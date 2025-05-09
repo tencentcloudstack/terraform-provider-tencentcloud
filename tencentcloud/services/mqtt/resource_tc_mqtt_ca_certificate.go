@@ -107,10 +107,9 @@ func resourceTencentCloudMqttCaCertificateCreate(d *schema.ResourceData, meta in
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		service    = MqttService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request    = mqttv20240516.NewRegisterCaCertificateRequest()
+		response   = mqttv20240516.NewRegisterCaCertificateResponse()
 		instanceId string
-		certStr    string
 		caSn       string
 	)
 
@@ -121,7 +120,6 @@ func resourceTencentCloudMqttCaCertificateCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("ca_certificate"); ok {
 		request.CaCertificate = helper.String(v.(string))
-		certStr = v.(string)
 	}
 
 	if v, ok := d.GetOk("verification_certificate"); ok {
@@ -148,6 +146,7 @@ func resourceTencentCloudMqttCaCertificateCreate(d *schema.ResourceData, meta in
 			return resource.NonRetryableError(fmt.Errorf("Create mqtt ca certificate failed, Response is nil."))
 		}
 
+		response = result
 		return nil
 	})
 
@@ -156,11 +155,11 @@ func resourceTencentCloudMqttCaCertificateCreate(d *schema.ResourceData, meta in
 		return reqErr
 	}
 
-	caSn, err := service.GetCertificateSerialNumber(certStr)
-	if err != nil {
-		return fmt.Errorf("Get certificate serial number error: %s", err.Error())
+	if response.Response.CaSn == nil {
+		return fmt.Errorf("CaSn is nil.")
 	}
 
+	caSn = *response.Response.CaSn
 	d.SetId(strings.Join([]string{instanceId, caSn}, tccommon.FILED_SP))
 
 	return resourceTencentCloudMqttCaCertificateRead(d, meta)
