@@ -93,10 +93,8 @@ func resourceTencentCloudCynosdbSslRead(d *schema.ResourceData, meta interface{}
 	}
 
 	_ = d.Set("cluster_id", clusterId)
+	_ = d.Set("instance_id", instanceId)
 
-	if instanceId != "" {
-		_ = d.Set("instance_id", instanceId)
-	}
 	if ssl.IsOpenSSL != nil {
 		if *ssl.IsOpenSSL == "yes" {
 			_ = d.Set("status", "ON")
