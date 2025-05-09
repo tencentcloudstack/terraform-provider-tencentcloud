@@ -543,6 +543,7 @@ tencentcloud_cynosdb_read_only_instance_exclusive_access
 tencentcloud_cynosdb_proxy_end_point
 tencentcloud_cynosdb_upgrade_proxy_version
 tencentcloud_cynosdb_backup_config
+tencentcloud_cynosdb_ssl
 
 Direct Connect(DC)
 Data Source
