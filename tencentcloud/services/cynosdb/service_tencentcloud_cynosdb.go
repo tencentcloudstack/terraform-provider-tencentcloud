@@ -2960,13 +2960,8 @@ func (me *CynosdbService) DescribeSSLStatus(ctx context.Context, clusterId, inst
 	logId := tccommon.GetLogId(ctx)
 
 	request := cynosdb.NewDescribeSSLStatusRequest()
-
-	if clusterId != "" {
-		request.ClusterId = &clusterId
-	}
-	if instanceId != "" {
-		request.InstanceId = &instanceId
-	}
+	request.ClusterId = &clusterId
+	request.InstanceId = &instanceId
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())

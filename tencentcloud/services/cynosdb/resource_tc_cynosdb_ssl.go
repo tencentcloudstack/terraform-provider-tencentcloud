@@ -33,7 +33,7 @@ func ResourceTencentCloudCynosdbSsl() *schema.Resource {
 				Description: "Cluster id.",
 			},
 			"instance_id": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "instance id.",
 			},
@@ -55,18 +55,10 @@ func resourceTencentCloudCynosdbSslCreate(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_ssl.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var clusterId, instanceId string
-	clusterId = d.Get("cluster_id").(string)
-	if v, ok := d.GetOk("instance_id"); ok && v.(string) != "" {
-		instanceId = v.(string)
-	}
+	clusterId := d.Get("cluster_id").(string)
+	instanceId := d.Get("instance_id").(string)
 
-	if instanceId == "" {
-		d.SetId(clusterId)
-	} else {
-		d.SetId(clusterId + tccommon.FILED_SP + instanceId)
-	}
-
+	d.SetId(clusterId + tccommon.FILED_SP + instanceId)
 	return resourceTencentCloudCynosdbSslUpdate(d, meta)
 }
 
@@ -80,12 +72,12 @@ func resourceTencentCloudCynosdbSslRead(d *schema.ResourceData, meta interface{}
 
 	service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	var clusterId, instanceId string
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	clusterId = idSplit[0]
-	if len(idSplit) > 1 {
-		instanceId = idSplit[1]
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	clusterId := idSplit[0]
+	instanceId := idSplit[1]
 
 	ssl, err := service.DescribeSSLStatus(ctx, clusterId, instanceId)
 	if err != nil {
@@ -125,12 +117,12 @@ func resourceTencentCloudCynosdbSslUpdate(d *schema.ResourceData, meta interface
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	var clusterId, instanceId string
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	clusterId = idSplit[0]
-	if len(idSplit) > 1 {
-		instanceId = idSplit[1]
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	clusterId := idSplit[0]
+	instanceId := idSplit[1]
 
 	var taskId *int64
 	if v, ok := d.GetOk("status"); ok {
@@ -138,9 +130,7 @@ func resourceTencentCloudCynosdbSslUpdate(d *schema.ResourceData, meta interface
 		if status == "ON" {
 			request := cynosdb.NewOpenSSLRequest()
 			request.ClusterId = helper.String(clusterId)
-			if instanceId != "" {
-				request.InstanceId = helper.String(instanceId)
-			}
+			request.InstanceId = helper.String(instanceId)
 
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().OpenSSL(request)
@@ -159,9 +149,7 @@ func resourceTencentCloudCynosdbSslUpdate(d *schema.ResourceData, meta interface
 		} else if status == "OFF" {
 			request := cynosdb.NewCloseSSLRequest()
 			request.ClusterId = helper.String(clusterId)
-			if instanceId != "" {
-				request.InstanceId = helper.String(instanceId)
-			}
+			request.InstanceId = helper.String(instanceId)
 
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().CloseSSL(request)

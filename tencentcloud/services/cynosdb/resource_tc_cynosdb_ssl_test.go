@@ -43,16 +43,16 @@ func TestAccTencentCloudCynosdbSslResource_basic(t *testing.T) {
 
 const testAccCynosdbSsl = `
 resource "tencentcloud_cynosdb_ssl" "cynosdb_ssl" {
-  cluster_id = "cynosdbmysql-1e0nzayx"
-  instance_id = "cynosdbmysql-ins-pfsv6q1e"
+  cluster_id = "cynosdbmysql-7yr4dde5"
+  instance_id = "cynosdbmysql-ins-4f62d5tq"
   status = "ON"
 }
 `
 
 const testAccCynosdbSsl_update = `
 resource "tencentcloud_cynosdb_ssl" "cynosdb_ssl" {
-  cluster_id = "cynosdbmysql-1e0nzayx"
-  instance_id = "cynosdbmysql-ins-pfsv6q1e"
+  cluster_id = "cynosdbmysql-7yr4dde5"
+  instance_id = "cynosdbmysql-ins-4f62d5tq"
   status = "OFF"
 }
 `

@@ -26,8 +26,8 @@ resource "tencentcloud_cynosdb_ssl" "cynosdb_ssl" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String) Cluster id.
+* `instance_id` - (Required, String) instance id.
 * `status` - (Required, String) Whether to enable SSL. `ON` means enabled, `OFF` means not enabled.
-* `instance_id` - (Optional, String) instance id.
 
 ## Attributes Reference
 
