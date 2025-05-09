@@ -48,6 +48,7 @@ func ResourceTencentCloudMqttDeviceCertificate() *schema.Resource {
 			"client_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Client ID.",
 			},
@@ -55,6 +56,7 @@ func ResourceTencentCloudMqttDeviceCertificate() *schema.Resource {
 			"format": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Certificate format, Default is PEM.",
 			},
@@ -62,6 +64,7 @@ func ResourceTencentCloudMqttDeviceCertificate() *schema.Resource {
 			"status": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"ACTIVE", "INACTIVE"}),
 				Description:  "Certificate status, Default is ACTIVE.\\n  ACTIVE activation;\\n  INACTIVE not active.",
 			},
