@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_mqtt_ca_certificate
+```
+
+```release-note:new-resource
+tencentcloud_mqtt_device_certificate
+```
+
+```release-note:new-resource
+tencentcloud_mqtt_authorization_policy
+```
