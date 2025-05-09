@@ -367,19 +367,15 @@ func (r *AddInstancesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type AddInstancesResponseParams struct {
 	// 冻结流水，一次开通一个冻结流水。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranId *string `json:"TranId,omitnil,omitempty" name:"TranId"`
 
 	// 后付费订单号。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
 	// 发货资源id列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 大订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BigDealIds []*string `json:"BigDealIds,omitnil,omitempty" name:"BigDealIds"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -493,11 +489,9 @@ type AuditInstanceFilters struct {
 
 type AuditInstanceInfo struct {
 	// 项目ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 标签信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagList []*Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 }
 
@@ -545,35 +539,27 @@ type AuditLog struct {
 	ThreadId *int64 `json:"ThreadId,omitnil,omitempty" name:"ThreadId"`
 
 	// 扫描行数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CheckRows *int64 `json:"CheckRows,omitnil,omitempty" name:"CheckRows"`
 
 	// cpu执行时间，微秒。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CpuTime *float64 `json:"CpuTime,omitnil,omitempty" name:"CpuTime"`
 
 	// IO等待时间，微秒。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IoWaitTime *int64 `json:"IoWaitTime,omitnil,omitempty" name:"IoWaitTime"`
 
 	// 锁等待时间，微秒。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LockWaitTime *int64 `json:"LockWaitTime,omitnil,omitempty" name:"LockWaitTime"`
 
 	// 事务持续等待时间，微秒。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrxLivingTime *int64 `json:"TrxLivingTime,omitnil,omitempty" name:"TrxLivingTime"`
 
 	// 开始时间，与timestamp构成一个精确到纳秒的时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NsTime *int64 `json:"NsTime,omitnil,omitempty" name:"NsTime"`
 
 	// 日志命中规则模板的基本信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TemplateInfo []*LogRuleTemplateInfo `json:"TemplateInfo,omitnil,omitempty" name:"TemplateInfo"`
 
 	// 事务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrxId *int64 `json:"TrxId,omitnil,omitempty" name:"TrxId"`
 }
 
@@ -643,7 +629,6 @@ type AuditLogFilter struct {
 
 type AuditRuleFilters struct {
 	// 单条审计规则。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleFilters []*RuleFilters `json:"RuleFilters,omitnil,omitempty" name:"RuleFilters"`
 }
 
@@ -658,30 +643,24 @@ type AuditRuleTemplateInfo struct {
 	RuleFilters []*RuleFilters `json:"RuleFilters,omitnil,omitempty" name:"RuleFilters"`
 
 	// 规则模板描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 规则模板创建时间。
 	CreateAt *string `json:"CreateAt,omitnil,omitempty" name:"CreateAt"`
 
 	// 规则模板修改时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateAt *string `json:"UpdateAt,omitnil,omitempty" name:"UpdateAt"`
 
 	// 告警等级。1-低风险，2-中风险，3-高风险。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmLevel *uint64 `json:"AlarmLevel,omitnil,omitempty" name:"AlarmLevel"`
 
 	// 告警策略。0-不告警，1-告警。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmPolicy *uint64 `json:"AlarmPolicy,omitnil,omitempty" name:"AlarmPolicy"`
 
 	// 模板状态。0-无任务 ，1-修改中。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 规则模板应用在哪些在实例。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AffectedInstances []*string `json:"AffectedInstances,omitnil,omitempty" name:"AffectedInstances"`
 }
 
@@ -714,15 +693,12 @@ type BackupFileInfo struct {
 	SnapshotTime *string `json:"SnapshotTime,omitnil,omitempty" name:"SnapshotTime"`
 
 	// 备份ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupId *int64 `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 
 	// 快照类型，可选值：full，全量；increment，增量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapShotType *string `json:"SnapShotType,omitnil,omitempty" name:"SnapShotType"`
 
 	// 备份文件备注
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupName *string `json:"BackupName,omitnil,omitempty" name:"BackupName"`
 }
 
@@ -800,29 +776,23 @@ func (r *BindClusterResourcePackagesResponse) FromJsonString(s string) error {
 
 type BindInstanceInfo struct {
 	// 绑定的集群ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 绑定的实例所在的地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 
 	// 绑定的实例类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
 	// 绑定集群下的实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExtendIds []*string `json:"ExtendIds,omitnil,omitempty" name:"ExtendIds"`
 }
 
 type BinlogConfigInfo struct {
 	// binlog保留时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BinlogSaveDays *int64 `json:"BinlogSaveDays,omitnil,omitempty" name:"BinlogSaveDays"`
 
 	// binlog异地地域备份是否开启
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BinlogCrossRegionsEnable *string `json:"BinlogCrossRegionsEnable,omitnil,omitempty" name:"BinlogCrossRegionsEnable"`
 
 	// binlog异地地域
@@ -858,18 +828,15 @@ type BizTaskInfo struct {
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 任务创建时间
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 延迟执行时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DelayTime *string `json:"DelayTime,omitnil,omitempty" name:"DelayTime"`
 
 	// 任务失败信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
 
 	// 异步任务流id
@@ -935,15 +902,12 @@ type BizTaskInfo struct {
 	ModifyParamsData []*ModifyParamsData `json:"ModifyParamsData,omitnil,omitempty" name:"ModifyParamsData"`
 
 	// 创建集群任务信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateClustersData *CreateClustersData `json:"CreateClustersData,omitnil,omitempty" name:"CreateClustersData"`
 
 	// 集群回档任务信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RollbackData *RollbackData `json:"RollbackData,omitnil,omitempty" name:"RollbackData"`
 
 	// 实例变配任务信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyInstanceData *ModifyInstanceData `json:"ModifyInstanceData,omitnil,omitempty" name:"ModifyInstanceData"`
 
 	// 手动备份任务信息
@@ -951,11 +915,9 @@ type BizTaskInfo struct {
 	ManualBackupData *ManualBackupData `json:"ManualBackupData,omitnil,omitempty" name:"ManualBackupData"`
 
 	// 修改内核版本任务信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyDbVersionData *ModifyDbVersionData `json:"ModifyDbVersionData,omitnil,omitempty" name:"ModifyDbVersionData"`
 
 	// 集群可用区信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterSlaveData *ClusterSlaveData `json:"ClusterSlaveData,omitnil,omitempty" name:"ClusterSlaveData"`
 
 	// 转换集群日志
@@ -967,12 +929,9 @@ type BizTaskInfo struct {
 	ModifyInstanceParamsData *BizTaskModifyParamsData `json:"ModifyInstanceParamsData,omitnil,omitempty" name:"ModifyInstanceParamsData"`
 
 	// 维护时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskMaintainInfo *TaskMaintainInfo `json:"TaskMaintainInfo,omitnil,omitempty" name:"TaskMaintainInfo"`
 
 	// 实例日志投递信息
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceCLSDeliveryInfos []*InstanceCLSDeliveryInfo `json:"InstanceCLSDeliveryInfos,omitnil,omitempty" name:"InstanceCLSDeliveryInfos"`
 
 	// 任务进度信息
@@ -984,7 +943,6 @@ type BizTaskModifyInstanceParam struct {
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 实例参数修改任务详情
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyInstanceParamList []*ModifyParamItem `json:"ModifyInstanceParamList,omitnil,omitempty" name:"ModifyInstanceParamList"`
 }
 
@@ -993,11 +951,9 @@ type BizTaskModifyParamsData struct {
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 集群参数修改数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterParamList []*ModifyParamItem `json:"ClusterParamList,omitnil,omitempty" name:"ClusterParamList"`
 
 	// 实例参数修改数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyInstanceParams []*BizTaskModifyInstanceParam `json:"ModifyInstanceParams,omitnil,omitempty" name:"ModifyInstanceParams"`
 }
 
@@ -1283,6 +1239,75 @@ func (r *CloseProxyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CloseSSLRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type CloseSSLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *CloseSSLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseSSLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloseSSLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloseSSLResponseParams struct {
+	// 流程ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 任务id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CloseSSLResponse struct {
+	*tchttp.BaseResponse
+	Response *CloseSSLResponseParams `json:"Response"`
+}
+
+func (r *CloseSSLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseSSLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CloseWanRequestParams struct {
 	// 实例组id
 	//
@@ -1384,35 +1409,31 @@ type ClusterInstanceDetail struct {
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
 	// 执行开始时间(距离0点的秒数)	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaintainStartTime *int64 `json:"MaintainStartTime,omitnil,omitempty" name:"MaintainStartTime"`
 
 	// 持续的时间(单位：秒)	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaintainDuration *int64 `json:"MaintainDuration,omitnil,omitempty" name:"MaintainDuration"`
 
 	// 可以执行的时间，枚举值：["Mon","Tue","Wed","Thu","Fri", "Sat", "Sun"]
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaintainWeekDays []*string `json:"MaintainWeekDays,omitnil,omitempty" name:"MaintainWeekDays"`
 
 	// serverless实例子状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServerlessStatus *string `json:"ServerlessStatus,omitnil,omitempty" name:"ServerlessStatus"`
 
 	// 实例任务信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceTasks []*ObjectTask `json:"InstanceTasks,omitnil,omitempty" name:"InstanceTasks"`
 
 	// 实例机器类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceDeviceType *string `json:"InstanceDeviceType,omitnil,omitempty" name:"InstanceDeviceType"`
 
 	// 实例存储类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceStorageType *string `json:"InstanceStorageType,omitnil,omitempty" name:"InstanceStorageType"`
 
 	// 数据库类型
 	DbMode *string `json:"DbMode,omitnil,omitempty" name:"DbMode"`
+
+	// 节点列表
+	NodeList []*string `json:"NodeList,omitnil,omitempty" name:"NodeList"`
 }
 
 type ClusterParamModifyLog struct {
@@ -1443,7 +1464,6 @@ type ClusterParamModifyLog struct {
 
 type ClusterSlaveData struct {
 	// 旧主可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldMasterZone *string `json:"OldMasterZone,omitnil,omitempty" name:"OldMasterZone"`
 
 	// 旧从可用区
@@ -1451,7 +1471,6 @@ type ClusterSlaveData struct {
 	OldSlaveZone []*string `json:"OldSlaveZone,omitnil,omitempty" name:"OldSlaveZone"`
 
 	// 新主可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NewMasterZone *string `json:"NewMasterZone,omitnil,omitempty" name:"NewMasterZone"`
 
 	// 新从可用区
@@ -1459,11 +1478,9 @@ type ClusterSlaveData struct {
 	NewSlaveZone []*string `json:"NewSlaveZone,omitnil,omitempty" name:"NewSlaveZone"`
 
 	// 新从可用区属性
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NewSlaveZoneAttr []*SlaveZoneAttrItem `json:"NewSlaveZoneAttr,omitnil,omitempty" name:"NewSlaveZoneAttr"`
 
 	// 旧可用区属性
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldSlaveZoneAttr []*SlaveZoneAttrItem `json:"OldSlaveZoneAttr,omitnil,omitempty" name:"OldSlaveZoneAttr"`
 }
 
@@ -1617,6 +1634,9 @@ type CreateAuditLogFileRequestParams struct {
 
 	// 审计日志过滤条件
 	LogFilter []*InstanceAuditLogFilter `json:"LogFilter,omitnil,omitempty" name:"LogFilter"`
+
+	// 审计日志列
+	ColumnFilter []*string `json:"ColumnFilter,omitnil,omitempty" name:"ColumnFilter"`
 }
 
 type CreateAuditLogFileRequest struct {
@@ -1645,6 +1665,9 @@ type CreateAuditLogFileRequest struct {
 
 	// 审计日志过滤条件
 	LogFilter []*InstanceAuditLogFilter `json:"LogFilter,omitnil,omitempty" name:"LogFilter"`
+
+	// 审计日志列
+	ColumnFilter []*string `json:"ColumnFilter,omitnil,omitempty" name:"ColumnFilter"`
 }
 
 func (r *CreateAuditLogFileRequest) ToJsonString() string {
@@ -1666,6 +1689,7 @@ func (r *CreateAuditLogFileRequest) FromJsonString(s string) error {
 	delete(f, "OrderBy")
 	delete(f, "Filter")
 	delete(f, "LogFilter")
+	delete(f, "ColumnFilter")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAuditLogFileRequest has unknown keys!", "")
 	}
@@ -1760,7 +1784,6 @@ func (r *CreateAuditRuleTemplateRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateAuditRuleTemplateResponseParams struct {
 	// 生成的规则模板ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplateId *string `json:"RuleTemplateId,omitnil,omitempty" name:"RuleTemplateId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2076,6 +2099,9 @@ type CreateClustersRequestParams struct {
 	// 普通实例内存,单位GB
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
+	// 实例数量，数量范围为(0,16]，默认值为2（即一个rw实例+一个ro实例），传递的n表示1个rw实例+n-1个ro实例（规格相同），如需要更精确的集群组成搭配，请使用InstanceInitInfos
+	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+
 	// 该参数无实际意义，已废弃。
 	// 存储大小，单位GB。
 	Storage *int64 `json:"Storage,omitnil,omitempty" name:"Storage"`
@@ -2117,9 +2143,6 @@ type CreateClustersRequestParams struct {
 	// 普通实例存储上限，单位GB
 	// 当DbType为MYSQL，且存储计费模式为预付费时，该参数需不大于cpu与memory对应存储规格上限
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
-
-	// 实例数量，数量范围为(0,16]
-	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
 	// 包年包月购买时长
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
@@ -2225,6 +2248,9 @@ type CreateClustersRequest struct {
 	// 普通实例内存,单位GB
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
+	// 实例数量，数量范围为(0,16]，默认值为2（即一个rw实例+一个ro实例），传递的n表示1个rw实例+n-1个ro实例（规格相同），如需要更精确的集群组成搭配，请使用InstanceInitInfos
+	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+
 	// 该参数无实际意义，已废弃。
 	// 存储大小，单位GB。
 	Storage *int64 `json:"Storage,omitnil,omitempty" name:"Storage"`
@@ -2266,9 +2292,6 @@ type CreateClustersRequest struct {
 	// 普通实例存储上限，单位GB
 	// 当DbType为MYSQL，且存储计费模式为预付费时，该参数需不大于cpu与memory对应存储规格上限
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
-
-	// 实例数量，数量范围为(0,16]
-	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
 	// 包年包月购买时长
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
@@ -2363,6 +2386,7 @@ func (r *CreateClustersRequest) FromJsonString(s string) error {
 	delete(f, "ProjectId")
 	delete(f, "Cpu")
 	delete(f, "Memory")
+	delete(f, "InstanceCount")
 	delete(f, "Storage")
 	delete(f, "ClusterName")
 	delete(f, "AdminPassword")
@@ -2375,7 +2399,6 @@ func (r *CreateClustersRequest) FromJsonString(s string) error {
 	delete(f, "ExpectTime")
 	delete(f, "ExpectTimeThresh")
 	delete(f, "StorageLimit")
-	delete(f, "InstanceCount")
 	delete(f, "TimeSpan")
 	delete(f, "TimeUnit")
 	delete(f, "AutoRenewFlag")
@@ -2405,19 +2428,15 @@ func (r *CreateClustersRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateClustersResponseParams struct {
 	// 冻结流水ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranId *string `json:"TranId,omitnil,omitempty" name:"TranId"`
 
 	// 订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
 	// 资源ID列表（该字段已不再维护，请使用dealNames字段查询接口DescribeResourcesByDealName获取资源ID）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 集群ID列表（该字段已不再维护，请使用dealNames字段查询接口DescribeResourcesByDealName获取集群ID）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
 
 	// 大订单号
@@ -2985,15 +3004,12 @@ func (r *CreateResourcePackageResponse) FromJsonString(s string) error {
 
 type CrossRegionBackupItem struct {
 	// 备份的目标地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CrossRegion *string `json:"CrossRegion,omitnil,omitempty" name:"CrossRegion"`
 
 	// 目标地域的备份任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BackupId *string `json:"BackupId,omitnil,omitempty" name:"BackupId"`
+	BackupId *int64 `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 
 	// 目标地域的备份状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupStatus *string `json:"BackupStatus,omitnil,omitempty" name:"BackupStatus"`
 }
 
@@ -3032,145 +3048,110 @@ type CynosdbCluster struct {
 	InstanceNum *int64 `json:"InstanceNum,omitnil,omitempty" name:"InstanceNum"`
 
 	// 用户uin
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Uin *string `json:"Uin,omitnil,omitempty" name:"Uin"`
 
 	// 引擎类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbType *string `json:"DbType,omitnil,omitempty" name:"DbType"`
 
 	// 用户appid
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 集群状态描述
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
 
 	// 集群创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 付费模式。0-按量计费，1-包年包月
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
 	// 截止时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PeriodEndTime *string `json:"PeriodEndTime,omitnil,omitempty" name:"PeriodEndTime"`
 
 	// 集群读写vip
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 集群读写vport
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
 	// 项目id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProjectID *int64 `json:"ProjectID,omitnil,omitempty" name:"ProjectID"`
 
 	// 私有网络ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// cynos内核版本
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
 
 	// 存储容量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
 
 	// 续费标志
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RenewFlag *int64 `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
 	// 正在处理的任务
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProcessingTask *string `json:"ProcessingTask,omitnil,omitempty" name:"ProcessingTask"`
 
 	// 集群的任务数组
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tasks []*ObjectTask `json:"Tasks,omitnil,omitempty" name:"Tasks"`
 
 	// 集群绑定的tag数组
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
 	// Db类型(NORMAL, SERVERLESS)
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbMode *string `json:"DbMode,omitnil,omitempty" name:"DbMode"`
 
 	// 当Db类型为SERVERLESS时，serverless集群状态，可选值:
 	// resume
 	// pause
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServerlessStatus *string `json:"ServerlessStatus,omitnil,omitempty" name:"ServerlessStatus"`
 
 	// 集群预付费存储值大小
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Storage *int64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
 	// 集群存储为预付费时的存储ID，用于预付费存储变配
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageId *string `json:"StorageId,omitnil,omitempty" name:"StorageId"`
 
 	// 集群存储付费模式。0-按量计费，1-包年包月
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StoragePayMode *int64 `json:"StoragePayMode,omitnil,omitempty" name:"StoragePayMode"`
 
 	// 集群计算规格对应的最小存储值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MinStorageSize *int64 `json:"MinStorageSize,omitnil,omitempty" name:"MinStorageSize"`
 
 	// 集群计算规格对应的最大存储值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxStorageSize *int64 `json:"MaxStorageSize,omitnil,omitempty" name:"MaxStorageSize"`
 
 	// 集群网络信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetAddrs []*NetAddr `json:"NetAddrs,omitnil,omitempty" name:"NetAddrs"`
 
 	// 物理可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PhysicalZone *string `json:"PhysicalZone,omitnil,omitempty" name:"PhysicalZone"`
 
 	// 主可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
 
 	// 是否有从可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HasSlaveZone *string `json:"HasSlaveZone,omitnil,omitempty" name:"HasSlaveZone"`
 
 	// 从可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveZones []*string `json:"SlaveZones,omitnil,omitempty" name:"SlaveZones"`
 
 	// 商业类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BusinessType *string `json:"BusinessType,omitnil,omitempty" name:"BusinessType"`
 
 	// 是否冻结
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsFreeze *string `json:"IsFreeze,omitnil,omitempty" name:"IsFreeze"`
 
 	// 订单来源
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrderSource *string `json:"OrderSource,omitnil,omitempty" name:"OrderSource"`
 
 	// 能力
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ability *Ability `json:"Ability,omitnil,omitempty" name:"Ability"`
 
 	// 实例绑定资源包信息（此处只返回存储资源包，即packageType=DISK）	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourcePackages []*ResourcePackage `json:"ResourcePackages,omitnil,omitempty" name:"ResourcePackages"`
 }
 
@@ -3188,7 +3169,6 @@ type CynosdbClusterDetail struct {
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 物理可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PhysicalZone *string `json:"PhysicalZone,omitnil,omitempty" name:"PhysicalZone"`
 
 	// 状态
@@ -3205,23 +3185,18 @@ type CynosdbClusterDetail struct {
 	ServerlessStatus *string `json:"ServerlessStatus,omitnil,omitempty" name:"ServerlessStatus"`
 
 	// 存储Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageId *string `json:"StorageId,omitnil,omitempty" name:"StorageId"`
 
 	// 存储大小，单位为G
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Storage *int64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
 	// 最大存储规格，单位为G
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxStorageSize *int64 `json:"MaxStorageSize,omitnil,omitempty" name:"MaxStorageSize"`
 
 	// 最小存储规格，单位为G
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MinStorageSize *int64 `json:"MinStorageSize,omitnil,omitempty" name:"MinStorageSize"`
 
 	// 存储付费类型，1为包年包月，0为按量计费
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StoragePayMode *int64 `json:"StoragePayMode,omitnil,omitempty" name:"StoragePayMode"`
 
 	// VPC名称
@@ -3246,14 +3221,12 @@ type CynosdbClusterDetail struct {
 	DbType *string `json:"DbType,omitnil,omitempty" name:"DbType"`
 
 	// Db类型：<li>NORMAL</li><li>SERVERLESS</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbMode *string `json:"DbMode,omitnil,omitempty" name:"DbMode"`
 
 	// 数据库版本
 	DbVersion *string `json:"DbVersion,omitnil,omitempty" name:"DbVersion"`
 
 	// 存储空间上限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
 
 	// 使用容量
@@ -3269,35 +3242,27 @@ type CynosdbClusterDetail struct {
 	RoAddr []*Addr `json:"RoAddr,omitnil,omitempty" name:"RoAddr"`
 
 	// 集群支持的功能
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ability *Ability `json:"Ability,omitnil,omitempty" name:"Ability"`
 
 	// cynos版本
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
 
 	// 商业类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BusinessType *string `json:"BusinessType,omitnil,omitempty" name:"BusinessType"`
 
 	// 是否有从可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HasSlaveZone *string `json:"HasSlaveZone,omitnil,omitempty" name:"HasSlaveZone"`
 
 	// 是否冻结
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsFreeze *string `json:"IsFreeze,omitnil,omitempty" name:"IsFreeze"`
 
 	// 任务列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tasks []*ObjectTask `json:"Tasks,omitnil,omitempty" name:"Tasks"`
 
 	// 主可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
 
 	// 从可用区列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveZones []*string `json:"SlaveZones,omitnil,omitempty" name:"SlaveZones"`
 
 	// 实例信息
@@ -3316,44 +3281,37 @@ type CynosdbClusterDetail struct {
 	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
 	// Proxy状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyStatus *string `json:"ProxyStatus,omitnil,omitempty" name:"ProxyStatus"`
 
 	// binlog开关，可选值：ON, OFF
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogBin *string `json:"LogBin,omitnil,omitempty" name:"LogBin"`
 
 	// 是否跳过交易
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSkipTrade *string `json:"IsSkipTrade,omitnil,omitempty" name:"IsSkipTrade"`
 
 	// pitr类型，可选值：normal, redo_pitr
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PitrType *string `json:"PitrType,omitnil,omitempty" name:"PitrType"`
 
 	// 是否打开密码复杂度
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsOpenPasswordComplexity *string `json:"IsOpenPasswordComplexity,omitnil,omitempty" name:"IsOpenPasswordComplexity"`
 
 	// 网络类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetworkStatus *string `json:"NetworkStatus,omitnil,omitempty" name:"NetworkStatus"`
 
 	// 集群绑定的资源包信息	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourcePackages []*ResourcePackage `json:"ResourcePackages,omitnil,omitempty" name:"ResourcePackages"`
 
 	// 自动续费标识，1为自动续费，0为到期不续
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RenewFlag *int64 `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
 	// 节点网络类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// 备可用区属性
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveZoneAttr []*SlaveZoneAttrItem `json:"SlaveZoneAttr,omitnil,omitempty" name:"SlaveZoneAttr"`
+
+	// 版本标签
+	CynosVersionTag *string `json:"CynosVersionTag,omitnil,omitempty" name:"CynosVersionTag"`
 }
 
 type CynosdbErrorLogItem struct {
@@ -3494,7 +3452,6 @@ type CynosdbInstance struct {
 	ServerlessStatus *string `json:"ServerlessStatus,omitnil,omitempty" name:"ServerlessStatus"`
 
 	// 预付费存储Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageId *string `json:"StorageId,omitnil,omitempty" name:"StorageId"`
 
 	// 存储付费类型
@@ -3504,15 +3461,12 @@ type CynosdbInstance struct {
 	PhysicalZone *string `json:"PhysicalZone,omitnil,omitempty" name:"PhysicalZone"`
 
 	// 商业类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BusinessType *string `json:"BusinessType,omitnil,omitempty" name:"BusinessType"`
 
 	// 任务
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tasks []*ObjectTask `json:"Tasks,omitnil,omitempty" name:"Tasks"`
 
 	// 是否冻结
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsFreeze *string `json:"IsFreeze,omitnil,omitempty" name:"IsFreeze"`
 
 	// 资源标签
@@ -3520,7 +3474,6 @@ type CynosdbInstance struct {
 	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
 	// 主可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
 
 	// 备可用区
@@ -3528,7 +3481,6 @@ type CynosdbInstance struct {
 	SlaveZones []*string `json:"SlaveZones,omitnil,omitempty" name:"SlaveZones"`
 
 	// 实例网络信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceNetInfo []*InstanceNetInfo `json:"InstanceNetInfo,omitnil,omitempty" name:"InstanceNetInfo"`
 
 	// 实例绑定资源包信息（此处只返回计算资源包，即packageType=CCU）
@@ -3536,20 +3488,22 @@ type CynosdbInstance struct {
 	ResourcePackages []*ResourcePackage `json:"ResourcePackages,omitnil,omitempty" name:"ResourcePackages"`
 
 	// 实例索引形态,可选值【mixedRowColumn（行列混存），onlyRowIndex（仅行存）】
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceIndexMode *string `json:"InstanceIndexMode,omitnil,omitempty" name:"InstanceIndexMode"`
 
 	// 当前实例支持的能力
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceAbility *InstanceAbility `json:"InstanceAbility,omitnil,omitempty" name:"InstanceAbility"`
 
 	// 实例机器类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// 实例存储类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceStorageType *string `json:"InstanceStorageType,omitnil,omitempty" name:"InstanceStorageType"`
+
+	// 未知字段
+	CynosVersionTag *string `json:"CynosVersionTag,omitnil,omitempty" name:"CynosVersionTag"`
+
+	// libradb 节点信息
+	NodeList []*string `json:"NodeList,omitnil,omitempty" name:"NodeList"`
 }
 
 type CynosdbInstanceDetail struct {
@@ -3708,15 +3662,12 @@ type CynosdbInstanceGroup struct {
 	InstanceSet []*CynosdbInstance `json:"InstanceSet,omitnil,omitempty" name:"InstanceSet"`
 
 	// VPC的ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
 	// 子网ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
 	// 正在回收IP信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldAddrInfo *OldAddrInfo `json:"OldAddrInfo,omitnil,omitempty" name:"OldAddrInfo"`
 
 	// 正在进行的任务
@@ -3799,21 +3750,17 @@ type CynosdbInstanceGrp struct {
 
 type DatabasePrivileges struct {
 	// 数据库
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
 
 	// 权限列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Privileges []*string `json:"Privileges,omitnil,omitempty" name:"Privileges"`
 }
 
 type DatabaseTables struct {
 	// 数据库名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
 
 	// 表名称列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tables []*string `json:"Tables,omitnil,omitempty" name:"Tables"`
 }
 
@@ -3831,35 +3778,27 @@ type DbInfo struct {
 	CollateRule *string `json:"CollateRule,omitnil,omitempty" name:"CollateRule"`
 
 	// 数据库备注
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 用户权限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserHostPrivileges []*UserHostPrivilege `json:"UserHostPrivileges,omitnil,omitempty" name:"UserHostPrivileges"`
 
 	// 数据库ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbId *int64 `json:"DbId,omitnil,omitempty" name:"DbId"`
 
 	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 用户appid
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 用户Uin
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Uin *string `json:"Uin,omitnil,omitempty" name:"Uin"`
 
 	// 集群Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
@@ -4310,12 +4249,16 @@ func (r *DeleteParamTemplateResponse) FromJsonString(s string) error {
 
 type DeliverSummary struct {
 	// 投递类型，store（存储类），mq（消息通道）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeliverType *string `json:"DeliverType,omitnil,omitempty" name:"DeliverType"`
 
 	// 投递子类型：cls，ckafka。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeliverSubType *string `json:"DeliverSubType,omitnil,omitempty" name:"DeliverSubType"`
+
+	// 投递者
+	DeliverConsumer *string `json:"DeliverConsumer,omitnil,omitempty" name:"DeliverConsumer"`
+
+	// 投递者名称
+	DeliverConsumerName *string `json:"DeliverConsumerName,omitnil,omitempty" name:"DeliverConsumerName"`
 }
 
 // Predefined struct for user
@@ -4360,19 +4303,15 @@ func (r *DescribeAccountAllGrantPrivilegesRequest) FromJsonString(s string) erro
 // Predefined struct for user
 type DescribeAccountAllGrantPrivilegesResponseParams struct {
 	// 权限语句
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PrivilegeStatements []*string `json:"PrivilegeStatements,omitnil,omitempty" name:"PrivilegeStatements"`
 
 	// 全局权限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GlobalPrivileges []*string `json:"GlobalPrivileges,omitnil,omitempty" name:"GlobalPrivileges"`
 
 	// 数据库权限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DatabasePrivileges []*DatabasePrivileges `json:"DatabasePrivileges,omitnil,omitempty" name:"DatabasePrivileges"`
 
 	// 数据库表权限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TablePrivileges []*TablePrivileges `json:"TablePrivileges,omitnil,omitempty" name:"TablePrivileges"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4568,7 +4507,6 @@ func (r *DescribeAccountsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeAccountsResponseParams struct {
 	// 数据库账号列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AccountSet []*Account `json:"AccountSet,omitnil,omitempty" name:"AccountSet"`
 
 	// 账号总数量
@@ -4962,7 +4900,6 @@ type DescribeAuditRuleTemplatesResponseParams struct {
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 规则模板详细信息列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*AuditRuleTemplateInfo `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5090,19 +5027,15 @@ type DescribeBackupConfigResponseParams struct {
 	ReserveDuration *uint64 `json:"ReserveDuration,omitnil,omitempty" name:"ReserveDuration"`
 
 	// 备份频率，长度为7的数组，分别对应周一到周日的备份方式，full-全量备份，increment-增量备份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupFreq []*string `json:"BackupFreq,omitnil,omitempty" name:"BackupFreq"`
 
 	// 备份方式，logic-逻辑备份，snapshot-快照备份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupType *string `json:"BackupType,omitnil,omitempty" name:"BackupType"`
 
 	// 跨地域逻辑备份配置修改时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicCrossRegionsConfigUpdateTime *string `json:"LogicCrossRegionsConfigUpdateTime,omitnil,omitempty" name:"LogicCrossRegionsConfigUpdateTime"`
 
 	// 自动逻辑备份配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicBackupConfig *LogicBackupConfigInfo `json:"LogicBackupConfig,omitnil,omitempty" name:"LogicBackupConfig"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5384,11 +5317,9 @@ func (r *DescribeBinlogConfigRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeBinlogConfigResponseParams struct {
 	// Binlog跨地域配置更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BinlogCrossRegionsConfigUpdateTime *string `json:"BinlogCrossRegionsConfigUpdateTime,omitnil,omitempty" name:"BinlogCrossRegionsConfigUpdateTime"`
 
 	// Binlog配置信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BinlogConfig *BinlogConfigInfo `json:"BinlogConfig,omitnil,omitempty" name:"BinlogConfig"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5598,7 +5529,6 @@ type DescribeBinlogsResponseParams struct {
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// Binlog列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Binlogs []*BinlogItem `json:"Binlogs,omitnil,omitempty" name:"Binlogs"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5673,7 +5603,6 @@ type DescribeChangedParamsAfterUpgradeResponseParams struct {
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 实例参数列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*ParamItemInfo `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5928,7 +5857,6 @@ func (r *DescribeClusterDetailDatabasesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeClusterDetailDatabasesResponseParams struct {
 	// 数据库信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbInfos []*DbInfo `json:"DbInfos,omitnil,omitempty" name:"DbInfos"`
 
 	// 总数
@@ -6209,7 +6137,6 @@ type DescribeClusterParamLogsResponseParams struct {
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 参数修改记录
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterParamLogs []*ClusterParamModifyLog `json:"ClusterParamLogs,omitnil,omitempty" name:"ClusterParamLogs"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6284,7 +6211,6 @@ type DescribeClusterParamsResponseParams struct {
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 实例参数列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*ParamInfo `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6342,27 +6268,21 @@ func (r *DescribeClusterPasswordComplexityRequest) FromJsonString(s string) erro
 // Predefined struct for user
 type DescribeClusterPasswordComplexityResponseParams struct {
 	// 数据字典参数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ValidatePasswordDictionary *ParamInfo `json:"ValidatePasswordDictionary,omitnil,omitempty" name:"ValidatePasswordDictionary"`
 
 	// 密码长度
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ValidatePasswordLength *ParamInfo `json:"ValidatePasswordLength,omitnil,omitempty" name:"ValidatePasswordLength"`
 
 	// 大小写敏感字符个数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ValidatePasswordMixedCaseCount *ParamInfo `json:"ValidatePasswordMixedCaseCount,omitnil,omitempty" name:"ValidatePasswordMixedCaseCount"`
 
 	// 数字个数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ValidatePasswordNumberCount *ParamInfo `json:"ValidatePasswordNumberCount,omitnil,omitempty" name:"ValidatePasswordNumberCount"`
 
 	// 密码等级
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ValidatePasswordPolicy *ParamInfo `json:"ValidatePasswordPolicy,omitnil,omitempty" name:"ValidatePasswordPolicy"`
 
 	// 特殊字符个数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ValidatePasswordSpecialCharCount *ParamInfo `json:"ValidatePasswordSpecialCharCount,omitnil,omitempty" name:"ValidatePasswordSpecialCharCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6886,11 +6806,9 @@ func (r *DescribeInstanceErrorLogsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeInstanceErrorLogsResponseParams struct {
 	// 日志条数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 错误日志列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrorLogs []*CynosdbErrorLogItem `json:"ErrorLogs,omitnil,omitempty" name:"ErrorLogs"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7846,7 +7764,7 @@ func (r *DescribeProjectSecurityGroupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeProxiesRequestParams struct {
-	// 集群ID（该参数必传，例如cynosdbmysql-xxxxxx）
+	// 集群 ID（该参数必传，例如 cynosdbmysql-2u2mh111）。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 返回数量，默认为 20，最大值为 100
@@ -7872,7 +7790,7 @@ type DescribeProxiesRequestParams struct {
 type DescribeProxiesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID（该参数必传，例如cynosdbmysql-xxxxxx）
+	// 集群 ID（该参数必传，例如 cynosdbmysql-2u2mh111）。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 返回数量，默认为 20，最大值为 100
@@ -7925,7 +7843,6 @@ type DescribeProxiesResponseParams struct {
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 数据库代理组列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyGroupInfos []*ProxyGroupInfo `json:"ProxyGroupInfos,omitnil,omitempty" name:"ProxyGroupInfos"`
 
 	// 数据库代理节点
@@ -8321,7 +8238,6 @@ type DescribeResourcePackageListResponseParams struct {
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 资源包明细
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Detail []*Package `json:"Detail,omitnil,omitempty" name:"Detail"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8416,7 +8332,6 @@ type DescribeResourcePackageSaleSpecResponseParams struct {
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 资源包明细说明
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Detail []*SalePackageSpec `json:"Detail,omitnil,omitempty" name:"Detail"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8542,11 +8457,9 @@ func (r *DescribeRollbackTimeRangeRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeRollbackTimeRangeResponseParams struct {
 	// 有效回归时间范围开始时间点（已废弃）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TimeRangeStart *string `json:"TimeRangeStart,omitnil,omitempty" name:"TimeRangeStart"`
 
 	// 有效回归时间范围结束时间点（已废弃）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TimeRangeEnd *string `json:"TimeRangeEnd,omitnil,omitempty" name:"TimeRangeEnd"`
 
 	// 可回档时间范围
@@ -8569,6 +8482,73 @@ func (r *DescribeRollbackTimeRangeResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeRollbackTimeRangeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSSLStatusRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeSSLStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeSSLStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSSLStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSSLStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSSLStatusResponseParams struct {
+	// yes-开启，no-关闭
+	IsOpenSSL *string `json:"IsOpenSSL,omitnil,omitempty" name:"IsOpenSSL"`
+
+	// 证书下载地址
+	DownloadUrl *string `json:"DownloadUrl,omitnil,omitempty" name:"DownloadUrl"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSSLStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSSLStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeSSLStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSSLStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8704,6 +8684,70 @@ func (r *DescribeServerlessStrategyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSlaveZonesRequestParams struct {
+	// 可用区
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 云架集群ID
+	OssClusterId *int64 `json:"OssClusterId,omitnil,omitempty" name:"OssClusterId"`
+}
+
+type DescribeSlaveZonesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 可用区
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 云架集群ID
+	OssClusterId *int64 `json:"OssClusterId,omitnil,omitempty" name:"OssClusterId"`
+}
+
+func (r *DescribeSlaveZonesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSlaveZonesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Zone")
+	delete(f, "OssClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSlaveZonesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSlaveZonesResponseParams struct {
+	// 从可用区
+	SlaveZones []*string `json:"SlaveZones,omitnil,omitempty" name:"SlaveZones"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSlaveZonesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSlaveZonesResponseParams `json:"Response"`
+}
+
+func (r *DescribeSlaveZonesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSlaveZonesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSupportProxyVersionRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -8745,11 +8789,9 @@ func (r *DescribeSupportProxyVersionRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeSupportProxyVersionResponseParams struct {
 	// 支持的数据库代理版本集合
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SupportProxyVersions []*string `json:"SupportProxyVersions,omitnil,omitempty" name:"SupportProxyVersions"`
 
 	// 当前proxy版本号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitnil,omitempty" name:"CurrentProxyVersion"`
 
 	// 代理版本详情
@@ -9001,35 +9043,28 @@ func (r *DisassociateSecurityGroupsResponse) FromJsonString(s string) error {
 
 type ErrorLogItemExport struct {
 	// 时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Timestamp *string `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
 
 	// 日志等级，可选值note, warning，error
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
 
 	// 日志内容
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 }
 
 type ExchangeInstanceInfo struct {
 	// 源实例信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SrcInstanceInfo *RollbackInstanceInfo `json:"SrcInstanceInfo,omitnil,omitempty" name:"SrcInstanceInfo"`
 
 	// 目标实例信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DstInstanceInfo *RollbackInstanceInfo `json:"DstInstanceInfo,omitnil,omitempty" name:"DstInstanceInfo"`
 }
 
 type ExchangeRoGroupInfo struct {
 	// 源RO组信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SrcRoGroupInfo *RollbackRoGroupInfo `json:"SrcRoGroupInfo,omitnil,omitempty" name:"SrcRoGroupInfo"`
 
 	// 目标RO组信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DstRoGroupInfo *RollbackRoGroupInfo `json:"DstRoGroupInfo,omitnil,omitempty" name:"DstRoGroupInfo"`
 }
 
@@ -9131,8 +9166,10 @@ func (r *ExportInstanceErrorLogsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ExportInstanceErrorLogsResponseParams struct {
 	// 错误日志导出内容
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrorLogItems []*ErrorLogItemExport `json:"ErrorLogItems,omitnil,omitempty" name:"ErrorLogItems"`
+
+	// 错误日志字符串
+	FileContent *string `json:"FileContent,omitnil,omitempty" name:"FileContent"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -9684,11 +9721,9 @@ func (r *InquirePriceModifyRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type InquirePriceModifyResponseParams struct {
 	// 实例价格
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstancePrice *TradePrice `json:"InstancePrice,omitnil,omitempty" name:"InstancePrice"`
 
 	// 存储价格
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StoragePrice *TradePrice `json:"StoragePrice,omitnil,omitempty" name:"StoragePrice"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9796,11 +9831,9 @@ func (r *InquirePriceRenewResponse) FromJsonString(s string) error {
 
 type InstanceAbility struct {
 	// 实例是否支持强制重启，可选值：yes：支持，no：不支持
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSupportForceRestart *string `json:"IsSupportForceRestart,omitnil,omitempty" name:"IsSupportForceRestart"`
 
 	// 不支持强制重启的原因
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NonsupportForceRestartReason *string `json:"NonsupportForceRestartReason,omitnil,omitempty" name:"NonsupportForceRestartReason"`
 }
 
@@ -9835,19 +9868,15 @@ type InstanceAuditRule struct {
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 是否是规则审计。true-规则审计，false-全审计。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AuditRule *bool `json:"AuditRule,omitnil,omitempty" name:"AuditRule"`
 
 	// 审计规则详情。仅当AuditRule=true时有效。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AuditRuleFilters []*AuditRuleFilters `json:"AuditRuleFilters,omitnil,omitempty" name:"AuditRuleFilters"`
 
 	// 是否是审计策略
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldRule *bool `json:"OldRule,omitnil,omitempty" name:"OldRule"`
 
 	// 实例应用的规则模板详情
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplates []*RuleTemplateInfo `json:"RuleTemplates,omitnil,omitempty" name:"RuleTemplates"`
 }
 
@@ -9859,99 +9888,71 @@ type InstanceAuditStatus struct {
 	AuditStatus *string `json:"AuditStatus,omitnil,omitempty" name:"AuditStatus"`
 
 	// 日志保留时长。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogExpireDay *uint64 `json:"LogExpireDay,omitnil,omitempty" name:"LogExpireDay"`
 
 	// 高频存储时长。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HighLogExpireDay *uint64 `json:"HighLogExpireDay,omitnil,omitempty" name:"HighLogExpireDay"`
 
 	// 低频存储时长。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LowLogExpireDay *uint64 `json:"LowLogExpireDay,omitnil,omitempty" name:"LowLogExpireDay"`
 
 	// 日志存储量。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BillingAmount *float64 `json:"BillingAmount,omitnil,omitempty" name:"BillingAmount"`
 
 	// 高频存储量。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HighRealStorage *float64 `json:"HighRealStorage,omitnil,omitempty" name:"HighRealStorage"`
 
 	// 低频存储量。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LowRealStorage *float64 `json:"LowRealStorage,omitnil,omitempty" name:"LowRealStorage"`
 
 	// 是否为全审计。true-表示全审计。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AuditAll *bool `json:"AuditAll,omitnil,omitempty" name:"AuditAll"`
 
 	// 审计开通时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateAt *string `json:"CreateAt,omitnil,omitempty" name:"CreateAt"`
 
 	// 实例相关信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceInfo *AuditInstanceInfo `json:"InstanceInfo,omitnil,omitempty" name:"InstanceInfo"`
 
 	// 总存储量。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RealStorage *float64 `json:"RealStorage,omitnil,omitempty" name:"RealStorage"`
 
 	// 实例所应用的规则模板。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplateIds []*string `json:"RuleTemplateIds,omitnil,omitempty" name:"RuleTemplateIds"`
 
 	// 是否开启日志投递：ON，OFF
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Deliver *string `json:"Deliver,omitnil,omitempty" name:"Deliver"`
 
 	// 日志投递类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeliverSummary []*DeliverSummary `json:"DeliverSummary,omitnil,omitempty" name:"DeliverSummary"`
 }
 
 type InstanceCLSDeliveryInfo struct {
 	// 实例id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 实例name
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 日志主题id
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志主题name
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
 	// 日志集id
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 日志集name
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
 	// 日志投递地域
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 投递状态creating,running,offlining,offlined
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 日志类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 }
 
@@ -9986,47 +9987,36 @@ type InstanceInitInfo struct {
 
 type InstanceNetInfo struct {
 	// 网络类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceGroupType *string `json:"InstanceGroupType,omitnil,omitempty" name:"InstanceGroupType"`
 
 	// 实例组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceGroupId *string `json:"InstanceGroupId,omitnil,omitempty" name:"InstanceGroupId"`
 
 	// 私有网络ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 网络类型, 0-基础网络, 1-vpc网络, 2-黑石网络
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetType *int64 `json:"NetType,omitnil,omitempty" name:"NetType"`
 
 	// 私有网络IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 私有网络端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
 	// 外网域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanDomain *string `json:"WanDomain,omitnil,omitempty" name:"WanDomain"`
 
 	// 外网IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanIP *string `json:"WanIP,omitnil,omitempty" name:"WanIP"`
 
 	// 外网端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanPort *int64 `json:"WanPort,omitnil,omitempty" name:"WanPort"`
 
 	// 外网开启状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanStatus *string `json:"WanStatus,omitnil,omitempty" name:"WanStatus"`
 }
 
@@ -10064,11 +10054,9 @@ type InstanceSpec struct {
 	MaxIoBandWidth *int64 `json:"MaxIoBandWidth,omitnil,omitempty" name:"MaxIoBandWidth"`
 
 	// 地域库存信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ZoneStockInfos []*ZoneStockInfo `json:"ZoneStockInfos,omitnil,omitempty" name:"ZoneStockInfos"`
 
 	// 库存数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StockCount *int64 `json:"StockCount,omitnil,omitempty" name:"StockCount"`
 }
 
@@ -10128,7 +10116,6 @@ func (r *IsolateClusterRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type IsolateClusterResponseParams struct {
 	// 任务流ID(后付费或者serverless资源返回，如果需要同步任务状态，请使用DescribeFlow接口)
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
 	// 退款订单号(预付费资源返回，如果需要同步订单状态，请使用计费产品的DescribeDealsByCond同步订单状态)
@@ -10246,41 +10233,32 @@ func (r *IsolateInstanceResponse) FromJsonString(s string) error {
 
 type LogRuleTemplateInfo struct {
 	// 模板ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplateId *string `json:"RuleTemplateId,omitnil,omitempty" name:"RuleTemplateId"`
 
 	// 规则模板名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplateName *string `json:"RuleTemplateName,omitnil,omitempty" name:"RuleTemplateName"`
 
 	// 告警等级。1-低风险，2-中风险，3-高风险。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmLevel *string `json:"AlarmLevel,omitnil,omitempty" name:"AlarmLevel"`
 
 	// 规则模板变更状态：0-未变更；1-已变更；2-已删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplateStatus *int64 `json:"RuleTemplateStatus,omitnil,omitempty" name:"RuleTemplateStatus"`
 }
 
 type LogicBackupConfigInfo struct {
 	// 是否开启自动逻辑备份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicBackupEnable *string `json:"LogicBackupEnable,omitnil,omitempty" name:"LogicBackupEnable"`
 
 	// 自动逻辑备份开始时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicBackupTimeBeg *uint64 `json:"LogicBackupTimeBeg,omitnil,omitempty" name:"LogicBackupTimeBeg"`
 
 	// 自动逻辑备份结束时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicBackupTimeEnd *uint64 `json:"LogicBackupTimeEnd,omitnil,omitempty" name:"LogicBackupTimeEnd"`
 
 	// 自动逻辑备份保留时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicReserveDuration *uint64 `json:"LogicReserveDuration,omitnil,omitempty" name:"LogicReserveDuration"`
 
 	// 是否开启跨地域逻辑备份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicCrossRegionsEnable *string `json:"LogicCrossRegionsEnable,omitnil,omitempty" name:"LogicCrossRegionsEnable"`
 
 	// 逻辑备份所跨地域
@@ -10796,7 +10774,7 @@ type ModifyBackupConfigRequestParams struct {
 	// 该参数目前不支持修改，无需填写。备份频率，长度为7的数组，分别对应周一到周日的备份方式，full-全量备份，increment-增量备份
 	BackupFreq []*string `json:"BackupFreq,omitnil,omitempty" name:"BackupFreq"`
 
-	// 该参数目前不支持修改，无需填写。备份方式，logic-逻辑备份，snapshot-快照备份
+	// 该参数目前不支持修改，无需填写。
 	BackupType *string `json:"BackupType,omitnil,omitempty" name:"BackupType"`
 
 	// 逻辑备份配置
@@ -10824,7 +10802,7 @@ type ModifyBackupConfigRequest struct {
 	// 该参数目前不支持修改，无需填写。备份频率，长度为7的数组，分别对应周一到周日的备份方式，full-全量备份，increment-增量备份
 	BackupFreq []*string `json:"BackupFreq,omitnil,omitempty" name:"BackupFreq"`
 
-	// 该参数目前不支持修改，无需填写。备份方式，logic-逻辑备份，snapshot-快照备份
+	// 该参数目前不支持修改，无需填写。
 	BackupType *string `json:"BackupType,omitnil,omitempty" name:"BackupType"`
 
 	// 逻辑备份配置
@@ -11519,15 +11497,12 @@ func (r *ModifyClusterStorageRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyClusterStorageResponseParams struct {
 	// 冻结流水ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranId *string `json:"TranId,omitnil,omitempty" name:"TranId"`
 
 	// 大订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BigDealIds []*string `json:"BigDealIds,omitnil,omitempty" name:"BigDealIds"`
 
 	// 订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -11649,15 +11624,19 @@ type ModifyInstanceData struct {
 	OldStorageLimit *int64 `json:"OldStorageLimit,omitnil,omitempty" name:"OldStorageLimit"`
 
 	// 变配前实例机器类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldDeviceType *string `json:"OldDeviceType,omitnil,omitempty" name:"OldDeviceType"`
 
 	// 变配后实例机器类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// 升级方式。升级完成后切换或维护时间内切换
 	UpgradeType *string `json:"UpgradeType,omitnil,omitempty" name:"UpgradeType"`
+
+	// libra节点数量
+	LibraNodeCount *int64 `json:"LibraNodeCount,omitnil,omitempty" name:"LibraNodeCount"`
+
+	// 原libra节点数量
+	OldLibraNodeCount *int64 `json:"OldLibraNodeCount,omitnil,omitempty" name:"OldLibraNodeCount"`
 }
 
 // Predefined struct for user
@@ -11957,8 +11936,10 @@ type ModifyParamItem struct {
 	CurrentValue *string `json:"CurrentValue,omitnil,omitempty" name:"CurrentValue"`
 
 	// 参数旧值（只在出参时有用）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldValue *string `json:"OldValue,omitnil,omitempty" name:"OldValue"`
+
+	// libra组件类型
+	Component *string `json:"Component,omitnil,omitempty" name:"Component"`
 }
 
 // Predefined struct for user
@@ -12732,47 +12713,36 @@ type Module struct {
 
 type NetAddr struct {
 	// 内网ip
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 内网端口号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
 	// 外网域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanDomain *string `json:"WanDomain,omitnil,omitempty" name:"WanDomain"`
 
 	// 外网端口号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanPort *int64 `json:"WanPort,omitnil,omitempty" name:"WanPort"`
 
 	// 网络类型（ro-只读,rw/ha-读写）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetType *string `json:"NetType,omitnil,omitempty" name:"NetType"`
 
 	// 子网ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
 	// 私有网络ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
 	// 描述信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 外网IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanIP *string `json:"WanIP,omitnil,omitempty" name:"WanIP"`
 
 	// 外网状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanStatus *string `json:"WanStatus,omitnil,omitempty" name:"WanStatus"`
 
 	// 实例组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceGroupId *string `json:"InstanceGroupId,omitnil,omitempty" name:"InstanceGroupId"`
 }
 
@@ -12795,23 +12765,18 @@ type NewAccount struct {
 
 type ObjectTask struct {
 	// 任务自增ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 任务类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
 	// 任务状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskStatus *string `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
 	// 任务ID（集群ID|实例组ID|实例ID）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ObjectId *string `json:"ObjectId,omitnil,omitempty" name:"ObjectId"`
 
 	// 任务类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ObjectType *string `json:"ObjectType,omitnil,omitempty" name:"ObjectType"`
 }
 
@@ -12938,15 +12903,12 @@ func (r *OfflineInstanceResponse) FromJsonString(s string) error {
 
 type OldAddrInfo struct {
 	// IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
 	// 期望执行回收时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReturnTime *string `json:"ReturnTime,omitnil,omitempty" name:"ReturnTime"`
 }
 
@@ -13380,6 +13342,73 @@ func (r *OpenReadOnlyInstanceExclusiveAccessResponse) FromJsonString(s string) e
 }
 
 // Predefined struct for user
+type OpenSSLRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type OpenSSLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *OpenSSLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenSSLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenSSLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OpenSSLResponseParams struct {
+	// 任务流ID
+	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 任务id
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type OpenSSLResponse struct {
+	*tchttp.BaseResponse
+	Response *OpenSSLResponseParams `json:"Response"`
+}
+
+func (r *OpenSSLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenSSLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type OpenWanRequestParams struct {
 	// 实例组id
 	//
@@ -13454,25 +13483,20 @@ func (r *OpenWanResponse) FromJsonString(s string) error {
 
 type Package struct {
 	// AppID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 资源包唯一ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageId *string `json:"PackageId,omitnil,omitempty" name:"PackageId"`
 
 	// 资源包名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageName *string `json:"PackageName,omitnil,omitempty" name:"PackageName"`
 
 	// 资源包类型
 	// CCU-计算资源包，DISK-存储资源包
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageType *string `json:"PackageType,omitnil,omitempty" name:"PackageType"`
 
 	// 资源包使用地域
 	// china-中国内地通用，overseas-港澳台及海外通用
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageRegion *string `json:"PackageRegion,omitnil,omitempty" name:"PackageRegion"`
 
 	// 资源包状态
@@ -13482,69 +13506,53 @@ type Package struct {
 	// normal_finish-使用完；
 	// apply_refund-申请退费中；
 	// refund-已退费。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 资源包总量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageTotalSpec *float64 `json:"PackageTotalSpec,omitnil,omitempty" name:"PackageTotalSpec"`
 
 	// 资源包已使用量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageUsedSpec *float64 `json:"PackageUsedSpec,omitnil,omitempty" name:"PackageUsedSpec"`
 
 	// 是否还有库存余量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HasQuota *bool `json:"HasQuota,omitnil,omitempty" name:"HasQuota"`
 
 	// 绑定实例信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BindInstanceInfos []*BindInstanceInfo `json:"BindInstanceInfos,omitnil,omitempty" name:"BindInstanceInfos"`
 
 	// 生效时间：2022-07-01 00:00:00
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// 失效时间：2022-08-01 00:00:00
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 资源包历史绑定（已解绑）实例信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HistoryBindResourceInfos []*BindInstanceInfo `json:"HistoryBindResourceInfos,omitnil,omitempty" name:"HistoryBindResourceInfos"`
 }
 
 type PackageDetail struct {
 	// AppId账户ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 资源包唯一ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageId *string `json:"PackageId,omitnil,omitempty" name:"PackageId"`
 
 	// 实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 成功抵扣容量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SuccessDeductSpec *float64 `json:"SuccessDeductSpec,omitnil,omitempty" name:"SuccessDeductSpec"`
 
 	// 截止当前，资源包已使用的容量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageTotalUsedSpec *float64 `json:"PackageTotalUsedSpec,omitnil,omitempty" name:"PackageTotalUsedSpec"`
 
 	// 抵扣开始时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// 抵扣结束时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 扩展信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExtendInfo *string `json:"ExtendInfo,omitnil,omitempty" name:"ExtendInfo"`
 }
 
@@ -13585,7 +13593,6 @@ type ParamDetail struct {
 	Min *string `json:"Min,omitnil,omitempty" name:"Min"`
 
 	// 参数的可选枚举值。如果为非枚举值，则为空
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnumValue []*string `json:"EnumValue,omitnil,omitempty" name:"EnumValue"`
 
 	// 1：全局参数，0：非全局参数
@@ -13598,19 +13605,15 @@ type ParamDetail struct {
 	MatchValue *string `json:"MatchValue,omitnil,omitempty" name:"MatchValue"`
 
 	// true-为公式，false-非公式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsFunc *bool `json:"IsFunc,omitnil,omitempty" name:"IsFunc"`
 
 	// 参数设置为公式时，Func返回设置的公式内容
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Func *string `json:"Func,omitnil,omitempty" name:"Func"`
 
 	// 参数是否可修改
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifiableInfo *ModifiableInfo `json:"ModifiableInfo,omitnil,omitempty" name:"ModifiableInfo"`
 
 	// 支持公式的参数的默认公式样式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FuncPattern *string `json:"FuncPattern,omitnil,omitempty" name:"FuncPattern"`
 }
 
@@ -13622,7 +13625,6 @@ type ParamInfo struct {
 	Default *string `json:"Default,omitnil,omitempty" name:"Default"`
 
 	// 参数为enum/string/bool时，可选值列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnumValue []*string `json:"EnumValue,omitnil,omitempty" name:"EnumValue"`
 
 	// 参数类型为float/integer时的最大值
@@ -13650,23 +13652,18 @@ type ParamInfo struct {
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 是否为全局参数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsGlobal *int64 `json:"IsGlobal,omitnil,omitempty" name:"IsGlobal"`
 
 	// 参数是否可修改
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifiableInfo *ModifiableInfo `json:"ModifiableInfo,omitnil,omitempty" name:"ModifiableInfo"`
 
 	// 是否为函数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsFunc *bool `json:"IsFunc,omitnil,omitempty" name:"IsFunc"`
 
 	// 函数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Func *string `json:"Func,omitnil,omitempty" name:"Func"`
 
 	// 支持公式的参数的默认公式样式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FuncPattern *string `json:"FuncPattern,omitnil,omitempty" name:"FuncPattern"`
 }
 
@@ -13713,36 +13710,26 @@ type ParamItemDetail struct {
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 类型是否为公式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsFunc *bool `json:"IsFunc,omitnil,omitempty" name:"IsFunc"`
 
 	// 参数配置公式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Func *string `json:"Func,omitnil,omitempty" name:"Func"`
 
 	// 支持公式的参数的默认公式样式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FuncPattern *string `json:"FuncPattern,omitnil,omitempty" name:"FuncPattern"`
 }
 
 type ParamItemInfo struct {
 	// 参数名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ParamName *string `json:"ParamName,omitnil,omitempty" name:"ParamName"`
 
 	// 参数新值
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NewValue *string `json:"NewValue,omitnil,omitempty" name:"NewValue"`
 
 	// 参数旧值
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldValue *string `json:"OldValue,omitnil,omitempty" name:"OldValue"`
 
 	// 参数公式
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ValueFunction *string `json:"ValueFunction,omitnil,omitempty" name:"ValueFunction"`
 }
 
@@ -13859,15 +13846,12 @@ type PolicyRule struct {
 
 type ProxyConnectionPoolInfo struct {
 	// 连接池保持阈值：单位（秒）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ConnectionPoolTimeOut *int64 `json:"ConnectionPoolTimeOut,omitnil,omitempty" name:"ConnectionPoolTimeOut"`
 
 	// 是否开启了连接池
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OpenConnectionPool *string `json:"OpenConnectionPool,omitnil,omitempty" name:"OpenConnectionPool"`
 
 	// 连接池类型：SessionConnectionPool（会话级别连接池）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ConnectionPoolType *string `json:"ConnectionPoolType,omitnil,omitempty" name:"ConnectionPoolType"`
 }
 
@@ -13891,25 +13875,20 @@ type ProxyGroup struct {
 	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitnil,omitempty" name:"CurrentProxyVersion"`
 
 	// 集群ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 用户AppId
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 读写节点开通数据库代理
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OpenRw *string `json:"OpenRw,omitnil,omitempty" name:"OpenRw"`
 }
 
 type ProxyGroupInfo struct {
 	// 数据库代理组
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyGroup *ProxyGroup `json:"ProxyGroup,omitnil,omitempty" name:"ProxyGroup"`
 
 	// 数据库代理组读写分离信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyGroupRwInfo *ProxyGroupRwInfo `json:"ProxyGroupRwInfo,omitnil,omitempty" name:"ProxyGroupRwInfo"`
 
 	// 数据库代理节点信息
@@ -13917,7 +13896,6 @@ type ProxyGroupInfo struct {
 	ProxyNodes []*ProxyNodeInfo `json:"ProxyNodes,omitnil,omitempty" name:"ProxyNodes"`
 
 	// 数据库代理连接池信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ConnectionPool *ProxyConnectionPoolInfo `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
 
 	// 数据库代理网络信息
@@ -13925,7 +13903,6 @@ type ProxyGroupInfo struct {
 	NetAddrInfos []*NetAddr `json:"NetAddrInfos,omitnil,omitempty" name:"NetAddrInfos"`
 
 	// 数据库代理任务集
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tasks []*ObjectTask `json:"Tasks,omitnil,omitempty" name:"Tasks"`
 }
 
@@ -13949,7 +13926,6 @@ type ProxyGroupRwInfo struct {
 	InstanceWeights []*ProxyInstanceWeight `json:"InstanceWeights,omitnil,omitempty" name:"InstanceWeights"`
 
 	// 是否开通读写节点，yse-是，no-否
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OpenRw *string `json:"OpenRw,omitnil,omitempty" name:"OpenRw"`
 
 	// 读写属性，可选值：READWRITE,READONLY
@@ -14015,11 +13991,9 @@ type ProxySpec struct {
 
 type ProxyVersionInfo struct {
 	// proxy版本号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyVersion *string `json:"ProxyVersion,omitnil,omitempty" name:"ProxyVersion"`
 
 	// 版本描述：GA:稳定版  BETA:尝鲜版，DEPRECATED:过旧，
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyVersionType *string `json:"ProxyVersionType,omitnil,omitempty" name:"ProxyVersionType"`
 }
 
@@ -14303,23 +14277,18 @@ func (r *RenewClustersRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type RenewClustersResponseParams struct {
 	// 预付费总订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BigDealIds []*string `json:"BigDealIds,omitnil,omitempty" name:"BigDealIds"`
 
 	// 退款订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
 	// 冻结流水，一次开通一个冻结流水
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranId *string `json:"TranId,omitnil,omitempty" name:"TranId"`
 
 	// 每个订单号对应的发货资源id列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 集群id列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -14419,16 +14388,13 @@ func (r *ResetAccountPasswordResponse) FromJsonString(s string) error {
 
 type ResourcePackage struct {
 	// 资源包的唯一ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageId *string `json:"PackageId,omitnil,omitempty" name:"PackageId"`
 
 	// 资源包类型：CCU：计算资源包
 	// DISK：存储资源包
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageType *string `json:"PackageType,omitnil,omitempty" name:"PackageType"`
 
 	// 当前资源包绑定在当前实例下的抵扣优先级
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeductionPriority *int64 `json:"DeductionPriority,omitnil,omitempty" name:"DeductionPriority"`
 }
 
@@ -14754,15 +14720,12 @@ type RollbackData struct {
 	SnapshotTime *string `json:"SnapshotTime,omitnil,omitempty" name:"SnapshotTime"`
 
 	// 回档到serverlessls集群时最小CPU
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MinCpu *int64 `json:"MinCpu,omitnil,omitempty" name:"MinCpu"`
 
 	// 回档到serverlessls集群时最大CPU
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxCpu *int64 `json:"MaxCpu,omitnil,omitempty" name:"MaxCpu"`
 
 	// 快照ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapShotId *uint64 `json:"SnapShotId,omitnil,omitempty" name:"SnapShotId"`
 
 	// 回档数据库
@@ -14774,11 +14737,9 @@ type RollbackData struct {
 	RollbackTables []*RollbackTable `json:"RollbackTables,omitnil,omitempty" name:"RollbackTables"`
 
 	// 备份文件名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupFileName *string `json:"BackupFileName,omitnil,omitempty" name:"BackupFileName"`
 
 	// 回档进程
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RollbackProcess *RollbackProcessInfo `json:"RollbackProcess,omitnil,omitempty" name:"RollbackProcess"`
 }
 
@@ -14792,61 +14753,47 @@ type RollbackDatabase struct {
 
 type RollbackInstanceInfo struct {
 	// 集群ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 集群名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
 	// vpc信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
 	// 子网信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
 	// vip信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// vport信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
 	// 实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 实例名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// cpu大小
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
 	// 内存大小
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Mem *int64 `json:"Mem,omitnil,omitempty" name:"Mem"`
 
 	// 存储大小
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
 }
 
 type RollbackProcessInfo struct {
 	// 是否可以交换vip
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsVipSwitchable *bool `json:"IsVipSwitchable,omitnil,omitempty" name:"IsVipSwitchable"`
 
 	// vip可交换时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	VipSwitchableTime *string `json:"VipSwitchableTime,omitnil,omitempty" name:"VipSwitchableTime"`
 
 	// 交换实例列表
@@ -14858,37 +14805,29 @@ type RollbackProcessInfo struct {
 	ExchangeRoGroupInfoList []*ExchangeRoGroupInfo `json:"ExchangeRoGroupInfoList,omitnil,omitempty" name:"ExchangeRoGroupInfoList"`
 
 	// 当前步骤
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CurrentStep *string `json:"CurrentStep,omitnil,omitempty" name:"CurrentStep"`
 
 	// 当前步骤进度
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CurrentStepProgress *int64 `json:"CurrentStepProgress,omitnil,omitempty" name:"CurrentStepProgress"`
 
 	// 当前步骤剩余时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CurrentStepRemainingTime *string `json:"CurrentStepRemainingTime,omitnil,omitempty" name:"CurrentStepRemainingTime"`
 }
 
 type RollbackRoGroupInfo struct {
 	// 实例组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceGroupId *string `json:"InstanceGroupId,omitnil,omitempty" name:"InstanceGroupId"`
 
 	// vpc信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
 	// 子网信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
 	// vip信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// vport信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 }
 
@@ -14902,11 +14841,9 @@ type RollbackTable struct {
 
 type RollbackTableInfo struct {
 	// 旧表名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OldTable *string `json:"OldTable,omitnil,omitempty" name:"OldTable"`
 
 	// 新表名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NewTable *string `json:"NewTable,omitnil,omitempty" name:"NewTable"`
 }
 
@@ -15153,19 +15090,15 @@ func (r *RollbackToNewClusterRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type RollbackToNewClusterResponseParams struct {
 	// 冻结流水ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranId *string `json:"TranId,omitnil,omitempty" name:"TranId"`
 
 	// 订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
 	// 资源ID列表（该字段已不再维护，请使用dealNames字段查询接口DescribeResourcesByDealName获取资源ID）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 集群ID列表（该字段已不再维护，请使用dealNames字段查询接口DescribeResourcesByDealName获取集群ID）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
 
 	// 大订单号
@@ -15205,56 +15138,44 @@ type RuleFilters struct {
 
 type RuleTemplateInfo struct {
 	// 规则模板ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplateId *string `json:"RuleTemplateId,omitnil,omitempty" name:"RuleTemplateId"`
 
 	// 规则模板名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTemplateName *string `json:"RuleTemplateName,omitnil,omitempty" name:"RuleTemplateName"`
 
 	// 规则内容。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleFilters []*RuleFilters `json:"RuleFilters,omitnil,omitempty" name:"RuleFilters"`
 
 	// 告警等级。1-低风险，2-中风险，3-高风险。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmLevel *int64 `json:"AlarmLevel,omitnil,omitempty" name:"AlarmLevel"`
 
 	// 告警策略。0-不告警，1-告警。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmPolicy *int64 `json:"AlarmPolicy,omitnil,omitempty" name:"AlarmPolicy"`
 
 	// 规则描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type SalePackageSpec struct {
 	// 资源包使用地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageRegion *string `json:"PackageRegion,omitnil,omitempty" name:"PackageRegion"`
 
 	// 资源包类型
 	// CCU-计算资源包
 	// DISK-存储资源包
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageType *string `json:"PackageType,omitnil,omitempty" name:"PackageType"`
 
 	// 资源包版本
 	// base-基础版本，common-通用版本，enterprise-企业版本
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PackageVersion *string `json:"PackageVersion,omitnil,omitempty" name:"PackageVersion"`
 
 	// 当前版本资源包最小资源数，计算资源单位：个；存储资源：GB
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MinPackageSpec *float64 `json:"MinPackageSpec,omitnil,omitempty" name:"MinPackageSpec"`
 
 	// 当前版本资源包最大资源数，计算资源单位：个；存储资源：GB
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxPackageSpec *float64 `json:"MaxPackageSpec,omitnil,omitempty" name:"MaxPackageSpec"`
 
 	// 资源包有效期，单位:天
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpireDay *int64 `json:"ExpireDay,omitnil,omitempty" name:"ExpireDay"`
 }
 
@@ -15302,7 +15223,6 @@ type SaleZone struct {
 	PhysicalZone *string `json:"PhysicalZone,omitnil,omitempty" name:"PhysicalZone"`
 
 	// 用户是否有可用区权限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HasPermission *bool `json:"HasPermission,omitnil,omitempty" name:"HasPermission"`
 
 	// 是否为全链路RDMA可用区
@@ -15450,7 +15370,6 @@ func (r *SearchClusterTablesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type SearchClusterTablesResponseParams struct {
 	// 数据表列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tables []*DatabaseTables `json:"Tables,omitnil,omitempty" name:"Tables"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -15522,19 +15441,15 @@ type ServerlessSpec struct {
 
 type ServerlessZoneStockInfo struct {
 	// 可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 存储量
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StockCount *int64 `json:"StockCount,omitnil,omitempty" name:"StockCount"`
 
 	// 是否包含库存
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HasStock *bool `json:"HasStock,omitnil,omitempty" name:"HasStock"`
 
 	// 从可用区库存信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveZoneStockInfos []*SlaveZoneStockInfo `json:"SlaveZoneStockInfos,omitnil,omitempty" name:"SlaveZoneStockInfos"`
 }
 
@@ -15604,25 +15519,20 @@ func (r *SetRenewFlagResponse) FromJsonString(s string) error {
 
 type SlaveZoneAttrItem struct {
 	// 可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// binlog同步方式
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BinlogSyncWay *string `json:"BinlogSyncWay,omitnil,omitempty" name:"BinlogSyncWay"`
 }
 
 type SlaveZoneStockInfo struct {
 	// 备可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
 	// 备可用区的库存数量	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StockCount *uint64 `json:"StockCount,omitnil,omitempty" name:"StockCount"`
 
 	// 备可用区是否有库存	
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HasStock *bool `json:"HasStock,omitnil,omitempty" name:"HasStock"`
 }
 
@@ -15662,37 +15572,30 @@ type SlowQueriesItem struct {
 
 	// 远程读取次数
 	// 数据库内核版本大于3.1.12
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SyncReadCountRemote *int64 `json:"SyncReadCountRemote,omitnil,omitempty" name:"SyncReadCountRemote"`
 
 	// 远程读取的字节数
 	// 数据库内核版本大于3.1.12
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SyncReadBytesRemote *int64 `json:"SyncReadBytesRemote,omitnil,omitempty" name:"SyncReadBytesRemote"`
 
 	// 远程读取所花费的时间（微秒）
 	// 数据库内核版本大于3.1.12
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SyncReadTimeRemote *int64 `json:"SyncReadTimeRemote,omitnil,omitempty" name:"SyncReadTimeRemote"`
 
 	// 远程写入次数
 	// 数据库内核版本大于3.1.12
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SyncWriteCountRemote *int64 `json:"SyncWriteCountRemote,omitnil,omitempty" name:"SyncWriteCountRemote"`
 
 	// 远程写入的字节数。
 	// 数据库内核版本大于3.1.12
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SyncWriteBytesRemote *int64 `json:"SyncWriteBytesRemote,omitnil,omitempty" name:"SyncWriteBytesRemote"`
 
 	// 远程写入所花费的时间（微秒）。
 	// 数据库内核版本大于3.1.12
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SyncWriteTimeRemote *int64 `json:"SyncWriteTimeRemote,omitnil,omitempty" name:"SyncWriteTimeRemote"`
 
 	// 事务提交延迟（微秒）
 	// 数据库内核版本大于3.1.12
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrxCommitDelay *int64 `json:"TrxCommitDelay,omitnil,omitempty" name:"TrxCommitDelay"`
 }
 
@@ -15854,7 +15757,6 @@ func (r *StopCLSDeliveryResponse) FromJsonString(s string) error {
 
 type SwitchClusterLogBin struct {
 	// 状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
@@ -16101,15 +16003,12 @@ func (r *SwitchProxyVpcResponse) FromJsonString(s string) error {
 
 type TablePrivileges struct {
 	// 数据库名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
 
 	// 表名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
 
 	// 权限列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Privileges []*string `json:"Privileges,omitnil,omitempty" name:"Privileges"`
 }
 
@@ -16123,15 +16022,12 @@ type Tag struct {
 
 type TaskMaintainInfo struct {
 	// 执行开始时间(距离0点的秒数)
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaintainStartTime *int64 `json:"MaintainStartTime,omitnil,omitempty" name:"MaintainStartTime"`
 
 	// 持续的时间(单位：秒)
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaintainDuration *int64 `json:"MaintainDuration,omitnil,omitempty" name:"MaintainDuration"`
 
 	// 可以执行的时间，枚举值：["Mon","Tue","Wed","Thu","Fri", "Sat", "Sun"]
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaintainWeekDays []*string `json:"MaintainWeekDays,omitnil,omitempty" name:"MaintainWeekDays"`
 }
 
@@ -16154,15 +16050,12 @@ type TemplateParamInfo struct {
 	Default *string `json:"Default,omitnil,omitempty" name:"Default"`
 
 	// 参数类型为enum时可选的值类型集合
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnumValue []*string `json:"EnumValue,omitnil,omitempty" name:"EnumValue"`
 
 	// 参数类型为float/integer时的最大值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Max *string `json:"Max,omitnil,omitempty" name:"Max"`
 
 	// 参数类型为float/integer时的最小值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Min *string `json:"Min,omitnil,omitempty" name:"Min"`
 
 	// 参数名称
@@ -16180,22 +16073,18 @@ type TemplateParamInfo struct {
 
 type TradePrice struct {
 	// 预付费模式下资源总价，不包含优惠，单位:分
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalPrice *int64 `json:"TotalPrice,omitnil,omitempty" name:"TotalPrice"`
 
 	// 总的折扣，100表示100%不打折
 	Discount *float64 `json:"Discount,omitnil,omitempty" name:"Discount"`
 
 	// 预付费模式下的优惠后总价, 单位: 分,例如用户享有折扣 =TotalPrice × Discount
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalPriceDiscount *int64 `json:"TotalPriceDiscount,omitnil,omitempty" name:"TotalPriceDiscount"`
 
 	// 后付费模式下的单位资源价格，不包含优惠，单位:分
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnitPrice *int64 `json:"UnitPrice,omitnil,omitempty" name:"UnitPrice"`
 
 	// 优惠后后付费模式下的单位资源价格, 单位: 分,例如用户享有折扣=UnitPricet × Discount
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnitPriceDiscount *int64 `json:"UnitPriceDiscount,omitnil,omitempty" name:"UnitPriceDiscount"`
 
 	// 计费价格单位
@@ -16439,11 +16328,9 @@ func (r *UpgradeInstanceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type UpgradeInstanceResponseParams struct {
 	// 冻结流水ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranId *string `json:"TranId,omitnil,omitempty" name:"TranId"`
 
 	// 大订单号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BigDealIds []*string `json:"BigDealIds,omitnil,omitempty" name:"BigDealIds"`
 
 	// 订单号
@@ -16685,11 +16572,9 @@ type UserHostPrivilege struct {
 	DbUserName *string `json:"DbUserName,omitnil,omitempty" name:"DbUserName"`
 
 	// 客户端ip
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbHost *string `json:"DbHost,omitnil,omitempty" name:"DbHost"`
 
 	// 用户权限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DbPrivilege *string `json:"DbPrivilege,omitnil,omitempty" name:"DbPrivilege"`
 }
 
@@ -16704,6 +16589,5 @@ type ZoneStockInfo struct {
 	StockCount *int64 `json:"StockCount,omitnil,omitempty" name:"StockCount"`
 
 	// 备可用区库存信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveZoneStockInfos []*SlaveZoneStockInfo `json:"SlaveZoneStockInfos,omitnil,omitempty" name:"SlaveZoneStockInfos"`
 }

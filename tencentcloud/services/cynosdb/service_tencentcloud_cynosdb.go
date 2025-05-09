@@ -2955,3 +2955,62 @@ func (me *CynosdbService) UpgradeClusterVersion(ctx context.Context, clusterId, 
 
 	return
 }
+
+func (me *CynosdbService) DescribeSSLStatus(ctx context.Context, clusterId, instanceId string) (ret *cynosdb.DescribeSSLStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cynosdb.NewDescribeSSLStatusRequest()
+
+	if clusterId != "" {
+		request.ClusterId = &clusterId
+	}
+	if instanceId != "" {
+		request.InstanceId = &instanceId
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCynosdbClient().DescribeSSLStatus(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		ret = response.Response
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) taskStateRefreshFunc(taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		request := cynosdb.NewDescribeTasksRequest()
+		request.Filters = []*cynosdb.QueryFilter{
+			{
+				ExactMatch: helper.Bool(true),
+				Names:      helper.Strings([]string{"TaskId"}),
+				Values:     helper.Strings([]string{taskId}),
+			},
+		}
+
+		ratelimit.Check(request.GetAction())
+		object, err := me.client.UseCynosdbClient().DescribeTasks(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if object == nil || object.Response == nil || len(object.Response.TaskList) == 0 || object.Response.TaskList[0].Status == nil {
+			return nil, "", nil
+		}
+
+		return object, *object.Response.TaskList[0].Status, nil
+	}
+}
