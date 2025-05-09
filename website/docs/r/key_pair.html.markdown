@@ -38,7 +38,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `created_time` - Creation time, which follows the `ISO8601` standard and uses `UTC` time in the format of `YYYY-MM-DDThh:mm:ssZ`.
+* `private_key` - Content of private key in a key pair. Tencent Cloud do not keep private keys. Please keep it properly.
 
 
 ## Import
