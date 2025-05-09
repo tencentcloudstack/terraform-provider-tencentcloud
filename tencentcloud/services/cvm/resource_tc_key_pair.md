@@ -4,7 +4,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_key_pair" "foo" {
-	key_name   = "terraform_test"
+  key_name = "terraform_test"
+}
+
+output "private_key" {
+  value = tencentcloud_key_pair.foo.private_key
+}
+
+output "create_time" {
+  value = tencentcloud_key_pair.foo.created_time
 }
 
 resource "tencentcloud_key_pair" "foo1" {
