@@ -2,6 +2,7 @@ package waf
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -590,6 +591,7 @@ func (me *WafService) DescribeWafInstanceById(ctx context.Context, instanceId st
 	logId := tccommon.GetLogId(ctx)
 
 	request := waf.NewDescribeInstancesRequest()
+	response := waf.NewDescribeInstancesResponse()
 	request.Offset = common.Uint64Ptr(1)
 	request.Limit = common.Uint64Ptr(20)
 	request.Filters = []*waf.FiltersItemNew{
@@ -606,16 +608,26 @@ func (me *WafService) DescribeWafInstanceById(ctx context.Context, instanceId st
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = instanceId
-	response, err := me.client.UseWafClient(iacExtInfo).DescribeInstances(request)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafClient(iacExtInfo).DescribeInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Instances) < 1 {
 		return
@@ -623,6 +635,48 @@ func (me *WafService) DescribeWafInstanceById(ctx context.Context, instanceId st
 
 	instance = response.Response.Instances[0]
 	return
+}
+
+func (me *WafService) DescribeWafInstanceWaitStatusById(ctx context.Context, instanceId string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeInstancesRequest()
+	request.Offset = common.Uint64Ptr(1)
+	request.Limit = common.Uint64Ptr(20)
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("InstanceId"),
+			Values:     common.StringPtrs([]string{instanceId}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafClient().DescribeInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || len(result.Response.Instances) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("DescribeInstances response is nil."))
+		}
+
+		instance := result.Response.Instances[0]
+		if instance.Status != nil && *instance.Status == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("Waf instance still running, status is %d...", *instance.Status))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (me *WafService) DescribeWafAttackLogHistogramByFilter(ctx context.Context, param map[string]interface{}) (AttackLogHistogram *waf.GetAttackHistogramResponseParams, errRet error) {

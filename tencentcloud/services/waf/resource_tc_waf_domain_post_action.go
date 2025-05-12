@@ -76,7 +76,7 @@ func resourceTencentCloudWafDomainPostActionRead(d *schema.ResourceData, meta in
 		return err
 	}
 
-	if respData == nil {
+	if respData == nil || len(respData) < 1 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `waf_domain_post_action` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil

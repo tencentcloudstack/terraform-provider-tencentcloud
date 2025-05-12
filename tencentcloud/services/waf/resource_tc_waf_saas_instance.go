@@ -346,6 +346,10 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create waf saas instance failed, Response is nil."))
+		}
+
 		if *result.Response.Status == 0 || *result.Response.InstanceId == "" {
 			return resource.NonRetryableError(fmt.Errorf("create waf saas instance status error: %s", *result.Response.ReturnMessage))
 		}
