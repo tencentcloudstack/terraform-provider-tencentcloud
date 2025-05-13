@@ -2,7 +2,9 @@ package waf
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,6 +20,9 @@ func ResourceTencentCloudWafBotStatusConfig() *schema.Resource {
 		Read:   resourceTencentCloudWafBotStatusConfigRead,
 		Update: resourceTencentCloudWafBotStatusConfigUpdate,
 		Delete: resourceTencentCloudWafBotStatusConfigDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"status": {
 				Type:        schema.TypeString,
@@ -34,7 +39,8 @@ func ResourceTencentCloudWafBotStatusConfig() *schema.Resource {
 
 			"instance_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
+				ForceNew:    true,
 				Description: "Instance ID.",
 			},
 
@@ -93,13 +99,20 @@ func resourceTencentCloudWafBotStatusConfigCreate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_waf_bot_status_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var domain string
+	var (
+		instanceId string
+		domain     string
+	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
 
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
 	}
 
-	d.SetId(domain)
+	d.SetId(strings.Join([]string{instanceId, domain}, tccommon.FILED_SP))
 
 	return resourceTencentCloudWafBotStatusConfigUpdate(d, meta)
 }
@@ -112,8 +125,15 @@ func resourceTencentCloudWafBotStatusConfigRead(d *schema.ResourceData, meta int
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service = WafService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		domain  = d.Id()
 	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+
+	instanceId := idSplit[0]
+	domain := idSplit[1]
 
 	respData, err := service.DescribeWafBotStatusConfigById(ctx, domain)
 	if err != nil {
@@ -127,9 +147,14 @@ func resourceTencentCloudWafBotStatusConfigRead(d *schema.ResourceData, meta int
 	}
 
 	_ = d.Set("domain", domain)
+	_ = d.Set("instance_id", instanceId)
 
 	if respData.Status != nil {
-		_ = d.Set("status", respData.Status)
+		if *respData.Status == true {
+			_ = d.Set("status", "1")
+		} else {
+			_ = d.Set("status", "0")
+		}
 	}
 
 	if respData.SceneCount != nil {
@@ -178,18 +203,22 @@ func resourceTencentCloudWafBotStatusConfigUpdate(d *schema.ResourceData, meta i
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		request = wafv20180125.NewModifyBotStatusRequest()
-		domain  = d.Id()
 	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+
+	instanceId := idSplit[0]
+	domain := idSplit[1]
 
 	if v, ok := d.GetOk("status"); ok {
 		request.Status = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceID = helper.String(v.(string))
-	}
-
-	request.Domain = helper.String(domain)
+	request.InstanceID = &instanceId
+	request.Domain = &domain
 	request.Category = helper.String("bot")
 	request.IsVersionFour = helper.Bool(true)
 	request.BotVersion = helper.String("4.1.0")

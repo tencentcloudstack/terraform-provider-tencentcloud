@@ -20,6 +20,7 @@ func TestAccTencentCloudWafBotStatusConfigResource_basic(t *testing.T) {
 				Config: testAccWafBotStatusConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "instance_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "domain"),
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "status"),
 				),
@@ -28,6 +29,7 @@ func TestAccTencentCloudWafBotStatusConfigResource_basic(t *testing.T) {
 				Config: testAccWafBotStatusConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "instance_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "domain"),
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_status_config.example", "status"),
 				),
@@ -43,14 +45,16 @@ func TestAccTencentCloudWafBotStatusConfigResource_basic(t *testing.T) {
 
 const testAccWafBotStatusConfig = `
 resource "tencentcloud_waf_bot_status_config" "example" {
+  instance_id = "waf_2kxtlbky11bbcr4b"
   domain      = "example.com"
-  status      = "1"
+  status      = "0"
 }
 `
 
 const testAccWafBotStatusConfigUpdate = `
 resource "tencentcloud_waf_bot_status_config" "example" {
+  instance_id = "waf_2kxtlbky11bbcr4b"
   domain      = "example.com"
-  status      = "0"
+  status      = "1"
 }
 `

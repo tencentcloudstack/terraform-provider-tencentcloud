@@ -15,18 +15,9 @@ Provides a resource to create a WAF bot status config
 
 ```hcl
 resource "tencentcloud_waf_bot_status_config" "example" {
-  domain = "example.com"
-  status = "1"
-}
-```
-
-### Or
-
-```hcl
-resource "tencentcloud_waf_bot_status_config" "example" {
+  instance_id = "waf_2kxtlbky11bbcr4b"
   domain      = "example.com"
   status      = "0"
-  instance_id = "waf_2kxtlbky11bbcr4b"
 }
 ```
 
@@ -35,8 +26,8 @@ resource "tencentcloud_waf_bot_status_config" "example" {
 The following arguments are supported:
 
 * `domain` - (Required, String, ForceNew) Domain.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
 * `status` - (Required, String) Bot status. 1 - enable; 0 - disable.
-* `instance_id` - (Optional, String) Instance ID.
 
 ## Attributes Reference
 
@@ -52,4 +43,12 @@ In addition to all arguments above, the following attributes are exported:
 * `scene_count` - Scene total count.
 * `valid_scene_count` - Number of effective scenarios.
 
+
+## Import
+
+WAF bot status config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_waf_bot_status_config.example waf_2kw1ente05223fcr#example.com
+```
 

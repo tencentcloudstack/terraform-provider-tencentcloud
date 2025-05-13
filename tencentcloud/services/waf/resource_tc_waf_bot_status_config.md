@@ -4,17 +4,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_waf_bot_status_config" "example" {
-  domain   = "example.com"
-  status   = "1"
+  instance_id = "waf_2kxtlbky11bbcr4b"
+  domain      = "example.com"
+  status      = "0"
 }
 ```
 
-Or
+Import
 
-```hcl
-resource "tencentcloud_waf_bot_status_config" "example" {
-  domain      = "example.com"
-  status      = "0"
-  instance_id = "waf_2kxtlbky11bbcr4b"
-}
+WAF bot status config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_waf_bot_status_config.example waf_2kw1ente05223fcr#example.com
 ```

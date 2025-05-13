@@ -79,7 +79,7 @@ func resourceTencentCloudWafBotSceneStatusConfigCreate(d *schema.ResourceData, m
 	}
 
 	if v, ok := d.GetOk("scene_id"); ok {
-		domain = v.(string)
+		sceneId = v.(string)
 	}
 
 	d.SetId(strings.Join([]string{domain, sceneId}, tccommon.FILED_SP))
