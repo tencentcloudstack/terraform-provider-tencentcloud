@@ -12,12 +12,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudWafInstanceAttackLogPost() *schema.Resource {
+func ResourceTencentCloudWafInstanceAttackLogPostConfig() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudWafInstanceAttackLogPostCreate,
-		Read:   resourceTencentCloudWafInstanceAttackLogPostRead,
-		Update: resourceTencentCloudWafInstanceAttackLogPostUpdate,
-		Delete: resourceTencentCloudWafInstanceAttackLogPostDelete,
+		Create: resourceTencentCloudWafInstanceAttackLogPostConfigCreate,
+		Read:   resourceTencentCloudWafInstanceAttackLogPostConfigRead,
+		Update: resourceTencentCloudWafInstanceAttackLogPostConfigUpdate,
+		Delete: resourceTencentCloudWafInstanceAttackLogPostConfigDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -39,8 +39,8 @@ func ResourceTencentCloudWafInstanceAttackLogPost() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudWafInstanceAttackLogPostCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post.create")()
+func resourceTencentCloudWafInstanceAttackLogPostConfigCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var instanceId string
@@ -50,11 +50,11 @@ func resourceTencentCloudWafInstanceAttackLogPostCreate(d *schema.ResourceData, 
 
 	d.SetId(instanceId)
 
-	return resourceTencentCloudWafInstanceAttackLogPostUpdate(d, meta)
+	return resourceTencentCloudWafInstanceAttackLogPostConfigUpdate(d, meta)
 }
 
-func resourceTencentCloudWafInstanceAttackLogPostRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post.read")()
+func resourceTencentCloudWafInstanceAttackLogPostConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post_config.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -71,7 +71,7 @@ func resourceTencentCloudWafInstanceAttackLogPostRead(d *schema.ResourceData, me
 
 	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `waf_instance_attack_log_post` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `waf_instance_attack_log_post_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -84,8 +84,8 @@ func resourceTencentCloudWafInstanceAttackLogPostRead(d *schema.ResourceData, me
 	return nil
 }
 
-func resourceTencentCloudWafInstanceAttackLogPostUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post.update")()
+func resourceTencentCloudWafInstanceAttackLogPostConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post_config.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -112,15 +112,15 @@ func resourceTencentCloudWafInstanceAttackLogPostUpdate(d *schema.ResourceData, 
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s update waf instance attack log_post failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s update waf instance attack log post config failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
-	return resourceTencentCloudWafInstanceAttackLogPostRead(d, meta)
+	return resourceTencentCloudWafInstanceAttackLogPostConfigRead(d, meta)
 }
 
-func resourceTencentCloudWafInstanceAttackLogPostDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post.delete")()
+func resourceTencentCloudWafInstanceAttackLogPostConfigDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_instance_attack_log_post_config.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
