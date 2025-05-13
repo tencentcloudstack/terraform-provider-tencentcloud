@@ -49,6 +49,6 @@ In addition to all arguments above, the following attributes are exported:
 WAF bot status config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_bot_status_config.example waf_2kw1ente05223fcr#example.com
+terraform import tencentcloud_waf_bot_status_config.example waf_2kxtlbky11bbcr4b#example.com
 ```
 
