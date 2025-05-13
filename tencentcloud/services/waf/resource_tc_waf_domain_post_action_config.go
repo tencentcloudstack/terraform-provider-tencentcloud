@@ -12,12 +12,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudWafDomainPostAction() *schema.Resource {
+func ResourceTencentCloudWafDomainPostActionConfig() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudWafDomainPostActionCreate,
-		Read:   resourceTencentCloudWafDomainPostActionRead,
-		Update: resourceTencentCloudWafDomainPostActionUpdate,
-		Delete: resourceTencentCloudWafDomainPostActionDelete,
+		Create: resourceTencentCloudWafDomainPostActionConfigCreate,
+		Read:   resourceTencentCloudWafDomainPostActionConfigRead,
+		Update: resourceTencentCloudWafDomainPostActionConfigUpdate,
+		Delete: resourceTencentCloudWafDomainPostActionConfigDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -46,8 +46,8 @@ func ResourceTencentCloudWafDomainPostAction() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudWafDomainPostActionCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action.create")()
+func resourceTencentCloudWafDomainPostActionConfigCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var domain string
@@ -57,11 +57,11 @@ func resourceTencentCloudWafDomainPostActionCreate(d *schema.ResourceData, meta 
 
 	d.SetId(domain)
 
-	return resourceTencentCloudWafDomainPostActionUpdate(d, meta)
+	return resourceTencentCloudWafDomainPostActionConfigUpdate(d, meta)
 }
 
-func resourceTencentCloudWafDomainPostActionRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action.read")()
+func resourceTencentCloudWafDomainPostActionConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action_config.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -78,7 +78,7 @@ func resourceTencentCloudWafDomainPostActionRead(d *schema.ResourceData, meta in
 
 	if respData == nil || len(respData) < 1 {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `waf_domain_post_action` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `waf_domain_post_action_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -97,8 +97,8 @@ func resourceTencentCloudWafDomainPostActionRead(d *schema.ResourceData, meta in
 	return nil
 }
 
-func resourceTencentCloudWafDomainPostActionUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action.update")()
+func resourceTencentCloudWafDomainPostActionConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action_config.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -129,15 +129,15 @@ func resourceTencentCloudWafDomainPostActionUpdate(d *schema.ResourceData, meta 
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s update waf domain post action failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s update waf domain post action config failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
-	return resourceTencentCloudWafDomainPostActionRead(d, meta)
+	return resourceTencentCloudWafDomainPostActionConfigRead(d, meta)
 }
 
-func resourceTencentCloudWafDomainPostActionDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action.delete")()
+func resourceTencentCloudWafDomainPostActionConfigDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_waf_domain_post_action_config.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil

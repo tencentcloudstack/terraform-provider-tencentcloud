@@ -1,20 +1,20 @@
 ---
 subcategory: "Web Application Firewall(WAF)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_waf_domain_post_action"
-sidebar_current: "docs-tencentcloud-resource-waf_domain_post_action"
+page_title: "TencentCloud: tencentcloud_waf_domain_post_action_config"
+sidebar_current: "docs-tencentcloud-resource-waf_domain_post_action_config"
 description: |-
-  Provides a resource to create a WAF domain post action
+  Provides a resource to create a WAF domain post action config
 ---
 
-# tencentcloud_waf_domain_post_action
+# tencentcloud_waf_domain_post_action_config
 
-Provides a resource to create a WAF domain post action
+Provides a resource to create a WAF domain post action config
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_waf_domain_post_action" "example" {
+resource "tencentcloud_waf_domain_post_action_config" "example" {
   domain             = "example.com"
   post_cls_action    = 1
   post_ckafka_action = 0
@@ -39,9 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-WAF domain post action can be imported using the id, e.g.
+WAF domain post action config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_domain_post_action.example example.com
+terraform import tencentcloud_waf_domain_post_action_config.example example.com
 ```
 

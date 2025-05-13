@@ -1698,3 +1698,201 @@ func (me *WafService) DescribeWafDomainPostActionById(ctx context.Context, domai
 
 	return
 }
+
+func (me *WafService) DescribeWafBotSceneStatusConfigById(ctx context.Context, domain string, sceneId string) (ret *waf.BotSceneInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeBotSceneListRequest()
+	response := waf.NewDescribeBotSceneListResponse()
+	request.Domain = helper.String(domain)
+	// wait waf sdk update
+	// request.BusinessType = common.StringPtrs([]string{"all"})
+	request.BusinessType = common.StringPtrs([]string{"login", "seckill", "crawl", "scan", "key-protect", "click-farming", "junk-mail", "social-media", "auto-download", "custom"})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		BotSceneList []*waf.BotSceneInfo
+		offset       int64 = 0
+		limit        int64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWafV20180125Client().DescribeBotSceneList(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.BotSceneList) < 1 {
+			break
+		}
+
+		BotSceneList = append(BotSceneList, response.Response.BotSceneList...)
+		if len(response.Response.BotSceneList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	for _, item := range BotSceneList {
+		if *item.SceneId == sceneId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafBotStatusConfigById(ctx context.Context, domain string) (ret *waf.DescribeBotSceneOverviewResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeBotSceneOverviewRequest()
+	response := waf.NewDescribeBotSceneOverviewResponse()
+	request.Domain = helper.String(domain)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribeBotSceneOverview(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafBotSceneUCBRuleById(ctx context.Context, domain, sceneId, ruleId string) (ret *waf.InOutputBotUCBRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeBotSceneUCBRuleRequest()
+	response := waf.NewDescribeBotSceneUCBRuleResponse()
+	request.Domain = helper.String(domain)
+	request.SceneId = helper.String(sceneId)
+	request.Sort = helper.String("desc")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		BotSceneUCBRuleList []*waf.InOutputBotUCBRule
+		skip                uint64 = 0
+		limit               uint64 = 20
+	)
+
+	for {
+		request.Skip = &skip
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWafV20180125Client().DescribeBotSceneUCBRule(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Res) < 1 {
+			break
+		}
+
+		BotSceneUCBRuleList = append(BotSceneUCBRuleList, response.Response.Data.Res...)
+		if len(response.Response.Data.Res) < int(limit) {
+			break
+		}
+
+		limit += skip
+	}
+
+	for _, item := range BotSceneUCBRuleList {
+		if *item.SceneId == sceneId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}
+
+func (me *WafService) DeleteWafBotSceneUCBRuleById(ctx context.Context, domain, sceneId, ruleId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDeleteBotSceneUCBRuleRequest()
+	request.Domain = helper.String(domain)
+	request.SceneId = helper.String(sceneId)
+	request.RuleId = helper.String(ruleId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DeleteBotSceneUCBRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
