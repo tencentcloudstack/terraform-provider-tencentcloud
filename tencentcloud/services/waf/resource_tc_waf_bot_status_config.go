@@ -24,12 +24,6 @@ func ResourceTencentCloudWafBotStatusConfig() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"status": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Bot status. 1 - enable; 0 - disable.",
-			},
-
 			"domain": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -42,6 +36,12 @@ func ResourceTencentCloudWafBotStatusConfig() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "Instance ID.",
+			},
+
+			"status": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Bot status. 1 - enable; 0 - disable.",
 			},
 
 			"scene_count": {
