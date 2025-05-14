@@ -1,3 +1,19 @@
+## 1.81.192(May 14 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_waf_bot_scene_status_config` ([#3355](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3355))
+* **New Resource:** `tencentcloud_waf_bot_scene_ucb_rule` ([#3356](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3356))
+* **New Resource:** `tencentcloud_waf_bot_status_config` ([#3355](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3355))
+* **New Resource:** `tencentcloud_waf_domain_post_action` ([#3354](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3354))
+* **New Resource:** `tencentcloud_waf_instance_attack_log_post` ([#3354](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3354))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: add `kms_key_id` ([#3339](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3339))
+* resource/tencentcloud_kubernetes_serverless_node_pool: update retry code logic ([#3358](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3358))
+* resource/tencentcloud_monitor_policy_binding_object: add region ([#3357](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3357))
+
 ## 1.81.191(May 9 , 2025)
 
 FEATURES:
