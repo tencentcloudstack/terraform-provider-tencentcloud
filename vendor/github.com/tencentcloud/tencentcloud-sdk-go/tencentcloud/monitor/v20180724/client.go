@@ -515,6 +515,69 @@ func (c *Client) CreateAlertRuleWithContext(ctx context.Context, request *Create
     return
 }
 
+func NewCreateConditionsTemplateRequest() (request *CreateConditionsTemplateRequest) {
+    request = &CreateConditionsTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CreateConditionsTemplate")
+    
+    
+    return
+}
+
+func NewCreateConditionsTemplateResponse() (response *CreateConditionsTemplateResponse) {
+    response = &CreateConditionsTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConditionsTemplate
+// 创建告警条件模板
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateConditionsTemplate(request *CreateConditionsTemplateRequest) (response *CreateConditionsTemplateResponse, err error) {
+    return c.CreateConditionsTemplateWithContext(context.Background(), request)
+}
+
+// CreateConditionsTemplate
+// 创建告警条件模板
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateConditionsTemplateWithContext(ctx context.Context, request *CreateConditionsTemplateRequest) (response *CreateConditionsTemplateResponse, err error) {
+    if request == nil {
+        request = NewCreateConditionsTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConditionsTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConditionsTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateExporterIntegrationRequest() (request *CreateExporterIntegrationRequest) {
     request = &CreateExporterIntegrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5262,6 +5325,79 @@ func (c *Client) DescribePolicyGroupListWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribePolicyObjectCountRequest() (request *DescribePolicyObjectCountRequest) {
+    request = &DescribePolicyObjectCountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribePolicyObjectCount")
+    
+    
+    return
+}
+
+func NewDescribePolicyObjectCountResponse() (response *DescribePolicyObjectCountResponse) {
+    response = &DescribePolicyObjectCountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePolicyObjectCount
+// 查询策略组在每个地域下面绑定的对象数统计
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePolicyObjectCount(request *DescribePolicyObjectCountRequest) (response *DescribePolicyObjectCountResponse, err error) {
+    return c.DescribePolicyObjectCountWithContext(context.Background(), request)
+}
+
+// DescribePolicyObjectCount
+// 查询策略组在每个地域下面绑定的对象数统计
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePolicyObjectCountWithContext(ctx context.Context, request *DescribePolicyObjectCountRequest) (response *DescribePolicyObjectCountResponse, err error) {
+    if request == nil {
+        request = NewDescribePolicyObjectCountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePolicyObjectCount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePolicyObjectCountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeProductEventListRequest() (request *DescribeProductEventListRequest) {
     request = &DescribeProductEventListRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6293,6 +6429,59 @@ func (c *Client) DescribePrometheusInstancesOverviewWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewDescribePrometheusInstancesOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePrometheusIntegrationMetricsRequest() (request *DescribePrometheusIntegrationMetricsRequest) {
+    request = &DescribePrometheusIntegrationMetricsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribePrometheusIntegrationMetrics")
+    
+    
+    return
+}
+
+func NewDescribePrometheusIntegrationMetricsResponse() (response *DescribePrometheusIntegrationMetricsResponse) {
+    response = &DescribePrometheusIntegrationMetricsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePrometheusIntegrationMetrics
+// 获取prometheus集成指标
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+func (c *Client) DescribePrometheusIntegrationMetrics(request *DescribePrometheusIntegrationMetricsRequest) (response *DescribePrometheusIntegrationMetricsResponse, err error) {
+    return c.DescribePrometheusIntegrationMetricsWithContext(context.Background(), request)
+}
+
+// DescribePrometheusIntegrationMetrics
+// 获取prometheus集成指标
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+func (c *Client) DescribePrometheusIntegrationMetricsWithContext(ctx context.Context, request *DescribePrometheusIntegrationMetricsRequest) (response *DescribePrometheusIntegrationMetricsResponse, err error) {
+    if request == nil {
+        request = NewDescribePrometheusIntegrationMetricsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePrometheusIntegrationMetrics require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePrometheusIntegrationMetricsResponse()
     err = c.Send(request, response)
     return
 }
@@ -7343,6 +7532,117 @@ func (c *Client) EnableSSOCamCheckWithContext(ctx context.Context, request *Enab
     return
 }
 
+func NewExportPrometheusReadOnlyDynamicAPIRequest() (request *ExportPrometheusReadOnlyDynamicAPIRequest) {
+    request = &ExportPrometheusReadOnlyDynamicAPIRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "ExportPrometheusReadOnlyDynamicAPI")
+    
+    
+    return
+}
+
+func NewExportPrometheusReadOnlyDynamicAPIResponse() (response *ExportPrometheusReadOnlyDynamicAPIResponse) {
+    response = &ExportPrometheusReadOnlyDynamicAPIResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ExportPrometheusReadOnlyDynamicAPI
+// Prometheus 内部动态 api 代理，仅内部使用
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATACOLUMNNOTFOUND = "FailedOperation.DataColumnNotFound"
+//  FAILEDOPERATION_DATAQUERYFAILED = "FailedOperation.DataQueryFailed"
+//  FAILEDOPERATION_DATATABLENOTFOUND = "FailedOperation.DataTableNotFound"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ExportPrometheusReadOnlyDynamicAPI(request *ExportPrometheusReadOnlyDynamicAPIRequest) (response *ExportPrometheusReadOnlyDynamicAPIResponse, err error) {
+    return c.ExportPrometheusReadOnlyDynamicAPIWithContext(context.Background(), request)
+}
+
+// ExportPrometheusReadOnlyDynamicAPI
+// Prometheus 内部动态 api 代理，仅内部使用
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATACOLUMNNOTFOUND = "FailedOperation.DataColumnNotFound"
+//  FAILEDOPERATION_DATAQUERYFAILED = "FailedOperation.DataQueryFailed"
+//  FAILEDOPERATION_DATATABLENOTFOUND = "FailedOperation.DataTableNotFound"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ExportPrometheusReadOnlyDynamicAPIWithContext(ctx context.Context, request *ExportPrometheusReadOnlyDynamicAPIRequest) (response *ExportPrometheusReadOnlyDynamicAPIResponse, err error) {
+    if request == nil {
+        request = NewExportPrometheusReadOnlyDynamicAPIRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ExportPrometheusReadOnlyDynamicAPI require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewExportPrometheusReadOnlyDynamicAPIResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetMonitorDataRequest() (request *GetMonitorDataRequest) {
     request = &GetMonitorDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7375,7 +7675,7 @@ func NewGetMonitorDataResponse() (response *GetMonitorDataResponse) {
 //
 // 例子：3:avg+max，5:avg+min，6:max+min，7:avg+max+min
 //
-// 拉取数据的粒度和统计方式的对应关系尽量在接入平台进行配置，如果没有配置，因为更小粒度数据存储时间有限，拉取时间范围也是有限。
+// 拉取数据的粒度和统计方式的对应关系尽量在接入平台进行配置，如果没有配置对应统计方式，请提工单反馈。
 //
 // 
 //
@@ -7406,7 +7706,7 @@ func (c *Client) GetMonitorData(request *GetMonitorDataRequest) (response *GetMo
 //
 // 例子：3:avg+max，5:avg+min，6:max+min，7:avg+max+min
 //
-// 拉取数据的粒度和统计方式的对应关系尽量在接入平台进行配置，如果没有配置，因为更小粒度数据存储时间有限，拉取时间范围也是有限。
+// 拉取数据的粒度和统计方式的对应关系尽量在接入平台进行配置，如果没有配置对应统计方式，请提工单反馈。
 //
 // 
 //
@@ -7497,6 +7797,63 @@ func (c *Client) GetPrometheusAgentManagementCommandWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewGetPrometheusAgentManagementCommandResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetTopNMonitorDataRequest() (request *GetTopNMonitorDataRequest) {
+    request = &GetTopNMonitorDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "GetTopNMonitorData")
+    
+    
+    return
+}
+
+func NewGetTopNMonitorDataResponse() (response *GetTopNMonitorDataResponse) {
+    response = &GetTopNMonitorDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetTopNMonitorData
+// 支持TopN查询，对于给定的监控指标和时间区间，按照指标大小按序返回不同维度组合及数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ERRNOTOPEN = "FailedOperation.ErrNotOpen"
+//  FAILEDOPERATION_ERROWED = "FailedOperation.ErrOwed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) GetTopNMonitorData(request *GetTopNMonitorDataRequest) (response *GetTopNMonitorDataResponse, err error) {
+    return c.GetTopNMonitorDataWithContext(context.Background(), request)
+}
+
+// GetTopNMonitorData
+// 支持TopN查询，对于给定的监控指标和时间区间，按照指标大小按序返回不同维度组合及数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ERRNOTOPEN = "FailedOperation.ErrNotOpen"
+//  FAILEDOPERATION_ERROWED = "FailedOperation.ErrOwed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) GetTopNMonitorDataWithContext(ctx context.Context, request *GetTopNMonitorDataRequest) (response *GetTopNMonitorDataResponse, err error) {
+    if request == nil {
+        request = NewGetTopNMonitorDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetTopNMonitorData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetTopNMonitorDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -8458,7 +8815,7 @@ func NewModifyPrometheusRecordRuleYamlResponse() (response *ModifyPrometheusReco
 }
 
 // ModifyPrometheusRecordRuleYaml
-// 通过yaml的方式修改Prometheus聚合实例
+// 通过yaml的方式修改Prometheus预聚合规则
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -8473,7 +8830,7 @@ func (c *Client) ModifyPrometheusRecordRuleYaml(request *ModifyPrometheusRecordR
 }
 
 // ModifyPrometheusRecordRuleYaml
-// 通过yaml的方式修改Prometheus聚合实例
+// 通过yaml的方式修改Prometheus预聚合规则
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -9343,7 +9700,7 @@ func NewUpdateAlertRuleResponse() (response *UpdateAlertRuleResponse) {
 //
 // 
 //
-// 请注意，**告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description**，，请参考 [Prometheus Rule更多配置请参考](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)。
+// 请注意，**告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description**，请参考 [Prometheus Rule更多配置请参考](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -9367,7 +9724,7 @@ func (c *Client) UpdateAlertRule(request *UpdateAlertRuleRequest) (response *Upd
 //
 // 
 //
-// 请注意，**告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description**，，请参考 [Prometheus Rule更多配置请参考](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)。
+// 请注意，**告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description**，请参考 [Prometheus Rule更多配置请参考](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"

@@ -849,6 +849,14 @@ func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 	return me.monitorConn
 }
 
+func (me *TencentCloudClient) UseMonitorClientRegion(region string) *monitor.Client {
+	cpf := me.NewClientProfile(300)
+	monitorConn, _ := monitor.NewClient(me.Credential, region, cpf)
+	monitorConn.WithHttpTransport(&LogRoundTripper{})
+
+	return monitorConn
+}
+
 // UseEsClient returns es client for service
 func (me *TencentCloudClient) UseEsClient(iacExtInfo ...IacExtInfo) *es.Client {
 	var logRoundTripper LogRoundTripper
