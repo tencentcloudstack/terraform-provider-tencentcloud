@@ -2187,6 +2187,7 @@ tencentcloud_waf_domain_post_action_config
 tencentcloud_waf_instance_attack_log_post_config
 tencentcloud_waf_bot_scene_status_config
 tencentcloud_waf_bot_status_config
+tencentcloud_waf_bot_scene_ucb_rule
 
 Wedata
 Data Source

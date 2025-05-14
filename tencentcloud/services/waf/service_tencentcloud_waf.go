@@ -1704,7 +1704,8 @@ func (me *WafService) DescribeWafBotSceneStatusConfigById(ctx context.Context, d
 
 	request := waf.NewDescribeBotSceneListRequest()
 	response := waf.NewDescribeBotSceneListResponse()
-	request.Domain = helper.String(domain)
+	request.Domain = &domain
+	request.SceneId = &sceneId
 	// wait waf sdk update
 	// request.BusinessType = common.StringPtrs([]string{"all"})
 	request.BusinessType = common.StringPtrs([]string{"login", "seckill", "crawl", "scan", "key-protect", "click-farming", "junk-mail", "social-media", "auto-download", "custom"})
@@ -1804,9 +1805,10 @@ func (me *WafService) DescribeWafBotSceneUCBRuleById(ctx context.Context, domain
 
 	request := waf.NewDescribeBotSceneUCBRuleRequest()
 	response := waf.NewDescribeBotSceneUCBRuleResponse()
-	request.Domain = helper.String(domain)
-	request.SceneId = helper.String(sceneId)
-	request.Sort = helper.String("desc")
+	request.Domain = &domain
+	request.SceneId = &sceneId
+	request.RuleId = &ruleId
+	request.Sort = helper.String("timestamp:-1")
 
 	defer func() {
 		if errRet != nil {
