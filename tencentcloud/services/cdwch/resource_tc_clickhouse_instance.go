@@ -232,7 +232,7 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("mount_disk_type", instanceInfo.MountDiskType)
 	_ = d.Set("ha_zk", instanceInfo.HAZk)
 
-	if instanceInfo.MasterSummary != nil {
+	if instanceInfo.MasterSummary != nil && instanceInfo.MasterSummary.NodeSize != nil && *instanceInfo.MasterSummary.NodeSize != 0 {
 		dataSpec := make(map[string]interface{})
 		dataSpec["spec_name"] = instanceInfo.MasterSummary.Spec
 		dataSpec["count"] = instanceInfo.MasterSummary.NodeSize
@@ -241,7 +241,7 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	_ = d.Set("cls_log_set_id", instanceInfo.ClsLogSetId)
-	if instanceInfo.CommonSummary != nil {
+	if instanceInfo.CommonSummary != nil && instanceInfo.CommonSummary.NodeSize != nil && *instanceInfo.CommonSummary.NodeSize != 0 {
 		commonSpec := make(map[string]interface{})
 		commonSpec["spec_name"] = instanceInfo.CommonSummary.Spec
 		commonSpec["count"] = instanceInfo.CommonSummary.NodeSize
