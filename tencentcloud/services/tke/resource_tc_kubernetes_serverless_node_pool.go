@@ -188,6 +188,45 @@ func resourceTencentCloudKubernetesServerlessNodePoolCreate(d *schema.ResourceDa
 
 	nodePoolId = *response.Response.NodePoolId
 
+	// wait
+	waitRequest := tkev20180525.NewDescribeClusterVirtualNodePoolsRequest()
+	waitRequest.ClusterId = &clusterId
+	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClusterVirtualNodePoolsWithContext(ctx, waitRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cluster virtual nodepools failed, Response is nil."))
+		}
+
+		if result.Response.NodePoolSet == nil || len(result.Response.NodePoolSet) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("NodePoolSet is nil."))
+		}
+
+		var hasNpId bool
+		for _, item := range result.Response.NodePoolSet {
+			if item.NodePoolId != nil && *item.NodePoolId == nodePoolId {
+				if item.LifeState != nil && *item.LifeState == "normal" {
+					return nil
+				}
+
+				hasNpId = true
+			}
+		}
+
+		if !hasNpId {
+			return resource.NonRetryableError(fmt.Errorf("NodePoolId %s is not found.", nodePoolId))
+		}
+
+		return resource.RetryableError(fmt.Errorf("serverless node pool %s is creating...", nodePoolId))
+	})
+
+	if err != nil {
+		return err
+	}
+
 	d.SetId(strings.Join([]string{clusterId, nodePoolId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudKubernetesServerlessNodePoolRead(d, meta)
@@ -388,5 +427,37 @@ func resourceTencentCloudKubernetesServerlessNodePoolDelete(d *schema.ResourceDa
 	}
 
 	_ = response
+
+	// wait
+	waitRequest := tkev20180525.NewDescribeClusterVirtualNodePoolsRequest()
+	waitRequest.ClusterId = &clusterId
+	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeClusterVirtualNodePoolsWithContext(ctx, waitRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.NodePoolSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cluster virtual nodepools failed, Response is nil."))
+		}
+
+		var hasNpId bool
+		for _, item := range result.Response.NodePoolSet {
+			if item.NodePoolId != nil && *item.NodePoolId == nodePoolId {
+				hasNpId = true
+			}
+		}
+
+		if !hasNpId {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("serverless node pool %s is deleting...", nodePoolId))
+	})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
