@@ -390,6 +390,13 @@ func ResourceTencentCloudWafBotSceneUCBRule() *schema.Resource {
 					},
 				},
 			},
+
+			// computed
+			"rule_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Rule ID.",
+			},
 		},
 	}
 }
@@ -740,6 +747,10 @@ func resourceTencentCloudWafBotSceneUCBRuleRead(d *schema.ResourceData, meta int
 
 	if respData.SceneId != nil {
 		_ = d.Set("scene_id", respData.SceneId)
+	}
+
+	if respData.RuleId != nil {
+		_ = d.Set("rule_id", respData.RuleId)
 	}
 
 	ruleList := make([]map[string]interface{}, 0, 1)
