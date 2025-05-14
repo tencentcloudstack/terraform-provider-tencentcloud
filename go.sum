@@ -1031,6 +1031,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.1096 h1:cX
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.1096/go.mod h1:YhKow73Lzn/iRvvDT0/XBnXsSypr29QZCDU6c4reVRg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.1066 h1:NBQgNznZRuNQ7AEHPtjFRq588IFEIvClBVtHdR/Q7Wo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.1066/go.mod h1:kgZ+YsYoqSplH7rlz1PwheZPZVU67tLpLXJDKLkM950=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.1149 h1:E9riu3snI31isF2lmzRe8CJ3giBbmeFFCXRcajtpjF0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.1149/go.mod h1:+LRDn2y0FXXf1qkivSnRNCUhJ0JDx7OA8YPjNEQtimE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.853 h1:abGpWsAtEuF2QIYKm2m9/hv9OqyHwWNLsd5+67z86BE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.853/go.mod h1:xIprIT+IW+3Fj05GCWmgvxJOhICqFGoW4Ef77cDD2JQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.0.1130 h1:2xpOVOz7a/qpDBmT6iRqu2JkaO2qy/KY/d0MhuZwPEU=
