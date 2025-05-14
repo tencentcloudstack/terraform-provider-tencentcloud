@@ -8,7 +8,7 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
-func TestAccTencentCloudWafBotSceneUCBRuleResource_basic(t *testing.T) {
+func TestAccTencentCloudWafBotSceneStatusConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -17,7 +17,7 @@ func TestAccTencentCloudWafBotSceneUCBRuleResource_basic(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccWafBotSceneUCBRule,
+				Config: testAccWafBotSceneStatusConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_scene_status_config.example", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_scene_status_config.example", "domain"),
@@ -26,7 +26,7 @@ func TestAccTencentCloudWafBotSceneUCBRuleResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccWafBotSceneUCBRuleUpdate,
+				Config: testAccWafBotSceneStatusConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_scene_status_config.example", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_bot_scene_status_config.example", "domain"),
@@ -43,7 +43,7 @@ func TestAccTencentCloudWafBotSceneUCBRuleResource_basic(t *testing.T) {
 	})
 }
 
-const testAccWafBotSceneUCBRule = `
+const testAccWafBotSceneStatusConfig = `
 resource "tencentcloud_waf_bot_scene_status_config" "example" {
   domain   = "example.com"
   scene_id = "3024324123"
@@ -51,7 +51,7 @@ resource "tencentcloud_waf_bot_scene_status_config" "example" {
 }
 `
 
-const testAccWafBotSceneUCBRuleUpdate = `
+const testAccWafBotSceneStatusConfigUpdate = `
 resource "tencentcloud_waf_bot_scene_status_config" "example" {
   domain   = "example.com"
   scene_id = "3024324123"
