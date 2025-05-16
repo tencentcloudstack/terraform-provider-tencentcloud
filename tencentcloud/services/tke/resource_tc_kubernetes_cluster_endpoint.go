@@ -438,7 +438,7 @@ func resourceTencentCloudTkeClusterEndpointDelete(d *schema.ResourceData, meta i
 }
 
 func waitForClusterEndpointFinish(ctx context.Context, service *TkeService, id string, enabled bool, isInternet bool) (err error) {
-	return resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		var (
 			status         string
 			message        string
@@ -457,15 +457,16 @@ func waitForClusterEndpointFinish(ctx context.Context, service *TkeService, id s
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
-		if status == retryableState {
-			return resource.RetryableError(
-				fmt.Errorf("%s create cluster internet endpoint status still is %s", id, status))
+
+		if status == retryableState || status == "TimeOut" {
+			return resource.RetryableError(fmt.Errorf("%s create cluster internet endpoint status still is %s", id, status))
 		}
+
 		if tccommon.IsContains(finishStates, status) {
 			return nil
 		}
-		return resource.NonRetryableError(
-			fmt.Errorf("%s create cluster internet endpoint error ,status is %s,message is %s", id, status, message))
+
+		return resource.NonRetryableError(fmt.Errorf("%s create cluster internet endpoint error, status is %s, message is %s", id, status, message))
 	})
 }
 
