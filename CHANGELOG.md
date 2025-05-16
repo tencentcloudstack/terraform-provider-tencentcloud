@@ -1,3 +1,10 @@
+## 1.81.193(May 15 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_cluster: `exist_instance` support update ([#3360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3360))
+* resource/tencentcloud_kubernetes_cluster_endpoint: update retry code logic ([#3361](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3361))
+
 ## 1.81.192(May 14 , 2025)
 
 FEATURES:
