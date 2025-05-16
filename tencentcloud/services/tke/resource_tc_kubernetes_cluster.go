@@ -5,9 +5,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -974,22 +976,19 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			},
 
 			"exist_instance": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
-				ForceNew:    true,
-				Description: "create tke cluster by existed instances.",
+				Description: "Create tke cluster by existed instances.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"node_role": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
-							Description: "Role of existed node. value:MASTER_ETCD or WORKER.",
+							Description: "Role of existed node. Value: MASTER_ETCD or WORKER.",
 						},
 						"instances_para": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							ForceNew:    true,
 							MaxItems:    1,
 							Description: "Reinstallation parameters of an existing instance.",
 							Elem: &schema.Resource{
@@ -997,7 +996,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 									"instance_ids": {
 										Type:        schema.TypeList,
 										Required:    true,
-										ForceNew:    true,
 										Description: "Cluster IDs.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
@@ -1006,7 +1004,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 									"security_group_ids": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										ForceNew:    true,
 										Description: "Security groups to which a CVM instance belongs.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
@@ -1015,7 +1012,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 									"password": {
 										Type:         schema.TypeString,
 										Optional:     true,
-										ForceNew:     true,
 										Sensitive:    true,
 										Description:  "Password to access, should be set if `key_ids` not set.",
 										ValidateFunc: tccommon.ValidateAsConfigPassword,
@@ -1023,7 +1019,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 									"key_ids": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										ForceNew:    true,
 										Description: "ID list of keys, should be set if `password` not set.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
@@ -1032,21 +1027,18 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 									"enhanced_security_service": {
 										Type:        schema.TypeBool,
 										Optional:    true,
-										ForceNew:    true,
 										Default:     true,
 										Description: "To specify whether to enable cloud security service. Default is TRUE.",
 									},
 									"enhanced_monitor_service": {
 										Type:        schema.TypeBool,
 										Optional:    true,
-										ForceNew:    true,
 										Default:     true,
 										Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
 									},
 									"master_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										ForceNew:    true,
 										MaxItems:    1,
 										Description: "Advanced Node Settings. commonly used to attach existing instances.",
 										Elem: &schema.Resource{
@@ -1054,44 +1046,37 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 												"mount_target": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													ForceNew:    true,
 													Description: "Mount target. Default is not mounting.",
 												},
 												"docker_graph_path": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													ForceNew:    true,
 													Description: "Docker graph path. Default is `/var/lib/docker`.",
 												},
 												"user_script": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													ForceNew:    true,
 													Description: "User script encoded in base64, which will be executed after the k8s component runs. The user needs to ensure the script's reentrant and retry logic. The script and its generated log files can be viewed in the node path /data/ccs_userscript/. If the node needs to be initialized before joining the schedule, it can be used in conjunction with the `unschedulable` parameter. After the final initialization of the userScript is completed, add the command \"kubectl uncordon nodename --kubeconfig=/root/.kube/config\" to add the node to the schedule.",
 												},
 												"unschedulable": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													ForceNew:    true,
 													Description: "Set whether the joined nodes participate in scheduling, with a default value of 0, indicating participation in scheduling; Non 0 means not participating in scheduling.",
 												},
 												"labels": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													ForceNew:    true,
 													Description: "Node label list.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																ForceNew:    true,
 																Description: "Name of map.",
 															},
 															"value": {
 																Type:        schema.TypeString,
 																Required:    true,
-																ForceNew:    true,
 																Description: "Value of map.",
 															},
 														},
@@ -1100,7 +1085,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 												"data_disk": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													ForceNew:    true,
 													MaxItems:    1,
 													Description: "Configurations of data disk.",
 													Elem: &schema.Resource{
@@ -1108,37 +1092,31 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 															"disk_type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.",
 															},
 															"file_system": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "File system, e.g. `ext3/ext4/xfs`.",
 															},
 															"disk_size": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Volume of disk in GB. Default is `0`.",
 															},
 															"auto_format_and_mount": {
 																Type:        schema.TypeBool,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Indicate whether to auto format and mount or not. Default is `false`.",
 															},
 															"mount_target": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Mount target.",
 															},
 															"disk_partition": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.",
 															},
 														},
@@ -1147,7 +1125,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 												"extra_args": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													ForceNew:    true,
 													MaxItems:    1,
 													Description: "Custom parameter information related to the node. This is a white-list parameter.",
 													Elem: &schema.Resource{
@@ -1155,7 +1132,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 															"kubelet": {
 																Type:        schema.TypeList,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Kubelet custom parameter. The parameter format is [\"k1=v1\", \"k1=v2\"].",
 																Elem: &schema.Schema{
 																	Type: schema.TypeString,
@@ -1167,13 +1143,11 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 												"desired_pod_number": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													ForceNew:    true,
 													Description: "Indicate to set desired pod number in node. valid when the cluster is podCIDR.",
 												},
 												"gpu_args": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													ForceNew:    true,
 													MaxItems:    1,
 													Description: "GPU driver parameters.",
 													Elem: &schema.Resource{
@@ -1181,34 +1155,29 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 															"mig_enable": {
 																Type:        schema.TypeBool,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Whether to enable MIG.",
 															},
 															"driver": {
 																Type:         schema.TypeMap,
 																Optional:     true,
-																ForceNew:     true,
 																Description:  "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 																ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
 															},
 															"cuda": {
 																Type:         schema.TypeMap,
 																Optional:     true,
-																ForceNew:     true,
 																Description:  "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 																ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
 															},
 															"cudnn": {
 																Type:         schema.TypeMap,
 																Optional:     true,
-																ForceNew:     true,
 																Description:  "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
 																ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
 															},
 															"custom_driver": {
 																Type:        schema.TypeMap,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
 															},
 														},
@@ -1217,26 +1186,22 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 												"taints": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													ForceNew:    true,
 													Description: "Node taint.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"key": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Key of the taint.",
 															},
 															"value": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Value of the taint.",
 															},
 															"effect": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																ForceNew:    true,
 																Description: "Effect of the taint.",
 															},
 														},
@@ -1251,7 +1216,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"desired_pod_numbers": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.",
 							Elem: &schema.Schema{
 								Type: schema.TypeInt,
@@ -2168,6 +2132,237 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 		if err != nil {
 			log.Printf("[CRITAL]%s update kubernetes cluster failed, reason:%+v", logId, err)
 			return err
+		}
+	}
+
+	if d.HasChange("exist_instance") {
+		tkeService := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		cvmService := svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+
+		oldInterface, newInterface := d.GetChange("exist_instance")
+		oldInstances := oldInterface.(*schema.Set)
+		newInstances := newInterface.(*schema.Set)
+
+		remove := oldInstances.Difference(newInstances).List()
+		add := newInstances.Difference(oldInstances).List()
+
+		// scale out first
+		if len(add) > 0 {
+			tmpNew := make([]*tkev20180525.ExistedInstancesForNode, 0, len(add))
+			instanceIds := make([]*string, 0)
+			instanceInfo := make([]map[string]interface{}, 0)
+			for index := range add {
+				if add[index] != nil {
+					instance := add[index].(map[string]interface{})
+					existedInstance, _ := tkeGetCvmExistInstancesPara(instance)
+					tmpNew = append(tmpNew, &existedInstance)
+
+					// get all new cvm IDs
+					if len(existedInstance.ExistedInstancesPara.InstanceIds) > 0 {
+						dMap := make(map[string]interface{}, 0)
+						instanceIds = append(instanceIds, existedInstance.ExistedInstancesPara.InstanceIds...)
+						dMap["instance_ids"] = instanceIds
+						dMap["node_role"] = existedInstance.NodeRole
+						instanceInfo = append(instanceInfo, dMap)
+					}
+				}
+			}
+
+			if len(tmpNew) > 0 {
+				request := tkev20180525.NewScaleOutClusterMasterRequest()
+				request.ClusterId = &clusterId
+				request.ExistedInstancesForNode = tmpNew
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ScaleOutClusterMasterWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s scale out cluster failed, reason:%+v", logId, err)
+					return err
+				}
+
+				// wait for cvm status
+				err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					result, e := cvmService.DescribeInstanceByFilter(ctx, instanceIds, nil)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					initFlag := true
+					if result != nil {
+						for _, item := range result {
+							if item.InstanceState != nil && *item.InstanceState != "RUNNING" {
+								initFlag = false
+								break
+							}
+						}
+
+						if initFlag {
+							return nil
+						}
+					}
+
+					return resource.RetryableError(fmt.Errorf("cvm instance status is not RUNNING, retry..."))
+				})
+
+				if err != nil {
+					return err
+				}
+
+				// wait for tke node init
+				for _, item := range instanceInfo {
+					tmpInsIds := item["instance_ids"].([]*string)
+					nodeRole := item["node_role"].(*string)
+					err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+						result, e := tkeService.DescribeKubernetesClusterMasterAttachmentByIds(ctx, clusterId, tmpInsIds, nodeRole)
+						if e != nil {
+							return tccommon.RetryError(e, tccommon.InternalError)
+						}
+
+						initFlag := true
+						if result != nil && result.InstanceSet != nil {
+							for _, item := range result.InstanceSet {
+								if item.InstanceState != nil && *item.InstanceState != "running" {
+									initFlag = false
+									break
+								}
+							}
+
+							if initFlag {
+								return nil
+							}
+						}
+
+						return resource.RetryableError(fmt.Errorf("tke master node cvm instance status is not running, retry..."))
+					})
+
+					if err != nil {
+						return err
+					}
+				}
+
+				// wait for tke cluster status
+				err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					result, e := tkeService.DescribeKubernetesClusterById(ctx, clusterId)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					if result == nil {
+
+					}
+
+					if result.ClusterStatus != nil && *result.ClusterStatus == "Running" {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("tke status is not RUNNING, retry..."))
+				})
+
+				if err != nil {
+					return err
+				}
+
+			}
+		}
+
+		// scale in
+		if len(remove) > 0 {
+			tmpOld := make([]map[string]interface{}, 0)
+			for index := range remove {
+				if remove[index] != nil {
+					instance := remove[index].(map[string]interface{})
+					existedInstance, _ := tkeGetCvmExistInstancesPara(instance)
+
+					insMap := make(map[string]interface{})
+					if existedInstance.NodeRole != nil {
+						insMap["node_role"] = *existedInstance.NodeRole
+					}
+
+					if len(existedInstance.ExistedInstancesPara.InstanceIds) > 0 {
+						for _, item := range existedInstance.ExistedInstancesPara.InstanceIds {
+							if item != nil {
+								insMap["instance_id"] = *item
+							}
+
+							tmpOld = append(tmpOld, insMap)
+						}
+					}
+				}
+			}
+
+			if len(tmpOld) > 0 {
+				request := tkev20180525.NewScaleInClusterMasterRequest()
+				request.ClusterId = &clusterId
+				for _, item := range tmpOld {
+					tmp := tkev20180525.ScaleInMaster{}
+					if v, ok := item["node_role"].(string); ok && v != "" {
+						tmp.NodeRole = &v
+					}
+
+					if v, ok := item["instance_id"].(string); ok && v != "" {
+						tmp.InstanceId = &v
+					}
+
+					tmp.InstanceDeleteMode = helper.String("retain")
+					request.ScaleInMasters = append(request.ScaleInMasters, &tmp)
+				}
+
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ScaleInClusterMasterWithContext(ctx, request)
+					if e != nil {
+						if sdkErr, ok := e.(*errors.TencentCloudSDKError); ok {
+							if sdkErr.GetCode() == "ResourceNotFound" {
+								return nil
+							}
+
+							if sdkErr.GetCode() == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), `is not exist`) {
+								return nil
+							}
+						}
+
+						return tccommon.RetryError(e, tccommon.InternalError)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s scale in cluster failed, reason:%+v", logId, err)
+					return err
+				}
+
+				// wait for tke cluster status
+				err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					result, e := tkeService.DescribeKubernetesClusterById(ctx, clusterId)
+					if e != nil {
+						return tccommon.RetryError(e, tccommon.InternalError)
+					}
+
+					if result == nil {
+
+					}
+
+					if result.ClusterStatus != nil && *result.ClusterStatus == "Running" {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("tke status is not RUNNING, retry..."))
+				})
+
+				if err != nil {
+					return err
+				}
+			}
 		}
 	}
 
