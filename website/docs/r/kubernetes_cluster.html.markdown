@@ -940,7 +940,7 @@ The following arguments are supported:
 * `enable_customized_pod_cidr` - (Optional, Bool) Whether to enable the custom mode of node podCIDR size. Default is false.
 * `eni_subnet_ids` - (Optional, List: [`String`]) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `event_persistence` - (Optional, List) Specify cluster Event Persistence config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
-* `exist_instance` - (Optional, List, ForceNew) create tke cluster by existed instances.
+* `exist_instance` - (Optional, Set) Create tke cluster by existed instances.
 * `extension_addon` - (Optional, List) Information of the add-on to be installed.
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
 * `globe_desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
@@ -990,6 +990,15 @@ The `cluster_extra_args` object supports the following:
 
 The `data_disk` object of `master_config` supports the following:
 
+* `auto_format_and_mount` - (Optional, Bool) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
+* `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
+* `file_system` - (Optional, String) File system, e.g. `ext3/ext4/xfs`.
+* `mount_target` - (Optional, String) Mount target.
+
+The `data_disk` object of `master_config` supports the following:
+
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
@@ -999,15 +1008,6 @@ The `data_disk` object of `master_config` supports the following:
 * `kms_key_id` - (Optional, String) ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
-
-The `data_disk` object of `master_config` supports the following:
-
-* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
-* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
-* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
-* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
-* `mount_target` - (Optional, String, ForceNew) Mount target.
 
 The `data_disk` object of `worker_config` supports the following:
 
@@ -1030,9 +1030,9 @@ The `event_persistence` object supports the following:
 
 The `exist_instance` object supports the following:
 
-* `desired_pod_numbers` - (Optional, List, ForceNew) Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.
-* `instances_para` - (Optional, List, ForceNew) Reinstallation parameters of an existing instance.
-* `node_role` - (Optional, String, ForceNew) Role of existed node. value:MASTER_ETCD or WORKER.
+* `desired_pod_numbers` - (Optional, List) Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.
+* `instances_para` - (Optional, List) Reinstallation parameters of an existing instance.
+* `node_role` - (Optional, String) Role of existed node. Value: MASTER_ETCD or WORKER.
 
 The `extension_addon` object supports the following:
 
@@ -1041,30 +1041,30 @@ The `extension_addon` object supports the following:
 
 The `extra_args` object of `master_config` supports the following:
 
-* `kubelet` - (Optional, List, ForceNew) Kubelet custom parameter. The parameter format is ["k1=v1", "k1=v2"].
+* `kubelet` - (Optional, List) Kubelet custom parameter. The parameter format is ["k1=v1", "k1=v2"].
 
 The `gpu_args` object of `master_config` supports the following:
 
-* `cuda` - (Optional, Map, ForceNew) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
-* `cudnn` - (Optional, Map, ForceNew) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
-* `custom_driver` - (Optional, Map, ForceNew) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
-* `driver` - (Optional, Map, ForceNew) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
-* `mig_enable` - (Optional, Bool, ForceNew) Whether to enable MIG.
+* `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
 The `instances_para` object of `exist_instance` supports the following:
 
-* `instance_ids` - (Required, List, ForceNew) Cluster IDs.
-* `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
-* `enhanced_security_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
-* `key_ids` - (Optional, List, ForceNew) ID list of keys, should be set if `password` not set.
-* `master_config` - (Optional, List, ForceNew) Advanced Node Settings. commonly used to attach existing instances.
-* `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
-* `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
+* `instance_ids` - (Required, List) Cluster IDs.
+* `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is TRUE.
+* `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is TRUE.
+* `key_ids` - (Optional, List) ID list of keys, should be set if `password` not set.
+* `master_config` - (Optional, List) Advanced Node Settings. commonly used to attach existing instances.
+* `password` - (Optional, String) Password to access, should be set if `key_ids` not set.
+* `security_group_ids` - (Optional, List) Security groups to which a CVM instance belongs.
 
 The `labels` object of `master_config` supports the following:
 
-* `name` - (Required, String, ForceNew) Name of map.
-* `value` - (Required, String, ForceNew) Value of map.
+* `name` - (Required, String) Name of map.
+* `value` - (Required, String) Value of map.
 
 The `log_agent` object supports the following:
 
@@ -1073,16 +1073,16 @@ The `log_agent` object supports the following:
 
 The `master_config` object of `instances_para` supports the following:
 
-* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
-* `desired_pod_number` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
-* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
-* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
-* `labels` - (Optional, List, ForceNew) Node label list.
-* `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
-* `taints` - (Optional, List, ForceNew) Node taint.
-* `unschedulable` - (Optional, Int, ForceNew) Set whether the joined nodes participate in scheduling, with a default value of 0, indicating participation in scheduling; Non 0 means not participating in scheduling.
-* `user_script` - (Optional, String, ForceNew) User script encoded in base64, which will be executed after the k8s component runs. The user needs to ensure the script's reentrant and retry logic. The script and its generated log files can be viewed in the node path /data/ccs_userscript/. If the node needs to be initialized before joining the schedule, it can be used in conjunction with the `unschedulable` parameter. After the final initialization of the userScript is completed, add the command "kubectl uncordon nodename --kubeconfig=/root/.kube/config" to add the node to the schedule.
+* `data_disk` - (Optional, List) Configurations of data disk.
+* `desired_pod_number` - (Optional, Int) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
+* `docker_graph_path` - (Optional, String) Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, List) Custom parameter information related to the node. This is a white-list parameter.
+* `gpu_args` - (Optional, List) GPU driver parameters.
+* `labels` - (Optional, List) Node label list.
+* `mount_target` - (Optional, String) Mount target. Default is not mounting.
+* `taints` - (Optional, List) Node taint.
+* `unschedulable` - (Optional, Int) Set whether the joined nodes participate in scheduling, with a default value of 0, indicating participation in scheduling; Non 0 means not participating in scheduling.
+* `user_script` - (Optional, String) User script encoded in base64, which will be executed after the k8s component runs. The user needs to ensure the script's reentrant and retry logic. The script and its generated log files can be viewed in the node path /data/ccs_userscript/. If the node needs to be initialized before joining the schedule, it can be used in conjunction with the `unschedulable` parameter. After the final initialization of the userScript is completed, add the command "kubectl uncordon nodename --kubeconfig=/root/.kube/config" to add the node to the schedule.
 
 The `master_config` object supports the following:
 
@@ -1134,9 +1134,9 @@ The `resource_delete_options` object supports the following:
 
 The `taints` object of `master_config` supports the following:
 
-* `effect` - (Optional, String, ForceNew) Effect of the taint.
-* `key` - (Optional, String, ForceNew) Key of the taint.
-* `value` - (Optional, String, ForceNew) Value of the taint.
+* `effect` - (Optional, String) Effect of the taint.
+* `key` - (Optional, String) Key of the taint.
+* `value` - (Optional, String) Value of the taint.
 
 The `worker_config` object supports the following:
 

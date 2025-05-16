@@ -273,7 +273,7 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 	// ExistedInstancesForNode
 	existInstances := make([]*tke.ExistedInstancesForNode, 0)
 	if instances, ok := d.GetOk("exist_instance"); ok {
-		instanceList := instances.([]interface{})
+		instanceList := instances.(*schema.Set).List()
 		for index := range instanceList {
 			instance := instanceList[index].(map[string]interface{})
 			existedInstance, _ := tkeGetCvmExistInstancesPara(instance)
