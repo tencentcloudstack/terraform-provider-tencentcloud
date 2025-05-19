@@ -84,7 +84,6 @@ The following arguments are supported:
 * `duration` - (Optional, Int) expiration date (unit: day), calculated from the current time, priority is higher than ExpiresAt Service account description.
 * `expires_at` - (Optional, Int) Service account expiration time (time stamp, unit: milliseconds).
 * `password` - (Optional, String) Password of the service account.
-* `reset_password` - (Optional, Bool) Reset password.
 * `tags` - (Optional, Map) Tag description list.
 
 The `permissions` object supports the following:

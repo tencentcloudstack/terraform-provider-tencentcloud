@@ -93,12 +93,6 @@ func ResourceTencentCloudTcrServiceAccount() *schema.Resource {
 				Description: "Password of the service account.",
 			},
 
-			"reset_password": {
-				Optional:    true,
-				Type:        schema.TypeBool,
-				Description: "Reset password.",
-			},
-
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
