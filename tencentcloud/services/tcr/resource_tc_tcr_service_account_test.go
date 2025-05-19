@@ -56,21 +56,21 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: fmt.Sprintf(testAccTcrServiceAccount_resetPassword, expireTime),
+				Config: fmt.Sprintf(testAccTcrServiceAccount_updatePassword, expireTime),
 				PreConfig: func() {
 					tcacctest.AccStepSetRegion(t, "ap-shanghai")
 					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_service_account.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tcr_service_account.example", "password"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_service_account.example", "password", "passwordTest1"),
 				),
 			},
 			{
 				ResourceName:            "tencentcloud_tcr_service_account.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"duration", "password", "reset_password"},
+				ImportStateVerifyIgnore: []string{"duration", "password"},
 			},
 		},
 	})
@@ -79,7 +79,7 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 const testAccTcrServiceAccount = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance"
+	name          = "tf-example-tcr-instance1"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
@@ -116,7 +116,7 @@ resource "tencentcloud_tcr_instance" "example" {
 const testAccTcrServiceAccount_Update = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance"
+	name          = "tf-example-tcr-instance1"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
@@ -150,10 +150,10 @@ resource "tencentcloud_tcr_instance" "example" {
 
 `
 
-const testAccTcrServiceAccount_resetPassword = `
+const testAccTcrServiceAccount_updatePassword = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance"
+	name          = "tf-example-tcr-instance1"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
@@ -183,7 +183,7 @@ resource "tencentcloud_tcr_instance" "example" {
 	tags = {
 	  "createdBy" = "terraform"
 	}
-	reset_password = true
+	password = "passwordTest1"
   }
 
 `
