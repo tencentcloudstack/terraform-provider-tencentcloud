@@ -1,4 +1,4 @@
-Provides a resource to create a waf cc
+Provides a resource to create a WAF cc
 
 Example Usage
 

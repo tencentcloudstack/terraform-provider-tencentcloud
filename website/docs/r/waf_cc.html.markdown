@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_waf_cc"
 sidebar_current: "docs-tencentcloud-resource-waf_cc"
 description: |-
-  Provides a resource to create a waf cc
+  Provides a resource to create a WAF cc
 ---
 
 # tencentcloud_waf_cc
 
-Provides a resource to create a waf cc
+Provides a resource to create a WAF cc
 
 ## Example Usage
 
@@ -58,6 +58,7 @@ The following arguments are supported:
 * `url` - (Required, String) Detection URL.
 * `valid_time` - (Required, Int) Action ValidTime, minute unit. Min: 60, Max: 604800.
 * `event_id` - (Optional, String) Event ID.
+* `limit_method` - (Optional, String) Frequency limiting method.
 * `options_arr` - (Optional, String) JSON serialized string of CC matching conditions, example:[{\"key\":\"Method\",\"args\":[\"=R0VU\"],\"match\":\"0\",\"encodeflag\":true}]
         Key optional values are Method, Post, Referer, Cookie, User-Agent, CustomHeader
         Match optional values are, when Key is Method, optional values are 0 (equal), 3 (not equal).
