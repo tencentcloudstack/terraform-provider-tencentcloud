@@ -834,8 +834,6 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 
 	_ = d.Set("project_id", int(*instance.ProjectId))
 	_ = d.Set("availability_zone", instance.Zone)
-	_ = d.Set("vpc_id", instance.VpcId)
-	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("engine_version", instance.DBVersion)
 	_ = d.Set("db_kernel_version", instance.DBKernelVersion)
 	_ = d.Set("db_major_vesion", instance.DBMajorVersion)
@@ -843,19 +841,34 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)
 
-	if rootUser != "" {
-		_ = d.Set("root_user", &rootUser)
-	}
+	// check net num
+	if len(instance.DBInstanceNetInfo) == 3 {
+		_ = d.Set("vpc_id", instance.DBInstanceNetInfo[0].VpcId)
+		_ = d.Set("subnet_id", instance.DBInstanceNetInfo[0].SubnetId)
+		_ = d.Set("private_access_ip", instance.DBInstanceNetInfo[0].Ip)
+		_ = d.Set("private_access_port", instance.DBInstanceNetInfo[0].Port)
 
-	if *instance.PayType == POSTGRESQL_PAYTYPE_PREPAID || *instance.PayType == COMMON_PAYTYPE_PREPAID {
-		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
-	} else {
-		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
-	}
+		// net status
+		public_access_switch := false
+		for _, v := range instance.DBInstanceNetInfo {
+			if *v.NetType == "public" {
+				// both 1 and opened used in SDK
+				if *v.Status == "opened" || *v.Status == "1" {
+					public_access_switch = true
+				}
 
-	// net status
-	public_access_switch := false
-	if len(instance.DBInstanceNetInfo) > 0 {
+				_ = d.Set("public_access_host", v.Address)
+				_ = d.Set("public_access_port", v.Port)
+			}
+		}
+
+		_ = d.Set("public_access_switch", public_access_switch)
+	} else if len(instance.DBInstanceNetInfo) == 2 {
+		_ = d.Set("vpc_id", instance.VpcId)
+		_ = d.Set("subnet_id", instance.SubnetId)
+
+		// net status
+		public_access_switch := false
 		for _, v := range instance.DBInstanceNetInfo {
 			if *v.NetType == "public" {
 				// both 1 and opened used in SDK
@@ -873,9 +886,21 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 				_ = d.Set("private_access_port", v.Port)
 			}
 		}
+
+		_ = d.Set("public_access_switch", public_access_switch)
+	} else {
+		return fmt.Errorf("DBInstanceNetInfo returned incorrect information.")
 	}
 
-	_ = d.Set("public_access_switch", public_access_switch)
+	if rootUser != "" {
+		_ = d.Set("root_user", &rootUser)
+	}
+
+	if *instance.PayType == POSTGRESQL_PAYTYPE_PREPAID || *instance.PayType == COMMON_PAYTYPE_PREPAID {
+		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
+	} else {
+		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
+	}
 
 	// security groups
 	sg, err := postgresqlService.DescribeDBInstanceSecurityGroupsById(ctx, d.Id())
@@ -1227,95 +1252,130 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	// update vpc and subnet
 	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
 		var (
-			vpcOld    string
-			vpcNew    string
-			subnetOld string
-			subnetNew string
-			vipOld    string
-			vipNew    string
+			postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			instance          *postgresql.DBInstance
+			has               bool
+			vpcOld            string
+			vpcNew            string
+			subnetOld         string
+			subnetNew         string
+			vipOld            string
+			vipNew            string
 		)
 
-		old, new := d.GetChange("vpc_id")
-		if old != nil {
-			vpcOld = old.(string)
-		}
+		// check net first
+		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			instance, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+			if inErr != nil {
+				ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+				if ok && (ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" || ee.GetCode() == "InvalidParameter") {
+					return nil
+				}
 
-		if new != nil {
-			vpcNew = new.(string)
-		}
+				return tccommon.RetryError(inErr)
+			}
 
-		old, new = d.GetChange("subnet_id")
-		if old != nil {
-			subnetOld = old.(string)
-		}
-
-		if new != nil {
-			subnetNew = new.(string)
-		}
-
-		// Create new network first, then delete the old one
-		request := postgresql.NewCreateDBInstanceNetworkAccessRequest()
-		request.DBInstanceId = helper.String(instanceId)
-		request.VpcId = helper.String(vpcNew)
-		request.SubnetId = helper.String(subnetNew)
-		// ip assigned by system
-		request.IsAssignVip = helper.Bool(false)
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateDBInstanceNetworkAccess(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if instance != nil && tccommon.IsContains(POSTGRESQL_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
+				return resource.RetryableError(fmt.Errorf("instance %s is %s, retrying", *instance.DBInstanceId, *instance.DBInstanceStatus))
 			}
 
 			return nil
 		})
 
-		if err != nil {
-			log.Printf("[CRITAL]%s create postgresql Instance NetworkAccess failed, reason:%+v", logId, err)
-			return err
+		if outErr != nil {
+			return outErr
 		}
 
-		service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		// wait for new network enabled
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{"opened"}, 3*tccommon.ReadRetryTimeout, time.Second, service.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcNew, subnetNew, vipOld, "", []string{}))
-		if object, e := conf.WaitForState(); e != nil {
-			return e
+		if !has {
+			d.SetId("")
+			return nil
+		}
+
+		// check net num
+		if instance.DBInstanceNetInfo != nil && len(instance.DBInstanceNetInfo) > 2 {
+			return fmt.Errorf("There are already %d network information for the current PostgreSQL instance %s. Please remove one before modifying the instance network information.", len(instance.DBInstanceNetInfo)-1, d.Id())
 		} else {
-			// find the vip assiged by system
-			ret := object.(*postgresql.DBInstanceNetInfo)
-			vipNew = *ret.Ip
-		}
+			old, new := d.GetChange("vpc_id")
+			if old != nil {
+				vpcOld = old.(string)
+			}
 
-		// wait unit network changing operation of instance done
-		conf = tccommon.BuildStateChangeConf([]string{}, []string{"running"}, 3*tccommon.ReadRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
-		if _, e := conf.WaitForState(); e != nil {
-			return e
-		}
+			if new != nil {
+				vpcNew = new.(string)
+			}
 
-		// delete the old one
-		if v, ok := d.GetOk("private_access_ip"); ok {
-			vipOld = v.(string)
-		}
+			old, new = d.GetChange("subnet_id")
+			if old != nil {
+				subnetOld = old.(string)
+			}
 
-		if err := service.DeletePostgresqlDBInstanceNetworkAccessById(ctx, instanceId, vpcOld, subnetOld, vipOld); err != nil {
-			return err
-		}
+			if new != nil {
+				subnetNew = new.(string)
+			}
 
-		// wait for old network removed
-		conf = tccommon.BuildStateChangeConf([]string{}, []string{"closed"}, 3*tccommon.ReadRetryTimeout, time.Second, service.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcOld, subnetOld, vipNew, vipOld, []string{}))
-		if _, e := conf.WaitForState(); e != nil {
-			return e
-		}
+			// Create new network first, then delete the old one
+			request := postgresql.NewCreateDBInstanceNetworkAccessRequest()
+			request.DBInstanceId = helper.String(instanceId)
+			request.VpcId = helper.String(vpcNew)
+			request.SubnetId = helper.String(subnetNew)
+			// ip assigned by system
+			request.IsAssignVip = helper.Bool(false)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateDBInstanceNetworkAccess(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
 
-		// wait unit network changing operation of instance done
-		conf = tccommon.BuildStateChangeConf([]string{}, []string{"running"}, 3*tccommon.ReadRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
-		if _, e := conf.WaitForState(); e != nil {
-			return e
-		}
+				return nil
+			})
 
-		// refresh the private ip with new one
-		_ = d.Set("private_access_ip", vipNew)
+			if err != nil {
+				log.Printf("[CRITAL]%s create postgresql Instance NetworkAccess failed, reason:%+v", logId, err)
+				return err
+			}
+
+			// wait for new network enabled
+			conf := tccommon.BuildStateChangeConf([]string{}, []string{"opened"}, 3*tccommon.ReadRetryTimeout, time.Second, postgresqlService.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcNew, subnetNew, vipOld, "", []string{}))
+			if object, e := conf.WaitForState(); e != nil {
+				return e
+			} else {
+				// find the vip assiged by system
+				ret := object.(*postgresql.DBInstanceNetInfo)
+				vipNew = *ret.Ip
+			}
+
+			// wait unit network changing operation of instance done
+			conf = tccommon.BuildStateChangeConf([]string{}, []string{"running"}, 3*tccommon.ReadRetryTimeout, time.Second, postgresqlService.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+
+			// delete the old one
+			if v, ok := d.GetOk("private_access_ip"); ok {
+				vipOld = v.(string)
+			}
+
+			if err := postgresqlService.DeletePostgresqlDBInstanceNetworkAccessById(ctx, instanceId, vpcOld, subnetOld, vipOld); err != nil {
+				return err
+			}
+
+			// wait for old network removed
+			conf = tccommon.BuildStateChangeConf([]string{}, []string{"closed"}, 3*tccommon.ReadRetryTimeout, time.Second, postgresqlService.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcOld, subnetOld, vipNew, vipOld, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+
+			// wait unit network changing operation of instance done
+			conf = tccommon.BuildStateChangeConf([]string{}, []string{"running"}, 3*tccommon.ReadRetryTimeout, time.Second, postgresqlService.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+
+			// refresh the private ip with new one
+			_ = d.Set("private_access_ip", vipNew)
+		}
 	}
 
 	// update name
