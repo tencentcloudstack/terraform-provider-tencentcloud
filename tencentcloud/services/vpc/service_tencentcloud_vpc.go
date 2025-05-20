@@ -5553,10 +5553,11 @@ func (me *VpcService) DeleteAssistantCidr(ctx context.Context, request *vpc.Dele
 	return
 }
 
-func (me *VpcService) DescribeVpcBandwidthPackage(ctx context.Context, bandwidthPackageId string) (resource *vpc.BandwidthPackage, errRet error) {
+func (me *VpcService) DescribeVpcBandwidthPackage(ctx context.Context, bandwidthPackageId string) (res *vpc.BandwidthPackage, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = vpc.NewDescribeBandwidthPackagesRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = vpc.NewDescribeBandwidthPackagesRequest()
+		response = vpc.NewDescribeBandwidthPackagesResponse()
 	)
 
 	defer func() {
@@ -5567,26 +5568,30 @@ func (me *VpcService) DescribeVpcBandwidthPackage(ctx context.Context, bandwidth
 	}()
 
 	request.BandwidthPackageIds = []*string{&bandwidthPackageId}
-	//request.Filters = append(
-	//	request.Filters,
-	//	&bwp.Filter{
-	//		Name:   helper.String("bandwidth-package_id"),
-	//		Values: []*string{&bandwidthPackageId},
-	//	},
-	//)
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeBandwidthPackages(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeBandwidthPackages(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe bwp bandwidthPackage failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response != nil && len(response.Response.BandwidthPackageSet) > 0 {
-		resource = response.Response.BandwidthPackageSet[0]
+	if len(response.Response.BandwidthPackageSet) > 0 {
+		res = response.Response.BandwidthPackageSet[0]
 	}
 
 	return
@@ -5596,24 +5601,30 @@ func (me *VpcService) DeleteVpcBandwidthPackageById(ctx context.Context, bandwid
 	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDeleteBandwidthPackageRequest()
-
 	request.BandwidthPackageId = &bandwidthPackageId
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete object", request.ToJsonString(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DeleteBandwidthPackage(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DeleteBandwidthPackage(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
