@@ -117,6 +117,7 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"limit_method": {
 				Optional:    true,
 				Type:        schema.TypeString,
+				Computed:    true,
 				Description: "Frequency limiting method.",
 			},
 			"rule_id": {
