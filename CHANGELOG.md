@@ -1,3 +1,20 @@
+## 1.81.194(May 21 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_mqtt_instance_detail` ([#3362](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3362))
+* **New Data Source:** `tencentcloud_mqtt_instances` ([#3362](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3362))
+* **New Data Source:** `tencentcloud_mqtt_topics` ([#3362](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3362))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_as_last_activity: support `exclude_cancelled_activity` ([#3368](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3368))
+* resource/tencentcloud_kubernetes_cluster_endpoint: update retry code logic ([#3370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3370))
+* resource/tencentcloud_postgresql_instance: Optimize and update network module code ([#3365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3365))
+* resource/tencentcloud_postgresql_readonly_instance: support tags ([#3364](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3364))
+* resource/tencentcloud_vpc_bandwidth_package: support modify `internet_max_bandwidth` ([#3367](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3367))
+* resource/tencentcloud_waf_cc: support `limit_method` ([#3366](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3366))
+
 ## 1.81.193(May 15 , 2025)
 
 ENHANCEMENTS:
