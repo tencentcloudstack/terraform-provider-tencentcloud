@@ -461,3 +461,147 @@ func (me *MqttService) DescribeMqttAuthorizationPolicyById(ctx context.Context, 
 	ret = response.Response
 	return
 }
+
+func (me *MqttService) DescribeMqttInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*mqttv20240516.MQTTInstanceItem, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = mqttv20240516.NewDescribeInstanceListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*mqttv20240516.Filter)
+		}
+
+		if k == "TagFilters" {
+			request.TagFilters = v.([]*mqttv20240516.TagFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMqttV20240516Client().DescribeInstanceList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MqttService) DescribeMqttInstanceDetailByFilter(ctx context.Context, param map[string]interface{}) (ret *mqttv20240516.DescribeInstanceResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = mqttv20240516.NewDescribeInstanceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMqttV20240516Client().DescribeInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *MqttService) DescribeMqttTopicsByFilter(ctx context.Context, param map[string]interface{}) (ret []*mqttv20240516.MQTTTopicItem, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = mqttv20240516.NewDescribeTopicListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*mqttv20240516.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMqttV20240516Client().DescribeTopicList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
