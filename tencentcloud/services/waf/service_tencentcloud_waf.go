@@ -1259,6 +1259,7 @@ func (me *WafService) DescribeWafCcById(ctx context.Context, domain, ruleId stri
 	logId := tccommon.GetLogId(ctx)
 
 	request := waf.NewDescribeCCRuleListRequest()
+	response := waf.NewDescribeCCRuleListResponse()
 	request.Domain = &domain
 	request.Filters = []*waf.FiltersItemNew{
 		{
@@ -1277,17 +1278,29 @@ func (me *WafService) DescribeWafCcById(ctx context.Context, domain, ruleId stri
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafClient().DescribeCCRuleList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseWafClient().DescribeCCRuleList(request)
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || len(response.Response.Data.Res) != 1 {
+	if len(response.Response.Data.Res) != 1 {
 		return
 	}
 
@@ -1310,15 +1323,22 @@ func (me *WafService) DeleteWafCcById(ctx context.Context, domain, ruleId, name 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafClient().DeleteCCRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseWafClient().DeleteCCRule(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

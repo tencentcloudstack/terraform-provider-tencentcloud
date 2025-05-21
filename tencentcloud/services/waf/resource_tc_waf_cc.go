@@ -114,6 +114,11 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 				Description: "Session ID that needs to be enabled for the rule.",
 			},
+			"limit_method": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Frequency limiting method.",
+			},
 			"rule_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -201,9 +206,15 @@ func resourceTencentCloudWafCcCreate(d *schema.ResourceData, meta interface{}) e
 	if v, ok := d.GetOk("session_applied"); ok {
 		sessionAppliedSet := v.(*schema.Set).List()
 		for i := range sessionAppliedSet {
-			sessionApplied := sessionAppliedSet[i].(int)
-			request.SessionApplied = append(request.SessionApplied, helper.IntInt64(sessionApplied))
+			if sessionAppliedSet[i] != nil {
+				sessionApplied := sessionAppliedSet[i].(int)
+				request.SessionApplied = append(request.SessionApplied, helper.IntInt64(sessionApplied))
+			}
 		}
+	}
+
+	if v, ok := d.GetOk("limit_method"); ok {
+		request.LimitMethod = helper.String(v.(string))
 	}
 
 	request.RuleId = helper.IntInt64(0)
@@ -215,9 +226,8 @@ func resourceTencentCloudWafCcCreate(d *schema.ResourceData, meta interface{}) e
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response.RuleId == nil {
-			e = fmt.Errorf("waf cc failed not exists")
-			return resource.NonRetryableError(e)
+		if result == nil || result.Response == nil || result.Response.RuleId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create waf cc failed, Response is nil."))
 		}
 
 		response = result
@@ -313,14 +323,6 @@ func resourceTencentCloudWafCcRead(d *schema.ResourceData, meta interface{}) err
 	if cc.Options != nil {
 		_ = d.Set("options_arr", cc.Options)
 	}
-	//
-	//if cc.Edition != nil {
-	//	_ = d.Set("edition", cc.Edition)
-	//}
-	//
-	//if cc.Type != nil {
-	//	_ = d.Set("type", cc.Type)
-	//}
 
 	if cc.EventId != nil {
 		_ = d.Set("event_id", cc.EventId)
@@ -328,6 +330,10 @@ func resourceTencentCloudWafCcRead(d *schema.ResourceData, meta interface{}) err
 
 	if cc.SessionApplied != nil {
 		_ = d.Set("session_applied", cc.SessionApplied)
+	}
+
+	if cc.LimitMethod != nil {
+		_ = d.Set("limit_method", cc.LimitMethod)
 	}
 
 	if cc.RuleId != nil {
@@ -426,6 +432,10 @@ func resourceTencentCloudWafCcUpdate(d *schema.ResourceData, meta interface{}) e
 			sessionApplied := sessionAppliedSet[i].(int)
 			request.SessionApplied = append(request.SessionApplied, helper.IntInt64(sessionApplied))
 		}
+	}
+
+	if v, ok := d.GetOk("limit_method"); ok {
+		request.LimitMethod = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
