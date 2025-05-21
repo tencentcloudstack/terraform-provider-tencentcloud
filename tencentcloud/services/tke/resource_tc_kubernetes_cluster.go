@@ -233,6 +233,13 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				},
 			},
 
+			"is_dual_stack": {
+				Type:         schema.TypeBool,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  "In the VPC-CNI mode of the cluster, the dual stack cluster status defaults to false, indicating a non dual stack cluster.",
+			},
+
 			"node_name_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1652,6 +1659,9 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 			}
 		}
 		clusterAdvancedSettings.ExtraArgs = &clusterExtraArgs
+	}
+	if v, ok := d.GetOkExists("is_dual_stack"); ok {
+		clusterAdvancedSettings.IsDualStack = helper.Bool(v.(bool))
 	}
 	if v, ok := d.GetOk("network_type"); ok {
 		clusterAdvancedSettings.NetworkType = helper.String(v.(string))
