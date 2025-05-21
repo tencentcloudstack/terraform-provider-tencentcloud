@@ -150,6 +150,31 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_prepaid(t *testing.T)
 	})
 }
 
+func TestAccTencentCloudPostgresqlReadonlyInstanceResource_tags(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPostgresqlReadonlyInstanceInstance_tag,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "tags.tf", "test"),
+				),
+			},
+			{
+				Config: testAccPostgresqlReadonlyInstanceInstance_tagUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyInstanceResourceKey, "tags.tf", "test1"),
+				),
+			},
+		},
+	})
+}
+
 const testAccPostgresqlReadonlyInstanceInstance_basic_without_rogroup string = tcacctest.OperationPresetPGSQL + tcacctest.DefaultVpcSubnets + tcacctest.DefaultSecurityGroupData + `
   resource "tencentcloud_postgresql_readonly_instance" "instance" {
 	auto_renew_flag       = 0
@@ -279,5 +304,45 @@ resource "tencentcloud_postgresql_readonly_instance" "instance" {
   vpc_id                = "vpc-48tmc13b"
   subnet_id             = "subnet-96hw3j18"
   zone                  = "ap-guangzhou-3"
+}
+`
+
+const testAccPostgresqlReadonlyInstanceInstance_tag = `
+resource "tencentcloud_postgresql_readonly_instance" "instance" {
+  db_version            = "17.0"
+  master_db_instance_id = "postgres-opvw0y6n"
+  memory                = 4
+  cpu                   = 2
+  name                  = "tf_ro_instance_tag"
+  need_support_ipv6     = 0
+  project_id            = 0
+  security_groups_ids   = ["sg-kensue7b"]
+  storage               = 20
+  vpc_id                = "vpc-kvy6qnqj"
+  subnet_id             = "subnet-rgj6t4u0"
+  zone                  = "ap-guangzhou-6"
+  tags = {
+    tf = "test"
+  }
+}
+`
+
+const testAccPostgresqlReadonlyInstanceInstance_tagUpdate = `
+resource "tencentcloud_postgresql_readonly_instance" "instance" {
+  db_version            = "17.0"
+  master_db_instance_id = "postgres-opvw0y6n"
+  memory                = 4
+  cpu                   = 2
+  name                  = "tf_ro_instance_tag"
+  need_support_ipv6     = 0
+  project_id            = 0
+  security_groups_ids   = ["sg-kensue7b"]
+  storage               = 20
+  vpc_id                = "vpc-kvy6qnqj"
+  subnet_id             = "subnet-rgj6t4u0"
+  zone                  = "ap-guangzhou-6"
+  tags = {
+    tf = "test1"
+  }
 }
 `
