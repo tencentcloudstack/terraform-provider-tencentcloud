@@ -4,18 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_as_last_activity"
 sidebar_current: "docs-tencentcloud-datasource-as_last_activity"
 description: |-
-  Use this data source to query detailed information of as last_activity
+  Use this data source to query detailed information of AS last activity
 ---
 
 # tencentcloud_as_last_activity
 
-Use this data source to query detailed information of as last_activity
+Use this data source to query detailed information of AS last activity
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_as_last_activity" "last_activity" {
-  auto_scaling_group_ids = ["asc-lo0b94oy"]
+data "tencentcloud_as_last_activity" "example" {
+  auto_scaling_group_ids     = ["asg-3st9wq9m"]
+  exclude_cancelled_activity = true
 }
 ```
 
@@ -24,6 +25,7 @@ data "tencentcloud_as_last_activity" "last_activity" {
 The following arguments are supported:
 
 * `auto_scaling_group_ids` - (Required, Set: [`String`]) ID list of an auto scaling group.
+* `exclude_cancelled_activity` - (Optional, Bool) Exclude cancellation type activities when querying. The default value is false, indicating that cancellation type activities are not excluded.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference

@@ -722,19 +722,21 @@ func (me *AsService) DescribeAsLastActivity(ctx context.Context, param map[strin
 		if k == "AutoScalingGroupIds" {
 			request.AutoScalingGroupIds = v.([]*string)
 		}
+
+		if k == "ExcludeCancelledActivity" {
+			request.ExcludeCancelledActivity = v.(*bool)
+		}
 	}
 
 	ratelimit.Check(request.GetAction())
-
 	response, err := me.client.UseAsClient().DescribeAutoScalingGroupLastActivities(request)
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	lastActivity = response.Response.ActivitySet
-
 	return
 }
 
