@@ -177,6 +177,16 @@ resource_metas:
           widget: text
           filter:
             enable: true
+          batch_add:
+            display_name: 记录值
+            batch_add_mode: one_to_one
+            filter:
+              enable: true
+            delimiter: |-
+              [\s
+              ,;]
+            help: 多个记录值以英文逗号、英文分号、空格或换行分割
+            widget: textarea
         weight:
           display_name: 权重信息
           ref_variable_type: opx_weight
