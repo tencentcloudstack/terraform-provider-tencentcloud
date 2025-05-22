@@ -57,5 +57,5 @@ Import
 VPN connection can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_vpn_connection.foo vpnx-nadifg3s
+$ terraform import tencentcloud_vpn_connection.example vpnx-nadifg3s
 ```
