@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_private_dns_forward_rule"
 sidebar_current: "docs-tencentcloud-resource-private_dns_forward_rule"
 description: |-
-  Provides a resource to create a privatedns forward rule
+  Provides a resource to create a Private Dns forward rule
 ---
 
 # tencentcloud_private_dns_forward_rule
 
-Provides a resource to create a privatedns forward rule
+Provides a resource to create a Private Dns forward rule
 
 ## Example Usage
 
@@ -53,7 +53,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-private dns forward rule can be imported using the id, e.g.
+Private Dns forward rule can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_private_dns_forward_rule.example fid-dbc2c0a97c

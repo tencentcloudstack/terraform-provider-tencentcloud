@@ -17,8 +17,8 @@ func resourceTencentCloudPrivateDnsEndPointReadPreHandleResponse0(ctx context.Co
 	}
 
 	if resp.EndPointSet == nil && len(resp.EndPointSet) < 1 {
+		log.Printf("[WARN]%s resource `tencentcloud_private_dns_end_point` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `private_dns_end_point` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 

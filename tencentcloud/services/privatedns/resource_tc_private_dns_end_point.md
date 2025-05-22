@@ -1,4 +1,4 @@
-Provides a resource to create a privatedns end point
+Provides a resource to create a Private Dns end point
 
 Example Usage
 
@@ -13,7 +13,7 @@ resource "tencentcloud_private_dns_end_point" "example" {
 
 Import
 
-private dns end point can be imported using the id, e.g.
+Private Dns end point can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_private_dns_end_point.example eid-77a246c867

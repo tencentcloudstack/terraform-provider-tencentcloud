@@ -111,14 +111,13 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().CreatePrivateZoneRecord(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
 		if result == nil || result.Response == nil || result.Response.RecordId == nil {
-			e = fmt.Errorf("create PrivateDns record failed, Response is nil.")
-			return resource.NonRetryableError(e)
+			return resource.NonRetryableError(fmt.Errorf("Create PrivateDns record failed, Response is nil."))
 		}
 
 		response = result
@@ -136,7 +135,7 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		records, e := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, nil)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		}
 
 		if len(records) < 1 {
@@ -168,7 +167,7 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_zone.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_record.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -192,7 +191,7 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 
 	if len(records) < 1 {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `PrivateDnsRecord` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		log.Printf("[WARN]%s resource `tencentcloud_private_dns_record` [%s] not found, please check if it has been deleted.\n", logId, recordId)
 		return nil
 	}
 
@@ -205,7 +204,7 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 
 	if record == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `PrivateDnsRecord` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		log.Printf("[WARN]%s resource `tencentcloud_private_dns_record` [%s] not found, please check if it has been deleted.\n", logId, recordId)
 		return nil
 	}
 
@@ -262,10 +261,10 @@ func resourceTencentCloudDPrivateDnsRecordUpdate(d *schema.ResourceData, meta in
 		request.TTL = helper.Int64(int64(v.(int)))
 	}
 
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().ModifyPrivateZoneRecord(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		}
 
 		return nil
@@ -300,7 +299,7 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DeletePrivateZoneRecord(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		}
 
 		return nil
