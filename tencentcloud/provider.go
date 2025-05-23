@@ -1855,6 +1855,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_l4_proxy":                                                             teo.ResourceTencentCloudTeoL4Proxy(),
 			"tencentcloud_teo_l4_proxy_rule":                                                        teo.ResourceTencentCloudTeoL4ProxyRule(),
 			"tencentcloud_teo_l7_acc_rule":                                                          teo.ResourceTencentCloudTeoL7AccRule(),
+			"tencentcloud_teo_l7_acc_rule_v2":                                                       teo.ResourceTencentCloudTeoL7AccRuleV2(),
+			"tencentcloud_teo_l7_acc_rule_priority_operation":                                       teo.ResourceTencentCloudTeoL7AccRulePriorityOperation(),
 			"tencentcloud_teo_l7_acc_setting":                                                       teo.ResourceTencentCloudTeoL7AccSetting(),
 			"tencentcloud_teo_rule_engine":                                                          teo.ResourceTencentCloudTeoRuleEngine(),
 			"tencentcloud_teo_ownership_verify":                                                     teo.ResourceTencentCloudTeoOwnershipVerify(),

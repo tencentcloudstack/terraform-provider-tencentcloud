@@ -1608,13 +1608,21 @@ func (me *TeoService) DescribeTeoL4ProxyRuleById(ctx context.Context, zoneId str
 	return
 }
 
-func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId string) (ret *teov20220901.DescribeL7AccRulesResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId string, ruleId string) (ret *teov20220901.DescribeL7AccRulesResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teov20220901.NewDescribeL7AccRulesRequest()
 	response := teov20220901.NewDescribeL7AccRulesResponse()
 	request.ZoneId = helper.String(zoneId)
 
+	if ruleId != "" {
+		request.Filters = []*teov20220901.Filter{
+			{
+				Name:   helper.String("rule-id"),
+				Values: helper.Strings([]string{ruleId}),
+			},
+		}
+	}
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
