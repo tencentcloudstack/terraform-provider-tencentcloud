@@ -59,8 +59,9 @@ func NewBatchDeleteImagePersonalRequest() (request *BatchDeleteImagePersonalRequ
 func NewBatchDeleteImagePersonalResponse() (response *BatchDeleteImagePersonalResponse) {
     response = &BatchDeleteImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteImagePersonal
@@ -113,8 +114,9 @@ func NewBatchDeleteRepositoryPersonalRequest() (request *BatchDeleteRepositoryPe
 func NewBatchDeleteRepositoryPersonalResponse() (response *BatchDeleteRepositoryPersonalResponse) {
     response = &BatchDeleteRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteRepositoryPersonal
@@ -167,14 +169,16 @@ func NewCheckInstanceRequest() (request *CheckInstanceRequest) {
 func NewCheckInstanceResponse() (response *CheckInstanceResponse) {
     response = &CheckInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckInstance
 // 用于校验企业版实例信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -198,6 +202,7 @@ func (c *Client) CheckInstance(request *CheckInstanceRequest) (response *CheckIn
 // 用于校验企业版实例信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -243,14 +248,16 @@ func NewCheckInstanceNameRequest() (request *CheckInstanceNameRequest) {
 func NewCheckInstanceNameResponse() (response *CheckInstanceNameResponse) {
     response = &CheckInstanceNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckInstanceName
 // 检查待创建的实例名称是否符合规范
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -274,6 +281,7 @@ func (c *Client) CheckInstanceName(request *CheckInstanceNameRequest) (response 
 // 检查待创建的实例名称是否符合规范
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -319,8 +327,9 @@ func NewCreateApplicationTriggerPersonalRequest() (request *CreateApplicationTri
 func NewCreateApplicationTriggerPersonalResponse() (response *CreateApplicationTriggerPersonalResponse) {
     response = &CreateApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateApplicationTriggerPersonal
@@ -365,66 +374,6 @@ func (c *Client) CreateApplicationTriggerPersonalWithContext(ctx context.Context
     return
 }
 
-func NewCreateCustomAccountRequest() (request *CreateCustomAccountRequest) {
-    request = &CreateCustomAccountRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateCustomAccount")
-    
-    
-    return
-}
-
-func NewCreateCustomAccountResponse() (response *CreateCustomAccountResponse) {
-    response = &CreateCustomAccountResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// CreateCustomAccount
-// 创建自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateCustomAccount(request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
-    return c.CreateCustomAccountWithContext(context.Background(), request)
-}
-
-// CreateCustomAccount
-// 创建自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateCustomAccountWithContext(ctx context.Context, request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
-    if request == nil {
-        request = NewCreateCustomAccountRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateCustomAccount require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateCustomAccountResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewCreateImageAccelerationServiceRequest() (request *CreateImageAccelerationServiceRequest) {
     request = &CreateImageAccelerationServiceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -439,8 +388,9 @@ func NewCreateImageAccelerationServiceRequest() (request *CreateImageAcceleratio
 func NewCreateImageAccelerationServiceResponse() (response *CreateImageAccelerationServiceResponse) {
     response = &CreateImageAccelerationServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateImageAccelerationService
@@ -501,8 +451,9 @@ func NewCreateImmutableTagRulesRequest() (request *CreateImmutableTagRulesReques
 func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResponse) {
     response = &CreateImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateImmutableTagRules
@@ -516,6 +467,7 @@ func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResp
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest) (response *CreateImmutableTagRulesResponse, err error) {
     return c.CreateImmutableTagRulesWithContext(context.Background(), request)
 }
@@ -531,6 +483,7 @@ func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateImmutableTagRulesWithContext(ctx context.Context, request *CreateImmutableTagRulesRequest) (response *CreateImmutableTagRulesResponse, err error) {
     if request == nil {
         request = NewCreateImmutableTagRulesRequest()
@@ -561,8 +514,9 @@ func NewCreateInstanceRequest() (request *CreateInstanceRequest) {
 func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
     response = &CreateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstance
@@ -653,8 +607,9 @@ func NewCreateInstanceCustomizedDomainRequest() (request *CreateInstanceCustomiz
 func NewCreateInstanceCustomizedDomainResponse() (response *CreateInstanceCustomizedDomainResponse) {
     response = &CreateInstanceCustomizedDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstanceCustomizedDomain
@@ -673,6 +628,7 @@ func NewCreateInstanceCustomizedDomainResponse() (response *CreateInstanceCustom
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceCustomizedDomain(request *CreateInstanceCustomizedDomainRequest) (response *CreateInstanceCustomizedDomainResponse, err error) {
@@ -695,6 +651,7 @@ func (c *Client) CreateInstanceCustomizedDomain(request *CreateInstanceCustomize
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceCustomizedDomainWithContext(ctx context.Context, request *CreateInstanceCustomizedDomainRequest) (response *CreateInstanceCustomizedDomainResponse, err error) {
@@ -727,8 +684,9 @@ func NewCreateInstanceTokenRequest() (request *CreateInstanceTokenRequest) {
 func NewCreateInstanceTokenResponse() (response *CreateInstanceTokenResponse) {
     response = &CreateInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstanceToken
@@ -789,8 +747,9 @@ func NewCreateInternalEndpointDnsRequest() (request *CreateInternalEndpointDnsRe
 func NewCreateInternalEndpointDnsResponse() (response *CreateInternalEndpointDnsResponse) {
     response = &CreateInternalEndpointDnsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInternalEndpointDns
@@ -871,8 +830,9 @@ func NewCreateMultipleSecurityPolicyRequest() (request *CreateMultipleSecurityPo
 func NewCreateMultipleSecurityPolicyResponse() (response *CreateMultipleSecurityPolicyResponse) {
     response = &CreateMultipleSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateMultipleSecurityPolicy
@@ -941,8 +901,9 @@ func NewCreateNamespaceRequest() (request *CreateNamespaceRequest) {
 func NewCreateNamespaceResponse() (response *CreateNamespaceResponse) {
     response = &CreateNamespaceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNamespace
@@ -1023,8 +984,9 @@ func NewCreateNamespacePersonalRequest() (request *CreateNamespacePersonalReques
 func NewCreateNamespacePersonalResponse() (response *CreateNamespacePersonalResponse) {
     response = &CreateNamespacePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNamespacePersonal
@@ -1085,8 +1047,9 @@ func NewCreateReplicationInstanceRequest() (request *CreateReplicationInstanceRe
 func NewCreateReplicationInstanceResponse() (response *CreateReplicationInstanceResponse) {
     response = &CreateReplicationInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateReplicationInstance
@@ -1161,14 +1124,16 @@ func NewCreateRepositoryRequest() (request *CreateRepositoryRequest) {
 func NewCreateRepositoryResponse() (response *CreateRepositoryResponse) {
     response = &CreateRepositoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRepository
 // 用于企业版创建镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1188,6 +1153,7 @@ func (c *Client) CreateRepository(request *CreateRepositoryRequest) (response *C
 // 用于企业版创建镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1229,8 +1195,9 @@ func NewCreateRepositoryPersonalRequest() (request *CreateRepositoryPersonalRequ
 func NewCreateRepositoryPersonalResponse() (response *CreateRepositoryPersonalResponse) {
     response = &CreateRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRepositoryPersonal
@@ -1285,8 +1252,9 @@ func NewCreateSecurityPolicyRequest() (request *CreateSecurityPolicyRequest) {
 func NewCreateSecurityPolicyResponse() (response *CreateSecurityPolicyResponse) {
     response = &CreateSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSecurityPolicy
@@ -1347,12 +1315,13 @@ func NewCreateServiceAccountRequest() (request *CreateServiceAccountRequest) {
 func NewCreateServiceAccountResponse() (response *CreateServiceAccountResponse) {
     response = &CreateServiceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateServiceAccount
-// 创建自定义账户
+// 创建服务级账户
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1367,7 +1336,7 @@ func (c *Client) CreateServiceAccount(request *CreateServiceAccountRequest) (res
 }
 
 // CreateServiceAccount
-// 创建自定义账户
+// 创建服务级账户
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1407,14 +1376,16 @@ func NewCreateSignatureRequest() (request *CreateSignatureRequest) {
 func NewCreateSignatureResponse() (response *CreateSignatureResponse) {
     response = &CreateSignatureResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSignature
 // 为一个镜像版本创建签名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1435,6 +1406,7 @@ func (c *Client) CreateSignature(request *CreateSignatureRequest) (response *Cre
 // 为一个镜像版本创建签名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1477,14 +1449,16 @@ func NewCreateSignaturePolicyRequest() (request *CreateSignaturePolicyRequest) {
 func NewCreateSignaturePolicyResponse() (response *CreateSignaturePolicyResponse) {
     response = &CreateSignaturePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSignaturePolicy
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -1496,6 +1470,7 @@ func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (r
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -1529,8 +1504,9 @@ func NewCreateTagRetentionExecutionRequest() (request *CreateTagRetentionExecuti
 func NewCreateTagRetentionExecutionResponse() (response *CreateTagRetentionExecutionResponse) {
     response = &CreateTagRetentionExecutionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTagRetentionExecution
@@ -1599,20 +1575,23 @@ func NewCreateTagRetentionRuleRequest() (request *CreateTagRetentionRuleRequest)
 func NewCreateTagRetentionRuleResponse() (response *CreateTagRetentionRuleResponse) {
     response = &CreateTagRetentionRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTagRetentionRule
 // 创建版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
 //  INTERNALERROR_ERRNOTEXIST = "InternalError.ErrNotExist"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -1628,12 +1607,14 @@ func (c *Client) CreateTagRetentionRule(request *CreateTagRetentionRuleRequest) 
 // 创建版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
 //  INTERNALERROR_ERRNOTEXIST = "InternalError.ErrNotExist"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -1671,8 +1652,9 @@ func NewCreateUserPersonalRequest() (request *CreateUserPersonalRequest) {
 func NewCreateUserPersonalResponse() (response *CreateUserPersonalResponse) {
     response = &CreateUserPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateUserPersonal
@@ -1723,8 +1705,9 @@ func NewCreateWebhookTriggerRequest() (request *CreateWebhookTriggerRequest) {
 func NewCreateWebhookTriggerResponse() (response *CreateWebhookTriggerResponse) {
     response = &CreateWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateWebhookTrigger
@@ -1783,8 +1766,9 @@ func NewDeleteApplicationTriggerPersonalRequest() (request *DeleteApplicationTri
 func NewDeleteApplicationTriggerPersonalResponse() (response *DeleteApplicationTriggerPersonalResponse) {
     response = &DeleteApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteApplicationTriggerPersonal
@@ -1821,62 +1805,6 @@ func (c *Client) DeleteApplicationTriggerPersonalWithContext(ctx context.Context
     return
 }
 
-func NewDeleteCustomAccountRequest() (request *DeleteCustomAccountRequest) {
-    request = &DeleteCustomAccountRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteCustomAccount")
-    
-    
-    return
-}
-
-func NewDeleteCustomAccountResponse() (response *DeleteCustomAccountResponse) {
-    response = &DeleteCustomAccountResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DeleteCustomAccount
-// 删除自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DeleteCustomAccount(request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
-    return c.DeleteCustomAccountWithContext(context.Background(), request)
-}
-
-// DeleteCustomAccount
-// 删除自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DeleteCustomAccountWithContext(ctx context.Context, request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
-    if request == nil {
-        request = NewDeleteCustomAccountRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteCustomAccount require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteCustomAccountResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDeleteImageRequest() (request *DeleteImageRequest) {
     request = &DeleteImageRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1891,14 +1819,16 @@ func NewDeleteImageRequest() (request *DeleteImageRequest) {
 func NewDeleteImageResponse() (response *DeleteImageResponse) {
     response = &DeleteImageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImage
 // 删除指定镜像
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -1918,6 +1848,7 @@ func (c *Client) DeleteImage(request *DeleteImageRequest) (response *DeleteImage
 // 删除指定镜像
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -1959,8 +1890,9 @@ func NewDeleteImageAccelerateServiceRequest() (request *DeleteImageAccelerateSer
 func NewDeleteImageAccelerateServiceResponse() (response *DeleteImageAccelerateServiceResponse) {
     response = &DeleteImageAccelerateServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImageAccelerateService
@@ -2019,8 +1951,9 @@ func NewDeleteImageLifecycleGlobalPersonalRequest() (request *DeleteImageLifecyc
 func NewDeleteImageLifecycleGlobalPersonalResponse() (response *DeleteImageLifecycleGlobalPersonalResponse) {
     response = &DeleteImageLifecycleGlobalPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImageLifecycleGlobalPersonal
@@ -2067,8 +2000,9 @@ func NewDeleteImagePersonalRequest() (request *DeleteImagePersonalRequest) {
 func NewDeleteImagePersonalResponse() (response *DeleteImagePersonalResponse) {
     response = &DeleteImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImagePersonal
@@ -2121,8 +2055,9 @@ func NewDeleteImmutableTagRulesRequest() (request *DeleteImmutableTagRulesReques
 func NewDeleteImmutableTagRulesResponse() (response *DeleteImmutableTagRulesResponse) {
     response = &DeleteImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImmutableTagRules
@@ -2134,6 +2069,7 @@ func NewDeleteImmutableTagRulesResponse() (response *DeleteImmutableTagRulesResp
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteImmutableTagRules(request *DeleteImmutableTagRulesRequest) (response *DeleteImmutableTagRulesResponse, err error) {
     return c.DeleteImmutableTagRulesWithContext(context.Background(), request)
 }
@@ -2147,6 +2083,7 @@ func (c *Client) DeleteImmutableTagRules(request *DeleteImmutableTagRulesRequest
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteImmutableTagRulesWithContext(ctx context.Context, request *DeleteImmutableTagRulesRequest) (response *DeleteImmutableTagRulesResponse, err error) {
     if request == nil {
         request = NewDeleteImmutableTagRulesRequest()
@@ -2177,19 +2114,22 @@ func NewDeleteInstanceRequest() (request *DeleteInstanceRequest) {
 func NewDeleteInstanceResponse() (response *DeleteInstanceResponse) {
     response = &DeleteInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstance
 // 删除镜像仓库企业版实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADEFAILED = "FailedOperation.TradeFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2202,11 +2142,13 @@ func (c *Client) DeleteInstance(request *DeleteInstanceRequest) (response *Delet
 // 删除镜像仓库企业版实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADEFAILED = "FailedOperation.TradeFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2241,14 +2183,16 @@ func NewDeleteInstanceCustomizedDomainRequest() (request *DeleteInstanceCustomiz
 func NewDeleteInstanceCustomizedDomainResponse() (response *DeleteInstanceCustomizedDomainResponse) {
     response = &DeleteInstanceCustomizedDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstanceCustomizedDomain
 // 删除自定义域名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -2270,6 +2214,7 @@ func (c *Client) DeleteInstanceCustomizedDomain(request *DeleteInstanceCustomize
 // 删除自定义域名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -2313,8 +2258,9 @@ func NewDeleteInstanceTokenRequest() (request *DeleteInstanceTokenRequest) {
 func NewDeleteInstanceTokenResponse() (response *DeleteInstanceTokenResponse) {
     response = &DeleteInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstanceToken
@@ -2373,8 +2319,9 @@ func NewDeleteInternalEndpointDnsRequest() (request *DeleteInternalEndpointDnsRe
 func NewDeleteInternalEndpointDnsResponse() (response *DeleteInternalEndpointDnsResponse) {
     response = &DeleteInternalEndpointDnsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInternalEndpointDns
@@ -2447,8 +2394,9 @@ func NewDeleteMultipleSecurityPolicyRequest() (request *DeleteMultipleSecurityPo
 func NewDeleteMultipleSecurityPolicyResponse() (response *DeleteMultipleSecurityPolicyResponse) {
     response = &DeleteMultipleSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMultipleSecurityPolicy
@@ -2507,8 +2455,9 @@ func NewDeleteNamespaceRequest() (request *DeleteNamespaceRequest) {
 func NewDeleteNamespaceResponse() (response *DeleteNamespaceResponse) {
     response = &DeleteNamespaceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNamespace
@@ -2516,10 +2465,12 @@ func NewDeleteNamespaceResponse() (response *DeleteNamespaceResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_ERRORTCRRESOURCECONFLICT = "FailedOperation.ErrorTcrResourceConflict"
 //  FAILEDOPERATION_ERRORTCRUNAUTHORIZED = "FailedOperation.ErrorTcrUnauthorized"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -2541,10 +2492,12 @@ func (c *Client) DeleteNamespace(request *DeleteNamespaceRequest) (response *Del
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_ERRORTCRRESOURCECONFLICT = "FailedOperation.ErrorTcrResourceConflict"
 //  FAILEDOPERATION_ERRORTCRUNAUTHORIZED = "FailedOperation.ErrorTcrUnauthorized"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -2587,8 +2540,9 @@ func NewDeleteNamespacePersonalRequest() (request *DeleteNamespacePersonalReques
 func NewDeleteNamespacePersonalResponse() (response *DeleteNamespacePersonalResponse) {
     response = &DeleteNamespacePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNamespacePersonal
@@ -2643,8 +2597,9 @@ func NewDeleteReplicationInstanceRequest() (request *DeleteReplicationInstanceRe
 func NewDeleteReplicationInstanceResponse() (response *DeleteReplicationInstanceResponse) {
     response = &DeleteReplicationInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteReplicationInstance
@@ -2707,14 +2662,16 @@ func NewDeleteRepositoryRequest() (request *DeleteRepositoryRequest) {
 func NewDeleteRepositoryResponse() (response *DeleteRepositoryResponse) {
     response = &DeleteRepositoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRepository
 // 删除镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2734,6 +2691,7 @@ func (c *Client) DeleteRepository(request *DeleteRepositoryRequest) (response *D
 // 删除镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2775,8 +2733,9 @@ func NewDeleteRepositoryPersonalRequest() (request *DeleteRepositoryPersonalRequ
 func NewDeleteRepositoryPersonalResponse() (response *DeleteRepositoryPersonalResponse) {
     response = &DeleteRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRepositoryPersonal
@@ -2829,14 +2788,17 @@ func NewDeleteRepositoryTagsRequest() (request *DeleteRepositoryTagsRequest) {
 func NewDeleteRepositoryTagsResponse() (response *DeleteRepositoryTagsResponse) {
     response = &DeleteRepositoryTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRepositoryTags
 // 用于企业版批量删除Repository Tag
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2856,6 +2818,8 @@ func (c *Client) DeleteRepositoryTags(request *DeleteRepositoryTagsRequest) (res
 // 用于企业版批量删除Repository Tag
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2897,8 +2861,9 @@ func NewDeleteSecurityPolicyRequest() (request *DeleteSecurityPolicyRequest) {
 func NewDeleteSecurityPolicyResponse() (response *DeleteSecurityPolicyResponse) {
     response = &DeleteSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSecurityPolicy
@@ -2967,8 +2932,9 @@ func NewDeleteServiceAccountRequest() (request *DeleteServiceAccountRequest) {
 func NewDeleteServiceAccountResponse() (response *DeleteServiceAccountResponse) {
     response = &DeleteServiceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteServiceAccount
@@ -3023,8 +2989,9 @@ func NewDeleteSignaturePolicyRequest() (request *DeleteSignaturePolicyRequest) {
 func NewDeleteSignaturePolicyResponse() (response *DeleteSignaturePolicyResponse) {
     response = &DeleteSignaturePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSignaturePolicy
@@ -3101,14 +3068,16 @@ func NewDeleteTagRetentionRuleRequest() (request *DeleteTagRetentionRuleRequest)
 func NewDeleteTagRetentionRuleResponse() (response *DeleteTagRetentionRuleResponse) {
     response = &DeleteTagRetentionRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTagRetentionRule
 // 删除版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -3130,6 +3099,7 @@ func (c *Client) DeleteTagRetentionRule(request *DeleteTagRetentionRuleRequest) 
 // 删除版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -3173,22 +3143,24 @@ func NewDeleteWebhookTriggerRequest() (request *DeleteWebhookTriggerRequest) {
 func NewDeleteWebhookTriggerResponse() (response *DeleteWebhookTriggerResponse) {
     response = &DeleteWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWebhookTrigger
 // 删除触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
-//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
     return c.DeleteWebhookTriggerWithContext(context.Background(), request)
 }
@@ -3197,14 +3169,15 @@ func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (res
 // 删除触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
-//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWebhookTriggerWithContext(ctx context.Context, request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
     if request == nil {
         request = NewDeleteWebhookTriggerRequest()
@@ -3235,8 +3208,9 @@ func NewDescribeApplicationTriggerLogPersonalRequest() (request *DescribeApplica
 func NewDescribeApplicationTriggerLogPersonalResponse() (response *DescribeApplicationTriggerLogPersonalResponse) {
     response = &DescribeApplicationTriggerLogPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeApplicationTriggerLogPersonal
@@ -3285,8 +3259,9 @@ func NewDescribeApplicationTriggerPersonalRequest() (request *DescribeApplicatio
 func NewDescribeApplicationTriggerPersonalResponse() (response *DescribeApplicationTriggerPersonalResponse) {
     response = &DescribeApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeApplicationTriggerPersonal
@@ -3337,8 +3312,9 @@ func NewDescribeChartDownloadInfoRequest() (request *DescribeChartDownloadInfoRe
 func NewDescribeChartDownloadInfoResponse() (response *DescribeChartDownloadInfoResponse) {
     response = &DescribeChartDownloadInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeChartDownloadInfo
@@ -3377,64 +3353,6 @@ func (c *Client) DescribeChartDownloadInfoWithContext(ctx context.Context, reque
     return
 }
 
-func NewDescribeCustomAccountsRequest() (request *DescribeCustomAccountsRequest) {
-    request = &DescribeCustomAccountsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeCustomAccounts")
-    
-    
-    return
-}
-
-func NewDescribeCustomAccountsResponse() (response *DescribeCustomAccountsResponse) {
-    response = &DescribeCustomAccountsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeCustomAccounts
-// 查询自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeCustomAccounts(request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
-    return c.DescribeCustomAccountsWithContext(context.Background(), request)
-}
-
-// DescribeCustomAccounts
-// 查询自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeCustomAccountsWithContext(ctx context.Context, request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
-    if request == nil {
-        request = NewDescribeCustomAccountsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCustomAccounts require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeCustomAccountsResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeExternalEndpointStatusRequest() (request *DescribeExternalEndpointStatusRequest) {
     request = &DescribeExternalEndpointStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3449,8 +3367,9 @@ func NewDescribeExternalEndpointStatusRequest() (request *DescribeExternalEndpoi
 func NewDescribeExternalEndpointStatusResponse() (response *DescribeExternalEndpointStatusResponse) {
     response = &DescribeExternalEndpointStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExternalEndpointStatus
@@ -3519,8 +3438,9 @@ func NewDescribeFavorRepositoryPersonalRequest() (request *DescribeFavorReposito
 func NewDescribeFavorRepositoryPersonalResponse() (response *DescribeFavorRepositoryPersonalResponse) {
     response = &DescribeFavorRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFavorRepositoryPersonal
@@ -3569,8 +3489,9 @@ func NewDescribeGCJobsRequest() (request *DescribeGCJobsRequest) {
 func NewDescribeGCJobsResponse() (response *DescribeGCJobsResponse) {
     response = &DescribeGCJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGCJobs
@@ -3631,8 +3552,9 @@ func NewDescribeImageAccelerateServiceRequest() (request *DescribeImageAccelerat
 func NewDescribeImageAccelerateServiceResponse() (response *DescribeImageAccelerateServiceResponse) {
     response = &DescribeImageAccelerateServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageAccelerateService
@@ -3691,8 +3613,9 @@ func NewDescribeImageFilterPersonalRequest() (request *DescribeImageFilterPerson
 func NewDescribeImageFilterPersonalResponse() (response *DescribeImageFilterPersonalResponse) {
     response = &DescribeImageFilterPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageFilterPersonal
@@ -3745,8 +3668,9 @@ func NewDescribeImageLifecycleGlobalPersonalRequest() (request *DescribeImageLif
 func NewDescribeImageLifecycleGlobalPersonalResponse() (response *DescribeImageLifecycleGlobalPersonalResponse) {
     response = &DescribeImageLifecycleGlobalPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageLifecycleGlobalPersonal
@@ -3793,8 +3717,9 @@ func NewDescribeImageLifecyclePersonalRequest() (request *DescribeImageLifecycle
 func NewDescribeImageLifecyclePersonalResponse() (response *DescribeImageLifecyclePersonalResponse) {
     response = &DescribeImageLifecyclePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageLifecyclePersonal
@@ -3843,15 +3768,19 @@ func NewDescribeImageManifestsRequest() (request *DescribeImageManifestsRequest)
 func NewDescribeImageManifestsResponse() (response *DescribeImageManifestsResponse) {
     response = &DescribeImageManifestsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageManifests
 // 查询容器镜像Manifest信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -3871,7 +3800,10 @@ func (c *Client) DescribeImageManifests(request *DescribeImageManifestsRequest) 
 // 查询容器镜像Manifest信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -3913,8 +3845,9 @@ func NewDescribeImagePersonalRequest() (request *DescribeImagePersonalRequest) {
 func NewDescribeImagePersonalResponse() (response *DescribeImagePersonalResponse) {
     response = &DescribeImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImagePersonal
@@ -3967,15 +3900,20 @@ func NewDescribeImagesRequest() (request *DescribeImagesRequest) {
 func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
     response = &DescribeImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImages
 // 查询镜像版本列表或指定容器镜像信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -3986,6 +3924,7 @@ func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *DescribeImagesResponse, err error) {
     return c.DescribeImagesWithContext(context.Background(), request)
 }
@@ -3994,7 +3933,11 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 // 查询镜像版本列表或指定容器镜像信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -4005,6 +3948,7 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImagesWithContext(ctx context.Context, request *DescribeImagesRequest) (response *DescribeImagesResponse, err error) {
     if request == nil {
         request = NewDescribeImagesRequest()
@@ -4035,8 +3979,9 @@ func NewDescribeImmutableTagRulesRequest() (request *DescribeImmutableTagRulesRe
 func NewDescribeImmutableTagRulesResponse() (response *DescribeImmutableTagRulesResponse) {
     response = &DescribeImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImmutableTagRules
@@ -4099,12 +4044,13 @@ func NewDescribeInstanceAllNamespacesRequest() (request *DescribeInstanceAllName
 func NewDescribeInstanceAllNamespacesResponse() (response *DescribeInstanceAllNamespacesResponse) {
     response = &DescribeInstanceAllNamespacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceAllNamespaces
-// 查询所有实例命名空间列表
+// 查询所有有实例命名空间列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
@@ -4127,7 +4073,7 @@ func (c *Client) DescribeInstanceAllNamespaces(request *DescribeInstanceAllNames
 }
 
 // DescribeInstanceAllNamespaces
-// 查询所有实例命名空间列表
+// 查询所有有实例命名空间列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
@@ -4175,8 +4121,9 @@ func NewDescribeInstanceCustomizedDomainRequest() (request *DescribeInstanceCust
 func NewDescribeInstanceCustomizedDomainResponse() (response *DescribeInstanceCustomizedDomainResponse) {
     response = &DescribeInstanceCustomizedDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceCustomizedDomain
@@ -4245,8 +4192,9 @@ func NewDescribeInstanceStatusRequest() (request *DescribeInstanceStatusRequest)
 func NewDescribeInstanceStatusResponse() (response *DescribeInstanceStatusResponse) {
     response = &DescribeInstanceStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceStatus
@@ -4305,8 +4253,9 @@ func NewDescribeInstanceTokenRequest() (request *DescribeInstanceTokenRequest) {
 func NewDescribeInstanceTokenResponse() (response *DescribeInstanceTokenResponse) {
     response = &DescribeInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceToken
@@ -4363,8 +4312,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -4429,8 +4379,9 @@ func NewDescribeInternalEndpointDnsStatusRequest() (request *DescribeInternalEnd
 func NewDescribeInternalEndpointDnsStatusResponse() (response *DescribeInternalEndpointDnsStatusResponse) {
     response = &DescribeInternalEndpointDnsStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternalEndpointDnsStatus
@@ -4497,8 +4448,9 @@ func NewDescribeInternalEndpointsRequest() (request *DescribeInternalEndpointsRe
 func NewDescribeInternalEndpointsResponse() (response *DescribeInternalEndpointsResponse) {
     response = &DescribeInternalEndpointsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternalEndpoints
@@ -4557,8 +4509,9 @@ func NewDescribeNamespacePersonalRequest() (request *DescribeNamespacePersonalRe
 func NewDescribeNamespacePersonalResponse() (response *DescribeNamespacePersonalResponse) {
     response = &DescribeNamespacePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNamespacePersonal
@@ -4609,8 +4562,9 @@ func NewDescribeNamespacesRequest() (request *DescribeNamespacesRequest) {
 func NewDescribeNamespacesResponse() (response *DescribeNamespacesResponse) {
     response = &DescribeNamespacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNamespaces
@@ -4695,14 +4649,16 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
 func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
     response = &DescribeRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRegions
 // 用于在TCR中获取可用区域
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4716,6 +4672,7 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
 // 用于在TCR中获取可用区域
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4751,8 +4708,9 @@ func NewDescribeReplicationInstanceCreateTasksRequest() (request *DescribeReplic
 func NewDescribeReplicationInstanceCreateTasksResponse() (response *DescribeReplicationInstanceCreateTasksResponse) {
     response = &DescribeReplicationInstanceCreateTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReplicationInstanceCreateTasks
@@ -4811,8 +4769,9 @@ func NewDescribeReplicationInstanceSyncStatusRequest() (request *DescribeReplica
 func NewDescribeReplicationInstanceSyncStatusResponse() (response *DescribeReplicationInstanceSyncStatusResponse) {
     response = &DescribeReplicationInstanceSyncStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReplicationInstanceSyncStatus
@@ -4871,8 +4830,9 @@ func NewDescribeReplicationInstancesRequest() (request *DescribeReplicationInsta
 func NewDescribeReplicationInstancesResponse() (response *DescribeReplicationInstancesResponse) {
     response = &DescribeReplicationInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReplicationInstances
@@ -4935,16 +4895,20 @@ func NewDescribeRepositoriesRequest() (request *DescribeRepositoriesRequest) {
 func NewDescribeRepositoriesResponse() (response *DescribeRepositoriesResponse) {
     response = &DescribeRepositoriesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositories
 // 查询镜像仓库列表或指定镜像仓库信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -4964,8 +4928,11 @@ func (c *Client) DescribeRepositories(request *DescribeRepositoriesRequest) (res
 // 查询镜像仓库列表或指定镜像仓库信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -5007,8 +4974,9 @@ func NewDescribeRepositoryFilterPersonalRequest() (request *DescribeRepositoryFi
 func NewDescribeRepositoryFilterPersonalResponse() (response *DescribeRepositoryFilterPersonalResponse) {
     response = &DescribeRepositoryFilterPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositoryFilterPersonal
@@ -5059,8 +5027,9 @@ func NewDescribeRepositoryOwnerPersonalRequest() (request *DescribeRepositoryOwn
 func NewDescribeRepositoryOwnerPersonalResponse() (response *DescribeRepositoryOwnerPersonalResponse) {
     response = &DescribeRepositoryOwnerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositoryOwnerPersonal
@@ -5113,8 +5082,9 @@ func NewDescribeRepositoryPersonalRequest() (request *DescribeRepositoryPersonal
 func NewDescribeRepositoryPersonalResponse() (response *DescribeRepositoryPersonalResponse) {
     response = &DescribeRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositoryPersonal
@@ -5165,8 +5135,9 @@ func NewDescribeSecurityPoliciesRequest() (request *DescribeSecurityPoliciesRequ
 func NewDescribeSecurityPoliciesResponse() (response *DescribeSecurityPoliciesResponse) {
     response = &DescribeSecurityPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityPolicies
@@ -5237,8 +5208,9 @@ func NewDescribeServiceAccountsRequest() (request *DescribeServiceAccountsReques
 func NewDescribeServiceAccountsResponse() (response *DescribeServiceAccountsResponse) {
     response = &DescribeServiceAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeServiceAccounts
@@ -5295,14 +5267,16 @@ func NewDescribeTagRetentionExecutionRequest() (request *DescribeTagRetentionExe
 func NewDescribeTagRetentionExecutionResponse() (response *DescribeTagRetentionExecutionResponse) {
     response = &DescribeTagRetentionExecutionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagRetentionExecution
 // 查询版本保留执行记录
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5310,6 +5284,7 @@ func NewDescribeTagRetentionExecutionResponse() (response *DescribeTagRetentionE
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -5323,6 +5298,7 @@ func (c *Client) DescribeTagRetentionExecution(request *DescribeTagRetentionExec
 // 查询版本保留执行记录
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5330,6 +5306,7 @@ func (c *Client) DescribeTagRetentionExecution(request *DescribeTagRetentionExec
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -5365,14 +5342,16 @@ func NewDescribeTagRetentionExecutionTaskRequest() (request *DescribeTagRetentio
 func NewDescribeTagRetentionExecutionTaskResponse() (response *DescribeTagRetentionExecutionTaskResponse) {
     response = &DescribeTagRetentionExecutionTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagRetentionExecutionTask
 // 查询版本保留执行任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5393,6 +5372,7 @@ func (c *Client) DescribeTagRetentionExecutionTask(request *DescribeTagRetention
 // 查询版本保留执行任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5435,14 +5415,16 @@ func NewDescribeTagRetentionRulesRequest() (request *DescribeTagRetentionRulesRe
 func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRulesResponse) {
     response = &DescribeTagRetentionRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagRetentionRules
-// 查询版本保留规则
+// 查询镜像版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -5463,9 +5445,10 @@ func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesReq
 }
 
 // DescribeTagRetentionRules
-// 查询版本保留规则
+// 查询镜像版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -5511,8 +5494,9 @@ func NewDescribeUserQuotaPersonalRequest() (request *DescribeUserQuotaPersonalRe
 func NewDescribeUserQuotaPersonalResponse() (response *DescribeUserQuotaPersonalResponse) {
     response = &DescribeUserQuotaPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserQuotaPersonal
@@ -5559,14 +5543,16 @@ func NewDescribeWebhookTriggerRequest() (request *DescribeWebhookTriggerRequest)
 func NewDescribeWebhookTriggerResponse() (response *DescribeWebhookTriggerResponse) {
     response = &DescribeWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebhookTrigger
 // 查询触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5575,6 +5561,7 @@ func NewDescribeWebhookTriggerResponse() (response *DescribeWebhookTriggerRespon
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) (response *DescribeWebhookTriggerResponse, err error) {
     return c.DescribeWebhookTriggerWithContext(context.Background(), request)
 }
@@ -5583,6 +5570,7 @@ func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) 
 // 查询触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5591,6 +5579,7 @@ func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) 
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTriggerWithContext(ctx context.Context, request *DescribeWebhookTriggerRequest) (response *DescribeWebhookTriggerResponse, err error) {
     if request == nil {
         request = NewDescribeWebhookTriggerRequest()
@@ -5621,14 +5610,16 @@ func NewDescribeWebhookTriggerLogRequest() (request *DescribeWebhookTriggerLogRe
 func NewDescribeWebhookTriggerLogResponse() (response *DescribeWebhookTriggerLogResponse) {
     response = &DescribeWebhookTriggerLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebhookTriggerLog
 // 获取触发器日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5636,6 +5627,7 @@ func NewDescribeWebhookTriggerLogResponse() (response *DescribeWebhookTriggerLog
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogRequest) (response *DescribeWebhookTriggerLogResponse, err error) {
     return c.DescribeWebhookTriggerLogWithContext(context.Background(), request)
 }
@@ -5644,6 +5636,7 @@ func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogReq
 // 获取触发器日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5651,6 +5644,7 @@ func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogReq
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTriggerLogWithContext(ctx context.Context, request *DescribeWebhookTriggerLogRequest) (response *DescribeWebhookTriggerLogResponse, err error) {
     if request == nil {
         request = NewDescribeWebhookTriggerLogRequest()
@@ -5681,14 +5675,16 @@ func NewDownloadHelmChartRequest() (request *DownloadHelmChartRequest) {
 func NewDownloadHelmChartResponse() (response *DownloadHelmChartResponse) {
     response = &DownloadHelmChartResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DownloadHelmChart
 // 用于在TCR中下载helm chart
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5701,6 +5697,7 @@ func (c *Client) DownloadHelmChart(request *DownloadHelmChartRequest) (response 
 // 用于在TCR中下载helm chart
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5721,6 +5718,81 @@ func (c *Client) DownloadHelmChartWithContext(ctx context.Context, request *Down
     return
 }
 
+func NewDuplicateImageRequest() (request *DuplicateImageRequest) {
+    request = &DuplicateImageRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DuplicateImage")
+    
+    
+    return
+}
+
+func NewDuplicateImageResponse() (response *DuplicateImageResponse) {
+    response = &DuplicateImageResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DuplicateImage
+// 用于在企业版镜像仓库中复制镜像版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DuplicateImage(request *DuplicateImageRequest) (response *DuplicateImageResponse, err error) {
+    return c.DuplicateImageWithContext(context.Background(), request)
+}
+
+// DuplicateImage
+// 用于在企业版镜像仓库中复制镜像版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DuplicateImageWithContext(ctx context.Context, request *DuplicateImageRequest) (response *DuplicateImageResponse, err error) {
+    if request == nil {
+        request = NewDuplicateImageRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DuplicateImage require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDuplicateImageResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDuplicateImagePersonalRequest() (request *DuplicateImagePersonalRequest) {
     request = &DuplicateImagePersonalRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5735,8 +5807,9 @@ func NewDuplicateImagePersonalRequest() (request *DuplicateImagePersonalRequest)
 func NewDuplicateImagePersonalResponse() (response *DuplicateImagePersonalResponse) {
     response = &DuplicateImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DuplicateImagePersonal
@@ -5789,8 +5862,9 @@ func NewManageExternalEndpointRequest() (request *ManageExternalEndpointRequest)
 func NewManageExternalEndpointResponse() (response *ManageExternalEndpointResponse) {
     response = &ManageExternalEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageExternalEndpoint
@@ -5849,8 +5923,9 @@ func NewManageImageLifecycleGlobalPersonalRequest() (request *ManageImageLifecyc
 func NewManageImageLifecycleGlobalPersonalResponse() (response *ManageImageLifecycleGlobalPersonalResponse) {
     response = &ManageImageLifecycleGlobalPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageImageLifecycleGlobalPersonal
@@ -5897,8 +5972,9 @@ func NewManageInternalEndpointRequest() (request *ManageInternalEndpointRequest)
 func NewManageInternalEndpointResponse() (response *ManageInternalEndpointResponse) {
     response = &ManageInternalEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageInternalEndpoint
@@ -5916,6 +5992,7 @@ func NewManageInternalEndpointResponse() (response *ManageInternalEndpointRespon
 //  RESOURCEINSUFFICIENT_ERRORVPCDNSSTATUS = "ResourceInsufficient.ErrorVpcDnsStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) (response *ManageInternalEndpointResponse, err error) {
@@ -5937,6 +6014,7 @@ func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) 
 //  RESOURCEINSUFFICIENT_ERRORVPCDNSSTATUS = "ResourceInsufficient.ErrorVpcDnsStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageInternalEndpointWithContext(ctx context.Context, request *ManageInternalEndpointRequest) (response *ManageInternalEndpointResponse, err error) {
@@ -5969,8 +6047,9 @@ func NewManageReplicationRequest() (request *ManageReplicationRequest) {
 func NewManageReplicationResponse() (response *ManageReplicationResponse) {
     response = &ManageReplicationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageReplication
@@ -6043,8 +6122,9 @@ func NewModifyApplicationTriggerPersonalRequest() (request *ModifyApplicationTri
 func NewModifyApplicationTriggerPersonalResponse() (response *ModifyApplicationTriggerPersonalResponse) {
     response = &ModifyApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApplicationTriggerPersonal
@@ -6085,62 +6165,6 @@ func (c *Client) ModifyApplicationTriggerPersonalWithContext(ctx context.Context
     return
 }
 
-func NewModifyCustomAccountRequest() (request *ModifyCustomAccountRequest) {
-    request = &ModifyCustomAccountRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyCustomAccount")
-    
-    
-    return
-}
-
-func NewModifyCustomAccountResponse() (response *ModifyCustomAccountResponse) {
-    response = &ModifyCustomAccountResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyCustomAccount
-// 更新自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) ModifyCustomAccount(request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
-    return c.ModifyCustomAccountWithContext(context.Background(), request)
-}
-
-// ModifyCustomAccount
-// 更新自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) ModifyCustomAccountWithContext(ctx context.Context, request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
-    if request == nil {
-        request = NewModifyCustomAccountRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyCustomAccount require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyCustomAccountResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewModifyImmutableTagRulesRequest() (request *ModifyImmutableTagRulesRequest) {
     request = &ModifyImmutableTagRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6155,8 +6179,9 @@ func NewModifyImmutableTagRulesRequest() (request *ModifyImmutableTagRulesReques
 func NewModifyImmutableTagRulesResponse() (response *ModifyImmutableTagRulesResponse) {
     response = &ModifyImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyImmutableTagRules
@@ -6213,8 +6238,9 @@ func NewModifyInstanceRequest() (request *ModifyInstanceRequest) {
 func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
     response = &ModifyInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstance
@@ -6279,8 +6305,9 @@ func NewModifyInstanceTokenRequest() (request *ModifyInstanceTokenRequest) {
 func NewModifyInstanceTokenResponse() (response *ModifyInstanceTokenResponse) {
     response = &ModifyInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceToken
@@ -6339,14 +6366,16 @@ func NewModifyNamespaceRequest() (request *ModifyNamespaceRequest) {
 func NewModifyNamespaceResponse() (response *ModifyNamespaceResponse) {
     response = &ModifyNamespaceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNamespace
 // 更新命名空间信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6367,6 +6396,7 @@ func (c *Client) ModifyNamespace(request *ModifyNamespaceRequest) (response *Mod
 // 更新命名空间信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6409,14 +6439,16 @@ func NewModifyRepositoryRequest() (request *ModifyRepositoryRequest) {
 func NewModifyRepositoryResponse() (response *ModifyRepositoryResponse) {
     response = &ModifyRepositoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRepository
 // 更新镜像仓库信息，可修改仓库描述信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6435,6 +6467,7 @@ func (c *Client) ModifyRepository(request *ModifyRepositoryRequest) (response *M
 // 更新镜像仓库信息，可修改仓库描述信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6475,8 +6508,9 @@ func NewModifyRepositoryAccessPersonalRequest() (request *ModifyRepositoryAccess
 func NewModifyRepositoryAccessPersonalResponse() (response *ModifyRepositoryAccessPersonalResponse) {
     response = &ModifyRepositoryAccessPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRepositoryAccessPersonal
@@ -6529,8 +6563,9 @@ func NewModifyRepositoryInfoPersonalRequest() (request *ModifyRepositoryInfoPers
 func NewModifyRepositoryInfoPersonalResponse() (response *ModifyRepositoryInfoPersonalResponse) {
     response = &ModifyRepositoryInfoPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRepositoryInfoPersonal
@@ -6583,8 +6618,9 @@ func NewModifySecurityPolicyRequest() (request *ModifySecurityPolicyRequest) {
 func NewModifySecurityPolicyResponse() (response *ModifySecurityPolicyResponse) {
     response = &ModifySecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySecurityPolicy
@@ -6643,8 +6679,9 @@ func NewModifyServiceAccountRequest() (request *ModifyServiceAccountRequest) {
 func NewModifyServiceAccountResponse() (response *ModifyServiceAccountResponse) {
     response = &ModifyServiceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyServiceAccount
@@ -6685,6 +6722,63 @@ func (c *Client) ModifyServiceAccountWithContext(ctx context.Context, request *M
     return
 }
 
+func NewModifyServiceAccountPasswordRequest() (request *ModifyServiceAccountPasswordRequest) {
+    request = &ModifyServiceAccountPasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "ModifyServiceAccountPassword")
+    
+    
+    return
+}
+
+func NewModifyServiceAccountPasswordResponse() (response *ModifyServiceAccountPasswordResponse) {
+    response = &ModifyServiceAccountPasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyServiceAccountPassword
+// 更新服务级账号密码
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyServiceAccountPassword(request *ModifyServiceAccountPasswordRequest) (response *ModifyServiceAccountPasswordResponse, err error) {
+    return c.ModifyServiceAccountPasswordWithContext(context.Background(), request)
+}
+
+// ModifyServiceAccountPassword
+// 更新服务级账号密码
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyServiceAccountPasswordWithContext(ctx context.Context, request *ModifyServiceAccountPasswordRequest) (response *ModifyServiceAccountPasswordResponse, err error) {
+    if request == nil {
+        request = NewModifyServiceAccountPasswordRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyServiceAccountPassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyServiceAccountPasswordResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyTagRetentionRuleRequest() (request *ModifyTagRetentionRuleRequest) {
     request = &ModifyTagRetentionRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6699,14 +6793,16 @@ func NewModifyTagRetentionRuleRequest() (request *ModifyTagRetentionRuleRequest)
 func NewModifyTagRetentionRuleResponse() (response *ModifyTagRetentionRuleResponse) {
     response = &ModifyTagRetentionRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTagRetentionRule
 // 更新版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -6728,6 +6824,7 @@ func (c *Client) ModifyTagRetentionRule(request *ModifyTagRetentionRuleRequest) 
 // 更新版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -6771,8 +6868,9 @@ func NewModifyUserPasswordPersonalRequest() (request *ModifyUserPasswordPersonal
 func NewModifyUserPasswordPersonalResponse() (response *ModifyUserPasswordPersonalResponse) {
     response = &ModifyUserPasswordPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyUserPasswordPersonal
@@ -6823,14 +6921,16 @@ func NewModifyWebhookTriggerRequest() (request *ModifyWebhookTriggerRequest) {
 func NewModifyWebhookTriggerResponse() (response *ModifyWebhookTriggerResponse) {
     response = &ModifyWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebhookTrigger
 // 更新触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -6838,6 +6938,7 @@ func NewModifyWebhookTriggerResponse() (response *ModifyWebhookTriggerResponse) 
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (response *ModifyWebhookTriggerResponse, err error) {
     return c.ModifyWebhookTriggerWithContext(context.Background(), request)
 }
@@ -6846,6 +6947,7 @@ func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (res
 // 更新触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -6853,6 +6955,7 @@ func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (res
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyWebhookTriggerWithContext(ctx context.Context, request *ModifyWebhookTriggerRequest) (response *ModifyWebhookTriggerResponse, err error) {
     if request == nil {
         request = NewModifyWebhookTriggerRequest()
@@ -6883,8 +6986,9 @@ func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
 func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
     response = &RenewInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewInstance
@@ -6959,8 +7063,9 @@ func NewValidateNamespaceExistPersonalRequest() (request *ValidateNamespaceExist
 func NewValidateNamespaceExistPersonalResponse() (response *ValidateNamespaceExistPersonalResponse) {
     response = &ValidateNamespaceExistPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ValidateNamespaceExistPersonal
@@ -7009,8 +7114,9 @@ func NewValidateRepositoryExistPersonalRequest() (request *ValidateRepositoryExi
 func NewValidateRepositoryExistPersonalResponse() (response *ValidateRepositoryExistPersonalResponse) {
     response = &ValidateRepositoryExistPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ValidateRepositoryExistPersonal

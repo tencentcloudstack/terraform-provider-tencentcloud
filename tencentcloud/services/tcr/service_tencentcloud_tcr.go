@@ -1801,3 +1801,33 @@ func (me *TCRService) DeleteTcrServiceAccountById(ctx context.Context, registryI
 
 	return
 }
+
+func (me *TCRService) ModifyServiceAccountPassword(ctx context.Context, registryId string, name string, password string) (passwordResp string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tcr.NewModifyServiceAccountPasswordRequest()
+	request.RegistryId = &registryId
+	request.Name = &name
+	request.Random = helper.Bool(false)
+	request.Password = helper.String(password)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().ModifyServiceAccountPassword(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Password != nil {
+		passwordResp = *response.Response.Password
+	}
+	return
+}
