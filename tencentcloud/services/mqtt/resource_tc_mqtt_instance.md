@@ -26,9 +26,9 @@ resource "tencentcloud_subnet" "subnet" {
 
 // create mqtt instance
 resource "tencentcloud_mqtt_instance" "example" {
-  instance_type = "BASIC"
+  instance_type = "PRO"
   name          = "tf-example"
-  sku_code      = "basic_2k"
+  sku_code      = "pro_6k_1"
   remark        = "remarks."
   vpc_list {
     vpc_id    = tencentcloud_vpc.vpc.id
@@ -67,16 +67,17 @@ resource "tencentcloud_subnet" "subnet" {
 resource "tencentcloud_mqtt_instance" "example" {
   instance_type = "PRO"
   name          = "tf-example"
-  sku_code      = "pro_6k_1"
+  sku_code      = "pro_10k_2"
   remark        = "remarks."
   vpc_list {
     vpc_id    = tencentcloud_vpc.vpc.id
     subnet_id = tencentcloud_subnet.subnet.id
   }
-  pay_mode     = 1
-  time_span    = 1
-  renew_flag   = 1
-  force_delete = false
+  pay_mode             = 1
+  time_span            = 1
+  renew_flag           = 1
+  force_delete         = false
+  automatic_activation = true
   tags = {
     createBy = "Terraform"
   }

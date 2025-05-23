@@ -37,9 +37,9 @@ resource "tencentcloud_subnet" "subnet" {
 
 // create mqtt instance
 resource "tencentcloud_mqtt_instance" "example" {
-  instance_type = "BASIC"
+  instance_type = "PRO"
   name          = "tf-example"
-  sku_code      = "basic_2k"
+  sku_code      = "pro_6k_1"
   remark        = "remarks."
   vpc_list {
     vpc_id    = tencentcloud_vpc.vpc.id
@@ -78,16 +78,17 @@ resource "tencentcloud_subnet" "subnet" {
 resource "tencentcloud_mqtt_instance" "example" {
   instance_type = "PRO"
   name          = "tf-example"
-  sku_code      = "pro_6k_1"
+  sku_code      = "pro_10k_2"
   remark        = "remarks."
   vpc_list {
     vpc_id    = tencentcloud_vpc.vpc.id
     subnet_id = tencentcloud_subnet.subnet.id
   }
-  pay_mode     = 1
-  time_span    = 1
-  renew_flag   = 1
-  force_delete = false
+  pay_mode             = 1
+  time_span            = 1
+  renew_flag           = 1
+  force_delete         = false
+  automatic_activation = true
   tags = {
     createBy = "Terraform"
   }
@@ -98,11 +99,10 @@ resource "tencentcloud_mqtt_instance" "example" {
 
 The following arguments are supported:
 
-* `instance_type` - (Required, String) Instance type,
-BASIC for Basic Edition
-PRO for Professional Edition.
+* `instance_type` - (Required, String) Instance type. PRO for Professional Edition; PLATINUM for Platinum Edition.
 * `name` - (Required, String) Instance name.
 * `sku_code` - (Required, String) Product SKU, available SKUs can be queried via the DescribeProductSKUList API.
+* `automatic_activation` - (Optional, Bool) Is the automatic registration certificate automatically activated. Default is false.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
 * `pay_mode` - (Optional, Int) Payment mode (0: Postpaid; 1: Prepaid).
 * `remark` - (Optional, String) Remarks.
@@ -121,7 +121,6 @@ The `vpc_list` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `automatic_activation` - Is the automatic registration certificate automatically activated.
 * `device_certificate_provision_type` - Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
 
 
