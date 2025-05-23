@@ -1,3 +1,16 @@
+## 1.81.195(May 23 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_teo_l7_acc_rule_priority_operation` ([#3376](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3376))
+* **New Resource:** `tencentcloud_teo_l7_acc_rule_v2` ([#3376](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3376))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mqtt_instance: support `automatic_activation` field edit ([#3374](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3374))
+* resource/tencentcloud_tcr_service_account: support update password ([#3346](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3346))
+* resource/tencentcloud_vpn_connection: update `security_group_policy` code logic ([#3373](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3373))
+
 ## 1.81.194(May 21 , 2025)
 
 FEATURES:
