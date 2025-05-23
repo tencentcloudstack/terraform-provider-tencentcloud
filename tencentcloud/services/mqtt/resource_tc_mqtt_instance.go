@@ -25,7 +25,7 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 			"instance_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Instance type,\nBASIC for Basic Edition\nPRO for Professional Edition.",
+				Description: "Instance type. PRO for Professional Edition; PLATINUM for Platinum Edition.",
 			},
 
 			"name": {
@@ -100,8 +100,9 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 
 			"automatic_activation": {
 				Type:        schema.TypeBool,
+				Optional:    true,
 				Computed:    true,
-				Description: "Is the automatic registration certificate automatically activated.",
+				Description: "Is the automatic registration certificate automatically activated. Default is false.",
 			},
 
 			"force_delete": {
@@ -223,6 +224,30 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 	if err != nil {
 		log.Printf("[CRITAL]%s create mqtt failed, reason:%+v", logId, err)
 		return reqErr
+	}
+
+	// open automatic_activation
+	if v, ok := d.GetOkExists("automatic_activation"); ok {
+		if v.(bool) {
+			modifyRequest := mqttv20240516.NewModifyInstanceRequest()
+			modifyRequest.InstanceId = &instanceId
+			modifyRequest.AutomaticActivation = helper.Bool(v.(bool))
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMqttV20240516Client().ModifyInstanceWithContext(ctx, modifyRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update mqtt failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+		}
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -352,6 +377,10 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 
 		if v, ok := d.GetOk("sku_code"); ok {
 			request.SkuCode = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("automatic_activation"); ok {
+			request.AutomaticActivation = helper.Bool(v.(bool))
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
