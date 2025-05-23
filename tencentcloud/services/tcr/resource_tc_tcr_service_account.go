@@ -89,6 +89,7 @@ func ResourceTencentCloudTcrServiceAccount() *schema.Resource {
 			"password": {
 				Optional:    true,
 				Computed:    true,
+				Sensitive:   true,
 				Type:        schema.TypeString,
 				Description: "Password of the service account.",
 			},

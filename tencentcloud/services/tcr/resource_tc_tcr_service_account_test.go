@@ -79,7 +79,7 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 const testAccTcrServiceAccount = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance2"
+	name          = "tf-example-tcr-instance3"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
@@ -116,7 +116,7 @@ resource "tencentcloud_tcr_instance" "example" {
 const testAccTcrServiceAccount_Update = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance2"
+	name          = "tf-example-tcr-instance3"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
@@ -153,7 +153,7 @@ resource "tencentcloud_tcr_instance" "example" {
 const testAccTcrServiceAccount_updatePassword = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance2"
+	name          = "tf-example-tcr-instance3"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
