@@ -4256,31 +4256,44 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 	var (
 		logId    = tccommon.GetLogId(ctx)
 		request  = vpc.NewDescribeVpnGatewaysRequest()
-		response *vpc.DescribeVpnGatewaysResponse
+		response = vpc.NewDescribeVpnGatewaysResponse()
 	)
+
+	var specArgs connectivity.IacExtInfo
+	specArgs.InstanceId = vpngwId
+
 	request.VpnGatewayIds = []*string{&vpngwId}
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		var specArgs connectivity.IacExtInfo
-		specArgs.InstanceId = vpngwId
-		response, err = me.client.UseVpcClient(specArgs).DescribeVpnGateways(request)
+		result, err := me.client.UseVpcClient(specArgs).DescribeVpnGateways(request)
 		if err != nil {
 			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
 				return tccommon.RetryError(err)
 			}
+
 			if ee.Code == VPCNotFound {
 				return nil
 			} else {
 				return tccommon.RetryError(err)
 			}
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describ vpn gateways failed, Response is nil."))
+		}
+
+		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]", logId, request.GetAction(), request.ToJsonString(), err)
 		return
 	}
-	if response == nil || response.Response == nil || len(response.Response.VpnGatewaySet) < 1 {
+
+	if len(response.Response.VpnGatewaySet) < 1 {
 		has = false
 		return
 	}
