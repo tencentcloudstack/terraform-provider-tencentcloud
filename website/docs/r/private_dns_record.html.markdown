@@ -34,7 +34,7 @@ resource "tencentcloud_private_dns_zone" "example" {
   cname_speedup_status = "ENABLED"
 
   tags = {
-    createdBy : "terraform"
+    createdBy = "Terraform"
   }
 }
 

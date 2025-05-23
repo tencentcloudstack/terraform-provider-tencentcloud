@@ -1,14 +1,14 @@
-Use this data source to query detailed information of privatedns private_zone_list
+Use this data source to query detailed information of Private Dns private zone list
 
 Example Usage
 
-Get All PrivateZones:
+Query All private zones:
 
 ```hcl
 data "tencentcloud_private_dns_private_zone_list" "example" {}
 ```
 
-Get PrivateZone By ZoneId:
+Query private zones by ZoneId:
 
 ```hcl
 data "tencentcloud_private_dns_private_zone_list" "example" {
@@ -19,7 +19,7 @@ data "tencentcloud_private_dns_private_zone_list" "example" {
 }
 ```
 
-Get PrivateZone By Domain:
+Query private zones by Domain:
 
 ```hcl
 data "tencentcloud_private_dns_private_zone_list" "example" {
@@ -30,7 +30,7 @@ data "tencentcloud_private_dns_private_zone_list" "example" {
 }
 ```
 
-Get PrivateZone By Vpc:
+Query private zones by Vpc:
 
 ```hcl
 data "tencentcloud_private_dns_private_zone_list" "example" {

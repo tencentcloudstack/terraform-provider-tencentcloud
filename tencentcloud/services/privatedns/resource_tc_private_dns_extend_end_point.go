@@ -173,7 +173,7 @@ func resourceTencentCloudPrivateDnsExtendEndPointCreate(d *schema.ResourceData, 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsIntlV20201028Client().CreateExtendEndpointWithContext(ctx, request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -197,7 +197,6 @@ func resourceTencentCloudPrivateDnsExtendEndPointCreate(d *schema.ResourceData, 
 
 	endPointId = *response.Response.EndpointId
 	d.SetId(endPointId)
-
 	return resourceTencentCloudPrivateDnsExtendEndPointRead(d, meta)
 }
 
@@ -219,7 +218,7 @@ func resourceTencentCloudPrivateDnsExtendEndPointRead(d *schema.ResourceData, me
 
 	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `private_dns_end_point` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_private_dns_extend_end_point` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -238,7 +237,6 @@ func resourceTencentCloudPrivateDnsExtendEndPointDelete(d *schema.ResourceData, 
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		request    = privatednsIntlv20201028.NewDeleteEndPointRequest()
-		response   = privatednsIntlv20201028.NewDeleteEndPointResponse()
 		endPointId = d.Id()
 	)
 
@@ -246,12 +244,11 @@ func resourceTencentCloudPrivateDnsExtendEndPointDelete(d *schema.ResourceData, 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivatednsIntlV20201028Client().DeleteEndPointWithContext(ctx, request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		response = result
 		return nil
 	})
 
@@ -260,6 +257,5 @@ func resourceTencentCloudPrivateDnsExtendEndPointDelete(d *schema.ResourceData, 
 		return err
 	}
 
-	_ = response
 	return nil
 }

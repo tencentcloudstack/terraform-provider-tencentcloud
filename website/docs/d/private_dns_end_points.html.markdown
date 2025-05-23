@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_private_dns_end_points"
 sidebar_current: "docs-tencentcloud-datasource-private_dns_end_points"
 description: |-
-  Use this data source to query detailed information of private dns dns end points
+  Use this data source to query detailed information of Private Dns end points
 ---
 
 # tencentcloud_private_dns_end_points
 
-Use this data source to query detailed information of private dns dns end points
+Use this data source to query detailed information of Private Dns end points
 
 ## Example Usage
 

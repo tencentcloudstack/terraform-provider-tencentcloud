@@ -1,4 +1,4 @@
-Provides a resource to create a privatedns forward rule
+Provides a resource to create a Private Dns forward rule
 
 Example Usage
 
@@ -25,7 +25,7 @@ resource "tencentcloud_private_dns_forward_rule" "example" {
 
 Import
 
-private dns forward rule can be imported using the id, e.g.
+Private Dns forward rule can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_private_dns_forward_rule.example fid-dbc2c0a97c
