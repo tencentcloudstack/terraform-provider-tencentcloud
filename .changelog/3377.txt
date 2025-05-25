@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_as_scaling_config: support `tags`
+```
+
+```release-note:enhancement
+resource/tencentcloud_as_scaling_group: fix error while creating multi tags
+```
