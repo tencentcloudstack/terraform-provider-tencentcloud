@@ -648,6 +648,14 @@ func flattenInstanceTagsMapping(list []*as.InstanceTag) map[string]interface{} {
 	return result
 }
 
+func flattenTagsMapping(list []*as.Tag) map[string]interface{} {
+	result := make(map[string]interface{}, len(list))
+	for _, v := range list {
+		result[*v.Key] = *v.Value
+	}
+	return result
+}
+
 func (me *AsService) DescribeAsAdvices(ctx context.Context, param map[string]interface{}) (advices []*as.AutoScalingAdvice, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)

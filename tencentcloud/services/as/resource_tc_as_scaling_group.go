@@ -352,12 +352,14 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		for k, v := range tags {
-			request.Tags = append(request.Tags, &as.Tag{
+		for tagKey, tagValue := range tags {
+			tag := as.Tag{
 				ResourceType: helper.String("auto-scaling-group"),
-				Key:          &k,
-				Value:        &v,
-			})
+				Key:          helper.String(tagKey),
+				Value:        helper.String(tagValue),
+			}
+
+			request.Tags = append(request.Tags, &tag)
 		}
 	}
 

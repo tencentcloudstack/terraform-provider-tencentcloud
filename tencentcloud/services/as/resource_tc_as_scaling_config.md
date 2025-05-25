@@ -42,6 +42,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_tags = {
     tag = "example"
   }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
@@ -60,6 +65,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "one-time"
   spot_max_price       = "1000"
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
@@ -158,6 +168,11 @@ resource "tencentcloud_as_scaling_config" "example" {
 
   instance_tags = {
     tag = "example"
+  }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
   }
 }
 ```

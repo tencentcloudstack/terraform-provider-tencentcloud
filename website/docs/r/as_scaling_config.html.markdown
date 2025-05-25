@@ -53,6 +53,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_tags = {
     tag = "example"
   }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
@@ -71,6 +76,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "one-time"
   spot_max_price       = "1000"
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
@@ -169,6 +179,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_tags = {
     tag = "example"
   }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
@@ -206,6 +221,7 @@ The following arguments are supported:
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String) Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.
+* `tags` - (Optional, Map) Tags of launch configuration.
 * `user_data` - (Optional, String) ase64-encoded User Data text, the length limit is 16KB.
 
 The `data_disk` object supports the following:

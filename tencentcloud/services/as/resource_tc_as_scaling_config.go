@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 
@@ -278,6 +280,11 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:    true,
 				Description: "Dedicated Cluster ID.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of launch configuration.",
+			},
 			// Computed values
 			"status": {
 				Type:        schema.TypeString,
@@ -514,6 +521,18 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := as.Tag{
+				ResourceType: helper.String("launch-configuration"),
+				Key:          helper.String(tagKey),
+				Value:        helper.String(tagValue),
+			}
+
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	var launchConfigurationId string
 	err := resource.Retry(4*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLaunchConfiguration(request)
@@ -646,6 +665,10 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 
 		if config.DedicatedClusterId != nil {
 			_ = d.Set("dedicated_cluster_id", config.DedicatedClusterId)
+		}
+
+		if config.Tags != nil && len(config.Tags) > 0 {
+			_ = d.Set("tags", flattenTagsMapping(config.Tags))
 		}
 
 		return nil
@@ -919,6 +942,23 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	if d.HasChange("dedicated_cluster_id") {
 		if v, ok := d.GetOk("dedicated_cluster_id"); ok {
 			request.DedicatedClusterId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("tags") {
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(client)
+		region := client.Region
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		resourceName := tccommon.BuildTagResourceName("as", "launch-configuration", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
 		}
 	}
 
