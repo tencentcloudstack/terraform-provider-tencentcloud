@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
-	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -364,9 +363,6 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bo
 		if err != nil {
 			return err
 		}
-
-		// wait cos backend sync
-		time.Sleep(30 * time.Second)
 	}
 
 	request := s3.DeleteBucketInput{
@@ -506,6 +502,34 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 
 	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, [%v] objects have been cleaned.\n",
 		logId, "ForceCleanObject", len(result.DeletedObjects))
+
+	// wait
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		listObjects, e := me.ListObjects(ctx, bucket)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s]\n",
+				logId, "ListObjects", resp.Body, e.Error())
+			return tccommon.RetryError(e)
+		}
+
+		listObjCount := len(listObjects)
+		if listObjCount == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("waiting objects deleting. still has %d item. retry...", listObjCount))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s get COS objects failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return nil
 }
 
