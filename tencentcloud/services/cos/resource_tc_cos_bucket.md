@@ -281,6 +281,31 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
 }
 ```
 
+Using Origin pull
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id    = data.tencentcloud_user_info.info.app_id
+  uin       = data.tencentcloud_user_info.info.uin
+  owner_uin = data.tencentcloud_user_info.info.owner_uin
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket = "tf-bucket-basic10-${local.app_id}"
+  acl    = "public-read"
+  origin_pull_rules {
+    priority            = 1
+    back_to_source_mode = "Redirect"
+    http_redirect_code  = "301"
+    protocol            = "FOLLOW"
+    host                = "1.1.1.1"
+    follow_query_string = true
+  }
+}
+```
+
 Using CORS with CDC
 
 ```hcl

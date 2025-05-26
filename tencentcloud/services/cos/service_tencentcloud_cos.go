@@ -1300,10 +1300,11 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 		return nil, errRet
 	}
 
+	header, _ := json.Marshal(response.Header)
 	resp, _ := json.Marshal(originConfig)
 
-	log.Printf("[DEBUG]%s api[%s] success, request body response body [%s]\n",
-		logId, "GetBucketPullOrigin", resp)
+	log.Printf("[DEBUG]%s api[%s] success, request body request header [%s], response body [%s]\n",
+		logId, "GetBucketPullOrigin", header, resp)
 
 	rules := make([]map[string]interface{}, 0)
 
@@ -1318,10 +1319,15 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 			item["prefix"] = helper.String(rule.OriginCondition.Prefix)
 		}
 
+		// has deprecated
 		if rule.OriginType == "Mirror" {
 			item["sync_back_to_source"] = helper.Bool(true)
 		} else if rule.OriginType == "Proxy" {
 			item["sync_back_to_source"] = helper.Bool(false)
+		}
+
+		if rule.OriginType != "" {
+			item["back_to_source_mode"] = helper.String(rule.OriginType)
 		}
 
 		if rule.OriginParameter != nil {
@@ -1345,6 +1351,11 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 				}
 
 			}
+
+			if rule.OriginParameter.HttpRedirectCode != "" && rule.OriginType == "Redirect" {
+				item["http_redirect_code"] = helper.String(rule.OriginParameter.HttpRedirectCode)
+			}
+
 			item["protocol"] = helper.String(rule.OriginParameter.Protocol)
 			item["follow_redirection"] = helper.Bool(rule.OriginParameter.FollowRedirection)
 			item["follow_query_string"] = helper.Bool(rule.OriginParameter.FollowQueryString)
@@ -1374,6 +1385,7 @@ func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, ru
 	ratelimit.Check("PutBucketPullOrigin")
 	response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.PutOrigin(ctx, opt)
 
+	header, _ := json.Marshal(response.Header)
 	req, _ := json.Marshal(opt)
 	resp, _ := json.Marshal(response.Response.Body)
 
@@ -1389,8 +1401,8 @@ func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, ru
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[PutBucketPullOrigin] success, request body [%s], response body [%s]\n",
-		logId, req, resp)
+	log.Printf("[DEBUG]%s api[PutBucketPullOrigin] success, request header [%s], request body [%s], response body [%s]\n",
+		logId, header, req, resp)
 
 	return nil
 }

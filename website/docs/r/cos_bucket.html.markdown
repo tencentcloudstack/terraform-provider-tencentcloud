@@ -292,6 +292,31 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
 }
 ```
 
+### Using Origin pull
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id    = data.tencentcloud_user_info.info.app_id
+  uin       = data.tencentcloud_user_info.info.uin
+  owner_uin = data.tencentcloud_user_info.info.owner_uin
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket = "tf-bucket-basic10-${local.app_id}"
+  acl    = "public-read"
+  origin_pull_rules {
+    priority            = 1
+    back_to_source_mode = "Redirect"
+    http_redirect_code  = "301"
+    protocol            = "FOLLOW"
+    host                = "1.1.1.1"
+    follow_query_string = true
+  }
+}
+```
+
 ### Using CORS with CDC
 
 ```hcl
@@ -493,13 +518,15 @@ The `origin_pull_rules` object supports the following:
 
 * `host` - (Required, String) Allows only a domain name or IP address. You can optionally append a port number to the address.
 * `priority` - (Required, Int) Priority of origin-pull rules, do not set the same value for multiple rules.
+* `back_to_source_mode` - (Optional, String) Back to source mode. Allow value: Proxy, Mirror, Redirect.
 * `custom_http_headers` - (Optional, Map) Specifies the custom headers that you can add for COS to access your origin server.
 * `follow_http_headers` - (Optional, Set) Specifies the pass through headers when accessing the origin server.
 * `follow_query_string` - (Optional, Bool) Specifies whether to pass through COS request query string when accessing the origin server.
 * `follow_redirection` - (Optional, Bool) Specifies whether to follow 3XX redirect to another origin server to pull data from.
+* `http_redirect_code` - (Optional, String) Redirect code. Effective when `back_to_source_mode` is `Redirect`. ex: 301, 302, 307. Default is 302.
 * `prefix` - (Optional, String) Triggers the origin-pull rule when the requested file name matches this prefix.
 * `protocol` - (Optional, String) the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.
-* `sync_back_to_source` - (Optional, Bool) If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
+* `sync_back_to_source` - (Optional, Bool, **Deprecated**) It has been deprecated from version 1.81.196. Please use `back_to_source_mode` instead. If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
 
 The `replica_rules` object supports the following:
 

@@ -39,8 +39,22 @@ func originPullRules() *schema.Resource {
 			"sync_back_to_source": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
+				Computed:    true,
+				Deprecated:  "It has been deprecated from version 1.81.196. Please use `back_to_source_mode` instead.",
 				Description: "If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.",
+			},
+			"back_to_source_mode": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"Proxy", "Mirror", "Redirect"}),
+				Description:  "Back to source mode. Allow value: Proxy, Mirror, Redirect.",
+			},
+			"http_redirect_code": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Redirect code. Effective when `back_to_source_mode` is `Redirect`. ex: 301, 302, 307. Default is 302.",
 			},
 			"prefix": {
 				Type:        schema.TypeString,
@@ -1670,10 +1684,25 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 			}
 		)
 
-		if v := dMap["sync_back_to_source"]; v.(bool) {
-			item.OriginType = "Mirror"
-		} else {
-			item.OriginType = "Proxy"
+		// has deprecated
+		if v, ok := dMap["sync_back_to_source"]; ok {
+			if v.(bool) {
+				item.OriginType = "Mirror"
+			} else {
+				item.OriginType = "Proxy"
+			}
+		}
+
+		if v, ok := dMap["back_to_source_mode"].(string); ok && v != "" {
+			item.OriginType = v
+		}
+
+		if v, ok := dMap["http_redirect_code"].(string); ok && v != "" {
+			if item.OriginType == "Redirect" {
+				item.OriginParameter.HttpRedirectCode = v
+			} else {
+				return fmt.Errorf("Parameter `http_redirect_code` can be set only if `back_to_source_mode` is `Redirect`.")
+			}
 		}
 
 		if v, ok := dMap["priority"]; ok {
