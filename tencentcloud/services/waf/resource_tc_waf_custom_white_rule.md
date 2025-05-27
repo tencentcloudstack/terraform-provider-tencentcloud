@@ -1,4 +1,4 @@
-Provides a resource to create a waf custom white rule
+Provides a resource to create a WAF custom white rule
 
 -> **NOTE:** If `job_type` is `TimedJob`, Then `expire_time` must select the maximum time value of the `end_date_time` in the parameter list `timed`.
 
@@ -19,9 +19,24 @@ resource "tencentcloud_waf_custom_white_rule" "example" {
     arg          = ""
   }
 
-  status = "1"
-  domain = "test.com"
-  bypass = "geoip,cc,owasp"
+  strategies {
+    field        = "IP_GEO"
+    compare_func = "geo_in"
+    content = jsonencode(
+      {
+        "Lang" : "cn",
+        "Areas" : [
+          { "Country" : "国外" }
+        ]
+      }
+    )
+    arg = ""
+  }
+
+  status     = "1"
+  domain     = "www.demo.com"
+  bypass     = "geoip,cc,owasp"
+  logical_op = "and"
 }
 ```
 
@@ -49,7 +64,7 @@ resource "tencentcloud_waf_custom_white_rule" "example" {
   }
 
   status   = "1"
-  domain   = "test.com"
+  domain   = "www.demo.com"
   bypass   = "geoip,cc,owasp"
   job_type = "TimedJob"
   job_date_time {
@@ -85,10 +100,11 @@ resource "tencentcloud_waf_custom_white_rule" "example" {
     case_not_sensitive = 1
   }
 
-  status   = "1"
-  domain   = "www.tencent.com"
-  bypass   = "geoip,cc,owasp"
-  job_type = "CronJob"
+  status     = "1"
+  domain     = "www.demo.com"
+  bypass     = "geoip,cc,owasp"
+  job_type   = "CronJob"
+  logical_op = "or"
   job_date_time {
     cron {
       w_days     = [0, 1, 2, 3, 4, 5, 6]
@@ -102,8 +118,8 @@ resource "tencentcloud_waf_custom_white_rule" "example" {
 
 Import
 
-waf custom white rule can be imported using the id, e.g.
+WAF custom white rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_custom_white_rule.example test.com#1100310837
+terraform import tencentcloud_waf_custom_white_rule.example www.demo.com#1100310837
 ```

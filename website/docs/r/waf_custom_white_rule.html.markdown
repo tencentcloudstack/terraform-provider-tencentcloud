@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_waf_custom_white_rule"
 sidebar_current: "docs-tencentcloud-resource-waf_custom_white_rule"
 description: |-
-  Provides a resource to create a waf custom white rule
+  Provides a resource to create a WAF custom white rule
 ---
 
 # tencentcloud_waf_custom_white_rule
 
-Provides a resource to create a waf custom white rule
+Provides a resource to create a WAF custom white rule
 
 -> **NOTE:** If `job_type` is `TimedJob`, Then `expire_time` must select the maximum time value of the `end_date_time` in the parameter list `timed`.
 
@@ -30,9 +30,24 @@ resource "tencentcloud_waf_custom_white_rule" "example" {
     arg          = ""
   }
 
-  status = "1"
-  domain = "test.com"
-  bypass = "geoip,cc,owasp"
+  strategies {
+    field        = "IP_GEO"
+    compare_func = "geo_in"
+    content = jsonencode(
+      {
+        "Lang" : "cn",
+        "Areas" : [
+          { "Country" : "国外" }
+        ]
+      }
+    )
+    arg = ""
+  }
+
+  status     = "1"
+  domain     = "www.demo.com"
+  bypass     = "geoip,cc,owasp"
+  logical_op = "and"
 }
 ```
 
@@ -60,7 +75,7 @@ resource "tencentcloud_waf_custom_white_rule" "example" {
   }
 
   status   = "1"
-  domain   = "test.com"
+  domain   = "www.demo.com"
   bypass   = "geoip,cc,owasp"
   job_type = "TimedJob"
   job_date_time {
@@ -96,10 +111,11 @@ resource "tencentcloud_waf_custom_white_rule" "example" {
     case_not_sensitive = 1
   }
 
-  status   = "1"
-  domain   = "www.tencent.com"
-  bypass   = "geoip,cc,owasp"
-  job_type = "CronJob"
+  status     = "1"
+  domain     = "www.demo.com"
+  bypass     = "geoip,cc,owasp"
+  job_type   = "CronJob"
+  logical_op = "or"
   job_date_time {
     cron {
       w_days     = [0, 1, 2, 3, 4, 5, 6]
@@ -123,6 +139,7 @@ The following arguments are supported:
 * `strategies` - (Required, List) Strategies detail.
 * `job_date_time` - (Optional, List) Rule execution time.
 * `job_type` - (Optional, String) Rule execution mode: TimedJob indicates scheduled execution. CronJob indicates periodic execution.
+* `logical_op` - (Optional, String) Logical operator of configuration mode, and/or.
 * `status` - (Optional, String) The status of the switch, 1 is on, 0 is off, default 1.
 
 The `cron` object of `job_date_time` supports the following:
@@ -190,9 +207,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-waf custom white rule can be imported using the id, e.g.
+WAF custom white rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_custom_white_rule.example test.com#1100310837
+terraform import tencentcloud_waf_custom_white_rule.example www.demo.com#1100310837
 ```
 

@@ -20,6 +20,18 @@ resource "tencentcloud_waf_bot_scene_ucb_rule" "example" {
       }
     }
 
+    rule {
+      key  = "url"
+      op   = "rematch"
+      lang = "cn"
+      value {
+        multi_value = [
+          "/prefix",
+          "/startwith"
+        ]
+      }
+    }
+
     action       = "monitor"
     on_off       = "on"
     rule_type    = 0

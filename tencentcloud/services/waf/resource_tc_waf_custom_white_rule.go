@@ -198,6 +198,12 @@ func ResourceTencentCloudWafCustomWhiteRule() *schema.Resource {
 					},
 				},
 			},
+			"logical_op": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Logical operator of configuration mode, and/or.",
+			},
 			"rule_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -329,6 +335,10 @@ func resourceTencentCloudWafCustomWhiteRuleCreate(d *schema.ResourceData, meta i
 		}
 
 		request.JobDateTime = &jobDateTime
+	}
+
+	if v, ok := d.GetOk("logical_op"); ok {
+		request.LogicalOp = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -523,6 +533,10 @@ func resourceTencentCloudWafCustomWhiteRuleRead(d *schema.ResourceData, meta int
 		_ = d.Set("status", customWhiteRule.Status)
 	}
 
+	if customWhiteRule.LogicalOp != nil {
+		_ = d.Set("logical_op", customWhiteRule.LogicalOp)
+	}
+
 	if customWhiteRule.RuleId != nil {
 		_ = d.Set("rule_id", customWhiteRule.RuleId)
 	}
@@ -666,6 +680,10 @@ func resourceTencentCloudWafCustomWhiteRuleUpdate(d *schema.ResourceData, meta i
 		}
 
 		request.JobDateTime = &jobDateTime
+	}
+
+	if v, ok := d.GetOk("logical_op"); ok {
+		request.LogicalOp = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

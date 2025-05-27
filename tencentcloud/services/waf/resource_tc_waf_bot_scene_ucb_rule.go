@@ -2,6 +2,7 @@ package waf
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"strings"
@@ -437,12 +438,16 @@ func resourceTencentCloudWafBotSceneUCBRuleCreate(d *schema.ResourceData, meta i
 			for _, item := range v.([]interface{}) {
 				if ruleMap, ok := item.(map[string]interface{}); ok && ruleMap != nil {
 					inOutputUCBRuleEntry := waf.InOutputUCBRuleEntry{}
+					var base46Flag bool
 					if v, ok := ruleMap["key"]; ok {
 						inOutputUCBRuleEntry.Key = helper.String(v.(string))
 					}
 
 					if v, ok := ruleMap["op"]; ok {
 						inOutputUCBRuleEntry.Op = helper.String(v.(string))
+						if v.(string) == "rematch" {
+							base46Flag = true
+						}
 					}
 
 					if valueMap, ok := helper.InterfaceToMap(ruleMap, "value"); ok {
@@ -471,10 +476,20 @@ func resourceTencentCloudWafBotSceneUCBRuleCreate(d *schema.ResourceData, meta i
 
 						if v, ok := valueMap["multi_value"]; ok {
 							multiValueSet := v.(*schema.Set).List()
-							for i := range multiValueSet {
-								if multiValueSet[i] != nil {
-									multiValue := multiValueSet[i].(string)
-									uCBEntryValue.MultiValue = append(uCBEntryValue.MultiValue, &multiValue)
+							if base46Flag {
+								for i := range multiValueSet {
+									if multiValueSet[i] != nil {
+										multiValue := multiValueSet[i].(string)
+										bs64Str := helper.String(base64.URLEncoding.EncodeToString([]byte(multiValue)))
+										uCBEntryValue.MultiValue = append(uCBEntryValue.MultiValue, bs64Str)
+									}
+								}
+							} else {
+								for i := range multiValueSet {
+									if multiValueSet[i] != nil {
+										multiValue := multiValueSet[i].(string)
+										uCBEntryValue.MultiValue = append(uCBEntryValue.MultiValue, &multiValue)
+									}
 								}
 							}
 						}
@@ -767,12 +782,16 @@ func resourceTencentCloudWafBotSceneUCBRuleRead(d *schema.ResourceData, meta int
 		tmpList := make([]map[string]interface{}, 0, len(respData.Rule))
 		for _, item := range respData.Rule {
 			dMap := make(map[string]interface{})
+			var base46Flag bool
 			if item.Key != nil {
 				dMap["key"] = item.Key
 			}
 
 			if item.Op != nil {
 				dMap["op"] = item.Op
+				if *item.Op == "rematch" {
+					base46Flag = true
+				}
 			}
 
 			if item.Value != nil {
@@ -795,7 +814,21 @@ func resourceTencentCloudWafBotSceneUCBRuleRead(d *schema.ResourceData, meta int
 				}
 
 				if item.Value.MultiValue != nil {
-					valueMap["multi_value"] = item.Value.MultiValue
+					if base46Flag {
+						tmpMvList := make([]string, 0, len(item.Value.MultiValue))
+						for _, item := range item.Value.MultiValue {
+							decoded, e := base64.StdEncoding.DecodeString(*item)
+							if e != nil {
+								return fmt.Errorf("[%s] base64 decode error: %s", *item, e.Error())
+							}
+
+							tmpMvList = append(tmpMvList, string(decoded))
+						}
+
+						valueMap["multi_value"] = tmpMvList
+					} else {
+						valueMap["multi_value"] = item.Value.MultiValue
+					}
 				}
 
 				valueList = append(valueList, valueMap)
@@ -1028,12 +1061,16 @@ func resourceTencentCloudWafBotSceneUCBRuleUpdate(d *schema.ResourceData, meta i
 			for _, item := range v.([]interface{}) {
 				if ruleMap, ok := item.(map[string]interface{}); ok && ruleMap != nil {
 					inOutputUCBRuleEntry := waf.InOutputUCBRuleEntry{}
+					var base46Flag bool
 					if v, ok := ruleMap["key"]; ok {
 						inOutputUCBRuleEntry.Key = helper.String(v.(string))
 					}
 
 					if v, ok := ruleMap["op"]; ok {
 						inOutputUCBRuleEntry.Op = helper.String(v.(string))
+						if v.(string) == "rematch" {
+							base46Flag = true
+						}
 					}
 
 					if valueMap, ok := helper.InterfaceToMap(ruleMap, "value"); ok {
@@ -1062,10 +1099,20 @@ func resourceTencentCloudWafBotSceneUCBRuleUpdate(d *schema.ResourceData, meta i
 
 						if v, ok := valueMap["multi_value"]; ok {
 							multiValueSet := v.(*schema.Set).List()
-							for i := range multiValueSet {
-								if multiValueSet[i] != nil {
-									multiValue := multiValueSet[i].(string)
-									uCBEntryValue.MultiValue = append(uCBEntryValue.MultiValue, &multiValue)
+							if base46Flag {
+								for i := range multiValueSet {
+									if multiValueSet[i] != nil {
+										multiValue := multiValueSet[i].(string)
+										bs64Str := helper.String(base64.URLEncoding.EncodeToString([]byte(multiValue)))
+										uCBEntryValue.MultiValue = append(uCBEntryValue.MultiValue, bs64Str)
+									}
+								}
+							} else {
+								for i := range multiValueSet {
+									if multiValueSet[i] != nil {
+										multiValue := multiValueSet[i].(string)
+										uCBEntryValue.MultiValue = append(uCBEntryValue.MultiValue, &multiValue)
+									}
 								}
 							}
 						}
