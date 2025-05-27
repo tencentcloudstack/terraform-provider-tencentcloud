@@ -864,13 +864,6 @@ func (me *CamService) DescribeUserById(ctx context.Context, userId string) (resp
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-			errCode := ee.GetCode()
-			//check if read empty
-			if strings.Contains(errCode, "ResourceNotFound") {
-				return
-			}
-		}
 		errRet = err
 		return
 	}
