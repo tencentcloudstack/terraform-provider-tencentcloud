@@ -748,20 +748,8 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	// Pass tag as creation param instead of modify and time.Sleep
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		functionInfo.tags = tags
-
-		tagService := svctag.NewTagService(m.(tccommon.ProviderMeta).GetAPIV3Conn())
-		region := m.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-		functionId := fmt.Sprintf("%s/function/%s", *functionInfo.namespace, functionInfo.name)
-		resourceName := tccommon.BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			log.Printf("[CRITAL]%s create function tags failed: %+v", logId, err)
-			return err
-		}
-		// wait for tags add successfully
-		time.Sleep(time.Second)
 	}
 
 	if v, ok := d.GetOk("async_run_enable"); ok && v != nil {
