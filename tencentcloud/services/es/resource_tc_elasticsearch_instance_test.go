@@ -93,7 +93,6 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "kibana_public_access", "OPEN"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "kibana_private_access", "CLOSE"),
 				),
 			},
 			{
@@ -110,7 +109,6 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.0.white_list.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.0.black_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "kibana_private_access", "OPEN"),
 				),
 			},
 			{
@@ -159,6 +157,39 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *test
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "OPEN"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudElasticsearchInstanceResource_kibanaPrivateAccess(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessOpen,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "OPEN"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessClose,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "CLOSE"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessOpen,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "OPEN"),
 				),
 			},
 		},
@@ -296,7 +327,6 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	tags = {
 	  test = "test"
 	}
-	kibana_private_access = "OPEN"
   }
 `
 
@@ -336,6 +366,56 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	license_type         = "basic"
 	basic_security_type  = 2
 	kibana_public_access = "OPEN"
+	public_access = "OPEN"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPrivateAccessClose = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_private_access = "CLOSE"
+	public_access = "CLOSE"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPrivateAccessOpen = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_private_access = "OPEN"
 	public_access = "OPEN"
 	es_public_acl {
 	  white_ip_list = [
