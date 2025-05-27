@@ -93,6 +93,7 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "kibana_public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "kibana_private_access", "CLOSE"),
 				),
 			},
 			{
@@ -109,6 +110,7 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.0.white_list.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.0.black_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "kibana_private_access", "OPEN"),
 				),
 			},
 			{
@@ -294,6 +296,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	tags = {
 	  test = "test"
 	}
+	kibana_private_access = "OPEN"
   }
 `
 
