@@ -1151,6 +1151,10 @@ github.com/tencentyun/cos-go-sdk-v5 v0.7.64-0.20250324024831-9ab072216e10 h1:0YE
 github.com/tencentyun/cos-go-sdk-v5 v0.7.64-0.20250324024831-9ab072216e10/go.mod h1:8+hG+mQMuRP/OIS9d83syAvXvrMj9HhkND6Q1fLghw0=
 github.com/tencentyun/cos-go-sdk-v5 v0.7.64 h1:2ADzzr+hcWl4Fw44DwXe0btlVzAYkdvHQ4glUyR0+mM=
 github.com/tencentyun/cos-go-sdk-v5 v0.7.64/go.mod h1:8+hG+mQMuRP/OIS9d83syAvXvrMj9HhkND6Q1fLghw0=
+github.com/tencentyun/cos-go-sdk-v5 v0.7.66-0.20250526100824-edd430d7fffb h1:UtCUmXCVOZz1XtgUhizhtzkIcmb2yRbC+IL3f/7MSxs=
+github.com/tencentyun/cos-go-sdk-v5 v0.7.66-0.20250526100824-edd430d7fffb/go.mod h1:8+hG+mQMuRP/OIS9d83syAvXvrMj9HhkND6Q1fLghw0=
+github.com/tencentyun/cos-go-sdk-v5 v0.7.66 h1:O4O6EsozBoDjxWbltr3iULgkI7WPj/BFNlYTXDuE64E=
+github.com/tencentyun/cos-go-sdk-v5 v0.7.66/go.mod h1:8+hG+mQMuRP/OIS9d83syAvXvrMj9HhkND6Q1fLghw0=
 github.com/tenntenn/modver v1.0.1 h1:2klLppGhDgzJrScMpkj9Ujy3rXPUspSjAcev9tSEBgA=
 github.com/tenntenn/modver v1.0.1/go.mod h1:bePIyQPb7UeioSRkw3Q0XeMhYZSMx9B8ePqg6SAMGH0=
 github.com/tenntenn/text/transform v0.0.0-20200319021203-7eef512accb3 h1:f+jULpRQGxTSkNYKJ51yaw6ChIqO+Je8UqsTKN/cDag=

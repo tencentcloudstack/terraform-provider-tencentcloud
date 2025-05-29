@@ -26,7 +26,7 @@ import (
 
 const (
 	// Version current go sdk version
-	Version               = "0.7.64"
+	Version               = "0.7.66"
 	UserAgent             = "cos-go-sdk-v5/" + Version
 	contentTypeXML        = "application/xml"
 	defaultServiceBaseURL = "http://service.cos.myqcloud.com"
@@ -85,6 +85,10 @@ func (*BaseURL) innerCheck(u *url.URL, reg *regexp.Regexp) bool {
 		return false
 	}
 	if domainSuffix.MatchString(urlStr) && !reg.MatchString(urlStr) {
+		return false
+	}
+	host := u.Hostname()
+	if domainSuffix.MatchString(host) && !reg.MatchString(u.Scheme+"://"+host) {
 		return false
 	}
 	return true
@@ -280,6 +284,9 @@ func (c *Client) newRequest(ctx context.Context, baseURL *url.URL, uri, method s
 	if c.invalidURL {
 		return nil, invalidBucketErr
 	}
+	if baseURL == nil {
+		return nil, invalidBucketErr
+	}
 	if !checkURL(baseURL) {
 		host := baseURL.String()
 		if c.BaseURL.MetaInsightURL != baseURL || !metaInsightHostPrefix.MatchString(host) {
@@ -471,6 +478,16 @@ func (c *Client) CheckRetrieable(u *url.URL, resp *Response, err error, secondLa
 	if err != nil && err != invalidBucketErr {
 		// 不重试
 		if resp != nil && resp.StatusCode < 500 {
+			if c.Conf.RetryOpt.AutoSwitchHost {
+				if resp.StatusCode == 301 || resp.StatusCode == 302 || resp.StatusCode == 307 {
+					if resp.Header.Get("X-Cos-Request-Id") == "" {
+						res = toSwitchHost(u)
+						if res != u {
+							return res, true
+						}
+					}
+				}
+			}
 			return res, false
 		}
 		if c.Conf.RetryOpt.AutoSwitchHost && secondLast {
