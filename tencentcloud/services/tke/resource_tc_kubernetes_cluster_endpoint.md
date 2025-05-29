@@ -2,6 +2,8 @@ Provide a resource to create a kubernetes cluster endpoint. This resource allows
 
 ~> **NOTE:** Recommend using `depends_on` to make sure endpoint create after node pools or workers does.
 
+~> **NOTE:** Please do not use this resource and resource `tencentcloud_kubernetes_cluster` to operate cluster public network/intranet access at the same time.
+
 Example Usage
 
 Open intranet access for kubernetes cluster
