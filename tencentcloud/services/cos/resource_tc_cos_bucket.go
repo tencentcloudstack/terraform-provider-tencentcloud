@@ -1673,7 +1673,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 					HTTPStatusCode: "404",
 				},
 				OriginParameter: &cos.BucketOriginParameter{
-					CopyOriginData: true,
+					CopyOriginData: helper.Bool(true),
 					HttpHeader:     &cos.BucketOriginHttpHeader{},
 				},
 				OriginInfo: &cos.BucketOriginInfo{
@@ -1720,10 +1720,10 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 			item.OriginInfo.HostInfo = &tmpHost
 		}
 		if v, ok := dMap["follow_query_string"]; ok {
-			item.OriginParameter.FollowQueryString = v.(bool)
+			item.OriginParameter.FollowQueryString = helper.Bool(v.(bool))
 		}
 		if v, ok := dMap["follow_redirection"]; ok {
-			item.OriginParameter.FollowRedirection = v.(bool)
+			item.OriginParameter.FollowRedirection = helper.Bool(v.(bool))
 		}
 		//if v, ok := dMap["copy_origin_data"]; ok {
 		//	item.OriginParameter.CopyOriginData = v.(bool)

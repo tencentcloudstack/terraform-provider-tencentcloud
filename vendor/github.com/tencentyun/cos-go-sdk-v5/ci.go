@@ -40,9 +40,10 @@ func EncodePicOperations(pic *PicOperations) string {
 }
 
 type ImageProcessResult struct {
-	XMLName        xml.Name           `xml:"UploadResult"`
-	OriginalInfo   *PicOriginalInfo   `xml:"OriginalInfo,omitempty"`
-	ProcessResults []PicProcessObject `xml:"ProcessResults>Object,omitempty"`
+	XMLName            xml.Name            `xml:"UploadResult"`
+	OriginalInfo       *PicOriginalInfo    `xml:"OriginalInfo,omitempty"`
+	ProcessResults     []PicProcessObject  `xml:"ProcessResults>Object,omitempty"`
+	ImgTargetRecResult *ImgTargetRecResult `xml:"ImgTargetRecResult,omitempty"`
 	// 历史兼容考虑不建议抽象单独struct防止客户使用影响
 	ProcessResultsText                string `xml:"ProcessResults>Text,omitempty"`
 	ProcessResultsWatermarkStatusCode int    `xml:"ProcessResults>WatermarkStatusCode,omitempty"`
@@ -73,6 +74,9 @@ type PicProcessObject struct {
 	WatermarkStatus int          `xml:"WatermarkStatus,omitempty"`
 	CodeStatus      int          `xml:"CodeStatus,omitempty"`
 	QRcodeInfo      []QRcodeInfo `xml:"QRcodeInfo,omitempty"`
+	FrameCount      int          `xml:"FrameCount,omitempty"`
+	Md5             string       `xml:"Md5,omitempty"`
+	BitDepth        int          `xml:"BitDepth,omitempty"`
 }
 type QRcodeInfo struct {
 	CodeUrl      string        `xml:"CodeUrl,omitempty"`
@@ -1279,7 +1283,7 @@ type GetQRcodeResultV2 struct {
 	ResultImage string       `xml:"ResultImage,omitempty"`
 }
 
-// 二维码识别-下载时识别 https://cloud.tencent.com/document/product/436/54070
+// GetQRcodeV2 二维码识别-下载时识别 https://cloud.tencent.com/document/product/436/54070
 func (s *CIService) GetQRcodeV2(ctx context.Context, name string, cover int, opt *ObjectGetOptions, id ...string) (*GetQRcodeResultV2, *Response, error) {
 	var u string
 	if len(id) == 1 {
@@ -2339,6 +2343,7 @@ type AIImageColoringOptions struct {
 	DetectUrl string `url:"detect-url,omitempty"`
 }
 
+// GetAIImageColoringV2 todo
 func (s *CIService) GetAIImageColoringV2(ctx context.Context, name string, opt *AIImageColoringOptions) (*Response, error) {
 	sendOpt := sendOptions{
 		baseURL:          s.client.BaseURL.BucketURL,
@@ -2363,12 +2368,12 @@ func (s *CIService) GetAISuperResolution(ctx context.Context, name string) (*Res
 	return resp, err
 }
 
-// AIImageColoringOptions TODO
+// AISuperResolutionOptions TODO
 type AISuperResolutionOptions struct {
 	DetectUrl string `url:"detect-url,omitempty"`
 }
 
-// GetAISuperResolution https://cloud.tencent.com/document/product/460/83793
+// GetAISuperResolutionV2 https://cloud.tencent.com/document/product/460/83793
 func (s *CIService) GetAISuperResolutionV2(ctx context.Context, name string, opt *AISuperResolutionOptions) (*Response, error) {
 	sendOpt := sendOptions{
 		baseURL:          s.client.BaseURL.BucketURL,
@@ -2401,7 +2406,7 @@ type AIEnhanceImageOptions struct {
 	IgnoreError int    `url:"ignore-error,omitempty"`
 }
 
-// GetAIEnhanceImage https://cloud.tencent.com/document/product/460/83792
+// GetAIEnhanceImageV2 https://cloud.tencent.com/document/product/460/83792
 func (s *CIService) GetAIEnhanceImageV2(ctx context.Context, name string, opt *AIEnhanceImageOptions) (*Response, error) {
 	sendOpt := sendOptions{
 		baseURL:          s.client.BaseURL.BucketURL,
@@ -2572,6 +2577,7 @@ type AIGameRecResult struct {
 	} `xml:"GameLabels,omitempty"`
 }
 
+// AIGameRec 游戏识别
 func (s *CIService) AIGameRec(ctx context.Context, obj string, opt *AIGameRecOptions) (*AIGameRecResult, *Response, error) {
 	var res AIGameRecResult
 	sendOpt := &sendOptions{
@@ -2592,7 +2598,7 @@ type AIPicMattingOptions struct {
 	OptHeaders    *OptHeaders `header:"-, omitempty" url:"-" json:"-" xml:"-"`
 }
 
-// 通用抠图
+// AIPicMatting 通用抠图
 // https://cloud.tencent.com/document/product/460/106750
 func (s *CIService) AIPicMatting(ctx context.Context, ObjectKey string, opt *AIPicMattingOptions) (*Response, error) {
 	sendOpt := sendOptions{
@@ -2613,7 +2619,7 @@ type AIPortraitMattingOptions struct {
 	OptHeaders    *OptHeaders `header:"-, omitempty" url:"-" json:"-" xml:"-"`
 }
 
-// 人像抠图
+// AIPortraitMatting 人像抠图
 // https://cloud.tencent.com/document/product/460/106751
 func (s *CIService) AIPortraitMatting(ctx context.Context, ObjectKey string, opt *AIPortraitMattingOptions) (*Response, error) {
 
@@ -2720,7 +2726,7 @@ type AIRecognitionOptions struct {
 	OptHeaders *OptHeaders `header:"-, omitempty" url:"-" json:"-" xml:"-"`
 }
 
-// 多AI接口合一
+// AIRecognition 多AI接口合一
 func (s *CIService) AIRecognition(ctx context.Context, ObjectKey string, opt *AIRecognitionOptions) (*AIRecognitionResult, *Response, error) {
 	var res AIRecognitionResult
 	sendOpt := sendOptions{
@@ -2753,7 +2759,7 @@ type ImageSlimResult struct {
 
 type ImageSlimOptions ImageSlim
 
-// 开通 极智压缩ImageSlim https://cloud.tencent.com/document/product/460/95042
+// PutImageSlim 开通 极智压缩ImageSlim https://cloud.tencent.com/document/product/460/95042
 func (s *CIService) PutImageSlim(ctx context.Context, opt *ImageSlimOptions) (*Response, error) {
 	sendOpt := &sendOptions{
 		baseURL: s.client.BaseURL.CIURL,
@@ -2765,7 +2771,7 @@ func (s *CIService) PutImageSlim(ctx context.Context, opt *ImageSlimOptions) (*R
 	return resp, err
 }
 
-// 查询 极智压缩ImageSlim https://cloud.tencent.com/document/product/460/95043
+// GetImageSlim 查询 极智压缩ImageSlim https://cloud.tencent.com/document/product/460/95043
 func (s *CIService) GetImageSlim(ctx context.Context) (*ImageSlimResult, *Response, error) {
 	var res ImageSlimResult
 	sendOpt := &sendOptions{
@@ -2778,7 +2784,7 @@ func (s *CIService) GetImageSlim(ctx context.Context) (*ImageSlimResult, *Respon
 	return &res, resp, err
 }
 
-// 关闭 极智压缩ImageSlim https://cloud.tencent.com/document/product/460/95044
+// DeleteImageSlim 关闭 极智压缩ImageSlim https://cloud.tencent.com/document/product/460/95044
 func (s *CIService) DeleteImageSlim(ctx context.Context) (*Response, error) {
 	sendOpt := &sendOptions{
 		baseURL: s.client.BaseURL.CIURL,
@@ -2789,7 +2795,7 @@ func (s *CIService) DeleteImageSlim(ctx context.Context) (*Response, error) {
 	return resp, err
 }
 
-// CIBucketsOptions is the option of CIBuckets
+// DescribeCIBucketsOptions is the option of CIBuckets
 type DescribeCIBucketsOptions struct {
 	BucketName string `url:"bucketName,omitempty"`
 	TagKey     string `url:"tagKey,omitempty"`
@@ -2798,6 +2804,7 @@ type DescribeCIBucketsOptions struct {
 	PageSize   int    `url:"pageSize,omitempty"`
 }
 
+// CIBucketList is the result of CIBuckets
 type CIBucketList struct {
 	BucketId   string `xml:"BucketId,omitempty"`
 	BucketName string `xml:"BucketName,omitempty"`
@@ -2807,6 +2814,7 @@ type CIBucketList struct {
 	Status     string `xml:"Status,omitempty"`
 }
 
+// CIBucketsResult is the result of CIBuckets
 type CIBucketsResult struct {
 	XMLName      xml.Name       `xml:"Response"`
 	RequestId    string         `xml:"RequestId,omitempty"`
@@ -2816,6 +2824,7 @@ type CIBucketsResult struct {
 	CIBucketList []CIBucketList `xml:"CIBucketList,omitempty"`
 }
 
+// DescribeCIBuckets 查询CI桶列表
 func (s *CIService) DescribeCIBuckets(ctx context.Context, opt *DescribeCIBucketsOptions) (*CIBucketsResult, *Response, error) {
 	var res CIBucketsResult
 	sendOpt := &sendOptions{
@@ -2827,4 +2836,40 @@ func (s *CIService) DescribeCIBuckets(ctx context.Context, opt *DescribeCIBucket
 	}
 	resp, err := s.client.send(ctx, sendOpt)
 	return &res, resp, err
+}
+
+// ImgTargetRecResult 图片识别结果
+type ImgTargetRecResult struct {
+	BodyDetailInfos struct {
+		BodyDetailInfo []struct {
+			X      string `xml:"X"`
+			Y      string `xml:"Y"`
+			Width  string `xml:"Width"`
+			Height string `xml:"Height"`
+		} `xml:"BodyDetailInfo"`
+	} `xml:"BodyDetailInfos"`
+	CarDetailInfos struct {
+		CarDetailInfo []struct {
+			X      string `xml:"X"`
+			Y      string `xml:"Y"`
+			Width  string `xml:"Width"`
+			Height string `xml:"Height"`
+		} `xml:"CarDetailInfo"`
+	} `xml:"CarDetailInfos"`
+	FaceDetailInfos struct {
+		FaceDetailInfo []struct {
+			X      string `xml:"X"`
+			Y      string `xml:"Y"`
+			Width  string `xml:"Width"`
+			Height string `xml:"Height"`
+		} `xml:"FaceDetailInfo"`
+	} `xml:"FaceDetailInfos"`
+	PlateDetailInfos struct {
+		PlateDetailInfo []struct {
+			X      string `xml:"X"`
+			Y      string `xml:"Y"`
+			Width  string `xml:"Width"`
+			Height string `xml:"Height"`
+		} `xml:"PlateDetailInfo"`
+	} `xml:"PlateDetailInfos"`
 }

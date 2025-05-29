@@ -32,6 +32,7 @@ type ObjectGetOptions struct {
 	ResponseCacheControl       string `url:"response-cache-control,omitempty" header:"-"`
 	ResponseContentDisposition string `url:"response-content-disposition,omitempty" header:"-"`
 	ResponseContentEncoding    string `url:"response-content-encoding,omitempty" header:"-"`
+	CiProcess                  string `url:"ci-process,omitempty" header:"-"`
 	Range                      string `url:"-" header:"Range,omitempty"`
 	IfModifiedSince            string `url:"-" header:"If-Modified-Since,omitempty"`
 	// SSE-C
@@ -504,6 +505,7 @@ func (s *ObjectService) Put(ctx context.Context, name string, r io.Reader, uopt 
 			method:    http.MethodPut,
 			body:      reader,
 			optHeader: opt,
+			isRetry:   nr > 0,
 		}
 
 		// 把上一次错误记录下来
@@ -685,6 +687,7 @@ type ObjectDeleteOptions struct {
 	XCosSSECustomerKeyMD5 string `header:"x-cos-server-side-encryption-customer-key-MD5,omitempty" url:"-" xml:"-"`
 	//兼容其他自定义头部
 	XOptionHeader *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+	XOptionQuery  *url.Values  `header:"-" url:"-" xml:"-"`
 	VersionId     string       `header:"-" url:"VersionId,omitempty" xml:"-"`
 }
 
@@ -704,10 +707,14 @@ func (s *ObjectService) Delete(ctx context.Context, name string, opt ...*ObjectD
 	if len(opt) > 0 {
 		optHeader = opt[0]
 	}
+	uri := "/" + encodeURIComponent(name)
+	if optHeader != nil && optHeader.XOptionQuery != nil {
+		uri = uri + "?" + optHeader.XOptionQuery.Encode()
+	}
 
 	sendOpt := sendOptions{
 		baseURL:   s.client.BaseURL.BucketURL,
-		uri:       "/" + encodeURIComponent(name),
+		uri:       uri,
 		method:    http.MethodDelete,
 		optHeader: optHeader,
 		optQuery:  optHeader,

@@ -1357,8 +1357,8 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 			}
 
 			item["protocol"] = helper.String(rule.OriginParameter.Protocol)
-			item["follow_redirection"] = helper.Bool(rule.OriginParameter.FollowRedirection)
-			item["follow_query_string"] = helper.Bool(rule.OriginParameter.FollowQueryString)
+			item["follow_redirection"] = rule.OriginParameter.FollowRedirection
+			item["follow_query_string"] = rule.OriginParameter.FollowQueryString
 		}
 
 		if rule.OriginInfo.HostInfo != nil {
