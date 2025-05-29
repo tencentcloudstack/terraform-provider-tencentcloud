@@ -13,7 +13,9 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** You can launch an CVM instance for a VPC network via specifying parameter `vpc_id`. One instance can only belong to one VPC.
 
-~> **NOTE:** At present, 'PREPAID' instance cannot be deleted directly and must wait it to be outdated and released automatically.
+~> **NOTE:** At present, `PREPAID` instance cannot be deleted directly and must wait it to be outdated and released automatically.
+
+~> **NOTE:** Currently, the `placement_group_id` field only supports setting and modification, but not deletion.
 
 ## Example Usage
 
@@ -211,6 +213,36 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+### Create CVM instance with placement_group_id
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name                    = "tf-example"
+  availability_zone                = "ap-guangzhou-6"
+  image_id                         = "img-eb30mz89"
+  instance_type                    = "S5.MEDIUM4"
+  system_disk_size                 = 50
+  system_disk_name                 = "sys_disk_1"
+  hostname                         = "user"
+  project_id                       = 0
+  vpc_id                           = "vpc-i5yyodl9"
+  subnet_id                        = "subnet-hhi88a58"
+  placement_group_id               = "ps-ejt4brtz"
+  force_replace_placement_group_id = false
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+    data_disk_name = "data_disk_1"
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -229,6 +261,7 @@ The following arguments are supported:
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_security_service` - (Optional, Bool) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
+* `force_replace_placement_group_id` - (Optional, Bool) Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.
 * `hostname` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifications may lead to the reinstallation of the instance's operating system.
 * `hpc_cluster_id` - (Optional, String, ForceNew) High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.
 * `instance_charge_type_prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`, `48`, `60`.
@@ -244,7 +277,7 @@ The following arguments are supported:
 * `key_name` - (Optional, String, **Deprecated**) Please use `key_ids` instead. The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.
 * `orderly_security_groups` - (Optional, List: [`String`]) A list of orderly security group IDs to associate with.
 * `password` - (Optional, String) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifications may lead to the reinstallation of the instance's operating system.
-* `placement_group_id` - (Optional, String, ForceNew) The ID of a placement group.
+* `placement_group_id` - (Optional, String) The ID of a placement group.
 * `private_ip` - (Optional, String) The private IP to be assigned to this instance, must be in the provided subnet and available.
 * `project_id` - (Optional, Int) The project the instance belongs to, default to 0.
 * `running_flag` - (Optional, Bool) Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.

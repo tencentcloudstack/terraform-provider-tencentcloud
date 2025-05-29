@@ -108,8 +108,13 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"placement_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The ID of a placement group.",
+			},
+			"force_replace_placement_group_id": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.",
 			},
 			// payment
 			"instance_charge_type": {
@@ -580,6 +585,13 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
 	}
 
+	var PgiFlag bool
+	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+		PgiFlag = v.(bool)
+	}
+
+	_ = d.Set("force_replace_placement_group_id", PgiFlag)
+
 	// network
 	request.InternetAccessible = &cvm.InternetAccessible{}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
@@ -987,6 +999,17 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)
 	}
+
+	if instance.DisasterRecoverGroupId != nil {
+		_ = d.Set("placement_group_id", instance.DisasterRecoverGroupId)
+	}
+
+	var PgiFlag bool
+	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+		PgiFlag = v.(bool)
+	}
+
+	_ = d.Set("force_replace_placement_group_id", PgiFlag)
 
 	if *instance.InstanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
 		_ = d.Set("cdh_instance_type", instance.InstanceType)
@@ -2027,6 +2050,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 	}
+
 	if d.HasChange("user_data_raw") {
 		userDataRaw := d.Get("user_data_raw").(string)
 		userData := base64.StdEncoding.EncodeToString([]byte(userDataRaw))
@@ -2040,6 +2064,47 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 	}
+
+	if d.HasChange("force_replace_placement_group_id") {
+		var PgiFlag bool
+		if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+			PgiFlag = v.(bool)
+		}
+
+		_ = d.Set("force_replace_placement_group_id", PgiFlag)
+	}
+
+	if d.HasChange("placement_group_id") {
+		_, newPGI := d.GetChange("placement_group_id")
+		newPGIStr := newPGI.(string)
+		if newPGIStr == "" {
+			// wait cvm support delete DisasterRecoverGroupId
+			return fmt.Errorf("Deleting `placement_group_id` is not currently supported.")
+		} else {
+			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+			if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+				request.Force = helper.Bool(v.(bool))
+			}
+
+			request.InstanceIds = helper.Strings([]string{instanceId})
+			request.DisasterRecoverGroupId = helper.String(newPGIStr)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+				if e != nil {
+					return tccommon.RetryError(e, tccommon.InternalError)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudInstanceRead(d, meta)
