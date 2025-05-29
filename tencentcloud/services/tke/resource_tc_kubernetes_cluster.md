@@ -9,6 +9,8 @@ It's more flexible than managing worker config directly with `tencentcloud_kuber
 
 ~> **NOTE:** If you want to set up addon for the tke cluster, it is recommended to use resource `tencentcloud_kubernetes_addon`.
 
+~> **NOTE:** Please do not use this resource and resource `tencentcloud_kubernetes_cluster_endpoint` to operate cluster public network/intranet access at the same time.
+
 Example Usage
 
 Create a basic cluster with two worker nodes
