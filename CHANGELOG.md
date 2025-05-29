@@ -1,3 +1,16 @@
+## 1.81.196(May 29 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_config: support `tags` ([#3377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3377))
+* resource/tencentcloud_as_scaling_group: fix error while creating multi tags ([#3377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3377))
+* resource/tencentcloud_cos_bucket: update `origin_pull_rules` add new params ([#3378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3378))
+* resource/tencentcloud_elasticsearch_instance: support kibana_private_access ([#3381](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3381))
+* resource/tencentcloud_kubernetes_cluster: update network params ([#3384](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3384))
+* resource/tencentcloud_scf_function: optmize `tags` ([#3379](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3379))
+* resource/tencentcloud_waf_cc: support `cel_rule`, `logical_op` ([#3382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3382))
+* resource/tencentcloud_waf_custom_white_rule: support `logical_op` ([#3382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3382))
+
 ## 1.81.195(May 23 , 2025)
 
 FEATURES:
