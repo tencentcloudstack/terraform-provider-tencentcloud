@@ -2091,7 +2091,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
 				if e != nil {
-					return tccommon.RetryError(e, tccommon.InternalError)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
