@@ -2,6 +2,7 @@ package waf
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"strconv"
@@ -252,16 +253,24 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			strategy := waf.Strategy{}
+			var base46Flag bool
 			if v, ok := dMap["field"]; ok {
 				strategy.Field = helper.String(v.(string))
 			}
 
 			if v, ok := dMap["compare_func"]; ok {
 				strategy.CompareFunc = helper.String(v.(string))
+				if v.(string) == "rematch" {
+					base46Flag = true
+				}
 			}
 
 			if v, ok := dMap["content"]; ok {
-				strategy.Content = helper.String(v.(string))
+				if base46Flag {
+					strategy.Content = helper.String(base64.URLEncoding.EncodeToString([]byte(v.(string))))
+				} else {
+					strategy.Content = helper.String(v.(string))
+				}
 			}
 
 			if v, ok := dMap["arg"]; ok {
@@ -408,7 +417,7 @@ func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interfac
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", idSplit)
+		return fmt.Errorf("id is broken, %s", idSplit)
 	}
 
 	domain := idSplit[0]
@@ -445,17 +454,29 @@ func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interfac
 		strategiesList := []interface{}{}
 		for _, strategies := range customRule.Strategies {
 			strategiesMap := map[string]interface{}{}
-
+			var base46Flag bool
 			if strategies.Field != nil {
 				strategiesMap["field"] = strategies.Field
 			}
 
 			if strategies.CompareFunc != nil {
 				strategiesMap["compare_func"] = strategies.CompareFunc
+				if *strategies.CompareFunc == "rematch" {
+					base46Flag = true
+				}
 			}
 
 			if strategies.Content != nil {
-				strategiesMap["content"] = strategies.Content
+				if base46Flag {
+					decoded, e := base64.StdEncoding.DecodeString(*strategies.Content)
+					if e != nil {
+						return fmt.Errorf("[%s] base64 decode error: %s", *strategies.Content, e.Error())
+					}
+
+					strategiesMap["content"] = string(decoded)
+				} else {
+					strategiesMap["content"] = strategies.Content
+				}
 			}
 
 			if strategies.Arg != nil {
@@ -609,16 +630,24 @@ func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interf
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			strategy := waf.Strategy{}
+			var base46Flag bool
 			if v, ok := dMap["field"]; ok {
 				strategy.Field = helper.String(v.(string))
 			}
 
 			if v, ok := dMap["compare_func"]; ok {
 				strategy.CompareFunc = helper.String(v.(string))
+				if v.(string) == "rematch" {
+					base46Flag = true
+				}
 			}
 
 			if v, ok := dMap["content"]; ok {
-				strategy.Content = helper.String(v.(string))
+				if base46Flag {
+					strategy.Content = helper.String(base64.URLEncoding.EncodeToString([]byte(v.(string))))
+				} else {
+					strategy.Content = helper.String(v.(string))
+				}
 			}
 
 			if v, ok := dMap["arg"]; ok {

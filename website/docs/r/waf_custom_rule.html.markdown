@@ -31,6 +31,13 @@ resource "tencentcloud_waf_custom_rule" "example" {
     arg          = ""
   }
 
+  strategies {
+    field        = "QUERY_STRING"
+    compare_func = "rematch"
+    content      = "need query string"
+    arg          = ""
+  }
+
   status      = "1"
   domain      = "test.com"
   action_type = "1"

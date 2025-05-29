@@ -107,6 +107,7 @@ func (me *WafService) DescribeWafCustomWhiteRuleById(ctx context.Context, domain
 	logId := tccommon.GetLogId(ctx)
 
 	request := waf.NewDescribeCustomWhiteRuleRequest()
+	response := waf.NewDescribeCustomWhiteRuleResponse()
 	request.Domain = &domain
 	request.Offset = common.Uint64Ptr(0)
 	request.Limit = common.Uint64Ptr(20)
@@ -124,15 +125,32 @@ func (me *WafService) DescribeWafCustomWhiteRuleById(ctx context.Context, domain
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafClient().DescribeCustomWhiteRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseWafClient().DescribeCustomWhiteRule(request)
+		if result == nil || result.Response == nil || result.Response.RuleList == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if err != nil {
+		errRet = err
+		return
+	}
 
 	if len(response.Response.RuleList) < 1 {
 		return
@@ -156,15 +174,22 @@ func (me *WafService) DeleteWafCustomWhiteRuleById(ctx context.Context, domain, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafClient().DeleteCustomWhiteRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseWafClient().DeleteCustomWhiteRule(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

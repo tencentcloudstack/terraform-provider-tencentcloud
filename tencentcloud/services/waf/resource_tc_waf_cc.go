@@ -120,6 +120,17 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 				Computed:    true,
 				Description: "Frequency limiting method.",
 			},
+			"cel_rule": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Cel expression.",
+			},
+			"logical_op": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Logical operator of configuration mode, and/or.",
+			},
 			"rule_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -216,6 +227,14 @@ func resourceTencentCloudWafCcCreate(d *schema.ResourceData, meta interface{}) e
 
 	if v, ok := d.GetOk("limit_method"); ok {
 		request.LimitMethod = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cel_rule"); ok {
+		request.CelRule = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("logical_op"); ok {
+		request.LogicalOp = helper.String(v.(string))
 	}
 
 	request.RuleId = helper.IntInt64(0)
@@ -337,6 +356,14 @@ func resourceTencentCloudWafCcRead(d *schema.ResourceData, meta interface{}) err
 		_ = d.Set("limit_method", cc.LimitMethod)
 	}
 
+	if cc.CelRule != nil {
+		_ = d.Set("cel_rule", cc.CelRule)
+	}
+
+	if cc.LogicalOp != nil {
+		_ = d.Set("logical_op", cc.LogicalOp)
+	}
+
 	if cc.RuleId != nil {
 		ruleIdStr := strconv.FormatUint(*cc.RuleId, 10)
 		_ = d.Set("rule_id", ruleIdStr)
@@ -437,6 +464,14 @@ func resourceTencentCloudWafCcUpdate(d *schema.ResourceData, meta interface{}) e
 
 	if v, ok := d.GetOk("limit_method"); ok {
 		request.LimitMethod = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cel_rule"); ok {
+		request.CelRule = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("logical_op"); ok {
+		request.LogicalOp = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
