@@ -73,14 +73,14 @@ func ResourceTencentCloudCcn() *schema.Resource {
 			"route_ecmp_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
-				Description: "Whether to enable the equivalent routing function. `true`: enabled, `false`: disabled.",
+				Computed:    true,
+				Description: "Whether to enable the equivalent routing function. `true`: enabled, `false`: disabled. Default is false.",
 			},
 			"route_overlap_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
-				Description: "Whether to enable the routing overlap function. `true`: enabled, `false`: disabled.",
+				Computed:    true,
+				Description: "Whether to enable the routing overlap function. `true`: enabled, `false`: disabled. Default is true, cannot set to false.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -158,36 +158,48 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// set ECMP/Overlap
-	request := vpc.NewModifyCcnAttributeRequest()
-	request.CcnId = &info.ccnId
+	var (
+		hasRouteECMP     bool
+		hasRouteOverlap  bool
+		routeECMPFlag    bool
+		routeOverlapFlag bool
+	)
+
 	if temp, ok := d.GetOkExists("route_ecmp_flag"); ok {
-		request.RouteECMPFlag = helper.Bool(temp.(bool))
+		routeECMPFlag = temp.(bool)
+		hasRouteECMP = true
 	}
 
 	if temp, ok := d.GetOkExists("route_overlap_flag"); ok {
-		request.RouteOverlapFlag = helper.Bool(temp.(bool))
+		routeOverlapFlag = temp.(bool)
+		hasRouteOverlap = true
 	}
 
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCcnAttribute(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if hasRouteECMP || hasRouteOverlap {
+		request := vpc.NewModifyCcnAttributeRequest()
+		request.CcnId = &info.ccnId
+		request.RouteECMPFlag = helper.Bool(routeECMPFlag)
+		request.RouteOverlapFlag = helper.Bool(routeOverlapFlag)
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCcnAttribute(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil {
+				e = fmt.Errorf("update ModifyCcnAttribute failed")
+				return resource.NonRetryableError(e)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update ModifyCcnAttribute failed, reason:%s\n", logId, err.Error())
+			return err
 		}
-
-		if result == nil {
-			e = fmt.Errorf("update ModifyCcnAttribute failed")
-			return resource.NonRetryableError(e)
-		}
-
-		_ = result
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s update ModifyCcnAttribute failed, reason:%s\n", logId, err.Error())
-		return err
 	}
 
 	return resourceTencentCloudCcnRead(d, meta)
