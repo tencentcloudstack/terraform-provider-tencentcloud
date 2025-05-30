@@ -1943,3 +1943,66 @@ func (me *WafService) DeleteWafBotSceneUCBRuleById(ctx context.Context, domain, 
 
 	return
 }
+
+func (me *WafService) DescribeWafAttackWhiteRuleById(ctx context.Context, domain string, ruleId uint64) (ret *waf.UserWhiteRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeAttackWhiteRuleRequest()
+	response := waf.NewDescribeAttackWhiteRuleResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Domain = &domain
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+		wrList []*waf.UserWhiteRule
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWafV20180125Client().DescribeAttackWhiteRule(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+
+		wrList = append(wrList, response.Response.List...)
+		if len(response.Response.List) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	for _, item := range wrList {
+		if item.WhiteRuleId != nil && *item.WhiteRuleId == ruleId {
+			ret = item
+			break
+		}
+	}
+
+	return
+}

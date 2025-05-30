@@ -2248,6 +2248,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_bot_scene_status_config":                                              waf.ResourceTencentCloudWafBotSceneStatusConfig(),
 			"tencentcloud_waf_bot_status_config":                                                    waf.ResourceTencentCloudWafBotStatusConfig(),
 			"tencentcloud_waf_bot_scene_ucb_rule":                                                   waf.ResourceTencentCloudWafBotSceneUCBRule(),
+			"tencentcloud_waf_attack_white_rule":                                                    waf.ResourceTencentCloudWafAttackWhiteRule(),
 			"tencentcloud_wedata_rule_template":                                                     wedata.ResourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_wedata_datasource":                                                        wedata.ResourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                                          wedata.ResourceTencentCloudWedataFunction(),
