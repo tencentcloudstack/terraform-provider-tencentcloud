@@ -111,9 +111,10 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Description: "The ID of a placement group.",
 			},
 			"force_replace_placement_group_id": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.",
+				Type:         schema.TypeBool,
+				Optional:     true,
+				RequiredWith: []string{"placement_group_id"},
+				Description:  "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.",
 			},
 			// payment
 			"instance_charge_type": {
