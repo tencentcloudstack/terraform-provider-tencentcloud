@@ -1,3 +1,15 @@
+## 1.81.197(May 30 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_waf_attack_white_rule` ([#3386](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3386))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cam_group_membership: throw error while user not exist ([#3380](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3380))
+* resource/tencentcloud_ccn: update params ([#3385](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3385))
+* resource/tencentcloud_instance: support modify `placement_group_id` ([#3383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3383))
+
 ## 1.81.196(May 29 , 2025)
 
 ENHANCEMENTS:
