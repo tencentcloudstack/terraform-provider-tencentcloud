@@ -581,6 +581,20 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	var (
+		rpgFlag bool
+	)
+
+	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+		rpgFlag = v.(bool)
+	}
+
+	if !rpgFlag {
+		if v, ok := d.GetOk("placement_group_id"); ok {
+			request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+		}
+	}
+
 	// network
 	request.InternetAccessible = &cvm.InternetAccessible{}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
@@ -837,54 +851,53 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// set placement group id
-	if v, ok := d.GetOk("placement_group_id"); ok && v != "" {
-		request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
-		if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
-			request.Force = helper.Bool(v.(bool))
-		}
-
-		request.InstanceIds = helper.Strings([]string{instanceId})
-		request.DisasterRecoverGroupId = helper.String(v.(string))
-		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			return err
-		}
-
-		// wait
-		err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return tccommon.RetryError(errRet, tccommon.InternalError)
-			}
-
-			if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
-				//LatestOperationCodeMode
-				if instance.LatestOperationErrorMsg != nil {
-					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+	if rpgFlag {
+		if v, ok := d.GetOk("placement_group_id"); ok && v != "" {
+			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+			request.InstanceIds = helper.Strings([]string{instanceId})
+			request.DisasterRecoverGroupId = helper.String(v.(string))
+			request.Force = helper.Bool(rpgFlag)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
 
-				return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
-			}
-
-			if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 				return nil
+			})
+
+			if err != nil {
+				return err
 			}
 
-			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-		})
+			// wait
+			err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return tccommon.RetryError(errRet, tccommon.InternalError)
+				}
 
-		if err != nil {
-			return err
+				if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+					//LatestOperationCodeMode
+					if instance.LatestOperationErrorMsg != nil {
+						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+					}
+
+					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
+				}
+
+				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+			})
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 
