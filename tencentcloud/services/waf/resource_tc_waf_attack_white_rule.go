@@ -28,6 +28,7 @@ func ResourceTencentCloudWafAttackWhiteRule() *schema.Resource {
 			"domain": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Domain.",
 			},
 

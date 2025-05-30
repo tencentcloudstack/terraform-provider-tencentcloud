@@ -90,7 +90,7 @@ resource "tencentcloud_waf_attack_white_rule" "example" {
 
 The following arguments are supported:
 
-* `domain` - (Required, String) Domain.
+* `domain` - (Required, String, ForceNew) Domain.
 * `rules` - (Required, List) Rule list.
 * `status` - (Required, Int) Rule status.
 * `mode` - (Optional, Int) 0: Whiten according to a specific rule ID, 1: Whiten according to the rule type.
