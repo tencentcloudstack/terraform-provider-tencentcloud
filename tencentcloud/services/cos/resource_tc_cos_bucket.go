@@ -1698,11 +1698,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 		}
 
 		if v, ok := dMap["http_redirect_code"].(string); ok && v != "" {
-			if item.OriginType == "Redirect" {
-				item.OriginParameter.HttpRedirectCode = v
-			} else {
-				return fmt.Errorf("Parameter `http_redirect_code` can be set only if `back_to_source_mode` is `Redirect`.")
-			}
+			item.OriginParameter.HttpRedirectCode = v
 		}
 
 		if v, ok := dMap["priority"]; ok {
