@@ -2,7 +2,9 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** You can launch an CVM instance for a VPC network via specifying parameter `vpc_id`. One instance can only belong to one VPC.
 
-~> **NOTE:** At present, 'PREPAID' instance cannot be deleted directly and must wait it to be outdated and released automatically.
+~> **NOTE:** At present, `PREPAID` instance cannot be deleted directly and must wait it to be outdated and released automatically.
+
+~> **NOTE:** Currently, the `placement_group_id` field only supports setting and modification, but not deletion.
 
 Example Usage
 
@@ -192,6 +194,36 @@ resource "tencentcloud_instance" "example" {
     data_disk_type = "CLOUD_SSD"
     data_disk_size = 50
     encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
+Create CVM instance with placement_group_id
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name                    = "tf-example"
+  availability_zone                = "ap-guangzhou-6"
+  image_id                         = "img-eb30mz89"
+  instance_type                    = "S5.MEDIUM4"
+  system_disk_size                 = 50
+  system_disk_name                 = "sys_disk_1"
+  hostname                         = "user"
+  project_id                       = 0
+  vpc_id                           = "vpc-i5yyodl9"
+  subnet_id                        = "subnet-hhi88a58"
+  placement_group_id               = "ps-ejt4brtz"
+  force_replace_placement_group_id = false
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+    data_disk_name = "data_disk_1"
   }
 
   tags = {
