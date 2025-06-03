@@ -2821,6 +2821,7 @@ func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeAddonRequest()
+	response := tke.NewDescribeAddonResponse()
 	request.ClusterId = &clusterId
 	request.AddonName = &addonName
 
@@ -2830,14 +2831,31 @@ func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeClient().DescribeAddon(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTkeClient().DescribeAddon(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes addon failed, Response is nil."))
+		}
+
+		if result.Response.Addons == nil {
+			return resource.NonRetryableError(fmt.Errorf("Addons is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Addons) < 1 {
 		return
