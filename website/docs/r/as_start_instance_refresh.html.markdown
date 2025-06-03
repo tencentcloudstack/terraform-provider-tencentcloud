@@ -39,7 +39,7 @@ The following arguments are supported:
 
 * `auto_scaling_group_id` - (Required, String, ForceNew) Scaling group ID.
 * `refresh_settings` - (Required, List, ForceNew) Refresh settings.
-* `refresh_mode` - (Optional, String, ForceNew) Refresh mode, currently, only rolling updates are supported, with the default value being ROLLING_UPDATE_RESET.
+* `refresh_mode` - (Optional, String, ForceNew) Refresh mode. Value range: ROLLING_UPDATE_RESET: Reinstall the system for rolling update; ROLLING_UPDATE_REPLACE: Create a new instance for rolling update. This mode does not support the rollback interface yet.
 
 The `refresh_settings` object supports the following:
 
