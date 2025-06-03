@@ -11,6 +11,8 @@ description: |-
 
 Provides a CCN attaching resource.
 
+~> **NOTE:** The resource is no longer maintained, please use resource `tencentcloud_ccn_attachment_v2` instead.
+
 ## Example Usage
 
 ### Only Attachment instance
