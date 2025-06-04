@@ -43,7 +43,7 @@ The following arguments are supported:
 
 * `addon_name` - (Required, String, ForceNew) Name of addon.
 * `cluster_id` - (Required, String, ForceNew) ID of cluster.
-* `addon_version` - (Optional, String) Version of addon.
+* `addon_version` - (Optional, String) Version of addon. If no set, the latest version will be installed by default.
 * `raw_values` - (Optional, String) Params of addon, base64 encoded json format.
 
 ## Attributes Reference
