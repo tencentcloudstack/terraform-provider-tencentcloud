@@ -1,0 +1,3 @@
+```release-note:new-resource
+resource/tencentcloud_kubernetes_scale_worker: support `data_disk.delete_with_instance` param
+```
