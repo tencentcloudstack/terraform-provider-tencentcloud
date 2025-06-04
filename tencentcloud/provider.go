@@ -1317,6 +1317,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eni_ipv4_address":                                                         vpc.ResourceTencentCloudEniIpv4Address(),
 			"tencentcloud_ccn":                                                                      ccn.ResourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":                                                           ccn.ResourceTencentCloudCcnAttachment(),
+			"tencentcloud_ccn_attachment_v2":                                                        ccn.ResourceTencentCloudCcnAttachmentV2(),
 			"tencentcloud_ccn_bandwidth_limit":                                                      ccn.ResourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_ccn_route_table":                                                          ccn.ResourceTencentCloudCcnRouteTable(),
 			"tencentcloud_ccn_route_table_input_policies":                                           ccn.ResourceTencentCloudCcnRouteTableInputPolicies(),

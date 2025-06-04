@@ -321,6 +321,7 @@ tencentcloud_ccn_route_table_input_policies
 Resource
 tencentcloud_ccn
 tencentcloud_ccn_attachment
+tencentcloud_ccn_attachment_v2
 tencentcloud_ccn_bandwidth_limit
 tencentcloud_ccn_routes
 tencentcloud_ccn_instances_accept_attach

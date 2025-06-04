@@ -1,6 +1,4 @@
-Provides a CCN attaching resource.
-
-~> **NOTE:** The resource is no longer maintained, please use resource `tencentcloud_ccn_attachment_v2` instead.
+Provides a CCN attaching instance resource.
 
 Example Usage
 
@@ -13,14 +11,6 @@ variable "region" {
 
 variable "availability_zone" {
   default = "ap-guangzhou-4"
-}
-
-variable "other_uin" {
-  default = "100031344528"
-}
-
-variable "other_ccn" {
-  default = "ccn-qhgojahx"
 }
 
 # create vpc
@@ -46,25 +36,17 @@ resource "tencentcloud_ccn" "example" {
   charge_type          = "PREPAID"
   bandwidth_limit_type = "INTER_REGION_LIMIT"
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 
 # attachment instance
-resource "tencentcloud_ccn_attachment" "attachment" {
+resource "tencentcloud_ccn_attachment_v2" "example" {
   ccn_id          = tencentcloud_ccn.example.id
   instance_id     = tencentcloud_vpc.vpc.id
   instance_type   = "VPC"
   instance_region = var.region
-}
-
-# attachment other instance
-resource "tencentcloud_ccn_attachment" "other_account" {
-  ccn_id          = var.other_ccn
-  instance_id     = tencentcloud_vpc.vpc.id
-  instance_type   = "VPC"
-  instance_region = var.region
-  ccn_uin         = var.other_uin
+  description     = "attachment descripiton."
 }
 ```
 
@@ -114,11 +96,19 @@ resource "tencentcloud_ccn_route_table" "example" {
 }
 
 # attachment instance & route table
-resource "tencentcloud_ccn_attachment" "attachment" {
+resource "tencentcloud_ccn_attachment_v2" "example" {
   ccn_id          = tencentcloud_ccn.example.id
   instance_id     = tencentcloud_vpc.vpc.id
   instance_type   = "VPC"
   instance_region = var.region
   route_table_id  = tencentcloud_ccn_route_table.example.id
 }
+```
+
+Import
+
+CCN attaching instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_ccn_attachment_v2.example ccn-l4m4asp7#VPC#ap-guangzhou#vpc-apgkmy5d
 ```

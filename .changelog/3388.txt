@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_ccn_attachment_v2
+```

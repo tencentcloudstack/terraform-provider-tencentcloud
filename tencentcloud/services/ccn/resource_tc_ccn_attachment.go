@@ -19,10 +19,11 @@ import (
 
 func ResourceTencentCloudCcnAttachment() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCcnAttachmentCreate,
-		Read:   resourceTencentCloudCcnAttachmentRead,
-		Update: resourceTencentCloudCcnAttachmentUpdate,
-		Delete: resourceTencentCloudCcnAttachmentDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.81.198. Please use 'tencentcloud_ccn_attachment_v2' instead.",
+		Create:             resourceTencentCloudCcnAttachmentCreate,
+		Read:               resourceTencentCloudCcnAttachmentRead,
+		Update:             resourceTencentCloudCcnAttachmentUpdate,
+		Delete:             resourceTencentCloudCcnAttachmentDelete,
 
 		Schema: map[string]*schema.Schema{
 			"ccn_id": {
