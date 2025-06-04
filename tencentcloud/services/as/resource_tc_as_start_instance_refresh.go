@@ -81,7 +81,7 @@ func ResourceTencentCloudAsStartInstanceRefresh() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Refresh mode, currently, only rolling updates are supported, with the default value being ROLLING_UPDATE_RESET.",
+				Description: "Refresh mode. Value range: ROLLING_UPDATE_RESET: Reinstall the system for rolling update; ROLLING_UPDATE_REPLACE: Create a new instance for rolling update. This mode does not support the rollback interface yet.",
 			},
 		},
 	}
@@ -174,15 +174,20 @@ func resourceTencentCloudAsStartInstanceRefreshCreate(d *schema.ResourceData, me
 		}
 
 		if result == nil || result.Response == nil || len(result.Response.RefreshActivitySet) != 1 {
-			e = fmt.Errorf("create as start instance refresh failed.")
-			return resource.NonRetryableError(e)
+			return resource.NonRetryableError(fmt.Errorf("Create as start instance refresh failed."))
 		}
 
-		if *result.Response.RefreshActivitySet[0].Status == REFRESH_ACTIVITIES_SUCCESSFUL {
+		refreshStatus := result.Response.RefreshActivitySet[0].Status
+		refreshActivityId := result.Response.RefreshActivitySet[0].RefreshActivityId
+		if refreshStatus == nil || refreshActivityId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Status or RefreshActivityId is nil."))
+		}
+
+		if *refreshStatus == REFRESH_ACTIVITIES_SUCCESSFUL {
 			return nil
 		}
 
-		return resource.RetryableError(fmt.Errorf("start instance refresh is still in running, state %s", *result.Response.RefreshActivitySet[0].Status))
+		return resource.RetryableError(fmt.Errorf("Start instance refresh is still in running. Status: %s, RefreshActivityId: %s.", *refreshStatus, *refreshActivityId))
 	})
 
 	if err != nil {
