@@ -428,20 +428,17 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().CreateLoadBalancer(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			requestId := *result.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
-			if retryErr != nil {
-				return tccommon.RetryError(errors.WithStack(retryErr))
-			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create CLB instance failed, Response is nil."))
 		}
 
 		response = result
@@ -453,12 +450,18 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	if len(response.Response.LoadBalancerIds) < 1 {
+	// wait
+	requestId := *response.Response.RequestId
+	clbId, err := waitForTaskFinishGetID(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+	if err != nil {
+		return err
+	}
+
+	if clbId == "" {
 		return fmt.Errorf("[CHECK][CLB instance][Create] check: response error, load balancer id is nil")
 	}
 
-	d.SetId(*response.Response.LoadBalancerIds[0])
-	clbId = *response.Response.LoadBalancerIds[0]
+	d.SetId(clbId)
 
 	if v, ok := d.GetOk("security_groups"); ok {
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()

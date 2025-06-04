@@ -1156,6 +1156,35 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	return
 }
 
+func waitForTaskFinishGetID(requestId string, meta *clb.Client) (clbID string, err error) {
+	request := clb.NewDescribeTaskStatusRequest()
+	request.TaskId = &requestId
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.DescribeTaskStatus(request)
+		if e != nil {
+			return resource.NonRetryableError(errors.WithStack(e))
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe task status failed, Response is nil."))
+		}
+
+		if *result.Response.Status == int64(CLB_TASK_EXPANDING) {
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(expanding), requestId is %s", *result.Response.Status, *result.Response.RequestId)))
+		} else if *result.Response.Status == int64(CLB_TASK_FAIL) {
+			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(failed), requestId is %s", *result.Response.Status, *result.Response.RequestId)))
+		}
+
+		if *result.Response.Status == CLB_TASK_SUCCESS && len(result.Response.LoadBalancerIds) == 1 {
+			clbID = *result.Response.LoadBalancerIds[0]
+		}
+
+		return nil
+	})
+
+	return
+}
+
 func flattenBackendList(list []*clb.Backend) (mapping []map[string]interface{}) {
 	result := make([]map[string]interface{}, 0, len(list))
 	for i := range list {
