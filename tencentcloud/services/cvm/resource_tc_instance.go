@@ -61,7 +61,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"instance_count": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead.",
+				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead. https://developer.hashicorp.com/terraform/language/meta-arguments/count.",
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 100),
 				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
 			},
@@ -99,7 +99,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"stopped_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.",
+				Description: "Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.Need to be used with the running_flag field set to `false`.",
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{
 					CVM_STOP_MODE_KEEP_CHARGING,
 					CVM_STOP_MODE_STOP_CHARGING,
@@ -251,7 +251,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
+				Description: "System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Invalid value passed in when creating.",
 			},
 			"system_disk_name": {
 				Type:        schema.TypeString,
@@ -299,7 +299,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
+							Description: "Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported. Invalid value passed in when creating.",
 						},
 						"delete_with_instance": {
 							Type:        schema.TypeBool,

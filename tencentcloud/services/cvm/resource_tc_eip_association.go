@@ -64,7 +64,7 @@ func ResourceTencentCloudEipAssociation() *schema.Resource {
 				ConflictsWith: []string{
 					"instance_id",
 				},
-				Description: "Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.",
+				Description: "The private IP to bind to. If `network_interface_id` is specified, `private_ip` must also be specified. It cannot be specified at the same time as `instance_id`.Also make sure the specified `private_ip` is a private IP on the specified `network_interface_id`.",
 			},
 		},
 	}
