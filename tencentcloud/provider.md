@@ -1511,6 +1511,7 @@ tencentcloud_teo_l7_acc_setting
 tencentcloud_teo_security_ip_group
 tencentcloud_teo_security_policy_config
 tencentcloud_teo_dns_record
+tencentcloud_teo_bind_security_template
 
 TencentCloud ServiceMesh(TCM)
 Data Source
