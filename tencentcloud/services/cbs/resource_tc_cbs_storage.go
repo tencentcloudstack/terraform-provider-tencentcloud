@@ -137,6 +137,13 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Computed:    true,
 				Description: "Whether to enable performance burst when creating a cloud disk.",
 			},
+			"encrypt_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk.",
+			},
 			// computed
 			"storage_status": {
 				Type:        schema.TypeString,
@@ -225,6 +232,10 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOkExists("burst_performance"); ok {
 		request.BurstPerformance = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("encrypt_type"); ok {
+		request.EncryptType = helper.String(v.(string))
 	}
 
 	storageId := ""
@@ -335,6 +346,10 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
 	_ = d.Set("throughput_performance", storage.ThroughputPerformance)
 	_ = d.Set("burst_performance", storage.BurstPerformance)
+
+	if storage.EncryptType != nil {
+		_ = d.Set("encrypt_type", storage.EncryptType)
+	}
 
 	if storage.KmsKeyId != nil {
 		_ = d.Set("kms_key_id", storage.KmsKeyId)

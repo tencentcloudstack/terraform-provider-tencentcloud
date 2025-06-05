@@ -69,6 +69,24 @@ resource "tencentcloud_cbs_storage" "example" {
 }
 ```
 
+### Create an encrypted CBS storage with encrypt_type
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  encrypt           = true
+  encrypt_type      = "ENCRYPT_V2"
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 ### Create a dedicated cluster CBS storage
 
 ```hcl
@@ -100,6 +118,7 @@ The following arguments are supported:
 * `charge_type` - (Optional, String) The charge type of CBS instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `CDCPAID` and `DEDICATED_CLUSTER_PAID`. The default is `POSTPAID_BY_HOUR`.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disk_backup_quota` - (Optional, Int) The quota of backup points of cloud disk.
+* `encrypt_type` - (Optional, String, ForceNew) Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk.
 * `encrypt` - (Optional, Bool, ForceNew) Pass in this parameter to create an encrypted cloud disk.
 * `force_delete` - (Optional, Bool) Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
 * `kms_key_id` - (Optional, String, ForceNew) Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.

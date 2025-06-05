@@ -58,6 +58,24 @@ resource "tencentcloud_cbs_storage" "example" {
 }
 ```
 
+Create an encrypted CBS storage with encrypt_type
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  encrypt           = true
+  encrypt_type      = "ENCRYPT_V2"
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 Create a dedicated cluster CBS storage
 
 ```hcl
