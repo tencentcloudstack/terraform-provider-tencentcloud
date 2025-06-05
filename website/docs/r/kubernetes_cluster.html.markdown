@@ -949,6 +949,7 @@ The following arguments are supported:
 * `ignore_cluster_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
 * `ignore_service_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the service cidr conflict error. Only valid in `VPC-CNI` mode.
 * `instance_delete_mode` - (Optional, String) The strategy for deleting cluster instances: terminate (destroy instances, only support pay as you go cloud host instances) retain (remove only, keep instances), Default is terminate.
+* `is_dual_stack` - (Optional, Bool, ForceNew) In the VPC-CNI mode of the cluster, the dual stack cluster status defaults to false, indicating a non dual stack cluster.
 * `is_non_static_ip_mode` - (Optional, Bool, ForceNew) Indicates whether non-static ip mode is enabled. Default is false.
 * `kube_proxy_mode` - (Optional, String) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.
 * `labels` - (Optional, Map, ForceNew) Labels of tke cluster nodes.
