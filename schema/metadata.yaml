@@ -137,7 +137,7 @@ resource_metas:
             delimiter: |-
               [\s
               ,;]
-            help: 多个备注以英文逗号、英文分号、空格或换行分割
+            help: 多个备注以英文逗号、英文分号、空格或换行分割，重复将去重，最大数量500
             widget: textarea
         status:
           display_name: 记录初始状态
@@ -164,7 +164,7 @@ resource_metas:
             delimiter: |-
               [\s
               ,;]
-            help: 多个主机记录以英文逗号、英文分号、空格或换行分割，重复将去重
+            help: 多个主机记录以英文逗号、英文分号、空格或换行分割，重复将去重，最大数量500
             widget: textarea
         ttl:
           display_name: TTL
@@ -185,7 +185,7 @@ resource_metas:
             delimiter: |-
               [\s
               ,;]
-            help: 多个记录值以英文逗号、英文分号、空格或换行分割
+            help: 多个记录值以英文逗号、英文分号、空格或换行分割，重复将去重，最大数量500
             widget: textarea
         weight:
           display_name: 权重信息
