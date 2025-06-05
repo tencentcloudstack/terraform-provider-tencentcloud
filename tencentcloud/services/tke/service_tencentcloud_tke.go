@@ -50,6 +50,7 @@ type ClusterAdvancedSettings struct {
 	BasePodNumber           int64
 	ContainerRuntime        string
 	RuntimeVersion          string
+	IsDualStack             bool
 	NodeNameType            string
 	ExtraArgs               ClusterExtraArgs
 	NetworkType             string

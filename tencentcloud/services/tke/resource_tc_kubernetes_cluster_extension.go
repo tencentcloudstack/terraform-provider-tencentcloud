@@ -557,6 +557,7 @@ func resourceTencentCloudKubernetesClusterReadPostHandleResponse0(ctx context.Co
 	if cluster.ClusterNetworkSettings != nil {
 		clusterInfo.KubeProxyMode = helper.PString(cluster.ClusterNetworkSettings.KubeProxyMode)
 		clusterInfo.ServiceCIDR = helper.PString(cluster.ClusterNetworkSettings.ServiceCIDR)
+		clusterInfo.IsDualStack = helper.PBool(cluster.ClusterNetworkSettings.IsDualStack)
 	}
 	clusterInfo.ContainerRuntime = helper.PString(cluster.ContainerRuntime)
 	clusterInfo.OsCustomizeType = helper.PString(cluster.OsCustomizeType)
@@ -710,6 +711,7 @@ func resourceTencentCloudKubernetesClusterReadPostHandleResponse0(ctx context.Co
 	}
 
 	if importClsFlag {
+		_ = d.Set("is_dual_stack", clusterInfo.IsDualStack)
 		networkType, _ := data["NetworkType"].(string)
 		_ = d.Set("network_type", networkType)
 
