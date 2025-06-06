@@ -172,24 +172,29 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPrivateAccess(t *tes
 		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccElasticsearchInstanceKibanaPrivateAccessOpen,
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "OPEN"),
+					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_url"),
 				),
 			},
 			{
-				Config: testAccElasticsearchInstanceKibanaPrivateAccessClose,
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessDefault,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "CLOSE"),
 				),
 			},
 			{
-				Config: testAccElasticsearchInstanceKibanaPrivateAccessOpen,
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "OPEN"),
+					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_url"),
 				),
 			},
 		},
@@ -380,7 +385,7 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
   }
 `
 
-const testAccElasticsearchInstanceKibanaPrivateAccessClose = tcacctest.DefaultEsVariables + `
+const testAccElasticsearchInstanceKibanaPrivateAccessDefault = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	instance_name        = "tf-ci-test-kibana"
 	availability_zone    = var.availability_zone
@@ -390,6 +395,7 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	password             = "Test1234"
 	license_type         = "basic"
 	basic_security_type  = 2
+	kibana_public_access = "OPEN"
 	kibana_private_access = "CLOSE"
 	public_access = "CLOSE"
 	es_public_acl {
@@ -405,7 +411,7 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
   }
 `
 
-const testAccElasticsearchInstanceKibanaPrivateAccessOpen = tcacctest.DefaultEsVariables + `
+const testAccElasticsearchInstanceKibanaPrivateAccessUpdate = tcacctest.DefaultEsVariables + `
 resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	instance_name        = "tf-ci-test-kibana"
 	availability_zone    = var.availability_zone
@@ -415,6 +421,7 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	password             = "Test1234"
 	license_type         = "basic"
 	basic_security_type  = 2
+	kibana_public_access = "CLOSE"
 	kibana_private_access = "OPEN"
 	public_access = "OPEN"
 	es_public_acl {

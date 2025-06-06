@@ -324,6 +324,11 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Kibana access URL.",
 			},
+			"kibana_private_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Kibana private URL.",
+			},
 			"es_public_url": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -520,48 +525,50 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		}
 	}
 
-	var isUpdate bool
-
-	// KibanaPublicAccess
-	var kibanaPublicAccess string
 	if v, ok := d.GetOk("kibana_public_access"); ok {
 		// The default value is OPEN when creating. If you call the modification interface again and change it to OPEN, the interface will report an error InvalidParameter.InvalidPublicAccess
-		publicAccess := v.(string)
-		if publicAccess != ES_KIBANA_PUBLIC_ACCESS_OPEN {
-			kibanaPublicAccess = publicAccess
-			isUpdate = true
-		}
-	}
-
-	var kibanaPrivateAccess string
-	if v, ok := d.GetOk("kibana_private_access"); ok {
-		if actualKibanaPrivateAccess != "" && actualKibanaPrivateAccess != v.(string) {
-			kibanaPrivateAccess = v.(string)
-			isUpdate = true
-		}
-
-	}
-
-	if isUpdate {
-		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, kibanaPrivateAccess, "", 0, nil, nil, nil, nil, nil)
-			if errRet != nil {
-				return tccommon.RetryError(errRet)
+		kibanaPublicAccess := v.(string)
+		if kibanaPublicAccess != ES_KIBANA_PUBLIC_ACCESS_OPEN {
+			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, "", "", 0, nil, nil, nil, nil, nil)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
 			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
 
-		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
-		if err != nil {
-			return err
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
 		}
-
-		isUpdate = false
 	}
 
+	if v, ok := d.GetOk("kibana_private_access"); ok {
+		kibanaPrivateAccess := v.(string)
+		if actualKibanaPrivateAccess != "" && actualKibanaPrivateAccess != kibanaPrivateAccess {
+			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", kibanaPrivateAccess, "", 0, nil, nil, nil, nil, nil)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	var isUpdate bool
 	// PublicAccess
 	var publicAccess string
 	esPublicAcl := es.EsPublicAcl{}
@@ -698,6 +705,7 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("elasticsearch_vip", instance.EsVip)
 	_ = d.Set("elasticsearch_port", instance.EsPort)
 	_ = d.Set("kibana_url", instance.KibanaUrl)
+	_ = d.Set("kibana_private_url", instance.KibanaPrivateUrl)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("kibana_public_access", instance.KibanaPublicAccess)
 	_ = d.Set("kibana_private_access", instance.KibanaPrivateAccess)
