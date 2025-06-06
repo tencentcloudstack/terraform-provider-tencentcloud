@@ -492,3 +492,52 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Con
 
 	return
 }
+
+func (me *PrivateDnsService) DescribePrivateDnsRecordById(ctx context.Context, zoneId, recordId string) (recordInfo *privatednsIntlv20201028.RecordInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatednsIntlv20201028.NewDescribeRecordRequest()
+	response := privatednsIntlv20201028.NewDescribeRecordResponse()
+	request.ZoneId = &zoneId
+	request.RecordId = &recordId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeRecord(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe PrivateDns record %s failed, Response is nil.", recordId))
+		}
+
+		if result.Response.RecordInfo != nil && result.Response.RecordInfo.RecordId != nil {
+			respRecordId := *result.Response.RecordInfo.RecordId
+			if respRecordId == recordId {
+				response = result
+				return nil
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("Describe PrivateDns record %s does not meet expectations, Response is %s.", recordId, respRecordId))
+			}
+		}
+
+		return resource.RetryableError(fmt.Errorf("Record %s is still creating...", recordId))
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	recordInfo = response.Response.RecordInfo
+	return
+}
