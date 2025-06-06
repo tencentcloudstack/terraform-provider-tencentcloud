@@ -89,6 +89,7 @@ resource "tencentcloud_mqtt_instance" "example" {
   renew_flag           = 1
   force_delete         = false
   automatic_activation = true
+  authorization_policy = true
   tags = {
     createBy = "Terraform"
   }
@@ -102,6 +103,7 @@ The following arguments are supported:
 * `instance_type` - (Required, String) Instance type. PRO for Professional Edition; PLATINUM for Platinum Edition.
 * `name` - (Required, String) Instance name.
 * `sku_code` - (Required, String) Product SKU, available SKUs can be queried via the DescribeProductSKUList API.
+* `authorization_policy` - (Optional, Bool) Authorization policy switch. Default is false.
 * `automatic_activation` - (Optional, Bool) Is the automatic registration certificate automatically activated. Default is false.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
 * `pay_mode` - (Optional, Int) Payment mode (0: Postpaid; 1: Prepaid).
