@@ -132,32 +132,8 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 	recordId := *response.Response.RecordId
 
 	// wait
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		records, e := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, nil)
-		if e != nil {
-			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
-		}
-
-		if len(records) < 1 {
-			return resource.RetryableError(fmt.Errorf("[WARN]%s resource `PrivateDnsRecord` [%s] wait creating...\n", logId, zoneId))
-		}
-
-		var record *privatedns.PrivateZoneRecord
-		for _, item := range records {
-			if item.RecordId != nil && *item.RecordId == recordId {
-				record = item
-			}
-		}
-
-		if record != nil {
-			return nil
-		}
-
-		return resource.RetryableError(fmt.Errorf("[WARN]%s resource `PrivateDnsRecord` [%s] wait creating...\n", logId, recordId))
-	})
-
+	_, err = service.DescribePrivateDnsRecordById(ctx, zoneId, recordId)
 	if err != nil {
-		log.Printf("[CRITAL]%s describe PrivateDns record failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

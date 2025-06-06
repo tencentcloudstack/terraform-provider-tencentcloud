@@ -848,15 +848,15 @@ func NewCreateLaunchTemplateResponse() (response *CreateLaunchTemplateResponse) 
 }
 
 // CreateLaunchTemplate
-// This API is used to create an instance launch template.
+// This interface (CreateLaunchTemplate) is used for instance launch template creation.
 //
 // 
 //
-// An instance launch template contains the configuration information required to create an instance, including instance type, data/system disk type and size, and security group, etc.
+// An instance launch template is a configuration data and can be used to create instances. Its content includes configurations required to create instances, such as instance type, types and sizes of data disk and system disk, and security group and other information.
 //
 // 
 //
-// When a template is created, it defaults to Version 1. You can use `CreateLaunchTemplateVersion` to create new versions of this template, with the version number increasing. When you run `RunInstances` to create instances, you can specify the instance launch template version. If it's not specified, the default template version is used.
+// This API is used to create an instance launch template. After the initial creation of the instance template, its template version is the default version 1. A new version can be created using CreateLaunchTemplateVersion (https://intl.cloud.tencent.com/document/product/213/66326?from_cn_redirect=1), and the version number will increment. By default, when specifying an instance launch template in RunInstances (https://intl.cloud.tencent.com/document/product/213/15730?from_cn_redirect=1), if the template version number is not specified, the default version will be used.
 //
 // error code that may be returned:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -954,15 +954,15 @@ func (c *Client) CreateLaunchTemplate(request *CreateLaunchTemplateRequest) (res
 }
 
 // CreateLaunchTemplate
-// This API is used to create an instance launch template.
+// This interface (CreateLaunchTemplate) is used for instance launch template creation.
 //
 // 
 //
-// An instance launch template contains the configuration information required to create an instance, including instance type, data/system disk type and size, and security group, etc.
+// An instance launch template is a configuration data and can be used to create instances. Its content includes configurations required to create instances, such as instance type, types and sizes of data disk and system disk, and security group and other information.
 //
 // 
 //
-// When a template is created, it defaults to Version 1. You can use `CreateLaunchTemplateVersion` to create new versions of this template, with the version number increasing. When you run `RunInstances` to create instances, you can specify the instance launch template version. If it's not specified, the default template version is used.
+// This API is used to create an instance launch template. After the initial creation of the instance template, its template version is the default version 1. A new version can be created using CreateLaunchTemplateVersion (https://intl.cloud.tencent.com/document/product/213/66326?from_cn_redirect=1), and the version number will increment. By default, when specifying an instance launch template in RunInstances (https://intl.cloud.tencent.com/document/product/213/15730?from_cn_redirect=1), if the template version number is not specified, the default version will be used.
 //
 // error code that may be returned:
 //  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
@@ -2469,6 +2469,57 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstancesAttributesRequest() (request *DescribeInstancesAttributesRequest) {
+    request = &DescribeInstancesAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "DescribeInstancesAttributes")
+    
+    
+    return
+}
+
+func NewDescribeInstancesAttributesResponse() (response *DescribeInstancesAttributesResponse) {
+    response = &DescribeInstancesAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstancesAttributes
+// This API is used to obtain the attributes of specified instances. Currently, it supports querying the custom data UserData of instances.
+//
+// error code that may be returned:
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+func (c *Client) DescribeInstancesAttributes(request *DescribeInstancesAttributesRequest) (response *DescribeInstancesAttributesResponse, err error) {
+    return c.DescribeInstancesAttributesWithContext(context.Background(), request)
+}
+
+// DescribeInstancesAttributes
+// This API is used to obtain the attributes of specified instances. Currently, it supports querying the custom data UserData of instances.
+//
+// error code that may be returned:
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+func (c *Client) DescribeInstancesAttributesWithContext(ctx context.Context, request *DescribeInstancesAttributesRequest) (response *DescribeInstancesAttributesResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstancesAttributesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstancesAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstancesAttributesResponse()
     err = c.Send(request, response)
     return
 }
@@ -7458,8 +7509,6 @@ func NewTerminateInstancesResponse() (response *TerminateInstancesResponse) {
 //
 // * Pay-as-you-go instances can be returned directly through this API.
 //
-// * When this API is called for the first time, the instance will be moved to the recycle bin. When this API is called for the second time, the instance will be terminated and cannot be recovered.
-//
 // * Batch operations are supported. The allowed maximum number of instances in each request is 100.
 //
 // error code that may be returned:
@@ -7521,8 +7570,6 @@ func (c *Client) TerminateInstances(request *TerminateInstancesRequest) (respons
 // * Use this API to return instances that are no longer required.
 //
 // * Pay-as-you-go instances can be returned directly through this API.
-//
-// * When this API is called for the first time, the instance will be moved to the recycle bin. When this API is called for the second time, the instance will be terminated and cannot be recovered.
 //
 // * Batch operations are supported. The allowed maximum number of instances in each request is 100.
 //
