@@ -1,3 +1,20 @@
+## 1.81.198(June 6 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ccn_attachment_v2` ([#3388](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3388))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_start_instance_refresh: update retry code logic ([#3390](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3390))
+* resource/tencentcloud_cbs_storage: support `encrypt_type` ([#3395](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3395))
+* resource/tencentcloud_clb_instance: update create function logic ([#3391](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3391))
+* resource/tencentcloud_elasticsearch_instance: kibana_public_access and kibana_private_access can be updated at the same time ([#3398](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3398))
+* resource/tencentcloud_kubernetes_addon: add operation wait ([#3389](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3389))
+* resource/tencentcloud_kubernetes_cluster: support `is_dual_stack` ([#3394](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3394))
+* resource/tencentcloud_mqtt_instance: support `authorization_policy` ([#3399](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3399))
+* resource/tencentcloud_private_dns_record: optmize create function code logic ([#3397](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3397))
+
 ## 1.81.197(May 30 , 2025)
 
 FEATURES:
