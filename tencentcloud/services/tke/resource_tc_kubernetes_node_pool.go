@@ -318,7 +318,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Optional:     true,
 							Default:      50,
 							Description:  "Volume of system disk in GB. Default is `50`.",
-							ValidateFunc: tccommon.ValidateIntegerInRange(20, 1024),
+							ValidateFunc: tccommon.ValidateIntegerInRange(20, 2048),
 						},
 						"data_disk": {
 							Type:        schema.TypeList,
