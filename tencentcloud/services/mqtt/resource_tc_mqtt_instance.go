@@ -240,15 +240,11 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 	)
 
 	if v, ok := d.GetOkExists("automatic_activation"); ok {
-		if v.(bool) {
-			isAutomaticActivation = true
-		}
+		isAutomaticActivation = v.(bool)
 	}
 
 	if v, ok := d.GetOkExists("authorization_policy"); ok {
-		if v.(bool) {
-			isAuthorizationPolicy = true
-		}
+		isAuthorizationPolicy = v.(bool)
 	}
 
 	// open automatic_activation or authorization_policy
