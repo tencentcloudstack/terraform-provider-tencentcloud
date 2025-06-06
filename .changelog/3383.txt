@@ -1,3 +1,3 @@
 ```release-note:enhancement
-resource/tencentcloud_instance: support modify `placement_group_id`
+resource/tencentcloud_kubernetes_node_pool: update `system_disk_size` params validate
 ```
