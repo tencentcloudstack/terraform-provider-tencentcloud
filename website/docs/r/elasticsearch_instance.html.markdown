@@ -226,6 +226,7 @@ In addition to all arguments above, the following attributes are exported:
 * `elasticsearch_port` - Elasticsearch port.
 * `elasticsearch_vip` - Elasticsearch VIP.
 * `es_public_url` - Es public network address.
+* `kibana_private_url` - Kibana private URL.
 * `kibana_url` - Kibana access URL.
 
 
