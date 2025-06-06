@@ -76,6 +76,7 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 			"renew_flag": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to enable auto-renewal (0: Disabled; 1: Enabled).",
 			},
 
@@ -103,6 +104,13 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Is the automatic registration certificate automatically activated. Default is false.",
+			},
+
+			"authorization_policy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Authorization policy switch. Default is false.",
 			},
 
 			"force_delete": {
@@ -226,27 +234,39 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 		return reqErr
 	}
 
-	// open automatic_activation
+	var (
+		isAutomaticActivation bool
+		isAuthorizationPolicy bool
+	)
+
 	if v, ok := d.GetOkExists("automatic_activation"); ok {
-		if v.(bool) {
-			modifyRequest := mqttv20240516.NewModifyInstanceRequest()
-			modifyRequest.InstanceId = &instanceId
-			modifyRequest.AutomaticActivation = helper.Bool(v.(bool))
-			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMqttV20240516Client().ModifyInstanceWithContext(ctx, modifyRequest)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), result.ToJsonString())
-				}
+		isAutomaticActivation = v.(bool)
+	}
 
-				return nil
-			})
+	if v, ok := d.GetOkExists("authorization_policy"); ok {
+		isAuthorizationPolicy = v.(bool)
+	}
 
-			if reqErr != nil {
-				log.Printf("[CRITAL]%s update mqtt failed, reason:%+v", logId, reqErr)
-				return reqErr
+	// open automatic_activation or authorization_policy
+	if isAutomaticActivation || isAuthorizationPolicy {
+		modifyRequest := mqttv20240516.NewModifyInstanceRequest()
+		modifyRequest.InstanceId = &instanceId
+		modifyRequest.AutomaticActivation = helper.Bool(isAutomaticActivation)
+		modifyRequest.AuthorizationPolicy = helper.Bool(isAuthorizationPolicy)
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMqttV20240516Client().ModifyInstanceWithContext(ctx, modifyRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), result.ToJsonString())
 			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update mqtt failed, reason:%+v", logId, reqErr)
+			return reqErr
 		}
 	}
 
@@ -322,6 +342,10 @@ func ResourceTencentCloudMqttInstanceRead(d *schema.ResourceData, meta interface
 		_ = d.Set("automatic_activation", respData.AutomaticActivation)
 	}
 
+	if respData.AuthorizationPolicy != nil {
+		_ = d.Set("authorization_policy", respData.AuthorizationPolicy)
+	}
+
 	forceDelete := false
 	if v, ok := d.GetOkExists("force_delete"); ok {
 		forceDelete = v.(bool)
@@ -356,7 +380,7 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	needChange := false
-	mutableArgs := []string{"name", "remark", "sku_code", "device_certificate_provision_type", "automatic_activation"}
+	mutableArgs := []string{"name", "remark", "sku_code", "device_certificate_provision_type", "automatic_activation", "authorization_policy"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -381,6 +405,10 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 
 		if v, ok := d.GetOkExists("automatic_activation"); ok {
 			request.AutomaticActivation = helper.Bool(v.(bool))
+		}
+
+		if v, ok := d.GetOkExists("authorization_policy"); ok {
+			request.AuthorizationPolicy = helper.Bool(v.(bool))
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
