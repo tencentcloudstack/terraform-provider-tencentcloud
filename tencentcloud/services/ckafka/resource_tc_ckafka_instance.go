@@ -55,8 +55,8 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "profession",
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"standard", "profession"}),
-				Description:  "Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.",
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"standard", "profession", "premium"}),
+				Description:  "Specifications type of instance. Allowed values are `profession`, `premium`. Default is `profession`.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
