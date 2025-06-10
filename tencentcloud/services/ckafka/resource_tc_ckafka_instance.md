@@ -1,62 +1,46 @@
-Use this resource to create ckafka instance.
+Use this resource to create CKafka instance.
 
 Example Usage
 
-Basic Instance
+Create basic instance(prepaid)
+
 ```hcl
-variable "vpc_id" {
-  default = "vpc-68vi2d3h"
-}
-
-variable "subnet_id" {
-  default = "subnet-ob6clqwk"
-}
-
 data "tencentcloud_availability_zones_by_product" "gz" {
-  name    = "ap-guangzhou-3"
+  name    = "ap-guangzhou-6"
   product = "ckafka"
 }
 
-resource "tencentcloud_ckafka_instance" "kafka_instance_prepaid" {
-  instance_name      = "ckafka-instance-prepaid"
-  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
-  period             = 1
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
-  msg_retention_time = 1300
-  renew_flag         = 0
-  kafka_version      = "2.4.1"
-  disk_size          = 200
-  disk_type          = "CLOUD_BASIC"
-  band_width = 20
-  partition = 400
-
-  specifications_type = "standard"
-  instance_type       = 2
-
-  config {
-    auto_create_topic_enable   = true
-    default_num_partitions     = 3
-    default_replication_factor = 3
-  }
-
-  dynamic_retention_config {
-    enable = 1
-  }
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
 }
 
-resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
-  instance_name      = "ckafka-instance-postpaid"
-  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
-  msg_retention_time = 1300
-  kafka_version      = "1.1.1"
-  disk_size          = 200
-  band_width         = 20
-  disk_type          = "CLOUD_BASIC"
-  partition          = 400
-  charge_type        = "POSTPAID_BY_HOUR"
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create ckafka
+resource "tencentcloud_ckafka_instance" "example" {
+  instance_name       = "tf-example"
+  zone_id             = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
+  period              = 1
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  msg_retention_time  = 1300
+  renew_flag          = 0
+  kafka_version       = "2.8.1"
+  disk_size           = 200
+  disk_type           = "CLOUD_BASIC"
+  band_width          = 40
+  partition           = 400
+  specifications_type = "profession"
+  instance_type       = 1
 
   config {
     auto_create_topic_enable   = true
@@ -70,42 +54,55 @@ resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
 }
 ```
 
-Multi zone Instance
+Create multi zone instance(postpaid)
+
 ```hcl
-variable "vpc_id" {
-  default = "vpc-68vi2d3h"
-}
-
-variable "subnet_id" {
-  default = "subnet-ob6clqwk"
-}
-
-data "tencentcloud_availability_zones_by_product" "gz3" {
-  name    = "ap-guangzhou-3"
-  product = "ckafka"
-}
-
 data "tencentcloud_availability_zones_by_product" "gz6" {
   name    = "ap-guangzhou-6"
   product = "ckafka"
 }
 
-resource "tencentcloud_ckafka_instance" "kafka_instance" {
-  instance_name   = "ckafka-instance-maz-tf-test"
-  zone_id         = data.tencentcloud_availability_zones_by_product.gz3.zones.0.id
+data "tencentcloud_availability_zones_by_product" "gz7" {
+  name    = "ap-guangzhou-7"
+  product = "ckafka"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create ckafka
+resource "tencentcloud_ckafka_instance" "example" {
+  instance_name   = "tf-example"
+  zone_id         = data.tencentcloud_availability_zones_by_product.gz6.zones.0.id
   multi_zone_flag = true
-  zone_ids        = [
-    data.tencentcloud_availability_zones_by_product.gz3.zones.0.id,
-    data.tencentcloud_availability_zones_by_product.gz6.zones.0.id
+  zone_ids = [
+    data.tencentcloud_availability_zones_by_product.gz6.zones.0.id,
+    data.tencentcloud_availability_zones_by_product.gz7.zones.0.id,
   ]
-  period             = 1
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
-  msg_retention_time = 1300
-  renew_flag         = 0
-  kafka_version      = "1.1.1"
-  disk_size          = 500
-  disk_type          = "CLOUD_BASIC"
+  renew_flag          = 0
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  msg_retention_time  = 4320
+  kafka_version       = "2.8.1"
+  disk_size           = 200
+  disk_type           = "CLOUD_BASIC"
+  band_width          = 20
+  partition           = 400
+  specifications_type = "profession"
+  charge_type         = "POSTPAID_BY_HOUR"
+  instance_type       = 1
 
   config {
     auto_create_topic_enable   = true
@@ -121,8 +118,8 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 
 Import
 
-ckafka instance can be imported using the instance_id, e.g.
+CKafka instance can be imported using the instanceId, e.g.
 
 ```
-$ terraform import tencentcloud_ckafka_instance.foo ckafka-f9ife4zz
+$ terraform import tencentcloud_ckafka_instance.example ckafka-f9ife4zz
 ```
