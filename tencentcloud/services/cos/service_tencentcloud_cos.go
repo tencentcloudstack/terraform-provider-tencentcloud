@@ -1618,7 +1618,7 @@ func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string
 	return
 }
 
-func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, certId string) (result *cos.BucketGetDomainCertificateResult, bucket string, errRet error) {
+func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, certId string) (res *cos.BucketGetDomainCertificateResult, bucket string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	ids, err := me.parseCertId(certId)
@@ -1636,25 +1636,31 @@ func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, ce
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request[%s], reason[%s]\n",
-				logId, "GetDomainCertificate", request, errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, request[%s], reason[%s]\n", logId, "GetDomainCertificate", request, errRet.Error())
 		}
 	}()
 
-	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomainCertificate(ctx, option)
-	resp, _ := json.Marshal(response.Response.Body)
-	if response.StatusCode == 404 {
-		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, response, e := me.client.UseTencentCosClient(bucket).Bucket.GetDomainCertificate(ctx, option)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			if response.StatusCode == 404 {
+				log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
+				return resource.NonRetryableError(fmt.Errorf("Get domain certificate failed, Status code is 404."))
+			}
+
+			resp, _ := json.Marshal(response.Response.Body)
+			log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s], result [%s]\n", logId, "GetDomainCertificate", request, resp, result)
+			res = result
+		}
+
+		return nil
+	})
+
+	if errRet != nil {
 		return
 	}
-
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s], result [%s]\n",
-		logId, "GetDomainCertificate", request, resp, result)
 
 	return
 }
@@ -1676,23 +1682,30 @@ func (me *CosService) DeleteCosBucketDomainCertificate(ctx context.Context, cert
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, option [%s], reason[%s]\n",
-				logId, "DeleteDomainCertificate", option, errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, option [%s], reason[%s]\n", logId, "DeleteDomainCertificate", option, errRet.Error())
 		}
 	}()
 
-	ratelimit.Check("DeleteDomainCertificate")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomainCertificate(ctx, option)
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("DeleteDomainCertificate")
+		result, e := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomainCertificate(ctx, option)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Delete cos domain certificate failed, Response is nil."))
+			}
 
-	if err != nil {
-		errRet = err
-		return err
+			resp, _ := json.Marshal(result.Response.Body)
+			log.Printf("[DEBUG]%s api[%s] success, option [%s], response body [%s]\n", logId, "DeleteDomainCertificate", option, resp)
+		}
+
+		return nil
+	})
+
+	if errRet != nil {
+		return
 	}
-
-	resp, _ := json.Marshal(response.Response.Body)
-
-	log.Printf("[DEBUG]%s api[%s] success, option [%s], response body [%s]\n",
-		logId, "DeleteDomainCertificate", option, resp)
 
 	return
 }
