@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudVpnConnectionResetResource_basic -v -timeout=0
 func TestAccTencentCloudVpnConnectionResetResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -76,9 +77,6 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "test"
   }
-  enable_health_check = true
-  health_check_local_ip = "192.168.0.2"
-  health_check_remote_ip = "3.3.3.2"
 }
 
 resource "tencentcloud_vpn_connection_reset" "vpn_connection_reset" {
