@@ -361,17 +361,22 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 				if vpc.VpcId != nil {
 					vpcMap["vpc_id"] = vpc.VpcId
 				}
+
 				if vpc.SubnetId != nil {
 					vpcMap["subnet_id"] = vpc.SubnetId
 				}
+
 				if vpc.VpcEndpoint != nil {
 					vpcMap["vpc_endpoint"] = vpc.VpcEndpoint
 				}
+
 				if vpc.VpcDataStreamEndpointStatus != nil {
 					vpcMap["vpc_data_stream_endpoint_status"] = vpc.VpcDataStreamEndpointStatus
 				}
+
 				tmpList = append(tmpList, vpcMap)
 			}
+
 			_ = d.Set("vpcs", tmpList)
 		}
 
@@ -467,7 +472,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceDelete(d *schema.ResourceData, m
 		instanceId = d.Id()
 	)
 
-	err := resource.Retry(tccommon.WaitReadTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := service.DeleteTdmqRabbitmqVipInstanceById(ctx, instanceId)
 		if e != nil {
 			return tccommon.RetryError(e)
