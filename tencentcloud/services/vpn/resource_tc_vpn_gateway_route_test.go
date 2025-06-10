@@ -16,6 +16,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudVpnGatewayRoute_basic -v -timeout=0
 func TestAccTencentCloudVpnGatewayRoute_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -160,9 +161,6 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "test"
   }
-  enable_health_check = true
-  health_check_local_ip = "192.168.0.2"
-  health_check_remote_ip = "3.3.3.2"
 }
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
@@ -227,9 +225,6 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "test"
   }
-  enable_health_check = true
-  health_check_local_ip = "192.168.0.2"
-  health_check_remote_ip = "3.3.3.2"
 }
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
