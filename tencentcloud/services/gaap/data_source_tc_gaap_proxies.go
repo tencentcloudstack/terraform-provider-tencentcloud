@@ -143,6 +143,11 @@ func DataSourceTencentCloudGaapProxies() *schema.Resource {
 							Computed:    true,
 							Description: "Version of the GAAP proxy.",
 						},
+						"is_auto_scale_proxy": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Indicates whether the auto scale channel is enabled, with 0 for no and 1 for yes.",
+						},
 						"tags": {
 							Type:        schema.TypeMap,
 							Computed:    true,
@@ -244,24 +249,28 @@ func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}
 		if proxy.Version == nil {
 			return errors.New("proxy version is nil")
 		}
+		if proxy.IsAutoScaleProxy == nil {
+			return errors.New("proxy IsAutoScaleProxy is nil")
+		}
 
 		proxyIds = append(proxyIds, *proxy.ProxyId)
 
 		m := map[string]interface{}{
-			"id":                *proxy.ProxyId,
-			"name":              *proxy.ProxyName,
-			"domain":            *proxy.Domain,
-			"ip":                *proxy.IP,
-			"bandwidth":         *proxy.Bandwidth,
-			"concurrent":        *proxy.Concurrent,
-			"access_region":     *proxy.AccessRegion,
-			"realserver_region": *proxy.RealServerRegion,
-			"project_id":        *proxy.ProjectId,
-			"create_time":       helper.FormatUnixTime(*proxy.CreateTime),
-			"status":            *proxy.Status,
-			"scalable":          *proxy.Scalarable == 1,
-			"forward_ip":        *proxy.ForwardIP,
-			"version":           *proxy.Version,
+			"id":                  *proxy.ProxyId,
+			"name":                *proxy.ProxyName,
+			"domain":              *proxy.Domain,
+			"ip":                  *proxy.IP,
+			"bandwidth":           *proxy.Bandwidth,
+			"concurrent":          *proxy.Concurrent,
+			"access_region":       *proxy.AccessRegion,
+			"realserver_region":   *proxy.RealServerRegion,
+			"project_id":          *proxy.ProjectId,
+			"create_time":         helper.FormatUnixTime(*proxy.CreateTime),
+			"status":              *proxy.Status,
+			"scalable":            *proxy.Scalarable == 1,
+			"forward_ip":          *proxy.ForwardIP,
+			"version":             *proxy.Version,
+			"is_auto_scale_proxy": *proxy.IsAutoScaleProxy,
 		}
 
 		if proxy.PolicyId != nil {
