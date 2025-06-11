@@ -1,3 +1,14 @@
+## 1.81.199(June 11 , 2025)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_gaap_proxies: support `is_auto_scale_proxy` ([#3410](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3410))
+* datasource/tencentcloud_gaap_proxy_detail: support `is_auto_scale_proxy` ([#3410](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3410))
+* resource/tencentcloud_ckafka_instance: udapte `specifications_type` description and doc ([#3404](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3404))
+* resource/tencentcloud_cos_bucket_domain_certificate_attachment: optmize code logic ([#3402](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3402))
+* resource/tencentcloud_elasticsearch_instance: fix update `es_public_acl` failed ([#3409](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3409))
+* resource/tencentcloud_monitor_policy_binding_object: support unbinding objects without region ([#3408](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3408))
+
 ## 1.81.198(June 6 , 2025)
 
 FEATURES:
