@@ -92,6 +92,7 @@ var MonitorRegionMap = map[string]string{
 }
 
 var MonitorRegionMapName = map[string]string{
+	"-":      "ap-guangzhou",
 	"gz":     "ap-guangzhou",
 	"szjr":   "ap-shenzhen-fsi",
 	"gzopen": "ap-guangzhou-open",
