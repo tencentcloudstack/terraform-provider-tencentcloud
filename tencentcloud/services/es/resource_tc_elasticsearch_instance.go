@@ -1013,9 +1013,9 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("public_access") || d.HasChange("es_public_acl") {
+	if d.HasChange("public_access") {
 		var publicAccess string
-		esPublicAcl := es.EsPublicAcl{}
+		esPublicAcl := &es.EsPublicAcl{}
 		if v, ok := d.GetOk("public_access"); ok {
 			publicAccess = v.(string)
 		}
@@ -1034,8 +1034,43 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				}
 			}
 		}
+		if publicAccess == ES_PUBLIC_ACCESS_CLOSE {
+			esPublicAcl = nil
+		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, 0, nil, nil, nil, nil, &esPublicAcl)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, 0, nil, nil, nil, nil, esPublicAcl)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("es_public_acl") {
+		esPublicAcl := es.EsPublicAcl{}
+		if aclMap, ok := helper.InterfacesHeadMap(d, "es_public_acl"); ok {
+			// if v, ok := aclMap["black_ip_list"]; ok {
+			// 	bList := v.(*schema.Set).List()
+			// 	for _, d := range bList {
+			// 		esPublicAcl.BlackIpList = append(esPublicAcl.BlackIpList, helper.String(d.(string)))
+			// 	}
+			// }
+			if v, ok := aclMap["white_ip_list"]; ok {
+				wList := v.(*schema.Set).List()
+				for _, d := range wList {
+					esPublicAcl.WhiteIpList = append(esPublicAcl.WhiteIpList, helper.String(d.(string)))
+				}
+			}
+		}
+		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, nil, nil, &esPublicAcl)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
