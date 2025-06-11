@@ -50,6 +50,22 @@ func TestAccTencentCloudMonitorPolicyBindingObjectResource_multiRegion(t *testin
 	})
 }
 
+func TestAccTencentCloudMonitorPolicyBindingObjectResource_noRegion(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMonitorPolicyBindingNoRegionObject,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_monitor_policy_binding_object.binding_multi_region_object", "dimensions.#", "1"),
+				),
+			},
+		},
+	})
+}
+
 const testAccMonitorPolicyBindingObjectBasic string = `
 resource "tencentcloud_monitor_policy_binding_object" "binding_object" {
   policy_id = "policy-dkfebnac"
@@ -81,6 +97,19 @@ resource "tencentcloud_monitor_policy_binding_object" "binding_multi_region_obje
       }
     )
     region = "ap-guangzhou"
+  }
+}
+`
+
+const testAccMonitorPolicyBindingNoRegionObject string = `
+resource "tencentcloud_monitor_policy_binding_object" "binding_multi_region_object" {
+  policy_id = "policy-wt2kvmmq"
+  dimensions {
+    dimensions_json = jsonencode(
+      {
+        domain = "keep.tencentcloud-terraform-provider.cn"
+      }
+    )
   }
 }
 `
