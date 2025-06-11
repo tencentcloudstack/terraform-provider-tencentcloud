@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_elasticsearch_instance: fix update `es_public_acl` failed
+```
