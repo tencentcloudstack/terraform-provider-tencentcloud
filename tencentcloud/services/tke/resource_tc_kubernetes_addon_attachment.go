@@ -17,10 +17,11 @@ import (
 
 func ResourceTencentCloudKubernetesAddonAttachment() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudKubernetesAddonAttachmentCreate,
-		Read:   resourceTencentCloudKubernetesAddonAttachmentRead,
-		Update: resourceTencentCloudKubernetesAddonAttachmentUpdate,
-		Delete: resourceTencentCloudKubernetesAddonAttachmentDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.81.200. Please use 'tencentcloud_kubernetes_addon' instead.",
+		Create:             resourceTencentCloudKubernetesAddonAttachmentCreate,
+		Read:               resourceTencentCloudKubernetesAddonAttachmentRead,
+		Update:             resourceTencentCloudKubernetesAddonAttachmentUpdate,
+		Delete:             resourceTencentCloudKubernetesAddonAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
