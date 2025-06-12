@@ -207,7 +207,6 @@ type AclConfig struct {
 	AclUserRules []*AclUserRule `json:"AclUserRules,omitnil,omitempty" name:"AclUserRules"`
 
 	// 托管定制规则
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Customizes []*AclUserRule `json:"Customizes,omitnil,omitempty" name:"Customizes"`
 }
 
@@ -313,6 +312,17 @@ type Action struct {
 	CodeAction *CodeAction `json:"CodeAction,omitnil,omitempty" name:"CodeAction"`
 }
 
+type AdaptiveFrequencyControl struct {
+	// 自适应频控是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 自适应频控的限制等级，当 Enabled 为 on 时，此字段必填。取值有：<li>Loose：宽松；</li><li>Moderate：适中；</li><li>Strict：严格。</li>
+	Sensitivity *string `json:"Sensitivity,omitnil,omitempty" name:"Sensitivity"`
+
+	// 自适应频控的处置方式，当 Enabled 为 on 时，此字段必填。SecurityAction 的 Name 取值支持：<li>Monitor：观察；</li><li>Deny：拦截；</li><li>Challenge：挑战，其中ChallengeActionParameters.Name仅支持JSChallenge。</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+}
+
 type AdvancedFilter struct {
 	// 需要过滤的字段。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
@@ -391,7 +401,6 @@ type AlgDetectRule struct {
 	AlgConditions []*AclCondition `json:"AlgConditions,omitnil,omitempty" name:"AlgConditions"`
 
 	// Cookie校验和会话行为分析。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlgDetectSession *AlgDetectSession `json:"AlgDetectSession,omitnil,omitempty" name:"AlgDetectSession"`
 
 	// 客户端行为校验。
@@ -584,7 +593,6 @@ type ApplicationProxyRule struct {
 	SessionPersist *bool `json:"SessionPersist,omitnil,omitempty" name:"SessionPersist"`
 
 	// 会话保持的时间，只有当SessionPersist为true时，该值才会生效。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitnil,omitempty" name:"SessionPersistTime"`
 
 	// 源站端口，支持格式：
@@ -593,7 +601,6 @@ type ApplicationProxyRule struct {
 	OriginPort *string `json:"OriginPort,omitnil,omitempty" name:"OriginPort"`
 
 	// 规则标签。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleTag *string `json:"RuleTag,omitnil,omitempty" name:"RuleTag"`
 }
 
@@ -639,6 +646,14 @@ type AuthenticationParameters struct {
 	// <li>dec：十进制；</li>
 	// <li>hex：十六进制。</li>注意：当 AuthType 为 TypeD 时，此字段必填。默认为 hex。
 	TimeFormat *string `json:"TimeFormat,omitnil,omitempty" name:"TimeFormat"`
+}
+
+type BandwidthAbuseDefense struct {
+	// 流量防盗刷（仅适用中国大陆地区）是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 流量防盗刷（仅适用中国大陆地区）的处置方式，当 Enabled 为 on 时，此字段必填。SecurityAction 的 Name 取值支持：<li>Monitor：观察；</li><li>Deny：拦截；</li><li>Challenge：挑战，其中ChallengeActionParameters.Name仅支持JSChallenge。</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
 }
 
 type BillingData struct {
@@ -912,7 +927,6 @@ type BotConfig struct {
 	BotPortraitRule *BotPortraitRule `json:"BotPortraitRule,omitnil,omitempty" name:"BotPortraitRule"`
 
 	// Bot智能分析。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IntelligenceRule *IntelligenceRule `json:"IntelligenceRule,omitnil,omitempty" name:"IntelligenceRule"`
 
 	// Bot自定义规则。如果为null，默认使用历史配置。
@@ -922,7 +936,6 @@ type BotConfig struct {
 	AlgDetectRule []*AlgDetectRule `json:"AlgDetectRule,omitnil,omitempty" name:"AlgDetectRule"`
 
 	// Bot托管定制策略，入参可不填，仅出参使用。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Customizes []*BotUserRule `json:"Customizes,omitnil,omitempty" name:"Customizes"`
 }
 
@@ -938,7 +951,6 @@ type BotExtendAction struct {
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
 	// 处置方式的触发概率，范围0-100。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Percent *uint64 `json:"Percent,omitnil,omitempty" name:"Percent"`
 }
 
@@ -954,23 +966,18 @@ type BotManagedRule struct {
 	RuleID *int64 `json:"RuleID,omitnil,omitempty" name:"RuleID"`
 
 	// 放行的规则ID。默认所有规则不配置放行。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TransManagedIds []*int64 `json:"TransManagedIds,omitnil,omitempty" name:"TransManagedIds"`
 
 	// JS挑战的规则ID。默认所有规则不配置JS挑战。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlgManagedIds []*int64 `json:"AlgManagedIds,omitnil,omitempty" name:"AlgManagedIds"`
 
 	// 数字验证码的规则ID。默认所有规则不配置数字验证码。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CapManagedIds []*int64 `json:"CapManagedIds,omitnil,omitempty" name:"CapManagedIds"`
 
 	// 观察的规则ID。默认所有规则不配置观察。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MonManagedIds []*int64 `json:"MonManagedIds,omitnil,omitempty" name:"MonManagedIds"`
 
 	// 拦截的规则ID。默认所有规则不配置拦截。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DropManagedIds []*int64 `json:"DropManagedIds,omitnil,omitempty" name:"DropManagedIds"`
 }
 
@@ -984,19 +991,15 @@ type BotPortraitRule struct {
 	RuleID *int64 `json:"RuleID,omitnil,omitempty" name:"RuleID"`
 
 	// JS挑战的规则ID。默认所有规则不配置JS挑战。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlgManagedIds []*int64 `json:"AlgManagedIds,omitnil,omitempty" name:"AlgManagedIds"`
 
 	// 数字验证码的规则ID。默认所有规则不配置数字验证码。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CapManagedIds []*int64 `json:"CapManagedIds,omitnil,omitempty" name:"CapManagedIds"`
 
 	// 观察的规则ID。默认所有规则不配置观察。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MonManagedIds []*int64 `json:"MonManagedIds,omitnil,omitempty" name:"MonManagedIds"`
 
 	// 拦截的规则ID。默认所有规则不配置拦截。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DropManagedIds []*int64 `json:"DropManagedIds,omitnil,omitempty" name:"DropManagedIds"`
 }
 
@@ -1091,7 +1094,6 @@ type Cache struct {
 
 	// 缓存过期时间设置。
 	// 单位为秒，最大可设置为 365 天。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CacheTime *int64 `json:"CacheTime,omitnil,omitempty" name:"CacheTime"`
 
 	// 是否开启强制缓存，取值有：
@@ -1145,13 +1147,11 @@ type CacheKey struct {
 	// 是否开启全路径缓存，取值有：
 	// <li>on：开启全路径缓存（即关闭参数忽略）；</li>
 	// <li>off：关闭全路径缓存（即开启参数忽略）。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FullUrlCache *string `json:"FullUrlCache,omitnil,omitempty" name:"FullUrlCache"`
 
 	// 是否忽略大小写缓存，取值有：
 	// <li>on：忽略；</li>
 	// <li>off：不忽略。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreCase *string `json:"IgnoreCase,omitnil,omitempty" name:"IgnoreCase"`
 
 	// CacheKey 中包含请求参数。
@@ -1266,7 +1266,6 @@ type CachePrefresh struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 缓存预刷新百分比，取值范围：1-99。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Percent *int64 `json:"Percent,omitnil,omitempty" name:"Percent"`
 }
 
@@ -1314,6 +1313,17 @@ type CertificateInfo struct {
 	// <li>failed：申请失败；</li>
 	// <li>issued：绑定失败。</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+type ChallengeActionParameters struct {
+	// 安全执行的具体挑战动作。取值有：<li> InterstitialChallenge：插页式挑战；</li><li> InlineChallenge：内嵌式挑战；</li><li> JSChallenge：JavaScript 挑战；</li><li> ManagedChallenge：托管挑战。</li>
+	ChallengeOption *string `json:"ChallengeOption,omitnil,omitempty" name:"ChallengeOption"`
+
+	// 重复挑战的时间间隔，当 Name 为 InterstitialChallenge/InlineChallenge 时，该字段必填。默认值为 300s。支持的单位有：<li>s：秒，取值范围1～60；</li><li>m：分，取值范围1～60；</li><li>h：小时，取值范围1～24。</li>
+	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
+
+	// 客户端认证方式 ID 。当 Name 为 InterstitialChallenge/InlineChallenge 时，该字段必填。
+	AttesterId *string `json:"AttesterId,omitnil,omitempty" name:"AttesterId"`
 }
 
 // Predefined struct for user
@@ -1394,6 +1404,14 @@ type CheckRegionHealthStatus struct {
 	OriginHealthStatus []*OriginHealthStatus `json:"OriginHealthStatus,omitnil,omitempty" name:"OriginHealthStatus"`
 }
 
+type ClientFiltering struct {
+	// 智能客户端过滤是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 智能客户端过滤的处置方式，当 Enabled 为 on 时，此字段必填。SecurityAction 的 Name 取值支持：<li>Monitor：观察；</li><li>Deny：拦截；</li><li>Challenge：挑战，其中ChallengeActionParameters.Name仅支持JSChallenge。</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+}
+
 type ClientIPCountryParameters struct {
 	// 配置开关，取值有：
 	// <li>on：开启；</li>
@@ -1432,7 +1450,6 @@ type ClientIpHeader struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 回源时，存放客户端 IP 的请求头名称。当 Switch 为 on 时，该参数必填。该参数不允许填写 X-Forwarded-For。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HeaderName *string `json:"HeaderName,omitnil,omitempty" name:"HeaderName"`
 }
 
@@ -1444,10 +1461,9 @@ type CnameStatus struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cname *string `json:"Cname,omitnil,omitempty" name:"Cname"`
 
-	// Cname状态信息，取值有：
+	// CNAME 状态信息，取值有：
 	// <li>active：生效；</li>
-	// <li>moved：不生效。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <li>moved：不生效；</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
@@ -1468,7 +1484,6 @@ type Compression struct {
 	// 支持的压缩算法列表，取值有：
 	// <li>brotli：brotli算法；</li>
 	// <li>gzip：gzip算法。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Algorithms []*string `json:"Algorithms,omitnil,omitempty" name:"Algorithms"`
 }
 
@@ -3259,6 +3274,19 @@ type CreatePrefetchTaskRequestParams struct {
 
 	// 附带的http头部信息。
 	Headers []*Header `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// 媒体分片预热控制，取值有：
+	// <li>on：开启分片预热，预热描述文件，并递归解析描述文件分片进行预热；</li>
+	// <li>off：仅预热提交的描述文件；</li>不填写时，默认值为 off。
+	// 
+	// 注意事项：
+	// 1. 支持的描述文件为 M3U8，对应分片为 TS；
+	// 2. 要求描述文件能正常请求，并按行业标准描述分片路径；
+	// 3. 递归解析深度不超过 3 层；
+	// 4. 解析获取的分片会正常累加每日预热用量，当用量超出配额时，会静默处理，不再执行预热。
+	// 
+	// 该参数为白名单功能，如有需要，请联系腾讯云工程师处理。
+	PrefetchMediaSegments *string `json:"PrefetchMediaSegments,omitnil,omitempty" name:"PrefetchMediaSegments"`
 }
 
 type CreatePrefetchTaskRequest struct {
@@ -3278,6 +3306,19 @@ type CreatePrefetchTaskRequest struct {
 
 	// 附带的http头部信息。
 	Headers []*Header `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// 媒体分片预热控制，取值有：
+	// <li>on：开启分片预热，预热描述文件，并递归解析描述文件分片进行预热；</li>
+	// <li>off：仅预热提交的描述文件；</li>不填写时，默认值为 off。
+	// 
+	// 注意事项：
+	// 1. 支持的描述文件为 M3U8，对应分片为 TS；
+	// 2. 要求描述文件能正常请求，并按行业标准描述分片路径；
+	// 3. 递归解析深度不超过 3 层；
+	// 4. 解析获取的分片会正常累加每日预热用量，当用量超出配额时，会静默处理，不再执行预热。
+	// 
+	// 该参数为白名单功能，如有需要，请联系腾讯云工程师处理。
+	PrefetchMediaSegments *string `json:"PrefetchMediaSegments,omitnil,omitempty" name:"PrefetchMediaSegments"`
 }
 
 func (r *CreatePrefetchTaskRequest) ToJsonString() string {
@@ -3296,6 +3337,7 @@ func (r *CreatePrefetchTaskRequest) FromJsonString(s string) error {
 	delete(f, "Targets")
 	delete(f, "EncodeUrl")
 	delete(f, "Headers")
+	delete(f, "PrefetchMediaSegments")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePrefetchTaskRequest has unknown keys!", "")
 	}
@@ -3345,10 +3387,10 @@ type CreatePurgeTaskRequestParams struct {
 	// <li>purge_cache_tag：cache-tag 刷新。</li>缓存清除类型详情请查看[清除缓存](https://cloud.tencent.com/document/product/1552/70759)。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 节点缓存清除方法，针对目录刷新、Hostname刷新以及刷新全部缓存类型有效，取值有：<li> invalidate：仅刷新目录下产生了更新的资源；</li><li> delete：无论目录下资源是否更新都刷新节点资源。</li>默认值： invalidate。
+	// 节点缓存清除方法，针对目录刷新、Hostname 刷新以及刷新全部缓存类型有效，取值有：<li> invalidate：仅刷新目录下产生了更新的资源；</li><li> delete：无论目录下资源是否更新都刷新节点资源。</li>默认值： invalidate。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
-	// 要清除缓存的资源列表。每个元素格式依据清除缓存类型而定，可参考接口示例。<li>单次提交的任务数受计费套餐配额限制，请查看 [EO计费套餐](https://cloud.tencent.com/document/product/1552/77380)。</li>
+	// 需清除缓存的资源列表，如 https://www.example.com/example.jpg，必须携带协议信息。更多元素格式依据清除缓存类型而定，可参考下方接口调用示例。<li>单次提交的任务数受计费套餐配额限制，请查看 [EO 计费套餐](https://cloud.tencent.com/document/product/1552/77380)。</li>
 	Targets []*string `json:"Targets,omitnil,omitempty" name:"Targets"`
 
 	// 若有编码转换，仅清除编码转换后匹配的资源。
@@ -3376,10 +3418,10 @@ type CreatePurgeTaskRequest struct {
 	// <li>purge_cache_tag：cache-tag 刷新。</li>缓存清除类型详情请查看[清除缓存](https://cloud.tencent.com/document/product/1552/70759)。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 节点缓存清除方法，针对目录刷新、Hostname刷新以及刷新全部缓存类型有效，取值有：<li> invalidate：仅刷新目录下产生了更新的资源；</li><li> delete：无论目录下资源是否更新都刷新节点资源。</li>默认值： invalidate。
+	// 节点缓存清除方法，针对目录刷新、Hostname 刷新以及刷新全部缓存类型有效，取值有：<li> invalidate：仅刷新目录下产生了更新的资源；</li><li> delete：无论目录下资源是否更新都刷新节点资源。</li>默认值： invalidate。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
-	// 要清除缓存的资源列表。每个元素格式依据清除缓存类型而定，可参考接口示例。<li>单次提交的任务数受计费套餐配额限制，请查看 [EO计费套餐](https://cloud.tencent.com/document/product/1552/77380)。</li>
+	// 需清除缓存的资源列表，如 https://www.example.com/example.jpg，必须携带协议信息。更多元素格式依据清除缓存类型而定，可参考下方接口调用示例。<li>单次提交的任务数受计费套餐配额限制，请查看 [EO 计费套餐](https://cloud.tencent.com/document/product/1552/77380)。</li>
 	Targets []*string `json:"Targets,omitnil,omitempty" name:"Targets"`
 
 	// 若有编码转换，仅清除编码转换后匹配的资源。
@@ -4042,17 +4084,14 @@ type CustomField struct {
 	// <li>RspHeader：从 HTTP 响应头中提取指定字段值；</li>
 	// <li>Cookie: 从 Cookie 中提取指定字段值；</li>
 	// <li>ReqBody: 从 HTTP 请求正文中通过 Google RE2 正则表达式提取指定内容。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 根据字段类型（Name）填入字段值的定义。需要区分大小写。
 	// <li>当字段类型为 ReqHeader、RspHeader、Cookie 时，填入需要提取值的参数名称，例如：Accept-Language。可输入 1-100 个字符，允许的字符开头为字母，中间为字母、数字、-，结尾为字母、数字；</li>
 	// <li>当字段类型为 ReqBody 时，填入 Google RE2 正则表达式，正则表达式长度上限为 4KB。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 
 	// 是否投递该字段，不填表示不投递此字段。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 }
 
@@ -4101,11 +4140,9 @@ type CustomTime struct {
 
 type CustomizedHeader struct {
 	// 自定义头部 Key。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 自定义头部 Value。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
@@ -4191,49 +4228,39 @@ type DDosProtectionConfig struct {
 
 type DefaultServerCertInfo struct {
 	// 服务器证书 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 
 	// 证书备注名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
 
 	// 证书类型，取值有：
 	// <li>default: 默认证书;</li>
 	// <li>upload:用户上传;</li>
 	// <li>managed:腾讯云托管。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 证书过期时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 证书生效时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EffectiveTime *string `json:"EffectiveTime,omitnil,omitempty" name:"EffectiveTime"`
 
 	// 证书公用名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CommonName *string `json:"CommonName,omitnil,omitempty" name:"CommonName"`
 
 	// 证书SAN域名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubjectAltName []*string `json:"SubjectAltName,omitnil,omitempty" name:"SubjectAltName"`
 
 	// 部署状态，取值有：
 	// <li>processing: 部署中；</li>
 	// <li>deployed: 已部署；</li>
 	// <li>failed: 部署失败。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// Status为失败时,此字段返回失败原因。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
 	// 证书算法。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SignAlgo *string `json:"SignAlgo,omitnil,omitempty" name:"SignAlgo"`
 }
 
@@ -5416,6 +5443,38 @@ type DeliveryCondition struct {
 	Conditions []*QueryCondition `json:"Conditions,omitnil,omitempty" name:"Conditions"`
 }
 
+type DenyActionParameters struct {
+	// 是否对来源 IP 延长封禁。取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
+	// 启用后，对触发规则的客户端 IP 持续拦截。当启用该选项时，必须同时指定 BlockIpDuration 参数。
+	// 注意：该选项不可与 ReturnCustomPage 或 Stall 选项同时启用。
+	BlockIp *string `json:"BlockIp,omitnil,omitempty" name:"BlockIp"`
+
+	// 当 BlockIP 为 on 时IP 的封禁时长。
+	BlockIpDuration *string `json:"BlockIpDuration,omitnil,omitempty" name:"BlockIpDuration"`
+
+	// 是否使用自定义页面。取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
+	// 启用后，使用自定义页面内容拦截（响应）请求，当启用该选项时，必须同时指定 ResponseCode 和 ErrorPageId 参数。
+	// 注意：该选项不可与 BlockIp 或 Stall 选项同时启用。
+	ReturnCustomPage *string `json:"ReturnCustomPage,omitnil,omitempty" name:"ReturnCustomPage"`
+
+	// 自定义页面的状态码。
+	ResponseCode *string `json:"ResponseCode,omitnil,omitempty" name:"ResponseCode"`
+
+	// 自定义页面的PageId。
+	ErrorPageId *string `json:"ErrorPageId,omitnil,omitempty" name:"ErrorPageId"`
+
+	// 是否对请求来源挂起不予处理。取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
+	// 启用后，不再响应当前连接会话内请求，且不会主动断开连接。用于爬虫对抗时，消耗客户端连接资源。
+	// 注意：该选项不可与 BlockIp 或 ReturnCustomPage 选项同时启用。
+	Stall *string `json:"Stall,omitnil,omitempty" name:"Stall"`
+}
+
 // Predefined struct for user
 type DeployConfigGroupVersionRequestParams struct {
 	// 站点 ID。
@@ -5511,7 +5570,6 @@ type DeployRecord struct {
 	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
 	// 发布记录 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RecordId *string `json:"RecordId,omitnil,omitempty" name:"RecordId"`
 
 	// 变更说明。
@@ -8061,7 +8119,7 @@ type DescribeOriginGroupRequestParams struct {
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values的上限为20。详细的过滤条件如下：
-	// <li>origin-group-id<br>   按照【<strong>源站组ID</strong>】进行过滤。源站组ID形如：origin-2ccgtb24-7dc5-46s2-9r3e-95825d53dwe3a<br>   模糊查询：不支持</li><li>origin-group-name<br>   按照【<strong>源站组名称</strong>】进行过滤<br>   模糊查询：支持。使用模糊查询时，仅支持填写一个源站组名称</li>
+	// <li>origin-group-id：按照源站组 ID 进行过滤，不支持模糊查询。源站组 ID 形如：origin-2ccgtb24-7dc5-46s2-9r3e-95825d53dwe3a；</li><li>origin-group-name： 按照源站组名称进行过滤，使用模糊查询时，仅支持填写一个源站组名称。</li>
 	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -8078,7 +8136,7 @@ type DescribeOriginGroupRequest struct {
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values的上限为20。详细的过滤条件如下：
-	// <li>origin-group-id<br>   按照【<strong>源站组ID</strong>】进行过滤。源站组ID形如：origin-2ccgtb24-7dc5-46s2-9r3e-95825d53dwe3a<br>   模糊查询：不支持</li><li>origin-group-name<br>   按照【<strong>源站组名称</strong>】进行过滤<br>   模糊查询：支持。使用模糊查询时，仅支持填写一个源站组名称</li>
+	// <li>origin-group-id：按照源站组 ID 进行过滤，不支持模糊查询。源站组 ID 形如：origin-2ccgtb24-7dc5-46s2-9r3e-95825d53dwe3a；</li><li>origin-group-name： 按照源站组名称进行过滤，使用模糊查询时，仅支持填写一个源站组名称。</li>
 	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -8375,6 +8433,102 @@ func (r *DescribeOverviewL7DataResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeOverviewL7DataResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribePlansRequestParams struct {
+	// 过滤条件，Filters.Values 的上限为 20。详细的过滤条件如下：<li>plan-type<br>  按照【<strong>套餐类型</strong>】进行过滤。<br>  可选的类型有：<br>  plan-trial：试用版套餐；<br>  plan-personal：个人版套餐；<br>  plan-basic：基础版套餐； <br>  plan-standard：标准版套餐； <br>  plan-enterprise：企业版套餐。 </li><li>plan-id<br>  按照【<strong>套餐 ID</strong>】进行过滤。套餐 ID 形如：edgeone-268z103ob0sx。</li><li>area<br>  按照【<strong>套餐加速地域</strong>】进行过滤。</li>  服务区域，可选的类型有：<br>  mainland: 中国大陆；<br>  overseas: 全球（不包括中国大陆)；<br>  global: 全球（包括中国大陆)。<br><li>status<br>  按照【<strong>套餐状态</strong>】进行过滤。<br>  可选的状态有：<br>  normal：正常状态；<br>  expiring-soon：即将过期；<br>  expired：已到期;<br>  isolated：已隔离。</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 排序字段，取值有：
+	// <li> enable-time：生效时间；</li>
+	// <li> expire-time：过期时间。</li>不填写使用默认值 enable-time。
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 排序方向，取值有：
+	// <li>asc：从小到大排序；</li>
+	// <li>desc：从大到小排序。</li>不填写使用默认值 desc。
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// 分页查询限制数目。默认值：20，最大值：200。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页查询偏移量。默认值：0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribePlansRequest struct {
+	*tchttp.BaseRequest
+	
+	// 过滤条件，Filters.Values 的上限为 20。详细的过滤条件如下：<li>plan-type<br>  按照【<strong>套餐类型</strong>】进行过滤。<br>  可选的类型有：<br>  plan-trial：试用版套餐；<br>  plan-personal：个人版套餐；<br>  plan-basic：基础版套餐； <br>  plan-standard：标准版套餐； <br>  plan-enterprise：企业版套餐。 </li><li>plan-id<br>  按照【<strong>套餐 ID</strong>】进行过滤。套餐 ID 形如：edgeone-268z103ob0sx。</li><li>area<br>  按照【<strong>套餐加速地域</strong>】进行过滤。</li>  服务区域，可选的类型有：<br>  mainland: 中国大陆；<br>  overseas: 全球（不包括中国大陆)；<br>  global: 全球（包括中国大陆)。<br><li>status<br>  按照【<strong>套餐状态</strong>】进行过滤。<br>  可选的状态有：<br>  normal：正常状态；<br>  expiring-soon：即将过期；<br>  expired：已到期;<br>  isolated：已隔离。</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 排序字段，取值有：
+	// <li> enable-time：生效时间；</li>
+	// <li> expire-time：过期时间。</li>不填写使用默认值 enable-time。
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 排序方向，取值有：
+	// <li>asc：从小到大排序；</li>
+	// <li>desc：从大到小排序。</li>不填写使用默认值 desc。
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// 分页查询限制数目。默认值：20，最大值：200。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页查询偏移量。默认值：0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribePlansRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePlansRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "Order")
+	delete(f, "Direction")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePlansRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribePlansResponseParams struct {
+	// 符合条件的套餐个数。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 套餐信息列表。
+	Plans []*Plan `json:"Plans,omitnil,omitempty" name:"Plans"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribePlansResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribePlansResponseParams `json:"Response"`
+}
+
+func (r *DescribePlansResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePlansResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8905,7 +9059,7 @@ func (r *DescribeSecurityIPGroupRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSecurityIPGroupResponseParams struct {
-	// 安全 IP 组的详细配置信息。包含每个安全 IP 组的 ID 、名称和 IP / 网段列表信息。
+	// 安全 IP 组的详细配置信息。包含每个安全 IP 组的 ID 、名称、 IP / 网段列表信息和过期时间信息。
 	IPGroups []*IPGroup `json:"IPGroups,omitnil,omitempty" name:"IPGroups"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -10552,11 +10706,9 @@ type DropPageConfig struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// Waf(托管规则)模块的拦截页面配置。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WafDropPageDetail *DropPageDetail `json:"WafDropPageDetail,omitnil,omitempty" name:"WafDropPageDetail"`
 
 	// 自定义页面的拦截页面配置。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AclDropPageDetail *DropPageDetail `json:"AclDropPageDetail,omitnil,omitempty" name:"AclDropPageDetail"`
 }
 
@@ -10648,7 +10800,6 @@ type ExceptConfig struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 例外规则详情。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExceptUserRules []*ExceptUserRule `json:"ExceptUserRules,omitnil,omitempty" name:"ExceptUserRules"`
 }
 
@@ -10668,15 +10819,12 @@ type ExceptUserRule struct {
 	RuleID *int64 `json:"RuleID,omitnil,omitempty" name:"RuleID"`
 
 	// 更新时间，如果为null，默认由底层按当前时间生成。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 匹配条件。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExceptUserRuleConditions []*ExceptUserRuleCondition `json:"ExceptUserRuleConditions,omitnil,omitempty" name:"ExceptUserRuleConditions"`
 
 	// 规则生效的范围。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExceptUserRuleScope *ExceptUserRuleScope `json:"ExceptUserRuleScope,omitnil,omitempty" name:"ExceptUserRuleScope"`
 
 	// 优先级，取值范围0-100。如果为null，默认由底层设置为0。
@@ -10736,16 +10884,50 @@ type ExceptUserRuleScope struct {
 	// <li>acl：自定义规则；</li>
 	// <li>cc：cc攻击防护；</li>
 	// <li>bot：Bot防护。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Modules []*string `json:"Modules,omitnil,omitempty" name:"Modules"`
 
 	// 跳过部分规则ID的例外规则详情。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PartialModules []*PartialModule `json:"PartialModules,omitnil,omitempty" name:"PartialModules"`
 
 	// 跳过具体字段不去扫描的例外规则详情。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SkipConditions []*SkipCondition `json:"SkipConditions,omitnil,omitempty" name:"SkipConditions"`
+}
+
+type ExceptionRule struct {
+	// 例外规则的 ID。<br>通过规则 ID 可支持不同的规则配置操作：<br> <li> <b>增加</b>新规则：ID 为空或不指定 ID 参数；</li><li> <b>修改</b>已有规则：指定需要更新/修改的规则 ID；</li><li> <b>删除</b>已有规则：ExceptionRules 参数中，Rules 列表中未包含的已有规则将被删除。</li>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 例外规则的名称。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 例外规则的具体内容，需符合表达式语法，详细规范参见产品文档。
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// 例外规则执行选项，取值有：<li>WebSecurityModules: 指定例外规则的安全防护模块。</li><li>ManagedRules：指定托管规则。</li>
+	SkipScope *string `json:"SkipScope,omitnil,omitempty" name:"SkipScope"`
+
+	// 跳过请求的具体类型，取值有：<li>SkipOnAllRequestFields: 跳过所有请求；</li><li>SkipOnSpecifiedRequestFields: 跳过指定请求字段。</li>仅当 SkipScope 为 ManagedRules 时有效。
+	SkipOption *string `json:"SkipOption,omitnil,omitempty" name:"SkipOption"`
+
+	// 指定例外规则的安全防护模块，仅当 SkipScope 为 WebSecurityModules 时有效。取值有：<li>websec-mod-managed-rules：托管规则；</li><li>websec-mod-rate-limiting：速率限制；</li><li>websec-mod-custom-rules：自定义规则；</li><li>websec-mod-adaptive-control：自适应频控、智能客户端过滤、慢速攻击防护、流量盗刷防护；</li><li>websec-mod-bot：Bot管理。</li>
+	WebSecurityModulesForException []*string `json:"WebSecurityModulesForException,omitnil,omitempty" name:"WebSecurityModulesForException"`
+
+	// 指定例外规则的具体托管规则，仅当 SkipScope 为 ManagedRules 时有效，且此时不能指定 ManagedRuleGroupsForException 。
+	ManagedRulesForException []*string `json:"ManagedRulesForException,omitnil,omitempty" name:"ManagedRulesForException"`
+
+	// 指定例外规则的托管规则组，仅当 SkipScope 为 ManagedRules 时有效，且此时不能指定 ManagedRulesForException 。
+	ManagedRuleGroupsForException []*string `json:"ManagedRuleGroupsForException,omitnil,omitempty" name:"ManagedRuleGroupsForException"`
+
+	// 指定例外规则跳过指定请求字段的具体配置，仅当 SkipScope 为 ManagedRules 并且 SkipOption 为 SkipOnSpecifiedRequestFields 时有效。
+	RequestFieldsForException []*RequestFieldsForException `json:"RequestFieldsForException,omitnil,omitempty" name:"RequestFieldsForException"`
+
+	// 例外规则是否开启。取值有：<li>on：开启</li><li>off：关闭</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+}
+
+type ExceptionRules struct {
+	// 例外规则的定义列表。使用 ModifySecurityPolicy 修改 Web 防护配置时: <li>若未指定 Rules 参数，或 Rules 参数长度为零：清空所有例外规则配置。</li><li>若 SecurityPolicy 参数中，未指定 ExceptionRules 参数值：保持已有例外规则配置，不做修改。</li>
+	Rules []*ExceptionRule `json:"Rules,omitnil,omitempty" name:"Rules"`
 }
 
 // Predefined struct for user
@@ -10850,11 +11032,9 @@ type FirstPartConfig struct {
 	// 开关，取值有：
 	// <li>on：开启；</li>
 	// <li>off：关闭。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 首段包的统计时长，单位是秒，即期望首段包的统计时长是多少，默认5秒。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StatTime *uint64 `json:"StatTime,omitnil,omitempty" name:"StatTime"`
 }
 
@@ -10887,7 +11067,6 @@ type ForceRedirect struct {
 	// 重定向状态码，取值有：
 	// <li>301：301跳转；</li>
 	// <li>302：302跳转。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RedirectStatusCode *int64 `json:"RedirectStatusCode,omitnil,omitempty" name:"RedirectStatusCode"`
 }
 
@@ -11209,33 +11388,42 @@ type Hsts struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// MaxAge 数值。单位为秒，最大值为1天。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxAge *int64 `json:"MaxAge,omitnil,omitempty" name:"MaxAge"`
 
 	// 是否包含子域名，取值有：
 	// <li>on：开启；</li>
 	// <li>off：关闭。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IncludeSubDomains *string `json:"IncludeSubDomains,omitnil,omitempty" name:"IncludeSubDomains"`
 
 	// 是否开启预加载，取值有：
 	// <li>on：开启；</li>
 	// <li>off：关闭。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Preload *string `json:"Preload,omitnil,omitempty" name:"Preload"`
+}
+
+type HttpDDoSProtection struct {
+	// 自适应频控的具体配置。
+	AdaptiveFrequencyControl *AdaptiveFrequencyControl `json:"AdaptiveFrequencyControl,omitnil,omitempty" name:"AdaptiveFrequencyControl"`
+
+	// 智能客户端过滤的具体配置。
+	ClientFiltering *ClientFiltering `json:"ClientFiltering,omitnil,omitempty" name:"ClientFiltering"`
+
+	// 流量防盗刷的具体配置。
+	BandwidthAbuseDefense *BandwidthAbuseDefense `json:"BandwidthAbuseDefense,omitnil,omitempty" name:"BandwidthAbuseDefense"`
+
+	// 慢速攻击防护的具体配置。
+	SlowAttackDefense *SlowAttackDefense `json:"SlowAttackDefense,omitnil,omitempty" name:"SlowAttackDefense"`
 }
 
 type Https struct {
 	// http2 配置开关，取值有：
 	// <li>on：开启；</li>
 	// <li>off：关闭。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Http2 *string `json:"Http2,omitnil,omitempty" name:"Http2"`
 
 	// OCSP 配置开关，取值有：
 	// <li>on：开启；</li>
 	// <li>off：关闭。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OcspStapling *string `json:"OcspStapling,omitnil,omitempty" name:"OcspStapling"`
 
 	// Tls 版本设置，取值有：
@@ -11243,7 +11431,6 @@ type Https struct {
 	// <li>TLSV1.1：TLSv1.1版本；</li>
 	// <li>TLSV1.2：TLSv1.2版本；</li>
 	// <li>TLSv1.3：TLSv1.3版本。</li>修改时必须开启连续的版本。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TlsVersion []*string `json:"TlsVersion,omitnil,omitempty" name:"TlsVersion"`
 
 	// HSTS 配置。
@@ -11257,15 +11444,21 @@ type Https struct {
 	// 申请类型，取值有：
 	// <li>apply：托管EdgeOne；</li>
 	// <li>none：不托管EdgeOne。</li>不填，默认取值为none。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApplyType *string `json:"ApplyType,omitnil,omitempty" name:"ApplyType"`
 
 	// 密码套件，取值有：
 	// <li>loose-v2023：提供高兼容性，安全性一般，支持 TLS 1.0-1.3 密码套件；</li>
 	// <li>general-v2023：提供较高兼容性，安全性中等，支持 TLS 1.2-1.3 密码套件；</li>
 	// <li>strict-v2023：提供高安全性能，禁用所有含不安全隐患的加密套件，支持 TLS 1.2-1.3 密码套件。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CipherSuite *string `json:"CipherSuite,omitnil,omitempty" name:"CipherSuite"`
+}
+
+type IPExpireInfo struct {
+	// 定时过期时间，遵循 ISO 8601 标准的日期和时间格式。例如 "2022-01-01T00:00:00+08:00"。
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+
+	// IP 列表。仅支持 IP  及 IP 网段。
+	IPList []*string `json:"IPList,omitnil,omitempty" name:"IPList"`
 }
 
 type IPGroup struct {
@@ -11275,8 +11468,15 @@ type IPGroup struct {
 	// 组名称。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// IP 组内容，仅支持 IP 及 IP 掩码。
+	// IP 组内容，仅支持 IP 及 IP 网段。
 	Content []*string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// IP 定时过期信息。
+	// 作为入参：用于为指定的 IP 地址或网段配置定时过期时间。
+	// 作为出参，包含以下两类信息：
+	// <li>当前未到期的定时过期信息：尚未触发的过期配置。</li>
+	// <li>一周内已到期的定时过期信息：已触发的过期配置。</li>
+	IPExpireInfo []*IPExpireInfo `json:"IPExpireInfo,omitnil,omitempty" name:"IPExpireInfo"`
 }
 
 type IPRegionInfo struct {
@@ -11309,7 +11509,6 @@ type Identification struct {
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
 	// 验证子域名。验证站点时，该值为空。验证子域名是为具体子域名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
 	// 验证状态，取值有：
@@ -11321,7 +11520,6 @@ type Identification struct {
 	Ascription *AscriptionInfo `json:"Ascription,omitnil,omitempty" name:"Ascription"`
 
 	// 域名当前的 NS 记录。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginalNameServers []*string `json:"OriginalNameServers,omitnil,omitempty" name:"OriginalNameServers"`
 
 	// 站点归属权校验：文件校验信息。
@@ -11541,11 +11739,9 @@ type IntelligenceRule struct {
 	// 开关，取值有：
 	// <li>on：开启；</li>
 	// <li>off：关闭。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 规则详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IntelligenceRuleItems []*IntelligenceRuleItem `json:"IntelligenceRuleItems,omitnil,omitempty" name:"IntelligenceRuleItems"`
 }
 
@@ -11570,11 +11766,9 @@ type IpTableConfig struct {
 	// 开关，取值有：
 	// <li>on：开启；</li>
 	// <li>off：关闭；</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 基础管控规则。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IpTableRules []*IpTableRule `json:"IpTableRules,omitnil,omitempty" name:"IpTableRules"`
 }
 
@@ -11622,7 +11816,6 @@ type IpTableRule struct {
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 规则名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleName *string `json:"RuleName,omitnil,omitempty" name:"RuleName"`
 
 	// 匹配内容。支持多值输入。
@@ -12018,6 +12211,17 @@ type MaxAgeParameters struct {
 
 	// 自定义缓存时间数值，单位为秒，取值：0～315360000。<br>注意：当 FollowOrigin 为 off 时，表示不遵循源站，使用 CacheTime 设置缓存时间，否则此字段不生效。
 	CacheTime *int64 `json:"CacheTime,omitnil,omitempty" name:"CacheTime"`
+}
+
+type MinimalRequestBodyTransferRate struct {
+	// 正文传输最小速率阈值，单位仅支持bps。
+	MinimalAvgTransferRateThreshold *string `json:"MinimalAvgTransferRateThreshold,omitnil,omitempty" name:"MinimalAvgTransferRateThreshold"`
+
+	// 正文传输最小速率统计时间范围，取值有：<li>10s：10秒；</li><li>30s：30秒；</li><li>60s：60秒；</li><li>120s：120秒。</li> 
+	CountingPeriod *string `json:"CountingPeriod,omitnil,omitempty" name:"CountingPeriod"`
+
+	// 正文传输最小速率阈值是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 }
 
 // Predefined struct for user
@@ -14104,15 +14308,15 @@ type ModifyOriginParameters struct {
 	// <li>follow：协议跟随。</li>
 	OriginProtocol *string `json:"OriginProtocol,omitnil,omitempty" name:"OriginProtocol"`
 
-	// HTTP 回源端口，取值范围 1～65535。该参数仅当回源协议 OriginProtocol 为 http 或者 follow 时生效。
+	// HTTP 回源端口，取值范围 1～65535。当回源协议 OriginProtocol 为 http 或者 follow 时该参数必填。
 	HTTPOriginPort *int64 `json:"HTTPOriginPort,omitnil,omitempty" name:"HTTPOriginPort"`
 
-	// HTTPS 回源端口，取值范围 1～65535。该参数仅当回源协议 OriginProtocol 为 https 或者 follow 时生效。
+	// HTTPS 回源端口，取值范围 1～65535。当回源协议 OriginProtocol 为 https 或者 follow 时该参数必填。
 	HTTPSOriginPort *int64 `json:"HTTPSOriginPort,omitnil,omitempty" name:"HTTPSOriginPort"`
 
-	// 指定是否允许访问私有对象存储源站，该参数仅当源站类型 OriginType = COS 或 AWSS3 时会生效，取值有：
+	// 指定是否允许访问私有对象存储源站，当源站类型 OriginType = COS 或 AWSS3 时该参数必填，取值有：
 	// <li>on：使用私有鉴权；</li>
-	// <li>off：不使用私有鉴权。</li>不填写时，默认值为off。
+	// <li>off：不使用私有鉴权。</li>
 	PrivateAccess *string `json:"PrivateAccess,omitnil,omitempty" name:"PrivateAccess"`
 
 	// 私有鉴权使用参数，该参数仅当 OriginType = AWSS3 且 PrivateAccess = on 时会生效。
@@ -14438,10 +14642,7 @@ type ModifySecurityIPGroupRequestParams struct {
 	// IP 组配置。
 	IPGroup *IPGroup `json:"IPGroup,omitnil,omitempty" name:"IPGroup"`
 
-	// 操作类型，取值有：
-	// <li> append: 向 IPGroup 中追加 Content 参数中内容；</li>
-	// <li> remove: 从 IPGroup 中删除 Content 参数中内容；</li>
-	// <li> update: 全量替换 IPGroup 内容，并可修改 IPGroup 名称。 </li>
+	// 操作类型，取值有：<li> append: 向 IPGroup 中添加新的 IP 地址或设置定时过期时间；</li><li>  remove: 从 IPGroup 中删除指定的 IP 地址或其定时过期时间；</li><li>  update: 完全替换 IPGroup 中 Content 或 ExpireInfo 的内容，并且可以修改 IPGroup 的名称。</li>    使用 append 操作时注意：   <li> 为 IP 或网段添加定时过期时间时，必须晚于当前时间。如果该 IP 或网段在组中不存在，必须同时在 Content 参数中添加该 IP 或网段。若该 IP 或网段已存在过期时间，则新时间将覆盖原有时间。</li>  使用 remove 操作时注意： <li> 删除 IP 或网段时，相关的未过期的定时过期时间也会被删除；</li> <li> 删除定时过期时间时，仅能删除当前未过期的时间。</li>  使用 update 操作时注意： <li> 替换 Content 内容时，不在 Content 中的 IP 或网段的未过期时间会被删除；</li> <li> 替换 IPExpireInfo 内容时，IPExpireInfo 中的 IP 或网段必须在 Content 中或在 IP 组中存在。</li>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 }
 
@@ -14454,10 +14655,7 @@ type ModifySecurityIPGroupRequest struct {
 	// IP 组配置。
 	IPGroup *IPGroup `json:"IPGroup,omitnil,omitempty" name:"IPGroup"`
 
-	// 操作类型，取值有：
-	// <li> append: 向 IPGroup 中追加 Content 参数中内容；</li>
-	// <li> remove: 从 IPGroup 中删除 Content 参数中内容；</li>
-	// <li> update: 全量替换 IPGroup 内容，并可修改 IPGroup 名称。 </li>
+	// 操作类型，取值有：<li> append: 向 IPGroup 中添加新的 IP 地址或设置定时过期时间；</li><li>  remove: 从 IPGroup 中删除指定的 IP 地址或其定时过期时间；</li><li>  update: 完全替换 IPGroup 中 Content 或 ExpireInfo 的内容，并且可以修改 IPGroup 的名称。</li>    使用 append 操作时注意：   <li> 为 IP 或网段添加定时过期时间时，必须晚于当前时间。如果该 IP 或网段在组中不存在，必须同时在 Content 参数中添加该 IP 或网段。若该 IP 或网段已存在过期时间，则新时间将覆盖原有时间。</li>  使用 remove 操作时注意： <li> 删除 IP 或网段时，相关的未过期的定时过期时间也会被删除；</li> <li> 删除定时过期时间时，仅能删除当前未过期的时间。</li>  使用 update 操作时注意： <li> 替换 Content 内容时，不在 Content 中的 IP 或网段的未过期时间会被删除；</li> <li> 替换 IPExpireInfo 内容时，IPExpireInfo 中的 IP 或网段必须在 Content 中或在 IP 组中存在。</li>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 }
 
@@ -14509,10 +14707,10 @@ type ModifySecurityPolicyRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 安全策略配置。<li>当 SecurityPolicy 参数中的 CustomRule 被设置时，SecurityConfig 参数中的 AclConfg、 IpTableConfg 将被忽略；</li><li>当 SecurityPolicy 参数中的 ManagedRule 被设置时，SecurityConfig 参数中的 WafConfig 将被忽略。</li><li>对于自定义规则以及托管规则策略配置建议使用 SecurityPolicy 参数进行设置。</li>
+	// 安全策略配置。<li>当 SecurityPolicy 参数中的 ExceptionRules 被设置时，SecurityConfig 参数中的 ExceptConfig 将被忽略；</li><li>当 SecurityPolicy 参数中的 CustomRules 被设置时，SecurityConfig 参数中的 AclConfig、 IpTableConfig 将被忽略；</li><li>当 SecurityPolicy 参数中的 HttpDDoSProtection 和 RateLimitingRules 被设置时，SecurityConfig 参数中的 RateLimitConfig 将被忽略；</li><li>当 SecurityPolicy 参数中的 ManagedRule 被设置时，SecurityConfig 参数中的 WafConfig 将被忽略；</li><li>对于例外规则、自定义规则、速率限制以及托管规则策略配置建议使用 SecurityPolicy 参数进行设置。</li>
 	SecurityConfig *SecurityConfig `json:"SecurityConfig,omitnil,omitempty" name:"SecurityConfig"`
 
-	// 安全策略配置。对 Web 防护自定义策略和托管规则配置建议使用，支持表达式语法对安全策略进行配置。
+	// 安全策略配置。对 Web 例外规则、防护自定义策略、速率规则和托管规则配置建议使用，支持表达式语法对安全策略进行配置。
 	SecurityPolicy *SecurityPolicy `json:"SecurityPolicy,omitnil,omitempty" name:"SecurityPolicy"`
 
 	// 安全策略类型，可使用以下参数值： <li>ZoneDefaultPolicy：用于指定站点级策略；</li><li>Template：用于指定策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>
@@ -14531,10 +14729,10 @@ type ModifySecurityPolicyRequest struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 安全策略配置。<li>当 SecurityPolicy 参数中的 CustomRule 被设置时，SecurityConfig 参数中的 AclConfg、 IpTableConfg 将被忽略；</li><li>当 SecurityPolicy 参数中的 ManagedRule 被设置时，SecurityConfig 参数中的 WafConfig 将被忽略。</li><li>对于自定义规则以及托管规则策略配置建议使用 SecurityPolicy 参数进行设置。</li>
+	// 安全策略配置。<li>当 SecurityPolicy 参数中的 ExceptionRules 被设置时，SecurityConfig 参数中的 ExceptConfig 将被忽略；</li><li>当 SecurityPolicy 参数中的 CustomRules 被设置时，SecurityConfig 参数中的 AclConfig、 IpTableConfig 将被忽略；</li><li>当 SecurityPolicy 参数中的 HttpDDoSProtection 和 RateLimitingRules 被设置时，SecurityConfig 参数中的 RateLimitConfig 将被忽略；</li><li>当 SecurityPolicy 参数中的 ManagedRule 被设置时，SecurityConfig 参数中的 WafConfig 将被忽略；</li><li>对于例外规则、自定义规则、速率限制以及托管规则策略配置建议使用 SecurityPolicy 参数进行设置。</li>
 	SecurityConfig *SecurityConfig `json:"SecurityConfig,omitnil,omitempty" name:"SecurityConfig"`
 
-	// 安全策略配置。对 Web 防护自定义策略和托管规则配置建议使用，支持表达式语法对安全策略进行配置。
+	// 安全策略配置。对 Web 例外规则、防护自定义策略、速率规则和托管规则配置建议使用，支持表达式语法对安全策略进行配置。
 	SecurityPolicy *SecurityPolicy `json:"SecurityPolicy,omitnil,omitempty" name:"SecurityPolicy"`
 
 	// 安全策略类型，可使用以下参数值： <li>ZoneDefaultPolicy：用于指定站点级策略；</li><li>Template：用于指定策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>
@@ -15052,24 +15250,20 @@ type OfflineCacheParameters struct {
 
 type Origin struct {
 	// 主源站列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Origins []*string `json:"Origins,omitnil,omitempty" name:"Origins"`
 
 	// 备源站列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupOrigins []*string `json:"BackupOrigins,omitnil,omitempty" name:"BackupOrigins"`
 
 	// 回源协议配置，取值有：
 	// <li>http：强制 http 回源；</li>
 	// <li>follow：协议跟随回源；</li>
 	// <li>https：强制 https 回源。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginPullProtocol *string `json:"OriginPullProtocol,omitnil,omitempty" name:"OriginPullProtocol"`
 
 	// 源站为腾讯云 COS 时，是否为私有访问 bucket，取值有：
 	// <li>on：私有访问；</li>
 	// <li>off：公共访问。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CosPrivateAccess *string `json:"CosPrivateAccess,omitnil,omitempty" name:"CosPrivateAccess"`
 }
 
@@ -15110,6 +15304,9 @@ type OriginDetail struct {
 	// 私有鉴权使用参数，该参数仅当源站类型 PrivateAccess = on 时会生效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PrivateParameters []*PrivateParameter `json:"PrivateParameters,omitnil,omitempty" name:"PrivateParameters"`
+
+	// 当前配置的回源 HOST 头。
+	HostHeader *string `json:"HostHeader,omitnil,omitempty" name:"HostHeader"`
 
 	// MO 子应用 ID
 	//
@@ -15159,7 +15356,6 @@ type OriginGroup struct {
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 回源Host Header。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostHeader *string `json:"HostHeader,omitnil,omitempty" name:"HostHeader"`
 }
 
@@ -15262,6 +15458,12 @@ type OriginInfo struct {
 
 	// 私有鉴权使用参数，该参数仅当源站类型 PrivateAccess = on 时会生效。
 	PrivateParameters []*PrivateParameter `json:"PrivateParameters,omitnil,omitempty" name:"PrivateParameters"`
+
+	// 自定义回源 HOST 头，该参数仅当 OriginType=IP_DOMAIN 时生效。
+	// 如果 OriginType=COS 或 AWS_S3 时，回源 HOST 头将与源站域名保持一致。
+	// 如果OriginType=ORIGIN_GROUP 或 LB 时，回源 HOST 头遵循源站组内配置，如果没有配置则默认为加速域名。
+	// 如果 OriginType=VOD 或 SPACE 时，无需配置该头部，按对应的回源域名生效。
+	HostHeader *string `json:"HostHeader,omitnil,omitempty" name:"HostHeader"`
 
 	// VODEO 子应用 ID。该参数当 OriginType = VODEO 时必填。
 	//
@@ -15387,8 +15589,85 @@ type PartialModule struct {
 	Module *string `json:"Module,omitnil,omitempty" name:"Module"`
 
 	// 模块下的需要例外的具体规则ID列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Include []*int64 `json:"Include,omitnil,omitempty" name:"Include"`
+}
+
+type Plan struct {
+	// 套餐类型。取值有：
+	// <li>plan-trial: 试用版套餐；</li>
+	// <li>plan-personal: 个人版套餐；</li>
+	// <li>plan-basic: 基础版套餐；</li>
+	// <li>plan-standard: 标准版套餐；</li>
+	// <li>plan-enterprise-v2: 企业版套餐；</li>
+	// <li>plan-enterprise-model-a: 企业版 Model A 套餐。</li>
+	// <li>plan-enterprise: 旧企业版套餐。</li>
+	PlanType *string `json:"PlanType,omitnil,omitempty" name:"PlanType"`
+
+	// 套餐 ID。形如 edgeone-2y041pblwaxe。
+	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
+
+	// 服务区域，取值有：
+	// <li>mainland: 中国大陆；</li>
+	// <li>overseas: 全球（不包括中国大陆)；</li>
+	// <li>global: 全球（包括中国大陆)。</li>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// 套餐状态，取值有：
+	// <li>normal：正常状态；</li>
+	// <li>expiring-soon：即将到期状态；</li>
+	// <li>expired：到期状态；</li>
+	// <li>isolated：隔离状态；</li>
+	// <li>overdue-isolated：欠费隔离状态。</li>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 付费类型，取值有：
+	// <li>0: 后付费；</li>
+	// <li>1: 预付费。</li>
+	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
+
+	// 套餐绑定的站点信息，包括站点id和站点名称，站点状态。
+	ZonesInfo []*ZoneInfo `json:"ZonesInfo,omitnil,omitempty" name:"ZonesInfo"`
+
+	// 套餐内智能加速请求数规格，单位：次。
+	SmartRequestCapacity *int64 `json:"SmartRequestCapacity,omitnil,omitempty" name:"SmartRequestCapacity"`
+
+	// 套餐内VAU规格，单位：个。
+	VAUCapacity *int64 `json:"VAUCapacity,omitnil,omitempty" name:"VAUCapacity"`
+
+	// 套餐内内容加速流量规格，单位：字节。
+	AccTrafficCapacity *int64 `json:"AccTrafficCapacity,omitnil,omitempty" name:"AccTrafficCapacity"`
+
+	// 套餐内智能加速流量规格，单位：字节。
+	SmartTrafficCapacity *int64 `json:"SmartTrafficCapacity,omitnil,omitempty" name:"SmartTrafficCapacity"`
+
+	// 套餐内DDoS防护流量规格，单位：字节。
+	DDoSTrafficCapacity *int64 `json:"DDoSTrafficCapacity,omitnil,omitempty" name:"DDoSTrafficCapacity"`
+
+	// 套餐内安全流量规格，单位：字节。
+	SecTrafficCapacity *int64 `json:"SecTrafficCapacity,omitnil,omitempty" name:"SecTrafficCapacity"`
+
+	// 套餐内安全请求数规格，单位：次。
+	SecRequestCapacity *int64 `json:"SecRequestCapacity,omitnil,omitempty" name:"SecRequestCapacity"`
+
+	// 套餐内四层加速流量规格，单位：字节。
+	L4TrafficCapacity *int64 `json:"L4TrafficCapacity,omitnil,omitempty" name:"L4TrafficCapacity"`
+
+	// 套餐内中国大陆网络优化流量规格，单位：字节。
+	CrossMLCTrafficCapacity *int64 `json:"CrossMLCTrafficCapacity,omitnil,omitempty" name:"CrossMLCTrafficCapacity"`
+
+	// 套餐是否允许绑定新站点，取值有：
+	// <li>true: 允许绑定新站点；</li>
+	// <li>false: 不允许绑定新站点。</li>
+	Bindable *string `json:"Bindable,omitnil,omitempty" name:"Bindable"`
+
+	// 套餐生效时间。
+	EnabledTime *string `json:"EnabledTime,omitnil,omitempty" name:"EnabledTime"`
+
+	// 套餐过期时间。
+	ExpiredTime *string `json:"ExpiredTime,omitnil,omitempty" name:"ExpiredTime"`
+
+	// 套餐所支持的功能，取值有：<li>ContentAcceleration：内容加速功能；</li><li>SmartAcceleration：智能加速功能；</li><li>L4：四层加速功能；</li><li>Waf：高级 Web 防护；</li><li>QUIC：QUIC功能；</li><li>CrossMLC：中国大陆网络优化功能；</li><li>ProcessMedia：媒体处理功能；</li><li>L4DDoS：四层DDoS防护功能；</li>L7DDoS功能只会出现以下所有规格中的一项<li>L7DDoS.CM30G；七层DDoS防护功能-中国大陆30G保底带宽规格；</li><li>L7DDoS.CM60G；七层DDoS防护功能-中国大陆60G保底带宽规格；</li><li>L7DDoS.CM100G；七层DDoS防护功能-中国大陆100G保底带宽规格；</li><li>L7DDoS.Anycast300G；七层DDoS防护功能-中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.AnycastUnlimited；七层DDoS防护功能-中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM30G_Anycast300G；七层DDoS防护功能-中国大陆30G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM60G_Anycast300G；七层DDoS防护功能-中国大陆60G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM100G_Anycast300G；七层DDoS防护功能-中国大陆100G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM30G_AnycastUnlimited；七层DDoS防护功能-中国大陆30G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM60G_AnycastUnlimited；七层DDoS防护功能-中国大陆60G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM100G_AnycastUnlimited；七层DDoS防护功能-中国大陆100G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li>
+	Features []*string `json:"Features,omitnil,omitempty" name:"Features"`
 }
 
 type PlanInfo struct {
@@ -15446,7 +15725,6 @@ type PostMaxSize struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 最大限制，取值在1MB和500MB之间。单位字节。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxSize *int64 `json:"MaxSize,omitnil,omitempty" name:"MaxSize"`
 }
 
@@ -15518,11 +15796,9 @@ type QueryString struct {
 	// CacheKey使用QueryString的方式，取值有：
 	// <li>includeCustom：使用部分url参数；</li>
 	// <li>excludeCustom：排除部分url参数。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
 	// 使用/排除的url参数数组。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value []*string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
@@ -15569,15 +15845,12 @@ type RateLimitConfig struct {
 	RateLimitUserRules []*RateLimitUserRule `json:"RateLimitUserRules,omitnil,omitempty" name:"RateLimitUserRules"`
 
 	// 速率限制模板功能。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RateLimitTemplate *RateLimitTemplate `json:"RateLimitTemplate,omitnil,omitempty" name:"RateLimitTemplate"`
 
 	// 智能客户端过滤。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RateLimitIntelligence *RateLimitIntelligence `json:"RateLimitIntelligence,omitnil,omitempty" name:"RateLimitIntelligence"`
 
 	// 速率限制-托管定制规则。如果为null，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RateLimitCustomizes []*RateLimitUserRule `json:"RateLimitCustomizes,omitnil,omitempty" name:"RateLimitCustomizes"`
 }
 
@@ -15623,7 +15896,6 @@ type RateLimitTemplateDetail struct {
 	// <li>normal：适中；</li>
 	// <li>strict：严格；</li>
 	// <li>close：关闭，仅精准速率限制生效。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
 	// 唯一id。
@@ -15632,11 +15904,9 @@ type RateLimitTemplateDetail struct {
 	// 模板处置方式，取值有：
 	// <li>alg：JavaScript挑战；</li>
 	// <li>monitor：观察。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
 	// 惩罚时间，取值范围0-2天，单位秒。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PunishTime *int64 `json:"PunishTime,omitnil,omitempty" name:"PunishTime"`
 
 	// 统计阈值，单位是次，取值范围0-4294967294。
@@ -15707,6 +15977,43 @@ type RateLimitUserRule struct {
 
 	// 重定向时候的地址。Action 是 redirect 时必填，且不能为空。
 	RedirectUrl *string `json:"RedirectUrl,omitnil,omitempty" name:"RedirectUrl"`
+}
+
+type RateLimitingRule struct {
+	// 精准速率限制的 ID。<br>通过规则 ID 可支持不同的规则配置操作：<br> <li> <b>增加</b>新规则：ID 为空或不指定 ID 参数；</li><li><b>修改</b>已有规则：指定需要更新/修改的规则 ID；</li><li><b>删除</b>已有规则：RateLimitingRules 参数中，Rules 列表中未包含的已有规则将被删除。</li>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 精准速率限制的名称。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 精准速率限制的具体内容，需符合表达式语法，详细规范参见产品文档。
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// 速率阈值请求特征的匹配方式， 当 Enabled 为 on 时，此字段必填。<br /><br />当条件有多个时，将组合多个条件共同进行统计计算，条件最多不可超过5条。取值有：<br/><li><b>http.request.ip</b>：客户端 IP；</li><li><b>http.request.xff_header_ip</b>：客户端 IP（优先匹配 XFF 头部）；</li><li><b>http.request.uri.path</b>：请求的访问路径；</li><li><b>http.request.cookies['session']</b>：名称为session的Cookie，其中session可替换为自己指定的参数；</li><li><b>http.request.headers['user-agent']</b>：名称为user-agent的HTTP头部，其中user-agent可替换为自己指定的参数；</li><li><b>http.request.ja3</b>：请求的JA3指纹；</li><li><b>http.request.uri.query['test']</b>：名称为test的URL查询参数，其中test可替换为自己指定的参数。</li> 
+	CountBy []*string `json:"CountBy,omitnil,omitempty" name:"CountBy"`
+
+	// 精准速率限制在时间范围内的累计拦截次数，取值范围 1 ~ 100000。
+	MaxRequestThreshold *int64 `json:"MaxRequestThreshold,omitnil,omitempty" name:"MaxRequestThreshold"`
+
+	// 统计的时间窗口，取值有：<li>1s：1秒；</li><li>5s：5秒；</li><li>10s：10秒；</li><li>20s：20秒；</li><li>30s：30秒；</li><li>40s：40秒；</li><li>50s：50秒；</li><li>1m：1分钟；</li><li>2m：2分钟；</li><li>5m：5分钟；</li><li>10m：10分钟；</li><li>1h：1小时。</li> 
+	CountingPeriod *string `json:"CountingPeriod,omitnil,omitempty" name:"CountingPeriod"`
+
+	// Action 动作的持续时长，单位仅支持：<li>s：秒，取值 1 ~ 120；</li><li>m：分钟，取值 1 ~ 120；</li><li>h：小时，取值 1 ~ 48；</li><li>d：天，取值 1 ~ 30。</li>
+	ActionDuration *string `json:"ActionDuration,omitnil,omitempty" name:"ActionDuration"`
+
+	// 精准速率限制的处置方式。取值有：<li>Monitor：观察；</li><li>Deny：拦截，其中DenyActionParameters.Name支持Deny和ReturnCustomPage；</li><li>Challenge：挑战，其中ChallengeActionParameters.Name支持JSChallenge和ManagedChallenge；</li><li>Redirect：重定向至URL；</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 精准速率限制的优先级，范围是 0 ~ 100，默认为 0。
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 精准速率限制规则是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+}
+
+type RateLimitingRules struct {
+	// 精准速率限制的定义列表。使用 ModifySecurityPolicy 修改 Web 防护配置时: <br> <li>  若未指定 Rules 参数，或 Rules 参数长度为零：清空所有精准速率限制配置。</li> <li> 若 SecurityPolicy 参数中，未指定 RateLimitingRules 参数值：保持已有自定义规则配置，不做修改。</li>
+	Rules []*RateLimitingRule `json:"Rules,omitnil,omitempty" name:"Rules"`
 }
 
 type RealtimeLogDeliveryTask struct {
@@ -15849,6 +16156,39 @@ func (r *RenewPlanResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *RenewPlanResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type RequestBodyTransferTimeout struct {
+	// 正文传输超时时长，取值 5 ~ 120，单位仅支持秒（s）。
+	IdleTimeout *string `json:"IdleTimeout,omitnil,omitempty" name:"IdleTimeout"`
+
+	// 正文传输超时时长是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+}
+
+type RequestFieldsForException struct {
+	// 跳过的具体字段。取值支持：<br/>
+	// <li>body.json：JSON 请求内容；此时 Condition 支持 key、value,  TargetField 支持 key、value，例如 { "Scope": "body.json",  "Condition": "", "TargetField": "key" }，表示 JSON 请求内容所有参数跳过 WAF 扫描；</li>
+	// <li style="margin-top:5px">cookie：Cookie；此时 Condition 支持 key、value,  TargetField 支持 key、value，例如 { "Scope": "cookie",  "Condition": "${key} in ['account-id'] and ${value} like ['prefix-*']", "TargetField": "value" }，表示 Cookie 参数名称等于account-id 并且参数值通配符匹配 prefix-* 跳过 WAF 扫描；</li>
+	// <li style="margin-top:5px">header：HTTP 头部参数；此时 Condition 支持 key、value,  TargetField 支持 key、value，例如 { "Scope": "header",  "Condition": "${key} like ['x-auth-*']", "TargetField": "value" }，表示 header 参数名称通配符匹配 x-auth-* 跳过 WAF 扫描；</li>
+	// <li style="margin-top:5px">uri.query：URL 编码内容/查询参数；此时 Condition 支持 key、value,  TargetField 支持 key、value，例如 { "Scope": "uri.query",  "Condition": "${key} in ['action'] and ${value} in ['upload', 'delete']", "TargetField": "value" }，表示 URL 编码内容/查询参数的参数名称等于 action 并且参数值等于 upload 或 delete 跳过 WAF 扫描；</li>
+	// <li style="margin-top:5px">uri：请求路径URI；此时 Condition 必须为空， TargetField 支持 query、path、fullpath，例如 { "Scope": "uri",  "Condition": "", "TargetField": "query" }，表示请求路径 URI 仅查询参数跳过 WAF 扫描；</li>
+	// <li style="margin-top:5px">body：请求正文内容。此时 Condition 必须为空， TargetField 支持 fullbody、multipart，例如 { "Scope": "body",  "Condition": "", "TargetField": "fullbody" }，表示请求正文内容为完整请求正文跳过 WAF 扫描；</li>
+	Scope *string `json:"Scope,omitnil,omitempty" name:"Scope"`
+
+	// 跳过的具体字段的表达式，需要符合表达式语法。<br />
+	// Condition  支持表达式配置语法：<li> 按规则的匹配条件表达式语法编写，支持引用 key、value。</li><li> 支持 in、like 操作符，以及 and 逻辑组合。</li>
+	// 例如：<li>${key} in ['x-trace-id']：参数名称等于x-trace-id。</li><li>${key} in ['x-trace-id'] and ${value} like ['Bearer *']：参数名称等于x-trace-id并且参数值通配符匹配Bearer *。</li>
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// Scope 参数使用不同取值时，TargetField 表达式中支持的值如下：
+	// <li> body.json：支持 key、value</li>
+	// <li> cookie：支持 key、value</li>
+	// <li> header：支持 key、value</li>
+	// <li> uri.query：支持 key、value</li>
+	// <li> uri：支持 path、query、fullpath</li>
+	// <li> body：支持 fullbody、multipart</li>
+	TargetField *string `json:"TargetField,omitnil,omitempty" name:"TargetField"`
 }
 
 type Resource struct {
@@ -16093,9 +16433,9 @@ type RuleEngineAction struct {
 	// <li>ErrorPage：自定义错误页面；</li>
 	// <li>ModifyResponseHeader：修改 HTTP 节点响应头；</li>
 	// <li>ModifyRequestHeader：修改 HTTP 节点请求头；</li>
-	// <li>ResponseSpeedLimit：单连接下载限速。</li>
-	// <li>SetContentIdentifierParameters：设置内容标识符。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <li>ResponseSpeedLimit：单连接下载限速；</li>
+	// <li>SetContentIdentifier：设置内容标识符；</li>
+	// <li>Vary：Vary 特性配置。</li>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 节点缓存 TTL 配置参数，当 Name 取值为 Cache 时，该参数必填。
@@ -16230,10 +16570,13 @@ type RuleEngineAction struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResponseSpeedLimitParameters *ResponseSpeedLimitParameters `json:"ResponseSpeedLimitParameters,omitnil,omitempty" name:"ResponseSpeedLimitParameters"`
 
-	// 内容标识配置参数，当 Name 取值为 HttpResponse 时，该参数必填。
+	// 内容标识配置参数，当 Name 取值为 SetContentIdentifier 时，该参数必填。
 	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetContentIdentifierParameters *SetContentIdentifierParameters `json:"SetContentIdentifierParameters,omitnil,omitempty" name:"SetContentIdentifierParameters"`
+
+	// Vary 特性配置参数，当 Name 取值为 Vary 时，该参数必填。
+	VaryParameters *VaryParameters `json:"VaryParameters,omitnil,omitempty" name:"VaryParameters"`
 }
 
 type RuleEngineItem struct {
@@ -16446,62 +16789,66 @@ type SecEntryValue struct {
 
 type SecurityAction struct {
 	// 安全执行的具体动作。取值有：
-	// <li>Deny：拦截；</li><li>Monitor：观察；</li><li>ReturnCustomPage：使用指定页面拦截；</li><li>Redirect：重定向至 URL；</li><li>BlockIP：IP 封禁；</li><li>JSChallenge：JavaScript 挑战；</li><li>ManagedChallenge：托管挑战；</li><li>Disabled：未启用；</li><li>Allow：放行。</li>
+	// <li>Deny：拦截，阻止请求访问站点资源；</li>
+	// <li>Monitor：观察，仅记录日志；</li>
+	// <li>Redirect：重定向至 URL；</li>
+	// <li>Disabled：未启用，不启用指定规则；</li>
+	// <li>Allow：允许访问，但延迟处理请求；</li>
+	// <li>Challenge：挑战，响应挑战内容；</li>
+	// <li>BlockIP：待废弃，IP 封禁；</li>
+	// <li>ReturnCustomPage：待废弃，使用指定页面拦截；</li>
+	// <li>JSChallenge：待废弃，JavaScript 挑战；</li>
+	// <li>ManagedChallenge：待废弃，托管挑战。</li>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 当 Name 为 BlockIP 时的附加参数。
-	BlockIPActionParameters *BlockIPActionParameters `json:"BlockIPActionParameters,omitnil,omitempty" name:"BlockIPActionParameters"`
-
-	// 当 Name 为 ReturnCustomPage 时的附加参数。
-	ReturnCustomPageActionParameters *ReturnCustomPageActionParameters `json:"ReturnCustomPageActionParameters,omitnil,omitempty" name:"ReturnCustomPageActionParameters"`
+	// 当 Name 为 Deny 时的附加参数。
+	DenyActionParameters *DenyActionParameters `json:"DenyActionParameters,omitnil,omitempty" name:"DenyActionParameters"`
 
 	// 当 Name 为 Redirect 时的附加参数。
 	RedirectActionParameters *RedirectActionParameters `json:"RedirectActionParameters,omitnil,omitempty" name:"RedirectActionParameters"`
+
+	// 当 Name 为 Challenge 时的附加参数。
+	ChallengeActionParameters *ChallengeActionParameters `json:"ChallengeActionParameters,omitnil,omitempty" name:"ChallengeActionParameters"`
+
+	// 待废弃，当 Name 为 BlockIP 时的附加参数。
+	BlockIPActionParameters *BlockIPActionParameters `json:"BlockIPActionParameters,omitnil,omitempty" name:"BlockIPActionParameters"`
+
+	// 待废弃，当 Name 为 ReturnCustomPage 时的附加参数。
+	ReturnCustomPageActionParameters *ReturnCustomPageActionParameters `json:"ReturnCustomPageActionParameters,omitnil,omitempty" name:"ReturnCustomPageActionParameters"`
 }
 
 type SecurityConfig struct {
 	// 托管规则。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WafConfig *WafConfig `json:"WafConfig,omitnil,omitempty" name:"WafConfig"`
 
 	// 速率限制。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RateLimitConfig *RateLimitConfig `json:"RateLimitConfig,omitnil,omitempty" name:"RateLimitConfig"`
 
 	// 自定义规则。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AclConfig *AclConfig `json:"AclConfig,omitnil,omitempty" name:"AclConfig"`
 
 	// Bot配置。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BotConfig *BotConfig `json:"BotConfig,omitnil,omitempty" name:"BotConfig"`
 
 	// 七层防护总开关。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SwitchConfig *SwitchConfig `json:"SwitchConfig,omitnil,omitempty" name:"SwitchConfig"`
 
 	// 基础访问管控。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IpTableConfig *IpTableConfig `json:"IpTableConfig,omitnil,omitempty" name:"IpTableConfig"`
 
 	// 例外规则配置。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExceptConfig *ExceptConfig `json:"ExceptConfig,omitnil,omitempty" name:"ExceptConfig"`
 
 	// 自定义拦截页面配置。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DropPageConfig *DropPageConfig `json:"DropPageConfig,omitnil,omitempty" name:"DropPageConfig"`
 
 	// 模板配置。此处仅出参数使用。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TemplateConfig *TemplateConfig `json:"TemplateConfig,omitnil,omitempty" name:"TemplateConfig"`
 
 	// 慢速攻击配置。如果入参为空或不填，默认使用历史配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlowPostConfig *SlowPostConfig `json:"SlowPostConfig,omitnil,omitempty" name:"SlowPostConfig"`
 
 	// 检测长度限制配置。仅出参使用。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DetectLengthLimitConfig *DetectLengthLimitConfig `json:"DetectLengthLimitConfig,omitnil,omitempty" name:"DetectLengthLimitConfig"`
 }
 
@@ -16511,6 +16858,15 @@ type SecurityPolicy struct {
 
 	// 托管规则配置。
 	ManagedRules *ManagedRules `json:"ManagedRules,omitnil,omitempty" name:"ManagedRules"`
+
+	// HTTP DDOS防护配置。
+	HttpDDoSProtection *HttpDDoSProtection `json:"HttpDDoSProtection,omitnil,omitempty" name:"HttpDDoSProtection"`
+
+	// 速率限制规则配置。
+	RateLimitingRules *RateLimitingRules `json:"RateLimitingRules,omitnil,omitempty" name:"RateLimitingRules"`
+
+	// 例外规则配置。
+	ExceptionRules *ExceptionRules `json:"ExceptionRules,omitnil,omitempty" name:"ExceptionRules"`
 }
 
 type SecurityTemplateBinding struct {
@@ -16530,35 +16886,27 @@ type SecurityType struct {
 
 type ServerCertInfo struct {
 	// 服务器证书 ID。来源于 SSL 侧，您可以前往 [SSL 证书列表](https://console.cloud.tencent.com/ssl) 查看 CertId。
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 
 	// 证书备注名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
 
 	// 证书类型，取值有：
 	// <li>default：默认证书；</li>
 	// <li>upload：用户上传；</li>
 	// <li>managed：腾讯云托管。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 证书过期时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 证书部署时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeployTime *string `json:"DeployTime,omitnil,omitempty" name:"DeployTime"`
 
 	// 签名算法。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SignAlgo *string `json:"SignAlgo,omitnil,omitempty" name:"SignAlgo"`
 
 	// 证书归属域名名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CommonName *string `json:"CommonName,omitnil,omitempty" name:"CommonName"`
 }
 
@@ -16593,7 +16941,6 @@ type SkipCondition struct {
 	MatchFromType *string `json:"MatchFromType,omitnil,omitempty" name:"MatchFromType"`
 
 	// 匹配Key的值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MatchFrom []*string `json:"MatchFrom,omitnil,omitempty" name:"MatchFrom"`
 
 	// 匹配Content所使用的匹配方式，取值为：
@@ -16602,8 +16949,21 @@ type SkipCondition struct {
 	MatchContentType *string `json:"MatchContentType,omitnil,omitempty" name:"MatchContentType"`
 
 	// 匹配Value的值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MatchContent []*string `json:"MatchContent,omitnil,omitempty" name:"MatchContent"`
+}
+
+type SlowAttackDefense struct {
+	// 慢速攻击防护是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 慢速攻击防护的处置方式，当 Enabled 为 on 时，此字段必填。SecurityAction 的 Name 取值支持：<li>Monitor：观察；</li><li>Deny：拦截；</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 正文传输最小速率阈值的具体配置，当 Enabled 为 on 时，此字段必填。
+	MinimalRequestBodyTransferRate *MinimalRequestBodyTransferRate `json:"MinimalRequestBodyTransferRate,omitnil,omitempty" name:"MinimalRequestBodyTransferRate"`
+
+	// 正文传输超时时长的具体配置，当 Enabled 为 on 时，此字段必填。
+	RequestBodyTransferTimeout *RequestBodyTransferTimeout `json:"RequestBodyTransferTimeout,omitnil,omitempty" name:"RequestBodyTransferTimeout"`
 }
 
 type SlowPostConfig struct {
@@ -16613,21 +16973,17 @@ type SlowPostConfig struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 首包配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FirstPartConfig *FirstPartConfig `json:"FirstPartConfig,omitnil,omitempty" name:"FirstPartConfig"`
 
 	// 基础配置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlowRateConfig *SlowRateConfig `json:"SlowRateConfig,omitnil,omitempty" name:"SlowRateConfig"`
 
 	// 慢速攻击的处置动作，取值有：
 	// <li>monitor：观察；</li>
 	// <li>drop：拦截。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
 	// 本规则的Id。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleId *uint64 `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 }
 
@@ -16638,11 +16994,9 @@ type SlowRateConfig struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 
 	// 统计的间隔，单位是秒，即在首段包传输结束后，将数据传输轴按照本参数切分，每个分片独立计算慢速攻击。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Interval *uint64 `json:"Interval,omitnil,omitempty" name:"Interval"`
 
 	// 统计时应用的速率阈值，单位是bps，即如果本分片中的传输速率没达到本参数的值，则判定为慢速攻击，应用慢速攻击的处置方式。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Threshold *uint64 `json:"Threshold,omitnil,omitempty" name:"Threshold"`
 }
 
@@ -16780,14 +17134,14 @@ type Task struct {
 	// 节点缓存清除方法，取值有：
 	// <li>invalidate：标记过期，用户请求时触发回源校验，即发送带有 If-None-Match 和 If-Modified-Since 头部的 HTTP 条件请求。若源站响应 200，则节点会回源拉取新的资源并更新缓存；若源站响应 304，则节点不会更新缓存；</li>
 	// <li>delete：直接删除节点缓存，用户请求时触发回源拉取资源。</li>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
 	// 状态。取值有：
 	// <li>processing：处理中；</li>
 	// <li>success：成功；</li>
 	// <li> failed：失败；</li>
-	// <li>timeout：超时。</li>
+	// <li>timeout：超时；</li>
+	// <li>canceled：已取消。</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 任务创建时间。
@@ -17041,17 +17395,25 @@ type UpstreamRequestQueryString struct {
 }
 
 type UpstreamURLRewriteParameters struct {
-	// 回源 URL 重写类型，仅支持填写 Path。
+	// 回源 URL 重写类型。仅支持填写 Path。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 回源 URL 重写动作。取值有：
-	// <li>replace：替换路径前缀；</li>
-	// <li>addPrefix：增加路径前缀；</li>
-	// <li>rmvPrefix：移除路径前缀。</li>
+	// <li><b>replace</b>：指替换完整路径。用于将完整的请求 URL Path 替换为指定路径。
+	// </li>
+	// <li><b>addPrefix</b>：指增加路径前缀。用于增加指定路径前缀至请求 URL Path。
+	// </li>
+	// <li><b>rmvPrefix</b>：指移除路径前缀。用于移除请求 URL Path 的指定路径前缀。
+	// </li>
+	// <li><b>regexReplace</b>：指正则替换完整路径。用于通过 Google RE2 正则表达式匹配和替换完整路径。
+	// </li>
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
-	// 回源 URL 重写值，最大长度 1024，必须以 / 开头。<br>注意：当 Action 为 addPrefix 时，不能以 / 结尾；当 Action 为 rmvPrefix 时，不能存在 *。
+	// 回源 URL 重写值。需要满足 URL Path 规范，且保证重写后的 Path 以 / 开头，以防止回源 URL 的 Host 被修改，长度范围为 1～1024。当 Action 为 addPrefix 时，不能以 / 结尾；当 Action 为 rmvPrefix 时，不能存在 *；当 Action 为 regexReplace 时，支持用 $NUM 引用正则捕获组，其中 NUM 代表组编号，如 $1，最多支持 $9。
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// 回源 URL 重写用于正则替换匹配完整路径的正则表达式。需要满足 Google RE2 规范，长度范围为 1～1024。当 Action 为 regexReplace 时，此字段必填，否则无需填写此字段。
+	Regex *string `json:"Regex,omitnil,omitempty" name:"Regex"`
 }
 
 type VanityNameServers struct {
@@ -17072,16 +17434,23 @@ type VanityNameServersIps struct {
 	IPv4 *string `json:"IPv4,omitnil,omitempty" name:"IPv4"`
 }
 
+type VaryParameters struct {
+	// Vary 特性配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+}
+
 // Predefined struct for user
 type VerifyOwnershipRequestParams struct {
-	// 站点或者加速域名。
+	// 站点域名或者站点下的加速域名。
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 }
 
 type VerifyOwnershipRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点或者加速域名。
+	// 站点域名或者站点下的加速域名。
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 }
 
@@ -17276,7 +17645,6 @@ type Zone struct {
 	ActiveStatus *string `json:"ActiveStatus,omitnil,omitempty" name:"ActiveStatus"`
 
 	// 站点别名。数字、英文、-和_组合，限制20个字符。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AliasZoneName *string `json:"AliasZoneName,omitnil,omitempty" name:"AliasZoneName"`
 
 	// 是否伪站点，取值有：
@@ -17389,6 +17757,18 @@ type ZoneConfigParameters struct {
 	// 站点配置信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ZoneConfig *ZoneConfig `json:"ZoneConfig,omitnil,omitempty" name:"ZoneConfig"`
+}
+
+type ZoneInfo struct {
+	// 站点id。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 站点名称。
+	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
+
+	// 站点是否停用。取值有：<li>false：非停用；</li>
+	// <li>true：停用。</li>
+	Paused *bool `json:"Paused,omitnil,omitempty" name:"Paused"`
 }
 
 type ZoneSetting struct {
