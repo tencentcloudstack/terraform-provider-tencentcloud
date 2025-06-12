@@ -19,8 +19,8 @@ import (
 
 func ResourceTencentCloudCosBucketDomainCertificateAttachment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudCosBucketDomainCertificateAttachmentRead,
 		Create: resourceTencentCloudCosBucketDomainCertificateAttachmentCreate,
+		Read:   resourceTencentCloudCosBucketDomainCertificateAttachmentRead,
 		// Update: resourceTencentCloudCosBucketDomainCertificateAttachmentUpdate,
 		Delete: resourceTencentCloudCosBucketDomainCertificateAttachmentDelete,
 		Importer: &schema.ResourceImporter{
