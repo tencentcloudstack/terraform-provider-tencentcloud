@@ -7,12 +7,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_bind_security_template" "teo_bind_security_template" {
+  operate     = "unbind-use-default"
+  template_id = "temp-7dr7dm78"
+  zone_id     = "zone-39quuimqg8r6"
+  entity = "aaa.makn.cn"
 }
 
 ```
 Import
 
-teo application_proxy_rule can be imported using the zoneId#templateId, e.g.
+teo application_proxy_rule can be imported using the zoneId#templateId#entity, e.g.
 ```
-terraform import tencentcloud_teo_bind_security_template.teo_bind_security_template zone-2983wizgxqvm#templateId
+terraform import tencentcloud_teo_bind_security_template.teo_bind_security_template zone-39quuimqg8r6#temp-7dr7dm78#aaa.makn.cn
 ```

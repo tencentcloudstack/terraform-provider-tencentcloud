@@ -9,7 +9,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
-func resourceTeoBindSecurityTemplateUpdateStateRefreshFunc_0_0(ctx context.Context, zoneId string, templateId string, entity string) resource.StateRefreshFunc {
+func resourceTeoBindSecurityTemplateCreateStateRefreshFunc_0_0(ctx context.Context, zoneId string, templateId string, entity string) resource.StateRefreshFunc {
 	var req *teov20220901.DescribeSecurityTemplateBindingsRequest
 	return func() (interface{}, string, error) {
 		meta := tccommon.ProviderMetaFromContext(ctx)
