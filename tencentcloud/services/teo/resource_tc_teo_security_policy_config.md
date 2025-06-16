@@ -14,7 +14,7 @@ resource "tencentcloud_teo_security_policy_config" "example" {
     custom_rules {
       precise_match_rules {
         name      = "rule1"
-        condition = "$${http.request.host} contain ['abc']"
+        condition = "$${http.request.host} contain ['test']"
         enabled   = "on"
         priority  = 50
         action {
@@ -177,6 +177,84 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         action {
           name = "Deny"
         }
+      }
+    }
+
+    http_ddos_protection {
+      adaptive_frequency_control {
+        enabled     = "on"
+        sensitivity = "Loose"
+        action {
+          name = "Challenge"
+          challenge_action_parameters {
+            challenge_option = "JSChallenge"
+          }
+        }
+      }
+
+      client_filtering {
+        enabled = "on"
+        action {
+          name = "Challenge"
+          challenge_action_parameters {
+            challenge_option = "JSChallenge"
+          }
+        }
+      }
+
+      bandwidth_abuse_defense {
+        enabled = "on"
+        action {
+          name = "Deny"
+        }
+      }
+
+      slow_attack_defense {
+        enabled = "on"
+        action {
+          name = "Deny"
+        }
+
+        minimal_request_body_transfer_rate {
+          minimal_avg_transfer_rate_threshold = "80bps"
+          counting_period                     = "60s"
+          enabled                             = "on"
+        }
+
+        request_body_transfer_timeout {
+          idle_timeout = "5s"
+          enabled      = "on"
+        }
+      }
+    }
+
+    rate_limiting_rules {
+      rules {
+        name                  = "Single IP request rate limit"
+        condition             = "$${http.request.uri.path} contain ['/checkout/submit']"
+        count_by              = ["http.request.ip"]
+        max_request_threshold = 300
+        counting_period       = "60s"
+        action_duration       = "30m"
+        action {
+          name = "Challenge"
+          challenge_action_parameters {
+            challenge_option = "JSChallenge"
+          }
+        }
+        priority = 50
+        enabled  = "on"
+      }
+    }
+
+    exception_rules {
+      rules {
+        name                               = "High-frequency API bypasses rate limits"
+        condition                          = "$${http.request.method} in ['POST'] and $${http.request.uri.path} in ['/api/EventLogUpload']"
+        skip_scope                         = "WebSecurityModules"
+        skip_option                        = "SkipOnAllRequestFields"
+        web_security_modules_for_exception = ["websec-mod-adaptive-control"]
+        enabled                            = "off"
       }
     }
   }
