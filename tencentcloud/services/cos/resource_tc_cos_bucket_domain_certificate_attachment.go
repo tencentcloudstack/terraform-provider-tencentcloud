@@ -19,8 +19,8 @@ import (
 
 func ResourceTencentCloudCosBucketDomainCertificateAttachment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudCosBucketDomainCertificateAttachmentRead,
 		Create: resourceTencentCloudCosBucketDomainCertificateAttachmentCreate,
+		Read:   resourceTencentCloudCosBucketDomainCertificateAttachmentRead,
 		// Update: resourceTencentCloudCosBucketDomainCertificateAttachmentUpdate,
 		Delete: resourceTencentCloudCosBucketDomainCertificateAttachmentDelete,
 		Importer: &schema.ResourceImporter{
@@ -74,12 +74,14 @@ func ResourceTencentCloudCosBucketDomainCertificateAttachment() *schema.Resource
 													Type:        schema.TypeString,
 													Required:    true,
 													ForceNew:    true,
+													Sensitive:   true,
 													Description: "Public key of certificate.",
 												},
 												"private_key": {
 													Type:        schema.TypeString,
 													Required:    true,
 													ForceNew:    true,
+													Sensitive:   true,
 													Description: "Private key of certificate.",
 												},
 											},
