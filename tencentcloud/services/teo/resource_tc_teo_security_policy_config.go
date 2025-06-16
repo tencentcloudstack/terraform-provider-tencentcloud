@@ -41,7 +41,6 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 						"custom_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Computed:    true,
 							MaxItems:    1,
 							Description: "Custom rule configuration.",
 							Elem: &schema.Resource{
@@ -647,24 +646,24 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"enabled": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "Whether adaptive frequency control is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>",
+													Description: "Whether adaptive frequency control is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>.",
 												},
 												"sensitivity": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The restriction level of adaptive frequency control. When Enabled is on, this field is required. The values are: <li>Loose: loose; </li><li>Moderate: moderate; </li><li>Strict: strict. </li>",
+													Description: "The restriction level of adaptive frequency control. When Enabled is on, this field is required. The values are: <li>Loose: loose; </li><li>Moderate: moderate; </li><li>Strict: strict. </li>.",
 												},
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
 													MaxItems:    1,
-													Description: "The handling method of adaptive frequency control. When Enabled is on, this field is required. SecurityAction's Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge. </li>",
+													Description: "The handling method of adaptive frequency control. When Enabled is on, this field is required. SecurityAction's Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge. </li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>",
+																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>.",
 															},
 															"deny_action_parameters": {
 																Type:        schema.TypeList,
@@ -731,12 +730,12 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"challenge_option": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>",
+																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>.",
 																		},
 																		"interval": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>",
+																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>.",
 																		},
 																		"attester_id": {
 																			Type:        schema.TypeString,
@@ -756,7 +755,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"duration": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>",
+																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>.",
 																		},
 																	},
 																},
@@ -797,19 +796,19 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"enabled": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "Whether smart client filtering is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>",
+													Description: "Whether smart client filtering is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>.",
 												},
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
 													MaxItems:    1,
-													Description: "The method of intelligent client filtering. When Enabled is on, this field is required. SecurityAction Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge. </li>",
+													Description: "The method of intelligent client filtering. When Enabled is on, this field is required. SecurityAction Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge. </li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The specific action of security execution. The values ​​are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>",
+																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>.",
 															},
 															"deny_action_parameters": {
 																Type:        schema.TypeList,
@@ -876,12 +875,12 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"challenge_option": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>",
+																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>.",
 																		},
 																		"interval": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>",
+																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>.",
 																		},
 																		"attester_id": {
 																			Type:        schema.TypeString,
@@ -901,7 +900,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"duration": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>",
+																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>.",
 																		},
 																	},
 																},
@@ -942,19 +941,19 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"enabled": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "Whether the anti-theft feature (only applicable to mainland China) is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>",
+													Description: "Whether the anti-theft feature (only applicable to mainland China) is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>.",
 												},
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
 													MaxItems:    1,
-													Description: "The method for preventing traffic fraud (only applicable to mainland China). When Enabled is on, this field is required. SecurityAction Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge. </li>",
+													Description: "The method for preventing traffic fraud (only applicable to mainland China). When Enabled is on, this field is required. SecurityAction Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge. </li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>",
+																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>.",
 															},
 															"deny_action_parameters": {
 																Type:        schema.TypeList,
@@ -1021,12 +1020,12 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"challenge_option": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>",
+																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>.",
 																		},
 																		"interval": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>",
+																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>.",
 																		},
 																		"attester_id": {
 																			Type:        schema.TypeString,
@@ -1046,7 +1045,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"duration": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>",
+																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>.",
 																		},
 																	},
 																},
@@ -1087,19 +1086,19 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"enabled": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "Whether slow attack protection is enabled. The possible values ​​are: <li>on: enabled; </li><li>off: disabled. </li>",
+													Description: "Whether slow attack protection is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>.",
 												},
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
 													MaxItems:    1,
-													Description: "The handling method of slow attack protection. When Enabled is on, this field is required. SecurityAction Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li>",
+													Description: "The handling method of slow attack protection. When Enabled is on, this field is required. SecurityAction Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>",
+																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>.",
 															},
 															"deny_action_parameters": {
 																Type:        schema.TypeList,
@@ -1111,7 +1110,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"block_ip": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Whether to extend the blocking of source IP. The possible values ​​are:\n<li>on: on;</li>\n<li>off: off.</li>\nWhen enabled, the client IP that triggers the rule will be blocked continuously. When this option is enabled, the BlockIpDuration parameter must be specified at the same time.\nNote: This option cannot be enabled at the same time as the ReturnCustomPage or Stall options.",
+																			Description: "Whether to extend the blocking of source IP. The possible values are:\n<li>on: on;</li>\n<li>off: off.</li>\nWhen enabled, the client IP that triggers the rule will be blocked continuously. When this option is enabled, the BlockIpDuration parameter must be specified at the same time.\nNote: This option cannot be enabled at the same time as the ReturnCustomPage or Stall options.",
 																		},
 																		"block_ip_duration": {
 																			Type:        schema.TypeString,
@@ -1166,12 +1165,12 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"challenge_option": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>",
+																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>.",
 																		},
 																		"interval": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>",
+																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>.",
 																		},
 																		"attester_id": {
 																			Type:        schema.TypeString,
@@ -1191,7 +1190,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"duration": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>",
+																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>.",
 																		},
 																	},
 																},
@@ -1234,12 +1233,12 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 															"counting_period": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The minimum text transmission rate statistics time range, the possible values are: <li>10s: 10 seconds; </li><li>30s: 30 seconds; </li><li>60s: 60 seconds; </li><li>120s: 120 seconds. </li>",
+																Description: "The minimum text transmission rate statistics time range, the possible values are: <li>10s: 10 seconds; </li><li>30s: 30 seconds; </li><li>60s: 60 seconds; </li><li>120s: 120 seconds. </li>.",
 															},
 															"enabled": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Whether the text transmission minimum rate threshold is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>",
+																Description: "Whether the text transmission minimum rate threshold is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>.",
 															},
 														},
 													},
@@ -1259,7 +1258,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 															"enabled": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Whether the text transmission timeout is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>",
+																Description: "Whether the text transmission timeout is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>.",
 															},
 														},
 													},
@@ -1273,7 +1272,6 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 						"rate_limiting_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Computed:    true,
 							MaxItems:    1,
 							Description: "Rate limiting rule configuration.",
 							Elem: &schema.Resource{
@@ -1281,14 +1279,14 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "A list of precise rate limiting definitions. When using ModifySecurityPolicy to modify the Web protection configuration: <br> <li> If the Rules parameter is not specified, or the Rules parameter length is zero: clear all precise rate limiting configurations. </li> <li> If the RateLimitingRules parameter value is not specified in the SecurityPolicy parameter: keep the existing custom rule configuration and do not modify it. </li>",
+										Description: "A list of precise rate limiting definitions. When using ModifySecurityPolicy to modify the Web protection configuration: <br> <li> If the Rules parameter is not specified, or the Rules parameter length is zero: clear all precise rate limiting configurations. </li>. <li> If the RateLimitingRules parameter value is not specified in the SecurityPolicy parameter: keep the existing custom rule configuration and do not modify it. </li>.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"id": {
 													Type:        schema.TypeString,
 													Optional:    true,
 													Computed:    true,
-													Description: "The ID of the precise rate limit. <br>The rule ID can support different rule configuration operations: <br> <li> <b>Add</b> a new rule: the ID is empty or the ID parameter is not specified; </li><li> <b>Modify</b> an existing rule: specify the rule ID to be updated/modified; </li><li> <b>Delete</b> an existing rule: in the RateLimitingRules parameter, the existing rules not included in the Rules list will be deleted. </li>",
+													Description: "The ID of the precise rate limit. <br>The rule ID can support different rule configuration operations: <br> <li> <b>Add</b> a new rule: the ID is empty or the ID parameter is not specified; </li><li> <b>Modify</b> an existing rule: specify the rule ID to be updated/modified; </li><li> <b>Delete</b> an existing rule: in the RateLimitingRules parameter, the existing rules not included in the Rules list will be deleted. </li>.",
 												},
 												"name": {
 													Type:        schema.TypeString,
@@ -1303,7 +1301,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"count_by": {
 													Type:        schema.TypeSet,
 													Optional:    true,
-													Description: "The matching method of the rate threshold request feature. When Enabled is on, this field is required. <br /><br />When there are multiple conditions, multiple conditions will be combined for statistical calculation. The number of conditions cannot exceed 5. The possible values are: <br/><li><b>http.request.ip</b>: client IP; </li><li><b>http.request.xff_header_ip</b>: client IP (matching XFF header first); </li><li><b>http.request.uri.path</b>: requested access path; </li><li><b>http.request.cookies['session']</b>: cookie named session, where session can be replaced by the parameter you specify; </li><li><b>http.request.headers['user-agent']</b>: HTTP header named user-agent, where user-agent can be replaced by the parameter you specify; </li><li><b>http.request.ja3</b>: requested JA3 fingerprint; </li><li><b>http.request.uri.query['test']</b>: URL query parameter named test, where test can be replaced by the parameter you specify. </li>",
+													Description: "The matching method of the rate threshold request feature. When Enabled is on, this field is required. <br /><br />When there are multiple conditions, multiple conditions will be combined for statistical calculation. The number of conditions cannot exceed 5. The possible values are: <br/><li><b>http.request.ip</b>: client IP; </li><li><b>http.request.xff_header_ip</b>: client IP (matching XFF header first); </li><li><b>http.request.uri.path</b>: requested access path; </li><li><b>http.request.cookies['session']</b>: cookie named session, where session can be replaced by the parameter you specify; </li><li><b>http.request.headers['user-agent']</b>: HTTP header named user-agent, where user-agent can be replaced by the parameter you specify; </li><li><b>http.request.ja3</b>: requested JA3 fingerprint; </li><li><b>http.request.uri.query['test']</b>: URL query parameter named test, where test can be replaced by the parameter you specify. </li>.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
@@ -1316,24 +1314,24 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"counting_period": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The statistical time window, the possible values are: <li>1s: 1 second; </li><li>5s: 5 seconds; </li><li>10s: 10 seconds; </li><li>20s: 20 seconds; </li><li>30s: 30 seconds; </li><li>40s: 40 seconds; </li><li>50s: 50 seconds; </li><li>1m: 1 minute; </li><li>2m: 2 minutes; </li><li>5m: 5 minutes; </li><li>10m: 10 minutes; </li><li>1h: 1 hour. </li>",
+													Description: "The statistical time window, the possible values are: <li>1s: 1 second; </li><li>5s: 5 seconds; </li><li>10s: 10 seconds; </li><li>20s: 20 seconds; </li><li>30s: 30 seconds; </li><li>40s: 40 seconds; </li><li>50s: 50 seconds; </li><li>1m: 1 minute; </li><li>2m: 2 minutes; </li><li>5m: 5 minutes; </li><li>10m: 10 minutes; </li><li>1h: 1 hour. </li>.",
 												},
 												"action_duration": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Action The duration of the action. The supported units are: <li>s: seconds, with a value of 1 to 120; </li><li>m: minutes, with a value of 1 to 120; </li><li>h: hours, with a value of 1 to 48; </li><li>d: days, with a value of 1 to 30. </li>",
+													Description: "Action The duration of the action. The supported units are: <li>s: seconds, with a value of 1 to 120; </li><li>m: minutes, with a value of 1 to 120; </li><li>h: hours, with a value of 1 to 48; </li><li>d: days, with a value of 1 to 30. </li>.",
 												},
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
 													MaxItems:    1,
-													Description: "The precise rate limit handling method. The values are: <li>Monitor: Observe; </li><li>Deny: Intercept, where DenyActionParameters.Name supports Deny and ReturnCustomPage; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name supports JSChallenge and ManagedChallenge; </li><li>Redirect: Redirect to URL; </li>",
+													Description: "The precise rate limit handling method. The values are: <li>Monitor: Observe; </li><li>Deny: Intercept, where DenyActionParameters.Name supports Deny and ReturnCustomPage; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name supports JSChallenge and ManagedChallenge; </li><li>Redirect: Redirect to URL; </li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>",
+																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>.",
 															},
 															"deny_action_parameters": {
 																Type:        schema.TypeList,
@@ -1400,12 +1398,12 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"challenge_option": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>",
+																			Description: "The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>.",
 																		},
 																		"interval": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>",
+																			Description: "The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>.",
 																		},
 																		"attester_id": {
 																			Type:        schema.TypeString,
@@ -1425,7 +1423,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																		"duration": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>",
+																			Description: "The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>.",
 																		},
 																	},
 																},
@@ -1461,7 +1459,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"enabled": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Whether the precise rate limit rule is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>",
+													Description: "Whether the precise rate limit rule is enabled. The possible values are: <li>on: enabled; </li><li>off: disabled. </li>.",
 												},
 											},
 										},
@@ -1472,7 +1470,6 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 						"exception_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Computed:    true,
 							MaxItems:    1,
 							Description: "Exception rule configuration.",
 							Elem: &schema.Resource{
@@ -1480,14 +1477,14 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "Definition list of exception rules. When using ModifySecurityPolicy to modify the Web protection configuration: <li>If the Rules parameter is not specified, or the length of the Rules parameter is zero: clear all exception rule configurations. </li><li>If the ExceptionRules parameter value is not specified in the SecurityPolicy parameter: keep the existing exception rule configurations and do not modify them. </li>",
+										Description: "Definition list of exception rules. When using ModifySecurityPolicy to modify the Web protection configuration: <li>If the Rules parameter is not specified, or the length of the Rules parameter is zero: clear all exception rule configurations. </li>.<li>If the ExceptionRules parameter value is not specified in the SecurityPolicy parameter: keep the existing exception rule configurations and do not modify them. </li>.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"id": {
 													Type:        schema.TypeString,
 													Optional:    true,
 													Computed:    true,
-													Description: "The ID of the exception rule. <br>The rule ID can support different rule configuration operations: <br> <li> <b>Add</b> a new rule: the ID is empty or the ID parameter is not specified; </li><li> <b>Modify</b> an existing rule: specify the rule ID to be updated/modified; </li><li> <b>Delete</b> an existing rule: in the ExceptionRules parameter, the existing rules not included in the Rules list will be deleted. </li>",
+													Description: "The ID of the exception rule. <br>The rule ID can support different rule configuration operations: <br> <li> <b>Add</b> a new rule: the ID is empty or the ID parameter is not specified; </li><li> <b>Modify</b> an existing rule: specify the rule ID to be updated/modified; </li><li> <b>Delete</b> an existing rule: in the ExceptionRules parameter, the existing rules not included in the Rules list will be deleted. </li>.",
 												},
 												"name": {
 													Type:        schema.TypeString,
@@ -1502,17 +1499,17 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"skip_scope": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Exception rule execution options, the values are: <li>WebSecurityModules: Specifies the security protection module for the exception rule. </li><li>ManagedRules: Specifies the managed rules. </li>",
+													Description: "Exception rule execution options, the values are: <li>WebSecurityModules: Specifies the security protection module for the exception rule. </li>.<li>ManagedRules: Specifies the managed rules. </li>.",
 												},
 												"skip_option": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The specific type of the skipped request. The possible values are: <li>SkipOnAllRequestFields: skip all requests; </li><li>SkipOnSpecifiedRequestFields: skip specified request fields. </li> This option is only valid when SkipScope is ManagedRules.",
+													Description: "The specific type of the skipped request. The possible values are: <li>SkipOnAllRequestFields: skip all requests; </li><li>SkipOnSpecifiedRequestFields: skip specified request fields. </li>. This option is only valid when SkipScope is ManagedRules.",
 												},
 												"web_security_modules_for_exception": {
 													Type:        schema.TypeSet,
 													Optional:    true,
-													Description: "Specifies the security protection module for the exception rule. It is valid only when SkipScope is WebSecurityModules. The possible values are: <li>websec-mod-managed-rules: managed rules; </li><li>websec-mod-rate-limiting: rate limiting; </li><li>websec-mod-custom-rules: custom rules; </li><li>websec-mod-adaptive-control: adaptive frequency control, intelligent client filtering, slow attack protection, traffic theft protection; </li><li>websec-mod-bot: Bot management. </li>",
+													Description: "Specifies the security protection module for the exception rule. It is valid only when SkipScope is WebSecurityModules. The possible values are: <li>websec-mod-managed-rules: managed rules; </li><li>websec-mod-rate-limiting: rate limiting; </li><li>websec-mod-custom-rules: custom rules; </li><li>websec-mod-adaptive-control: adaptive frequency control, intelligent client filtering, slow attack protection, traffic theft protection; </li><li>websec-mod-bot: Bot management. </li>.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
@@ -1542,17 +1539,17 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 															"scope": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Specific fields to skip. Supported values:<br/>\n<li>body.json: JSON request content; in this case, Condition supports key and value, and TargetField supports key and value, for example, { \"Scope\": \"body.json\", \"Condition\": \"\", \"TargetField\": \"key\" }, which means that all parameters of JSON request content skip WAF scanning;</li>\n<li style=\"margin-top:5px\">cookie: Cookie; in this case, Condition supports key and value, and TargetField supports key and value, for example, { \"Scope\": \"cookie\", \"Condition\": \"${key} in ['account-id'] and ${value} like ['prefix-*']\", \"TargetField\": \"value\" }, which means that the Cookie parameter name is equal to account-id and the parameter value wildcard matches prefix-* to skip WAF scanning;</li>\n<li style=\"margin-top:5px\">header: HTTP header parameter; Condition supports key and value, TargetField supports key and value, for example { \"Scope\": \"header\", \"Condition\": \"${key} like ['x-auth-*']\", \"TargetField\": \"value\" }, which means that the header parameter name wildcard matches x-auth-* and skips WAF scanning; </li>\n<li style=\"margin-top:5px\">uri.query: URL encoded content/query parameter; Condition supports key and value, TargetField supports key and value, for example { \"Scope\": \"uri.query\", \"Condition\": \"${key} in ['action'] and ${value} in ['upload', 'delete']\", \"TargetField\": \"value\" }, which means that the parameter name of the URL encoded content/query parameter is equal to action And the parameter value is equal to upload or delete to skip WAF scanning;</li>\n<li style=\"margin-top:5px\">uri: request path URI; in this case, Condition must be empty, TargetField supports query, path, fullpath, for example, { \"Scope\": \"uri\", \"Condition\": \"\", \"TargetField\": \"query\" }, indicating that the request path URI only query parameters skip WAF scanning;</li>\n<li style=\"margin-top:5px\">body: request body content. In this case, Condition must be empty, TargetField supports fullbody and multipart, for example, { \"Scope\": \"body\", \"Condition\": \"\", \"TargetField\": \"fullbody\" }, indicating that the request body content is the complete request body and skips WAF scanning;</li>",
+																Description: "Specific fields to skip. Supported values:<br/>\n<li>body.json: JSON request content; in this case, Condition supports key and value, and TargetField supports key and value, for example, { \"Scope\": \"body.json\", \"Condition\": \"\", \"TargetField\": \"key\" }, which means that all parameters of JSON request content skip WAF scanning;</li>\n<li style=\"margin-top:5px\">cookie: Cookie; in this case, Condition supports key and value, and TargetField supports key and value, for example, { \"Scope\": \"cookie\", \"Condition\": \"${key} in ['account-id'] and ${value} like ['prefix-*']\", \"TargetField\": \"value\" }, which means that the Cookie parameter name is equal to account-id and the parameter value wildcard matches prefix-* to skip WAF scanning;</li>\n<li style=\"margin-top:5px\">header: HTTP header parameter; Condition supports key and value, TargetField supports key and value, for example { \"Scope\": \"header\", \"Condition\": \"${key} like ['x-auth-*']\", \"TargetField\": \"value\" }, which means that the header parameter name wildcard matches x-auth-* and skips WAF scanning; </li>\n<li style=\"margin-top:5px\">uri.query: URL encoded content/query parameter; Condition supports key and value, TargetField supports key and value, for example { \"Scope\": \"uri.query\", \"Condition\": \"${key} in ['action'] and ${value} in ['upload', 'delete']\", \"TargetField\": \"value\" }, which means that the parameter name of the URL encoded content/query parameter is equal to action And the parameter value is equal to upload or delete to skip WAF scanning;</li>\n<li style=\"margin-top:5px\">uri: request path URI; in this case, Condition must be empty, TargetField supports query, path, fullpath, for example, { \"Scope\": \"uri\", \"Condition\": \"\", \"TargetField\": \"query\" }, indicating that the request path URI only query parameters skip WAF scanning;</li>\n<li style=\"margin-top:5px\">body: request body content. In this case, Condition must be empty, TargetField supports fullbody and multipart, for example, { \"Scope\": \"body\", \"Condition\": \"\", \"TargetField\": \"fullbody\" }, indicating that the request body content is the complete request body and skips WAF scanning;</li>.",
 															},
 															"condition": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The expression of the specific field to be skipped must conform to the expression syntax. <br />\nCondition supports expression configuration syntax: <li> Written according to the matching condition expression syntax of the rule, supporting references to key and value. </li><li> Supports in, like operators, and and logical combinations. </li>\nFor example: <li>${key} in ['x-trace-id']: parameter name is equal to x-trace-id. </li><li>${key} in ['x-trace-id'] and ${value} like ['Bearer *']: parameter name is equal to x-trace-id and the parameter value wildcard matches Bearer *. </li>",
+																Description: "The expression of the specific field to be skipped must conform to the expression syntax. <br />\nCondition supports expression configuration syntax: <li> Written according to the matching condition expression syntax of the rule, supporting references to key and value. </li>.<li> Supports in, like operators, and and logical combinations. </li>.\nFor example: <li>${key} in ['x-trace-id']: parameter name is equal to x-trace-id. </li>.<li>${key} in ['x-trace-id'] and ${value} like ['Bearer *']: parameter name is equal to x-trace-id and the parameter value wildcard matches Bearer *. </li>.",
 															},
 															"target_field": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "When the Scope parameter uses different values, the supported values in the TargetField expression are as follows:\n<li> body.json: supports key and value</li>\n<li> cookie: supports key and value</li>\n<li> header: supports key and value</li>\n<li> uri.query: supports key and value</li>\n<li> uri: supports path, query and fullpath</li>\n<li> body: supports fullbody and multipart</li>",
+																Description: "When the Scope parameter uses different values, the supported values in the TargetField expression are as follows:\n<li> body.json: supports key and value</li>\n<li> cookie: supports key and value</li>\n<li> header: supports key and value</li>\n<li> uri.query: supports key and value</li>\n<li> uri: supports path, query and fullpath</li>\n<li> body: supports fullbody and multipart</li>.",
 															},
 														},
 													},
@@ -1560,7 +1557,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"enabled": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Whether the exception rule is enabled. The values are: <li>on: enabled</li><li>off: disabled</li>",
+													Description: "Whether the exception rule is enabled. The values are: <li>on: enabled</li><li>off: disabled</li>.",
 												},
 											},
 										},
@@ -1767,11 +1764,19 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					continue
 				}
 			}
-		}
 
-		customRulesMap["precise_match_rules"] = preciseMatchRulesList
-		customRulesMap["basic_access_rules"] = basicAccessRulesList
-		securityPolicyMap["custom_rules"] = []interface{}{customRulesMap}
+			if len(preciseMatchRulesList) > 0 {
+				customRulesMap["precise_match_rules"] = preciseMatchRulesList
+			}
+
+			if len(basicAccessRulesList) > 0 {
+				customRulesMap["basic_access_rules"] = basicAccessRulesList
+			}
+
+			if len(preciseMatchRulesList) > 0 || len(basicAccessRulesList) > 0 {
+				securityPolicyMap["custom_rules"] = []interface{}{customRulesMap}
+			}
+		}
 	}
 
 	if respData.ManagedRules != nil {
@@ -1788,8 +1793,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 			managedRulesMap["semantic_analysis"] = respData.ManagedRules.SemanticAnalysis
 		}
 
-		autoUpdateMap := map[string]interface{}{}
 		if respData.ManagedRules.AutoUpdate != nil {
+			autoUpdateMap := map[string]interface{}{}
 			if respData.ManagedRules.AutoUpdate.AutoUpdateToLatestVersion != nil {
 				autoUpdateMap["auto_update_to_latest_version"] = respData.ManagedRules.AutoUpdate.AutoUpdateToLatestVersion
 			}
@@ -1801,8 +1806,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 			managedRulesMap["auto_update"] = []interface{}{autoUpdateMap}
 		}
 
-		managedRuleGroupsList := make([]map[string]interface{}, 0, len(respData.ManagedRules.ManagedRuleGroups))
 		if respData.ManagedRules.ManagedRuleGroups != nil {
+			managedRuleGroupsList := make([]map[string]interface{}, 0, len(respData.ManagedRules.ManagedRuleGroups))
 			for _, managedRuleGroups := range respData.ManagedRules.ManagedRuleGroups {
 				managedRuleGroupsMap := map[string]interface{}{}
 
@@ -1814,8 +1819,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					managedRuleGroupsMap["sensitivity_level"] = managedRuleGroups.SensitivityLevel
 				}
 
-				actionMap := map[string]interface{}{}
 				if managedRuleGroups.Action != nil {
+					actionMap := map[string]interface{}{}
 					if managedRuleGroups.Action.Name != nil {
 						actionMap["name"] = managedRuleGroups.Action.Name
 					}
@@ -1829,8 +1834,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 						actionMap["block_ip_action_parameters"] = []interface{}{blockIPActionParametersMap}
 					}
 
-					returnCustomPageActionParametersMap := map[string]interface{}{}
 					if managedRuleGroups.Action.ReturnCustomPageActionParameters != nil {
+						returnCustomPageActionParametersMap := map[string]interface{}{}
 						if managedRuleGroups.Action.ReturnCustomPageActionParameters.ResponseCode != nil {
 							returnCustomPageActionParametersMap["response_code"] = managedRuleGroups.Action.ReturnCustomPageActionParameters.ResponseCode
 						}
@@ -1842,8 +1847,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 						actionMap["return_custom_page_action_parameters"] = []interface{}{returnCustomPageActionParametersMap}
 					}
 
-					redirectActionParametersMap := map[string]interface{}{}
 					if managedRuleGroups.Action.RedirectActionParameters != nil {
+						redirectActionParametersMap := map[string]interface{}{}
 						if managedRuleGroups.Action.RedirectActionParameters.URL != nil {
 							redirectActionParametersMap["url"] = managedRuleGroups.Action.RedirectActionParameters.URL
 						}
@@ -1854,22 +1859,22 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					managedRuleGroupsMap["action"] = []interface{}{actionMap}
 				}
 
-				ruleActionsList := make([]map[string]interface{}, 0, len(managedRuleGroups.RuleActions))
 				if managedRuleGroups.RuleActions != nil {
+					ruleActionsList := make([]map[string]interface{}, 0, len(managedRuleGroups.RuleActions))
 					for _, ruleActions := range managedRuleGroups.RuleActions {
 						ruleActionsMap := map[string]interface{}{}
 						if ruleActions.RuleId != nil {
 							ruleActionsMap["rule_id"] = ruleActions.RuleId
 						}
 
-						actionMap := map[string]interface{}{}
 						if ruleActions.Action != nil {
+							actionMap := map[string]interface{}{}
 							if ruleActions.Action.Name != nil {
 								actionMap["name"] = ruleActions.Action.Name
 							}
 
-							blockIPActionParametersMap := map[string]interface{}{}
 							if ruleActions.Action.BlockIPActionParameters != nil {
+								blockIPActionParametersMap := map[string]interface{}{}
 								if ruleActions.Action.BlockIPActionParameters.Duration != nil {
 									blockIPActionParametersMap["duration"] = ruleActions.Action.BlockIPActionParameters.Duration
 								}
@@ -1877,8 +1882,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 								actionMap["block_ip_action_parameters"] = []interface{}{blockIPActionParametersMap}
 							}
 
-							returnCustomPageActionParametersMap := map[string]interface{}{}
 							if ruleActions.Action.ReturnCustomPageActionParameters != nil {
+								returnCustomPageActionParametersMap := map[string]interface{}{}
 								if ruleActions.Action.ReturnCustomPageActionParameters.ResponseCode != nil {
 									returnCustomPageActionParametersMap["response_code"] = ruleActions.Action.ReturnCustomPageActionParameters.ResponseCode
 								}
@@ -1890,8 +1895,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 								actionMap["return_custom_page_action_parameters"] = []interface{}{returnCustomPageActionParametersMap}
 							}
 
-							redirectActionParametersMap := map[string]interface{}{}
 							if ruleActions.Action.RedirectActionParameters != nil {
+								redirectActionParametersMap := map[string]interface{}{}
 								if ruleActions.Action.RedirectActionParameters.URL != nil {
 									redirectActionParametersMap["url"] = ruleActions.Action.RedirectActionParameters.URL
 								}
@@ -1908,8 +1913,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					managedRuleGroupsMap["rule_actions"] = ruleActionsList
 				}
 
-				metaDataMap := map[string]interface{}{}
 				if managedRuleGroups.MetaData != nil {
+					metaDataMap := map[string]interface{}{}
 					if managedRuleGroups.MetaData.GroupDetail != nil {
 						metaDataMap["group_detail"] = managedRuleGroups.MetaData.GroupDetail
 					}
@@ -1918,8 +1923,8 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 						metaDataMap["group_name"] = managedRuleGroups.MetaData.GroupName
 					}
 
-					ruleDetailsList := make([]map[string]interface{}, 0, len(managedRuleGroups.MetaData.RuleDetails))
 					if managedRuleGroups.MetaData.RuleDetails != nil {
+						ruleDetailsList := make([]map[string]interface{}, 0, len(managedRuleGroups.MetaData.RuleDetails))
 						for _, ruleDetails := range managedRuleGroups.MetaData.RuleDetails {
 							ruleDetailsMap := map[string]interface{}{}
 							if ruleDetails.RuleId != nil {
@@ -1947,6 +1952,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 
 						metaDataMap["rule_details"] = ruleDetailsList
 					}
+
 					managedRuleGroupsMap["meta_data"] = []interface{}{metaDataMap}
 				}
 
@@ -2548,10 +2554,11 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				rulesList = append(rulesList, rulesMap)
 			}
 
-			rateLimitingRulesMap["rules"] = rulesList
+			if len(rulesList) > 0 {
+				rateLimitingRulesMap["rules"] = rulesList
+				securityPolicyMap["rate_limiting_rules"] = []interface{}{rateLimitingRulesMap}
+			}
 		}
-
-		securityPolicyMap["rate_limiting_rules"] = []interface{}{rateLimitingRulesMap}
 	}
 
 	if respData.ExceptionRules != nil {
@@ -2624,10 +2631,11 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				rulesList = append(rulesList, rulesMap)
 			}
 
-			exceptionRulesMap["rules"] = rulesList
+			if len(rulesList) > 0 {
+				exceptionRulesMap["rules"] = rulesList
+				securityPolicyMap["exception_rules"] = []interface{}{exceptionRulesMap}
+			}
 		}
-
-		securityPolicyMap["exception_rules"] = []interface{}{exceptionRulesMap}
 	}
 
 	securityPolicyList = append(securityPolicyList, securityPolicyMap)
@@ -2670,7 +2678,13 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 	request.Entity = &entity
 	request.TemplateId = &templateId
 	request.Host = &host
-	request.SecurityConfig = &teov20220901.SecurityConfig{}
+	request.SecurityConfig = &teov20220901.SecurityConfig{
+		RateLimitConfig: &teov20220901.RateLimitConfig{
+			RateLimitUserRules: []*teov20220901.RateLimitUserRule{},
+			Switch:             helper.String("on"),
+		},
+	}
+
 	if securityPolicyMap, ok := helper.InterfacesHeadMap(d, "security_policy"); ok {
 		securityPolicy := teov20220901.SecurityPolicy{}
 		if customRulesMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["custom_rules"]); ok {
@@ -2822,6 +2836,10 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 			}
 
 			securityPolicy.CustomRules = &customRules
+		} else {
+			securityPolicy.CustomRules = &teov20220901.CustomRules{
+				Rules: []*teov20220901.CustomRule{},
+			}
 		}
 
 		if managedRulesMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["managed_rules"]); ok {
@@ -3512,9 +3530,9 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 
 					rateLimitingRules.Rules = append(rateLimitingRules.Rules, &rateLimitingRule)
 				}
-			}
 
-			securityPolicy.RateLimitingRules = &rateLimitingRules
+				securityPolicy.RateLimitingRules = &rateLimitingRules
+			}
 		}
 
 		if exceptionRulesMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["exception_rules"]); ok {
@@ -3599,9 +3617,13 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 
 					exceptionRules.Rules = append(exceptionRules.Rules, &exceptionRule)
 				}
-			}
 
-			securityPolicy.ExceptionRules = &exceptionRules
+				securityPolicy.ExceptionRules = &exceptionRules
+			}
+		} else {
+			securityPolicy.ExceptionRules = &teov20220901.ExceptionRules{
+				Rules: []*teov20220901.ExceptionRule{},
+			}
 		}
 
 		request.SecurityPolicy = &securityPolicy
