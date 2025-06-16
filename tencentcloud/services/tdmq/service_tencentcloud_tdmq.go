@@ -1672,6 +1672,7 @@ func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := tdmq.NewDescribeRabbitMQVipInstanceRequest()
+	response := tdmq.NewDescribeRabbitMQVipInstanceResponse()
 	request.ClusterId = &instanceId
 
 	defer func() {
@@ -1680,16 +1681,28 @@ func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
 	var iacExtInfo connectivity.IacExtInfo
-	iacExtInfo.InstanceId = instanceId
-	response, err := me.client.UseTdmqClient(iacExtInfo).DescribeRabbitMQVipInstance(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmqClient(iacExtInfo).DescribeRabbitMQVipInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tdmq rabbitmqVipInstance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	rabbitmqVipInstance = response.Response
 	return
