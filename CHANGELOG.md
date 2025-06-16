@@ -1,3 +1,11 @@
+## 1.82.1(June 16 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket_domain_certificate_attachment: set sensitive for `cert` and `private_key` ([#3411](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3411))
+* resource/tencentcloud_kubernetes_addon_attachment: has been deprecated ([#3412](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3412))
+* resource/tencentcloud_teo_security_policy_config: add new item for `security_policy` ([#3413](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3413))
+
 ## 1.81.199(June 11 , 2025)
 
 ENHANCEMENTS:
