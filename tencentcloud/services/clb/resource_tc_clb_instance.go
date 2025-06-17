@@ -338,9 +338,9 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.Get("snat_ips").([]interface{}); ok && len(v) > 0 {
 		for i := range v {
 			item := v[i].(map[string]interface{})
-			subnetId := item["subnet_id"].(string)
-			snatIp := &clb.SnatIp{
-				SubnetId: &subnetId,
+			snatIp := &clb.SnatIp{}
+			if v, ok := item["subnet_id"].(string); ok && v != "" {
+				snatIp.SubnetId = &v
 			}
 
 			if v, ok := item["ip"].(string); ok && v != "" {
@@ -470,8 +470,9 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
 			if securityGroups[i] != nil {
-				securityGroup := securityGroups[i].(string)
-				sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+				if securityGroup, ok := securityGroups[i].(string); ok && securityGroup != "" {
+					sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+				}
 			}
 		}
 
@@ -891,8 +892,9 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		securityGroups := d.Get("security_groups").([]interface{})
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
-			securityGroup := securityGroups[i].(string)
-			sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			if securityGroup, ok := securityGroups[i].(string); ok && securityGroup != "" {
+				sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
