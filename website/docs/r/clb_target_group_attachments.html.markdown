@@ -4,26 +4,27 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_target_group_attachments"
 sidebar_current: "docs-tencentcloud-resource-clb_target_group_attachments"
 description: |-
-  Provides a resource to create a clb target_group_attachments
+  Provides a resource to create a CLB target group attachments
 ---
 
 # tencentcloud_clb_target_group_attachments
 
-Provides a resource to create a clb target_group_attachments
+Provides a resource to create a CLB target group attachments
 
-This resource supports bidirectional binding (target group binding to the load balancer, load balancer binding to the target group). When choosing either the load balancer or the target group as the binding target, up to 20 combinations can be bound at most.
+~> **NOTE:** This resource supports bidirectional binding (target group binding to the load balancer, load balancer binding to the target group). When choosing either the load balancer or the target group as the binding target, up to 20 combinations can be bound at most.
 
 ## Example Usage
 
 ### Load balancer binding to the target group
 
 ```hcl
-resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" {
-  load_balancer_id = "lb-phbx2420"
+resource "tencentcloud_clb_target_group_attachments" "example" {
+  load_balancer_id = "lb-lmgp1eis"
   associations {
-    listener_id     = "lbl-m2q6sp9m"
-    target_group_id = "lbtg-5xunivs0"
-    location_id     = "loc-jjqr0ric"
+    listener_id     = "lbl-jbdfcswy"
+    target_group_id = "lbtg-bjosq37w"
+    location_id     = "loc-bjl41tpc"
+    weight          = "10"
   }
 }
 ```
@@ -31,12 +32,13 @@ resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" 
 ### Target group binding to the load balancer
 
 ```hcl
-resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" {
-  target_group_id = "lbtg-5xunivs0"
+resource "tencentcloud_clb_target_group_attachments" "example" {
+  load_balancer_id = "lb-lmgp1eis"
   associations {
-    listener_id      = "lbl-m2q6sp9m"
+    listener_id      = "lbl-jbdfcswy"
     load_balancer_id = "lb-phbx2420"
-    location_id      = "loc-jjqr0ric"
+    location_id      = "loc-bjl41tpc"
+    weight           = "10"
   }
 }
 ```
@@ -55,6 +57,7 @@ The `associations` object supports the following:
 * `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, when the binding target is target group, load_balancer_id in associations is required.
 * `location_id` - (Optional, String, ForceNew) Forwarding rule ID.
 * `target_group_id` - (Optional, String, ForceNew) Target group ID, when the binding target is clb, the target_group_id in associations is required.
+* `weight` - (Optional, String, ForceNew) Target group weight, range ['0', '100']. It only takes effect when binding to the v2 target group.
 
 ## Attributes Reference
 

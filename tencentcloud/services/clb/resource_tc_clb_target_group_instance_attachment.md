@@ -62,13 +62,19 @@ data "tencentcloud_instances" "instances" {
 resource "tencentcloud_clb_target_group" "example" {
   target_group_name = "tf-example"
   vpc_id            = tencentcloud_vpc.vpc.id
+  port              = 8090
+  type              = "v1"
+
+  tags {
+    tag_key   = "tagKey"
+    tag_value = "tagValue"
+  }
 }
 
 resource "tencentcloud_clb_target_group_instance_attachment" "example" {
   target_group_id = tencentcloud_clb_target_group.example.id
-  bind_ip         = data.tencentcloud_instances.instances.instance_list[0].private_ip
+  bind_ip         = tencentcloud_instance.example.private_ip
   port            = 8080
-  weight          = 10
 }
 ```
 
@@ -77,5 +83,5 @@ Import
 CLB target group instance attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_target_group_instance_attachment.example lbtg-3k3io0i0#172.16.48.18#8080
+$ terraform import tencentcloud_clb_target_group_instance_attachment.example lbtg-3k3io0i0#10.0.30.25#8080
 ```

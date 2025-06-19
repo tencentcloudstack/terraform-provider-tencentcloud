@@ -53,6 +53,13 @@ resource "tencentcloud_clb_listener_rule" "example" {
 resource "tencentcloud_clb_target_group" "example" {
   target_group_name = "tf-example"
   vpc_id            = tencentcloud_vpc.vpc.id
+  port              = 8090
+  type              = "v1"
+
+  tags {
+    tag_key   = "tagKey"
+    tag_value = "tagValue"
+  }
 }
 
 // create clb target group attachment

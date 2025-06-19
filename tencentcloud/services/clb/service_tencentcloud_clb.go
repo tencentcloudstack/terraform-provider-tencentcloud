@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -1378,25 +1379,31 @@ func (me *ClbService) DeleteTarget(ctx context.Context, targetGroupId string) er
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func (me *ClbService) DescribeTargetGroups(ctx context.Context, targetGroupId string, filters map[string]string) (targetGroupInfos []*clb.TargetGroupInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := clb.NewDescribeTargetGroupsRequest()
+	response := clb.NewDescribeTargetGroupsResponse()
 	if targetGroupId != "" {
 		request.TargetGroupIds = []*string{&targetGroupId}
 	}
+
 	for k, v := range filters {
 		tmpFilter := clb.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
+
 		request.Filters = append(request.Filters, &tmpFilter)
 	}
 
@@ -1405,26 +1412,43 @@ func (me *ClbService) DescribeTargetGroups(ctx context.Context, targetGroupId st
 	for {
 		request.Offset = &offset
 		request.Limit = &pageSize
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClbClient().DescribeTargetGroups(request)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseClbClient().DescribeTargetGroups(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe target group failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil || len(response.Response.TargetGroupSet) < 1 {
+		if len(response.Response.TargetGroupSet) < 1 {
 			break
 		}
+
 		targetGroupInfos = append(targetGroupInfos, response.Response.TargetGroupSet...)
 		if len(response.Response.TargetGroupSet) < int(pageSize) {
 			break
 		}
+
 		offset += pageSize
 	}
+
 	return
 }
 
@@ -1510,7 +1534,7 @@ func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clb
 	return
 }
 
-func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []string) (has bool, err error) {
+func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []string) (targetInfo *clb.TargetGroupInfo, has bool, err error) {
 	var (
 		logId       = tccommon.GetLogId(ctx)
 		targetInfos []*clb.TargetGroupInfo
@@ -1540,15 +1564,17 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 			if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
 				*rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *rule.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 				if originListenerId == ids[1] && originClbId == ids[2] {
-					return true, nil
+					targetInfo = info
+					return targetInfo, true, nil
 				}
 			} else if originListenerId == ids[1] && originClbId == ids[2] && originLocationId == ids[3] {
-				return true, nil
+				targetInfo = info
+				return targetInfo, true, nil
 			}
 		}
 	}
 
-	return false, nil
+	return nil, false, nil
 }
 
 func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targetGroupId, listenerId, clbId, locationId string) (errRet error) {
@@ -2513,7 +2539,20 @@ func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context,
 				info = append(info, "null")
 			}
 
+			if associations.Weight != nil {
+				weight := *associations.Weight
+				info = append(info, strconv.FormatUint(weight, 10))
+			} else {
+				info = append(info, "null")
+			}
+
 			key := strings.Join(info, tccommon.FILED_SP)
+			fmt.Println(11111111)
+			fmt.Println(11111111)
+			fmt.Println(key)
+			fmt.Println(associationsSet)
+			fmt.Println(11111111)
+			fmt.Println(11111111)
 			if _, ok := associationsSet[key]; ok {
 				result = append(result, key)
 			}

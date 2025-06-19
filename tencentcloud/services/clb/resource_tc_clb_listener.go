@@ -281,6 +281,13 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to enable SNAT.",
 			},
+			"full_end_ports": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "End port of the full port segment listener.",
+				Elem:        &schema.Schema{Type: schema.TypeInt},
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -409,6 +416,15 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("snat_enable"); ok {
 		request.SnatEnable = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("full_end_ports"); ok {
+		fullEndPorts := v.([]interface{})
+		request.FullEndPorts = make([]*int64, 0, len(fullEndPorts))
+		for i := range fullEndPorts {
+			item := fullEndPorts[i].(int)
+			request.FullEndPorts = append(request.FullEndPorts, helper.IntInt64(item))
+		}
 	}
 
 	var response *clb.CreateListenerResponse

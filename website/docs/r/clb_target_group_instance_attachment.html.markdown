@@ -73,13 +73,19 @@ data "tencentcloud_instances" "instances" {
 resource "tencentcloud_clb_target_group" "example" {
   target_group_name = "tf-example"
   vpc_id            = tencentcloud_vpc.vpc.id
+  port              = 8090
+  type              = "v1"
+
+  tags {
+    tag_key   = "tagKey"
+    tag_value = "tagValue"
+  }
 }
 
 resource "tencentcloud_clb_target_group_instance_attachment" "example" {
   target_group_id = tencentcloud_clb_target_group.example.id
-  bind_ip         = data.tencentcloud_instances.instances.instance_list[0].private_ip
+  bind_ip         = tencentcloud_instance.example.private_ip
   port            = 8080
-  weight          = 10
 }
 ```
 
@@ -88,9 +94,9 @@ resource "tencentcloud_clb_target_group_instance_attachment" "example" {
 The following arguments are supported:
 
 * `bind_ip` - (Required, String, ForceNew) The Intranet IP of the target group instance.
-* `port` - (Required, Int, ForceNew) Port of the target group instance.
+* `port` - (Required, Int, ForceNew) The port of the target group instance, fully listening to the target group does not support passing this field.
 * `target_group_id` - (Required, String, ForceNew) Target group ID.
-* `weight` - (Required, Int) The weight of the target group instance.
+* `weight` - (Required, Int) Weight of target group instance v2 target group needs to be configured with weight. When calling CreateTargetGroup interface to create target group, either this parameter or Weight parameter in the creation interface must be filled in. Value range: 0-100.
 
 ## Attributes Reference
 
@@ -105,6 +111,6 @@ In addition to all arguments above, the following attributes are exported:
 CLB target group instance attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_target_group_instance_attachment.example lbtg-3k3io0i0#172.16.48.18#8080
+$ terraform import tencentcloud_clb_target_group_instance_attachment.example lbtg-3k3io0i0#10.0.30.25#8080
 ```
 
