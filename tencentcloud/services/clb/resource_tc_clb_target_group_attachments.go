@@ -309,14 +309,6 @@ func setString(fieldName string, value string, request *clb.TargetGroupAssociati
 	}
 }
 
-func setInt(fieldName string, value int, request *clb.TargetGroupAssociation) {
-	switch fieldName {
-	case "weight":
-		request.Weight = helper.IntInt64(value)
-	default:
-		log.Printf("Invalid field name: %s\n", fieldName)
-	}
-}
 func isBindFromClb(id string) bool {
 	re := regexp.MustCompile(`^(.*?)-`)
 	match := re.FindStringSubmatch(id)
