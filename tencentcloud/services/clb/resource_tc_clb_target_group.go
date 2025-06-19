@@ -46,8 +46,7 @@ func ResourceTencentCloudClbTargetGroup() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "The backend server of target group bind.",
-				Deprecated: "It has been deprecated from version 1.77.3. " +
-					"please use `tencentcloud_clb_target_group_instance_attachment` instead.",
+				Deprecated:  "It has been deprecated from version 1.77.3. Please use `tencentcloud_clb_target_group_instance_attachment` instead.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"bind_ip": {
@@ -202,9 +201,7 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 	}
 
 	d.SetId(*response.Response.TargetGroupId)
-
 	return resourceTencentCloudClbTargetRead(d, meta)
-
 }
 
 func resourceTencentCloudClbTargetRead(d *schema.ResourceData, meta interface{}) error {
@@ -334,10 +331,5 @@ func resourceTencentCloudClbTargetDelete(d *schema.ResourceData, meta interface{
 		targetGroupId = d.Id()
 	)
 
-	err := clbService.DeleteTarget(ctx, targetGroupId)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return clbService.DeleteTarget(ctx, targetGroupId)
 }

@@ -43,14 +43,14 @@ func ResourceTencentCloudClbTGAttachmentInstance() *schema.Resource {
 			},
 			"port": {
 				Type:        schema.TypeInt,
-				Optional:    true,
+				Required:    true,
 				ForceNew:    true,
 				Description: "The port of the target group instance, fully listening to the target group does not support passing this field.",
 			},
 			"weight": {
 				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "The weight of the target group instance.",
+				Required:    true,
+				Description: "The weight of the target group instance. Value range: 0-100.",
 			},
 		},
 	}
@@ -115,7 +115,6 @@ func resourceTencentCloudClbTGAttachmentInstanceCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(strings.Join([]string{targetGroupId, bindIp, strconv.Itoa(port)}, tccommon.FILED_SP))
-
 	return resourceTencentCloudClbTGAttachmentInstanceRead(d, meta)
 }
 
@@ -233,10 +232,5 @@ func resourceTencentCloudClbTGAttachmentInstanceDelete(d *schema.ResourceData, m
 		return err
 	}
 
-	err = clbService.DeregisterTargetInstances(ctx, targetGroupId, bindIp, port)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return clbService.DeregisterTargetInstances(ctx, targetGroupId, bindIp, port)
 }

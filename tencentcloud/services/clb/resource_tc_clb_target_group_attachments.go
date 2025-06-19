@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -72,11 +73,11 @@ func ResourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 							Description: "Forwarding rule ID.",
 						},
 						"weight": {
-							Type:         schema.TypeInt,
-							Optional:     true,
-							ForceNew:     true,
-							ValidateFunc: tccommon.ValidateIntegerInRange(0, 100),
-							Description:  "Target group weight, range [0, 100]. It only takes effect when binding to the v2 target group. If it does not exist, it defaults to 10.",
+							// why int to string? (fix map int zero value)
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Target group weight, range ['0', '100']. It only takes effect when binding to the v2 target group.",
 						},
 					},
 				},
@@ -196,15 +197,15 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 	}
 
 	if len(targetGroupAttachments) < 1 {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `ClbTargetGroupAttachments` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
 	var associationsList []interface{}
 
 	for _, attachment := range targetGroupAttachments {
 		info := strings.Split(attachment, tccommon.FILED_SP)
-		if len(info) != 4 {
+		if len(info) != 5 {
 			return fmt.Errorf("id is broken,%s", info)
 		}
 		associationsMap := map[string]interface{}{}
@@ -221,6 +222,9 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 		}
 		if info[3] != "" && info[3] != "null" {
 			associationsMap["location_id"] = info[3]
+		}
+		if info[4] != "" && info[4] != "null" {
+			associationsMap["weight"] = info[4]
 		}
 		associationsList = append(associationsList, associationsMap)
 	}
@@ -280,10 +284,6 @@ func parseParamToRequest(d *schema.ResourceData, param string, id string) (assoc
 					if v, ok := dMap[name].(string); ok && v != "" {
 						setString(name, v, &targetGroupAssociation)
 					}
-
-					if v, ok := dMap[name].(int); ok {
-						setInt(name, v, &targetGroupAssociation)
-					}
 				}
 			}
 			associations = append(associations, &targetGroupAssociation)
@@ -301,6 +301,9 @@ func setString(fieldName string, value string, request *clb.TargetGroupAssociati
 		request.ListenerId = helper.String(value)
 	case "location_id":
 		request.LocationId = helper.String(value)
+	case "weight":
+		valueInt, _ := strconv.Atoi(value)
+		request.Weight = helper.IntInt64(valueInt)
 	default:
 		log.Printf("Invalid field name: %s\n", fieldName)
 	}
@@ -337,9 +340,10 @@ func margeReadRequest(d *schema.ResourceData) ([]string, map[string]struct{}) {
 			processIds(resourceId, dMap, "target_group_id", isBindFromClb(resourceId), &ids)
 			processIds(resourceId, dMap, "listener_id", isBindFromClb(resourceId), &ids)
 			processIds(resourceId, dMap, "location_id", isBindFromClb(resourceId), &ids)
+			processIds(resourceId, dMap, "weight", isBindFromClb(resourceId), &ids)
 
-			if groupId, ok := dMap["target_group_id"]; ok && groupId.(string) != "" {
-				targetGroupList = append(targetGroupList, groupId.(string))
+			if groupId, ok := dMap["target_group_id"].(string); ok && groupId != "" {
+				targetGroupList = append(targetGroupList, groupId)
 			}
 
 			associationsSet[strings.Join(ids, tccommon.FILED_SP)] = struct{}{}
@@ -356,11 +360,10 @@ func processIds(id string, dMap map[string]interface{}, key string, clbFlag bool
 	} else if !clbFlag && key == "target_group_id" {
 		*ids = append(*ids, id)
 	} else {
-		if v, ok := dMap[key]; ok && v.(string) != "" {
-			*ids = append(*ids, v.(string))
+		if v, ok := dMap[key].(string); ok && v != "" {
+			*ids = append(*ids, v)
 		} else {
 			*ids = append(*ids, "null")
 		}
-
 	}
 }

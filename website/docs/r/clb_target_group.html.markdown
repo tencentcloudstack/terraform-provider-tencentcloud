@@ -73,7 +73,7 @@ The following arguments are supported:
 * `port` - (Optional, Int) The default port of target group, add server after can use it. If `full_listen_switch` is true, setting this parameter is not supported.
 * `protocol` - (Optional, String) Target group backend forwarding protocol. This item is required for the v2 new version target group. Currently supports `TCP`, `UDP`.
 * `tags` - (Optional, List) Label.
-* `target_group_instances` - (Optional, List, **Deprecated**) It has been deprecated from version 1.77.3. please use `tencentcloud_clb_target_group_instance_attachment` instead. The backend server of target group bind.
+* `target_group_instances` - (Optional, List, **Deprecated**) It has been deprecated from version 1.77.3. Please use `tencentcloud_clb_target_group_instance_attachment` instead. The backend server of target group bind.
 * `target_group_name` - (Optional, String) Target group name.
 * `type` - (Optional, String) Target group type, currently supports v1 (old version target group), v2 (new version target group), defaults to v1 (old version target group).
 * `vpc_id` - (Optional, String, ForceNew) VPC ID, default is based on the network.

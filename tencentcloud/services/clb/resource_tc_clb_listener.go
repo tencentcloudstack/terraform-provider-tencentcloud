@@ -284,6 +284,7 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 			"full_end_ports": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "End port of the full port segment listener.",
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 			},
