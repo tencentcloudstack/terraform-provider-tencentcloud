@@ -50,7 +50,7 @@ func ResourceTencentCloudClbTGAttachmentInstance() *schema.Resource {
 			"weight": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The weight of the target group instance. Value range: 0-100.",
+				Description: "Weight of target group instance v2 target group needs to be configured with weight. When calling CreateTargetGroup interface to create target group, either this parameter or Weight parameter in the creation interface must be filled in. Value range: 0-100.",
 			},
 		},
 	}

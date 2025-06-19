@@ -75,7 +75,6 @@ resource "tencentcloud_clb_target_group_instance_attachment" "example" {
   target_group_id = tencentcloud_clb_target_group.example.id
   bind_ip         = tencentcloud_instance.example.private_ip
   port            = 8080
-  weight          = 10
 }
 ```
 

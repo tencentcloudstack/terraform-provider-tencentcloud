@@ -86,7 +86,6 @@ resource "tencentcloud_clb_target_group_instance_attachment" "example" {
   target_group_id = tencentcloud_clb_target_group.example.id
   bind_ip         = tencentcloud_instance.example.private_ip
   port            = 8080
-  weight          = 10
 }
 ```
 
@@ -97,7 +96,7 @@ The following arguments are supported:
 * `bind_ip` - (Required, String, ForceNew) The Intranet IP of the target group instance.
 * `port` - (Required, Int, ForceNew) The port of the target group instance, fully listening to the target group does not support passing this field.
 * `target_group_id` - (Required, String, ForceNew) Target group ID.
-* `weight` - (Required, Int) The weight of the target group instance. Value range: 0-100.
+* `weight` - (Required, Int) Weight of target group instance v2 target group needs to be configured with weight. When calling CreateTargetGroup interface to create target group, either this parameter or Weight parameter in the creation interface must be filled in. Value range: 0-100.
 
 ## Attributes Reference
 

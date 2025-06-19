@@ -79,7 +79,6 @@ resource "tencentcloud_clb_target_group_attachment" "example" {
   target_group_id = tencentcloud_clb_target_group.example.id
   listener_id     = tencentcloud_clb_listener.example.listener_id
   rule_id         = tencentcloud_clb_listener_rule.example.rule_id
-  weight          = 10
 }
 ```
 
