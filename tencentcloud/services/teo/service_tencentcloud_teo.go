@@ -1836,10 +1836,12 @@ func (me *TeoService) DescribeTeoBindSecurityTemplateById(ctx context.Context, z
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseTeoV20220901Client().DescribeSecurityTemplateBindings(request)
+
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if response != nil && response.Response != nil {
 		if response.Response.SecurityTemplate != nil && len(response.Response.SecurityTemplate) > 0 {
@@ -1855,5 +1857,117 @@ func (me *TeoService) DescribeTeoBindSecurityTemplateById(ctx context.Context, z
 			}
 		}
 	}
+	return
+}
+
+func (me *TeoService) DescribeTeoPlansById(ctx context.Context, planId string) (ret *teo.Plan, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribePlansRequest()
+	response := teo.NewDescribePlansResponse()
+	request.Filters = []*teo.Filter{
+		{
+			Name:   helper.String("plan-id"),
+			Values: helper.Strings([]string{planId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribePlans(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Plans == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe plans failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Plans) > 0 {
+		ret = response.Response.Plans[0]
+	}
+
+	return
+}
+
+func (me *TeoService) DescribeTeoPlansByFilters(ctx context.Context, paramMap map[string]interface{}) (ret []*teo.Plan, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribePlansRequest()
+	response := teo.NewDescribePlansResponse()
+
+	for k, v := range paramMap {
+		if k == "Filters" {
+			request.Filters = v.([]*teov20220901.Filter)
+		}
+
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+
+		if k == "Direction" {
+			request.Direction = v.(*string)
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 200
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoClient().DescribePlans(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe plans failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.Plans) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Plans...)
+		if len(response.Response.Plans) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
 	return
 }

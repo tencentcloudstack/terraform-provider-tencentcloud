@@ -1488,6 +1488,7 @@ Data Source
 tencentcloud_teo_zone_available_plans
 tencentcloud_teo_rule_engine_settings
 tencentcloud_teo_zones
+tencentcloud_teo_plans
 
 Resource
 tencentcloud_teo_zone
