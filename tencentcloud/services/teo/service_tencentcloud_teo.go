@@ -1819,3 +1819,41 @@ func (me *TeoService) DescribeTeoDnsRecordById(ctx context.Context, zoneId, reco
 	}
 	return
 }
+
+func (me *TeoService) DescribeTeoBindSecurityTemplateById(ctx context.Context, zoneId string, templateId string, entity string) (ret *teov20220901.EntityStatus, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeSecurityTemplateBindingsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.TemplateId = []*string{helper.String(templateId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeSecurityTemplateBindings(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response != nil && response.Response != nil {
+		if response.Response.SecurityTemplate != nil && len(response.Response.SecurityTemplate) > 0 {
+			if response.Response.SecurityTemplate[0] != nil && response.Response.SecurityTemplate[0].TemplateScope != nil && len(response.Response.SecurityTemplate[0].TemplateScope) > 0 {
+				if response.Response.SecurityTemplate[0].TemplateScope[0] != nil && len(response.Response.SecurityTemplate[0].TemplateScope[0].EntityStatus) > 0 {
+					for _, v := range response.Response.SecurityTemplate[0].TemplateScope[0].EntityStatus {
+						if v != nil && *v.Entity == entity {
+							ret = v
+							return
+						}
+					}
+				}
+			}
+		}
+	}
+	return
+}
