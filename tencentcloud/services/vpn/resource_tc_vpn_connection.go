@@ -647,10 +647,8 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-	}
-
-	if vpnConnectionId == "" {
-		return fmt.Errorf("VPN connection id is nil.")
+	} else {
+		vpnConnectionId = *response.Response.VpnConnection.VpnConnectionId
 	}
 
 	d.SetId(vpnConnectionId)
