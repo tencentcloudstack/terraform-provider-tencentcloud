@@ -34,6 +34,12 @@ func DataSourceTencentCloudEips() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The elastic ip address.",
+				Deprecated:  "Use 'address_ip' instead.",
+			},
+			"address_ip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The elastic ip address.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -73,6 +79,11 @@ func DataSourceTencentCloudEips() *schema.Resource {
 							Description: "The EIP current status.",
 						},
 						"public_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The elastic ip address.",
+						},
+						"address_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The elastic ip address.",
@@ -124,6 +135,9 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 	if v, ok := d.GetOk("public_ip"); ok {
 		filter["public-ip"] = []string{v.(string)}
 	}
+	if v, ok := d.GetOk("address_ip"); ok {
+		filter["address-ip"] = []string{v.(string)}
+	}
 
 	tags := helper.GetTags(d, "tags")
 
@@ -163,6 +177,7 @@ EIP_LOOP:
 			"eip_type":    eip.AddressType,
 			"status":      eip.AddressStatus,
 			"public_ip":   eip.AddressIp,
+			"address_ip":  eip.AddressIp,
 			"instance_id": eip.InstanceId,
 			"eni_id":      eip.NetworkInterfaceId,
 			"create_time": eip.CreatedTime,
