@@ -1,3 +1,16 @@
+## 1.82.2(June 20 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_teo_plans` ([#3416](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3416))
+* **New Resource:** `tencentcloud_teo_bind_security_template` ([#3393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3393))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: optmize `security_groups` nil value ([#3415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3415))
+* resource/tencentcloud_postgresql_clone_db_instance:  optmize doc and code logic ([#3414](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3414))
+* resource/tencentcloud_vpn_connection: optmize nil id value ([#3417](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3417))
+
 ## 1.82.1(June 16 , 2025)
 
 ENHANCEMENTS:
