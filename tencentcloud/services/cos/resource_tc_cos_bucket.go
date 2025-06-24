@@ -358,7 +358,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 						},
 						"filter_prefix": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "Object key prefix identifying one or more objects to which the rule applies.",
 						},
 						"transition": {
