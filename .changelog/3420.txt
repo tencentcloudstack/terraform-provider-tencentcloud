@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ckafka_user: optmize read function code logic
+```
