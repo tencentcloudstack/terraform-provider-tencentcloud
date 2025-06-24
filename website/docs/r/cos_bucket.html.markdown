@@ -491,9 +491,9 @@ The `expiration` object of `lifecycle_rules` supports the following:
 
 The `lifecycle_rules` object supports the following:
 
-* `filter_prefix` - (Required, String) Object key prefix identifying one or more objects to which the rule applies.
 * `abort_incomplete_multipart_upload` - (Optional, Set) Set the maximum time a multipart upload is allowed to remain running.
 * `expiration` - (Optional, Set) Specifies a period in the object's expire (documented below).
+* `filter_prefix` - (Optional, String) Object key prefix identifying one or more objects to which the rule applies.
 * `id` - (Optional, String) A unique identifier for the rule. It can be up to 255 characters.
 * `non_current_expiration` - (Optional, Set) Specifies when non current object versions shall expire.
 * `non_current_transition` - (Optional, Set) Specifies a period in the non current object's transitions.
