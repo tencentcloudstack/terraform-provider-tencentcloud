@@ -233,6 +233,23 @@ func TestAccTencentCloudElasticsearchInstanceResource_publicAccess(t *testing.T)
 	})
 }
 
+func TestAccTencentCloudElasticsearchInstanceResource_https(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessHttps,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "protocol", "https"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckElasticsearchInstanceDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -509,6 +526,36 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	license_type         = "basic"
 	basic_security_type  = 2
 	public_access = "OPEN"
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.2"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPublicAccessHttps = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	protocol = "https"
 	es_acl {
 	  white_list = [
 		"127.0.0.2"
