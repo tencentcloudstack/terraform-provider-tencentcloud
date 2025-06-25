@@ -303,6 +303,12 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 					},
 				},
 			},
+			"protocol": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Create an https cluster, default is http.",
+			},
 			// computed
 			"elasticsearch_domain": {
 				Type:        schema.TypeString,
@@ -444,6 +450,9 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			}
 			request.NodeInfoList = append(request.NodeInfoList, &info)
 		}
+	}
+	if v, ok := d.GetOk("protocol"); ok {
+		request.Protocol = helper.String(v.(string))
 	}
 	//internal version: replace reqTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace reqTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -709,6 +718,7 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("kibana_public_access", instance.KibanaPublicAccess)
 	_ = d.Set("kibana_private_access", instance.KibanaPrivateAccess)
+	_ = d.Set("protocol", instance.Protocol)
 
 	multiZoneInfos := make([]map[string]interface{}, 0, len(instance.MultiZoneInfo))
 	for _, item := range instance.MultiZoneInfo {
@@ -805,6 +815,14 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	instanceId := d.Id()
 	elasticsearchService := ElasticsearchService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+	}
+
+	immutableArgs := []string{"protocol"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	d.Partial(true)
