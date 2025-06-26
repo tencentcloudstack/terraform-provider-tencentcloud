@@ -1,3 +1,13 @@
+## 1.82.3(June 26 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_user: optmize read function code logic ([#3420](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3420))
+* resource/tencentcloud_cos_bucket: update `filter_prefix` property ([#3419](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3419))
+* resource/tencentcloud_elasticsearch_instance: support protocol ([#3421](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3421))
+* resource/tencentcloud_security_group_rule_set: update doc ([#3422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3422))
+* resource/tencentcloud_teo_acceleration_domain: add new params ([#3418](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3418))
+
 ## 1.82.2(June 20 , 2025)
 
 FEATURES:
