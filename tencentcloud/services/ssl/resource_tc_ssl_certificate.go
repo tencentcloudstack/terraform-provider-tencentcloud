@@ -39,8 +39,8 @@ func ResourceTencentCloudSslCertificate() *schema.Resource {
 			"type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(SSL_CERT_TYPE),
 				ForceNew:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue(SSL_CERT_TYPE),
 				Description:  "Type of the SSL certificate. Valid values: `CA` and `SVR`.",
 			},
 			"project_id": {
@@ -91,6 +91,12 @@ func ResourceTencentCloudSslCertificate() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Tags of the SSL certificate.",
+			},
+			"notification_switch": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Certificate expiration notification switch. 0: Do not ignore certificate expiration notifications. 1: Ignore certificate expiration notifications. Default is 0.",
 			},
 			// computed
 			"product_zh_name": {
@@ -205,6 +211,28 @@ func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interfac
 		}
 	}
 	d.SetId(id)
+
+	// set notification_switch on
+	if v, ok := d.GetOkExists("notification_switch"); ok {
+		if v.(int) == 1 {
+			request := ssl.NewModifyCertificatesExpiringNotificationSwitchRequest()
+			request.CertificateIds = helper.Strings([]string{id})
+			request.SwitchStatus = helper.IntUint64(v.(int))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, e := m.(tccommon.ProviderMeta).GetAPIV3Conn().UseSSLCertificateClient().ModifyCertificatesExpiringNotificationSwitch(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify certificate switch status failed, reason: %v", logId, err)
+				return err
+			}
+		}
+	}
 
 	return resourceTencentCloudSslCertificateRead(d, m)
 }
@@ -363,6 +391,28 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 			return err
 		}
 	}
+
+	if d.HasChange("notification_switch") {
+		if v, ok := d.GetOkExists("notification_switch"); ok {
+			request := ssl.NewModifyCertificatesExpiringNotificationSwitchRequest()
+			request.CertificateIds = helper.Strings([]string{id})
+			request.SwitchStatus = helper.IntUint64(v.(int))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, e := m.(tccommon.ProviderMeta).GetAPIV3Conn().UseSSLCertificateClient().ModifyCertificatesExpiringNotificationSwitch(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify certificate switch status failed, reason: %v", logId, err)
+				return err
+			}
+		}
+	}
+
 	d.Partial(false)
 	return resourceTencentCloudSslCertificateRead(d, m)
 }
