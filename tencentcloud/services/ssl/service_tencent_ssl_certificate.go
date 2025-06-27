@@ -1320,7 +1320,7 @@ func (me *SslService) DescribeSslDescribeHostVodInstanceListByFilter(ctx context
 	return
 }
 
-func (me *SslService) DescribeSslDescribeHostWafInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostWafInstanceList []*ssl.LiveInstanceDetail, errRet error) {
+func (me *SslService) DescribeSslDescribeHostWafInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostWafInstanceList []*ssl.WafInstanceDetail, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = ssl.NewDescribeHostWafInstanceListRequest()

@@ -35,6 +35,9 @@ const (
 	// CAM鉴权出现错误。
 	FAILEDOPERATION_CAMAUTHORIZEDFAIL = "FailedOperation.CAMAuthorizedFail"
 
+	// 由于未知原因证书取消失败，请您刷新页面后重试
+	FAILEDOPERATION_CANCELAUDITCERTIFICATEFAILED = "FailedOperation.CancelAuditCertificateFailed"
+
 	// 取消订单失败。
 	FAILEDOPERATION_CANCELORDERFAILED = "FailedOperation.CancelOrderFailed"
 
@@ -50,6 +53,12 @@ const (
 	// 温馨提示：上传的证书内容不符合CA证书的标准格式，请您核对证书类型是否有误
 	FAILEDOPERATION_CERTIFICATECAERROR = "FailedOperation.CertificateCaError"
 
+	// 多年期证书非首年无法终止审核，如您暂时不用证书，无需验证域名即可
+	FAILEDOPERATION_CERTIFICATECANCELFAILEDMULTI = "FailedOperation.CertificateCancelFailedMulti"
+
+	// 温馨提示：证书链检测异常，请核对每段证书是否存在异常
+	FAILEDOPERATION_CERTIFICATECHAINERROR = "FailedOperation.CertificateChainError"
+
 	// 记录状态必须完结才可以执行该操作。
 	FAILEDOPERATION_CERTIFICATEDEPLOYDETAILROLLBACKSTATUSINVALID = "FailedOperation.CertificateDeployDetailRollbackStatusInvalid"
 
@@ -58,6 +67,9 @@ const (
 
 	// 已选择的云资源无实例，无法更新，请重新核对后重试。
 	FAILEDOPERATION_CERTIFICATEDEPLOYINSTANCEEMPTY = "FailedOperation.CertificateDeployInstanceEmpty"
+
+	// 部署格式错误
+	FAILEDOPERATION_CERTIFICATEDEPLOYINSTANCEFORMATERROR = "FailedOperation.CertificateDeployInstanceFormatError"
 
 	// 证书部署记录不存在。
 	FAILEDOPERATION_CERTIFICATEDEPLOYNOTEXIST = "FailedOperation.CertificateDeployNotExist"
@@ -89,6 +101,15 @@ const (
 	// 云资源类型无效。
 	FAILEDOPERATION_CERTIFICATEHOSTRESOURCETYPEINVALID = "FailedOperation.CertificateHostResourceTypeInvalid"
 
+	// 邮箱不能为空
+	FAILEDOPERATION_CERTIFICATEINFOSUBMITCONTACTEMAILEMPTY = "FailedOperation.CertificateInfoSubmitContactEmailEmpty"
+
+	// 您输入的域名%s格式有误，请您核对后重新提交
+	FAILEDOPERATION_CERTIFICATEINFOSUBMITDOMAININVALID = "FailedOperation.CertificateInfoSubmitDomainInvalid"
+
+	// 当前证书状态不可以提交资料
+	FAILEDOPERATION_CERTIFICATEINFOSUBMITSTATUSINVALID = "FailedOperation.CertificateInfoSubmitStatusInvalid"
+
 	// 证书不符合标准。
 	FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
 
@@ -97,6 +118,9 @@ const (
 
 	// 证书与私钥不对应。
 	FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
+
+	// 该证书已设置成不允许下载。
+	FAILEDOPERATION_CERTIFICATENOTALLOWDOWNLOAD = "FailedOperation.CertificateNotAllowDownload"
 
 	// 证书不可用，请检查后再试。
 	FAILEDOPERATION_CERTIFICATENOTAVAILABLE = "FailedOperation.CertificateNotAvailable"
@@ -107,11 +131,23 @@ const (
 	// 证书不存在。
 	FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 
+	// 该证书不存在或已签发。
+	FAILEDOPERATION_CERTIFICATENOTFOUNDORAUDITED = "FailedOperation.CertificateNotFoundOrAudited"
+
 	// 该证书不存在或不可取消。
 	FAILEDOPERATION_CERTIFICATENOTFOUNDORCANTCANCEL = "FailedOperation.CertificateNotFoundOrCantCancel"
 
+	// 订单正在处理中，请您耐心等待
+	FAILEDOPERATION_CERTIFICATEORDERSUBMITPROCESSING = "FailedOperation.CertificateOrderSubmitProcessing"
+
+	// 当前选择的根证书无效，请您重新选择
+	FAILEDOPERATION_CERTIFICATEORDERSUBMITROOTCAINVALID = "FailedOperation.CertificateOrderSubmitRootCAInvalid"
+
 	// 解析失败，请检查证书是否符合标准，请留意是否有多余的空格
 	FAILEDOPERATION_CERTIFICATEPARSEERROR = "FailedOperation.CertificateParseError"
+
+	// 您输入的邮箱格式有误，请您核对后重新提交
+	FAILEDOPERATION_CERTIFICATEPREVERIFYEMAILINVALID = "FailedOperation.CertificatePreVerifyEmailInvalid"
 
 	// 当前证书状态不允许下载。
 	FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWDOWNLOAD = "FailedOperation.CertificateStatusNotAllowDownload"
@@ -121,6 +157,12 @@ const (
 
 	// 证书当前状态不允许进行域名验证。
 	FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWVERIFY = "FailedOperation.CertificateStatusNotAllowVerify"
+
+	// 上传证书的托管续费证书不能手动提交订单
+	FAILEDOPERATION_CERTIFICATESUBMITHOSTINGCERTERROR = "FailedOperation.CertificateSubmitHostingCertError"
+
+	// 证书操作参数无效，证书ID数量超过100。
+	FAILEDOPERATION_CERTIFICATESYNCTASKCERTIFICATEIDCOUNTINVALID = "FailedOperation.CertificateSyncTaskCertificateIdCountInvalid"
 
 	// 证书关联云资源查询任务ID无效
 	FAILEDOPERATION_CERTIFICATESYNCTASKIDINVALID = "FailedOperation.CertificateSyncTaskIdInvalid"
@@ -221,6 +263,12 @@ const (
 	// 计费中心错误。
 	FAILEDOPERATION_TRADEERROR = "FailedOperation.TradeError"
 
+	// 当前接口不支持上传确认函功能，请去腾讯云控制台进行操作
+	FAILEDOPERATION_UPLOADCONFIRMCERTIFICATENOTSUPPORT = "FailedOperation.UploadConfirmCertificateNotSupport"
+
+	// 当前证书是DV证书，不支持上传确认函
+	FAILEDOPERATION_UPLOADCONFIRMCERTIFICATENOTSUPPORTDV = "FailedOperation.UploadConfirmCertificateNotSupportDV"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
@@ -263,6 +311,9 @@ const (
 	// 产品PID无效。
 	INVALIDPARAMETER_PRODUCTPIDINVALID = "InvalidParameter.ProductPidInvalid"
 
+	// Region不允许为空
+	INVALIDPARAMETER_REGIONNOTEMPTY = "InvalidParameter.RegionNotEmpty"
+
 	// 算法无效。
 	INVALIDPARAMETER_RENEWALGORITHMINVALID = "InvalidParameter.RenewAlgorithmInvalid"
 
@@ -277,6 +328,12 @@ const (
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 邮箱格式有误，请您重新输入
+	INVALIDPARAMETERVALUE_CERTIFICATEEMAILPARSEINVALID = "InvalidParameterValue.CertificateEmailParseInvalid"
+
+	// 中间根证书不一致
+	INVALIDPARAMETERVALUE_INTERMEDIATECERTNOTSAME = "InvalidParameterValue.IntermediateCertNotSame"
 
 	// 单位时间内接口请求频率达到限制。
 	LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
