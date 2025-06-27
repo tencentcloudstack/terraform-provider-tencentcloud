@@ -174,6 +174,11 @@ func DataSourceTencentCloudElasticsearchInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Elasticsearch port.",
 						},
+						"elasticsearch_public_url": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Elasticsearch public url.",
+						},
 						"kibana_url": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -194,20 +199,22 @@ func DataSourceTencentCloudElasticsearchInstances() *schema.Resource {
 func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_elasticsearch_instances.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	elasticsearchService := ElasticsearchService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId                = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                  = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		elasticsearchService = ElasticsearchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId           string
+		instanceName         string
+	)
 
-	instanceId := ""
-	instanceName := ""
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
+
 	if v, ok := d.GetOk("instance_name"); ok {
 		instanceName = v.(string)
 	}
+
 	tags := helper.GetTags(d, "tags")
 	var instances []*es.InstanceInfo
 	var errRet error
@@ -216,8 +223,10 @@ func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, me
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return nil
 	}
@@ -248,6 +257,11 @@ func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, me
 			"kibana_url":           instance.KibanaUrl,
 			"create_time":          instance.CreateTime,
 		}
+
+		if instance.EsPublicUrl != nil {
+			mapping["elasticsearch_public_url"] = instance.EsPublicUrl
+		}
+
 		if instance.MultiZoneInfo != nil && len(instance.MultiZoneInfo) > 0 {
 			infos := make([]map[string]interface{}, 0, len(instance.MultiZoneInfo))
 			for _, v := range instance.MultiZoneInfo {
@@ -255,10 +269,13 @@ func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, me
 					"availability_zone": v.Zone,
 					"subnet_id":         v.SubnetId,
 				}
+
 				infos = append(infos, info)
 			}
+
 			mapping["multi_zone_infos"] = infos
 		}
+
 		if instance.NodeInfoList != nil && len(instance.NodeInfoList) > 0 {
 			infos := make([]map[string]interface{}, 0, len(instance.NodeInfoList))
 			for _, v := range instance.NodeInfoList {
@@ -266,6 +283,7 @@ func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, me
 				if *v.Type == "kibana" {
 					continue
 				}
+
 				info := map[string]interface{}{
 					"node_num":  v.NodeNum,
 					"node_type": v.NodeType,
@@ -274,8 +292,10 @@ func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, me
 					"disk_size": v.DiskSize,
 					"encrypt":   *v.DiskEncrypt > 0,
 				}
+
 				infos = append(infos, info)
 			}
+
 			mapping["node_info_list"] = infos
 		}
 

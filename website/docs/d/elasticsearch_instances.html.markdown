@@ -4,18 +4,24 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_elasticsearch_instances"
 sidebar_current: "docs-tencentcloud-datasource-elasticsearch_instances"
 description: |-
-  Use this data source to query elasticsearch instances.
+  Use this data source to query Elasticsearch(ES) instances.
 ---
 
 # tencentcloud_elasticsearch_instances
 
-Use this data source to query elasticsearch instances.
+Use this data source to query Elasticsearch(ES) instances.
 
 ## Example Usage
 
+### Query ES instances by filters
+
 ```hcl
-data "tencentcloud_elasticsearch_instances" "foo" {
-  instance_id = "es-17634f05"
+data "tencentcloud_elasticsearch_instances" "example" {
+  instance_id   = "es-bxffils7"
+  instance_name = "tf-example"
+  tags = {
+    createBy = "Terraform"
+  }
 }
 ```
 
@@ -40,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
   * `deploy_mode` - Cluster deployment mode.
   * `elasticsearch_domain` - Elasticsearch domain name.
   * `elasticsearch_port` - Elasticsearch port.
+  * `elasticsearch_public_url` - Elasticsearch public url.
   * `elasticsearch_vip` - Elasticsearch VIP.
   * `instance_id` - ID of the instance.
   * `instance_name` - Name of the instance.
