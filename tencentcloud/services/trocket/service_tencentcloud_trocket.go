@@ -2,6 +2,7 @@ package trocket
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -91,6 +92,7 @@ func (me *TrocketService) DescribeTrocketRocketmqTopicById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := trocket.NewDescribeTopicListRequest()
+	response := trocket.NewDescribeTopicListResponse()
 	request.InstanceId = &instanceId
 	filter := &trocket.Filter{
 		Name:   helper.String("TopicName"),
@@ -104,26 +106,41 @@ func (me *TrocketService) DescribeTrocketRocketmqTopicById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
 	var (
-		offset int64 = 0
-		limit  int64 = 100
+		offset    int64 = 0
+		limit     int64 = 100
+		instances       = make([]*trocket.TopicItem, 0)
 	)
-	instances := make([]*trocket.TopicItem, 0)
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTrocketClient().DescribeTopicList(request)
+		ratelimit.Check(request.GetAction())
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTrocketClient().DescribeTopicList(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe topicList failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.Data) < 1 {
 			break
 		}
+
 		instances = append(instances, response.Response.Data...)
 		if len(response.Response.Data) < int(limit) {
 			break
@@ -132,10 +149,13 @@ func (me *TrocketService) DescribeTrocketRocketmqTopicById(ctx context.Context, 
 		offset += limit
 	}
 
-	if len(instances) < 1 {
-		return
+	for _, item := range instances {
+		if *item.Topic == topic {
+			rocketmqTopic = item
+			break
+		}
 	}
-	rocketmqTopic = instances[0]
+
 	return
 }
 
@@ -152,14 +172,22 @@ func (me *TrocketService) DeleteTrocketRocketmqTopicById(ctx context.Context, in
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTrocketClient().DeleteTopic(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTrocketClient().DeleteTopic(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
