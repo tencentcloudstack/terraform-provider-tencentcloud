@@ -42,15 +42,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"image_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The image to use for the instance. Modifications may lead to the reinstallation of the instance's operating system..",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				AtLeastOneOf: []string{"image_id", "launch_template_id"},
+				Description:  "The image to use for the instance. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"availability_zone": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "The available zone for the CVM instance.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				AtLeastOneOf: []string{"availability_zone", "launch_template_id"},
+				Description:  "The available zone for the CVM instance.",
 			},
 			"dedicated_cluster_id": {
 				Type:        schema.TypeString,
@@ -77,17 +81,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateInstanceType,
+				AtLeastOneOf: []string{"instance_type", "launch_template_id"},
 				Description:  "The type of the instance.",
 			},
 			"hostname": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
+				Computed:    true,
 				Description: "The project the instance belongs to, default to 0.",
 			},
 			"running_flag": {
@@ -197,16 +203,18 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			},
 			// vpc
 			"vpc_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				AtLeastOneOf: []string{"vpc_id", "launch_template_id"},
+				Description:  "The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.",
 			},
 			"subnet_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				AtLeastOneOf: []string{"subnet_id", "launch_template_id"},
+				Description:  "The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.",
 			},
 			"private_ip": {
 				Type:        schema.TypeString,
@@ -221,6 +229,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"orderly_security_groups"},
+				AtLeastOneOf:  []string{"security_groups", "launch_template_id"},
 				Description:   "A list of security group IDs to associate with.",
 				Deprecated:    "It will be deprecated. Use `orderly_security_groups` instead.",
 			},
@@ -231,6 +240,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"security_groups"},
+				AtLeastOneOf:  []string{"orderly_security_groups", "launch_template_id"},
 				Description:   "A list of orderly security group IDs to associate with.",
 			},
 			// storage
@@ -440,6 +450,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.",
 			},
+			// template
+			"launch_template_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Instance launch template ID. This parameter allows you to create an instance using the preset parameters in the instance template.",
+			},
+			"launch_template_version": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The instance launch template version number. If given, a new instance launch template will be created based on the given version number.",
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -495,9 +518,14 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	)
 
 	request := cvm.NewRunInstancesRequest()
-	request.ImageId = helper.String(d.Get("image_id").(string))
-	request.Placement = &cvm.Placement{
-		Zone: helper.String(d.Get("availability_zone").(string)),
+	if v, ok := d.GetOk("image_id"); ok {
+		request.ImageId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("availability_zone"); ok {
+		request.Placement = &cvm.Placement{
+			Zone: helper.String(v.(string)),
+		}
 	}
 
 	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
@@ -768,6 +796,17 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOkExists("disable_api_termination"); ok {
 		request.DisableApiTermination = helper.Bool(v.(bool))
+	}
+
+	var launchTemplate cvm.LaunchTemplate
+	if v, ok := d.GetOk("launch_template_id"); ok {
+		launchTemplate.LaunchTemplateId = helper.String(v.(string))
+		request.LaunchTemplate = &launchTemplate
+	}
+
+	if v, ok := d.GetOkExists("launch_template_version"); ok {
+		launchTemplate.LaunchTemplateVersion = helper.IntUint64(v.(int))
+		request.LaunchTemplate = &launchTemplate
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
