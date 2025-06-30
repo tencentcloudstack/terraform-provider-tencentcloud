@@ -35,7 +35,7 @@ const (
 	// 初始化master失败。
 	INTERNALERROR_INITMASTERFAILED = "InternalError.InitMasterFailed"
 
-	// Param。
+	// 参数错误。
 	INTERNALERROR_PARAM = "InternalError.Param"
 
 	// 公共集群不支持扩展节点。
@@ -73,4 +73,7 @@ const (
 
 	// 集群状态不支持该操作。
 	RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 )

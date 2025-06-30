@@ -348,6 +348,81 @@ type DataDisk struct {
 }
 
 // Predefined struct for user
+type DeleteClusterMachinesRequestParams struct {
+	// 集群 ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 节点名列表
+	MachineNames []*string `json:"MachineNames,omitnil,omitempty" name:"MachineNames"`
+
+	// 删除节点时是否缩容节点池，true为缩容
+	EnableScaleDown *bool `json:"EnableScaleDown,omitnil,omitempty" name:"EnableScaleDown"`
+
+	// 集群实例删除时的策略：terminate（销毁实例，仅支持按量计费云主机实例）retain（仅移除，保留实例）
+	InstanceDeleteMode *string `json:"InstanceDeleteMode,omitnil,omitempty" name:"InstanceDeleteMode"`
+}
+
+type DeleteClusterMachinesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群 ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 节点名列表
+	MachineNames []*string `json:"MachineNames,omitnil,omitempty" name:"MachineNames"`
+
+	// 删除节点时是否缩容节点池，true为缩容
+	EnableScaleDown *bool `json:"EnableScaleDown,omitnil,omitempty" name:"EnableScaleDown"`
+
+	// 集群实例删除时的策略：terminate（销毁实例，仅支持按量计费云主机实例）retain（仅移除，保留实例）
+	InstanceDeleteMode *string `json:"InstanceDeleteMode,omitnil,omitempty" name:"InstanceDeleteMode"`
+}
+
+func (r *DeleteClusterMachinesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteClusterMachinesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "MachineNames")
+	delete(f, "EnableScaleDown")
+	delete(f, "InstanceDeleteMode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteClusterMachinesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteClusterMachinesResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteClusterMachinesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteClusterMachinesResponseParams `json:"Response"`
+}
+
+func (r *DeleteClusterMachinesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteClusterMachinesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteHealthCheckPolicyRequestParams struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -926,6 +1001,10 @@ type Disk struct {
 
 	// 挂载目录
 	MountTarget *string `json:"MountTarget,omitnil,omitempty" name:"MountTarget"`
+
+	// 云盘ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiskId *string `json:"DiskId,omitnil,omitempty" name:"DiskId"`
 }
 
 type ExternalNodeInfo struct {
@@ -1462,11 +1541,14 @@ type NativeNodeInfo struct {
 	// 自动续费标识
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
-	// 节点计费模式（已弃用）
+	// 节点计费模式
 	PayMode *string `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
 	// 节点内存容量，单位：`GB`
 	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
+
+	// 节点系统盘配置信息
+	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
 	// 公网带宽相关信息设置
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
@@ -1484,6 +1566,22 @@ type NativeNodeInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpiredTime *string `json:"ExpiredTime,omitnil,omitempty" name:"ExpiredTime"`
 
+	// 节点外网 IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WanIp *string `json:"WanIp,omitnil,omitempty" name:"WanIp"`
+
+	// 节点密钥 ID 列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
+
+	// 节点GPU相关配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GPUParams *GPUParams `json:"GPUParams,omitnil,omitempty" name:"GPUParams"`
+
+	// 数据盘列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
+
 	// 安全组列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecurityGroupIDs []*string `json:"SecurityGroupIDs,omitnil,omitempty" name:"SecurityGroupIDs"`
@@ -1497,6 +1595,12 @@ type NativeNodeInfo struct {
 	// OS的名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OsImage *string `json:"OsImage,omitnil,omitempty" name:"OsImage"`
+
+	// **原生节点的 Machine 类型**
+	// 
+	// - Native 表示 CXM 类型的原生节点
+	// - NativeCVM 表示 CVM 类型的原生节点
+	MachineType *string `json:"MachineType,omitnil,omitempty" name:"MachineType"`
 
 	// **原生节点对应的实例 ID**
 	// 

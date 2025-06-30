@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -12,7 +11,6 @@ import (
 	svctke "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 const DefaultAddonName = "cos"
@@ -38,18 +36,18 @@ func init() {
 				return nil
 			}
 
-			for _, c := range cls {
-				clusterId := c.ClusterId
-				if err = service.DeleteExtensionAddon(ctx, clusterId, DefaultAddonName); err != nil {
-					if e, ok := err.(*errors.TencentCloudSDKError); ok {
-						// suppress the not found error when cos doesn't exist
-						if strings.Contains(e.GetMessage(), "application cos not found") {
-							continue
-						}
-					}
-					return err
-				}
-			}
+			// for _, c := range cls {
+			// 	clusterId := c.ClusterId
+			// 	if err = service.DeleteExtensionAddon(ctx, clusterId, DefaultAddonName); err != nil {
+			// 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			// 			// suppress the not found error when cos doesn't exist
+			// 			if strings.Contains(e.GetMessage(), "application cos not found") {
+			// 				continue
+			// 			}
+			// 		}
+			// 		return err
+			// 	}
+			// }
 
 			return nil
 		},

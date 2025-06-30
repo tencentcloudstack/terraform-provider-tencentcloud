@@ -71,6 +71,7 @@ func NewAcquireClusterAdminRoleResponse() (response *AcquireClusterAdminRoleResp
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
 //  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESRESOURCEEXISTED = "FailedOperation.KubernetesResourceExisted"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
@@ -96,6 +97,7 @@ func (c *Client) AcquireClusterAdminRole(request *AcquireClusterAdminRoleRequest
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
 //  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_KUBERNETESRESOURCEEXISTED = "FailedOperation.KubernetesResourceExisted"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
@@ -2758,6 +2760,7 @@ func NewCreateReservedInstancesResponse() (response *CreateReservedInstancesResp
 // 预留券实例的购买会预先扣除本次实例购买所需金额，在调用本接口前请确保账户余额充足。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
 //  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
 //  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
@@ -2772,6 +2775,7 @@ func (c *Client) CreateReservedInstances(request *CreateReservedInstancesRequest
 // 预留券实例的购买会预先扣除本次实例购买所需金额，在调用本接口前请确保账户余额充足。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
 //  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
 //  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
@@ -4762,6 +4766,7 @@ func NewDeleteReservedInstancesResponse() (response *DeleteReservedInstancesResp
 // 预留券实例如符合退还规则，可通过本接口主动退还。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -4774,6 +4779,7 @@ func (c *Client) DeleteReservedInstances(request *DeleteReservedInstancesRequest
 // 预留券实例如符合退还规则，可通过本接口主动退还。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -6041,6 +6047,7 @@ func NewDescribeClusterKubeconfigResponse() (response *DescribeClusterKubeconfig
 //  RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERINABNORMALSTAT = "ResourceUnavailable.ClusterInAbnormalStat"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_NORBACPERMISSIONS = "UnauthorizedOperation.NoRBACPermissions"
 func (c *Client) DescribeClusterKubeconfig(request *DescribeClusterKubeconfigRequest) (response *DescribeClusterKubeconfigResponse, err error) {
     return c.DescribeClusterKubeconfigWithContext(context.Background(), request)
 }
@@ -6071,6 +6078,7 @@ func (c *Client) DescribeClusterKubeconfig(request *DescribeClusterKubeconfigReq
 //  RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERINABNORMALSTAT = "ResourceUnavailable.ClusterInAbnormalStat"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_NORBACPERMISSIONS = "UnauthorizedOperation.NoRBACPermissions"
 func (c *Client) DescribeClusterKubeconfigWithContext(ctx context.Context, request *DescribeClusterKubeconfigRequest) (response *DescribeClusterKubeconfigResponse, err error) {
     if request == nil {
         request = NewDescribeClusterKubeconfigRequest()
@@ -6220,6 +6228,7 @@ func NewDescribeClusterNodePoolDetailResponse() (response *DescribeClusterNodePo
 // 查询节点池详情
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NODEPOOLQUERYFAILED = "FailedOperation.NodePoolQueryFailed"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -6233,6 +6242,7 @@ func (c *Client) DescribeClusterNodePoolDetail(request *DescribeClusterNodePoolD
 // 查询节点池详情
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NODEPOOLQUERYFAILED = "FailedOperation.NodePoolQueryFailed"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -6277,6 +6287,7 @@ func NewDescribeClusterNodePoolsResponse() (response *DescribeClusterNodePoolsRe
 // 查询节点池列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NODEPOOLQUERYFAILED = "FailedOperation.NodePoolQueryFailed"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -6290,6 +6301,7 @@ func (c *Client) DescribeClusterNodePools(request *DescribeClusterNodePoolsReque
 // 查询节点池列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NODEPOOLQUERYFAILED = "FailedOperation.NodePoolQueryFailed"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -8001,9 +8013,7 @@ func NewDescribeEncryptionStatusResponse() (response *DescribeEncryptionStatusRe
 // 查询etcd数据是否进行加密
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
-//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  FAILEDOPERATION_GETCLUSTERFAILED = "FailedOperation.GetClusterFailed"
 func (c *Client) DescribeEncryptionStatus(request *DescribeEncryptionStatusRequest) (response *DescribeEncryptionStatusResponse, err error) {
     return c.DescribeEncryptionStatusWithContext(context.Background(), request)
 }
@@ -8012,9 +8022,7 @@ func (c *Client) DescribeEncryptionStatus(request *DescribeEncryptionStatusReque
 // 查询etcd数据是否进行加密
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
-//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  FAILEDOPERATION_GETCLUSTERFAILED = "FailedOperation.GetClusterFailed"
 func (c *Client) DescribeEncryptionStatusWithContext(ctx context.Context, request *DescribeEncryptionStatusRequest) (response *DescribeEncryptionStatusResponse, err error) {
     if request == nil {
         request = NewDescribeEncryptionStatusRequest()
@@ -8235,6 +8243,7 @@ func NewDescribeIPAMDResponse() (response *DescribeIPAMDResponse) {
 //  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCEINUSE_TKEAPISERVERGETERROR = "ResourceInUse.TKEAPIServerGetError"
 func (c *Client) DescribeIPAMD(request *DescribeIPAMDRequest) (response *DescribeIPAMDResponse, err error) {
     return c.DescribeIPAMDWithContext(context.Background(), request)
 }
@@ -8246,6 +8255,7 @@ func (c *Client) DescribeIPAMD(request *DescribeIPAMDRequest) (response *Describ
 //  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCEINUSE_TKEAPISERVERGETERROR = "ResourceInUse.TKEAPIServerGetError"
 func (c *Client) DescribeIPAMDWithContext(ctx context.Context, request *DescribeIPAMDRequest) (response *DescribeIPAMDResponse, err error) {
     if request == nil {
         request = NewDescribeIPAMDRequest()
@@ -8524,6 +8534,73 @@ func (c *Client) DescribeLogSwitchesWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDescribeMasterComponentRequest() (request *DescribeMasterComponentRequest) {
+    request = &DescribeMasterComponentRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeMasterComponent")
+    
+    
+    return
+}
+
+func NewDescribeMasterComponentResponse() (response *DescribeMasterComponentResponse) {
+    response = &DescribeMasterComponentResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeMasterComponent
+// 进行master组件停机故障演练时，获取master组件运行状态，支持kube-apiserver、kube-scheduler、kube-controller-manager
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeMasterComponent(request *DescribeMasterComponentRequest) (response *DescribeMasterComponentResponse, err error) {
+    return c.DescribeMasterComponentWithContext(context.Background(), request)
+}
+
+// DescribeMasterComponent
+// 进行master组件停机故障演练时，获取master组件运行状态，支持kube-apiserver、kube-scheduler、kube-controller-manager
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeMasterComponentWithContext(ctx context.Context, request *DescribeMasterComponentRequest) (response *DescribeMasterComponentResponse, err error) {
+    if request == nil {
+        request = NewDescribeMasterComponentRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeMasterComponent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeMasterComponentResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeOSImagesRequest() (request *DescribeOSImagesRequest) {
     request = &DescribeOSImagesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8606,12 +8683,8 @@ func NewDescribeOpenPolicyListResponse() (response *DescribeOpenPolicyListRespon
 // 查询opa策略列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_POLICYSERVERCOMMONERROR = "FailedOperation.PolicyServerCommonError"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  FAILEDOPERATION_KUBECLIENTCREATE = "FailedOperation.KubeClientCreate"
+//  RESOURCENOTFOUND_LOGCOLLECTORCLSLOGTOPICNOTEXISTS = "ResourceNotFound.LogCollectorClsLogTopicNotExists"
 func (c *Client) DescribeOpenPolicyList(request *DescribeOpenPolicyListRequest) (response *DescribeOpenPolicyListResponse, err error) {
     return c.DescribeOpenPolicyListWithContext(context.Background(), request)
 }
@@ -8620,12 +8693,8 @@ func (c *Client) DescribeOpenPolicyList(request *DescribeOpenPolicyListRequest) 
 // 查询opa策略列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_POLICYSERVERCOMMONERROR = "FailedOperation.PolicyServerCommonError"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
-//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  FAILEDOPERATION_KUBECLIENTCREATE = "FailedOperation.KubeClientCreate"
+//  RESOURCENOTFOUND_LOGCOLLECTORCLSLOGTOPICNOTEXISTS = "ResourceNotFound.LogCollectorClsLogTopicNotExists"
 func (c *Client) DescribeOpenPolicyListWithContext(ctx context.Context, request *DescribeOpenPolicyListRequest) (response *DescribeOpenPolicyListResponse, err error) {
     if request == nil {
         request = NewDescribeOpenPolicyListRequest()
@@ -8665,6 +8734,7 @@ func NewDescribePodChargeInfoResponse() (response *DescribePodChargeInfoResponse
 // 查询正在运行中Pod的计费信息。可以通过 Namespace 和 Name 来查询某个 Pod 的信息，也可以通过 Pod 的 Uid 批量查询。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 func (c *Client) DescribePodChargeInfo(request *DescribePodChargeInfoRequest) (response *DescribePodChargeInfoResponse, err error) {
@@ -8675,6 +8745,7 @@ func (c *Client) DescribePodChargeInfo(request *DescribePodChargeInfoRequest) (r
 // 查询正在运行中Pod的计费信息。可以通过 Namespace 和 Name 来查询某个 Pod 的信息，也可以通过 Pod 的 Uid 批量查询。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 func (c *Client) DescribePodChargeInfoWithContext(ctx context.Context, request *DescribePodChargeInfoRequest) (response *DescribePodChargeInfoResponse, err error) {
@@ -8716,6 +8787,7 @@ func NewDescribePodDeductionRateResponse() (response *DescribePodDeductionRateRe
 // 查询各个规格的 Pod 的抵扣率
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 func (c *Client) DescribePodDeductionRate(request *DescribePodDeductionRateRequest) (response *DescribePodDeductionRateResponse, err error) {
@@ -8726,6 +8798,7 @@ func (c *Client) DescribePodDeductionRate(request *DescribePodDeductionRateReque
 // 查询各个规格的 Pod 的抵扣率
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 func (c *Client) DescribePodDeductionRateWithContext(ctx context.Context, request *DescribePodDeductionRateRequest) (response *DescribePodDeductionRateResponse, err error) {
@@ -8767,6 +8840,7 @@ func NewDescribePodsBySpecResponse() (response *DescribePodsBySpecResponse) {
 // 查询可以用预留券抵扣的 Pod 信息。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 func (c *Client) DescribePodsBySpec(request *DescribePodsBySpecRequest) (response *DescribePodsBySpecResponse, err error) {
@@ -8777,6 +8851,7 @@ func (c *Client) DescribePodsBySpec(request *DescribePodsBySpecRequest) (respons
 // 查询可以用预留券抵扣的 Pod 信息。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 func (c *Client) DescribePodsBySpecWithContext(ctx context.Context, request *DescribePodsBySpecRequest) (response *DescribePodsBySpecResponse, err error) {
@@ -8818,6 +8893,7 @@ func NewDescribePostNodeResourcesResponse() (response *DescribePostNodeResources
 // 包括 Pod 资源统计和绑定的预留券资源统计。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
 func (c *Client) DescribePostNodeResources(request *DescribePostNodeResourcesRequest) (response *DescribePostNodeResourcesResponse, err error) {
@@ -8828,6 +8904,7 @@ func (c *Client) DescribePostNodeResources(request *DescribePostNodeResourcesReq
 // 包括 Pod 资源统计和绑定的预留券资源统计。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
 func (c *Client) DescribePostNodeResourcesWithContext(ctx context.Context, request *DescribePostNodeResourcesRequest) (response *DescribePostNodeResourcesResponse, err error) {
@@ -10082,6 +10159,7 @@ func NewDescribeRIUtilizationDetailResponse() (response *DescribeRIUtilizationDe
 // 预留实例用量查询
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -10095,6 +10173,7 @@ func (c *Client) DescribeRIUtilizationDetail(request *DescribeRIUtilizationDetai
 // 预留实例用量查询
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -10222,6 +10301,7 @@ func NewDescribeReservedInstanceUtilizationRateResponse() (response *DescribeRes
 // 查询各种规格类型的预留券使用率
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -10234,6 +10314,7 @@ func (c *Client) DescribeReservedInstanceUtilizationRate(request *DescribeReserv
 // 查询各种规格类型的预留券使用率
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -10277,6 +10358,7 @@ func NewDescribeReservedInstancesResponse() (response *DescribeReservedInstances
 // 查询预留实例列表
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -10291,6 +10373,7 @@ func (c *Client) DescribeReservedInstances(request *DescribeReservedInstancesReq
 // 查询预留实例列表
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -11702,83 +11785,6 @@ func (c *Client) EnableVpcCniNetworkTypeWithContext(ctx context.Context, request
     return
 }
 
-func NewForwardApplicationRequestV3Request() (request *ForwardApplicationRequestV3Request) {
-    request = &ForwardApplicationRequestV3Request{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tke", APIVersion, "ForwardApplicationRequestV3")
-    
-    
-    return
-}
-
-func NewForwardApplicationRequestV3Response() (response *ForwardApplicationRequestV3Response) {
-    response = &ForwardApplicationRequestV3Response{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ForwardApplicationRequestV3
-// 操作TKE集群的addon
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
-func (c *Client) ForwardApplicationRequestV3(request *ForwardApplicationRequestV3Request) (response *ForwardApplicationRequestV3Response, err error) {
-    return c.ForwardApplicationRequestV3WithContext(context.Background(), request)
-}
-
-// ForwardApplicationRequestV3
-// 操作TKE集群的addon
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
-func (c *Client) ForwardApplicationRequestV3WithContext(ctx context.Context, request *ForwardApplicationRequestV3Request) (response *ForwardApplicationRequestV3Response, err error) {
-    if request == nil {
-        request = NewForwardApplicationRequestV3Request()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ForwardApplicationRequestV3 require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewForwardApplicationRequestV3Response()
-    err = c.Send(request, response)
-    return
-}
-
 func NewForwardTKEEdgeApplicationRequestV3Request() (request *ForwardTKEEdgeApplicationRequestV3Request) {
     request = &ForwardTKEEdgeApplicationRequestV3Request{
         BaseRequest: &tchttp.BaseRequest{},
@@ -13065,6 +13071,63 @@ func (c *Client) ModifyClusterVirtualNodePoolWithContext(ctx context.Context, re
     return
 }
 
+func NewModifyMasterComponentRequest() (request *ModifyMasterComponentRequest) {
+    request = &ModifyMasterComponentRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "ModifyMasterComponent")
+    
+    
+    return
+}
+
+func NewModifyMasterComponentResponse() (response *ModifyMasterComponentResponse) {
+    response = &ModifyMasterComponentResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyMasterComponent
+// 修改master组件，支持kube-apiserver、kube-scheduler、kube-controller-manager副本数调整为0和恢复
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_NODEPOOLSTATENOTNORMAL = "ResourceUnavailable.NodePoolStateNotNormal"
+func (c *Client) ModifyMasterComponent(request *ModifyMasterComponentRequest) (response *ModifyMasterComponentResponse, err error) {
+    return c.ModifyMasterComponentWithContext(context.Background(), request)
+}
+
+// ModifyMasterComponent
+// 修改master组件，支持kube-apiserver、kube-scheduler、kube-controller-manager副本数调整为0和恢复
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_NODEPOOLSTATENOTNORMAL = "ResourceUnavailable.NodePoolStateNotNormal"
+func (c *Client) ModifyMasterComponentWithContext(ctx context.Context, request *ModifyMasterComponentRequest) (response *ModifyMasterComponentResponse, err error) {
+    if request == nil {
+        request = NewModifyMasterComponentRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyMasterComponent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyMasterComponentResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyNodePoolDesiredCapacityAboutAsgRequest() (request *ModifyNodePoolDesiredCapacityAboutAsgRequest) {
     request = &ModifyNodePoolDesiredCapacityAboutAsgRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -13807,6 +13870,7 @@ func NewModifyReservedInstanceScopeResponse() (response *ModifyReservedInstanceS
 // 修改预留券的抵扣范围，抵扣范围取值：Region、Zone 和 Node。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
@@ -13818,6 +13882,7 @@ func (c *Client) ModifyReservedInstanceScope(request *ModifyReservedInstanceScop
 // 修改预留券的抵扣范围，抵扣范围取值：Region、Zone 和 Node。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
@@ -13915,6 +13980,7 @@ func NewRenewReservedInstancesResponse() (response *RenewReservedInstancesRespon
 // 续费时请确保账户余额充足。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
 //  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
 //  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
@@ -13929,6 +13995,7 @@ func (c *Client) RenewReservedInstances(request *RenewReservedInstancesRequest) 
 // 续费时请确保账户余额充足。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
 //  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
 //  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
@@ -14278,6 +14345,7 @@ func NewSetNodePoolNodeProtectionResponse() (response *SetNodePoolNodeProtection
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionRequest) (response *SetNodePoolNodeProtectionResponse, err error) {
     return c.SetNodePoolNodeProtectionWithContext(context.Background(), request)
@@ -14298,6 +14366,7 @@ func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionReq
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SetNodePoolNodeProtectionWithContext(ctx context.Context, request *SetNodePoolNodeProtectionRequest) (response *SetNodePoolNodeProtectionResponse, err error) {
     if request == nil {

@@ -806,7 +806,12 @@ func resourceTencentCloudKubernetesClusterReadPostHandleResponse0(ctx context.Co
 			}
 			_ = d.Set("cluster_subnet_id", resp.SubnetId)
 		}
+
 		if networkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
+			if cluster.ClusterNetworkSettings != nil && cluster.ClusterNetworkSettings.SubnetId != nil {
+				_ = d.Set("cluster_subnet_id", cluster.ClusterNetworkSettings.SubnetId)
+			}
+
 			resp, err := service.DescribeIPAMD(ctx, d.Id())
 			if err != nil {
 				return err
@@ -1450,55 +1455,55 @@ func resourceTencentCloudKubernetesClusterUpdateOnExit(ctx context.Context) erro
 		}
 	}
 
-	if d.HasChange("extension_addon") {
-		o, n := d.GetChange("extension_addon")
-		adds, removes, changes := ResourceTkeGetAddonsDiffs(o.([]interface{}), n.([]interface{}))
-		updates := append(adds, changes...)
-		for i := range updates {
-			var err error
-			addon := updates[i].(map[string]interface{})
-			param := addon["param"].(string)
-			name, err := tkeService.GetAddonNameFromJson(param)
-			if err != nil {
-				return err
-			}
-			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
-			if has {
-				err = tkeService.UpdateExtensionAddon(ctx, id, name, param)
-			} else {
-				err = tkeService.CreateExtensionAddon(ctx, id, param)
-			}
-			if err != nil {
-				return err
-			}
-			_, _, err = tkeService.PollingAddonsPhase(ctx, id, name, nil)
-			if err != nil {
-				return err
-			}
-		}
+	// if d.HasChange("extension_addon") {
+	// 	o, n := d.GetChange("extension_addon")
+	// 	adds, removes, changes := ResourceTkeGetAddonsDiffs(o.([]interface{}), n.([]interface{}))
+	// 	updates := append(adds, changes...)
+	// 	for i := range updates {
+	// 		var err error
+	// 		addon := updates[i].(map[string]interface{})
+	// 		param := addon["param"].(string)
+	// 		name, err := tkeService.GetAddonNameFromJson(param)
+	// 		if err != nil {
+	// 			return err
+	// 		}
+	// 		_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
+	// 		if has {
+	// 			err = tkeService.UpdateExtensionAddon(ctx, id, name, param)
+	// 		} else {
+	// 			err = tkeService.CreateExtensionAddon(ctx, id, param)
+	// 		}
+	// 		if err != nil {
+	// 			return err
+	// 		}
+	// 		_, _, err = tkeService.PollingAddonsPhase(ctx, id, name, nil)
+	// 		if err != nil {
+	// 			return err
+	// 		}
+	// 	}
 
-		for i := range removes {
-			addon := removes[i].(map[string]interface{})
-			param := addon["param"].(string)
-			name, err := tkeService.GetAddonNameFromJson(param)
-			if err != nil {
-				return err
-			}
-			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
-			if !has {
-				continue
-			}
-			err = tkeService.DeleteExtensionAddon(ctx, id, name)
-			if err != nil {
-				return err
-			}
-			_, has, _ = tkeService.PollingAddonsPhase(ctx, id, name, nil)
-			if has {
-				return fmt.Errorf("addon %s still exists", name)
-			}
-		}
+	// 	for i := range removes {
+	// 		addon := removes[i].(map[string]interface{})
+	// 		param := addon["param"].(string)
+	// 		name, err := tkeService.GetAddonNameFromJson(param)
+	// 		if err != nil {
+	// 			return err
+	// 		}
+	// 		_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
+	// 		if !has {
+	// 			continue
+	// 		}
+	// 		err = tkeService.DeleteExtensionAddon(ctx, id, name)
+	// 		if err != nil {
+	// 			return err
+	// 		}
+	// 		_, has, _ = tkeService.PollingAddonsPhase(ctx, id, name, nil)
+	// 		if has {
+	// 			return fmt.Errorf("addon %s still exists", name)
+	// 		}
+	// 	}
 
-	}
+	// }
 	d.Partial(false)
 	return nil
 }

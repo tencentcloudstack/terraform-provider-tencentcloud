@@ -113,26 +113,26 @@ func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTk
 	return
 }
 
-func (me *TkeService) DescribeExtensionAddonList(ctx context.Context, clusterId string) (AppList, error) {
-	var (
-		err      error
-		response string
-		appList  AppList
-	)
+// func (me *TkeService) DescribeExtensionAddonList(ctx context.Context, clusterId string) (AppList, error) {
+// 	var (
+// 		err      error
+// 		response string
+// 		appList  AppList
+// 	)
 
-	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-		response, _, err = me.DescribeExtensionAddon(ctx, clusterId, "")
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if err := json.Unmarshal([]byte(response), &appList); err != nil {
-			return resource.NonRetryableError(err)
-		}
-		return nil
-	})
+// 	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+// 		response, _, err = me.DescribeExtensionAddon(ctx, clusterId, "")
+// 		if err != nil {
+// 			return resource.NonRetryableError(err)
+// 		}
+// 		if err := json.Unmarshal([]byte(response), &appList); err != nil {
+// 			return resource.NonRetryableError(err)
+// 		}
+// 		return nil
+// 	})
 
-	return appList, err
-}
+// 	return appList, err
+// }
 
 func (me *TkeService) DescribeAddonList(ctx context.Context, clusterId string) (ret []*tke.Addon, errRet error) {
 	request := tke.NewDescribeAddonRequest()
@@ -195,81 +195,81 @@ func (me *TkeService) DescribeAddonValuesList(ctx context.Context, clusterId, ad
 	return
 }
 
-func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonName string, addonResponseData *AddonResponseData) (string, bool, error) {
-	var (
-		err      error
-		phase    string
-		response string
-		has      bool
-	)
+// func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonName string, addonResponseData *AddonResponseData) (string, bool, error) {
+// 	var (
+// 		err      error
+// 		phase    string
+// 		response string
+// 		has      bool
+// 	)
 
-	if addonResponseData == nil {
-		addonResponseData = &AddonResponseData{}
-	}
+// 	if addonResponseData == nil {
+// 		addonResponseData = &AddonResponseData{}
+// 	}
 
-	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-		response, has, err = me.DescribeExtensionAddon(ctx, clusterId, addonName)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if err = json.Unmarshal([]byte(response), addonResponseData); err != nil {
-			return resource.NonRetryableError(err)
-		}
+// 	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+// 		response, has, err = me.DescribeExtensionAddon(ctx, clusterId, addonName)
+// 		if err != nil {
+// 			return resource.NonRetryableError(err)
+// 		}
+// 		if err = json.Unmarshal([]byte(response), addonResponseData); err != nil {
+// 			return resource.NonRetryableError(err)
+// 		}
 
-		if addonResponseData.Status == nil {
-			return nil
-		}
+// 		if addonResponseData.Status == nil {
+// 			return nil
+// 		}
 
-		if addonResponseData.Status["phase"] != nil {
-			phase = addonResponseData.Status["phase"].(string)
-		}
+// 		if addonResponseData.Status["phase"] != nil {
+// 			phase = addonResponseData.Status["phase"].(string)
+// 		}
 
-		if phase == "Upgrading" || phase == "Installing" || phase == "ChartFetched" || phase == "RollingBack" || phase == "Terminating" {
-			return resource.RetryableError(fmt.Errorf("addon %s is %s, retrying", addonName, phase))
-		}
+// 		if phase == "Upgrading" || phase == "Installing" || phase == "ChartFetched" || phase == "RollingBack" || phase == "Terminating" {
+// 			return resource.RetryableError(fmt.Errorf("addon %s is %s, retrying", addonName, phase))
+// 		}
 
-		return nil
-	})
+// 		return nil
+// 	})
 
-	return response, has, err
-}
+// 	return response, has, err
+// }
 
-func (me *TkeService) ProcessExtensionAddons(ctx context.Context, request *tke.ForwardApplicationRequestV3Request) (response *tke.ForwardApplicationRequestV3Response, err error) {
-	logId := tccommon.GetLogId(ctx)
-	defer func() {
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-		}
-	}()
+// func (me *TkeService) ProcessExtensionAddons(ctx context.Context, request *tke.ForwardApplicationRequestV3Request) (response *tke.ForwardApplicationRequestV3Response, err error) {
+// 	logId := tccommon.GetLogId(ctx)
+// 	defer func() {
+// 		if err != nil {
+// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+// 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+// 		}
+// 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err = me.client.UseTkeClient().ForwardApplicationRequestV3(request)
+// 	ratelimit.Check(request.GetAction())
+// 	response, err = me.client.UseTkeClient().ForwardApplicationRequestV3(request)
 
-	if err != nil {
-		return
-	}
+// 	if err != nil {
+// 		return
+// 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+// 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	return
-}
+// 	return
+// }
 
-func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, addon string) (result string, has bool, errRet error) {
-	request := tke.NewForwardApplicationRequestV3Request()
-	request.Method = helper.String("GET")
-	request.ClusterName = &clusterName
-	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
-	response, err := me.ProcessExtensionAddons(ctx, request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	has = true
-	result = *response.Response.ResponseBody
-	return
-}
+// func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, addon string) (result string, has bool, errRet error) {
+// 	request := tke.NewForwardApplicationRequestV3Request()
+// 	request.Method = helper.String("GET")
+// 	request.ClusterName = &clusterName
+// 	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
+// 	response, err := me.ProcessExtensionAddons(ctx, request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
+// 	has = true
+// 	result = *response.Response.ResponseBody
+// 	return
+// }
 
 func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, rawValues, rawValuesType *string) (string, error) {
 	var reqBody = &AddonRequestBody{}
@@ -303,47 +303,47 @@ func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, r
 	return string(result), nil
 }
 
-func (me *TkeService) CreateExtensionAddon(ctx context.Context, clusterName, reqBody string) (errRet error) {
-	request := tke.NewForwardApplicationRequestV3Request()
-	request.Method = helper.String("POST")
-	request.ClusterName = &clusterName
-	request.Path = helper.String(me.GetAddonsPath(clusterName, ""))
-	request.RequestBody = &reqBody
-	_, err := me.ProcessExtensionAddons(ctx, request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	return
-}
+// func (me *TkeService) CreateExtensionAddon(ctx context.Context, clusterName, reqBody string) (errRet error) {
+// 	request := tke.NewForwardApplicationRequestV3Request()
+// 	request.Method = helper.String("POST")
+// 	request.ClusterName = &clusterName
+// 	request.Path = helper.String(me.GetAddonsPath(clusterName, ""))
+// 	request.RequestBody = &reqBody
+// 	_, err := me.ProcessExtensionAddons(ctx, request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
+// 	return
+// }
 
-func (me *TkeService) UpdateExtensionAddon(ctx context.Context, clusterName, addon, reqBody string) (errRet error) {
-	request := tke.NewForwardApplicationRequestV3Request()
-	request.Method = helper.String("PATCH")
-	request.ContentType = helper.String("application/strategic-merge-patch+json")
-	request.ClusterName = &clusterName
-	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
-	request.RequestBody = &reqBody
-	_, err := me.ProcessExtensionAddons(ctx, request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	return
-}
+// func (me *TkeService) UpdateExtensionAddon(ctx context.Context, clusterName, addon, reqBody string) (errRet error) {
+// 	request := tke.NewForwardApplicationRequestV3Request()
+// 	request.Method = helper.String("PATCH")
+// 	request.ContentType = helper.String("application/strategic-merge-patch+json")
+// 	request.ClusterName = &clusterName
+// 	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
+// 	request.RequestBody = &reqBody
+// 	_, err := me.ProcessExtensionAddons(ctx, request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
+// 	return
+// }
 
-func (me *TkeService) DeleteExtensionAddon(ctx context.Context, clusterName, addon string) (errRet error) {
-	request := tke.NewForwardApplicationRequestV3Request()
-	request.Method = helper.String("DELETE")
-	request.ClusterName = &clusterName
-	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
-	_, err := me.ProcessExtensionAddons(ctx, request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	return
-}
+// func (me *TkeService) DeleteExtensionAddon(ctx context.Context, clusterName, addon string) (errRet error) {
+// 	request := tke.NewForwardApplicationRequestV3Request()
+// 	request.Method = helper.String("DELETE")
+// 	request.ClusterName = &clusterName
+// 	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
+// 	_, err := me.ProcessExtensionAddons(ctx, request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
+// 	return
+// }
 
 func (me *TkeService) GetAddonsPath(cluster, addon string) string {
 	addonPath := ""
@@ -364,25 +364,26 @@ func (me *TkeService) GetAddonNameFromJson(reqJson string) (name string, err err
 	}
 	return
 }
-func (me *TkeService) DeleteKubernetesAddonAttachmentById(ctx context.Context) (errRet error) {
-	logId := tccommon.GetLogId(ctx)
 
-	request := tke.NewForwardApplicationRequestV3Request()
+// func (me *TkeService) DeleteKubernetesAddonAttachmentById(ctx context.Context) (errRet error) {
+// 	logId := tccommon.GetLogId(ctx)
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
+// 	request := tke.NewForwardApplicationRequestV3Request()
 
-	ratelimit.Check(request.GetAction())
+// 	defer func() {
+// 		if errRet != nil {
+// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+// 		}
+// 	}()
 
-	response, err := me.client.UseTkeClient().ForwardApplicationRequestV3(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+// 	ratelimit.Check(request.GetAction())
 
-	return
-}
+// 	response, err := me.client.UseTkeClient().ForwardApplicationRequestV3(request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
+// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+// 	return
+// }
