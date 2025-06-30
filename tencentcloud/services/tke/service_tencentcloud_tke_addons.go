@@ -206,48 +206,6 @@ func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, r
 	return string(result), nil
 }
 
-// func (me *TkeService) CreateExtensionAddon(ctx context.Context, clusterName, reqBody string) (errRet error) {
-// 	request := tke.NewForwardApplicationRequestV3Request()
-// 	request.Method = helper.String("POST")
-// 	request.ClusterName = &clusterName
-// 	request.Path = helper.String(me.GetAddonsPath(clusterName, ""))
-// 	request.RequestBody = &reqBody
-// 	_, err := me.ProcessExtensionAddons(ctx, request)
-// 	if err != nil {
-// 		errRet = err
-// 		return
-// 	}
-// 	return
-// }
-
-// func (me *TkeService) UpdateExtensionAddon(ctx context.Context, clusterName, addon, reqBody string) (errRet error) {
-// 	request := tke.NewForwardApplicationRequestV3Request()
-// 	request.Method = helper.String("PATCH")
-// 	request.ContentType = helper.String("application/strategic-merge-patch+json")
-// 	request.ClusterName = &clusterName
-// 	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
-// 	request.RequestBody = &reqBody
-// 	_, err := me.ProcessExtensionAddons(ctx, request)
-// 	if err != nil {
-// 		errRet = err
-// 		return
-// 	}
-// 	return
-// }
-
-// func (me *TkeService) DeleteExtensionAddon(ctx context.Context, clusterName, addon string) (errRet error) {
-// 	request := tke.NewForwardApplicationRequestV3Request()
-// 	request.Method = helper.String("DELETE")
-// 	request.ClusterName = &clusterName
-// 	request.Path = helper.String(me.GetAddonsPath(clusterName, addon))
-// 	_, err := me.ProcessExtensionAddons(ctx, request)
-// 	if err != nil {
-// 		errRet = err
-// 		return
-// 	}
-// 	return
-// }
-
 func (me *TkeService) GetAddonsPath(cluster, addon string) string {
 	addonPath := ""
 	if addon != "" {
