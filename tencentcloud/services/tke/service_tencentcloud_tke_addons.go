@@ -113,27 +113,6 @@ func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTk
 	return
 }
 
-// func (me *TkeService) DescribeExtensionAddonList(ctx context.Context, clusterId string) (AppList, error) {
-// 	var (
-// 		err      error
-// 		response string
-// 		appList  AppList
-// 	)
-
-// 	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-// 		response, _, err = me.DescribeExtensionAddon(ctx, clusterId, "")
-// 		if err != nil {
-// 			return resource.NonRetryableError(err)
-// 		}
-// 		if err := json.Unmarshal([]byte(response), &appList); err != nil {
-// 			return resource.NonRetryableError(err)
-// 		}
-// 		return nil
-// 	})
-
-// 	return appList, err
-// }
-
 func (me *TkeService) DescribeAddonList(ctx context.Context, clusterId string) (ret []*tke.Addon, errRet error) {
 	request := tke.NewDescribeAddonRequest()
 	response := tke.NewDescribeAddonResponse()
