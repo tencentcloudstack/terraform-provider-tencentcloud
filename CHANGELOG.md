@@ -1,3 +1,10 @@
+## 1.82.4(June 30 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_addon_attachment: Take this resource offline ([#3427](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3427))
+* resource/tencentcloud_kubernetes_cluster: support subentId for cdc cluster ([#3427](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3427))
+
 ## 1.82.3(June 26 , 2025)
 
 ENHANCEMENTS:
