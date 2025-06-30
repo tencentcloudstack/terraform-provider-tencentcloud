@@ -1269,7 +1269,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			"extension_addon": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Information of the add-on to be installed.",
+				Description: "Information of the add-on to be installed. It is recommended to use resource `tencentcloud_kubernetes_addon` management cluster addon.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -1954,7 +1954,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"cdc_id"}
+	immutableArgs := []string{"cdc_id", "extension_addon"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

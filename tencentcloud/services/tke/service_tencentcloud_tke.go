@@ -3588,34 +3588,6 @@ func (me *TkeService) DescribeKubernetesClusterNativeNodePoolsByFilter(ctx conte
 	return
 }
 
-func (me *TkeService) DescribeKubernetesAddonAttachmentById(ctx context.Context) (ret *tke.ForwardApplicationRequestV3ResponseParams, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := tke.NewForwardApplicationRequestV3Request()
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	if err := resourceTencentCloudKubernetesAddonAttachmentReadPreRequest0(ctx, request); err != nil {
-		return nil, err
-	}
-
-	response, err := me.client.UseTkeV20180525Client().ForwardApplicationRequestV3(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	ret = response.Response
-	return
-}
-
 func (me *TkeService) DescribeKubernetesHealthCheckPolicyById(ctx context.Context, clusterId string, name string) (ret *tke2.HealthCheckPolicy, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
