@@ -799,7 +799,7 @@ The following arguments are supported:
 * `eni_subnet_ids` - (Optional, List: [`String`]) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `event_persistence` - (Optional, List) Specify cluster Event Persistence config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `exist_instance` - (Optional, Set) Create tke cluster by existed instances.
-* `extension_addon` - (Optional, List) Information of the add-on to be installed.
+* `extension_addon` - (Optional, List) Information of the add-on to be installed. It is recommended to use resource `tencentcloud_kubernetes_addon` management cluster addon.
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
 * `globe_desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
