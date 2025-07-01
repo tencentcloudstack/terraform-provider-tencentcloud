@@ -1,3 +1,11 @@
+## 1.82.5(July 01 , 2025)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_elasticsearch_instances: add `elasticsearch_public_url` params ([#3424](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3424))
+* resource/tencentcloud_instance: support create by template ([#3428](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3428))
+* resource/tencentcloud_trocket_rocketmq_topic: optmize read function code logic ([#3425](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3425))
+
 ## 1.82.4(June 30 , 2025)
 
 ENHANCEMENTS:
