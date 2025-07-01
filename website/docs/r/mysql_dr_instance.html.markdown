@@ -51,10 +51,10 @@ resource "tencentcloud_mysql_dr_instance" "example" {
 resource "tencentcloud_mysql_dr_instance" "example" {
   master_instance_id = "cdb-3kwa3gfj"
   master_region      = "ap-guangzhou"
-  auto_renew_flag    = 0
   availability_zone  = "ap-guangzhou-6"
   charge_type        = "PREPAID"
   prepaid_period     = 1
+  auto_renew_flag    = 1
   cpu                = 4
   device_type        = "UNIVERSAL"
   first_slave_zone   = "ap-guangzhou-7"
