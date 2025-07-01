@@ -437,6 +437,14 @@ func resourceTencentCloudMysqlDrInstanceUpdate(d *schema.ResourceData, meta inte
 	mysqlID := d.Id()
 	payType := getPayType(d).(int)
 
+	if d.HasChange("prepaid_period") {
+		if v, ok := d.GetOk("charge_type"); ok {
+			if v.(string) != MYSQL_CHARGE_TYPE_PREPAID {
+				return fmt.Errorf("`prepaid_period` only support prepaid instance.")
+			}
+		}
+	}
+
 	if d.HasChange("charge_type") {
 		oldChargeTypeInterface, newChargeTypeInterface := d.GetChange("charge_type")
 		oldChargeType := oldChargeTypeInterface.(string)
@@ -452,9 +460,8 @@ func resourceTencentCloudMysqlDrInstanceUpdate(d *schema.ResourceData, meta inte
 		}
 
 		request := cdb.NewRenewDBInstanceRequest()
-		response := cdb.NewRenewDBInstanceResponse()
 		request.InstanceId = &mysqlID
-		request.ModifyPayType = helper.String("PREPAID")
+		request.ModifyPayType = helper.String(newChargeType)
 		request.TimeSpan = helper.IntInt64(period)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().RenewDBInstance(request)
@@ -468,16 +475,12 @@ func resourceTencentCloudMysqlDrInstanceUpdate(d *schema.ResourceData, meta inte
 				return resource.NonRetryableError(fmt.Errorf("Renew DB instance failed, Response is nil."))
 			}
 
-			response = result
 			return nil
 		})
 
 		if err != nil {
 			return err
 		}
-
-		// wait
-		_ = response
 	}
 
 	d.Partial(true)
