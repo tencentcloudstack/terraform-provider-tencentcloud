@@ -450,7 +450,7 @@ func resourceTencentCloudMysqlDrInstanceUpdate(d *schema.ResourceData, meta inte
 		oldChargeType := oldChargeTypeInterface.(string)
 		newChargeType := newChargeTypeInterface.(string)
 
-		if oldChargeType == "PREPAID" && newChargeType == "POSTPAID" {
+		if oldChargeType == MYSQL_CHARGE_TYPE_PREPAID && newChargeType == MYSQL_CHARGE_TYPE_POSTPAID {
 			return fmt.Errorf("`charge_type` only supports modification from `POSTPAID` to `PREPAID`.")
 		}
 
