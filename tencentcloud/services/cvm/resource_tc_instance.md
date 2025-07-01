@@ -6,6 +6,8 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** Currently, the `placement_group_id` field only supports setting and modification, but not deletion.
 
+~> **NOTE:** When creating a CVM instance using a `launch_template_id`, if you set other parameter values ​​at the same time, the template definition values ​​will be overwritten.
+
 Example Usage
 
 Create a general POSTPAID_BY_HOUR CVM instance
@@ -229,6 +231,15 @@ resource "tencentcloud_instance" "example" {
   tags = {
     tagKey = "tagValue"
   }
+}
+```
+
+Create CVM instance with template
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  launch_template_id      = "lt-b20scl2a"
+  launch_template_version = 1
 }
 ```
 

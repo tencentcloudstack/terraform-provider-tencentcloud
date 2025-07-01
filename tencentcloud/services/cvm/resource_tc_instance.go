@@ -62,17 +62,10 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Exclusive cluster id.",
 			},
-			"instance_count": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead.",
-				ValidateFunc: tccommon.ValidateIntegerInRange(1, 100),
-				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
-			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      "Terraform-CVM-Instance",
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 128),
 				Description:  "The name of the instance. The max length of instance_name is 128, and default value is `Terraform-CVM-Instance`.",
 			},
@@ -99,7 +92,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"running_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
+				Computed:    true,
 				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.",
 			},
 			"stopped_mode": {
@@ -114,6 +107,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"placement_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The ID of a placement group.",
 			},
 			"force_replace_placement_group_id": {
@@ -126,7 +120,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"instance_charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      CVM_CHARGE_TYPE_POSTPAID,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_CHARGE_TYPE),
 				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDHPAID` and `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR` and `CDHPAID`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time. `CDHPAID` instance must set `cdh_instance_type` and `cdh_host_id`.",
 			},
@@ -159,6 +153,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"cdh_instance_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateStringPrefix("CDH_"),
 				Description:  "Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.",
 			},
@@ -166,6 +161,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.",
 			},
 			// network
@@ -247,14 +243,14 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"system_disk_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      CVM_DISK_TYPE_CLOUD_PREMIUM,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_DISK_TYPE),
 				Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: cloud disk, `CLOUD_SSD`: cloud SSD disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD. NOTE: If modified, the instance may force stop.",
 			},
 			"system_disk_size": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     50,
+				Computed:    true,
 				Description: "Size of the system disk. unit is GB, Default is 50GB. If modified, the instance may force stop.",
 			},
 			"system_disk_id": {
@@ -395,7 +391,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"keep_image_login": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
+				Computed: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "false" && old == "" || old == "false" && new == "" {
 						return true
@@ -423,6 +419,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
+				Computed:    true,
 				Description: "A mapping of tags to assign to the resource. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).",
 			},
 			"force_delete": {
@@ -434,13 +431,14 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"disable_api_termination": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
+				Computed:    true,
 				Description: "Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.",
 			},
 			// role
 			"cam_role_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "CAM role name authorized to access.",
 			},
 			"hpc_cluster_id": {
@@ -539,10 +537,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("instance_name"); ok {
 		request.InstanceName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("instance_count"); ok {
-		request.InstanceCount = helper.Int64(int64(v.(int)))
 	}
 
 	if v, ok := d.GetOk("instance_type"); ok {
@@ -964,28 +958,30 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if !(d.Get("running_flag").(bool)) {
-		stoppedMode := d.Get("stopped_mode").(string)
-		err = cvmService.StopInstance(ctx, instanceId, stoppedMode)
-		if err != nil {
-			return err
-		}
-
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return tccommon.RetryError(errRet, tccommon.InternalError)
+	if v, ok := d.GetOkExists("running_flag"); ok {
+		if !v.(bool) {
+			stoppedMode := d.Get("stopped_mode").(string)
+			err = cvmService.StopInstance(ctx, instanceId, stoppedMode)
+			if err != nil {
+				return err
 			}
 
-			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
-				return nil
+			err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return tccommon.RetryError(errRet, tccommon.InternalError)
+				}
+
+				if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+			})
+
+			if err != nil {
+				return err
 			}
-
-			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-		})
-
-		if err != nil {
-			return err
 		}
 	}
 
