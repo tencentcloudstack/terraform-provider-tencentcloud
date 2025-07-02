@@ -225,7 +225,6 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"orderly_security_groups"},
-				AtLeastOneOf:  []string{"security_groups", "launch_template_id"},
 				Description:   "A list of security group IDs to associate with.",
 				Deprecated:    "It will be deprecated. Use `orderly_security_groups` instead.",
 			},
@@ -236,7 +235,6 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"security_groups"},
-				AtLeastOneOf:  []string{"orderly_security_groups", "launch_template_id"},
 				Description:   "A list of orderly security group IDs to associate with.",
 			},
 			// storage
