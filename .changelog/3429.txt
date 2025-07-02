@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_instance: fix the at least error while creating cvm instance
+```
