@@ -74,7 +74,6 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateInstanceType,
-				AtLeastOneOf: []string{"instance_type", "launch_template_id"},
 				Description:  "The type of the instance.",
 			},
 			"hostname": {
@@ -199,18 +198,16 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			},
 			// vpc
 			"vpc_id": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				AtLeastOneOf: []string{"vpc_id", "launch_template_id"},
-				Description:  "The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.",
 			},
 			"subnet_id": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				AtLeastOneOf: []string{"subnet_id", "launch_template_id"},
-				Description:  "The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.",
 			},
 			"private_ip": {
 				Type:        schema.TypeString,
@@ -225,7 +222,6 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"orderly_security_groups"},
-				AtLeastOneOf:  []string{"security_groups", "launch_template_id"},
 				Description:   "A list of security group IDs to associate with.",
 				Deprecated:    "It will be deprecated. Use `orderly_security_groups` instead.",
 			},
@@ -236,7 +232,6 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"security_groups"},
-				AtLeastOneOf:  []string{"orderly_security_groups", "launch_template_id"},
 				Description:   "A list of orderly security group IDs to associate with.",
 			},
 			// storage
