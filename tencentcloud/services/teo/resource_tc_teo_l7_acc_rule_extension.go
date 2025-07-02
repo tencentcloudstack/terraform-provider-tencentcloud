@@ -803,9 +803,12 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"version": {
-									Type:        schema.TypeString,
+									Type:        schema.TypeList,
 									Optional:    true,
 									Description: "TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable tls1, 1.1, 1.2, and 1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: tlsv1: tlsv1 version; `tlsv1.1`: tlsv1.1 version; `tlsv1.2`: tlsv1.2 version; `tlsv1.3`: tlsv1.3 version.",
+									Elem: &schema.Schema{
+										Type: schema.TypeString,
+									},
 								},
 								"cipher_suite": {
 									Type:        schema.TypeString,
