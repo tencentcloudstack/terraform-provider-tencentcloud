@@ -1,3 +1,9 @@
+## 1.82.6(July 02 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: fix the at least error while creating cvm instance ([#3429](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3429))
+
 ## 1.82.5(July 01 , 2025)
 
 ENHANCEMENTS:
