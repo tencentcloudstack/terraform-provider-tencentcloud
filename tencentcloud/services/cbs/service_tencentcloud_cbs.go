@@ -645,11 +645,18 @@ func (me *CbsService) DeleteSnapshotPolicy(ctx context.Context, policyId string)
 	return nil
 }
 
-func (me *CbsService) AttachSnapshotPolicy(ctx context.Context, diskId, policyId string) error {
+func (me *CbsService) AttachSnapshotPolicy(ctx context.Context, diskId string, diskIds []string, policyId string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cbs.NewBindAutoSnapshotPolicyRequest()
 	request.AutoSnapshotPolicyId = &policyId
-	request.DiskIds = []*string{&diskId}
+	if diskId != "" {
+		request.DiskIds = []*string{&diskId}
+	}
+
+	if len(diskIds) > 0 {
+		request.DiskIds = helper.Strings(diskIds)
+	}
+
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseCbsClient().BindAutoSnapshotPolicy(request)
 	if err != nil {
@@ -660,7 +667,7 @@ func (me *CbsService) AttachSnapshotPolicy(ctx context.Context, diskId, policyId
 	return nil
 }
 
-func (me *CbsService) DescribeAttachedSnapshotPolicy(ctx context.Context, diskId, policyId string) (policy *cbs.AutoSnapshotPolicy, errRet error) {
+func (me *CbsService) DescribeAttachedSnapshotPolicy(ctx context.Context, diskId string, policyId string) (policy *cbs.AutoSnapshotPolicy, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cbs.NewDescribeDiskAssociatedAutoSnapshotPolicyRequest()
 	request.DiskId = &diskId
@@ -672,20 +679,49 @@ func (me *CbsService) DescribeAttachedSnapshotPolicy(ctx context.Context, diskId
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return
 	}
+
 	for i, item := range response.Response.AutoSnapshotPolicySet {
 		if *item.AutoSnapshotPolicyId == policyId {
 			policy = response.Response.AutoSnapshotPolicySet[i]
 			break
 		}
 	}
+
 	return
 }
 
-func (me *CbsService) UnattachSnapshotPolicy(ctx context.Context, diskId, policyId string) error {
+func (me *CbsService) DescribeAttachedSnapshotPolicyDisksById(ctx context.Context, policyId string) (policy *cbs.AutoSnapshotPolicy, errRet error) {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	request := cbs.NewDescribeAutoSnapshotPoliciesRequest()
+	request.AutoSnapshotPolicyIds = []*string{&policyId}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCbsClient().DescribeAutoSnapshotPolicies(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.AutoSnapshotPolicySet) > 0 {
+		policy = response.Response.AutoSnapshotPolicySet[0]
+	}
+
+	return
+}
+
+func (me *CbsService) UnattachSnapshotPolicy(ctx context.Context, diskId string, diskIds []string, policyId string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cbs.NewUnbindAutoSnapshotPolicyRequest()
 	request.AutoSnapshotPolicyId = &policyId
-	request.DiskIds = []*string{&diskId}
+	if diskId != "" {
+		request.DiskIds = []*string{&diskId}
+	}
+
+	if len(diskIds) > 0 {
+		request.DiskIds = helper.Strings(diskIds)
+	}
+
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseCbsClient().UnbindAutoSnapshotPolicy(request)
 	if err != nil {
