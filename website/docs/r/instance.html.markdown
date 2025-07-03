@@ -304,8 +304,9 @@ The following arguments are supported:
 * `system_disk_size` - (Optional, Int) Size of the system disk. unit is GB, Default is 50GB. If modified, the instance may force stop.
 * `system_disk_type` - (Optional, String) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: cloud disk, `CLOUD_SSD`: cloud SSD disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD. NOTE: If modified, the instance may force stop.
 * `tags` - (Optional, Map) A mapping of tags to assign to the resource. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
-* `user_data_raw` - (Optional, String) The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded.
-* `user_data` - (Optional, String) The user data to be injected into this instance. Must be base64 encoded and up to 16 KB.
+* `user_data_raw` - (Optional, String) The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.
+* `user_data_replace_on_change` - (Optional, Bool) When used in combination with `user_data` or `user_data_raw` will trigger a destroy and recreate of the CVM instance when set to `true`. Default is `false`.
+* `user_data` - (Optional, String) The user data to be injected into this instance. Must be base64 encoded and up to 16 KB. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.
 * `vpc_id` - (Optional, String) The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.
 
 The `data_disks` object supports the following:
