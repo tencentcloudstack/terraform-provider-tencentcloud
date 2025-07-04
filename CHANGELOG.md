@@ -1,3 +1,10 @@
+## 1.82.7(July 04 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_snapshot_policy_attachment: support `storage_ids` and `import` ([#3433](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3433))
+* resource/tencentcloud_instance: support `user_data_replace_on_change` ([#3432](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3432))
+
 ## 1.82.6(July 02 , 2025)
 
 ENHANCEMENTS:
