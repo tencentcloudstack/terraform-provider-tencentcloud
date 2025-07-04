@@ -18,6 +18,7 @@ import (
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -402,14 +403,20 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"user_data_raw"},
-				Description:   "The user data to be injected into this instance. Must be base64 encoded and up to 16 KB.",
+				Description:   "The user data to be injected into this instance. Must be base64 encoded and up to 16 KB. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.",
 			},
 			"user_data_raw": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"user_data"},
-				Description:   "The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded.",
+				Description:   "The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.",
+			},
+			"user_data_replace_on_change": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "When used in combination with `user_data` or `user_data_raw` will trigger a destroy and recreate of the CVM instance when set to `true`. Default is `false`.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -498,6 +505,16 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Description: "Instance os name.",
 			},
 		},
+
+		CustomizeDiff: customdiff.All(
+			customdiff.ForceNewIf("user_data", func(_ context.Context, diff *schema.ResourceDiff, meta interface{}) bool {
+				return diff.Get("user_data_replace_on_change").(bool)
+			}),
+
+			customdiff.ForceNewIf("user_data_raw", func(_ context.Context, diff *schema.ResourceDiff, meta interface{}) bool {
+				return diff.Get("user_data_replace_on_change").(bool)
+			}),
+		),
 	}
 }
 
