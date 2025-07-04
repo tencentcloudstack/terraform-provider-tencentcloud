@@ -15,6 +15,8 @@ Provides a resource to create a CLB attachment.
 
 ## Example Usage
 
+### Bind a Cvm instance by using rule_id
+
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
   clb_id      = "lb-k2zjp9lv"
@@ -29,7 +31,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-
+### Bind a Cvm instance by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -46,7 +48,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-
+### Bind multiple Cvm instances by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -68,7 +70,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-
+### Bind multiple Cvm instances by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -91,7 +93,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-
+### Bind backend target is ENI by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -107,7 +109,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-
+### Bind backend target is ENI by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -156,9 +158,11 @@ CLB attachment can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_clb_attachment.example loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
+```
 
 Or
 
+```
 $ terraform import tencentcloud_clb_attachment.example test.com,/#lbl-hh141sn9#lb-7a0t6zqb
 ```
 
