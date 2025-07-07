@@ -1,3 +1,11 @@
+## 1.82.8(July 07 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_teo_acceleration_domain: optmize `host_header` params ([#3436](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3436))
+* resource/tencentcloud_teo_l7_acc_rule: Correct the `tls_config_parameters.0.version` field type. ([#3431](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3431))
+* resource/tencentcloud_teo_l7_acc_rule_v2: Correct the `tls_config_parameters.0.version` field type. ([#3431](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3431))
+
 ## 1.82.7(July 04 , 2025)
 
 ENHANCEMENTS:
