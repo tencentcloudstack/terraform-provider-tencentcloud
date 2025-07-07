@@ -48,27 +48,27 @@ func ResourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 						"origin_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The origin type. Values: `IP_DOMAIN`: IPv4/IPv6 address or domain name; `COS`: COS bucket address; `ORIGIN_GROUP`: Origin group; `AWS_S3`: AWS S3 bucket address; `SPACE`: EdgeOne Shield Space.",
+							Description: "Origin server type, with values: IP_DOMAIN: IPv4, IPv6, or domain name type origin server; COS: Tencent Cloud COS origin server; AWS_S3: AWS S3 origin server; ORIGIN_GROUP: origin server group type origin server; VOD: Video on Demand; SPACE: origin server uninstallation. Currently only available to the allowlist; LB: load balancing. Currently only available to the allowlist.",
 						},
 						"origin": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The origin address. Enter the origin group ID if `OriginType=ORIGIN_GROUP`.",
+							Description: "Origin server address, which varies according to the value of OriginType: When OriginType = IP_DOMAIN, fill in an IPv4 address, an IPv6 address, or a domain name; When OriginType = COS, fill in the access domain name of the COS bucket; When OriginType = AWS_S3, fill in the access domain name of the S3 bucket; When OriginType = ORIGIN_GROUP, fill in the origin server group ID; When OriginType = VOD, fill in the VOD application ID; When OriginType = LB, fill in the Cloud Load Balancer instance ID. This feature is currently only available to the allowlist; When OriginType = SPACE, fill in the origin server uninstallation space ID. This feature is currently only available to the allowlist.",
 						},
 						"backup_origin": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "ID of the secondary origin group (valid when `OriginType=ORIGIN_GROUP`). If it is not specified, it indicates that secondary origins are not used.",
+							Description: "The ID of the secondary origin group. This parameter is valid only when OriginType is ORIGIN_GROUP. This field indicates the old version capability, which cannot be configured or modified on the control panel after being called. Please submit a ticket if required.",
 						},
 						"private_access": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Whether to authenticate access to the private object storage origin (valid when `OriginType=COS/AWS_S3`). Values: `on`: Enable private authentication; `off`: Disable private authentication. If this field is not specified, the default value `off` is used.",
+							Description: "Whether access to the private Cloud Object Storage origin server is allowed. This parameter is valid only when OriginType is COS or AWS_S3. Valid values: on: Enable private authentication; off: Disable private authentication. If it is not specified, the default value is off.",
 						},
 						"private_parameters": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "The private authentication parameters. This field is valid when `PrivateAccess=on`.",
+							Description: "Private authentication parameter. This parameter is valid only when `private_access` is on.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
@@ -88,7 +88,7 @@ func ResourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Customize the back-to-origin HOST header. This parameter is only valid when OriginType=IP_DOMAIN. If OriginType=COS or AWS_S3, the back-to-origin HOST header will be consistent with the origin server domain name. If OriginType=ORIGIN_GROUP, the back-to-origin HOST header follows the configuration in the origin server group. If no configuration is made, the default is the acceleration domain name. If OriginType=VOD or SPACE, there is no need to configure this header. It will take effect according to the corresponding back-to-origin domain name.",
+							Description: "Custom origin server HOST header. this parameter is valid only when OriginType=IP_DOMAIN.If the OriginType is another type of origin, this parameter does not need to be passed in, otherwise an error will be reported. If OriginType is COS or AWS_S3, the HOST header for origin-pull will remain consistent with the origin server domain name. If OriginType is ORIGIN_GROUP, the HOST header follows the ORIGIN site GROUP configuration. if not configured, it defaults to the acceleration domain name. If OriginType is VOD or SPACE, no configuration is required for this header, and the domain name takes effect based on the corresponding origin.",
 						},
 						"vod_origin_scope": {
 							Type:        schema.TypeString,
@@ -174,8 +174,10 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 
 	if originInfoMap, ok := helper.InterfacesHeadMap(d, "origin_info"); ok {
 		originInfo := teo.OriginInfo{}
+		var originType string
 		if v, ok := originInfoMap["origin_type"]; ok {
 			originInfo.OriginType = helper.String(v.(string))
+			originType = v.(string)
 		}
 
 		if v, ok := originInfoMap["origin"]; ok {
@@ -207,7 +209,11 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 		}
 
 		if v, ok := originInfoMap["host_header"].(string); ok && v != "" {
-			originInfo.HostHeader = helper.String(v)
+			if originType == "IP_DOMAIN" {
+				originInfo.HostHeader = helper.String(v)
+			} else {
+				return fmt.Errorf("Only `origin_type` is `IP_DOMAIN` can set `host_header`.")
+			}
 		}
 
 		if v, ok := originInfoMap["vod_origin_scope"].(string); ok && v != "" {
@@ -458,8 +464,10 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 		request.DomainName = helper.String(domainName)
 		if originInfoMap, ok := helper.InterfacesHeadMap(d, "origin_info"); ok {
 			originInfo := teo.OriginInfo{}
+			var originType string
 			if v, ok := originInfoMap["origin_type"]; ok {
 				originInfo.OriginType = helper.String(v.(string))
+				originType = v.(string)
 			}
 
 			if v, ok := originInfoMap["origin"]; ok {
@@ -491,7 +499,9 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			}
 
 			if v, ok := originInfoMap["host_header"].(string); ok && v != "" {
-				originInfo.HostHeader = helper.String(v)
+				if originType == "IP_DOMAIN" {
+					originInfo.HostHeader = helper.String(v)
+				}
 			}
 
 			if v, ok := originInfoMap["vod_origin_scope"].(string); ok && v != "" {

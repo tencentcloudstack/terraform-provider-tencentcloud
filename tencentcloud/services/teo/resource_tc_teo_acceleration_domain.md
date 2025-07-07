@@ -2,6 +2,8 @@ Provides a resource to create a TEO acceleration domain
 
 ~> **NOTE:** Before modifying resource content, you need to ensure that the `status` is `online`.
 
+~> **NOTE:** Only `origin_type` is `IP_DOMAIN` can set `host_header`.
+
 Example Usage
 
 ```hcl
