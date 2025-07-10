@@ -1,3 +1,11 @@
+## 1.82.9(July 10 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_attachment: optmize `targets` code logic ([#3437](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3437))
+* resource/tencentcloud_instance: optmize code logic for `launch_template_id` ([#3439](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3439))
+* resource/tencentcloud_redis_instance: suuport create memcached redis ([#3438](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3438))
+
 ## 1.82.8(July 07 , 2025)
 
 ENHANCEMENTS:
