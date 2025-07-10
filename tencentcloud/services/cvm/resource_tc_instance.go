@@ -542,7 +542,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		projectId := int64(v.(int))
 		request.Placement.ProjectId = &projectId
 	}
@@ -615,10 +615,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	var (
-		rpgFlag bool
-	)
-
+	var rpgFlag bool
 	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
 		rpgFlag = v.(bool)
 	}
@@ -630,23 +627,35 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// network
-	request.InternetAccessible = &cvm.InternetAccessible{}
+	var (
+		internetAccessible cvm.InternetAccessible
+		netWorkFlag        bool
+	)
+
 	if v, ok := d.GetOk("internet_charge_type"); ok {
-		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+		internetAccessible.InternetChargeType = helper.String(v.(string))
+		netWorkFlag = true
 	}
 
-	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
+	if v, ok := d.GetOkExists("internet_max_bandwidth_out"); ok {
 		maxBandwidthOut := int64(v.(int))
-		request.InternetAccessible.InternetMaxBandwidthOut = &maxBandwidthOut
+		internetAccessible.InternetMaxBandwidthOut = &maxBandwidthOut
+		netWorkFlag = true
 	}
 
 	if v, ok := d.GetOk("bandwidth_package_id"); ok {
-		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		internetAccessible.BandwidthPackageId = helper.String(v.(string))
+		netWorkFlag = true
 	}
 
 	if v, ok := d.GetOkExists("allocate_public_ip"); ok {
 		allocatePublicIp := v.(bool)
-		request.InternetAccessible.PublicIpAssigned = &allocatePublicIp
+		internetAccessible.PublicIpAssigned = &allocatePublicIp
+		netWorkFlag = true
+	}
+
+	if netWorkFlag {
+		request.InternetAccessible = &internetAccessible
 	}
 
 	// vpc
@@ -680,27 +689,38 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// storage
-	request.SystemDisk = &cvm.SystemDisk{}
+	var (
+		systemDisk     cvm.SystemDisk
+		systemDiskFlag bool
+	)
+
 	if v, ok := d.GetOk("system_disk_type"); ok {
-		request.SystemDisk.DiskType = helper.String(v.(string))
+		systemDisk.DiskType = helper.String(v.(string))
+		systemDiskFlag = true
 	}
 
-	if v, ok := d.GetOk("system_disk_size"); ok {
+	if v, ok := d.GetOkExists("system_disk_size"); ok {
 		diskSize := int64(v.(int))
-		request.SystemDisk.DiskSize = &diskSize
+		systemDisk.DiskSize = &diskSize
+		systemDiskFlag = true
 	}
 
 	if v, ok := d.GetOk("system_disk_id"); ok {
-		request.SystemDisk.DiskId = helper.String(v.(string))
+		systemDisk.DiskId = helper.String(v.(string))
+		systemDiskFlag = true
 	}
 
 	if v, ok := d.GetOk("system_disk_name"); ok {
-		request.SystemDisk.DiskName = helper.String(v.(string))
+		systemDisk.DiskName = helper.String(v.(string))
+		systemDiskFlag = true
+	}
+
+	if systemDiskFlag {
+		request.SystemDisk = &systemDisk
 	}
 
 	if v, ok := d.GetOk("data_disks"); ok {
 		dataDisks := v.([]interface{})
-		request.DataDisks = make([]*cvm.DataDisk, 0, len(dataDisks))
 		for _, d := range dataDisks {
 			value := d.(map[string]interface{})
 			diskType := value["data_disk_type"].(string)
@@ -749,46 +769,75 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// enhanced service
-	request.EnhancedService = &cvm.EnhancedService{}
+	var (
+		enhancedService     cvm.EnhancedService
+		enhancedServiceFlag bool
+	)
+
 	if v, ok := d.GetOkExists("disable_security_service"); ok {
 		securityService := !(v.(bool))
-		request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
+		enhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
 			Enabled: &securityService,
 		}
+		enhancedServiceFlag = true
 	}
 
 	if v, ok := d.GetOkExists("disable_monitor_service"); ok {
 		monitorService := !(v.(bool))
-		request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
+		enhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
 			Enabled: &monitorService,
 		}
+		enhancedServiceFlag = true
 	}
 
 	if v, ok := d.GetOkExists("disable_automation_service"); ok {
 		automationService := !(v.(bool))
-		request.EnhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
+		enhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
 			Enabled: &automationService,
 		}
+		enhancedServiceFlag = true
+	}
+
+	if enhancedServiceFlag {
+		request.EnhancedService = &enhancedService
 	}
 
 	// login
-	request.LoginSettings = &cvm.LoginSettings{}
-	keyIds := d.Get("key_ids").(*schema.Set).List()
-	if len(keyIds) > 0 {
-		request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(keyIds)
-	} else if v, ok := d.GetOk("key_name"); ok {
-		request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
+	var (
+		loginSettings     cvm.LoginSettings
+		loginSettingsFlag bool
+	)
+
+	if v, ok := d.GetOk("key_name"); ok {
+		loginSettings.KeyIds = []*string{helper.String(v.(string))}
+		loginSettingsFlag = true
+	}
+
+	if v, ok := d.GetOk("key_ids"); ok {
+		keyIds := v.(*schema.Set).List()
+		if len(keyIds) > 0 {
+			loginSettings.KeyIds = helper.InterfacesStringsPoint(keyIds)
+			loginSettingsFlag = true
+		}
 	}
 
 	if v, ok := d.GetOk("password"); ok {
-		request.LoginSettings.Password = helper.String(v.(string))
+		loginSettings.Password = helper.String(v.(string))
+		loginSettingsFlag = true
 	}
 
-	v := d.Get("keep_image_login").(bool)
-	if v {
-		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
-	} else {
-		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+	if v, ok := d.GetOkExists("keep_image_login"); ok {
+		if v.(bool) {
+			loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+		} else {
+			loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+		}
+
+		loginSettingsFlag = true
+	}
+
+	if loginSettingsFlag {
+		request.LoginSettings = &loginSettings
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
@@ -1810,48 +1859,75 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		// enhanced service
-		request.EnhancedService = &cvm.EnhancedService{}
-		if d.HasChange("disable_security_service") {
-			v := d.Get("disable_security_service")
-			securityService := v.(bool)
-			request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
+		var (
+			enhancedService     cvm.EnhancedService
+			enhancedServiceFlag bool
+		)
+
+		if v, ok := d.GetOkExists("disable_security_service"); ok {
+			securityService := !(v.(bool))
+			enhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
 				Enabled: &securityService,
 			}
+			enhancedServiceFlag = true
 		}
 
-		if d.HasChange("disable_monitor_service") {
-			v := d.Get("disable_monitor_service")
+		if v, ok := d.GetOkExists("disable_monitor_service"); ok {
 			monitorService := !(v.(bool))
-			request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
+			enhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
 				Enabled: &monitorService,
 			}
+			enhancedServiceFlag = true
 		}
 
-		if d.HasChange("disable_automation_service") {
-			v := d.Get("disable_automation_service")
+		if v, ok := d.GetOkExists("disable_automation_service"); ok {
 			automationService := !(v.(bool))
-			request.EnhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
+			enhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
 				Enabled: &automationService,
 			}
+			enhancedServiceFlag = true
 		}
 
-		// Modify or keep login info when instance reset
-		request.LoginSettings = &cvm.LoginSettings{}
+		if enhancedServiceFlag {
+			request.EnhancedService = &enhancedService
+		}
 
-		if v, ok := d.GetOk("password"); ok {
-			request.LoginSettings.Password = helper.String(v.(string))
+		// login
+		var (
+			loginSettings     cvm.LoginSettings
+			loginSettingsFlag bool
+		)
+
+		if v, ok := d.GetOk("key_name"); ok {
+			loginSettings.KeyIds = []*string{helper.String(v.(string))}
+			loginSettingsFlag = true
 		}
 
 		if v, ok := d.GetOk("key_ids"); ok {
-			request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
-		} else if v, ok := d.GetOk("key_name"); ok {
-			request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
+			keyIds := v.(*schema.Set).List()
+			if len(keyIds) > 0 {
+				loginSettings.KeyIds = helper.InterfacesStringsPoint(keyIds)
+				loginSettingsFlag = true
+			}
 		}
 
-		if v := d.Get("keep_image_login").(bool); v {
-			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
-		} else {
-			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+		if v, ok := d.GetOk("password"); ok {
+			loginSettings.Password = helper.String(v.(string))
+			loginSettingsFlag = true
+		}
+
+		if v, ok := d.GetOkExists("keep_image_login"); ok {
+			if v.(bool) {
+				loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+			} else {
+				loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+			}
+
+			loginSettingsFlag = true
+		}
+
+		if loginSettingsFlag {
+			request.LoginSettings = &loginSettings
 		}
 
 		if err := cvmService.ResetInstance(ctx, request); err != nil {
