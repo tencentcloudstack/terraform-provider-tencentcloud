@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_instance: optmize code logic for `launch_template_id`
+```
