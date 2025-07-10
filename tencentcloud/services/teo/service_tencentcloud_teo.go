@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -1972,7 +1973,7 @@ func (me *TeoService) DescribeTeoPlansByFilters(ctx context.Context, paramMap ma
 	return
 }
 
-func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, zoneId, status string) (errRet error) {
+func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, timeout time.Duration, zoneId, status string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := teo.NewDescribeOriginACLRequest()
 	request.ZoneId = &zoneId
@@ -1983,7 +1984,7 @@ func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, zoneId, status s
 		}
 	}()
 
-	errRet = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+	errRet = resource.Retry(timeout, func() *resource.RetryError {
 		result, e := me.client.UseTeoClient().DescribeOriginACLWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -1991,17 +1992,15 @@ func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, zoneId, status s
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil {
+		if result == nil || result.Response == nil || result.Response.OriginACLInfo == nil || result.Response.OriginACLInfo.Status == nil {
 			return resource.NonRetryableError(fmt.Errorf("Describe teo origin acl failed, Response is nil."))
 		}
 
-		if result.Response.OriginACLInfo != nil {
-			if result.Response.OriginACLInfo.Status != nil && *result.Response.OriginACLInfo.Status == status {
-				return nil
-			}
+		if *result.Response.OriginACLInfo.Status == status {
+			return nil
 		}
 
-		return resource.RetryableError(fmt.Errorf("TEO zone %s origin acl is still updating...", zoneId))
+		return resource.RetryableError(fmt.Errorf("TEO zone %s origin acl is still %s. Please contact TEO for assistance.", zoneId, *result.Response.OriginACLInfo.Status))
 	})
 
 	return
@@ -2019,7 +2018,7 @@ func (me *TeoService) DescribeTeoOriginACLById(ctx context.Context, zoneId strin
 		}
 	}()
 
-	errRet = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := me.client.UseTeoClient().DescribeOriginACLWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
