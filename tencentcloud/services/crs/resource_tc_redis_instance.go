@@ -57,7 +57,19 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateIntegerMin(2),
-				Description:  "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.",
+				Description: "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified." +
+					"<ul><li>2: Redis 2.8 Memory Edition (standard architecture);</li> " +
+					"<li>3: CKV 3.2 Memory Edition (standard architecture);</li> " +
+					"<li>4: CKV 3.2 Memory Edition (cluster architecture);</li> " +
+					"<li>6: Redis 4.0 Memory Edition (standard architecture);</li> " +
+					"<li>7: Redis 4.0 Memory Edition (cluster architecture);</li> " +
+					"<li>8: Redis 5.0 Memory Edition (standard architecture);</li> " +
+					"<li>9: Redis 5.0 Memory Edition (cluster architecture);</li> " +
+					"<li>15: Redis 6.2 Memory Edition (standard architecture);</li> " +
+					"<li>16: Redis 6.2 Memory Edition (cluster architecture);</li> " +
+					"<li>17: Redis 7.0 Memory Edition (standard architecture);</li> " +
+					"<li>18: Redis 7.0 Memory Edition (cluster architecture). </li> " +
+					"<li>200: Memcached 1.6 Memory Edition (cluster architecture). </li>Note: The CKV version is currently used by existing users and is temporarily retained.</ul>.",
 			},
 			"redis_shard_num": {
 				Type:         schema.TypeInt,

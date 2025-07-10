@@ -234,6 +234,86 @@ resource "tencentcloud_redis_instance" "example" {
 }
 ```
 
+### Create a memcached instance
+
+```hcl
+data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 200
+  region  = "ap-guangzhou"
+}
+
+variable "replica_zone_ids" {
+  default = [100004, 100006]
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_redis_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_redis_zone_config.zone.list[2].zone
+  name              = "tf_redis_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name = "tf-redis-sg"
+}
+
+resource "tencentcloud_security_group_rule_set" "sg_rule" {
+  security_group_id = tencentcloud_security_group.security_group.id
+
+  ingress {
+    action      = "ACCEPT"
+    cidr_block  = "10.0.0.0/22"
+    protocol    = "TCP"
+    port        = "80-90"
+    description = "A:Allow Ips and 80-90"
+  }
+
+  ingress {
+    action      = "ACCEPT"
+    cidr_block  = "10.0.2.1"
+    protocol    = "UDP"
+    port        = "8080"
+    description = "B:Allow UDP 8080"
+  }
+
+  egress {
+    action      = "DROP"
+    cidr_block  = "10.0.0.0/16"
+    protocol    = "ICMP"
+    description = "A:Block ping3"
+  }
+
+  egress {
+    action      = "DROP"
+    cidr_block  = "0.0.0.0/0"
+    protocol    = "ALL"
+    description = "A:Block ping3"
+  }
+}
+
+resource "tencentcloud_redis_instance" "example" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[2].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[2].type_id
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[2].redis_shard_nums[0]
+  redis_replicas_num = 2
+  no_auth            = true
+  replica_zone_ids   = var.replica_zone_ids
+  name               = "tf-example"
+  port               = 6379
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
+  security_groups    = [tencentcloud_security_group.security_group.id]
+
+  force_delete = true
+}
+```
+
 ### Create a CDC scenario instance
 
 ```hcl
@@ -310,7 +390,7 @@ The following arguments are supported:
 * `security_groups` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, String) Specifies which subnet the instance should belong to. When the `operation_network` is `changeVpc` or `changeBaseToVpc`, this parameter needs to be configured.
 * `tags` - (Optional, Map) Instance tags.
-* `type_id` - (Optional, Int) Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.
+* `type_id` - (Optional, Int) Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.<ul><li>2: Redis 2.8 Memory Edition (standard architecture);</li> <li>3: CKV 3.2 Memory Edition (standard architecture);</li> <li>4: CKV 3.2 Memory Edition (cluster architecture);</li> <li>6: Redis 4.0 Memory Edition (standard architecture);</li> <li>7: Redis 4.0 Memory Edition (cluster architecture);</li> <li>8: Redis 5.0 Memory Edition (standard architecture);</li> <li>9: Redis 5.0 Memory Edition (cluster architecture);</li> <li>15: Redis 6.2 Memory Edition (standard architecture);</li> <li>16: Redis 6.2 Memory Edition (cluster architecture);</li> <li>17: Redis 7.0 Memory Edition (standard architecture);</li> <li>18: Redis 7.0 Memory Edition (cluster architecture). </li> <li>200: Memcached 1.6 Memory Edition (cluster architecture). </li>Note: The CKV version is currently used by existing users and is temporarily retained.</ul>.
 * `type` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.33.1. Please use 'type_id' instead. Instance type. Available values: `cluster_ckv`,`cluster_redis5.0`,`cluster_redis`,`master_slave_ckv`,`master_slave_redis4.0`,`master_slave_redis5.0`,`master_slave_redis`,`standalone_redis`, specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.
 * `vpc_id` - (Optional, String) ID of the vpc with which the instance is to be associated. When the `operation_network` is `changeVpc` or `changeBaseToVpc`, this parameter needs to be configured.
 * `wait_switch` - (Optional, Int) Switching mode: `1`-maintenance time window switching, `2`-immediate switching, default value `2`.
