@@ -94,7 +94,7 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 	tmpL4ProxyIds := make([]interface{}, 0)
 	if v, ok := d.GetOk("l7_hosts"); ok {
 		l7Hosts := v.(*schema.Set).List()
-		if len(l7Hosts) > 2 {
+		if len(l7Hosts) > 200 {
 			l7Hosts = v.(*schema.Set).List()[:2]
 			tmpL7Hosts = v.(*schema.Set).List()[2:]
 		}
@@ -113,7 +113,7 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("l4_proxy_ids"); ok {
 		l4ProxyIds := v.(*schema.Set).List()
-		if len(l4ProxyIds) > 1 {
+		if len(l4ProxyIds) > 100 {
 			l4ProxyIds = v.(*schema.Set).List()[:1]
 			tmpL4ProxyIds = v.(*schema.Set).List()[1:]
 		}
