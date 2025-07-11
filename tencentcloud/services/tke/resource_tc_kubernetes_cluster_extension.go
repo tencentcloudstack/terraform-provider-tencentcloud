@@ -1865,7 +1865,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	if v, ok := dMap["instance_charge_type"]; ok {
 		instanceChargeType := v.(string)
 		request.InstanceChargeType = &instanceChargeType
-		if instanceChargeType == svccvm.CVM_CHARGE_TYPE_PREPAID {
+		if instanceChargeType == svccvm.CVM_CHARGE_TYPE_PREPAID || instanceChargeType == svccvm.CVM_CHARGE_TYPE_UNDERWRITE {
 			request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
 			if period, ok := dMap["instance_charge_type_prepaid_period"]; ok {
 				periodInt64 := int64(period.(int))
@@ -1875,8 +1875,8 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 					instanceChargeType)
 				return
 			}
-			if renewFlag, ok := dMap["instance_charge_type_prepaid_renew_flag"]; ok {
-				request.InstanceChargePrepaid.RenewFlag = helper.String(renewFlag.(string))
+			if renewFlag, ok := dMap["instance_charge_type_prepaid_renew_flag"].(string); ok && renewFlag != "" {
+				request.InstanceChargePrepaid.RenewFlag = helper.String(renewFlag)
 			}
 		}
 	}
