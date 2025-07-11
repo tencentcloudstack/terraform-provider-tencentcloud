@@ -1,3 +1,9 @@
+## 1.82.10(July 11 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_scale_worker: support `UNDERWRITE` for charge type ([#3441](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3441))
+
 ## 1.82.9(July 10 , 2025)
 
 ENHANCEMENTS:
