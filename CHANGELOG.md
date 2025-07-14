@@ -1,3 +1,9 @@
+## 1.82.11(July 14 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_elasticsearch_instance: fix node_info_list update ([#3442](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3442))
+
 ## 1.82.10(July 11 , 2025)
 
 ENHANCEMENTS:
