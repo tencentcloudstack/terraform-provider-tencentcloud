@@ -346,6 +346,19 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Description: "Instance creation time.",
 			},
 		},
+		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
+			nodeInfos := d.Get("node_info_list").([]interface{})
+			typeMap := map[string]bool{}
+			for _, v := range nodeInfos {
+				m := v.(map[string]interface{})
+				t := m["type"].(string)
+				if typeMap[t] {
+					return fmt.Errorf("duplicate node type '%s' is not allowed in node_info_list", t)
+				}
+				typeMap[t] = true
+			}
+			return nil
+		},
 	}
 }
 
@@ -1142,6 +1155,8 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					}
 				}
 			}
+			// 更新oldNodeMap中的值
+			oldNodeMap[t] = new
 		}
 	}
 
