@@ -178,7 +178,7 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Description:  "License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.",
 			},
 			"node_info_list": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				MinItems:    1,
 				Description: "Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.",
@@ -346,6 +346,19 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Description: "Instance creation time.",
 			},
 		},
+		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
+			nodeInfos := d.Get("node_info_list").(*schema.Set).List()
+			typeMap := map[string]bool{}
+			for _, v := range nodeInfos {
+				m := v.(map[string]interface{})
+				t := m["type"].(string)
+				if typeMap[t] {
+					return fmt.Errorf("duplicate node type '%s' is not allowed in node_info_list", t)
+				}
+				typeMap[t] = true
+			}
+			return nil
+		},
 	}
 }
 
@@ -428,7 +441,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 
 	if v, ok := d.GetOk("node_info_list"); ok {
-		infos := v.([]interface{})
+		infos := v.(*schema.Set).List()
 		request.NodeInfoList = make([]*es.NodeInfo, 0, len(infos))
 		for _, item := range infos {
 			value := item.(map[string]interface{})
@@ -995,39 +1008,155 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	}
 
 	if d.HasChange("node_info_list") {
-		nodeInfos := d.Get("node_info_list").([]interface{})
-		nodeInfoList := make([]*es.NodeInfo, 0, len(nodeInfos))
-		for _, d := range nodeInfos {
-			value := d.(map[string]interface{})
-			nodeType := value["node_type"].(string)
-			diskSize := uint64(value["disk_size"].(int))
-			nodeNum := uint64(value["node_num"].(int))
-			types := value["type"].(string)
-			diskType := value["disk_type"].(string)
-			encrypt := value["encrypt"].(bool)
-			dataDisk := es.NodeInfo{
-				NodeType:    &nodeType,
-				DiskSize:    &diskSize,
-				NodeNum:     &nodeNum,
-				Type:        &types,
-				DiskType:    &diskType,
-				DiskEncrypt: helper.BoolToInt64Pointer(encrypt),
-			}
-			nodeInfoList = append(nodeInfoList, &dataDisk)
+		o, n := d.GetChange("node_info_list")
+		oldNodeMap := make(map[string]map[string]interface{})
+		newNodesMap := make(map[string]map[string]interface{})
+		for _, node := range o.(*schema.Set).List() {
+			nodeMap := node.(map[string]interface{})
+			oldNodeMap[nodeMap["type"].(string)] = nodeMap
 		}
-		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nodeInfoList, nil, nil, nil, nil)
-			if errRet != nil {
-				return tccommon.RetryError(errRet)
-			}
-			return nil
-		})
-		if err != nil {
-			return err
+		for _, node := range n.(*schema.Set).List() {
+			nodeMap := node.(map[string]interface{})
+			newNodesMap[nodeMap["type"].(string)] = nodeMap
 		}
-		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
-		if err != nil {
-			return err
+
+		typeList := []string{"hotData", "warmData", "dedicatedMaster"}
+		for _, t := range typeList {
+			old := oldNodeMap[t]
+			new := newNodesMap[t]
+			baseNodeList := make([]interface{}, 0)
+			for k, v := range oldNodeMap {
+				if k == t {
+					continue
+				}
+				baseNodeList = append(baseNodeList, v)
+			}
+
+			if old == nil && new == nil {
+				// 没有该类型节点配置
+				continue
+			} else if old == nil {
+				// 新增
+				baseNodeList = append(baseNodeList, new)
+				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil)
+					if errRet != nil {
+						return tccommon.RetryError(errRet)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+				if err != nil {
+					return err
+				}
+			} else if new == nil {
+				// 删除
+				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil)
+					if errRet != nil {
+						return tccommon.RetryError(errRet)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+				if err != nil {
+					return err
+				}
+			} else {
+				// 磁盘类型不支持修改
+				fields := []string{"disk_type", "encrypt", "type"}
+				for _, field := range fields {
+					if old[field] != new[field] {
+						return fmt.Errorf("%s not support change", field)
+					}
+				}
+				// 修改一种节点的个数
+				var isUpdateNodeNum bool
+				if old["node_num"].(int) != new["node_num"].(int) {
+					changeESNodes := convertToNodeInfos(baseNodeList)
+					thisNode := convertToNodeInfo(old)
+					thisNode.NodeNum = helper.IntUint64(new["node_num"].(int))
+					changeESNodes = append(changeESNodes, thisNode)
+					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil)
+						if errRet != nil {
+							return tccommon.RetryError(errRet)
+						}
+						return nil
+					})
+					if err != nil {
+						return err
+					}
+					err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+					if err != nil {
+						return err
+					}
+					isUpdateNodeNum = true
+				}
+
+				var isUpdateNodeType bool
+				// 修改一种节点的节点规格
+				if old["node_type"].(string) != new["node_type"].(string) {
+					changeESNodes := convertToNodeInfos(baseNodeList)
+					thisNode := convertToNodeInfo(old)
+					thisNode.NodeType = helper.String(new["node_type"].(string))
+					if isUpdateNodeNum {
+						thisNode.NodeNum = helper.IntUint64(new["node_num"].(int))
+					}
+					changeESNodes = append(changeESNodes, thisNode)
+					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil)
+						if errRet != nil {
+							return tccommon.RetryError(errRet)
+						}
+						return nil
+					})
+					if err != nil {
+						return err
+					}
+					err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+					if err != nil {
+						return err
+					}
+					isUpdateNodeType = true
+				}
+				// 修改一种节点的磁盘大小
+				if old["disk_size"].(int) != new["disk_size"].(int) {
+					changeESNodes := convertToNodeInfos(baseNodeList)
+					thisNode := convertToNodeInfo(old)
+					thisNode.NodeType = helper.String(new["node_type"].(string))
+					thisNode.DiskSize = helper.IntUint64(new["disk_size"].(int))
+					if isUpdateNodeNum {
+						thisNode.NodeNum = helper.IntUint64(new["node_num"].(int))
+					}
+					if isUpdateNodeType {
+						thisNode.NodeType = helper.String(new["node_type"].(string))
+					}
+					changeESNodes = append(changeESNodes, thisNode)
+					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil)
+						if errRet != nil {
+							return tccommon.RetryError(errRet)
+						}
+						return nil
+					})
+					if err != nil {
+						return err
+					}
+					err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+					if err != nil {
+						return err
+					}
+				}
+			}
+			// 更新oldNodeMap中的值
+			oldNodeMap[t] = new
 		}
 	}
 
@@ -1250,4 +1379,32 @@ func tencentCloudElasticsearchInstanceUpgradeWaiting(ctx context.Context, servic
 		}
 		return nil
 	})
+}
+
+func convertToNodeInfo(n interface{}) *es.NodeInfo {
+	value := n.(map[string]interface{})
+	nodeType := value["node_type"].(string)
+	diskSize := uint64(value["disk_size"].(int))
+	nodeNum := uint64(value["node_num"].(int))
+	types := value["type"].(string)
+	diskType := value["disk_type"].(string)
+	encrypt := value["encrypt"].(bool)
+	nodeInfo := &es.NodeInfo{
+		NodeType:    &nodeType,
+		DiskSize:    &diskSize,
+		NodeNum:     &nodeNum,
+		Type:        &types,
+		DiskType:    &diskType,
+		DiskEncrypt: helper.BoolToInt64Pointer(encrypt),
+	}
+	return nodeInfo
+}
+
+func convertToNodeInfos(nodeInfos []interface{}) []*es.NodeInfo {
+	nodeInfoList := make([]*es.NodeInfo, 0, len(nodeInfos))
+	for _, n := range nodeInfos {
+		nodeInfo := convertToNodeInfo(n)
+		nodeInfoList = append(nodeInfoList, nodeInfo)
+	}
+	return nodeInfoList
 }
