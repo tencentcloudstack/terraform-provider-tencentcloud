@@ -178,7 +178,7 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Description:  "License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.",
 			},
 			"node_info_list": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				MinItems:    1,
 				Description: "Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.",
@@ -347,7 +347,7 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 			},
 		},
 		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
-			nodeInfos := d.Get("node_info_list").([]interface{})
+			nodeInfos := d.Get("node_info_list").(*schema.Set).List()
 			typeMap := map[string]bool{}
 			for _, v := range nodeInfos {
 				m := v.(map[string]interface{})
@@ -441,7 +441,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 
 	if v, ok := d.GetOk("node_info_list"); ok {
-		infos := v.([]interface{})
+		infos := v.(*schema.Set).List()
 		request.NodeInfoList = make([]*es.NodeInfo, 0, len(infos))
 		for _, item := range infos {
 			value := item.(map[string]interface{})
@@ -1011,11 +1011,11 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		o, n := d.GetChange("node_info_list")
 		oldNodeMap := make(map[string]map[string]interface{})
 		newNodesMap := make(map[string]map[string]interface{})
-		for _, node := range o.([]interface{}) {
+		for _, node := range o.(*schema.Set).List() {
 			nodeMap := node.(map[string]interface{})
 			oldNodeMap[nodeMap["type"].(string)] = nodeMap
 		}
-		for _, node := range n.([]interface{}) {
+		for _, node := range n.(*schema.Set).List() {
 			nodeMap := node.(map[string]interface{})
 			newNodesMap[nodeMap["type"].(string)] = nodeMap
 		}
@@ -1070,7 +1070,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				}
 			} else {
 				// 磁盘类型不支持修改
-				fields := []string{"disk_type", "encrypt"}
+				fields := []string{"disk_type", "encrypt", "type"}
 				for _, field := range fields {
 					if old[field] != new[field] {
 						return fmt.Errorf("%s not support change", field)

@@ -160,7 +160,7 @@ resource "tencentcloud_elasticsearch_instance" "example_multi_zone" {
 
 The following arguments are supported:
 
-* `node_info_list` - (Required, List) Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.
+* `node_info_list` - (Required, Set) Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.
 * `password` - (Required, String) Password to an instance, the password needs to be 8 to 16 characters, including at least two items ([a-z,A-Z], [0-9] and [-!@#$%&^*+=_:;,.?] special symbols.
 * `version` - (Required, String) Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2`, `7.5.1` and `7.10.1`.
 * `vpc_id` - (Required, String, ForceNew) The ID of a VPC network.
