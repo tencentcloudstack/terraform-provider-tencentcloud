@@ -109,7 +109,7 @@ func resourceTencentCloudMysqlSslRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("instance_id", instanceId)
 	} else {
 		roGroupId = resID
-		_ = d.Set("ro_group_id", instanceId)
+		_ = d.Set("ro_group_id", roGroupId)
 	}
 
 	ssl, err := service.DescribeMysqlSslById(ctx, instanceId, roGroupId)
