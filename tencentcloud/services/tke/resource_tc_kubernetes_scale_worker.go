@@ -323,7 +323,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							Optional:    true,
 							ForceNew:    true,
 							Default:     "POSTPAID_BY_HOUR",
-							Description: "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.",
+							Description: "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.",
 						},
 						"instance_charge_type_prepaid_period": {
 							Type:        schema.TypeInt,
@@ -445,6 +445,12 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 									},
 								},
 							},
+						},
+						"cdc_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "CDC ID.",
 						},
 					},
 				},

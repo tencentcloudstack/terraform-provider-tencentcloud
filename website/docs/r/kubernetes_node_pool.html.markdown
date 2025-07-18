@@ -324,6 +324,7 @@ The `auto_scaling_config` object supports the following:
 * `backup_instance_types` - (Optional, List) Backup CVM instance types if specified instance type sold out or mismatch.
 * `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, String, ForceNew) Name of cam role.
+* `cdc_id` - (Optional, String, ForceNew) CDC ID.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is TRUE.

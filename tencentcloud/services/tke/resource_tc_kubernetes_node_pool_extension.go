@@ -336,6 +336,10 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 			launchConfig["host_name_style"] = launchCfg.HostNameSettings.HostNameStyle
 		}
 
+		if launchCfg.DedicatedClusterId != nil {
+			launchConfig["cdc_id"] = launchCfg.DedicatedClusterId
+		}
+
 		asgConfig := make([]interface{}, 0, 1)
 		asgConfig = append(asgConfig, launchConfig)
 		if err := d.Set("auto_scaling_config", asgConfig); err != nil {
@@ -1123,6 +1127,11 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 			}
 		}
 	}
+
+	if v, ok := dMap["cdc_id"]; ok && v != "" {
+		request.DedicatedClusterId = helper.String(v.(string))
+	}
+
 	result = request.ToJsonString()
 	return result, errRet
 }

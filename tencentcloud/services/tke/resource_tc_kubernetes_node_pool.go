@@ -500,6 +500,12 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Computed:    true,
 							Description: "The style of the host name of the cloud server, the value range includes ORIGINAL and UNIQUE, and the default is ORIGINAL. For usage, refer to `HostNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
 						},
+						"cdc_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "CDC ID.",
+						},
 					},
 				},
 			},
