@@ -1506,11 +1506,18 @@ func (me *MysqlService) DescribeMysqlTimeWindowById(ctx context.Context, instanc
 	return
 }
 
-func (me *MysqlService) DescribeMysqlSslById(ctx context.Context, instanceId string) (ssl *cdb.DescribeSSLStatusResponseParams, errRet error) {
+func (me *MysqlService) DescribeMysqlSslById(ctx context.Context, instanceId, roGroupId string) (ssl *cdb.DescribeSSLStatusResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdb.NewDescribeSSLStatusRequest()
-	request.InstanceId = &instanceId
+	response := cdb.NewDescribeSSLStatusResponse()
+	if instanceId != "" {
+		request.InstanceId = &instanceId
+	}
+
+	if roGroupId != "" {
+		request.RoGroupId = &roGroupId
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -1518,14 +1525,27 @@ func (me *MysqlService) DescribeMysqlSslById(ctx context.Context, instanceId str
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMysqlClient().DescribeSSLStatus(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseMysqlClient().DescribeSSLStatus(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ssl status failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ssl = response.Response
 	return
