@@ -1048,7 +1048,6 @@ func buildMultiZoneSettingList(instance *emr.ClusterInstancesInfo, clusterNodeMa
 	}
 
 	multiZoneSettingList := []interface{}{}
-	fmt.Printf("clusterNodeNum:%+v", clusterNodeNum)
 	for _, z := range []string{firstZoneID, secondZoneID, thirdZoneID} {
 		resourceSpec := make(map[string]interface{})
 		vpcSettings := make(map[string]interface{})

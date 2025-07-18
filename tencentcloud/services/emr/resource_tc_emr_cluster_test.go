@@ -777,6 +777,10 @@ data "tencentcloud_instance_types" "cvm4c8m" {
     name   = "zone"
     values = ["ap-guangzhou-6", "ap-guangzhou-7"]
   }
+  filter {
+    name   = "instance-family"
+    values = ["S5"]
+  }
 }
 
 resource "tencentcloud_emr_cluster" "emrrrr" {
