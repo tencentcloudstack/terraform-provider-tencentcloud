@@ -1922,6 +1922,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		request.TagSpecification = append(request.TagSpecification, &tmpTagSpec)
 	}
 
+	if v, ok := dMap["cdc_id"]; ok && v.(string) != "" {
+		request.DedicatedClusterId = helper.String(v.(string))
+	}
+
 	cvmJson = request.ToJsonString()
 
 	cvmJson = strings.Replace(cvmJson, `"Password":"",`, "", -1)
