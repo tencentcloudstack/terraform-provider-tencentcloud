@@ -5,11 +5,13 @@ import (
 	innerErr "errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svccdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
+	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -69,9 +71,10 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Description: "The softwares of a EMR instance.",
 			},
 			"resource_spec": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      1,
+				ConflictsWith: []string{"multi_zone_setting", "multi_zone"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"master_resource_spec": buildResourceSpecSchema(),
@@ -308,6 +311,87 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 					},
 				},
 			},
+			"multi_zone": {
+				Type:         schema.TypeBool,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				RequiredWith: []string{"multi_zone_setting"},
+				Description:  "true means that cross-AZ deployment is enabled; it is only a user parameter when creating a new cluster, and no subsequent adjustment is supported.",
+			},
+			"multi_zone_setting": {
+				Type:         schema.TypeList,
+				Optional:     true,
+				Computed:     true,
+				RequiredWith: []string{"multi_zone"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vpc_settings": {
+							Type:        schema.TypeMap,
+							Required:    true,
+							ForceNew:    true,
+							Description: "The private net config of EMR instance.",
+						},
+						"placement": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Computed: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"zone": {
+										Type:        schema.TypeString,
+										Required:    true,
+										ForceNew:    true,
+										Description: "Zone.",
+									},
+								},
+							},
+							Description: "The location of the instance.",
+						},
+						"resource_spec": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"master_resource_spec": buildResourceSpecSchema(),
+									"core_resource_spec":   buildResourceSpecSchema(),
+									"task_resource_spec":   buildResourceSpecSchema(),
+									"master_count": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Optional:    true,
+										Description: "The number of master node.",
+									},
+									"core_count": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Optional:    true,
+										Description: "The number of core node.",
+									},
+									"task_count": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Optional:    true,
+										Description: "The number of core node.",
+									},
+									"common_resource_spec": buildResourceSpecSchema(),
+									"common_count": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Optional:    true,
+										ForceNew:    true,
+										Description: "The number of common node.",
+									},
+								},
+							},
+							Description: "Resource specification of EMR instance.",
+						},
+					},
+				},
+				Description: "The specification of node resources is as follows: fill in a few available areas. In order, the first one is the main available area, the second one is the backup available area, and the third one is the arbitration available area.",
+			},
 		},
 	}
 }
@@ -406,7 +490,140 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if d.HasChange("resource_spec.0.master_count") || d.HasChange("resource_spec.0.task_count") || d.HasChange("resource_spec.0.core_count") {
+	// multi_zone_setting
+	var isChangeMultiZoneNodeCount bool
+	if d.HasChange("multi_zone_setting") {
+		if v, ok := d.GetOk("multi_zone_setting"); ok {
+			multiZoneSettings := v.([]interface{})
+			for idx, multiZoneSetting := range multiZoneSettings {
+				multiZoneSettingMap := multiZoneSetting.(map[string]interface{})
+				placement, placementOk := multiZoneSettingMap["placement"]
+				if !placementOk {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.placement` must be set", idx)
+				}
+				placementList := placement.([]interface{})
+				if len(placementList) == 0 {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.placement` must be set", idx)
+				}
+				if _, ok := placementList[0].(map[string]interface{})["zone"]; !ok {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.placement.zone` must be set", idx)
+				}
+				zone := placementList[0].(map[string]interface{})["zone"].(string)
+				var zoneId int64
+				cvmService := svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+				err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					zones, errRet := cvmService.DescribeZones(ctx)
+					if errRet != nil {
+						return tccommon.RetryError(errRet, tccommon.InternalError)
+					}
+					for _, z := range zones {
+						if *z.Zone == zone {
+							zoneId = helper.StrToInt64(*z.ZoneId)
+						}
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				if zoneId == 0 {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.placement.zone` %s not found", idx, zone)
+				}
+				vpcSetting, vpcSettingOk := multiZoneSettingMap["vpc_settings"]
+				if !vpcSettingOk {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.vpc_settings` must be set", idx)
+				}
+				vpcSettingMap, vpcSettingMapOk := vpcSetting.(map[string]interface{})
+				if !vpcSettingMapOk {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.vpc_settings` must be a map", idx)
+				}
+				subnetId := vpcSettingMap["subnet_id"].(string)
+
+				resourceSpec, resourceSpecOk := multiZoneSettingMap["resource_spec"]
+				if !resourceSpecOk {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.resource_spec` must be set", idx)
+				}
+				resourceSpecList := resourceSpec.([]interface{})
+				if len(resourceSpecList) == 0 {
+					return fmt.Errorf("Argument `multi_zone_setting.%d.resource_spec` must be set", idx)
+				}
+				if d.HasChange(fmt.Sprintf("multi_zone_setting.%d.resource_spec.0.master_count", idx)) {
+					request := emr.NewScaleOutInstanceRequest()
+					request.TimeUnit = common.StringPtr(timeUnit.(string))
+					request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
+					request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
+					request.InstanceId = common.StringPtr(instanceId)
+					request.ZoneId = helper.Int64(zoneId)
+					request.SubnetId = common.StringPtr(subnetId)
+
+					o, n := d.GetChange(fmt.Sprintf("multi_zone_setting.%d.resource_spec.0.master_count", idx))
+					if o.(int) < n.(int) {
+						request.MasterCount = common.Uint64Ptr((uint64)(n.(int) - o.(int)))
+						traceId, err := emrService.ScaleOutInstance(ctx, request)
+						if err != nil {
+							return err
+						}
+						time.Sleep(5 * time.Second)
+						conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+						if _, e := conf.WaitForState(); e != nil {
+							return e
+						}
+					}
+					isChangeMultiZoneNodeCount = true
+				}
+				if d.HasChange(fmt.Sprintf("multi_zone_setting.%d.resource_spec.0.task_count", idx)) {
+					request := emr.NewScaleOutInstanceRequest()
+					request.TimeUnit = common.StringPtr(timeUnit.(string))
+					request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
+					request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
+					request.InstanceId = common.StringPtr(instanceId)
+					request.ZoneId = helper.Int64(zoneId)
+					request.SubnetId = common.StringPtr(subnetId)
+
+					o, n := d.GetChange(fmt.Sprintf("multi_zone_setting.%d.resource_spec.0.task_count", idx))
+					if o.(int) < n.(int) {
+						request.TaskCount = common.Uint64Ptr((uint64)(n.(int) - o.(int)))
+						traceId, err := emrService.ScaleOutInstance(ctx, request)
+						if err != nil {
+							return err
+						}
+						time.Sleep(5 * time.Second)
+						conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+						if _, e := conf.WaitForState(); e != nil {
+							return e
+						}
+					}
+					isChangeMultiZoneNodeCount = true
+				}
+				if d.HasChange(fmt.Sprintf("multi_zone_setting.%d.resource_spec.0.core_count", idx)) {
+					request := emr.NewScaleOutInstanceRequest()
+					request.TimeUnit = common.StringPtr(timeUnit.(string))
+					request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
+					request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
+					request.InstanceId = common.StringPtr(instanceId)
+					request.ZoneId = helper.Int64(zoneId)
+					request.SubnetId = common.StringPtr(subnetId)
+
+					o, n := d.GetChange(fmt.Sprintf("multi_zone_setting.%d.resource_spec.0.core_count", idx))
+					if o.(int) < n.(int) {
+						request.CoreCount = common.Uint64Ptr((uint64)(n.(int) - o.(int)))
+						traceId, err := emrService.ScaleOutInstance(ctx, request)
+						if err != nil {
+							return err
+						}
+						time.Sleep(5 * time.Second)
+						conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+						if _, e := conf.WaitForState(); e != nil {
+							return e
+						}
+					}
+					isChangeMultiZoneNodeCount = true
+				}
+
+			}
+		}
+	}
+	if d.HasChange("resource_spec.0.master_count") || d.HasChange("resource_spec.0.task_count") || d.HasChange("resource_spec.0.core_count") || isChangeMultiZoneNodeCount {
 		if v, ok := d.GetOk("terminate_node_info"); ok {
 			terminateNodeInfos := v.([]interface{})
 			for _, terminateNodeInfo := range terminateNodeInfos {
@@ -620,9 +837,13 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 			_ = d.Set("auto_renew", result[0].IsAutoRenew)
 			for _, item := range result {
 				node := item
+				var nodeFlag string
+				if node.ZoneId != nil {
+					nodeFlag = fmt.Sprintf("%d-", *node.ZoneId)
+				}
 				// 节点类型 0:common节点；1:master节点；2:core节点；3:task节点
 				if node.Flag != nil {
-					nodeFlag := strconv.FormatInt(*node.Flag, 10)
+					nodeFlag = nodeFlag + strconv.FormatInt(*node.Flag, 10)
 					clusterNodeMap[nodeFlag] = node
 					if v, ok := clusterNodeNum[nodeFlag]; ok {
 						clusterNodeNum[nodeFlag] = v + 1
@@ -664,95 +885,17 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 			if instance.Config.SecurityGroup != nil {
 				_ = d.Set("sg_id", instance.Config.SecurityGroup)
 			}
-			resourceSpec := make(map[string]interface{})
 
-			if v, ok := clusterNodeNum["1"]; ok {
-				resourceSpec["master_count"] = v
-			}
+			multiZoneSetting := buildMultiZoneSettingList(instance, clusterNodeMap, clusterNodeNum)
+			_ = d.Set("multi_zone", len(multiZoneSetting) > 1)
 
-			if v, ok := clusterNodeMap["1"]; ok && v != nil {
-				masterResourceSpec := make(map[string]interface{})
-				masterResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
-				masterResourceSpec["cpu"] = v.CpuNum
-				if instance.Config.MasterResource != nil {
-					masterResource := instance.Config.MasterResource
-					masterResourceSpec["disk_size"] = masterResource.DiskSize
-					masterResourceSpec["multi_disks"] = fetchMultiDisks(v, masterResource)
-
-				}
-				if v.StorageType != nil {
-					masterResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
-				}
-				masterResourceSpec["spec"] = v.Spec
-				masterResourceSpec["storage_type"] = v.RootStorageType
-				masterResourceSpec["root_size"] = v.RootSize
-				resourceSpec["master_resource_spec"] = []interface{}{masterResourceSpec}
+			if len(multiZoneSetting) > 1 {
+				multiZoneSetting := buildMultiZoneSettingList(instance, clusterNodeMap, clusterNodeNum)
+				_ = d.Set("multi_zone_setting", multiZoneSetting)
+			} else {
+				resourceSpec := buildResourceSpec(instance, clusterNodeMap, clusterNodeNum)
+				_ = d.Set("resource_spec", []interface{}{resourceSpec})
 			}
-
-			if v, ok := clusterNodeNum["2"]; ok {
-				resourceSpec["core_count"] = v
-			}
-			if v, ok := clusterNodeMap["2"]; ok && v != nil {
-				coreResourceSpec := make(map[string]interface{})
-				coreResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
-				coreResourceSpec["cpu"] = v.CpuNum
-				if instance.Config.CoreResource != nil {
-					coreResource := instance.Config.CoreResource
-					coreResourceSpec["disk_size"] = coreResource.DiskSize
-					coreResourceSpec["multi_disks"] = fetchMultiDisks(v, coreResource)
-				}
-				if v.StorageType != nil {
-					coreResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
-				}
-				coreResourceSpec["spec"] = v.Spec
-				coreResourceSpec["storage_type"] = v.RootStorageType
-				coreResourceSpec["root_size"] = v.RootSize
-				resourceSpec["core_resource_spec"] = []interface{}{coreResourceSpec}
-			}
-
-			if v, ok := clusterNodeNum["3"]; ok {
-				resourceSpec["task_count"] = v
-			}
-			if v, ok := clusterNodeMap["3"]; ok && v != nil {
-				taskResourceSpec := make(map[string]interface{})
-				taskResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
-				taskResourceSpec["cpu"] = v.CpuNum
-				if instance.Config.TaskResource != nil {
-					taskResource := instance.Config.TaskResource
-					taskResourceSpec["disk_size"] = taskResource.DiskSize
-					taskResourceSpec["multi_disks"] = fetchMultiDisks(v, taskResource)
-				}
-				if v.StorageType != nil {
-					taskResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
-				}
-				taskResourceSpec["spec"] = v.Spec
-				taskResourceSpec["storage_type"] = v.RootStorageType
-				taskResourceSpec["root_size"] = v.RootSize
-				resourceSpec["task_resource_spec"] = []interface{}{taskResourceSpec}
-			}
-
-			if v, ok := clusterNodeNum["0"]; ok {
-				resourceSpec["common_count"] = v
-			}
-			if v, ok := clusterNodeMap["0"]; ok && v != nil {
-				comResourceSpec := make(map[string]interface{})
-				comResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
-				comResourceSpec["cpu"] = v.CpuNum
-				if instance.Config.ComResource != nil {
-					comResource := instance.Config.ComResource
-					comResourceSpec["disk_size"] = comResource.DiskSize
-					comResourceSpec["multi_disks"] = fetchMultiDisks(v, comResource)
-				}
-				if v.StorageType != nil {
-					comResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
-				}
-				comResourceSpec["spec"] = v.Spec
-				comResourceSpec["storage_type"] = v.RootStorageType
-				comResourceSpec["root_size"] = v.RootSize
-				resourceSpec["common_resource_spec"] = []interface{}{comResourceSpec}
-			}
-
-			_ = d.Set("resource_spec", []interface{}{resourceSpec})
 		}
 
 		_ = d.Set("instance_name", instance.ClusterName)
@@ -781,4 +924,238 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("tags", tags)
 
 	return nil
+}
+
+func buildResourceSpec(instance *emr.ClusterInstancesInfo, clusterNodeMap map[string]*emr.NodeHardwareInfo, clusterNodeNum map[string]int) map[string]interface{} {
+	resourceSpec := make(map[string]interface{})
+
+	if v, ok := clusterNodeNum[fmt.Sprintf("%d-1", *instance.ZoneId)]; ok {
+		resourceSpec["master_count"] = v
+	}
+
+	if v, ok := clusterNodeMap[fmt.Sprintf("%d-1", *instance.ZoneId)]; ok && v != nil {
+		masterResourceSpec := make(map[string]interface{})
+		masterResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+		masterResourceSpec["cpu"] = v.CpuNum
+		if instance.Config.MasterResource != nil {
+			masterResource := instance.Config.MasterResource
+			masterResourceSpec["disk_size"] = masterResource.DiskSize
+			masterResourceSpec["multi_disks"] = fetchMultiDisks(v, masterResource)
+
+		}
+		if v.StorageType != nil {
+			masterResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+		}
+		masterResourceSpec["spec"] = v.Spec
+		masterResourceSpec["storage_type"] = v.RootStorageType
+		masterResourceSpec["root_size"] = v.RootSize
+		resourceSpec["master_resource_spec"] = []interface{}{masterResourceSpec}
+	}
+
+	if v, ok := clusterNodeNum[fmt.Sprintf("%d-2", *instance.ZoneId)]; ok {
+		resourceSpec["core_count"] = v
+	}
+	if v, ok := clusterNodeMap[fmt.Sprintf("%d-2", *instance.ZoneId)]; ok && v != nil {
+		coreResourceSpec := make(map[string]interface{})
+		coreResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+		coreResourceSpec["cpu"] = v.CpuNum
+		if instance.Config.CoreResource != nil {
+			coreResource := instance.Config.CoreResource
+			coreResourceSpec["disk_size"] = coreResource.DiskSize
+			coreResourceSpec["multi_disks"] = fetchMultiDisks(v, coreResource)
+		}
+		if v.StorageType != nil {
+			coreResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+		}
+		coreResourceSpec["spec"] = v.Spec
+		coreResourceSpec["storage_type"] = v.RootStorageType
+		coreResourceSpec["root_size"] = v.RootSize
+		resourceSpec["core_resource_spec"] = []interface{}{coreResourceSpec}
+	}
+
+	if v, ok := clusterNodeNum[fmt.Sprintf("%d-3", *instance.ZoneId)]; ok {
+		resourceSpec["task_count"] = v
+	}
+	if v, ok := clusterNodeMap[fmt.Sprintf("%d-3", *instance.ZoneId)]; ok && v != nil {
+		taskResourceSpec := make(map[string]interface{})
+		taskResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+		taskResourceSpec["cpu"] = v.CpuNum
+		if instance.Config.TaskResource != nil {
+			taskResource := instance.Config.TaskResource
+			taskResourceSpec["disk_size"] = taskResource.DiskSize
+			taskResourceSpec["multi_disks"] = fetchMultiDisks(v, taskResource)
+		}
+		if v.StorageType != nil {
+			taskResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+		}
+		taskResourceSpec["spec"] = v.Spec
+		taskResourceSpec["storage_type"] = v.RootStorageType
+		taskResourceSpec["root_size"] = v.RootSize
+		resourceSpec["task_resource_spec"] = []interface{}{taskResourceSpec}
+	}
+
+	if v, ok := clusterNodeNum[fmt.Sprintf("%d-0", *instance.ZoneId)]; ok {
+		resourceSpec["common_count"] = v
+	}
+	if v, ok := clusterNodeMap[fmt.Sprintf("%d-0", *instance.ZoneId)]; ok && v != nil {
+		comResourceSpec := make(map[string]interface{})
+		comResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+		comResourceSpec["cpu"] = v.CpuNum
+		if instance.Config.ComResource != nil {
+			comResource := instance.Config.ComResource
+			comResourceSpec["disk_size"] = comResource.DiskSize
+			comResourceSpec["multi_disks"] = fetchMultiDisks(v, comResource)
+		}
+		if v.StorageType != nil {
+			comResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+		}
+		comResourceSpec["spec"] = v.Spec
+		comResourceSpec["storage_type"] = v.RootStorageType
+		comResourceSpec["root_size"] = v.RootSize
+		resourceSpec["common_resource_spec"] = []interface{}{comResourceSpec}
+	}
+	return resourceSpec
+}
+
+func buildMultiZoneSettingList(instance *emr.ClusterInstancesInfo, clusterNodeMap map[string]*emr.NodeHardwareInfo, clusterNodeNum map[string]int) []interface{} {
+	firstZoneID := helper.Int64ToStr(*instance.ZoneId)
+	var secondZoneID, thirdZoneID string
+	zoneNodeNums := make(map[string]int)
+	for k, v := range clusterNodeNum {
+		zoneID := strings.Split(k, "-")[0]
+		zoneNodeNums[zoneID] = zoneNodeNums[zoneID] + v
+	}
+	for k, v := range zoneNodeNums {
+		if v == 1 {
+			zoneID := strings.Split(k, "-")[0]
+			thirdZoneID = zoneID
+		}
+	}
+	for k := range zoneNodeNums {
+		if thirdZoneID == "" {
+			if !strings.HasPrefix(k, firstZoneID) {
+				zoneID := strings.Split(k, "-")[0]
+				secondZoneID = zoneID
+				break
+			}
+		} else {
+			if !strings.HasPrefix(k, firstZoneID) && !strings.HasPrefix(k, thirdZoneID) {
+				zoneID := strings.Split(k, "-")[0]
+				secondZoneID = zoneID
+				break
+			}
+		}
+	}
+
+	multiZoneSettingList := []interface{}{}
+	for _, z := range []string{firstZoneID, secondZoneID, thirdZoneID} {
+		resourceSpec := make(map[string]interface{})
+		vpcSettings := make(map[string]interface{})
+		placement := make(map[string]interface{})
+		vpcSettings["vpc_id"] = instance.UniqVpcId
+
+		if v, ok := clusterNodeNum[fmt.Sprintf("%s-1", z)]; ok {
+			resourceSpec["master_count"] = v
+		}
+
+		if v, ok := clusterNodeMap[fmt.Sprintf("%s-1", z)]; ok && v != nil {
+			vpcSettings["subnet_id"] = v.SubnetInfo.SubnetId
+			placement["zone"] = v.Zone
+			masterResourceSpec := make(map[string]interface{})
+			masterResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+			masterResourceSpec["cpu"] = v.CpuNum
+			if instance.Config.MasterResource != nil {
+				masterResource := instance.Config.MasterResource
+				masterResourceSpec["disk_size"] = masterResource.DiskSize
+				masterResourceSpec["multi_disks"] = fetchMultiDisks(v, masterResource)
+
+			}
+			if v.StorageType != nil {
+				masterResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+			}
+			masterResourceSpec["spec"] = v.Spec
+			masterResourceSpec["storage_type"] = v.RootStorageType
+			masterResourceSpec["root_size"] = v.RootSize
+			resourceSpec["master_resource_spec"] = []interface{}{masterResourceSpec}
+		}
+
+		if v, ok := clusterNodeNum[fmt.Sprintf("%s-2", z)]; ok {
+			resourceSpec["core_count"] = v
+		}
+		if v, ok := clusterNodeMap[fmt.Sprintf("%s-2", z)]; ok && v != nil {
+			vpcSettings["subnet_id"] = v.SubnetInfo.SubnetId
+			placement["zone"] = v.Zone
+			coreResourceSpec := make(map[string]interface{})
+			coreResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+			coreResourceSpec["cpu"] = v.CpuNum
+			if instance.Config.CoreResource != nil {
+				coreResource := instance.Config.CoreResource
+				coreResourceSpec["disk_size"] = coreResource.DiskSize
+				coreResourceSpec["multi_disks"] = fetchMultiDisks(v, coreResource)
+			}
+			if v.StorageType != nil {
+				coreResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+			}
+			coreResourceSpec["spec"] = v.Spec
+			coreResourceSpec["storage_type"] = v.RootStorageType
+			coreResourceSpec["root_size"] = v.RootSize
+			resourceSpec["core_resource_spec"] = []interface{}{coreResourceSpec}
+		}
+
+		if v, ok := clusterNodeNum[fmt.Sprintf("%s-3", z)]; ok {
+			resourceSpec["task_count"] = v
+		}
+		if v, ok := clusterNodeMap[fmt.Sprintf("%s-3", z)]; ok && v != nil {
+			vpcSettings["subnet_id"] = v.SubnetInfo.SubnetId
+			placement["zone"] = v.Zone
+			taskResourceSpec := make(map[string]interface{})
+			taskResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+			taskResourceSpec["cpu"] = v.CpuNum
+			if instance.Config.TaskResource != nil {
+				taskResource := instance.Config.TaskResource
+				taskResourceSpec["disk_size"] = taskResource.DiskSize
+				taskResourceSpec["multi_disks"] = fetchMultiDisks(v, taskResource)
+			}
+			if v.StorageType != nil {
+				taskResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+			}
+			taskResourceSpec["spec"] = v.Spec
+			taskResourceSpec["storage_type"] = v.RootStorageType
+			taskResourceSpec["root_size"] = v.RootSize
+			resourceSpec["task_resource_spec"] = []interface{}{taskResourceSpec}
+		}
+
+		if v, ok := clusterNodeNum[fmt.Sprintf("%s-0", z)]; ok {
+			resourceSpec["common_count"] = v
+		}
+		if v, ok := clusterNodeMap[fmt.Sprintf("%s-0", z)]; ok && v != nil {
+			vpcSettings["subnet_id"] = v.SubnetInfo.SubnetId
+			placement["zone"] = v.Zone
+			comResourceSpec := make(map[string]interface{})
+			comResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
+			comResourceSpec["cpu"] = v.CpuNum
+			if instance.Config.ComResource != nil {
+				comResource := instance.Config.ComResource
+				comResourceSpec["disk_size"] = comResource.DiskSize
+				comResourceSpec["multi_disks"] = fetchMultiDisks(v, comResource)
+			}
+			if v.StorageType != nil {
+				comResourceSpec["disk_type"] = translateDiskType(*v.StorageType)
+			}
+			comResourceSpec["spec"] = v.Spec
+			comResourceSpec["storage_type"] = v.RootStorageType
+			comResourceSpec["root_size"] = v.RootSize
+			resourceSpec["common_resource_spec"] = []interface{}{comResourceSpec}
+		}
+		if len(resourceSpec) == 0 {
+			continue
+		}
+		multiZoneSettingList = append(multiZoneSettingList, map[string]interface{}{
+			"placement":     []interface{}{placement},
+			"vpc_settings":  vpcSettings,
+			"resource_spec": []interface{}{resourceSpec},
+		})
+	}
+
+	return multiZoneSettingList
 }
