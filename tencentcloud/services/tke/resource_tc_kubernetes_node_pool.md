@@ -267,6 +267,64 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
+Create Node pool for CDC cluster
+
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
+  cluster_id               = "cls-nhhpsdx8"
+  default_cooldown         = 400
+  max_size                 = 4
+  min_size                 = 1
+  desired_capacity         = 2
+  vpc_id                   = "vpc-pi5u9uth"
+  subnet_ids               = ["subnet-muu9a0gk"]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  enable_auto_scale        = true
+  multi_zone_subnet_policy = "EQUALITY"
+  node_os                  = "img-eb30mz89"
+  delete_keep_instance     = true
+
+  node_config {
+    data_disk {
+      disk_type    = "CLOUD_SSD"
+      disk_size    = 50
+      file_system  = "ext4"
+      mount_target = "/var/lib/data1"
+    }
+  }
+
+  auto_scaling_config {
+    instance_type              = "S5.MEDIUM4"
+    instance_charge_type       = "CDCPAID"
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = "100"
+    orderly_security_group_ids = ["sg-4z20n68d"]
+
+    data_disk {
+      disk_type = "CLOUD_SSD"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "Password@123"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    host_name                  = "example"
+    host_name_style            = "ORIGINAL"
+    instance_name              = "example"
+    instance_name_style        = "ORIGINAL"
+    cdc_id                     = "cluster-262n63e8"
+  }
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 Import
 
 tke node pool can be imported, e.g.

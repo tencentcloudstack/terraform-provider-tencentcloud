@@ -278,6 +278,64 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
+### Create Node pool for CDC cluster
+
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf-example"
+  cluster_id               = "cls-nhhpsdx8"
+  default_cooldown         = 400
+  max_size                 = 4
+  min_size                 = 1
+  desired_capacity         = 2
+  vpc_id                   = "vpc-pi5u9uth"
+  subnet_ids               = ["subnet-muu9a0gk"]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  enable_auto_scale        = true
+  multi_zone_subnet_policy = "EQUALITY"
+  node_os                  = "img-eb30mz89"
+  delete_keep_instance     = true
+
+  node_config {
+    data_disk {
+      disk_type    = "CLOUD_SSD"
+      disk_size    = 50
+      file_system  = "ext4"
+      mount_target = "/var/lib/data1"
+    }
+  }
+
+  auto_scaling_config {
+    instance_type              = "S5.MEDIUM4"
+    instance_charge_type       = "CDCPAID"
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = "100"
+    orderly_security_group_ids = ["sg-4z20n68d"]
+
+    data_disk {
+      disk_type = "CLOUD_SSD"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "Password@123"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    host_name                  = "example"
+    host_name_style            = "ORIGINAL"
+    instance_name              = "example"
+    instance_name_style        = "ORIGINAL"
+    cdc_id                     = "cluster-262n63e8"
+  }
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -324,6 +382,7 @@ The `auto_scaling_config` object supports the following:
 * `backup_instance_types` - (Optional, List) Backup CVM instance types if specified instance type sold out or mismatch.
 * `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, String, ForceNew) Name of cam role.
+* `cdc_id` - (Optional, String, ForceNew) CDC ID.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is TRUE.
@@ -331,7 +390,7 @@ The `auto_scaling_config` object supports the following:
 * `host_name` - (Optional, String) The hostname of the cloud server, dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows instances are not supported. Examples of other types (Linux, etc.): The character length is [2, 40], multiple periods are allowed, and there is a paragraph between the dots, and each paragraph is allowed to consist of letters (unlimited case), numbers and dashes (-). Pure numbers are not allowed. For usage, refer to `HostNameSettings` in https://www.tencentcloud.com/document/product/377/31001.
 * `instance_charge_type_prepaid_period` - (Optional, Int) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
-* `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
+* `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `instance_name_style` - (Optional, String) Type of CVM instance name. Valid values: `ORIGINAL` and `UNIQUE`. Default value: `ORIGINAL`. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.
 * `instance_name` - (Optional, String) Instance name, no more than 60 characters. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.
 * `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.

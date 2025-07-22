@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_scale_worker: support `cdc_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_node_pool: support `cdc_id`
+```

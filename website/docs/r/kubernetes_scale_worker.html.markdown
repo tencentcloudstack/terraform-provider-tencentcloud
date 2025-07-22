@@ -123,6 +123,38 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
 }
 ```
 
+### Create scale worker for CDC cluster
+
+```hcl
+resource "tencentcloud_kubernetes_scale_worker" "example" {
+  cluster_id = "cls-0o0dpx1a"
+
+  worker_config {
+    count                = 2
+    instance_charge_type = "CDCPAID"
+    instance_name        = "tke_worker_demo"
+    availability_zone    = "ap-guangzhou-4"
+    instance_type        = "S5.MEDIUM2"
+    subnet_id            = "subnet-muu9a0gk"
+    system_disk_type     = "CLOUD_SSD"
+    system_disk_size     = 50
+    internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+    security_group_ids   = ["sg-4z20n68d"]
+
+    data_disk {
+      disk_type = "CLOUD_SSD"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "Password@123"
+    cdc_id                    = "cluster-262n63e8"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -189,6 +221,7 @@ The `worker_config` object supports the following:
 * `availability_zone` - (Optional, String, ForceNew) Indicates which availability zone will be used.
 * `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, String, ForceNew) CAM role name authorized to access.
+* `cdc_id` - (Optional, String, ForceNew) CDC ID.
 * `count` - (Optional, Int, ForceNew) Number of cvm.
 * `data_disk` - (Optional, List, ForceNew) Configurations of cvm data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.
@@ -200,7 +233,7 @@ The `worker_config` object supports the following:
 * `img_id` - (Optional, String) The valid image id, format of img-xxx.
 * `instance_charge_type_prepaid_period` - (Optional, Int, ForceNew) The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String, ForceNew) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
-* `instance_charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
+* `instance_charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
 * `instance_name` - (Optional, String, ForceNew) Name of the CVMs.
 * `internet_charge_type` - (Optional, String, ForceNew) Charge types for network traffic. Available values include `TRAFFIC_POSTPAID_BY_HOUR`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is 0.
