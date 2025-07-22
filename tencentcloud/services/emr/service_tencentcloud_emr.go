@@ -165,6 +165,111 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		}
 	}
 
+	if v, ok := d.GetOkExists("multi_zone"); ok {
+		request.MultiZone = helper.Bool(v.(bool))
+		request.VersionID = helper.IntInt64(1)
+	}
+	if v, ok := d.GetOk("multi_zone_setting"); ok {
+		multiZoneSettings := v.([]interface{})
+		request.MultiZoneSettings = make([]*emr.MultiZoneSetting, 0)
+		for idx, zone := range multiZoneSettings {
+			if zone == nil {
+				err = fmt.Errorf("multi_zone_setting element with index %d is nil", idx+1)
+				return
+			}
+			zoneMap := zone.(map[string]interface{})
+			tmpZone := &emr.MultiZoneSetting{}
+			if v, ok := zoneMap["zone_tag"].(string); ok && v != "" {
+				tmpZone.ZoneTag = helper.String(v)
+			}
+			if v, ok := zoneMap["vpc_settings"]; ok {
+				value := v.(map[string]interface{})
+				var vpcId string
+				var subnetId string
+
+				if subV, ok := value["vpc_id"]; ok {
+					vpcId = subV.(string)
+				}
+				if subV, ok := value["subnet_id"]; ok {
+					subnetId = subV.(string)
+				}
+				vpcSettings := &emr.VPCSettings{VpcId: &vpcId, SubnetId: &subnetId}
+				tmpZone.VPCSettings = vpcSettings
+			}
+			if v, ok := zoneMap["placement"]; ok {
+				tmpZone.Placement = &emr.Placement{}
+				placementList := v.([]interface{})
+				if len(placementList) == 0 {
+					err = fmt.Errorf("placement in multi_zone_setting is empty")
+					return
+				}
+				placement := placementList[0].(map[string]interface{})
+
+				if projectId, ok := placement["project_id"]; ok {
+					projectIdInt64, _ := strconv.ParseInt(projectId.(string), 10, 64)
+					tmpZone.Placement.ProjectId = common.Int64Ptr(projectIdInt64)
+				} else {
+					tmpZone.Placement.ProjectId = common.Int64Ptr(0)
+				}
+				if z, ok := placement["zone"]; ok {
+					tmpZone.Placement.Zone = common.StringPtr(z.(string))
+				}
+			}
+			if v, ok := zoneMap["resource_spec"]; ok {
+				tmpResourceSpec := v.([]interface{})
+				resourceSpec := tmpResourceSpec[0].(map[string]interface{})
+				tmpZone.ResourceSpec = &emr.NewResourceSpec{}
+				for k, v := range resourceSpec {
+					if k == "master_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.MasterResourceSpec = ParseResource(spec)
+						}
+					} else if k == "core_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.CoreResourceSpec = ParseResource(spec)
+						}
+					} else if k == "task_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.TaskResourceSpec = ParseResource(spec)
+						}
+					} else if k == "master_count" {
+						tmpZone.ResourceSpec.MasterCount = common.Int64Ptr((int64)(v.(int)))
+					} else if k == "core_count" {
+						tmpZone.ResourceSpec.CoreCount = common.Int64Ptr((int64)(v.(int)))
+					} else if k == "task_count" {
+						tmpZone.ResourceSpec.TaskCount = common.Int64Ptr((int64)(v.(int)))
+					} else if k == "common_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.CommonResourceSpec = ParseResource(spec)
+						}
+					} else if k == "common_count" {
+						tmpZone.ResourceSpec.CommonCount = common.Int64Ptr((int64)(v.(int)))
+					}
+				}
+			}
+			request.MultiZoneSettings = append(request.MultiZoneSettings, tmpZone)
+		}
+	}
 	if v, ok := d.GetOk("support_ha"); ok {
 		request.SupportHA = common.Uint64Ptr((uint64)(v.(int)))
 	} else {
@@ -367,8 +472,6 @@ func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, node
 	request.InstanceId = &instanceId
 	request.NodeFlag = &nodeFlag
 	request.HardwareResourceType = &hardwareResourceType
-	request.Limit = helper.IntInt64(limit)
-	request.Offset = helper.IntInt64(offset)
 	response, err := me.client.UseEmrClient().DescribeClusterNodes(request)
 
 	if err != nil {
