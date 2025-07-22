@@ -40,6 +40,7 @@ func ResourceTencentCloudTeoPlan() *schema.Resource {
 						"period": {
 							Type:         schema.TypeInt,
 							Optional:     true,
+							Default:      1,
 							ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}),
 							Description:  "The subscription period of the prepaid package, in months, with possible values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. If not filled in, the default value 1 is used.",
 						},
@@ -73,7 +74,7 @@ func ResourceTencentCloudTeoPlan() *schema.Resource {
 			},
 
 			"pay_mode": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Payment type, possible values: <li>0: post-payment; </li><li>1: pre-payment. </li>.",
 			},
@@ -175,7 +176,35 @@ func ResourceTencentCloudTeoPlanRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if respData.PlanType != nil {
-		_ = d.Set("plan_type", respData.PlanType)
+		// need manual mapping
+		if *respData.PlanType == "plan-personal" {
+			_ = d.Set("plan_type", "personal")
+		} else if *respData.PlanType == "plan-basic" {
+			_ = d.Set("plan_type", "basic")
+		} else if *respData.PlanType == "plan-standard" {
+			_ = d.Set("plan_type", "standard")
+		} else if *respData.PlanType == "plan-enterprise-v2" {
+			_ = d.Set("plan_type", "enterprise")
+		} else {
+			_ = d.Set("plan_type", respData.PlanType)
+		}
+	}
+
+	if respData.AutoRenewal != nil {
+		tmpList := make([]map[string]interface{}, 0, 1)
+		dMap := make(map[string]interface{}, 0)
+		if *respData.AutoRenewal {
+			dMap["renew_flag"] = "on"
+		} else {
+			dMap["renew_flag"] = "off"
+		}
+
+		if v, ok := d.GetOkExists("prepaid_plan_param.0.period"); ok {
+			dMap["period"] = v.(int)
+		}
+
+		tmpList = append(tmpList, dMap)
+		_ = d.Set("prepaid_plan_param", tmpList)
 	}
 
 	if respData.PlanId != nil {
@@ -240,7 +269,7 @@ func ResourceTencentCloudTeoPlanUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("prepaid_plan_param.0.period") {
 		request := teov20220901.NewRenewPlanRequest()
-		if v, ok := d.GetOk("period"); ok {
+		if v, ok := d.GetOkExists("prepaid_plan_param.0.period"); ok {
 			request.Period = helper.IntInt64(v.(int))
 		}
 
@@ -263,7 +292,7 @@ func ResourceTencentCloudTeoPlanUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("prepaid_plan_param.0.renew_flag") {
 		request := teov20220901.NewModifyPlanRequest()
-		if v, ok := d.GetOk("renew_flag"); ok {
+		if v, ok := d.GetOk("prepaid_plan_param.0.renew_flag"); ok {
 			request.RenewFlag = &teov20220901.RenewFlag{
 				Switch: helper.String(v.(string)),
 			}

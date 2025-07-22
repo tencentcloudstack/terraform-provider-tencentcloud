@@ -323,6 +323,14 @@ type AdaptiveFrequencyControl struct {
 	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
 }
 
+type Addresses struct {
+	// IPv4 网段列表。
+	IPv4 []*string `json:"IPv4,omitnil,omitempty" name:"IPv4"`
+
+	// IPv6 网段列表。
+	IPv6 []*string `json:"IPv6,omitnil,omitempty" name:"IPv6"`
+}
+
 type AdvancedFilter struct {
 	// 需要过滤的字段。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
@@ -1525,6 +1533,60 @@ type ConfigGroupVersionInfo struct {
 
 	// 版本创建时间。时间为世界标准时间（UTC）， 遵循 ISO 8601 标准的日期和时间格式。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+}
+
+// Predefined struct for user
+type ConfirmOriginACLUpdateRequestParams struct {
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+type ConfirmOriginACLUpdateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+func (r *ConfirmOriginACLUpdateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ConfirmOriginACLUpdateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ConfirmOriginACLUpdateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ConfirmOriginACLUpdateResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ConfirmOriginACLUpdateResponse struct {
+	*tchttp.BaseResponse
+	Response *ConfirmOriginACLUpdateResponseParams `json:"Response"`
+}
+
+func (r *ConfirmOriginACLUpdateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ConfirmOriginACLUpdateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ContentIdentifier struct {
@@ -4033,6 +4095,26 @@ func (r *CreateZoneResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CurrentOriginACL struct {
+	// 回源 IP 网段详情。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EntireAddresses *Addresses `json:"EntireAddresses,omitnil,omitempty" name:"EntireAddresses"`
+
+	// 版本号。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// 版本生效时间，时间是北京时间 UTC+8， 遵循 ISO 8601 标准的日期和时间格式。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ActiveTime *string `json:"ActiveTime,omitnil,omitempty" name:"ActiveTime"`
+
+	// 本参数用于记录当前版本生效前是否完成「我已更新至最新回源 IP 网段」的确认。取值有：
+	// <li>true：版本生效时，已完成更新至最新回源 IP 的确认；</li>
+	// <li>false：版本生效时，仍未完成已更新至最新回源 IP 的确认，回源 IP 网段由后台强制更新至最新版本。</li>注意：本参数返回 false 时，请及时确认您的源站防火墙配置是否已更新至最新的回源 IP 网段，以避免出现回源失败。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsPlaned *string `json:"IsPlaned,omitnil,omitempty" name:"IsPlaned"`
+}
+
 type CustomEndpoint struct {
 	// 实时日志投递的自定义 HTTP 接口地址，暂仅支持 HTTP/HTTPS 协议。
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
@@ -6461,7 +6543,7 @@ type DescribeDDoSAttackDataRequestParams struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 统计指标列表，取值有：
@@ -6471,7 +6553,7 @@ type DescribeDDoSAttackDataRequestParams struct {
 	// <li>ddos_attackPackageRate：攻击包速率曲线。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// DDoS策略组ID列表，不填默认选择全部策略ID。
@@ -6497,7 +6579,7 @@ type DescribeDDoSAttackDataRequest struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 统计指标列表，取值有：
@@ -6507,7 +6589,7 @@ type DescribeDDoSAttackDataRequest struct {
 	// <li>ddos_attackPackageRate：攻击包速率曲线。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// DDoS策略组ID列表，不填默认选择全部策略ID。
@@ -6586,13 +6668,13 @@ type DescribeDDoSAttackEventRequestParams struct {
 	// 开始时间，时间范围为 30 天。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间，时间范围为 30 天。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// ddos策略组集合，不填默认选择全部策略。
 	PolicyIds []*int64 `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 
-	// 站点集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 分页查询的限制数目，默认值为20，最大查询条目为1000。
@@ -6627,13 +6709,13 @@ type DescribeDDoSAttackEventRequest struct {
 	// 开始时间，时间范围为 30 天。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间，时间范围为 30 天。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// ddos策略组集合，不填默认选择全部策略。
 	PolicyIds []*int64 `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 
-	// 站点集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 分页查询的限制数目，默认值为20，最大查询条目为1000。
@@ -6724,7 +6806,7 @@ type DescribeDDoSAttackTopDataRequestParams struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询的统计指标，取值有：
@@ -6736,7 +6818,7 @@ type DescribeDDoSAttackTopDataRequestParams struct {
 	// <li>ddos_attackFlux_sregion：按攻击源地区的攻击数量排行。</li>
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
-	// 站点ID集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// DDoS策略组ID集合，不填默认选择全部策略ID。
@@ -6772,7 +6854,7 @@ type DescribeDDoSAttackTopDataRequest struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询的统计指标，取值有：
@@ -6784,7 +6866,7 @@ type DescribeDDoSAttackTopDataRequest struct {
 	// <li>ddos_attackFlux_sregion：按攻击源地区的攻击数量排行。</li>
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
-	// 站点ID集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// DDoS策略组ID集合，不填默认选择全部策略ID。
@@ -8037,6 +8119,63 @@ func (r *DescribeLoadBalancerListResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeOriginACLRequestParams struct {
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+type DescribeOriginACLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+func (r *DescribeOriginACLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOriginACLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOriginACLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOriginACLResponseParams struct {
+	// 七层加速域名/四层代理实例与回源 IP 网段的绑定关系详情。
+	OriginACLInfo *OriginACLInfo `json:"OriginACLInfo,omitnil,omitempty" name:"OriginACLInfo"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeOriginACLResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOriginACLResponseParams `json:"Response"`
+}
+
+func (r *DescribeOriginACLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOriginACLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeOriginGroupHealthStatusRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -9236,7 +9375,7 @@ type DescribeTimingL4DataRequestParams struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询指标，取值有：
@@ -9248,7 +9387,7 @@ type DescribeTimingL4DataRequestParams struct {
 	// <li>l4Flow_outBandwidth: 访问出向带宽峰值。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点 ID 集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 四层实例列表, 不填表示选择全部实例。
@@ -9276,7 +9415,7 @@ type DescribeTimingL4DataRequest struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询指标，取值有：
@@ -9288,7 +9427,7 @@ type DescribeTimingL4DataRequest struct {
 	// <li>l4Flow_outBandwidth: 访问出向带宽峰值。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点 ID 集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 四层实例列表, 不填表示选择全部实例。
@@ -9370,7 +9509,7 @@ type DescribeTimingL7AnalysisDataRequestParams struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 指标列表，取值有:
@@ -9385,7 +9524,7 @@ type DescribeTimingL7AnalysisDataRequestParams struct {
 	// <li> l7Flow_avgFirstByteResponseTime: L7 访问平均首字节响应耗时，单位：ms。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点 ID 集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 查询时间粒度，取值有：
@@ -9426,7 +9565,7 @@ type DescribeTimingL7AnalysisDataRequest struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 指标列表，取值有:
@@ -9441,7 +9580,7 @@ type DescribeTimingL7AnalysisDataRequest struct {
 	// <li> l7Flow_avgFirstByteResponseTime: L7 访问平均首字节响应耗时，单位：ms。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点 ID 集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 查询时间粒度，取值有：
@@ -9672,7 +9811,7 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询的指标，取值有：
@@ -9703,7 +9842,7 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 	// 
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
-	// 站点 ID 集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 查询前多少个 top 数据，最大值为1000。不填默认为10，表示查询 top10 的数据。
@@ -9747,7 +9886,7 @@ type DescribeTopL7AnalysisDataRequest struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 查询的指标，取值有：
@@ -9778,7 +9917,7 @@ type DescribeTopL7AnalysisDataRequest struct {
 	// 
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
-	// 站点 ID 集合，此参数必填。
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
 	// 查询前多少个 top 数据，最大值为1000。不填默认为10，表示查询 top10 的数据。
@@ -10452,6 +10591,60 @@ type DiffIPWhitelist struct {
 	NoChangeIPWhitelist *IPWhitelist `json:"NoChangeIPWhitelist,omitnil,omitempty" name:"NoChangeIPWhitelist"`
 }
 
+// Predefined struct for user
+type DisableOriginACLRequestParams struct {
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+type DisableOriginACLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+func (r *DisableOriginACLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableOriginACLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableOriginACLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisableOriginACLResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DisableOriginACLResponse struct {
+	*tchttp.BaseResponse
+	Response *DisableOriginACLResponseParams `json:"Response"`
+}
+
+func (r *DisableOriginACLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableOriginACLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DnsRecord struct {
 	// 站点 ID。<br>注意：ZoneId 仅做出参使用，在 ModifyDnsRecords 不可作为入参使用，如有传此参数，会忽略。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -10729,6 +10922,96 @@ type DropPageDetail struct {
 
 	// 自定义响应 Id。该 Id 可通过查询自定义错误页列表接口获取。默认值为default，使用系统默认页面。Type 类型是 page 时必填，且不能为空。
 	CustomResponseId *string `json:"CustomResponseId,omitnil,omitempty" name:"CustomResponseId"`
+}
+
+// Predefined struct for user
+type EnableOriginACLRequestParams struct {
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 七层加速域名开启源站防护的模式。
+	// <li>all：针对站点下的所有七层加速域名开启。</li>
+	// <li>specific：针对站点下指定的七层加速域名开启。</li>当参数为空时，默认为 specific。
+	L7EnableMode *string `json:"L7EnableMode,omitnil,omitempty" name:"L7EnableMode"`
+
+	// 开启源站防护的七层加速域名列表，仅当参数 L7EnableMode 为 specific 时生效。L7EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 200 个七层加速域名。
+	L7Hosts []*string `json:"L7Hosts,omitnil,omitempty" name:"L7Hosts"`
+
+	// 四层代理实例开启源站防护的模式。
+	// <li>all：针对站点下的所有四层代理实例开启。</li>
+	// <li>specific：针对站点下指定的四层代理实例开启。</li>当参数为空时，默认为 specific。
+	L4EnableMode *string `json:"L4EnableMode,omitnil,omitempty" name:"L4EnableMode"`
+
+	// 开启源站防护的四层代理实例列表，仅当参数 L4EnableMode 为 specific 时生效。L4EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 100 个四层代理实例。
+	L4ProxyIds []*string `json:"L4ProxyIds,omitnil,omitempty" name:"L4ProxyIds"`
+}
+
+type EnableOriginACLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 七层加速域名开启源站防护的模式。
+	// <li>all：针对站点下的所有七层加速域名开启。</li>
+	// <li>specific：针对站点下指定的七层加速域名开启。</li>当参数为空时，默认为 specific。
+	L7EnableMode *string `json:"L7EnableMode,omitnil,omitempty" name:"L7EnableMode"`
+
+	// 开启源站防护的七层加速域名列表，仅当参数 L7EnableMode 为 specific 时生效。L7EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 200 个七层加速域名。
+	L7Hosts []*string `json:"L7Hosts,omitnil,omitempty" name:"L7Hosts"`
+
+	// 四层代理实例开启源站防护的模式。
+	// <li>all：针对站点下的所有四层代理实例开启。</li>
+	// <li>specific：针对站点下指定的四层代理实例开启。</li>当参数为空时，默认为 specific。
+	L4EnableMode *string `json:"L4EnableMode,omitnil,omitempty" name:"L4EnableMode"`
+
+	// 开启源站防护的四层代理实例列表，仅当参数 L4EnableMode 为 specific 时生效。L4EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 100 个四层代理实例。
+	L4ProxyIds []*string `json:"L4ProxyIds,omitnil,omitempty" name:"L4ProxyIds"`
+}
+
+func (r *EnableOriginACLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableOriginACLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "L7EnableMode")
+	delete(f, "L7Hosts")
+	delete(f, "L4EnableMode")
+	delete(f, "L4ProxyIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableOriginACLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableOriginACLResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type EnableOriginACLResponse struct {
+	*tchttp.BaseResponse
+	Response *EnableOriginACLResponseParams `json:"Response"`
+}
+
+func (r *EnableOriginACLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableOriginACLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EntityStatus struct {
@@ -12076,7 +12359,7 @@ type LoadBalancer struct {
 	// <li>Running：已生效。</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 该负载均衡实例绑的定四层层代理实例的列表。
+	// 该负载均衡实例绑的四层代理实例的列表。
 	L4UsedList []*string `json:"L4UsedList,omitnil,omitempty" name:"L4UsedList"`
 
 	// 该负载均衡实例绑定的七层域名列表。
@@ -14193,6 +14476,67 @@ func (r *ModifyLoadBalancerResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyOriginACLRequestParams struct {
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 需要启用/关闭特定回源 IP 网段回源的实例。
+	OriginACLEntities []*OriginACLEntity `json:"OriginACLEntities,omitnil,omitempty" name:"OriginACLEntities"`
+}
+
+type ModifyOriginACLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 站点 ID。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 需要启用/关闭特定回源 IP 网段回源的实例。
+	OriginACLEntities []*OriginACLEntity `json:"OriginACLEntities,omitnil,omitempty" name:"OriginACLEntities"`
+}
+
+func (r *ModifyOriginACLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyOriginACLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "OriginACLEntities")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyOriginACLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyOriginACLResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyOriginACLResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyOriginACLResponseParams `json:"Response"`
+}
+
+func (r *ModifyOriginACLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyOriginACLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyOriginGroupRequestParams struct {
 	// 站点 ID
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -15207,6 +15551,26 @@ type MutualTLS struct {
 	CertInfos []*CertificateInfo `json:"CertInfos,omitnil,omitempty" name:"CertInfos"`
 }
 
+type NextOriginACL struct {
+	// 版本号。
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// 版本生效时间，时间是北京时间 UTC+8， 遵循 ISO 8601 标准的日期和时间格式。
+	PlannedActiveTime *string `json:"PlannedActiveTime,omitnil,omitempty" name:"PlannedActiveTime"`
+
+	// 回源 IP 网段详情。
+	EntireAddresses *Addresses `json:"EntireAddresses,omitnil,omitempty" name:"EntireAddresses"`
+
+	// 最新回源 IP 网段相较于 CurrentOrginACL 中回源 IP 网段新增的部分。
+	AddedAddresses *Addresses `json:"AddedAddresses,omitnil,omitempty" name:"AddedAddresses"`
+
+	// 最新回源 IP 网段相较于 CurrentOrginACL 中回源 IP 网段删减的部分。
+	RemovedAddresses *Addresses `json:"RemovedAddresses,omitnil,omitempty" name:"RemovedAddresses"`
+
+	// 最新回源 IP 网段相较于 CurrentOrginACL 中回源 IP 网段无变化的部分。
+	NoChangeAddresses *Addresses `json:"NoChangeAddresses,omitnil,omitempty" name:"NoChangeAddresses"`
+}
+
 type NoCache struct {
 	// 不缓存配置开关，取值有：
 	// <li>on：开启；</li>
@@ -15265,6 +15629,45 @@ type Origin struct {
 	// <li>on：私有访问；</li>
 	// <li>off：公共访问。</li>
 	CosPrivateAccess *string `json:"CosPrivateAccess,omitnil,omitempty" name:"CosPrivateAccess"`
+}
+
+type OriginACLEntity struct {
+	// 实例类型，取值有：
+	// - l7：七层加速域名；
+	// - l4：四层代理实例。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 实例详情，取值有：
+	// - 当 Type = l7 时，请填写七层加速域名；
+	// - 当 Type = l4 时，请填写四层代理实例 ID。
+	Instances []*string `json:"Instances,omitnil,omitempty" name:"Instances"`
+
+	// 操作模式，取值有：
+	// <li>enable：启用；</li>
+	// <li>disable：停用。</li>
+	OperationMode *string `json:"OperationMode,omitnil,omitempty" name:"OperationMode"`
+}
+
+type OriginACLInfo struct {
+	// 启用了特定回源 IP 网段回源的七层加速域名列表。源站防护未开启时为空。
+	L7Hosts []*string `json:"L7Hosts,omitnil,omitempty" name:"L7Hosts"`
+
+	// 启用了特定回源 IP 网段回源的四层代理实例列表。源站防护未开启时为空。
+	L4ProxyIds []*string `json:"L4ProxyIds,omitnil,omitempty" name:"L4ProxyIds"`
+
+	// 当前生效的回源 IP 网段。源站防护未开启时为空。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentOriginACL *CurrentOriginACL `json:"CurrentOriginACL,omitnil,omitempty" name:"CurrentOriginACL"`
+
+	// 当回源 IP 网段发生更新时，该字段会返回下一个版本将要生效的回源 IP 网段，包含与当前回源 IP 网段的对比。无更新或者源站防护未开启时该字段为空。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NextOriginACL *NextOriginACL `json:"NextOriginACL,omitnil,omitempty" name:"NextOriginACL"`
+
+	// 源站防护状态，取值有：
+	// <li>online：已生效；</li>
+	// <li>offline：已停用；</li>
+	// <li>updating: 配置部署中。</li>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 type OriginDetail struct {
@@ -15461,7 +15864,7 @@ type OriginInfo struct {
 
 	// 自定义回源 HOST 头，该参数仅当 OriginType=IP_DOMAIN 时生效。
 	// 如果 OriginType=COS 或 AWS_S3 时，回源 HOST 头将与源站域名保持一致。
-	// 如果OriginType=ORIGIN_GROUP 或 LB 时，回源 HOST 头遵循源站组内配置，如果没有配置则默认为加速域名。
+	// 如果OriginType=ORIGIN_GROUP 时，回源 HOST 头遵循源站组内配置，如果没有配置则默认为加速域名。
 	// 如果 OriginType=VOD 或 SPACE 时，无需配置该头部，按对应的回源域名生效。
 	HostHeader *string `json:"HostHeader,omitnil,omitempty" name:"HostHeader"`
 
@@ -15608,9 +16011,14 @@ type Plan struct {
 
 	// 服务区域，取值有：
 	// <li>mainland: 中国大陆；</li>
-	// <li>overseas: 全球（不包括中国大陆)；</li>
-	// <li>global: 全球（包括中国大陆)。</li>
+	// <li>overseas: 全球（不包括中国大陆）；</li>
+	// <li>global: 全球（包括中国大陆）。</li>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// 自动续费开关。取值有：
+	// <li>true: 已开启自动续费；</li>
+	// <li>false: 未开启自动续费。</li>
+	AutoRenewal *bool `json:"AutoRenewal,omitnil,omitempty" name:"AutoRenewal"`
 
 	// 套餐状态，取值有：
 	// <li>normal：正常状态；</li>
