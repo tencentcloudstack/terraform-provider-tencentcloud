@@ -36,28 +36,12 @@ func ResourceTencentCloudTeoOriginAcl() *schema.Resource {
 				Description: "Specifies the site ID.",
 			},
 
-			"l7_enable_mode": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"all", "specific"}),
-				Description:  "The mode of configurating origin ACLs for L7 acceleration domains. - all: configurate origin ACLs for all L7 acceleration domains under the site. - specific: configurate origin ACLs for designated L7 acceleration domains under the site. When the parameter is empty, it defaults to specific.",
-			},
-
 			"l7_hosts": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "The list of L7 acceleration domains that require enabling the origin ACLs. This list must be empty when the request parameter L7EnableMode is set to 'all'.",
-			},
-
-			"l4_enable_mode": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"all", "specific"}),
-				Description:  "The mode of configurating origin ACLs for L4 proxy Instances. - all: configurate origin ACLs for all L4 proxy Instances under the site. - specific: configurate origin ACLs for designated L4 proxy Instances under the site. When the parameter is empty, it defaults to specific.",
 			},
 
 			"l4_proxy_ids": {
@@ -88,17 +72,13 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 		zoneId = v.(string)
 	}
 
-	if v, ok := d.GetOk("l7_enable_mode"); ok {
-		request.L7EnableMode = helper.String(v.(string))
-	}
-
 	tmpL7Hosts := make([]interface{}, 0)
 	tmpL4ProxyIds := make([]interface{}, 0)
 	if v, ok := d.GetOk("l7_hosts"); ok {
 		l7Hosts := v.(*schema.Set).List()
-		if len(l7Hosts) > 200 {
-			l7Hosts = v.(*schema.Set).List()[:2]
-			tmpL7Hosts = v.(*schema.Set).List()[2:]
+		if len(l7Hosts) > 1 {
+			l7Hosts = v.(*schema.Set).List()[:1]
+			tmpL7Hosts = v.(*schema.Set).List()[1:]
 		}
 
 		for i := range l7Hosts {
@@ -109,13 +89,9 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if v, ok := d.GetOk("l4_enable_mode"); ok {
-		request.L4EnableMode = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("l4_proxy_ids"); ok {
 		l4ProxyIds := v.(*schema.Set).List()
-		if len(l4ProxyIds) > 100 {
+		if len(l4ProxyIds) > 1 {
 			l4ProxyIds = v.(*schema.Set).List()[:1]
 			tmpL4ProxyIds = v.(*schema.Set).List()[1:]
 		}
@@ -128,6 +104,8 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 		}
 	}
 
+	request.L7EnableMode = helper.String("specific")
+	request.L4EnableMode = helper.String("specific")
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().EnableOriginACLWithContext(ctx, request)
 		if e != nil {
@@ -155,48 +133,89 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 	}
 
 	if len(tmpL7Hosts) > 0 || len(tmpL4ProxyIds) > 0 {
-		request := teov20220901.NewModifyOriginACLRequest()
-		request.ZoneId = &zoneId
-		if len(tmpL7Hosts) > 0 {
+		batchSize := 200
+		for i := 0; i < len(tmpL7Hosts); i += batchSize {
+			end := i + batchSize
+			if end > len(tmpL7Hosts) {
+				end = len(tmpL7Hosts)
+			}
+
+			batchHosts := tmpL7Hosts[i:end]
+			request := teov20220901.NewModifyOriginACLRequest()
+			request.ZoneId = &zoneId
 			request.OriginACLEntities = append(request.OriginACLEntities, &teov20220901.OriginACLEntity{
 				Type:          helper.String("l7"),
-				Instances:     helper.InterfacesStringsPoint(tmpL7Hosts),
+				Instances:     helper.InterfacesStringsPoint(batchHosts),
 				OperationMode: helper.String("enable"),
 			})
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyOriginACLWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify teo origin acl failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify teo origin acl (L7 batch %d) failed, reason:%+v", logId, i/batchSize, err)
+				return err
+			}
+
+			// wait
+			err = service.WaitTeoOriginACLById(ctx, d.Timeout(schema.TimeoutCreate), zoneId, "online")
+			if err != nil {
+				return err
+			}
 		}
 
-		if len(tmpL4ProxyIds) > 0 {
+		for i := 0; i < len(tmpL4ProxyIds); i += batchSize {
+			end := i + batchSize
+			if end > len(tmpL4ProxyIds) {
+				end = len(tmpL4ProxyIds)
+			}
+
+			batchProxyIds := tmpL4ProxyIds[i:end]
+			request := teov20220901.NewModifyOriginACLRequest()
+			request.ZoneId = &zoneId
 			request.OriginACLEntities = append(request.OriginACLEntities, &teov20220901.OriginACLEntity{
 				Type:          helper.String("l4"),
-				Instances:     helper.InterfacesStringsPoint(tmpL4ProxyIds),
+				Instances:     helper.InterfacesStringsPoint(batchProxyIds),
 				OperationMode: helper.String("enable"),
 			})
-		}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyOriginACLWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyOriginACLWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify teo origin acl failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify teo origin acl (L4 batch %d) failed, reason:%+v", logId, i/batchSize, err)
+				return err
 			}
 
-			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Modify teo origin acl failed, Response is nil."))
+			// wait
+			err = service.WaitTeoOriginACLById(ctx, d.Timeout(schema.TimeoutCreate), zoneId, "online")
+			if err != nil {
+				return err
 			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s modify teo origin acl failed, reason:%+v", logId, err)
-			return err
-		}
-
-		// wait
-		err = service.WaitTeoOriginACLById(ctx, d.Timeout(schema.TimeoutCreate), zoneId, "online")
-		if err != nil {
-			return err
 		}
 	}
 
@@ -308,40 +327,79 @@ func ResourceTencentCloudTeoOriginAclUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	if len(l7List) > 0 || len(l4List) > 0 {
-		request := teov20220901.NewModifyOriginACLRequest()
-		request.ZoneId = &zoneId
-		if len(l7List) > 0 {
-			request.OriginACLEntities = append(request.OriginACLEntities, l7List...)
-		}
-
-		if len(l4List) > 0 {
-			request.OriginACLEntities = append(request.OriginACLEntities, l4List...)
-		}
-
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyOriginACLWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		batchSize := 200
+		for i := 0; i < len(l7List); i += batchSize {
+			end := i + batchSize
+			if end > len(l7List) {
+				end = len(l7List)
 			}
 
-			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Modify teo origin acl failed, Response is nil."))
+			batchHosts := l7List[i:end]
+			request := teov20220901.NewModifyOriginACLRequest()
+			request.ZoneId = &zoneId
+			request.OriginACLEntities = append(request.OriginACLEntities, batchHosts...)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyOriginACLWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify teo origin acl failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify teo origin acl (L7 batch %d) failed, reason:%+v", logId, i/batchSize, err)
+				return err
 			}
 
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s modify teo origin acl failed, reason:%+v", logId, err)
-			return err
+			// wait
+			err = service.WaitTeoOriginACLById(ctx, d.Timeout(schema.TimeoutCreate), zoneId, "online")
+			if err != nil {
+				return err
+			}
 		}
 
-		// wait
-		err = service.WaitTeoOriginACLById(ctx, d.Timeout(schema.TimeoutUpdate), zoneId, "online")
-		if err != nil {
-			return err
+		for i := 0; i < len(l4List); i += batchSize {
+			end := i + batchSize
+			if end > len(l4List) {
+				end = len(l4List)
+			}
+
+			batchProxyIds := l4List[i:end]
+			request := teov20220901.NewModifyOriginACLRequest()
+			request.ZoneId = &zoneId
+			request.OriginACLEntities = append(request.OriginACLEntities, batchProxyIds...)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyOriginACLWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify teo origin acl failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify teo origin acl (L4 batch %d) failed, reason:%+v", logId, i/batchSize, err)
+				return err
+			}
+
+			// wait
+			err = service.WaitTeoOriginACLById(ctx, d.Timeout(schema.TimeoutCreate), zoneId, "online")
+			if err != nil {
+				return err
+			}
 		}
 	}
 
