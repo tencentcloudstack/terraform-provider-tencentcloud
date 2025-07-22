@@ -12,8 +12,9 @@ resource "tencentcloud_eb_event_bus" "foo" {
     "createdBy" = "terraform"
   }
 }
+
 data "tencentcloud_eb_bus" "bus" {
-  order_by = "AddTime"
+  order_by = "created_at"
   order = "DESC"
   filters {
 		values = ["Custom"]
