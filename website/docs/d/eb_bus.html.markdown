@@ -23,8 +23,9 @@ resource "tencentcloud_eb_event_bus" "foo" {
     "createdBy" = "terraform"
   }
 }
+
 data "tencentcloud_eb_bus" "bus" {
-  order_by = "AddTime"
+  order_by = "created_at"
   order    = "DESC"
   filters {
     values = ["Custom"]
@@ -40,7 +41,7 @@ data "tencentcloud_eb_bus" "bus" {
 The following arguments are supported:
 
 * `filters` - (Optional, List) Filter conditions. The upper limit of Filters per request is 10, and the upper limit of Filter.Values 5.
-* `order_by` - (Optional, String) According to which field to sort the returned results, the following fields are supported: AddTime (creation time), ModTime (modification time).
+* `order_by` - (Optional, String) According to which field to sort the returned results, the following fields are supported: `created_at` (creation time), `updated_at` (modification time).
 * `order` - (Optional, String) Return results in ascending or descending order, optional values ASC (ascending) and DESC (descending).
 * `result_output_file` - (Optional, String) Used to save results.
 

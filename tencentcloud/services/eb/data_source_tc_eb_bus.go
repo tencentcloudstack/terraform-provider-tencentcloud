@@ -19,7 +19,7 @@ func DataSourceTencentCloudEbBus() *schema.Resource {
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "According to which field to sort the returned results, the following fields are supported: AddTime (creation time), ModTime (modification time).",
+				Description: "According to which field to sort the returned results, the following fields are supported: `created_at` (creation time), `updated_at` (modification time).",
 			},
 
 			"order": {
