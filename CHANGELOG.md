@@ -1,3 +1,18 @@
+## 1.82.12(July 22 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_teo_content_identifier` ([#3449](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3449))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_eb_bus: update desc of `order_by` ([#3450](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3450))
+* resource/tencentcloud_emr_cluster: support `multi_zone` and `multi_zone_setting` ([#3446](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3446))
+* resource/tencentcloud_kubernetes_node_pool: support `cdc_id` ([#3444](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3444))
+* resource/tencentcloud_kubernetes_scale_worker: support `cdc_id` ([#3444](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3444))
+* resource/tencentcloud_mysql_ssl: support `ro_group_id` ([#3445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3445))
+* resource/tencentcloud_teo_acceleration_domain: Documentation supplementary instructions. ([#3448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3448))
+
 ## 1.82.11(July 14 , 2025)
 
 ENHANCEMENTS:
