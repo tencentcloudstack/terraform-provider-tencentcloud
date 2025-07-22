@@ -5,14 +5,12 @@ Example Usage
 ```hcl
 resource "tencentcloud_teo_origin_acl" "example" {
   zone_id        = "zone-39quuimqg8r6"
-  l7_enable_mode = "specific"
   l7_hosts       = [
     "example1.com",
     "example2.com",
     "example3.com",
   ]
 
-  l4_enable_mode = "specific"
   l4_proxy_ids   = [
     "sid-3dwf5252ravl",
     "sid-3dwfxzt8ed3l",
