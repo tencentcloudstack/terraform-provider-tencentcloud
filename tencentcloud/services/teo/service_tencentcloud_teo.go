@@ -1971,3 +1971,53 @@ func (me *TeoService) DescribeTeoPlansByFilters(ctx context.Context, paramMap ma
 
 	return
 }
+
+func (me *TeoService) DescribeTeoContentIdentifierById(ctx context.Context, contentId string) (ret *teo.ContentIdentifier, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeContentIdentifiersRequest()
+	response := teo.NewDescribeContentIdentifiersResponse()
+	request.Filters = []*teo.AdvancedFilter{
+		{
+			Name:   helper.String("content-id"),
+			Values: helper.Strings([]string{contentId}),
+			Fuzzy:  helper.Bool(false),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeContentIdentifiers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || len(result.Response.ContentIdentifiers) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe teo content identifier failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.ContentIdentifiers) != 1 {
+		errRet = fmt.Errorf("`ContentIdentifiers` returning multiple values, Should be one.")
+		return
+	}
+
+	ret = response.Response.ContentIdentifiers[0]
+	return
+}
