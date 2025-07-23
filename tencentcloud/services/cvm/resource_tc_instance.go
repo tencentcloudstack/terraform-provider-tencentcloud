@@ -205,7 +205,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"WanIP", "HighQualityEIP", "AntiDDoSEIP"}),
 				Description:  "AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.",
 			},
-			"anti_ddoS_package_id": {
+			"anti_ddos_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
@@ -674,7 +674,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		netWorkFlag = true
 	}
 
-	if v, ok := d.GetOk("anti_ddoS_package_id"); ok {
+	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
 		internetAccessible.AntiDDoSPackageId = helper.String(v.(string))
 		netWorkFlag = true
 	}
@@ -1193,7 +1193,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		}
 
 		if instance.InternetAccessible.AntiDDoSPackageId != nil {
-			_ = d.Set("anti_ddoS_package_id", instance.InternetAccessible.AntiDDoSPackageId)
+			_ = d.Set("anti_ddos_package_id", instance.InternetAccessible.AntiDDoSPackageId)
 		}
 	}
 

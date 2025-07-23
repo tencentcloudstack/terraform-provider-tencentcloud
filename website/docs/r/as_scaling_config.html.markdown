@@ -244,7 +244,7 @@ The following arguments are supported:
 
 * `configuration_name` - (Required, String) Name of a launch configuration.
 * `instance_types` - (Required, List: [`String`]) Specified types of CVM instances.
-* `anti_ddoS_package_id` - (Optional, String) Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.
+* `anti_ddos_package_id` - (Optional, String) Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.
 * `bandwidth_package_id` - (Optional, String) Bandwidth package ID.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
