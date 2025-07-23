@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -290,6 +290,9 @@ const (
 	// 子网信息不合法。
 	INVALIDPARAMETERVALUE_SUBNETIDS = "InvalidParameterValue.SubnetIds"
 
+	// 子网不在指定本地专用集群中。
+	INVALIDPARAMETERVALUE_SUBNETNOTINDEDICATEDCLUSTER = "InvalidParameterValue.SubnetNotInDedicatedCluster"
+
 	// 负载均衡器四层监听器的后端端口重复。
 	INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 
@@ -400,6 +403,9 @@ const (
 
 	// 指定的带宽包ID不存在。
 	RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
+
+	// 指定的传统型负载均衡器ID不存在。
+	RESOURCENOTFOUND_CLASSICLOADBALANCERNOTFOUND = "ResourceNotFound.ClassicLoadBalancerNotFound"
 
 	// 指定的 CMQ queue 不存在。
 	RESOURCENOTFOUND_CMQQUEUENOTFOUND = "ResourceNotFound.CmqQueueNotFound"

@@ -156,6 +156,29 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:    true,
 				Description: "Specify whether to assign an Internet IP address.",
 			},
+			"bandwidth_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Bandwidth package ID.",
+			},
+			"ipv4_address_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"WanIP", "HighQualityEIP", "AntiDDoSEIP"}),
+				Description:  "AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.",
+			},
+			"anti_ddoS_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.",
+			},
+			"is_keep_eip": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to delete the bound EIP when the instance is destroyed. Range of values: True: retain the EIP; False: not retain the EIP. Note that when the IPv4AddressType field specifies the EIP type, the default behavior is not to retain the EIP. WanIP is unaffected by this field and will always be deleted with the instance. Changing this field configuration will take effect immediately for resources already bound to a scaling group.",
+			},
 			"password": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -369,6 +392,18 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOkExists("public_ip_assigned"); ok {
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
+	}
+	if v, ok := d.GetOk("bandwidth_package_id"); ok {
+		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("ipv4_address_type"); ok {
+		request.InternetAccessible.IPv4AddressType = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("anti_ddoS_package_id"); ok {
+		request.InternetAccessible.AntiDDoSPackageId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOkExists("is_keep_eip"); ok {
+		request.InternetAccessible.IsKeepEIP = helper.Bool(v.(bool))
 	}
 
 	request.LoginSettings = &as.LoginSettings{}
@@ -610,6 +645,24 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 
 		_ = d.Set("cam_role_name", *config.CamRoleName)
 
+		if config.InternetAccessible != nil {
+			if config.InternetAccessible.BandwidthPackageId != nil {
+				_ = d.Set("bandwidth_package_id", config.InternetAccessible.BandwidthPackageId)
+			}
+
+			if config.InternetAccessible.IPv4AddressType != nil {
+				_ = d.Set("ipv4_address_type", config.InternetAccessible.IPv4AddressType)
+			}
+
+			if config.InternetAccessible.AntiDDoSPackageId != nil {
+				_ = d.Set("anti_ddoS_package_id", config.InternetAccessible.AntiDDoSPackageId)
+			}
+
+			if config.InternetAccessible.IsKeepEIP != nil {
+				_ = d.Set("is_keep_eip", config.InternetAccessible.IsKeepEIP)
+			}
+		}
+
 		if config.HostNameSettings != nil {
 			isEmptySettings := true
 			settings := map[string]interface{}{}
@@ -749,7 +802,8 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if d.HasChange("internet_charge_type") || d.HasChange("internet_max_bandwidth_out") || d.HasChange("public_ip_assigned") {
+	if d.HasChange("internet_charge_type") || d.HasChange("internet_max_bandwidth_out") || d.HasChange("public_ip_assigned") ||
+		d.HasChange("bandwidth_package_id") || d.HasChange("ipv4_address_type") || d.HasChange("anti_ddoS_package_id") || d.HasChange("is_keep_eip") {
 		request.InternetAccessible = &as.InternetAccessible{}
 		if v, ok := d.GetOk("internet_charge_type"); ok {
 			request.InternetAccessible.InternetChargeType = helper.String(v.(string))
@@ -760,6 +814,18 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOkExists("public_ip_assigned"); ok {
 			publicIpAssigned := v.(bool)
 			request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
+		}
+		if v, ok := d.GetOk("bandwidth_package_id"); ok {
+			request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("ipv4_address_type"); ok {
+			request.InternetAccessible.IPv4AddressType = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("anti_ddoS_package_id"); ok {
+			request.InternetAccessible.AntiDDoSPackageId = helper.String(v.(string))
+		}
+		if v, ok := d.GetOkExists("is_keep_eip"); ok {
+			request.InternetAccessible.IsKeepEIP = helper.Bool(v.(bool))
 		}
 	}
 

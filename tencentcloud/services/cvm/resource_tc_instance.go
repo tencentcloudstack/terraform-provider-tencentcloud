@@ -197,6 +197,21 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.",
 			},
+			"ipv4_address_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"WanIP", "HighQualityEIP", "AntiDDoSEIP"}),
+				Description:  "AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.",
+			},
+			"anti_ddoS_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.",
+			},
 			// vpc
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -651,6 +666,16 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOkExists("allocate_public_ip"); ok {
 		allocatePublicIp := v.(bool)
 		internetAccessible.PublicIpAssigned = &allocatePublicIp
+		netWorkFlag = true
+	}
+
+	if v, ok := d.GetOk("ipv4_address_type"); ok {
+		internetAccessible.IPv4AddressType = helper.String(v.(string))
+		netWorkFlag = true
+	}
+
+	if v, ok := d.GetOk("anti_ddoS_package_id"); ok {
+		internetAccessible.AntiDDoSPackageId = helper.String(v.(string))
 		netWorkFlag = true
 	}
 
@@ -1160,6 +1185,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 
 	if _, ok := d.GetOkExists("allocate_public_ip"); !ok {
 		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
+	}
+
+	if instance.InternetAccessible != nil {
+		if instance.InternetAccessible.IPv4AddressType != nil {
+			_ = d.Set("ipv4_address_type", instance.InternetAccessible.IPv4AddressType)
+		}
+
+		if instance.InternetAccessible.AntiDDoSPackageId != nil {
+			_ = d.Set("anti_ddoS_package_id", instance.InternetAccessible.AntiDDoSPackageId)
+		}
 	}
 
 	tagService := svctag.NewTagService(client)
