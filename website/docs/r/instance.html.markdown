@@ -292,7 +292,7 @@ resource "tencentcloud_instance" "example" {
 The following arguments are supported:
 
 * `allocate_public_ip` - (Optional, Bool, ForceNew) Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.
-* `anti_ddoS_package_id` - (Optional, String, ForceNew) Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.
+* `anti_ddos_package_id` - (Optional, String, ForceNew) Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.
 * `availability_zone` - (Optional, String, ForceNew) The available zone for the CVM instance.
 * `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.

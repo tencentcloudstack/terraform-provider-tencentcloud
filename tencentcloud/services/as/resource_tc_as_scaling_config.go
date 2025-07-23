@@ -168,7 +168,7 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"WanIP", "HighQualityEIP", "AntiDDoSEIP"}),
 				Description:  "AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.",
 			},
-			"anti_ddoS_package_id": {
+			"anti_ddos_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.",
@@ -399,7 +399,7 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOk("ipv4_address_type"); ok {
 		request.InternetAccessible.IPv4AddressType = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("anti_ddoS_package_id"); ok {
+	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
 		request.InternetAccessible.AntiDDoSPackageId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("is_keep_eip"); ok {
@@ -655,7 +655,7 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 			}
 
 			if config.InternetAccessible.AntiDDoSPackageId != nil {
-				_ = d.Set("anti_ddoS_package_id", config.InternetAccessible.AntiDDoSPackageId)
+				_ = d.Set("anti_ddos_package_id", config.InternetAccessible.AntiDDoSPackageId)
 			}
 
 			if config.InternetAccessible.IsKeepEIP != nil {
@@ -803,7 +803,7 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("internet_charge_type") || d.HasChange("internet_max_bandwidth_out") || d.HasChange("public_ip_assigned") ||
-		d.HasChange("bandwidth_package_id") || d.HasChange("ipv4_address_type") || d.HasChange("anti_ddoS_package_id") || d.HasChange("is_keep_eip") {
+		d.HasChange("bandwidth_package_id") || d.HasChange("ipv4_address_type") || d.HasChange("anti_ddos_package_id") || d.HasChange("is_keep_eip") {
 		request.InternetAccessible = &as.InternetAccessible{}
 		if v, ok := d.GetOk("internet_charge_type"); ok {
 			request.InternetAccessible.InternetChargeType = helper.String(v.(string))
@@ -821,7 +821,7 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOk("ipv4_address_type"); ok {
 			request.InternetAccessible.IPv4AddressType = helper.String(v.(string))
 		}
-		if v, ok := d.GetOk("anti_ddoS_package_id"); ok {
+		if v, ok := d.GetOk("anti_ddos_package_id"); ok {
 			request.InternetAccessible.AntiDDoSPackageId = helper.String(v.(string))
 		}
 		if v, ok := d.GetOkExists("is_keep_eip"); ok {
