@@ -1,5 +1,7 @@
 Provides a resource to create a TEO origin acl
 
+~> **NOTE:** This resource must exclusive in one origin acl, do not declare additional rule resources of this origin acl elsewhere.
+
 Example Usage
 
 ```hcl
