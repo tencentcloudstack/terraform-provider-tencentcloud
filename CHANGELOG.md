@@ -1,3 +1,16 @@
+## 1.82.13(July 25 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_teo_customize_error_page` ([#3454](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3454))
+* **New Resource:** `tencentcloud_teo_origin_acl` ([#3440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3440))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_topic: update doc for `period` ([#3452](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3452))
+* resource/tencentcloud_kubernetes_native_node_pool: optmize code logic for update function ([#3453](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3453))
+* resource/tencentcloud_kubernetes_node_pool: update desc of `node_os` ([#3455](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3455))
+
 ## 1.82.12(July 22 , 2025)
 
 FEATURES:
