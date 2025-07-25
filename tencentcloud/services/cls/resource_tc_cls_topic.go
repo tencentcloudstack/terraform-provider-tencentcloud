@@ -70,7 +70,7 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Lifecycle in days. Value range: 1~366. Default value: 30.",
+				Description: "lifetime. Unit: days. Standard storage value range: 1 to 3600. Infrequent storage value range: 7 to 3600 days. A value of 3640 indicates permanent retention.If this value is not input, it defaults to the Period value of the log set corresponding to the accessed log topic (defaults to 30 days in case of access failure).",
 			},
 			"hot_period": {
 				Type:        schema.TypeInt,
