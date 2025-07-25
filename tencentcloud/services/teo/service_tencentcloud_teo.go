@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -2070,5 +2071,75 @@ func (me *TeoService) DescribeTeoCustomizeErrorPageById(ctx context.Context, zon
 	}
 
 	ret = response.Response.ErrorPages[0]
+	return
+}
+
+func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, timeout time.Duration, zoneId, status string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := teo.NewDescribeOriginACLRequest()
+	request.ZoneId = &zoneId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(timeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoClient().DescribeOriginACLWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.OriginACLInfo == nil || result.Response.OriginACLInfo.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe teo origin acl failed, Response is nil."))
+		}
+
+		if *result.Response.OriginACLInfo.Status == status {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("TEO zone %s origin acl is still %s. Please contact TEO for assistance.", zoneId, *result.Response.OriginACLInfo.Status))
+	})
+
+	return
+}
+
+func (me *TeoService) DescribeTeoOriginACLById(ctx context.Context, zoneId string) (originACLInfo *teo.OriginACLInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := teo.NewDescribeOriginACLRequest()
+	response := teo.NewDescribeOriginACLResponse()
+	request.ZoneId = &zoneId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoClient().DescribeOriginACLWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe teo origin acl failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe teo origin acl failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	originACLInfo = response.Response.OriginACLInfo
 	return
 }
