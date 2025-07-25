@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,6 +22,11 @@ func ResourceTencentCloudTeoOriginAcl() *schema.Resource {
 		Delete: ResourceTencentCloudTeoOriginAclDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(30 * time.Minute),
+			Update: schema.DefaultTimeout(30 * time.Minute),
+			Delete: schema.DefaultTimeout(30 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
@@ -88,9 +94,9 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 	tmpL4ProxyIds := make([]interface{}, 0)
 	if v, ok := d.GetOk("l7_hosts"); ok {
 		l7Hosts := v.(*schema.Set).List()
-		if len(l7Hosts) > 200 {
-			l7Hosts = l7Hosts[:200]
-			tmpL7Hosts = l7Hosts[200:]
+		if len(l7Hosts) > 2 {
+			l7Hosts = v.(*schema.Set).List()[:2]
+			tmpL7Hosts = v.(*schema.Set).List()[2:]
 		}
 
 		for i := range l7Hosts {
@@ -107,9 +113,9 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("l4_proxy_ids"); ok {
 		l4ProxyIds := v.(*schema.Set).List()
-		if len(l4ProxyIds) > 100 {
-			l4ProxyIds = l4ProxyIds[:100]
-			tmpL4ProxyIds = l4ProxyIds[100:]
+		if len(l4ProxyIds) > 1 {
+			l4ProxyIds = v.(*schema.Set).List()[:1]
+			tmpL4ProxyIds = v.(*schema.Set).List()[1:]
 		}
 
 		for i := range l4ProxyIds {
