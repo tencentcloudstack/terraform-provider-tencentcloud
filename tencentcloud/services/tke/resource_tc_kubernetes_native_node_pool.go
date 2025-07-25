@@ -1575,19 +1575,28 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 			if v, ok := nativeMap["auto_repair"]; ok {
 				updateNativeNodePoolParam.AutoRepair = helper.Bool(v.(bool))
 			}
+
+			var instanceChargeType string
 			if v, ok := nativeMap["instance_charge_type"]; ok {
 				updateNativeNodePoolParam.InstanceChargeType = helper.String(v.(string))
+				instanceChargeType = v.(string)
 			}
-			if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
-				instanceChargePrepaid := tke2.InstanceChargePrepaid{}
-				if v, ok := instanceChargePrepaidMap["period"]; ok {
-					instanceChargePrepaid.Period = helper.IntUint64(v.(int))
+
+			if instanceChargeType == "PREPAID" {
+				if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
+					instanceChargePrepaid := tke2.InstanceChargePrepaid{}
+					if v, ok := instanceChargePrepaidMap["period"]; ok {
+						instanceChargePrepaid.Period = helper.IntUint64(v.(int))
+					}
+
+					if v, ok := instanceChargePrepaidMap["renew_flag"]; ok {
+						instanceChargePrepaid.RenewFlag = helper.String(v.(string))
+					}
+
+					updateNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 				}
-				if v, ok := instanceChargePrepaidMap["renew_flag"]; ok {
-					instanceChargePrepaid.RenewFlag = helper.String(v.(string))
-				}
-				updateNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 			}
+
 			if systemDiskMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["system_disk"]); ok {
 				disk := tke2.Disk{}
 				if v, ok := systemDiskMap["disk_type"]; ok {
