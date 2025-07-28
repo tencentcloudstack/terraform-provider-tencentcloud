@@ -1251,62 +1251,62 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					return err
 				}
 			}
-			// 数据层新增hotData节点
-			var isAddHotData bool
-			if oldHotData == nil && newHotData != nil {
-				baseNodeList := make([]interface{}, 0)
-				baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
-				if newWarmData != nil {
-					baseNodeList = append(baseNodeList, oldNodeMap["warmData"])
-				}
-				changeESNodes := convertToNodeInfos(baseNodeList)
-				thisHotDataNode := convertToNodeInfo(newHotData)
-				changeESNodes = append(changeESNodes, thisHotDataNode)
-				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos)
-					if errRet != nil {
-						return tccommon.RetryError(errRet)
-					}
-					return nil
-				})
-				if err != nil {
-					return err
-				}
-				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
-				if err != nil {
-					return err
-				}
-				isAddHotData = true
+		}
+		// 数据层新增hotData节点
+		var isAddHotData bool
+		if oldHotData == nil && newHotData != nil {
+			baseNodeList := make([]interface{}, 0)
+			baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
+			if newWarmData != nil {
+				baseNodeList = append(baseNodeList, oldNodeMap["warmData"])
 			}
-			// 数据层新增warmData节点
-			if oldWarmData == nil && newWarmData != nil {
-				baseNodeList := make([]interface{}, 0)
-				baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
-				if newHotData != nil {
-					// changeMultiZone: 更新可用区，存量节点数量一定会修改，使用newNodesMap["hotData"]
-					if isAddHotData || changeMultiZone {
-						baseNodeList = append(baseNodeList, newNodesMap["hotData"])
-					} else {
-						baseNodeList = append(baseNodeList, oldNodeMap["hotData"])
-					}
+			changeESNodes := convertToNodeInfos(baseNodeList)
+			thisHotDataNode := convertToNodeInfo(newHotData)
+			changeESNodes = append(changeESNodes, thisHotDataNode)
+			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
 				}
-				changeESNodes := convertToNodeInfos(baseNodeList)
-				thisWarmDataNode := convertToNodeInfo(newWarmData)
-				changeESNodes2 := append(changeESNodes, thisWarmDataNode)
-				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes2, nil, nil, nil, nil, multiZoneInfos)
-					if errRet != nil {
-						return tccommon.RetryError(errRet)
-					}
-					return nil
-				})
-				if err != nil {
-					return err
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+			isAddHotData = true
+		}
+		// 数据层新增warmData节点
+		if oldWarmData == nil && newWarmData != nil {
+			baseNodeList := make([]interface{}, 0)
+			baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
+			if newHotData != nil {
+				// changeMultiZone: 更新可用区，存量节点数量一定会修改，使用newNodesMap["hotData"]
+				if isAddHotData || changeMultiZone {
+					baseNodeList = append(baseNodeList, newNodesMap["hotData"])
+				} else {
+					baseNodeList = append(baseNodeList, oldNodeMap["hotData"])
 				}
-				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
-				if err != nil {
-					return err
+			}
+			changeESNodes := convertToNodeInfos(baseNodeList)
+			thisWarmDataNode := convertToNodeInfo(newWarmData)
+			changeESNodes2 := append(changeESNodes, thisWarmDataNode)
+			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes2, nil, nil, nil, nil, multiZoneInfos)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
 				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
 			}
 		}
 
