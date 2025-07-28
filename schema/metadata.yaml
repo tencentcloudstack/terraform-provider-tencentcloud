@@ -99,12 +99,15 @@ resource_metas:
           display_name: 记录线路
           val_source:
             method: GET
-            path: "/api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}"
+            path: "/api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}&ProviderAuthUid={rely_resources[1]}"
             values:
               label_path: "$.Data.Lines[*]"
               value_path: "$.Data.Lines[*]"
             rely_resources:
             - name: domain
+              source: owner
+              required: true
+            - name: ProviderAuthUid
               source: owner
               required: true
           region_rule:
@@ -117,12 +120,15 @@ resource_metas:
           display_name: 记录类型
           val_source:
             method: GET
-            path: "/api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}"
+            path: "/api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}&ProviderAuthUid={rely_resources[1]}"
             values:
               label_path: "$.Data.Types[*]"
               value_path: "$.Data.Types[*]"
             rely_resources:
             - name: domain
+              source: owner
+              required: true
+            - name: ProviderAuthUid
               source: owner
               required: true
           widget: select_remote
