@@ -285,7 +285,7 @@ func TestAccTencentCloudElasticsearchInstanceResource_MultiZoneInfo(t *testing.T
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mod", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mode", "0"),
 				),
 			},
 			{
@@ -293,7 +293,7 @@ func TestAccTencentCloudElasticsearchInstanceResource_MultiZoneInfo(t *testing.T
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.#", "3"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mod", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mode", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "multi_zone_infos.#", "2"),
 				),
 			},
