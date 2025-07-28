@@ -169,14 +169,14 @@ The following arguments are supported:
 * `charge_period` - (Optional, Int, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
 * `cos_backup` - (Optional, List) COS automatic backup information.
-* `deploy_mode` - (Optional, Int, ForceNew) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
+* `deploy_mode` - (Optional, Int) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
 * `es_acl` - (Optional, List) Kibana Access Control Configuration.
 * `es_public_acl` - (Optional, List) Public network access control list.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `kibana_private_access` - (Optional, String) Kibana private network access status. Valid values are `OPEN` and `CLOSE`.
 * `kibana_public_access` - (Optional, String) Kibana public network access status. Valid values are `OPEN` and `CLOSE`.
 * `license_type` - (Optional, String) License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.
-* `multi_zone_infos` - (Optional, List, ForceNew) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
+* `multi_zone_infos` - (Optional, List) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
 * `protocol` - (Optional, String) Create an https cluster, default is http.
 * `public_access` - (Optional, String) ES cluster public network access status. Valid values are `OPEN` and `CLOSE`. Cannot be changed at the same time as `es_acl`.
 * `renew_flag` - (Optional, String, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
