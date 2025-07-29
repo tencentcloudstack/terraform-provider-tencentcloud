@@ -1086,7 +1086,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				continue
 			} else if old == nil {
 				// 新增
-				if isDataNode && !changeMultiZone {
+				if !isDataNode {
 					baseNodeList = append(baseNodeList, new)
 					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
 						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil, nil)
@@ -1102,6 +1102,8 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					if err != nil {
 						return err
 					}
+					// 更新oldNodeMap中的值
+					oldNodeMap[t] = new
 				}
 			} else if new == nil {
 				// 删除
@@ -1119,6 +1121,8 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				if err != nil {
 					return err
 				}
+				// 更新oldNodeMap中的值
+				oldNodeMap[t] = new
 			} else {
 				// 磁盘类型不支持修改
 				fields := []string{"disk_type", "encrypt", "type"}
@@ -1130,7 +1134,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				// 修改一种节点的个数
 				var isUpdateNodeNum bool
 
-				if isDataNode && !changeMultiZone {
+				if isDataNode && !changeMultiZone || !isDataNode {
 					if old["node_num"].(int) != new["node_num"].(int) {
 						changeESNodes := convertToNodeInfos(baseNodeList)
 						thisNode := convertToNodeInfo(old)
@@ -1207,6 +1211,15 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 						return err
 					}
 				}
+				// 更新oldNodeMap中的值
+				after := make(map[string]interface{})
+				for k, v := range new {
+					after[k] = v
+				}
+				if !isUpdateNodeNum {
+					after["node_num"] = old["node_num"]
+				}
+				oldNodeMap[t] = after
 			}
 		}
 
@@ -1230,10 +1243,14 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				if oldHotData != nil && newHotData != nil {
 					thisHotDataNode := convertToNodeInfo(newHotData)
 					changeESNodes = append(changeESNodes, thisHotDataNode)
+					// 更新oldNodeMap中的值
+					oldNodeMap["hotData"] = newHotData
 				}
 				if oldWarmData != nil && newWarmData != nil {
 					thisWarmDataNode := convertToNodeInfo(newWarmData)
 					changeESNodes = append(changeESNodes, thisWarmDataNode)
+					// 更新oldNodeMap中的值
+					oldNodeMap["warmData"] = newWarmData
 				}
 
 				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
@@ -1253,11 +1270,10 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 		}
 		// 数据层新增hotData节点
-		var isAddHotData bool
 		if oldHotData == nil && newHotData != nil {
 			baseNodeList := make([]interface{}, 0)
 			baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
-			if newWarmData != nil {
+			if v, ok := oldNodeMap["warmData"]; ok && v != nil {
 				baseNodeList = append(baseNodeList, oldNodeMap["warmData"])
 			}
 			changeESNodes := convertToNodeInfos(baseNodeList)
@@ -1277,19 +1293,15 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			if err != nil {
 				return err
 			}
-			isAddHotData = true
+			// 更新oldNodeMap中的值
+			oldNodeMap["hotData"] = newHotData
 		}
 		// 数据层新增warmData节点
 		if oldWarmData == nil && newWarmData != nil {
 			baseNodeList := make([]interface{}, 0)
 			baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
-			if newHotData != nil {
-				// changeMultiZone: 更新可用区，存量节点数量一定会修改，使用newNodesMap["hotData"]
-				if isAddHotData || changeMultiZone {
-					baseNodeList = append(baseNodeList, newNodesMap["hotData"])
-				} else {
-					baseNodeList = append(baseNodeList, oldNodeMap["hotData"])
-				}
+			if v, ok := oldNodeMap["hotData"]; ok && v != nil {
+				baseNodeList = append(baseNodeList, oldNodeMap["hotData"])
 			}
 			changeESNodes := convertToNodeInfos(baseNodeList)
 			thisWarmDataNode := convertToNodeInfo(newWarmData)
@@ -1308,6 +1320,8 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			if err != nil {
 				return err
 			}
+			// 更新oldNodeMap中的值
+			oldNodeMap["warmData"] = newWarmData
 		}
 
 	}
