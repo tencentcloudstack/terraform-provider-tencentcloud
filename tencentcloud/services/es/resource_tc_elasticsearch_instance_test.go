@@ -274,6 +274,33 @@ func TestAccTencentCloudElasticsearchInstanceResource_nodeInfoList(t *testing.T)
 	})
 }
 
+func TestAccTencentCloudElasticsearchInstanceResource_MultiZoneInfo(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceMultiZoneInfo,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mode", "0"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceMultiZoneInfoUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.#", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "multi_zone_infos.#", "2"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckElasticsearchInstanceDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -669,4 +696,91 @@ resource "tencentcloud_elasticsearch_instance" "es_node_info_list" {
 	  disk_size = 50
   	}
   }
+`
+const testAccElasticsearchInstanceMultiZoneInfo = `
+resource "tencentcloud_elasticsearch_instance" "foo" {
+  instance_name       = "tf-ci-test"
+  availability_zone   = "ap-guangzhou-3"
+  version             = "7.10.1"
+  vpc_id              = "vpc-axrsmmrv"
+  subnet_id           = "subnet-j5vja918"
+  password            = "Test1234"
+  license_type        = "basic"
+  basic_security_type = 2
+
+  node_info_list {
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM4"
+    disk_size = 50
+    type      = "hotData"
+    disk_type = "CLOUD_SSD"
+  }
+  node_info_list {
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    # disk_type = "CLOUD_SSD"
+    type      = "dedicatedMaster"
+    disk_size = 50
+  }
+  es_acl {
+    white_list = [
+      "127.0.0.2"
+    ]
+    black_list = [
+      "1.1.1.1"
+    ]
+  }
+}
+`
+
+const testAccElasticsearchInstanceMultiZoneInfoUpdate = `
+resource "tencentcloud_elasticsearch_instance" "foo" {
+  instance_name       = "tf-ci-test"
+  availability_zone   = "ap-guangzhou-3"
+  version             = "7.10.1"
+  vpc_id              = "vpc-axrsmmrv"
+  subnet_id           = "subnet-j5vja918"
+  password            = "Test1234"
+  license_type        = "basic"
+  basic_security_type = 2
+
+  node_info_list {
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM4"
+    disk_size = 50
+    type      = "warmData"
+    disk_type = "CLOUD_PREMIUM"
+  }
+  node_info_list {
+    node_num  = 6
+    node_type = "ES.S1.MEDIUM4"
+    disk_size = 50
+    type      = "hotData"
+    disk_type = "CLOUD_SSD"
+  }
+  node_info_list {
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    # disk_type = "CLOUD_SSD"
+    type      = "dedicatedMaster"
+    disk_size = 50
+  }
+  es_acl {
+    white_list = [
+      "127.0.0.2"
+    ]
+    black_list = [
+      "1.1.1.1"
+    ]
+  }
+  deploy_mode = 1
+  multi_zone_infos {
+    availability_zone = "ap-guangzhou-3"
+    subnet_id         = "subnet-j5vja918"
+  }
+  multi_zone_infos {
+    availability_zone = "ap-guangzhou-4"
+    subnet_id         = "subnet-oi7ya2j6"
+  }
+}
 `

@@ -97,7 +97,6 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 			"deploy_mode": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ForceNew:     true,
 				Default:      ES_DEPLOY_MODE_SINGLE_REGION,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(ES_DEPLOY_MODE),
 				Description:  "Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.",
@@ -105,7 +104,6 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 			"multi_zone_infos": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Computed:    true,
 				Description: "Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).",
 				Elem: &schema.Resource{
@@ -532,7 +530,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			}
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -552,7 +550,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		kibanaPublicAccess := v.(string)
 		if kibanaPublicAccess != ES_KIBANA_PUBLIC_ACCESS_OPEN {
 			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, "", "", 0, nil, nil, nil, nil, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, "", "", 0, nil, nil, nil, nil, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -573,7 +571,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		kibanaPrivateAccess := v.(string)
 		if actualKibanaPrivateAccess != "" && actualKibanaPrivateAccess != kibanaPrivateAccess {
 			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", kibanaPrivateAccess, "", 0, nil, nil, nil, nil, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", kibanaPrivateAccess, "", 0, nil, nil, nil, nil, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -619,7 +617,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 
 	if isUpdate {
 		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, 0, nil, nil, nil, nil, &esPublicAcl)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, 0, nil, nil, nil, nil, &esPublicAcl, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -649,7 +647,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		}
 
 		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -742,6 +740,18 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	}
 	_ = d.Set("multi_zone_infos", multiZoneInfos)
 
+	if len(multiZoneInfos) > 0 {
+		if _, ok := d.GetOk("availability_zone"); ok {
+			if instance.Zone != nil && *instance.Zone == "-" {
+				_ = d.Set("availability_zone", multiZoneInfos[0]["availability_zone"])
+			}
+		}
+		if _, ok := d.GetOk("subnet_id"); ok {
+			if instance.SubnetUid != nil && *instance.SubnetUid == "-" {
+				_ = d.Set("subnet_id", multiZoneInfos[0]["subnet_id"])
+			}
+		}
+	}
 	nodeInfoList := make([]map[string]interface{}, 0, len(instance.NodeInfoList))
 	for _, item := range instance.NodeInfoList {
 		// this will not keep longer as long as cloud api response update
@@ -844,7 +854,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		instanceName := d.Get("instance_name").(string)
 		// Update operation support at most one item at the same time
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", "", "", "", 0, nil, nil, nil, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", "", "", "", 0, nil, nil, nil, nil, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -861,7 +871,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, "", "", "", 0, nil, nil, nil, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, "", "", "", 0, nil, nil, nil, nil, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -880,7 +890,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("kibana_public_access") {
 		if v, ok := d.GetOk("kibana_public_access"); ok {
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", v.(string), "", "", 0, nil, nil, nil, nil, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", v.(string), "", "", 0, nil, nil, nil, nil, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -900,7 +910,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("kibana_private_access") {
 		if v, ok := d.GetOk("kibana_private_access"); ok {
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", v.(string), "", 0, nil, nil, nil, nil, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", v.(string), "", 0, nil, nil, nil, nil, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -959,7 +969,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		licenseType := d.Get("license_type").(string)
 		licenseTypeUpgrading := licenseType != "oss"
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", int64(basicSecurityType), nil, nil, nil, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", int64(basicSecurityType), nil, nil, nil, nil, nil, nil)
 			if errRet != nil {
 				err := errRet.(*sdkErrors.TencentCloudSDKError)
 				if err.Code == es.INVALIDPARAMETER && licenseTypeUpgrading {
@@ -990,7 +1000,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				NodeType: helper.String(value["node_type"].(string)),
 			}
 			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, info, nil, nil, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, info, nil, nil, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -1020,7 +1030,40 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			newNodesMap[nodeMap["type"].(string)] = nodeMap
 		}
 
+		var multiZoneInfos []*es.ZoneDetail
+		var changeMultiZone bool
+		var newMzNum int
+		if d.HasChange("multi_zone_infos") {
+			if !d.HasChange("node_info_list") {
+				return fmt.Errorf("multi_zone_infos and node_info_list must be modified together")
+			}
+			if v, ok := d.GetOk("deploy_mode"); ok {
+				if v.(int) != ES_DEPLOY_MODE_MULTI_REGION {
+					return fmt.Errorf("multi_zone_infos can only be set when deploy_mode is %d", ES_DEPLOY_MODE_MULTI_REGION)
+				}
+			}
+			_, n := d.GetChange("multi_zone_infos")
+			if n != nil {
+				newMzNum = len(n.([]interface{}))
+			}
+			if v, ok := d.GetOk("multi_zone_infos"); ok {
+				infos := v.([]interface{})
+				multiZoneInfos = make([]*es.ZoneDetail, 0, len(infos))
+				for _, item := range infos {
+					value := item.(map[string]interface{})
+					multiZoneInfo := &es.ZoneDetail{
+						Zone:     helper.String(value["availability_zone"].(string)),
+						SubnetId: helper.String(value["subnet_id"].(string)),
+					}
+					multiZoneInfos = append(multiZoneInfos, multiZoneInfo)
+				}
+				changeMultiZone = true
+			}
+
+		}
+
 		typeList := []string{"hotData", "warmData", "dedicatedMaster"}
+		dataTypeList := []string{"hotData", "warmData"}
 		for _, t := range typeList {
 			old := oldNodeMap[t]
 			new := newNodesMap[t]
@@ -1031,60 +1074,22 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				}
 				baseNodeList = append(baseNodeList, v)
 			}
+			var isDataNode bool
+			for _, v := range dataTypeList {
+				if v == t {
+					isDataNode = true
+				}
+			}
 
 			if old == nil && new == nil {
 				// 没有该类型节点配置
 				continue
 			} else if old == nil {
 				// 新增
-				baseNodeList = append(baseNodeList, new)
-				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil)
-					if errRet != nil {
-						return tccommon.RetryError(errRet)
-					}
-					return nil
-				})
-				if err != nil {
-					return err
-				}
-				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
-				if err != nil {
-					return err
-				}
-			} else if new == nil {
-				// 删除
-				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil)
-					if errRet != nil {
-						return tccommon.RetryError(errRet)
-					}
-					return nil
-				})
-				if err != nil {
-					return err
-				}
-				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
-				if err != nil {
-					return err
-				}
-			} else {
-				// 磁盘类型不支持修改
-				fields := []string{"disk_type", "encrypt", "type"}
-				for _, field := range fields {
-					if old[field] != new[field] {
-						return fmt.Errorf("%s not support change", field)
-					}
-				}
-				// 修改一种节点的个数
-				var isUpdateNodeNum bool
-				if old["node_num"].(int) != new["node_num"].(int) {
-					changeESNodes := convertToNodeInfos(baseNodeList)
-					thisNode := convertToNodeInfo(old)
-					thisNode.NodeNum = helper.IntUint64(new["node_num"].(int))
-					changeESNodes = append(changeESNodes, thisNode)
+				if !isDataNode {
+					baseNodeList = append(baseNodeList, new)
 					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil)
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil, nil)
 						if errRet != nil {
 							return tccommon.RetryError(errRet)
 						}
@@ -1097,9 +1102,61 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					if err != nil {
 						return err
 					}
-					isUpdateNodeNum = true
+					// 更新oldNodeMap中的值
+					oldNodeMap[t] = new
 				}
+			} else if new == nil {
+				// 删除
+				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil, nil)
+					if errRet != nil {
+						return tccommon.RetryError(errRet)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+				if err != nil {
+					return err
+				}
+				// 更新oldNodeMap中的值
+				oldNodeMap[t] = new
+			} else {
+				// 磁盘类型不支持修改
+				fields := []string{"disk_type", "encrypt", "type"}
+				for _, field := range fields {
+					if old[field] != new[field] {
+						return fmt.Errorf("%s not support change", field)
+					}
+				}
+				// 修改一种节点的个数
+				var isUpdateNodeNum bool
 
+				if isDataNode && !changeMultiZone || !isDataNode {
+					if old["node_num"].(int) != new["node_num"].(int) {
+						changeESNodes := convertToNodeInfos(baseNodeList)
+						thisNode := convertToNodeInfo(old)
+						thisNode.NodeNum = helper.IntUint64(new["node_num"].(int))
+						changeESNodes = append(changeESNodes, thisNode)
+						err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+							errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil)
+							if errRet != nil {
+								return tccommon.RetryError(errRet)
+							}
+							return nil
+						})
+						if err != nil {
+							return err
+						}
+						err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+						if err != nil {
+							return err
+						}
+						isUpdateNodeNum = true
+					}
+				}
 				var isUpdateNodeType bool
 				// 修改一种节点的节点规格
 				if old["node_type"].(string) != new["node_type"].(string) {
@@ -1111,7 +1168,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					}
 					changeESNodes = append(changeESNodes, thisNode)
 					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil)
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil)
 						if errRet != nil {
 							return tccommon.RetryError(errRet)
 						}
@@ -1140,7 +1197,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					}
 					changeESNodes = append(changeESNodes, thisNode)
 					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil)
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil)
 						if errRet != nil {
 							return tccommon.RetryError(errRet)
 						}
@@ -1154,10 +1211,119 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 						return err
 					}
 				}
+				// 更新oldNodeMap中的值
+				after := make(map[string]interface{})
+				for k, v := range new {
+					after[k] = v
+				}
+				if !isUpdateNodeNum {
+					after["node_num"] = old["node_num"]
+				}
+				oldNodeMap[t] = after
+			}
+		}
+
+		// 处理可用区变更
+		oldHotData := oldNodeMap["hotData"]
+		oldWarmData := oldNodeMap["warmData"]
+		newHotData := newNodesMap["hotData"]
+		newWarmData := newNodesMap["warmData"]
+
+		// 变更可用区
+		if changeMultiZone {
+			baseNodeList := make([]interface{}, 0)
+			baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
+			// 更新节点数
+			if oldHotData != nil && newHotData != nil || oldWarmData != nil && newWarmData != nil {
+				// 校验节点数是否是多可用区数量的倍数
+				if newHotData["node_num"] != nil && newHotData["node_num"].(int)%newMzNum != 0 || newWarmData["node_num"] != nil && newWarmData["node_num"].(int)%newMzNum != 0 {
+					return fmt.Errorf("node num should be the %d multiple for current es", newMzNum)
+				}
+				changeESNodes := convertToNodeInfos(baseNodeList)
+				if oldHotData != nil && newHotData != nil {
+					thisHotDataNode := convertToNodeInfo(newHotData)
+					changeESNodes = append(changeESNodes, thisHotDataNode)
+					// 更新oldNodeMap中的值
+					oldNodeMap["hotData"] = newHotData
+				}
+				if oldWarmData != nil && newWarmData != nil {
+					thisWarmDataNode := convertToNodeInfo(newWarmData)
+					changeESNodes = append(changeESNodes, thisWarmDataNode)
+					// 更新oldNodeMap中的值
+					oldNodeMap["warmData"] = newWarmData
+				}
+
+				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos)
+					if errRet != nil {
+						return tccommon.RetryError(errRet)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+				if err != nil {
+					return err
+				}
+			}
+		}
+		// 数据层新增hotData节点
+		if oldHotData == nil && newHotData != nil {
+			baseNodeList := make([]interface{}, 0)
+			baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
+			if v, ok := oldNodeMap["warmData"]; ok && v != nil {
+				baseNodeList = append(baseNodeList, oldNodeMap["warmData"])
+			}
+			changeESNodes := convertToNodeInfos(baseNodeList)
+			thisHotDataNode := convertToNodeInfo(newHotData)
+			changeESNodes = append(changeESNodes, thisHotDataNode)
+			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
 			}
 			// 更新oldNodeMap中的值
-			oldNodeMap[t] = new
+			oldNodeMap["hotData"] = newHotData
 		}
+		// 数据层新增warmData节点
+		if oldWarmData == nil && newWarmData != nil {
+			baseNodeList := make([]interface{}, 0)
+			baseNodeList = append(baseNodeList, oldNodeMap["dedicatedMaster"])
+			if v, ok := oldNodeMap["hotData"]; ok && v != nil {
+				baseNodeList = append(baseNodeList, oldNodeMap["hotData"])
+			}
+			changeESNodes := convertToNodeInfos(baseNodeList)
+			thisWarmDataNode := convertToNodeInfo(newWarmData)
+			changeESNodes2 := append(changeESNodes, thisWarmDataNode)
+			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, changeESNodes2, nil, nil, nil, nil, multiZoneInfos)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+			// 更新oldNodeMap中的值
+			oldNodeMap["warmData"] = newWarmData
+		}
+
 	}
 
 	if d.HasChange("public_access") {
@@ -1185,7 +1351,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			esPublicAcl = nil
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, 0, nil, nil, nil, nil, esPublicAcl)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, 0, nil, nil, nil, nil, esPublicAcl, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -1217,7 +1383,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, nil, nil, &esPublicAcl)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, nil, nil, &esPublicAcl, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -1268,7 +1434,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil, nil)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -1298,7 +1464,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 
 			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil, nil)
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
