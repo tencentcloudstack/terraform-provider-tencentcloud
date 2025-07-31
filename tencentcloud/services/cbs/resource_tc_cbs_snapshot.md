@@ -4,8 +4,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cbs_snapshot" "example" {
+  storage_id    = "disk-1i9gxxi8"
   snapshot_name = "tf-example"
-  storage_id    = "disk-alc1r5sw"
+  disk_usage    = "DATA_DISK"
   tags = {
     createBy = "Terraform"
   }
