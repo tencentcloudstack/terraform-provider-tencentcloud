@@ -281,6 +281,12 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to enable SNAT.",
 			},
+			"deregister_target_rst": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "Whether to send the TCP RST packet to the client when unbinding a real server. This parameter is applicable to TCP listeners only.",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -409,6 +415,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("snat_enable"); ok {
 		request.SnatEnable = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("deregister_target_rst"); ok {
+		request.DeregisterTargetRst = helper.Bool(v.(bool))
 	}
 
 	var response *clb.CreateListenerResponse
@@ -624,6 +634,10 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("snat_enable", false)
 	}
 
+	if instance.DeregisterTargetRst != nil {
+		_ = d.Set("deregister_target_rst", instance.DeregisterTargetRst)
+	}
+
 	return nil
 }
 
@@ -732,6 +746,13 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		if v, ok := d.GetOkExists("snat_enable"); ok {
 			request.SnatEnable = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("deregister_target_rst") {
+		changed = true
+		if v, ok := d.GetOkExists("deregister_target_rst"); ok {
+			request.DeregisterTargetRst = helper.Bool(v.(bool))
 		}
 	}
 
