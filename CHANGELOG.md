@@ -1,3 +1,11 @@
+## 1.82.14(July 31 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_snapshot: support `disk_usage` ([#3458](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3458))
+* resource/tencentcloud_clb_listener: support `deregister_target_rst` ([#3459](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3459))
+* resource/tencentcloud_elasticsearch_instance: support update `multi_zone_infos` ([#3457](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3457))
+
 ## 1.82.13(July 25 , 2025)
 
 FEATURES:
