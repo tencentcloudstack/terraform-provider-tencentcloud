@@ -118,7 +118,7 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 		request.MX = helper.IntUint64(v.(int))
 	}
 	request.TTL = helper.IntUint64(ttl)
-	if v, ok := d.GetOk("weight"); ok {
+	if v, ok := d.GetOkExists("weight"); ok {
 		request.Weight = helper.IntUint64(v.(int))
 	}
 	request.Status = &status
@@ -269,7 +269,7 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 		ttl := v.(int)
 		request.TTL = helper.IntUint64(ttl)
 	}
-	if v, ok := d.GetOk("weight"); ok {
+	if v, ok := d.GetOkExists("weight"); ok {
 		weight := v.(int)
 		request.Weight = helper.IntUint64(weight)
 	}
