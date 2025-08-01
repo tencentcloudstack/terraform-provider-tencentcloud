@@ -69,8 +69,7 @@ func ResourceTencentCloudDnspodRecord() *schema.Resource {
 			"weight": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
-				Description: "Weight information. An integer from 0 to 100. Only enterprise VIP domain names are available, 0 means off, does not pass this parameter, means that the weight information is not set. Default is 0.",
+				Description: "Weight information. An integer from 0 to 100. Only enterprise VIP domain names are available, 0 means off, does not pass this parameter, means that the weight information is not set.",
 			},
 			"status": {
 				Type:        schema.TypeString,
@@ -118,7 +117,7 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 		request.MX = helper.IntUint64(v.(int))
 	}
 	request.TTL = helper.IntUint64(ttl)
-	if v, ok := d.GetOk("weight"); ok {
+	if v, ok := d.GetOkExists("weight"); ok {
 		request.Weight = helper.IntUint64(v.(int))
 	}
 	request.Status = &status
@@ -269,7 +268,7 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 		ttl := v.(int)
 		request.TTL = helper.IntUint64(ttl)
 	}
-	if v, ok := d.GetOk("weight"); ok {
+	if v, ok := d.GetOkExists("weight"); ok {
 		weight := v.(int)
 		request.Weight = helper.IntUint64(weight)
 	}
