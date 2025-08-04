@@ -1664,7 +1664,7 @@ func (me *TkeService) ModifyClusterNodePoolInstanceTypes(ctx context.Context, cl
 	return
 }
 
-func (me *TkeService) ModifyClusterNodePoolPreStartUserScript(ctx context.Context, clusterId, nodePoolId, preStartUserScript string) (errRet error) {
+func (me *TkeService) ModifyClusterNodePoolPreStartUserScript(ctx context.Context, clusterId, nodePoolId, userData, preStartUserScript string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tke.NewModifyClusterNodePoolRequest()
 
@@ -1675,6 +1675,7 @@ func (me *TkeService) ModifyClusterNodePoolPreStartUserScript(ctx context.Contex
 	}()
 	request.ClusterId = &clusterId
 	request.NodePoolId = &nodePoolId
+	request.UserScript = &userData
 	request.PreStartUserScript = &preStartUserScript
 
 	ratelimit.Check(request.GetAction())

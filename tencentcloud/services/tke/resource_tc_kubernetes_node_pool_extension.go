@@ -399,6 +399,10 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 			nodeConfig["user_data"] = helper.PString(nodePool.UserScript)
 		}
 
+		if helper.PString(nodePool.PreStartUserScript) != "" {
+			nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
+		}
+
 		if nodePool.GPUArgs != nil {
 			setting := nodePool.GPUArgs
 			var driverEmptyFlag, cudaEmptyFlag, cudnnEmptyFlag, customDriverEmptyFlag bool
@@ -834,13 +838,15 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx context.Context) err
 		_ = d.Set("auto_scaling_config.0.backup_instance_types", instanceTypes)
 	}
 
-	if d.HasChange("node_config.0.pre_start_user_script") {
+	if d.HasChange("node_config.0.user_data") || d.HasChange("node_config.0.pre_start_user_script") {
+		userData := d.Get("node_config.0.user_data").(string)
 		preStartUserScript := d.Get("node_config.0.pre_start_user_script").(string)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := service.ModifyClusterNodePoolPreStartUserScript(ctx, clusterId, nodePoolId, preStartUserScript)
+			errRet := service.ModifyClusterNodePoolPreStartUserScript(ctx, clusterId, nodePoolId, userData, preStartUserScript)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
+
 			return nil
 		})
 
