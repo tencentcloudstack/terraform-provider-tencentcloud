@@ -23,6 +23,7 @@ func (me *TrocketService) DescribeTrocketRocketmqInstanceById(ctx context.Contex
 	logId := tccommon.GetLogId(ctx)
 
 	request := trocket.NewDescribeInstanceRequest()
+	response := trocket.NewDescribeInstanceResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -31,14 +32,26 @@ func (me *TrocketService) DescribeTrocketRocketmqInstanceById(ctx context.Contex
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTrocketClient().DescribeInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTrocketClient().DescribeInstance(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe trocket rocketmqInstance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
-		return
+		return nil, err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	rocketmqInstance = response.Response
 	return
@@ -56,14 +69,25 @@ func (me *TrocketService) DeleteTrocketRocketmqInstanceById(ctx context.Context,
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTrocketClient().DeleteInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTrocketClient().DeleteInstance(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete trocket rocketmqInstance failed, Response is nil."))
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
