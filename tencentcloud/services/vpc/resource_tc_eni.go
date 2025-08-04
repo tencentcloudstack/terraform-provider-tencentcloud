@@ -436,16 +436,18 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 		desc = helper.String(d.Get("description").(string))
 	}
 
-	if d.HasChange("security_groups") || d.HasChange("orderly_security_groups") {
-		updateAttrs = append(updateAttrs, []string{"security_groups", "orderly_security_groups"}...)
+	if d.HasChange("security_groups") {
+		updateAttrs = append(updateAttrs, "security_groups")
+		if v, ok := d.GetOk("security_groups"); ok {
+			sgs = helper.InterfacesStrings(v.(*schema.Set).List())
+		}
 	}
 
-	if raw, ok := d.GetOk("security_groups"); ok {
-		sgs = helper.InterfacesStrings(raw.(*schema.Set).List())
-	}
-
-	if raw, ok := d.GetOk("orderly_security_groups"); ok {
-		sgs = helper.InterfacesStrings(raw.([]interface{}))
+	if d.HasChange("orderly_security_groups") {
+		updateAttrs = append(updateAttrs, "orderly_security_groups")
+		if v, ok := d.GetOk("orderly_security_groups"); ok {
+			sgs = helper.InterfacesStrings(v.([]interface{}))
+		}
 	}
 
 	if len(updateAttrs) > 0 {
