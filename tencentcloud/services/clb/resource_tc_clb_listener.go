@@ -287,6 +287,12 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to send the TCP RST packet to the client when unbinding a real server. This parameter is applicable to TCP listeners only.",
 			},
+			"idle_connect_timeout": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Optional:    true,
+				Description: "Connection idle timeout period (in seconds). It's only available to TCP listeners. Value range: 300-900 for shared and dedicated instances; 300-2000 for LCU-supported CLB instances. It defaults to 900. To set a period longer than 2000 seconds (up to 3600 seconds). Please submit a work order for processing.",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -419,6 +425,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("deregister_target_rst"); ok {
 		request.DeregisterTargetRst = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("idle_connect_timeout"); ok {
+		request.IdleConnectTimeout = helper.IntInt64(v.(int))
 	}
 
 	var response *clb.CreateListenerResponse
@@ -638,6 +648,10 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("deregister_target_rst", instance.DeregisterTargetRst)
 	}
 
+	if instance.IdleConnectTimeout != nil {
+		_ = d.Set("idle_connect_timeout", instance.IdleConnectTimeout)
+	}
+
 	return nil
 }
 
@@ -753,6 +767,13 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		if v, ok := d.GetOkExists("deregister_target_rst"); ok {
 			request.DeregisterTargetRst = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("idle_connect_timeout") {
+		changed = true
+		if v, ok := d.GetOkExists("idle_connect_timeout"); ok {
+			request.IdleConnectTimeout = helper.IntInt64(v.(int))
 		}
 	}
 
