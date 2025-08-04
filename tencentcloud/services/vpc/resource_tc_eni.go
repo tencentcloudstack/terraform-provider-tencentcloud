@@ -74,12 +74,11 @@ func ResourceTencentCloudEni() *schema.Resource {
 				Description:  "Description of the ENI, maximum length 60.",
 			},
 			"security_groups": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Set:         schema.HashString,
-				Description: "A set of security group IDs.",
+				Description: "List of security group IDs.",
 			},
 			"ipv4s": {
 				Type:          schema.TypeSet,
@@ -176,7 +175,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 	)
 
 	if raw, ok := d.GetOk("security_groups"); ok {
-		securityGroups = helper.InterfacesStrings(raw.(*schema.Set).List())
+		securityGroups = helper.InterfacesStrings(raw.([]interface{}))
 	}
 
 	if raw, ok := d.GetOk("ipv4s"); ok {
@@ -424,7 +423,7 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 	if d.HasChange("security_groups") {
 		updateAttrs = append(updateAttrs, "security_groups")
 	}
-	sgs = helper.InterfacesStrings(d.Get("security_groups").(*schema.Set).List())
+	sgs = helper.InterfacesStrings(d.Get("security_groups").([]interface{}))
 
 	if len(updateAttrs) > 0 {
 		if err := vpcService.ModifyEniAttribute(ctx, id, name, desc, sgs); err != nil {
