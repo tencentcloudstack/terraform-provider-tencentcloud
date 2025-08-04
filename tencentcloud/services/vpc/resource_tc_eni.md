@@ -58,5 +58,5 @@ Import
 ENI can be imported using the id, e.g.
 
 ```
-  $ terraform import tencentcloud_eni.foo eni-qka182br
+  $ terraform import tencentcloud_eni.example eni-qka182br
 ```
