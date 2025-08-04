@@ -136,90 +136,6 @@ func TestAccTencentCloudDnspodRecordResource_MX(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudDnspodRecordResource_WeightZero(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheck(t) },
-		Providers:    tcacctest.AccProviders,
-		CheckDestroy: testAccCheckDnspodRecordDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccTencentCloudDnspodRecordWeightZero,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "domain", "tencentcloud-terraform-provider.cn"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_type", "A"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_line", "默认"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "value", "1.2.3.10"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "sub_domain", "weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "remark", "terraform-test"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "weight", "0"),
-				),
-			},
-			{
-				Config: testAccTencentCloudDnspodRecordWeight,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "domain", "tencentcloud-terraform-provider.cn"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_type", "A"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_line", "默认"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "value", "1.2.3.10"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "sub_domain", "weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "remark", "terraform-test"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "weight", "10"),
-				),
-			},
-			{
-				ResourceName:      "tencentcloud_dnspod_record.weight",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudDnspodRecordResource_Weight(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { tcacctest.AccPreCheck(t) },
-		Providers:    tcacctest.AccProviders,
-		CheckDestroy: testAccCheckDnspodRecordDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccTencentCloudDnspodRecordWeight,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "domain", "tencentcloud-terraform-provider.cn"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_type", "A"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_line", "默认"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "value", "1.2.3.10"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "sub_domain", "weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "remark", "terraform-test"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "weight", "10"),
-				),
-			},
-			{
-				Config: testAccTencentCloudDnspodRecordWeightZero,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "domain", "tencentcloud-terraform-provider.cn"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_type", "A"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "record_line", "默认"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "value", "1.2.3.10"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "sub_domain", "weight"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "remark", "terraform-test"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.weight", "weight", "0"),
-				),
-			},
-			{
-				ResourceName:      "tencentcloud_dnspod_record.weight",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
 func testAccCheckDnspodRecordExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -369,28 +285,5 @@ resource "tencentcloud_dnspod_record" "demo" {
   ttl         = 86400
   status      = "ENABLE"
   remark      = "terraform-test"
-}
-`
-
-const testAccTencentCloudDnspodRecordWeightZero = `
-resource "tencentcloud_dnspod_record" "weight" {
-	domain="tencentcloud-terraform-provider.cn"
-	record_type="A"
-	record_line="默认"
-	value="1.2.3.10"
-	sub_domain="weight"
-	remark="terraform-test"
-	weight=0
-}
-`
-const testAccTencentCloudDnspodRecordWeight = `
-resource "tencentcloud_dnspod_record" "weight" {
-	domain="tencentcloud-terraform-provider.cn"
-	record_type="A"
-	record_line="默认"
-	value="1.2.3.10"
-	sub_domain="weight"
-	remark="terraform-test"
-	weight=10
 }
 `

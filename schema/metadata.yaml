@@ -1,7 +1,6 @@
 provider_meta:
   metadata:
     display_name: 腾讯云资源
-    icon_url: tencentcloud
     attr_orders:
     - name: domain
     - name: profile
