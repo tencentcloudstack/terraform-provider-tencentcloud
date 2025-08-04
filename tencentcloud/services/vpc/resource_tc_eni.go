@@ -74,11 +74,22 @@ func ResourceTencentCloudEni() *schema.Resource {
 				Description:  "Description of the ENI, maximum length 60.",
 			},
 			"security_groups": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "List of security group IDs.",
+				Type:          schema.TypeSet,
+				Optional:      true,
+				Computed:      true,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Set:           schema.HashString,
+				ConflictsWith: []string{"orderly_security_groups"},
+				Deprecated:    "It has been deprecated from version 1.82.15. Use `orderly_security_groups` instead.",
+				Description:   "A set of security group IDs.",
+			},
+			"orderly_security_groups": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"security_groups"},
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Description:   "List of security group IDs.",
 			},
 			"ipv4s": {
 				Type:          schema.TypeSet,
@@ -175,6 +186,10 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 	)
 
 	if raw, ok := d.GetOk("security_groups"); ok {
+		securityGroups = helper.InterfacesStrings(raw.(*schema.Set).List())
+	}
+
+	if raw, ok := d.GetOk("orderly_security_groups"); ok {
 		securityGroups = helper.InterfacesStrings(raw.([]interface{}))
 	}
 
@@ -358,6 +373,7 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 		sgs = append(sgs, *sg)
 	}
 	_ = d.Set("security_groups", sgs)
+	_ = d.Set("orderly_security_groups", sgs)
 
 	ipv4s := make([]map[string]interface{}, 0, len(eni.PrivateIpAddressSet))
 	for _, ipv4 := range eni.PrivateIpAddressSet {
@@ -420,10 +436,17 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 		desc = helper.String(d.Get("description").(string))
 	}
 
-	if d.HasChange("security_groups") {
-		updateAttrs = append(updateAttrs, "security_groups")
+	if d.HasChange("security_groups") || d.HasChange("orderly_security_groups") {
+		updateAttrs = append(updateAttrs, []string{"security_groups", "orderly_security_groups"}...)
 	}
-	sgs = helper.InterfacesStrings(d.Get("security_groups").([]interface{}))
+
+	if raw, ok := d.GetOk("security_groups"); ok {
+		sgs = helper.InterfacesStrings(raw.(*schema.Set).List())
+	}
+
+	if raw, ok := d.GetOk("orderly_security_groups"); ok {
+		sgs = helper.InterfacesStrings(raw.([]interface{}))
+	}
 
 	if len(updateAttrs) > 0 {
 		if err := vpcService.ModifyEniAttribute(ctx, id, name, desc, sgs); err != nil {
