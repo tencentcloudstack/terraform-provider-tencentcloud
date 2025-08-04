@@ -44,6 +44,8 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
   health_check_http_code     = 2
   health_check_http_version  = "HTTP/1.0"
   health_check_http_method   = "GET"
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
@@ -64,6 +66,8 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   scheduler                  = "WRR"
   health_check_type          = "TCP"
   health_check_port          = 200
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
@@ -88,6 +92,8 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_http_version  = "HTTP/1.1"
   health_check_http_method   = "HEAD"
   health_check_http_path     = "/"
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
@@ -219,6 +225,7 @@ The following arguments are supported:
 * `health_check_type` - (Optional, String) Protocol used for health check. Valid values: `CUSTOM`, `TCP`, `HTTP`,`HTTPS`, `PING`, `GRPC`.
 * `health_check_unhealth_num` - (Optional, Int) Unhealthy threshold of health check, and the default is `3`. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is [2-10]. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `health_source_ip_type` - (Optional, Int) Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.
+* `idle_connect_timeout` - (Optional, Int) Connection idle timeout period (in seconds). It's only available to TCP listeners. Value range: 300-900 for shared and dedicated instances; 300-2000 for LCU-supported CLB instances. It defaults to 900. To set a period longer than 2000 seconds (up to 3600 seconds). Please submit a work order for processing.
 * `keepalive_enable` - (Optional, Int) Whether to enable a persistent connection. This parameter is applicable only to HTTP and HTTPS listeners. Valid values: 0 (disable; default value) and 1 (enable).
 * `multi_cert_info` - (Optional, List) Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.
 * `port` - (Optional, Int, ForceNew) Port of the CLB listener.

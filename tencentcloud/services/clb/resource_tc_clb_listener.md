@@ -33,6 +33,8 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
   health_check_http_code     = 2
   health_check_http_version  = "HTTP/1.0"
   health_check_http_method   = "GET"
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
@@ -53,6 +55,8 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   scheduler                  = "WRR"
   health_check_type          = "TCP"
   health_check_port          = 200
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
@@ -77,6 +81,8 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_http_version  = "HTTP/1.1"
   health_check_http_method   = "HEAD"
   health_check_http_path     = "/"
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
