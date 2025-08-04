@@ -114,7 +114,7 @@ resource "tencentcloud_waf_cc" "example" {
 
 The following arguments are supported:
 
-* `action_type` - (Required, String) Rule Action, 20 log, 21 captcha, 22 deny, 23 accurate deny.
+* `action_type` - (Required, String) Rule Action, 20 means observation, 21 means human-machine identification, 22 means interception, 23 means precise interception, 26 means precise human-machine identification, and 27 means JS verification.
 * `advance` - (Required, String) Advanced mode (whether to use session detection). 0(disabled) 1(enabled).
 * `domain` - (Required, String) Domain.
 * `edition` - (Required, String) WAF edition. clb-waf means clb-waf, sparta-waf means saas-waf.

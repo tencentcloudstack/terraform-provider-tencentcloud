@@ -67,7 +67,7 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"action_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Rule Action, 20 log, 21 captcha, 22 deny, 23 accurate deny.",
+				Description: "Rule Action, 20 means observation, 21 means human-machine identification, 22 means interception, 23 means precise interception, 26 means precise human-machine identification, and 27 means JS verification.",
 			},
 			"priority": {
 				Required:    true,
@@ -382,7 +382,6 @@ func resourceTencentCloudWafCcUpdate(d *schema.ResourceData, meta interface{}) e
 	)
 
 	immutableArgs := []string{"domain", "name"}
-
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
