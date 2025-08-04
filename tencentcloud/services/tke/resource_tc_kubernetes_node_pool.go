@@ -220,7 +220,6 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 						"user_data": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Base64-encoded User Data text, the length limit is 16KB.",
 						},
 						"pre_start_user_script": {
