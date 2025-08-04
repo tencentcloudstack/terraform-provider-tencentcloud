@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_trocket_rocketmq_instance"
 sidebar_current: "docs-tencentcloud-resource-trocket_rocketmq_instance"
 description: |-
-  Provides a resource to create a rocketmq 5.x instance
+  Provides a resource to create a Trocket rocketmq instance
 ---
 
 # tencentcloud_trocket_rocketmq_instance
 
-Provides a resource to create a rocketmq 5.x instance
+Provides a resource to create a Trocket rocketmq instance
 
 ~> **NOTE:** It only supports create postpaid rocketmq 5.x instance.
 
@@ -76,6 +76,18 @@ resource "tencentcloud_trocket_rocketmq_instance" "example" {
   subnet_id     = tencentcloud_subnet.subnet.id
   enable_public = true
   bandwidth     = 10
+  ip_rules {
+    ip     = "1.1.1.1"
+    allow  = true
+    remark = "remark message."
+  }
+
+  ip_rules {
+    ip     = "2.2.2.2"
+    allow  = false
+    remark = "remark message."
+  }
+
   tags = {
     tag_key   = "rocketmq"
     tag_value = "5.x"
@@ -116,9 +128,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-trocket rocketmq_instance can be imported using the id, e.g.
+Trocket rocketmq instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_trocket_rocketmq_instance.rocketmq_instance rmq-n5qado7m
+terraform import tencentcloud_trocket_rocketmq_instance.example rmq-n5qado7m
 ```
 

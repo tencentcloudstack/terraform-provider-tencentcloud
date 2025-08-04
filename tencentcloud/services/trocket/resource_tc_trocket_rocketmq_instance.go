@@ -63,6 +63,7 @@ func ResourceTencentCloudTrocketRocketmqInstance() *schema.Resource {
 				Required:    true,
 				Description: "VPC id.",
 			},
+
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -135,15 +136,16 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		ctx          = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request      = trocket.NewCreateInstanceRequest()
 		response     = trocket.NewCreateInstanceResponse()
 		instanceId   string
 		enablePublic bool
 		bandwidth    int
 	)
+
 	if v, ok := d.GetOk("instance_type"); ok {
 		request.InstanceType = helper.String(v.(string))
 	}
@@ -180,6 +182,7 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 	if enablePublic && bandwidth <= 0 {
 		return fmt.Errorf("`bandwidth` must be greater than zero when `enable_public` equal true.")
 	}
+
 	if v, ok := d.GetOk("ip_rules"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -187,12 +190,15 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 			if v, ok := dMap["ip"]; ok {
 				ipRule.Ip = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["allow"]; ok {
 				ipRule.Allow = helper.Bool(v.(bool))
 			}
+
 			if v, ok := dMap["remark"]; ok {
 				ipRule.Remark = helper.String(v.(string))
 			}
+
 			request.IpRules = append(request.IpRules, &ipRule)
 		}
 	}
@@ -208,15 +214,28 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create trocket rocketmqInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create trocket rocketmqInstance failed, reason:%+v", logId, err)
 		return err
 	}
-	instanceId = *response.Response.InstanceId
 
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
+	}
+
+	instanceId = *response.Response.InstanceId
+	d.SetId(instanceId)
+
+	// wait
 	service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"RUNNING"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TrocketRocketmqInstanceStateRefreshFunc(instanceId, []string{}))
 	if _, e := conf.WaitForState(); e != nil {
@@ -232,8 +251,6 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 		}
 	}
 
-	d.SetId(instanceId)
-
 	return resourceTencentCloudTrocketRocketmqInstanceRead(d, meta)
 }
 
@@ -241,13 +258,12 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	rocketmqInstance, err := service.DescribeTrocketRocketmqInstanceById(ctx, instanceId)
 	if err != nil {
@@ -255,8 +271,8 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 	}
 
 	if rocketmqInstance == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `TrocketRocketmqInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
 
@@ -282,6 +298,7 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 		if endpointType == nil {
 			continue
 		}
+
 		if *endpointType == ENDPOINT_TYPE_PUBLIC {
 			enablePublic = true
 			if len(endpoint.IpRules) != 0 {
@@ -293,13 +310,17 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 					ipRuleMap["remark"] = ipRule.Remark
 					ipRuleList = append(ipRuleList, ipRuleMap)
 				}
+
 				_ = d.Set("ip_rules", ipRuleList)
 			}
+
 			if endpoint.Bandwidth != nil {
 				_ = d.Set("bandwidth", endpoint.Bandwidth)
 			}
+
 			_ = d.Set("public_end_point", endpoint.EndpointUrl)
 		}
+
 		if *endpointType == ENDPOINT_TYPE_VPC {
 			if endpoint.VpcId != nil {
 				_ = d.Set("vpc_id", endpoint.VpcId)
@@ -308,10 +329,12 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 			if endpoint.SubnetId != nil {
 				_ = d.Set("subnet_id", endpoint.SubnetId)
 			}
+
 			_ = d.Set("vpc_end_point", endpoint.EndpointUrl)
 		}
 
 	}
+
 	_ = d.Set("enable_public", enablePublic)
 
 	if rocketmqInstance.MessageRetention != nil {
@@ -334,16 +357,17 @@ func resourceTencentCloudTrocketRocketmqInstanceUpdate(d *schema.ResourceData, m
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	request := trocket.NewModifyInstanceRequest()
+	var (
+		logId                      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request1                   = trocket.NewModifyInstanceRequest()
+		request2                   = trocket.NewModifyInstanceEndpointRequest()
+		instanceId                 = d.Id()
+		needModifyInstance         bool
+		needModifyInstanceEndpoint bool
+	)
 
-	instanceId := d.Id()
-
-	request.InstanceId = &instanceId
-
-	immutableArgs := []string{"instance_type", "vpc_id", "subnet_id", "enable_public", "bandwidth", "ip_rules"}
-
+	immutableArgs := []string{"instance_type", "vpc_id", "subnet_id", "enable_public"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -352,46 +376,125 @@ func resourceTencentCloudTrocketRocketmqInstanceUpdate(d *schema.ResourceData, m
 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
+			request1.Name = helper.String(v.(string))
 		}
+
+		needModifyInstance = true
 	}
 
 	if d.HasChange("sku_code") {
 		if v, ok := d.GetOk("sku_code"); ok {
-			request.SkuCode = helper.String(v.(string))
+			request1.SkuCode = helper.String(v.(string))
 		}
+
+		needModifyInstance = true
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
-			request.Remark = helper.String(v.(string))
+			request1.Remark = helper.String(v.(string))
 		}
+
+		needModifyInstance = true
 	}
 
 	if d.HasChange("message_retention") {
 		if v, ok := d.GetOkExists("message_retention"); ok {
-			request.MessageRetention = helper.IntInt64(v.(int))
+			request1.MessageRetention = helper.IntInt64(v.(int))
+		}
+
+		needModifyInstance = true
+	}
+
+	if needModifyInstance {
+		request1.InstanceId = &instanceId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTrocketClient().ModifyInstance(request1)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request1.GetAction(), request1.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update trocket rocketmqInstance failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait
+		service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"RUNNING"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TrocketRocketmqInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
 		}
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTrocketClient().ModifyInstance(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if d.HasChange("bandwidth") {
+		if v, ok := d.GetOkExists("bandwidth"); ok {
+			request2.Bandwidth = helper.IntInt64(v.(int))
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update trocket rocketmqInstance failed, reason:%+v", logId, err)
-		return err
+
+		needModifyInstanceEndpoint = true
 	}
 
-	service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"RUNNING"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TrocketRocketmqInstanceStateRefreshFunc(instanceId, []string{}))
-	if _, e := conf.WaitForState(); e != nil {
-		return e
+	if d.HasChange("ip_rules") {
+		if v, ok := d.GetOk("ip_rules"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				ipRule := trocket.IpRule{}
+				if v, ok := dMap["ip"]; ok {
+					ipRule.Ip = helper.String(v.(string))
+				}
+
+				if v, ok := dMap["allow"]; ok {
+					ipRule.Allow = helper.Bool(v.(bool))
+				}
+
+				if v, ok := dMap["remark"]; ok {
+					ipRule.Remark = helper.String(v.(string))
+				}
+
+				request2.IpRules = append(request2.IpRules, &ipRule)
+			}
+		}
+
+		needModifyInstanceEndpoint = true
+	}
+
+	if needModifyInstanceEndpoint {
+		if v, ok := d.GetOkExists("enable_public"); ok {
+			if v.(bool) {
+				request2.InstanceId = &instanceId
+				request2.Type = helper.String("PUBLIC")
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTrocketClient().ModifyInstanceEndpoint(request2)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request1.GetAction(), request1.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s update trocket rocketmqInstance failed, reason:%+v", logId, err)
+					return err
+				}
+
+				// wait
+				service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+				conf := tccommon.BuildStateChangeConf([]string{}, []string{"RUNNING"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TrocketRocketmqInstanceStateRefreshFunc(instanceId, []string{}))
+				if _, e := conf.WaitForState(); e != nil {
+					return e
+				}
+			} else {
+				return fmt.Errorf("Only instances with public network access can modify `bandwidth` or `ip_rules`.")
+			}
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -404,6 +507,7 @@ func resourceTencentCloudTrocketRocketmqInstanceUpdate(d *schema.ResourceData, m
 			return err
 		}
 	}
+
 	return resourceTencentCloudTrocketRocketmqInstanceRead(d, meta)
 }
 
@@ -411,24 +515,27 @@ func resourceTencentCloudTrocketRocketmqInstanceDelete(d *schema.ResourceData, m
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	if err := service.DeleteTrocketRocketmqInstanceById(ctx, instanceId); err != nil {
 		return err
 	}
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{""}, 10*tccommon.ReadRetryTimeout, time.Second, service.TrocketRocketmqInstanceStateRefreshFunc(d.Id(), []string{}))
 
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{""}, 10*tccommon.ReadRetryTimeout, time.Second, service.TrocketRocketmqInstanceStateRefreshFunc(d.Id(), []string{}))
 	if _, err := conf.WaitForState(); err != nil {
 		if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 			if sdkerr.Code == "ResourceNotFound.Instance" {
 				return nil
 			}
 		}
+
 		return err
 	}
+
 	return nil
 }
