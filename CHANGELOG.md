@@ -1,3 +1,13 @@
+## 1.82.15(August 4 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_listener: support `idle_connect_timeout` ([#3465](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3465))
+* resource/tencentcloud_eni: optmize code logic, add `orderly_security_groups` ([#3464](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3464))
+* resource/tencentcloud_kubernetes_node_pool: support to modify `user_data`. ([#3461](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3461))
+* resource/tencentcloud_trocket_rocketmq_instance: support to modify `ip_rules` and `bandwidth` ([#3462](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3462))
+* resource/tencentcloud_waf_cc: update doc for `action_type` ([#3463](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3463))
+
 ## 1.82.14(July 31 , 2025)
 
 ENHANCEMENTS:
