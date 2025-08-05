@@ -166,8 +166,8 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 	}
 
 	if record == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `tencentcloud_private_dns_record` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		d.SetId("")
 		return nil
 	}
 
