@@ -189,6 +189,7 @@ The `data_disk` object of `worker_config` supports the following:
 The `data_disk` object supports the following:
 
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `delete_with_instance` - (Optional, Bool, ForceNew) Indicate whether to delete the disk when deleting the instance. Only supports disk paid by the hour.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
