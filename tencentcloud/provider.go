@@ -1573,6 +1573,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_set_policy_version_config":                                            cam.ResourceTencentCloudCamSetPolicyVersionConfig(),
 			"tencentcloud_cam_user_permission_boundary_attachment":                                  cam.ResourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_cam_role_permission_boundary_attachment":                                  cam.ResourceTencentCloudCamRolePermissionBoundaryAttachment(),
+			"tencentcloud_cam_message_receiver":                                                     cam.ResourceTencentCloudCamMessageReceiver(),
 			"tencentcloud_organization_quit_organization_operation":                                 tco.ResourceTencentCloudOrganizationQuitOrganizationOperation(),
 			"tencentcloud_ciam_user_group":                                                          ciam.ResourceTencentCloudCiamUserGroup(),
 			"tencentcloud_ciam_user_store":                                                          ciam.ResourceTencentCloudCiamUserStore(),
