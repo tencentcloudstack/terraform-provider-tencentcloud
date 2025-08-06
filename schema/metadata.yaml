@@ -2,13 +2,13 @@ provider_meta:
   metadata:
     display_name: 腾讯云资源
     attr_orders:
-    - name: domain
-    - name: profile
-    - name: protocol
-    - name: secret_id
-    - name: secret_key
-    - name: security_token
-    - name: shared_credentials_dir
+      - name: domain
+      - name: profile
+      - name: protocol
+      - name: secret_id
+      - name: secret_key
+      - name: security_token
+      - name: shared_credentials_dir
   block:
     attributes:
       domain:
@@ -23,12 +23,12 @@ provider_meta:
         display_name: 协议
         widget: select
         values:
-        - value: HTTP
-          display_name: HTTP
-          icon_url: ''
-        - value: HTTPS
-          display_name: HTTPS
-          icon_url: ''
+          - value: HTTP
+            display_name: HTTP
+            icon_url: ''
+          - value: HTTPS
+            display_name: HTTPS
+            icon_url: ''
         is_public: true
       secret_id:
         display_name: secret_id
@@ -55,21 +55,21 @@ resource_metas:
       order: 1
       is_batch_add: true
       attr_orders:
-      - name: domain
-      - name: record_line
-      - name: record_type
-      - name: value
-      - name: weight
-      - name: mx
-      - name: ttl
-      - name: status
-      - name: sub_domain
-      - name: remark
+        - name: domain
+        - name: record_line
+        - name: record_type
+        - name: value
+        - name: weight
+        - name: mx
+        - name: ttl
+        - name: status
+        - name: sub_domain
+        - name: remark
     block:
       attributes:
         id:
           display_name: ID
-          description: '域名记录唯一ID'
+          description: 域名记录唯一ID
           widget: text
           is_backfilled: true
           is_not_edited: true
@@ -86,23 +86,23 @@ resource_metas:
           display_name: MX 优先级
           widget: text
           dependent_constraint:
-          - attr_name: record_type
-            values:
-            - value: TXT
-            - value: A
-            - value: CNAME
-            fulfill_behavior:
-              visible: false
-            otherwise_behavior:
-              visible: true
+            - attr_name: record_type
+              values:
+                - value: TXT
+                - value: A
+                - value: CNAME
+              fulfill_behavior:
+                visible: false
+              otherwise_behavior:
+                visible: true
         record_line:
           display_name: 记录线路
           val_source:
             method: GET
             path: "/api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}&ProviderAuthUid={rely_resources[1]}"
             values:
-              label_path: "$.Data.Lines[*]"
-              value_path: "$.Data.Lines[*]"
+              label_path: '$.Data.Lines[*]'
+              value_path: '$.Data.Lines[*]'
             rely_resources:
             - name: domain
               source: owner
@@ -112,7 +112,7 @@ resource_metas:
               required: true
           region_rule:
             kind: json_path
-            rule: "$.record_line"
+            rule: $.record_line
           widget: select_remote
           filter:
             enable: true
@@ -122,8 +122,8 @@ resource_metas:
             method: GET
             path: "/api/opx/rs/v1/namespaces/{namespace}/forward/domain-record?Domain={rely_resources[0]}&ProviderName=tencentcloudstack/tencentcloud&ResourceStackUid={resource_stack_uid}&ProviderAuthUid={rely_resources[1]}"
             values:
-              label_path: "$.Data.Types[*]"
-              value_path: "$.Data.Types[*]"
+              label_path: '$.Data.Types[*]'
+              value_path: '$.Data.Types[*]'
             rely_resources:
             - name: domain
               source: owner
@@ -149,12 +149,12 @@ resource_metas:
           display_name: 记录初始状态
           widget: select
           values:
-          - value: ENABLE
-            display_name: ENABLE
-            icon_url: ''
-          - value: DISABLE
-            display_name: DISABLE
-            icon_url: ''
+            - value: ENABLE
+              display_name: ENABLE
+              icon_url: ''
+            - value: DISABLE
+              display_name: DISABLE
+              icon_url: ''
           filter:
             enable: true
         sub_domain:
@@ -177,7 +177,7 @@ resource_metas:
           widget: text
           validator:
             kind: REGEX
-            rule: "^(604800|[1-5]?[0-9]{1,5}|[1-9])$"
+            rule: '^(604800|[1-5]?[0-9]{1,5}|[1-9])$'
         value:
           display_name: 记录值
           widget: text
@@ -201,13 +201,26 @@ resource_metas:
             enable: true
           validator:
             kind: REGEX
-            rule: "^(100|[1-9]?[0-9])$"
+            rule: '^(100|[1-9]?[0-9])$'
           dependent_constraint:
-          - attr_name: record_type
-            values:
-            - value: TXT
-            - value: MX
-            fulfill_behavior:
-              visible: false
-            otherwise_behavior:
-              visible: true
+            - attr_name: record_type
+              values:
+                - value: TXT
+                - value: MX
+              fulfill_behavior:
+                visible: false
+              otherwise_behavior:
+                visible: true
+    operations:
+      - category: batch_edit_properties
+        attr_orders:
+          - name: domain
+          - name: record_line
+          - name: record_type
+          - name: value
+          - name: weight
+          - name: mx
+          - name: ttl
+          - name: status
+          - name: sub_domain
+          - name: remark
