@@ -24,6 +24,7 @@ func (me *DlcService) DescribeDlcWorkGroupById(ctx context.Context, workGroupId 
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDescribeWorkGroupsRequest()
+	response := dlc.NewDescribeWorkGroupsResponse()
 	request.WorkGroupId = helper.Int64(helper.StrToInt64(workGroupId))
 
 	defer func() {
@@ -32,18 +33,31 @@ func (me *DlcService) DescribeDlcWorkGroupById(ctx context.Context, workGroupId 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeWorkGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().DescribeWorkGroups(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil || result.Response.WorkGroupSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc work groups failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.WorkGroupSet) < 1 {
 		return
 	}
+
 	workGroup = response.Response.WorkGroupSet[0]
 	return
 }
@@ -151,14 +165,21 @@ func (me *DlcService) DeleteDlcUsersToWorkGroupAttachmentById(ctx context.Contex
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DeleteUsersFromWorkGroup(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().DeleteUsersFromWorkGroup(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete dlc users from work group failed, Response is nil."))
+		}
+
+		return nil
+	})
 
 	return
 }
@@ -201,6 +222,7 @@ func (me *DlcService) DescribeDlcStoreLocationConfigById(ctx context.Context) (s
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDescribeAdvancedStoreLocationRequest()
+	response := dlc.NewDescribeAdvancedStoreLocationResponse()
 
 	defer func() {
 		if errRet != nil {
@@ -208,18 +230,27 @@ func (me *DlcService) DescribeDlcStoreLocationConfigById(ctx context.Context) (s
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeAdvancedStoreLocation(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().DescribeAdvancedStoreLocation(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc advanced store location failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil {
-		return
-	}
 	storeLocationConfig = response.Response
 	return
 }
@@ -313,8 +344,9 @@ func (me *DlcService) DescribeDlcDescribeUserRolesByFilter(ctx context.Context, 
 }
 func (me *DlcService) DescribeDlcDescribeUserInfoByFilter(ctx context.Context, param map[string]interface{}) (describeUserInfo *dlc.UserDetailInfo, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = dlc.NewDescribeUserInfoRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = dlc.NewDescribeUserInfoRequest()
+		response = dlc.NewDescribeUserInfoResponse()
 	)
 
 	defer func() {
@@ -341,18 +373,27 @@ func (me *DlcService) DescribeDlcDescribeUserInfoByFilter(ctx context.Context, p
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeUserInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().DescribeUserInfo(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil || result.Response.UserInfo == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc user info failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil || response.Response.UserInfo == nil {
-		return
-	}
 	describeUserInfo = response.Response.UserInfo
 	return
 }
@@ -674,23 +715,32 @@ func (me *DlcService) DeleteDlcBindWorkGroupsToUserById(ctx context.Context, use
 		UserId:       &userId,
 		WorkGroupIds: workIds,
 	}
+
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().UnbindWorkGroupsFromUser(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().UnbindWorkGroupsFromUser(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Unbind dlc work groups from user failed, Response is nil."))
+		}
+
+		return nil
+	})
 
 	return
 }
+
 func (me *DlcService) DescribeDlcUserDataEngineConfigById(ctx context.Context, dataEngineId string) (userDataEngineConfig *dlc.DataEngineConfigInstanceInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

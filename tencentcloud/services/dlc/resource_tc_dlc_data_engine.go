@@ -190,7 +190,7 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 			"data_engine_config_pairs": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Cluster advanced configuration.",
+				Description: "Collection of user-defined engine configuration items. This parameter needs to input all the configuration items users should add. For example, if there is a configuration item named k1:v1 while k2:v2 needs to be added, [k1:v1,k2:v2] should be passed.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"config_item": {
@@ -237,28 +237,28 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "For spark Batch ExecType, cluster session resource configuration template.",
+				Description: " Template of the resource configuration of the job engine.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"driver_size": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Engine driver size specification only supports: small/medium/large/xlarge/m.small/m.medium/m.large/m.xlarge.",
+							Description: "The driver size. Valid values for the standard resource type: `small`, `medium`, `large`, and `xlarge`. Valid values for the memory resource type: `m.small`, `m.medium`, `m.large`, and `m.xlarge`. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"executor_size": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Engine executor size specification only supports: small/medium/large/xlarge/m.small/m.medium/m.large/m.xlarge.",
+							Description: "The executor size. Valid values for the standard resource type: `small`, `medium`, `large`, and `xlarge`. Valid values for the memory resource type: `m.small`, `m.medium`, `m.large`, and `m.xlarge`. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"executor_nums": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Specify the number of executors. The minimum value is 1 and the maximum value is less than the cluster specification.",
+							Description: "The executor count. The minimum value is 1 and the maximum value is less than the cluster specification.",
 						},
 						"executor_max_numbers": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Specify the executor max number (in a dynamic configuration scenario), the minimum value is 1, and the maximum value is less than the cluster specification (when ExecutorMaxNumbers is less than ExecutorNums, the value is set to ExecutorNums).",
+							Description: "The maximum executor count (in dynamic mode). The minimum value is 1 and the maximum value is less than the cluster specification. If you set `ExecutorMaxNumbers` to a value smaller than that of `ExecutorNums`, the value of `ExecutorMaxNumbers` is automatically changed to that of `ExecutorNums`.",
 						},
 					},
 				},
@@ -271,21 +271,21 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_data_engine.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
 		request        = dlc.NewCreateDataEngineRequest()
 		response       = dlc.NewCreateDataEngineResponse()
 		dataEngineId   string
 		dataEngineName string
 	)
+
 	if v, ok := d.GetOk("engine_type"); ok {
 		request.EngineType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("data_engine_name"); ok {
-		dataEngineName = v.(string)
 		request.DataEngineName = helper.String(v.(string))
+		dataEngineName = v.(string)
 	}
 
 	if v, ok := d.GetOk("cluster_type"); ok {
@@ -353,12 +353,15 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 		if v, ok := dMap["resume_time"]; ok {
 			crontabResumeSuspendStrategy.ResumeTime = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["suspend_time"]; ok {
 			crontabResumeSuspendStrategy.SuspendTime = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["suspend_strategy"]; ok {
 			crontabResumeSuspendStrategy.SuspendStrategy = helper.IntInt64(v.(int))
 		}
+
 		request.CrontabResumeSuspendStrategy = &crontabResumeSuspendStrategy
 	}
 
@@ -381,6 +384,7 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("resource_type"); ok {
 		request.ResourceType = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("data_engine_config_pairs"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -388,9 +392,11 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 			if v, ok := dMap["config_item"]; ok {
 				dataEngineConfigPair.ConfigItem = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["config_value"]; ok {
 				dataEngineConfigPair.ConfigItem = helper.String(v.(string))
 			}
+
 			request.DataEngineConfigPairs = append(request.DataEngineConfigPairs, &dataEngineConfigPair)
 		}
 	}
@@ -416,15 +422,19 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 		if v, ok := dMap["driver_size"]; ok {
 			sessionResourceTemplate.DriverSize = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["executor_size"]; ok {
 			sessionResourceTemplate.ExecutorSize = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["executor_nums"]; ok {
 			sessionResourceTemplate.ExecutorNums = helper.IntUint64(v.(int))
 		}
+
 		if v, ok := dMap["executor_max_numbers"]; ok {
 			sessionResourceTemplate.ExecutorMaxNumbers = helper.IntUint64(v.(int))
 		}
+
 		request.SessionResourceTemplate = &sessionResourceTemplate
 	}
 
@@ -435,9 +445,11 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create dlc dataEngine failed, reason:%+v", logId, err)
 		return err
