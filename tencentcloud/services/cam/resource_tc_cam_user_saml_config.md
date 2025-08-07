@@ -9,6 +9,7 @@ resource "tencentcloud_cam_user_saml_config" "example" {
   saml_metadata_document = <<-EOT
   <?xml version="1.0" encoding="utf-8"?></EntityDescriptor>
 EOT
+  auxiliary_domain       = "xxx.com"
 }
 ```
 
