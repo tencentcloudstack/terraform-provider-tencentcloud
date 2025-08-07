@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cvm_image_share_permission: optmize code logic and doc
+```
+
+```release-note:enhancement
+datasource/tencentcloud_cvm_image_share_permission: optmize doc
+```
