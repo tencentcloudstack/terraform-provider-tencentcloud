@@ -160,27 +160,14 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
-	records, err := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, nil)
+	record, err := service.DescribePrivateDnsRecordById(ctx, zoneId, recordId)
 	if err != nil {
 		return err
 	}
 
-	if len(records) < 1 {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `tencentcloud_private_dns_record` [%s] not found, please check if it has been deleted.\n", logId, recordId)
-		return nil
-	}
-
-	var record *privatedns.PrivateZoneRecord
-	for _, item := range records {
-		if item.RecordId != nil && *item.RecordId == recordId {
-			record = item
-		}
-	}
-
 	if record == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `tencentcloud_private_dns_record` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		d.SetId("")
 		return nil
 	}
 

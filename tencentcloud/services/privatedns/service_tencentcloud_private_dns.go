@@ -38,7 +38,7 @@ func (me *PrivateDnsService) DescribePrivateDnsRecordByFilter(ctx context.Contex
 		}
 	}()
 	var (
-		limit  int64 = 20
+		limit  int64 = 200
 		offset int64 = 0
 		total  int64 = -1
 	)
