@@ -42,7 +42,7 @@ func ResourceTencentCloudEipAssociation() *schema.Resource {
 					"private_ip",
 				},
 				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 25),
-				Description:  "The CVM or CLB instance id going to bind with the EIP. This field is conflict with `network_interface_id` and `private_ip fields`.",
+				Description:  "The CVM, SaaS WAF or CLB instance id going to bind with the EIP. This field is conflict with `network_interface_id` and `private_ip fields`.",
 			},
 			"network_interface_id": {
 				Type:         schema.TypeString,

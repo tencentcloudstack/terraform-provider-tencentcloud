@@ -105,10 +105,19 @@ resource "tencentcloud_eip_association" "example" {
 }
 ```
 
+Bind elastic public IP By WAF(SaaS)
+
+```hcl
+resource "tencentcloud_eip_association" "example" {
+  eip_id      = "eip-4stgtfb8"
+  instance_id = "waf_2opxlbky67yub3gm"
+}
+```
+
 Import
 
 Eip association can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_eip_association.bar eip-41s6jwy4::ins-34jwj3
+$ terraform import tencentcloud_eip_association.example eip-41s6jwy4::ins-0cxjwrog
 ```
