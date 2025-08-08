@@ -2257,3 +2257,78 @@ func (me *OrganizationService) DescribeRoleConfigurationProvisioningsByFilter(ct
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationResourceToShareMemberByFilter(ctx context.Context, param map[string]interface{}) (ret []*organization.ShareResourceToMember, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = organization.NewDescribeResourceToShareMemberRequest()
+		response = organization.NewDescribeResourceToShareMemberResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+
+		if k == "ProductResourceIds" {
+			request.ProductResourceIds = v.([]*string)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseOrganizationClient().DescribeResourceToShareMember(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe resource to share member failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
+			return
+		}
+
+		if len(response.Response.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
