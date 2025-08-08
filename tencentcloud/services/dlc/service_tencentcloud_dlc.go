@@ -402,26 +402,40 @@ func (me *DlcService) DescribeDlcDataEngineByName(ctx context.Context, dataEngin
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDescribeDataEnginesRequest()
+	response := dlc.NewDescribeDataEnginesResponse()
 	item := &dlc.Filter{
 		Name:   helper.String("data-engine-name"),
 		Values: []*string{helper.String(dataEngineName)}}
 	request.Filters = []*dlc.Filter{item}
+
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeDataEngines(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().DescribeDataEngines(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil || result.Response.DataEngines == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc data engine failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil || len(response.Response.DataEngines) < 1 {
+	if len(response.Response.DataEngines) < 1 {
 		return
 	}
 
@@ -441,17 +455,25 @@ func (me *DlcService) DeleteDlcDataEngineByName(ctx context.Context, dataEngineN
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DeleteDataEngine(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseDlcClient().DeleteDataEngine(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete data engine failed, Response is nil."))
+		}
+
+		return nil
+	})
 
 	return
 }
+
 func (me *DlcService) DescribeDlcDataEngineById(ctx context.Context, dataEngineId string) (dataEngine *dlc.DataEngineInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

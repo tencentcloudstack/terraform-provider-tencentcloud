@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,6 +56,9 @@ const (
 	// 重复的标签键。
 	FAILEDOPERATION_DUPLICATETAGKEY = "FailedOperation.DuplicateTagKey"
 
+	// 当前已有资源组正在使用该配置项，无法一键删除（一键删除会导致引擎重启）您可前往资源组列表页点击详情删除
+	FAILEDOPERATION_FAILEDOPERATIONCODE_NETWORKCONNECTIONINUSED = "FailedOperation.FailedOperationCode_NetworkConnectionInUsed"
+
 	// 扣费失败。
 	FAILEDOPERATION_FEEDEDUCTIONFAILED = "FailedOperation.FeeDeductionFailed"
 
@@ -92,11 +95,17 @@ const (
 	// 询价失败。
 	FAILEDOPERATION_INQUIREPRICEFAILED = "FailedOperation.InquirePriceFailed"
 
+	// Invalid NetworkConnectionType
+	FAILEDOPERATION_INVALIDNETWORKCONNECTIONTYPE = "FailedOperation.InvalidNetworkConnectionType"
+
 	// 元数据错误，请重试，或者提交工单联系我们
 	FAILEDOPERATION_METASTOREERROR = "FailedOperation.MetastoreError"
 
 	// 实例变配失败。
 	FAILEDOPERATION_MODIFYINSTANCEFAILED = "FailedOperation.ModifyInstanceFailed"
+
+	// The  datasource vpc has been bound to the engine
+	FAILEDOPERATION_NETWORKCONNECTIONEXIST = "FailedOperation.NetworkConnectionExist"
 
 	// 没有操作权限。
 	FAILEDOPERATION_NOPERMISSION = "FailedOperation.NoPermission"
@@ -152,6 +161,9 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 指定的交互式SQL任务自定义主键不唯一
+	INVALIDPARAMETER_BATCHSQLCUSTOMKEYNOTUNIQUE = "InvalidParameter.BatchSQLCustomKeyNotUnique"
+
 	// 指定的交互式SQL任务Filter.Key不匹配，当前仅支持: task-sql-keyword/task-operator/batch-id/session-id/task-state
 	INVALIDPARAMETER_BATCHSQLFILTERSKEYTYPENOTMATH = "InvalidParameter.BatchSQLFiltersKeyTypeNotMath"
 
@@ -172,6 +184,9 @@ const (
 
 	// 指定集群计费模式不匹配，当前仅支持: 1: 按量计费, 2: 包年包月
 	INVALIDPARAMETER_DATAENGINEMODENOTMATCH = "InvalidParameter.DataEngineModeNotMatch"
+
+	// 当前任务仅支持SQL引擎运行
+	INVALIDPARAMETER_DATAENGINEONLYSUPPORTSQL = "InvalidParameter.DataEngineOnlySupportSQL"
 
 	// 当前任务仅支持Spark批作业引擎运行
 	INVALIDPARAMETER_DATAENGINEONLYSUPPORTSPARKBATCH = "InvalidParameter.DataEngineOnlySupportSparkBatch"
@@ -202,6 +217,9 @@ const (
 
 	// 重复的用户名。
 	INVALIDPARAMETER_DUPLICATEUSERNAME = "InvalidParameter.DuplicateUserName"
+
+	// 用户vpc连接名称重复
+	INVALIDPARAMETER_DUPLICATEUSERVPCCONNECTIONNAME = "InvalidParameter.DuplicateUserVpcConnectionName"
 
 	// 指定Filter.Values参数数量超限，当前应小于等于50个
 	INVALIDPARAMETER_FILTERSVALUESNUMBEROUTOFLIMIT = "InvalidParameter.FiltersValuesNumberOutOfLimit"
@@ -332,6 +350,9 @@ const (
 	// 请求的消息类型无效。
 	INVALIDPARAMETER_INVALIDINFOTYPE = "InvalidParameter.InvalidInfoType"
 
+	// 指定参数int类型转换失败
+	INVALIDPARAMETER_INVALIDINTFORMAT = "InvalidParameter.InvalidIntFormat"
+
 	// 无效的最大结果数。
 	INVALIDPARAMETER_INVALIDMAXRESULTS = "InvalidParameter.InvalidMaxResults"
 
@@ -365,8 +386,14 @@ const (
 	// 不支持的排序类型。
 	INVALIDPARAMETER_INVALIDSORTBYTYPE = "InvalidParameter.InvalidSortByType"
 
+	// Invalid Sorting
+	INVALIDPARAMETER_INVALIDSORTING = "InvalidParameter.InvalidSorting"
+
 	// SparkAppParam无效。
 	INVALIDPARAMETER_INVALIDSPARKAPPPARAM = "InvalidParameter.InvalidSparkAppParam"
+
+	// 指定的Spark作业配置格式异常，请参考：spark.network.timeout=120s
+	INVALIDPARAMETER_INVALIDSPARKCONFIGFORMAT = "InvalidParameter.InvalidSparkConfigFormat"
 
 	// 当前Statement仅支持sql类型
 	INVALIDPARAMETER_INVALIDSTATEMENTKINDTYPE = "InvalidParameter.InvalidStatementKindType"
@@ -422,6 +449,9 @@ const (
 	// 无效的工作组名。
 	INVALIDPARAMETER_INVALIDWORKGROUPNAME = "InvalidParameter.InvalidWorkGroupName"
 
+	// 您当前仅允许查看100条结果数据，若需调整，请与我们联系
+	INVALIDPARAMETER_MAXRESULTONLYSUPPORTHUNDRED = "InvalidParameter.MaxResultOnlySupportHundred"
+
 	// 提交的SQL数量范围限制为1~50
 	INVALIDPARAMETER_NUMBEROFSQLEXCEEDSTHELIMIT = "InvalidParameter.NumberOfSQLExceedsTheLimit"
 
@@ -476,6 +506,9 @@ const (
 	// Vpc cidr格式错误。
 	INVALIDPARAMETER_VPCCIDRFORMATERROR = "InvalidParameter.VpcCidrFormatError"
 
+	// Vpc cidr重叠。
+	INVALIDPARAMETER_VPCCIDROVERLAP = "InvalidParameter.VpcCidrOverlap"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
@@ -487,6 +520,9 @@ const (
 
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
+
+	// 地域错误
+	REGIONERROR = "RegionError"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
@@ -536,6 +572,9 @@ const (
 	// 找不到默认引擎
 	RESOURCENOTFOUND_DEFAULTDATAENGINENOTFOUND = "ResourceNotFound.DefaultDataEngineNotFound"
 
+	// Eks计算集群初始化或迁移中，请稍后再试。
+	RESOURCENOTFOUND_EKSRESOURCENOTFOUND = "ResourceNotFound.EksResourceNotFound"
+
 	// 指定集群镜像Session配置不存在
 	RESOURCENOTFOUND_IMAGESESSIONCONFIGNOTFOUND = "ResourceNotFound.ImageSessionConfigNotFound"
 
@@ -550,6 +589,12 @@ const (
 
 	// 指定集群镜像版本已存在
 	RESOURCENOTFOUND_IMAGEVERSIONNOTUNIQUE = "ResourceNotFound.ImageVersionNotUnique"
+
+	// 该网络连接不存在
+	RESOURCENOTFOUND_NETWORKCONNECTIONNOTFOUND = "ResourceNotFound.NetworkConnectionNotFound"
+
+	// 网关不存在
+	RESOURCENOTFOUND_RESOURCENOTFOUNDCODE_GATEWAYNOTFOUND = "ResourceNotFound.ResourceNotFoundCode_GatewayNotFound"
 
 	// 指定任务资源超过集群剩余资源限制，请调整后重试
 	RESOURCENOTFOUND_RESOURCEUSAGEOUTOFLIMIT = "ResourceNotFound.ResourceUsageOutOfLimit"
@@ -572,6 +617,9 @@ const (
 	// session已消亡。
 	RESOURCENOTFOUND_SESSIONSTATEDEAD = "ResourceNotFound.SessionStateDead"
 
+	// Session正在关闭，请确认任务是否已经取消
+	RESOURCENOTFOUND_SESSIONSTATESHUTTINGDOWN = "ResourceNotFound.SessionStateShuttingDown"
+
 	// 找不到Spark Shuffle存储路径，请到控制台->数据探索页面->存储配置中设置
 	RESOURCENOTFOUND_SHUFFLEDIRNOTFOUND = "ResourceNotFound.ShuffleDirNotFound"
 
@@ -592,6 +640,9 @@ const (
 
 	// 账号余额不足，无法执行SQL任务。
 	RESOURCEUNAVAILABLE_BALANCEINSUFFICIENT = "ResourceUnavailable.BalanceInsufficient"
+
+	// 网关未运行
+	RESOURCEUNAVAILABLE_RESOURCEUNAVAILABLECODE_GATEWAYNOTRUNNING = "ResourceUnavailable.ResourceUnavailableCode_GatewayNotRunning"
 
 	// 当前为白名单功能，请联系我们开通
 	RESOURCEUNAVAILABLE_WHITELISTFUNCTION = "ResourceUnavailable.WhiteListFunction"
@@ -665,6 +716,9 @@ const (
 	// 子用户无权取消特定权限。
 	UNAUTHORIZEDOPERATION_REVOKEPOLICY = "UnauthorizedOperation.RevokePolicy"
 
+	// 无引擎cam权限
+	UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONCODE_NOENGINECAMPERMISSIONS = "UnauthorizedOperation.UnauthorizedOperationCode_NoEngineCamPermissions"
+
 	// 子用户不是管理员，无权将工作组和用户解绑。
 	UNAUTHORIZEDOPERATION_UNBINDWORKGROUPSFROMUSER = "UnauthorizedOperation.UnbindWorkgroupsFromUser"
 
@@ -673,6 +727,9 @@ const (
 
 	// 子用户不存在。
 	UNAUTHORIZEDOPERATION_USERNOTEXIST = "UnauthorizedOperation.UserNotExist"
+
+	// Yunti user do not support this operation
+	UNAUTHORIZEDOPERATION_YUNTIUSERUNSUPPORT = "UnauthorizedOperation.YuntiUserUnSupport"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
