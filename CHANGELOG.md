@@ -1,3 +1,15 @@
+## 1.82.16(August 8 , 2025)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_cvm_image_share_permission: optmize doc ([#3468](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3468))
+* resource/tencentcloud_as_start_instance_refresh: add `check_instance_target_health_timeout` ([#3473](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3473))
+* resource/tencentcloud_cam_user_saml_config: add `auxiliary_domain` ([#3472](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3472))
+* resource/tencentcloud_cvm_image_share_permission: optmize code logic and doc ([#3468](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3468))
+* resource/tencentcloud_eip_association: update doc for `instance_id` ([#3471](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3471))
+* resource/tencentcloud_private_dns_record: optmize code read function ([#3467](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3467))
+* resource/tencentcloud_teo_acceleration_domain: update doc ([#3474](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3474))
+
 ## 1.82.15(August 4 , 2025)
 
 ENHANCEMENTS:
