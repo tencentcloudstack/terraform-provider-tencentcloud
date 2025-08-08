@@ -74,6 +74,11 @@ func ResourceTencentCloudAsStartInstanceRefresh() *schema.Resource {
 								},
 							},
 						},
+						"check_instance_target_health_timeout": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "The timeout period for backend service health status checks, in seconds. The valid range is [60, 7200], with a default value of 1800 seconds. This takes effect only when the CheckInstanceTargetHealth parameter is enabled. If the instance health check times out, it will be marked as a refresh failure.",
+						},
 					},
 				},
 			},
@@ -129,6 +134,10 @@ func resourceTencentCloudAsStartInstanceRefreshCreate(d *schema.ResourceData, me
 			}
 
 			refreshSettings.RollingUpdateSettings = &rollingUpdateSettings
+		}
+
+		if v, ok := refreshSettingsMap["check_instance_target_health_timeout"]; ok && v != 0 {
+			refreshSettings.CheckInstanceTargetHealthTimeout = helper.IntUint64(v.(int))
 		}
 
 		request.RefreshSettings = &refreshSettings
