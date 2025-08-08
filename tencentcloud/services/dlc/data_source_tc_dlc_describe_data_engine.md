@@ -1,9 +1,9 @@
-Use this data source to query detailed information of dlc describe_data_engine
+Use this data source to query detailed information of DLC describe data engine
 
 Example Usage
 
 ```hcl
-data "tencentcloud_dlc_describe_data_engine" "describe_data_engine" {
-  data_engine_name = "testSpark"
-  }
+data "tencentcloud_dlc_describe_data_engine" "example" {
+  data_engine_name = "tf-example"
+}
 ```

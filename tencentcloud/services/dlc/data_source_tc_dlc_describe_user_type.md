@@ -1,9 +1,9 @@
-Use this data source to query detailed information of dlc describe_user_type
+Use this data source to query detailed information of DLC describe user type
 
 Example Usage
 
 ```hcl
-data "tencentcloud_dlc_describe_user_type" "describe_user_type" {
-  user_id = "127382378"
-  }
+data "tencentcloud_dlc_describe_user_type" "example" {
+  user_id = "100021240183"
+}
 ```

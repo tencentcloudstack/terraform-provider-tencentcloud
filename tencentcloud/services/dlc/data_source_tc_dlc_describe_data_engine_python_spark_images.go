@@ -19,34 +19,34 @@ func DataSourceTencentCloudDlcDescribeDataEnginePythonSparkImages() *schema.Reso
 			"child_image_version_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Engine Image version id.",
+				Description: "ID of the minor version of the cluster image.",
 			},
 
 			"python_spark_images": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "Pyspark image list.",
+				Description: "PYSPARK image information list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"spark_image_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Spark image unique id.",
+							Description: "Unique ID of the spark image.",
 						},
 						"child_image_version_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine Image version id.",
+							Description: "ID of the cluster image of the minor version.",
 						},
 						"spark_image_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Spark image name.",
+							Description: "Name of the spark image.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Spark image description information.",
+							Description: "Description of the spark image.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,

@@ -289,12 +289,14 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 			"auto_authorization": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Automatic authorization.",
 			},
 
 			"engine_network_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Engine network ID.",
 			},
 

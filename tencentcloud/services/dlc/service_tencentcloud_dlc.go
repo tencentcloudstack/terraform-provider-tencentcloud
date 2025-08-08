@@ -291,8 +291,9 @@ func (me *DlcService) DescribeDlcDescribeUserTypeByFilter(ctx context.Context, p
 }
 func (me *DlcService) DescribeDlcDescribeUserRolesByFilter(ctx context.Context, param map[string]interface{}) (describeUserRoles []*dlc.UserRole, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = dlc.NewDescribeUserRolesRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = dlc.NewDescribeUserRolesRequest()
+		response = dlc.NewDescribeUserRolesResponse()
 	)
 
 	defer func() {
@@ -317,21 +318,37 @@ func (me *DlcService) DescribeDlcDescribeUserRolesByFilter(ctx context.Context, 
 
 	var (
 		offset int64 = 0
-		limit  int64 = 20
+		limit  int64 = 100
 	)
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseDlcClient().DescribeUserRoles(request)
-		if err != nil {
-			errRet = err
+
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseDlcClient().DescribeUserRoles(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe dlc user roles failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.UserRoles) < 1 {
+		if len(response.Response.UserRoles) < 1 {
 			break
 		}
+
 		describeUserRoles = append(describeUserRoles, response.Response.UserRoles...)
 		if len(response.Response.UserRoles) < int(limit) {
 			break
@@ -382,7 +399,7 @@ func (me *DlcService) DescribeDlcDescribeUserInfoByFilter(ctx context.Context, p
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.UserInfo == nil {
+		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("Describe dlc user info failed, Response is nil."))
 		}
 
@@ -552,6 +569,14 @@ func (me *DlcService) DescribeDlcDataEngineImageVersionsByFilter(ctx context.Con
 	for k, v := range param {
 		if k == "EngineType" {
 			request.EngineType = v.(*string)
+		}
+
+		if k == "Sort" {
+			request.Sort = v.(*string)
+		}
+
+		if k == "Asc" {
+			request.Asc = v.(*bool)
 		}
 	}
 
@@ -884,13 +909,17 @@ func (me *DlcService) DescribeDlcDescribeDataEngineEventsByFilter(ctx context.Co
 		if k == "DataEngineName" {
 			request.DataEngineName = v.(*string)
 		}
+
+		if k == "SessionId" {
+			request.SessionId = v.(*string)
+		}
 	}
 
 	ratelimit.Check(request.GetAction())
 
 	var (
 		offset int64 = 0
-		limit  int64 = 20
+		limit  int64 = 100
 	)
 	for {
 		request.Offset = &offset

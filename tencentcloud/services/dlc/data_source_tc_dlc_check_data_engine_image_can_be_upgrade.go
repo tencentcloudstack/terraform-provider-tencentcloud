@@ -19,19 +19,19 @@ func DataSourceTencentCloudDlcCheckDataEngineImageCanBeUpgrade() *schema.Resourc
 			"data_engine_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Engine unique id.",
+				Description: "Unique engine ID.",
 			},
 
 			"child_image_version_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "The latest image version id that can be upgraded.",
+				Description: "ID of the minor version of the cluster image that can be updated under the major version.",
 			},
 
 			"is_upgrade": {
 				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Is it possible to upgrade.",
+				Description: "Whether it can be updated.",
 			},
 
 			"result_output_file": {

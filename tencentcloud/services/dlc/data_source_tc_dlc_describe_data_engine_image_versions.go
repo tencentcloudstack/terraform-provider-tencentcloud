@@ -22,51 +22,63 @@ func DataSourceTencentCloudDlcDescribeDataEngineImageVersions() *schema.Resource
 				Description: "Engine type only support: SparkSQL/PrestoSQL/SparkBatch.",
 			},
 
+			"sort": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Sort fields: InsertTime (insert time, default), UpdateTime (update time).",
+			},
+
+			"asc": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Sort by: false (descending, default), true (ascending).",
+			},
+
 			"image_parent_versions": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "Cluster large version image information list.",
+				Description: "Major version of the image information list of clusters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"image_version_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine major version id.",
+							Description: "ID of the major version of the image.",
 						},
 						"image_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine major version name.",
+							Description: "Name of the major version of the image.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Image major version description.",
+							Description: "Description of the major version of the image.",
 						},
 						"is_public": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Whether it is a public version, only support: 1: public;/2: private.",
+							Description: "Whether it is a public version: 1: public version; 2: private version.",
 						},
 						"engine_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine type only support: SparkSQL/PrestoSQL/SparkBatch.",
+							Description: "Cluster types: SparkSQL, PrestoSQL, and SparkBatch.",
 						},
 						"is_shared_engine": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Is shared engine, only support: 1:yes/2:no.",
+							Description: "Version status. 1: initializing; 2: online; 3: offline.",
 						},
 						"state": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Version status, only support: 1: initialized/2: online/3: offline.",
+							Description: "Version status. 1: initializing; 2: online; 3: offline.",
 						},
 						"insert_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time.",
+							Description: "Insert time.",
 						},
 						"update_time": {
 							Type:        schema.TypeString,
@@ -97,6 +109,14 @@ func dataSourceTencentCloudDlcDescribeDataEngineImageVersionsRead(d *schema.Reso
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("engine_type"); ok {
 		paramMap["EngineType"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("sort"); ok {
+		paramMap["Sort"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("asc"); ok {
+		paramMap["Asc"] = helper.Bool(v.(bool))
 	}
 
 	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}

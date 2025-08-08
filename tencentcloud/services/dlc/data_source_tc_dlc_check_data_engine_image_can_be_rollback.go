@@ -19,25 +19,25 @@ func DataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback() *schema.Resour
 			"data_engine_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Engine unique id.",
+				Description: "Unique engine ID.",
 			},
 
 			"to_record_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Log record id after rollback.",
+				Description: "Log record ID after rolling back.",
 			},
 
 			"from_record_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Log record id before rollback.",
+				Description: "Log record ID before rolling back.",
 			},
 
 			"is_rollback": {
 				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Is it possible to roll back.",
+				Description: "Whether it can be rolled back.",
 			},
 
 			"result_output_file": {
