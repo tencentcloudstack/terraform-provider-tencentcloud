@@ -2,7 +2,7 @@ Provides a resource to create a TEO acceleration domain
 
 ~> **NOTE:** Before modifying resource content, you need to ensure that the `status` is `online`.
 
-~> **NOTE:** Only `origin_type` is `IP_DOMAIN` can set `host_header`.
+~> **NOTE:** Only `origin_type` is `IP_DOMAIN` can set `host_header`; And when `origin_type` is changed to `IP_DOMAIN`, `host_header` needs to be set to a legal value, such as a domain name string(like `domain_name`).
 
 ~> **NOTE:** If you use a third-party storage bucket configured for back-to-source, you need to ignore changes to `SecretAccessKey`.
 
