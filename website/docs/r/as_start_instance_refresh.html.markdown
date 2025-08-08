@@ -25,6 +25,7 @@ resource "tencentcloud_as_start_instance_refresh" "example" {
       max_surge    = 1
       fail_process = "AUTO_PAUSE"
     }
+    check_instance_target_health_timeout = 1800
   }
 
   timeouts {
@@ -44,6 +45,7 @@ The following arguments are supported:
 The `refresh_settings` object supports the following:
 
 * `rolling_update_settings` - (Required, List) Rolling update settings parameters. RefreshMode is the rolling update. This parameter must be filled in.Note: This field may return null, indicating that no valid value can be obtained.
+* `check_instance_target_health_timeout` - (Optional, Int) The timeout period for backend service health status checks, in seconds. The valid range is [60, 7200], with a default value of 1800 seconds. This takes effect only when the CheckInstanceTargetHealth parameter is enabled. If the instance health check times out, it will be marked as a refresh failure.
 * `check_instance_target_health` - (Optional, Bool) Backend service health check status for instances, defaults to FALSE. This setting takes effect only for scaling groups bound with application load balancers. When enabled, if an instance fails the check after being refreshed, its load balancer port weight remains 0 and is marked as a refresh failure. Valid values: <br><li>TRUE: Enable the check.</li> <li>FALSE: Do not enable the check.
 
 The `rolling_update_settings` object of `refresh_settings` supports the following:
