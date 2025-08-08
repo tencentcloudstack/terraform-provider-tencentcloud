@@ -22,6 +22,12 @@ func DataSourceTencentCloudDlcDescribeDataEngineEvents() *schema.Resource {
 				Description: "Data engine name.",
 			},
 
+			"session_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Session ID, standard spark engine required.",
+			},
+
 			"events": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -76,6 +82,10 @@ func dataSourceTencentCloudDlcDescribeDataEngineEventsRead(d *schema.ResourceDat
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("data_engine_name"); ok {
 		paramMap["DataEngineName"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("session_id"); ok {
+		paramMap["SessionId"] = helper.String(v.(string))
 	}
 
 	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
