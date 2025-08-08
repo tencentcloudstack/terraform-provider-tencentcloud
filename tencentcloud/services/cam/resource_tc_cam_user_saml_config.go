@@ -42,6 +42,13 @@ func ResourceTencentCloudCamUserSamlConfig() *schema.Resource {
 				},
 			},
 
+			"auxiliary_domain": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "auxiliary domain, like: `xxx.com`.",
+			},
+
 			"status": {
 				Computed:    true,
 				Type:        schema.TypeInt,
@@ -51,7 +58,7 @@ func ResourceTencentCloudCamUserSamlConfig() *schema.Resource {
 			"metadata_document_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The path used to save the samlMetadat file.",
+				Description: "The path used to save the saml Metadata file.",
 			},
 		},
 	}
@@ -78,6 +85,10 @@ func resourceTencentCloudCamUserSamlConfigCreate(d *schema.ResourceData, meta in
 			saml = string(metadata)
 		}
 		request.SAMLMetadataDocument = helper.String(tccommon.StringToBase64(saml))
+	}
+
+	if v, ok := d.GetOk("auxiliary_domain"); ok {
+		request.AuxiliaryDomain = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -128,6 +139,10 @@ func resourceTencentCloudCamUserSamlConfigRead(d *schema.ResourceData, meta inte
 		_ = d.Set("saml_metadata_document", metadata)
 	}
 
+	if userSamlConfig.AuxiliaryDomain != nil {
+		_ = d.Set("auxiliary_domain", userSamlConfig.AuxiliaryDomain)
+	}
+
 	if userSamlConfig.Status != nil {
 		_ = d.Set("status", userSamlConfig.Status)
 	}
@@ -163,6 +178,12 @@ func resourceTencentCloudCamUserSamlConfigUpdate(d *schema.ResourceData, meta in
 				saml = string(metadata)
 			}
 			request.SAMLMetadataDocument = helper.String(tccommon.StringToBase64(saml))
+		}
+	}
+
+	if d.HasChange("auxiliary_domain") {
+		if v, ok := d.GetOk("auxiliary_domain"); ok {
+			request.AuxiliaryDomain = helper.String(v.(string))
 		}
 	}
 

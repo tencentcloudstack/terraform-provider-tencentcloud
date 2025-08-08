@@ -20,6 +20,7 @@ resource "tencentcloud_cam_user_saml_config" "example" {
   saml_metadata_document = <<-EOT
   <?xml version="1.0" encoding="utf-8"?></EntityDescriptor>
 EOT
+  auxiliary_domain       = "xxx.com"
 }
 ```
 
@@ -36,7 +37,8 @@ resource "tencentcloud_cam_user_saml_config" "example" {
 The following arguments are supported:
 
 * `saml_metadata_document` - (Required, String) SAML metadata document, xml format, support string content or file path.
-* `metadata_document_file` - (Optional, String) The path used to save the samlMetadat file.
+* `auxiliary_domain` - (Optional, String) auxiliary domain, like: `xxx.com`.
+* `metadata_document_file` - (Optional, String) The path used to save the saml Metadata file.
 
 ## Attributes Reference
 
