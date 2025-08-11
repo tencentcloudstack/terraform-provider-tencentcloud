@@ -2291,7 +2291,7 @@ func (me *OrganizationService) DescribeOrganizationResourceToShareMemberByFilter
 
 	var (
 		offset uint64 = 0
-		limit  uint64 = 100
+		limit  uint64 = 50
 	)
 
 	for {
