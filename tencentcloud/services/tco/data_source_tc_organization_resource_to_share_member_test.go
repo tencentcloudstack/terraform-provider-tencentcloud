@@ -27,9 +27,9 @@ func TestAccTencentCloudOrganizationResourceToShareMemberDataSource_basic(t *tes
 
 const testAccOrganizationResourceToShareMemberDataSource = `
 data "tencentcloud_organization_resource_to_share_member" "example" {
-  area                 = ""
-  search_key           = ""
-  type                 = ""
-  product_resource_ids = []
+  area                 = "ap-guangzhou"
+  search_key           = "tf-example"
+  type                 = "CVM"
+  product_resource_ids = ["ins-69hg2ze0", "ins-0cxjwrog"]
 }
 `
