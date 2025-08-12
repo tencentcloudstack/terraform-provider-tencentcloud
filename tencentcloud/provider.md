@@ -1516,6 +1516,7 @@ tencentcloud_teo_bind_security_template
 tencentcloud_teo_content_identifier
 tencentcloud_teo_customize_error_page
 tencentcloud_teo_origin_acl
+tencentcloud_teo_ddos_protection_config
 
 TencentCloud ServiceMesh(TCM)
 Data Source
