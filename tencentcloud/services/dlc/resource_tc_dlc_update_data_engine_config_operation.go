@@ -18,9 +18,6 @@ func ResourceTencentCloudDlcUpdateDataEngineConfigOperation() *schema.Resource {
 		Create: resourceTencentCloudDlcUpdateDataEngineConfigOperationCreate,
 		Read:   resourceTencentCloudDlcUpdateDataEngineConfigOperationRead,
 		Delete: resourceTencentCloudDlcUpdateDataEngineConfigOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"data_engine_id": {
 				Required:    true,
@@ -43,12 +40,13 @@ func resourceTencentCloudDlcUpdateDataEngineConfigOperationCreate(d *schema.Reso
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_update_data_engine_config_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		service      = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request      = dlc.NewUpdateDataEngineConfigRequest()
 		dataEngineId string
 	)
+
 	if v, ok := d.GetOk("data_engine_id"); ok {
 		dataEngineId = v.(string)
 		request.DataEngineIds = []*string{&dataEngineId}
@@ -65,22 +63,21 @@ func resourceTencentCloudDlcUpdateDataEngineConfigOperationCreate(d *schema.Reso
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s operate dlc updateDataEngineConfigOperation failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate dlc update data engine config failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(dataEngineId)
-
-	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 5*tccommon.ReadRetryTimeout, time.Second, service.DlcRestartDataEngineStateRefreshFunc(d.Id(), []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
+
 	return resourceTencentCloudDlcUpdateDataEngineConfigOperationRead(d, meta)
 }
 

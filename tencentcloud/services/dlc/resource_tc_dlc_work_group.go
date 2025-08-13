@@ -2,6 +2,7 @@ package dlc
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -27,22 +28,20 @@ func ResourceTencentCloudDlcWorkGroup() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Name of Work Group.",
+				Description: "Working group name.",
 			},
 
 			"work_group_description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Description of Work Group.",
+				Description: "Working group description.",
 			},
 
 			"user_ids": {
-				Computed: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "A collection of user IDs that has been bound to the workgroup.",
+				Computed:    true,
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Collection of IDs of users to be bound to working groups.",
 			},
 		},
 	}
@@ -52,13 +51,13 @@ func resourceTencentCloudDlcWorkGroupCreate(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_work_group.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
 		request     = dlc.NewCreateWorkGroupRequest()
 		response    = dlc.NewCreateWorkGroupResponse()
 		workGroupId int64
 	)
+
 	if v, ok := d.GetOk("work_group_name"); ok {
 		request.WorkGroupName = helper.String(v.(string))
 	}
@@ -74,12 +73,22 @@ func resourceTencentCloudDlcWorkGroupCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create dlc workGroup failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create dlc workGroup failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.WorkGroupId == nil {
+		return fmt.Errorf("WorkGroupId is nil.")
 	}
 
 	workGroupId = *response.Response.WorkGroupId
@@ -92,13 +101,12 @@ func resourceTencentCloudDlcWorkGroupRead(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_work_group.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	workGroupId := d.Id()
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service     = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		workGroupId = d.Id()
+	)
 
 	workGroup, err := service.DescribeDlcWorkGroupById(ctx, workGroupId)
 	if err != nil {
@@ -106,8 +114,8 @@ func resourceTencentCloudDlcWorkGroupRead(d *schema.ResourceData, meta interface
 	}
 
 	if workGroup == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `DlcWorkGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
 
@@ -120,9 +128,7 @@ func resourceTencentCloudDlcWorkGroupRead(d *schema.ResourceData, meta interface
 	}
 
 	if workGroup.UserSet != nil {
-
-		userIds := make([]*string, len(workGroup.UserSet))
-
+		userIds := make([]*string, 0, len(workGroup.UserSet))
 		for _, user := range workGroup.UserSet {
 			userIds = append(userIds, user.UserId)
 		}
@@ -137,32 +143,33 @@ func resourceTencentCloudDlcWorkGroupUpdate(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_work_group.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := dlc.NewModifyWorkGroupRequest()
-
-	workGroupId := d.Id()
-
-	request.WorkGroupId = helper.Int64(helper.StrToInt64(workGroupId))
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		request     = dlc.NewModifyWorkGroupRequest()
+		workGroupId = d.Id()
+	)
 
 	if d.HasChange("work_group_description") {
 		if v, ok := d.GetOk("work_group_description"); ok {
 			request.WorkGroupDescription = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().ModifyWorkGroup(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		request.WorkGroupId = helper.Int64(helper.StrToInt64(workGroupId))
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().ModifyWorkGroup(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update dlc workGroup failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update dlc workGroup failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudDlcWorkGroupRead(d, meta)
@@ -172,11 +179,12 @@ func resourceTencentCloudDlcWorkGroupDelete(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_work_group.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	workGroupId := d.Id()
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service     = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		workGroupId = d.Id()
+	)
 
 	if err := service.DeleteDlcWorkGroupById(ctx, workGroupId); err != nil {
 		return err

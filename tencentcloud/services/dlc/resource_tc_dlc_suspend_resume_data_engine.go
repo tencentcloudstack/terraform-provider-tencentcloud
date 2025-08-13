@@ -17,22 +17,19 @@ func ResourceTencentCloudDlcSuspendResumeDataEngine() *schema.Resource {
 		Create: resourceTencentCloudDlcSuspendResumeDataEngineCreate,
 		Read:   resourceTencentCloudDlcSuspendResumeDataEngineRead,
 		Delete: resourceTencentCloudDlcSuspendResumeDataEngineDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"data_engine_name": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Engine name.",
+				Description: "The name of a virtual cluster.",
 			},
 
 			"operate": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Engine operate tye: suspend/resume.",
+				Description: "The operation type: `suspend` or `resume`.",
 			},
 		},
 	}
@@ -42,12 +39,12 @@ func resourceTencentCloudDlcSuspendResumeDataEngineCreate(d *schema.ResourceData
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_suspend_resume_data_engine.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
 		request        = dlc.NewSuspendResumeDataEngineRequest()
 		dataEngineName string
 	)
+
 	if v, ok := d.GetOk("data_engine_name"); ok {
 		dataEngineName = v.(string)
 		request.DataEngineName = helper.String(v.(string))
@@ -64,15 +61,16 @@ func resourceTencentCloudDlcSuspendResumeDataEngineCreate(d *schema.ResourceData
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s operate dlc suspendResumeDataEngine failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(dataEngineName)
-
 	return resourceTencentCloudDlcSuspendResumeDataEngineRead(d, meta)
 }
 

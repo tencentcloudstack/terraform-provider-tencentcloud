@@ -1,18 +1,10 @@
-Provides a resource to create a dlc suspend_resume_data_engine
+Provides a resource to create a DLC suspend resume data engine
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_suspend_resume_data_engine" "suspend_resume_data_engine" {
-  data_engine_name = "example-iac"
-  operate = "suspend"
+resource "tencentcloud_dlc_suspend_resume_data_engine" "example" {
+  data_engine_name = "tf-example"
+  operate          = "suspend"
 }
-```
-
-Import
-
-dlc suspend_resume_data_engine can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_suspend_resume_data_engine.suspend_resume_data_engine suspend_resume_data_engine_id
 ```

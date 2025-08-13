@@ -26,14 +26,14 @@ func ResourceTencentCloudDlcRestartDataEngineOperation() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Engine unique id.",
+				Description: "Engine ID.",
 			},
 
 			"forced_operation": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to force restart and ignore tasks.",
+				Description: "Whether to restart by force and ignore tasks.",
 			},
 		},
 	}
@@ -43,12 +43,13 @@ func resourceTencentCloudDlcRestartDataEngineCreateOperation(d *schema.ResourceD
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_restart_data_engine_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		service      = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request      = dlc.NewRestartDataEngineRequest()
 		dataEngineId string
 	)
+
 	if v, ok := d.GetOk("data_engine_id"); ok {
 		dataEngineId = v.(string)
 		request.DataEngineId = helper.String(v.(string))
@@ -65,19 +66,17 @@ func resourceTencentCloudDlcRestartDataEngineCreateOperation(d *schema.ResourceD
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s operate dlc restartDataEngine failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(dataEngineId)
-
-	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 5*tccommon.ReadRetryTimeout, time.Second, service.DlcRestartDataEngineStateRefreshFunc(d.Id(), []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}

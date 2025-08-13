@@ -18,22 +18,19 @@ func ResourceTencentCloudDlcSwitchDataEngineImageOperation() *schema.Resource {
 		Create: resourceTencentCloudDlcSwitchDataEngineImageOperationCreate,
 		Read:   resourceTencentCloudDlcSwitchDataEngineImageOperationRead,
 		Delete: resourceTencentCloudDlcSwitchDataEngineImageOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"data_engine_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Engine unique id.",
+				Description: "Engine ID.",
 			},
 
 			"new_image_version_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "New image version id.",
+				Description: "New image version ID.",
 			},
 		},
 	}
@@ -43,12 +40,13 @@ func resourceTencentCloudDlcSwitchDataEngineImageOperationCreate(d *schema.Resou
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_switch_data_engine_image_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		service      = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request      = dlc.NewSwitchDataEngineImageRequest()
 		dataEngineId string
 	)
+
 	if v, ok := d.GetOk("data_engine_id"); ok {
 		dataEngineId = v.(string)
 		request.DataEngineId = helper.String(v.(string))
@@ -65,19 +63,17 @@ func resourceTencentCloudDlcSwitchDataEngineImageOperationCreate(d *schema.Resou
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s operate dlc switchDataEngineImageOperation failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate dlc switch data engine image failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(dataEngineId)
-
-	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 5*tccommon.ReadRetryTimeout, time.Second, service.DlcRestartDataEngineStateRefreshFunc(d.Id(), []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}

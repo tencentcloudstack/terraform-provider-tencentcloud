@@ -4,17 +4,17 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dlc_restart_data_engine_operation"
 sidebar_current: "docs-tencentcloud-resource-dlc_restart_data_engine_operation"
 description: |-
-  Provides a resource to create a dlc restart_data_engine
+  Provides a resource to create a DLC restart data engine
 ---
 
 # tencentcloud_dlc_restart_data_engine_operation
 
-Provides a resource to create a dlc restart_data_engine
+Provides a resource to create a DLC restart data engine
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_restart_data_engine_operation" "restart_data_engine" {
+resource "tencentcloud_dlc_restart_data_engine_operation" "example" {
   data_engine_id   = "DataEngine-g5ds87d8"
   forced_operation = false
 }
@@ -24,8 +24,8 @@ resource "tencentcloud_dlc_restart_data_engine_operation" "restart_data_engine" 
 
 The following arguments are supported:
 
-* `data_engine_id` - (Required, String, ForceNew) Engine unique id.
-* `forced_operation` - (Optional, Bool, ForceNew) Whether to force restart and ignore tasks.
+* `data_engine_id` - (Required, String, ForceNew) Engine ID.
+* `forced_operation` - (Optional, Bool, ForceNew) Whether to restart by force and ignore tasks.
 
 ## Attributes Reference
 
