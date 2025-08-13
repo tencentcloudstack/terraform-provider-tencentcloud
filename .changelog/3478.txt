@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_dlc_task_result
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_engine_node_specifications
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_native_spark_sessions
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_standard_engine_resource_group_config_information
+```
