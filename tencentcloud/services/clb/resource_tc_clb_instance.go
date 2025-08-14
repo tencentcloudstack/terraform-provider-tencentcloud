@@ -223,6 +223,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 			"eip_address_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.",
 			},
 			"domain": {
