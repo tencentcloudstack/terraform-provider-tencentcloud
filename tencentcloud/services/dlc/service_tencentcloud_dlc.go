@@ -944,3 +944,163 @@ func (me *DlcService) DescribeDlcDescribeDataEngineEventsByFilter(ctx context.Co
 
 	return
 }
+
+func (me *DlcService) DescribeDlcTaskResultByFilter(ctx context.Context, param map[string]interface{}) (ret *dlc.DescribeTaskResultResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeTaskResultRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+
+		if k == "NextToken" {
+			request.NextToken = v.(*string)
+		}
+
+		if k == "MaxResults" {
+			request.MaxResults = v.(*int64)
+		}
+
+		if k == "IsTransformDataType" {
+			request.IsTransformDataType = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDlcClient().DescribeTaskResult(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *DlcService) DescribeDlcEngineNodeSpecificationsByFilter(ctx context.Context, param map[string]interface{}) (ret *dlc.DescribeEngineNodeSpecResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeEngineNodeSpecRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DataEngineName" {
+			request.DataEngineName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDlcClient().DescribeEngineNodeSpec(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *DlcService) DescribeDlcNativeSparkSessionsByFilter(ctx context.Context, param map[string]interface{}) (ret []*dlc.SparkSessionInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeNativeSparkSessionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DataEngineId" {
+			request.DataEngineId = v.(*string)
+		}
+
+		if k == "ResourceGroupId" {
+			request.ResourceGroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDlcClient().DescribeNativeSparkSessions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.SparkSessionsList) < 1 {
+		return
+	}
+
+	ret = response.Response.SparkSessionsList
+	return
+}
+
+func (me *DlcService) DescribeDlcStandardEngineResourceGroupConfigInformationByFilter(ctx context.Context, param map[string]interface{}) (ret *dlc.DescribeStandardEngineResourceGroupConfigInfoResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeStandardEngineResourceGroupConfigInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+
+		if k == "Sorting" {
+			request.Sorting = v.(*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*dlc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDlcClient().DescribeStandardEngineResourceGroupConfigInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
