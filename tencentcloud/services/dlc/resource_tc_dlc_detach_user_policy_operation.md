@@ -1,21 +1,18 @@
-Provides a resource to create a dlc detach_user_policy_operation
+Provides a resource to create a DLC detach user policy operation
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_detach_user_policy_operation" "detach_user_policy_operation" {
- user_id = 100032676511
- policy_set {
-   database = "test_iac_keep"
-   catalog = "DataLakeCatalog"
-   table = ""
-   operation = "ASSAYER"
-   policy_type = "DATABASE"
-   re_auth = false
-   source = "USER"
-   mode = "COMMON"
-   operator = "100032669045"
-   id = 102533
- }
+resource "tencentcloud_dlc_detach_user_policy_operation" "example" {
+  user_id = 100032676511
+  policy_set {
+    database    = "tf_example_db"
+    catalog     = "DataLakeCatalog"
+    table       = "tf_example_table"
+    operation   = "ASSAYER"
+    policy_type = "DATABASE"
+    source      = "USER"
+    mode        = "COMMON"
+  }
 }
 ```

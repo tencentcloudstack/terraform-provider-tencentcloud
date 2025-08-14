@@ -17,22 +17,19 @@ func ResourceTencentCloudDlcModifyDataEngineDescriptionOperation() *schema.Resou
 		Create: resourceTencentCloudDlcModifyDataEngineDescriptionOperationCreate,
 		Read:   resourceTencentCloudDlcModifyDataEngineDescriptionOperationRead,
 		Delete: resourceTencentCloudDlcModifyDataEngineDescriptionOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"data_engine_name": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "The name of the engine to modify.",
+				Description: "Engine description and its maximum length is 250 characters.",
 			},
 
 			"message": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Engine description information, the maximum length is 250.",
+				Description: "Engine description and its maximum length is 250 characters.",
 			},
 		},
 	}
@@ -42,12 +39,12 @@ func resourceTencentCloudDlcModifyDataEngineDescriptionOperationCreate(d *schema
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_modify_data_engine_description_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
 		request        = dlc.NewModifyDataEngineDescriptionRequest()
 		dataEngineName string
 	)
+
 	if v, ok := d.GetOk("data_engine_name"); ok {
 		dataEngineName = v.(string)
 		request.DataEngineName = helper.String(v.(string))
@@ -64,15 +61,16 @@ func resourceTencentCloudDlcModifyDataEngineDescriptionOperationCreate(d *schema
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s operate dlc modifyDataEngineDescriptionOperation failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate dlc data engine description failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(dataEngineName)
-
 	return resourceTencentCloudDlcModifyDataEngineDescriptionOperationRead(d, meta)
 }
 

@@ -28,31 +28,31 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 			"engine_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Engine type, only support: spark/presto.",
+				Description: "The engine type. Valid values: `spark` and `presto`.",
 			},
 
 			"data_engine_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Engine name.",
+				Description: "The name of the virtual cluster.",
 			},
 
 			"cluster_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Engine cluster type, only support: spark_cu/presto_cu.",
+				Description: "The cluster type. Valid values: `spark_private`, `presto_private`, `presto_cu`, and `spark_cu`.",
 			},
 
 			"mode": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine mode, only support 1: ByAmount, 2: YearlyAndMonthly.",
+				Description: "The billing mode. Valid values: `0` (shared engine), `1` (pay-as-you-go), and `2` (monthly subscription).",
 			},
 
 			"auto_resume": {
 				Required:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to automatically start the cluster, prepay not support.",
+				Description: "Whether to automatically start the clusters.",
 			},
 
 			"size": {
@@ -64,13 +64,13 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 			"min_clusters": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine min size, greater than or equal to 1 and MaxClusters bigger than MinClusters.",
+				Description: "The minimum number of clusters.",
 			},
 
 			"max_clusters": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine max cluster size, MaxClusters less than or equal to 10 and MaxClusters bigger than MinClusters.",
+				Description: "The maximum number of clusters.",
 			},
 
 			"default_data_engine": {
@@ -83,50 +83,50 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Engine VPC network segment, just like 192.0.2.1/24.",
+				Description: "The VPC CIDR block.",
 			},
 
 			"message": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Engine description information.",
+				Description: "The description.",
 			},
 
 			"pay_mode": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine pay mode type, only support 0: postPay(default), 1: prePay.",
+				Description: "The pay mode. Valid value: `0` (postpaid, default) and `1` (prepaid) (currently not available).",
 			},
 
 			"time_span": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine TimeSpan, prePay: minimum of 1, representing one month of purchasing resources, with a maximum of 120, default 3600, postPay: fixed fee of 3600.",
+				Description: "The usage duration of the resource. Postpaid: Fill in 3,600 as a fixed figure; prepaid: fill in a figure equal to or bigger than 1 which means purchasing resources for one month. The maximum figure is not bigger than 120. The default value is 1.",
 			},
 
 			"time_unit": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Engine TimeUnit, prePay: use m(default), postPay: use h.",
+				Description: "The unit of the resource period. Valid values: `s` (default) for the postpaid mode and `m` for the prepaid mode.",
 			},
 
 			"auto_renew": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine auto renew, only support 0: Default, 1: AutoRenewON, 2: AutoRenewOFF.",
+				Description: "The auto-renewal status of the resource. For the postpaid mode, no renewal is required, and the value is fixed to `0`. For the prepaid mode, valid values are `0` (manual), `1` (auto), and `2` (no renewal). If this parameter is set to `0` for a key account in the prepaid mode, auto-renewal applies. It defaults to `0`.",
 			},
 
 			"auto_suspend": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to automatically suspend the cluster, prepay not support.",
+				Description: "Whether to automatically suspend clusters. Valid values: `false` (default, no) and `true` (yes).",
 			},
 
 			"crontab_resume_suspend": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine crontab resume or suspend strategy, only support: 0: Wait(default), 1: Kill.",
+				Description: "Whether to enable scheduled start and suspension of clusters. Valid values: `0` (disable) and `1` (enable). Note: This policy and the auto-suspension policy are mutually exclusive.",
 			},
 
 			"crontab_resume_suspend_strategy": {
@@ -134,23 +134,23 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "Engine auto suspend strategy, when AutoSuspend is true, CrontabResumeSuspend must stop.",
+				Description: "The complex policy for scheduled start and suspension, including the start/suspension time and suspension policy.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"resume_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Scheduled pull-up time: For example: 8 o&amp;#39;clock on Monday is expressed as 1000000-08:00:00.",
+							Description: "Scheduled starting time, such as 8: 00 a.m. on Monday and Wednesday.",
 						},
 						"suspend_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Scheduled suspension time: For example: 20 o&amp;#39;clock on Monday is expressed as 1000000-20:00:00.",
+							Description: "Scheduled suspension time, such as 8: 00 p.m. on Monday and Wednesday.",
 						},
 						"suspend_strategy": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Suspend configuration: 0 (default): wait for the task to end before suspending, 1: force suspend.",
+							Description: "The suspension setting. Valid values: `0` (suspension after task end, default) and `1` (force suspension).",
 						},
 					},
 				},
@@ -160,40 +160,40 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Engine exec type, only support SQL(default) or BATCH.",
+				Description: "The type of tasks to be executed by the engine, which defaults to SQL. Valid values: `SQL` and `BATCH`.",
 			},
 
 			"max_concurrency": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Maximum number of concurrent tasks in a single cluster, default 5.",
+				Description: "The max task concurrency of a cluster, which defaults to 5.",
 			},
 
 			"tolerable_queue_time": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Tolerable queuing time, default 0. scaling may be triggered when tasks are queued for longer than the tolerable time. if this parameter is 0, it means that capacity expansion may be triggered immediately once a task is queued.",
+				Description: "The task queue time limit, which defaults to 0. When the actual queue time exceeds the value set here, scale-out may be triggered. Setting this parameter to 0 represents that scale-out may be triggered immediately after a task queues up.",
 			},
 
 			"auto_suspend_time": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Cluster automatic suspension time, default 10 minutes.",
+				Description: "The cluster auto-suspension time, which defaults to 10 min.",
 			},
 
 			"resource_type": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Engine resource type not match, only support: Standard_CU/Memory_CU(only BATCH ExecType).",
+				Description: "The resource type. Valid values: `Standard_CU` (standard) and `Memory_CU` (memory).",
 			},
 
 			"data_engine_config_pairs": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Collection of user-defined engine configuration items. This parameter needs to input all the configuration items users should add. For example, if there is a configuration item named k1:v1 while k2:v2 needs to be added, [k1:v1,k2:v2] should be passed.",
+				Description: "The advanced configurations of clusters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"config_item": {
@@ -214,25 +214,25 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Cluster image version name. Such as SuperSQL-P 1.1; SuperSQL-S 3.2, etc., do not upload, and create a cluster with the latest mirror version by default.",
+				Description: "The version name of cluster image, such as SuperSQL-P 1.1 and SuperSQL-S 3.2. If no value is passed in, a cluster is created using the latest image version.",
 			},
 
 			"main_cluster_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Primary cluster name, specified when creating a disaster recovery cluster.",
+				Description: "The primary cluster, which is specified when a failover cluster is created.",
 			},
 
 			"elastic_switch": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "For spark Batch ExecType, yearly and monthly cluster whether to enable elasticity.",
+				Description: "Whether to enable the scaling feature for a monthly subscribed Spark job cluster.",
 			},
 
 			"elastic_limit": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "For spark Batch ExecType, yearly and monthly cluster elastic limit.",
+				Description: "The upper limit (in CUs) for scaling of the monthly subscribed Spark job cluster.",
 			},
 
 			"session_resource_template": {
@@ -240,18 +240,18 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "Template of the resource configuration of the job engine.",
+				Description: "The session resource configuration template for a Spark job cluster.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"driver_size": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The driver size. Valid values for the standard resource type: `small`, `medium`, `large`, and `xlarge`. Valid values for the memory resource type: `m.small`, `m.medium`, `m.large`, and `m.xlarge`. Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "The driver size. Valid values for the standard resource type: `small`, `medium`, `large`, and `xlarge`. Valid values for the memory resource type: `m.small`, `m.medium`, `m.large`, and `m.xlarge`.",
 						},
 						"executor_size": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The executor size. Valid values for the standard resource type: `small`, `medium`, `large`, and `xlarge`. Valid values for the memory resource type: `m.small`, `m.medium`, `m.large`, and `m.xlarge`. Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "The executor size. Valid values for the standard resource type: `small`, `medium`, `large`, and `xlarge`. Valid values for the memory resource type: `m.small`, `m.medium`, `m.large`, and `m.xlarge`.",
 						},
 						"executor_nums": {
 							Type:        schema.TypeInt,
@@ -266,7 +266,7 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 						"running_time_parameters": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "Runtime parameters.",
+							Description: "The running time parameters of the session resource configuration template for a Spark job cluster.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"config_item": {
@@ -304,7 +304,7 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Engine generation, SuperSQL: represents the supersql engine; Native: represents the standard engine. The default value is SuperSQL.",
+				Description: "Generation of the engine. SuperSQL means the supersql engine while Native means the standard engine. It is SuperSQL by default.",
 			},
 		},
 	}
