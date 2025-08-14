@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clb_instance: update `eip_address_id` attributes
+```
