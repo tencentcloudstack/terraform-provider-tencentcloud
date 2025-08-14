@@ -1,3 +1,20 @@
+## 1.82.17(August 14 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dlc_engine_node_specifications` ([#3478](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3478))
+* **New Data Source:** `tencentcloud_dlc_native_spark_sessions` ([#3478](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3478))
+* **New Data Source:** `tencentcloud_dlc_standard_engine_resource_group_config_information` ([#3478](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3478))
+* **New Data Source:** `tencentcloud_dlc_task_result` ([#3478](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3478))
+* **New Data Source:** `tencentcloud_organization_resource_to_share_member` ([#3475](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3475))
+* **New Resource:** `tencentcloud_teo_ddos_protection_config` ([#3476](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3476))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_config: support AntiDDos Eip ([#3451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3451))
+* resource/tencentcloud_clb_instance: update `eip_address_id` attributes ([#3479](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3479))
+* resource/tencentcloud_instance: support AntiDDos Eip ([#3451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3451))
+
 ## 1.82.16(August 8 , 2025)
 
 ENHANCEMENTS:
