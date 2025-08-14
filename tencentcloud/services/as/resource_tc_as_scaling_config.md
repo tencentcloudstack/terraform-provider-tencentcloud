@@ -190,21 +190,21 @@ resource "tencentcloud_as_scaling_config" "example" {
   image_id           = data.tencentcloud_images.example.images.0.image_id
   instance_types     = ["SA5.MEDIUM4"]
   project_id         = 0
-  system_disk_type   = "CLOUD_PREMIUM"
+  system_disk_type   = "CLOUD_HSSD"
   system_disk_size   = "50"
+  security_group_ids = ["sg-l222vn6w"]
 
   data_disk {
-    disk_type = "CLOUD_PREMIUM"
+    disk_type = "CLOUD_HSSD"
     disk_size = 50
   }
 
-
   internet_charge_type              = "BANDWIDTH_PACKAGE"
-  internet_max_bandwidth_out        = 10
+  internet_max_bandwidth_out        = 100
   public_ip_assigned                = true
-  bandwidth_package_id              = "bwp-4ocyia9s"
+  bandwidth_package_id              = "bwp-rp2nx3ab"
   ipv4_address_type                 = "AntiDDoSEIP"
-  anti_ddos_package_id              = "bgp-xxxxxxx"
+  anti_ddos_package_id              = "bgp-31400fvq"
   is_keep_eip                       = true
   password                          = "Test@123#"
   enhanced_security_service         = false

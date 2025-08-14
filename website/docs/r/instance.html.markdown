@@ -260,27 +260,28 @@ resource "tencentcloud_instance" "example" {
 
 ```hcl
 resource "tencentcloud_instance" "example" {
-  instance_name        = "tf-example"
-  availability_zone    = "ap-guangzhou-6"
-  image_id             = "img-eb30mz89"
-  instance_type        = "S5.MEDIUM4"
-  system_disk_type     = "CLOUD_HSSD"
-  system_disk_size     = 50
-  hostname             = "user"
-  project_id           = 0
-  vpc_id               = "vpc-i5yyodl9"
-  subnet_id            = "subnet-hhi88a58"
-  internet_charge_type = "BANDWIDTH_PACKAGE"
-  bandwidth_package_id = "bwp-4ocyia9s"
-  ipv4_address_type    = "AntiDDoSEIP"
-  anti_ddos_package_id = "bgp-xxxxxxx"
-
+  instance_name              = "tf-example"
+  availability_zone          = "ap-guangzhou-6"
+  image_id                   = "img-eb30mz89"
+  instance_type              = "S5.MEDIUM4"
+  system_disk_type           = "CLOUD_HSSD"
+  system_disk_size           = 50
+  hostname                   = "user"
+  project_id                 = 0
+  vpc_id                     = "vpc-i5yyodl9"
+  subnet_id                  = "subnet-hhi88a58"
+  orderly_security_groups    = ["sg-l222vn6w"]
+  internet_charge_type       = "BANDWIDTH_PACKAGE"
+  bandwidth_package_id       = "bwp-rp2nx3ab"
+  ipv4_address_type          = "AntiDDoSEIP"
+  anti_ddos_package_id       = "bgp-31400fvq"
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 100
   data_disks {
     data_disk_type = "CLOUD_HSSD"
     data_disk_size = 100
     encrypt        = false
   }
-
   tags = {
     tagKey = "tagValue"
   }
