@@ -8,6 +8,8 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** When creating a CVM instance using a `launch_template_id`, if you set other parameter values ​​at the same time, the template definition values ​​will be overwritten.
 
+~> **NOTE:** It is recommended to use resource `tencentcloud_eip` to create a AntiDDos Eip, and then call resource `tencentcloud_eip_association` to bind it to resource `tencentcloud_instance`.
+
 Example Usage
 
 Create a general POSTPAID_BY_HOUR CVM instance
@@ -240,6 +242,38 @@ Create CVM instance with template
 resource "tencentcloud_instance" "example" {
   launch_template_id      = "lt-b20scl2a"
   launch_template_version = 1
+}
+```
+
+Create CVM instance with AntiDDos Eip
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name              = "tf-example"
+  availability_zone          = "ap-guangzhou-6"
+  image_id                   = "img-eb30mz89"
+  instance_type              = "S5.MEDIUM4"
+  system_disk_type           = "CLOUD_HSSD"
+  system_disk_size           = 50
+  hostname                   = "user"
+  project_id                 = 0
+  vpc_id                     = "vpc-i5yyodl9"
+  subnet_id                  = "subnet-hhi88a58"
+  orderly_security_groups    = ["sg-l222vn6w"]
+  internet_charge_type       = "BANDWIDTH_PACKAGE"
+  bandwidth_package_id       = "bwp-rp2nx3ab"
+  ipv4_address_type          = "AntiDDoSEIP"
+  anti_ddos_package_id       = "bgp-31400fvq"
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 100
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+  tags = {
+    tagKey = "tagValue"
+  }
 }
 ```
 

@@ -19,6 +19,8 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** When creating a CVM instance using a `launch_template_id`, if you set other parameter values ​​at the same time, the template definition values ​​will be overwritten.
 
+~> **NOTE:** It is recommended to use resource `tencentcloud_eip` to create a AntiDDos Eip, and then call resource `tencentcloud_eip_association` to bind it to resource `tencentcloud_instance`.
+
 ## Example Usage
 
 ### Create a general POSTPAID_BY_HOUR CVM instance
@@ -254,11 +256,44 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+### Create CVM instance with AntiDDos Eip
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name              = "tf-example"
+  availability_zone          = "ap-guangzhou-6"
+  image_id                   = "img-eb30mz89"
+  instance_type              = "S5.MEDIUM4"
+  system_disk_type           = "CLOUD_HSSD"
+  system_disk_size           = 50
+  hostname                   = "user"
+  project_id                 = 0
+  vpc_id                     = "vpc-i5yyodl9"
+  subnet_id                  = "subnet-hhi88a58"
+  orderly_security_groups    = ["sg-l222vn6w"]
+  internet_charge_type       = "BANDWIDTH_PACKAGE"
+  bandwidth_package_id       = "bwp-rp2nx3ab"
+  ipv4_address_type          = "AntiDDoSEIP"
+  anti_ddos_package_id       = "bgp-31400fvq"
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 100
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `allocate_public_ip` - (Optional, Bool, ForceNew) Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.
+* `anti_ddos_package_id` - (Optional, String, ForceNew) Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.
 * `availability_zone` - (Optional, String, ForceNew) The available zone for the CVM instance.
 * `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
@@ -282,6 +317,7 @@ The following arguments are supported:
 * `instance_type` - (Optional, String) The type of the instance.
 * `internet_charge_type` - (Optional, String) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. If not set, internet charge type are consistent with the cvm charge type by default. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.
 * `internet_max_bandwidth_out` - (Optional, Int) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.
+* `ipv4_address_type` - (Optional, String, ForceNew) AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.
 * `keep_image_login` - (Optional, Bool) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifications may lead to the reinstallation of the instance's operating system..
 * `key_ids` - (Optional, Set: [`String`]) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.
 * `key_name` - (Optional, String, **Deprecated**) Please use `key_ids` instead. The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.

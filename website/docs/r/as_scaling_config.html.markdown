@@ -61,7 +61,7 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
-### charge type
+### Using SPOTPAID charge type
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -187,12 +187,65 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
+### Create configuration with AntiDDos Eip
+
+```hcl
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 4 for x86_64"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name = "tf-example"
+  image_id           = data.tencentcloud_images.example.images.0.image_id
+  instance_types     = ["SA5.MEDIUM4"]
+  project_id         = 0
+  system_disk_type   = "CLOUD_HSSD"
+  system_disk_size   = "50"
+  security_group_ids = ["sg-l222vn6w"]
+
+  data_disk {
+    disk_type = "CLOUD_HSSD"
+    disk_size = 50
+  }
+
+  internet_charge_type              = "BANDWIDTH_PACKAGE"
+  internet_max_bandwidth_out        = 100
+  public_ip_assigned                = true
+  bandwidth_package_id              = "bwp-rp2nx3ab"
+  ipv4_address_type                 = "AntiDDoSEIP"
+  anti_ddos_package_id              = "bgp-31400fvq"
+  is_keep_eip                       = true
+  password                          = "Test@123#"
+  enhanced_security_service         = false
+  enhanced_monitor_service          = false
+  enhanced_automation_tools_service = false
+  user_data                         = "dGVzdA=="
+
+  host_name_settings {
+    host_name       = "host-name"
+    host_name_style = "UNIQUE"
+  }
+
+  instance_tags = {
+    tag = "example"
+  }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `configuration_name` - (Required, String) Name of a launch configuration.
 * `instance_types` - (Required, List: [`String`]) Specified types of CVM instances.
+* `anti_ddos_package_id` - (Optional, String) Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.
+* `bandwidth_package_id` - (Optional, String) Bandwidth package ID.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `dedicated_cluster_id` - (Optional, String) Dedicated Cluster ID.
@@ -211,6 +264,8 @@ The following arguments are supported:
 * `instance_tags` - (Optional, Map) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
+* `ipv4_address_type` - (Optional, String) AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.
+* `is_keep_eip` - (Optional, Bool) Whether to delete the bound EIP when the instance is destroyed. Range of values: True: retain the EIP; False: not retain the EIP. Note that when the IPv4AddressType field specifies the EIP type, the default behavior is not to retain the EIP. WanIP is unaffected by this field and will always be deleted with the instance. Changing this field configuration will take effect immediately for resources already bound to a scaling group.
 * `keep_image_login` - (Optional, Bool) Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.
 * `key_ids` - (Optional, List: [`String`]) ID list of keys.
 * `password` - (Optional, String) Password to access.
