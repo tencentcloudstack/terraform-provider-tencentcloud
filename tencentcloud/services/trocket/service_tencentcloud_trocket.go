@@ -220,6 +220,7 @@ func (me *TrocketService) DescribeTrocketRocketmqConsumerGroupById(ctx context.C
 	logId := tccommon.GetLogId(ctx)
 
 	request := trocket.NewDescribeConsumerGroupRequest()
+	response := trocket.NewDescribeConsumerGroupResponse()
 	request.InstanceId = &instanceId
 	request.ConsumerGroup = &consumerGroup
 
@@ -229,14 +230,27 @@ func (me *TrocketService) DescribeTrocketRocketmqConsumerGroupById(ctx context.C
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTrocketClient().DescribeConsumerGroup(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTrocketClient().DescribeConsumerGroup(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe consumer group failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	rocketmqConsumerGroup = response.Response
 	return
@@ -255,14 +269,22 @@ func (me *TrocketService) DeleteTrocketRocketmqConsumerGroupById(ctx context.Con
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTrocketClient().DeleteConsumerGroup(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTrocketClient().DeleteConsumerGroup(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

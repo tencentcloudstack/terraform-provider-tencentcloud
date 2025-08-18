@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -57,6 +58,13 @@ func ResourceTencentCloudTrocketRocketmqTopic() *schema.Resource {
 				Optional:    true,
 				Description: "remark.",
 			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag of topic.",
+			},
 		},
 	}
 }
@@ -67,6 +75,7 @@ func resourceTencentCloudTrocketRocketmqTopicCreate(d *schema.ResourceData, meta
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request    = trocket.NewCreateTopicRequest()
 		response   = trocket.NewCreateTopicResponse()
 		instanceId string
@@ -102,7 +111,7 @@ func resourceTencentCloudTrocketRocketmqTopicCreate(d *schema.ResourceData, meta
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create trocket rocketmqTopic failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create trocket rocketmq topic failed, Response is nil."))
 		}
 
 		response = result
@@ -110,7 +119,7 @@ func resourceTencentCloudTrocketRocketmqTopicCreate(d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create trocket rocketmqTopic failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create trocket rocketmq topic failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -121,6 +130,16 @@ func resourceTencentCloudTrocketRocketmqTopicCreate(d *schema.ResourceData, meta
 	instanceId = *response.Response.InstanceId
 	topic = *response.Response.Topic
 	d.SetId(strings.Join([]string{instanceId, topic}, tccommon.FILED_SP))
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := fmt.Sprintf("qcs::trocket:%s:uin/:topic/%s/%s", region, instanceId, topic)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudTrocketRocketmqTopicRead(d, meta)
 }
 
@@ -148,7 +167,7 @@ func resourceTencentCloudTrocketRocketmqTopicRead(d *schema.ResourceData, meta i
 	}
 
 	if rocketmqTopic == nil {
-		log.Printf("[WARN]%s resource `TrocketRocketmqTopic` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_trocket_rocketmq_topic` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -173,6 +192,15 @@ func resourceTencentCloudTrocketRocketmqTopicRead(d *schema.ResourceData, meta i
 		_ = d.Set("remark", rocketmqTopic.Remark)
 	}
 
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	tags, err := tagService.DescribeResourceTags(ctx, "trocket", "topic", tcClient.Region, fmt.Sprintf("%s/%s", instanceId, topic))
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -182,6 +210,7 @@ func resourceTencentCloudTrocketRocketmqTopicUpdate(d *schema.ResourceData, meta
 
 	var (
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request = trocket.NewModifyTopicRequest()
 	)
 
@@ -194,9 +223,6 @@ func resourceTencentCloudTrocketRocketmqTopicUpdate(d *schema.ResourceData, meta
 	topic := idSplit[1]
 
 	if d.HasChange("queue_num") || d.HasChange("remark") {
-		request.InstanceId = &instanceId
-		request.Topic = &topic
-
 		if v, ok := d.GetOkExists("queue_num"); ok {
 			request.QueueNum = helper.IntInt64(v.(int))
 		}
@@ -205,6 +231,8 @@ func resourceTencentCloudTrocketRocketmqTopicUpdate(d *schema.ResourceData, meta
 			request.Remark = helper.String(v.(string))
 		}
 
+		request.InstanceId = &instanceId
+		request.Topic = &topic
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTrocketClient().ModifyTopic(request)
 			if e != nil {
@@ -217,7 +245,18 @@ func resourceTencentCloudTrocketRocketmqTopicUpdate(d *schema.ResourceData, meta
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s update trocket rocketmqTopic failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update trocket rocketmq topic failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("trocket", "topic", tcClient.Region, fmt.Sprintf("%s/%s", instanceId, topic))
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 	}
@@ -242,7 +281,6 @@ func resourceTencentCloudTrocketRocketmqTopicDelete(d *schema.ResourceData, meta
 
 	instanceId := idSplit[0]
 	topic := idSplit[1]
-
 	if err := service.DeleteTrocketRocketmqTopicById(ctx, instanceId, topic); err != nil {
 		return err
 	}
