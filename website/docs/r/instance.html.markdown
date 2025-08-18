@@ -21,6 +21,8 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** It is recommended to use resource `tencentcloud_eip` to create a AntiDDos Eip, and then call resource `tencentcloud_eip_association` to bind it to resource `tencentcloud_instance`.
 
+~> **NOTE:** When creating a prepaid CVM instance and binding a data disk, you need to explicitly set `delete_with_instance` to `false`.
+
 ## Example Usage
 
 ### Create a general POSTPAID_BY_HOUR CVM instance
