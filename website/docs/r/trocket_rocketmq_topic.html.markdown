@@ -54,6 +54,9 @@ resource "tencentcloud_trocket_rocketmq_topic" "example" {
   topic_type  = "NORMAL"
   queue_num   = 4
   remark      = "remark."
+  tags = {
+    createBy = "Terraform"
+  }
 }
 ```
 
@@ -66,6 +69,7 @@ The following arguments are supported:
 * `topic_type` - (Required, String, ForceNew) Topic type. `UNSPECIFIED`: not specified, `NORMAL`: normal message, `FIFO`: sequential message, `DELAY`: delayed message.
 * `topic` - (Required, String, ForceNew) topic.
 * `remark` - (Optional, String) remark.
+* `tags` - (Optional, Map) Tag of topic.
 
 ## Attributes Reference
 

@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_trocket_rocketmq_topic: support `tags`
+```
+
+```release-note:enhancement
+resource/tencentcloud_trocket_rocketmq_consumer_group: support `tags`
+```

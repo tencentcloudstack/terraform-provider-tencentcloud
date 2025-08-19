@@ -43,6 +43,9 @@ resource "tencentcloud_trocket_rocketmq_topic" "example" {
   topic_type  = "NORMAL"
   queue_num   = 4
   remark      = "remark."
+  tags = {
+    createBy = "Terraform"
+  }
 }
 ```
 
