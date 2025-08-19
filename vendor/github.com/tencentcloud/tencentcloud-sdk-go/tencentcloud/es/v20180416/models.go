@@ -15,9 +15,9 @@
 package v20180416
 
 import (
-    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 type AutoScaleDiskInfo struct {
@@ -98,7 +98,7 @@ type CheckMigrateIndexMetaDataRequestParams struct {
 
 type CheckMigrateIndexMetaDataRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 索引 id
 	ServerlessId *string `json:"ServerlessId,omitnil,omitempty" name:"ServerlessId"`
 
@@ -122,8 +122,8 @@ type CheckMigrateIndexMetaDataRequest struct {
 }
 
 func (r *CheckMigrateIndexMetaDataRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -167,8 +167,8 @@ type CheckMigrateIndexMetaDataResponse struct {
 }
 
 func (r *CheckMigrateIndexMetaDataResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -321,7 +321,7 @@ type CreateClusterSnapshotRequestParams struct {
 
 type CreateClusterSnapshotRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例名称
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -333,8 +333,8 @@ type CreateClusterSnapshotRequest struct {
 }
 
 func (r *CreateClusterSnapshotRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -369,8 +369,8 @@ type CreateClusterSnapshotResponse struct {
 }
 
 func (r *CreateClusterSnapshotResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -405,7 +405,7 @@ type CreateCosMigrateToServerlessInstanceRequestParams struct {
 
 type CreateCosMigrateToServerlessInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 快照名
 	Snapshot *string `json:"Snapshot,omitnil,omitempty" name:"Snapshot"`
 
@@ -429,8 +429,8 @@ type CreateCosMigrateToServerlessInstanceRequest struct {
 }
 
 func (r *CreateCosMigrateToServerlessInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -468,8 +468,8 @@ type CreateCosMigrateToServerlessInstanceResponse struct {
 }
 
 func (r *CreateCosMigrateToServerlessInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -501,7 +501,7 @@ type CreateIndexRequestParams struct {
 
 type CreateIndexRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES集群ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -522,8 +522,8 @@ type CreateIndexRequest struct {
 }
 
 func (r *CreateIndexRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -557,8 +557,8 @@ type CreateIndexResponse struct {
 }
 
 func (r *CreateIndexResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -706,7 +706,7 @@ type CreateInstanceRequestParams struct {
 
 type CreateInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 可用区
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
@@ -843,8 +843,8 @@ type CreateInstanceRequest struct {
 }
 
 func (r *CreateInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -921,8 +921,8 @@ type CreateInstanceResponse struct {
 }
 
 func (r *CreateInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -996,7 +996,7 @@ type CreateLogstashInstanceRequestParams struct {
 
 type CreateLogstashInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例名称（1-50 个英文、汉字、数字、连接线-或下划线_）
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
@@ -1059,8 +1059,8 @@ type CreateLogstashInstanceRequest struct {
 }
 
 func (r *CreateLogstashInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1111,8 +1111,8 @@ type CreateLogstashInstanceResponse struct {
 }
 
 func (r *CreateLogstashInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1162,7 +1162,7 @@ type CreateServerlessInstanceRequestParams struct {
 
 type CreateServerlessInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 索引名，需以-AppId结尾
 	IndexName *string `json:"IndexName,omitnil,omitempty" name:"IndexName"`
 
@@ -1201,8 +1201,8 @@ type CreateServerlessInstanceRequest struct {
 }
 
 func (r *CreateServerlessInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1249,8 +1249,8 @@ type CreateServerlessInstanceResponse struct {
 }
 
 func (r *CreateServerlessInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1282,7 +1282,7 @@ type CreateServerlessSpaceV2RequestParams struct {
 
 type CreateServerlessSpaceV2Request struct {
 	*tchttp.BaseRequest
-	
+
 	// vpc信息
 	VpcInfo []*VpcInfo `json:"VpcInfo,omitnil,omitempty" name:"VpcInfo"`
 
@@ -1303,8 +1303,8 @@ type CreateServerlessSpaceV2Request struct {
 }
 
 func (r *CreateServerlessSpaceV2Request) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1341,8 +1341,8 @@ type CreateServerlessSpaceV2Response struct {
 }
 
 func (r *CreateServerlessSpaceV2Response) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1375,7 +1375,7 @@ type DeleteClusterSnapshotRequestParams struct {
 
 type DeleteClusterSnapshotRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例Id，格式：es-xxxx
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -1387,8 +1387,8 @@ type DeleteClusterSnapshotRequest struct {
 }
 
 func (r *DeleteClusterSnapshotRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1422,8 +1422,8 @@ type DeleteClusterSnapshotResponse struct {
 }
 
 func (r *DeleteClusterSnapshotResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1455,7 +1455,7 @@ type DeleteIndexRequestParams struct {
 
 type DeleteIndexRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES集群ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -1476,8 +1476,8 @@ type DeleteIndexRequest struct {
 }
 
 func (r *DeleteIndexRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1511,8 +1511,8 @@ type DeleteIndexResponse struct {
 }
 
 func (r *DeleteIndexResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1529,14 +1529,14 @@ type DeleteInstanceRequestParams struct {
 
 type DeleteInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *DeleteInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1565,8 +1565,8 @@ type DeleteInstanceResponse struct {
 }
 
 func (r *DeleteInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1583,14 +1583,14 @@ type DeleteLogstashInstanceRequestParams struct {
 
 type DeleteLogstashInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *DeleteLogstashInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1619,8 +1619,8 @@ type DeleteLogstashInstanceResponse struct {
 }
 
 func (r *DeleteLogstashInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1640,7 +1640,7 @@ type DeleteLogstashPipelinesRequestParams struct {
 
 type DeleteLogstashPipelinesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -1649,8 +1649,8 @@ type DeleteLogstashPipelinesRequest struct {
 }
 
 func (r *DeleteLogstashPipelinesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1680,8 +1680,8 @@ type DeleteLogstashPipelinesResponse struct {
 }
 
 func (r *DeleteLogstashPipelinesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1698,14 +1698,14 @@ type DeleteServerlessInstanceRequestParams struct {
 
 type DeleteServerlessInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// serverless实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *DeleteServerlessInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1734,8 +1734,8 @@ type DeleteServerlessInstanceResponse struct {
 }
 
 func (r *DeleteServerlessInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1755,7 +1755,7 @@ type DeleteServerlessSpaceUserRequestParams struct {
 
 type DeleteServerlessSpaceUserRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 空间的ID
 	SpaceId *string `json:"SpaceId,omitnil,omitempty" name:"SpaceId"`
 
@@ -1764,8 +1764,8 @@ type DeleteServerlessSpaceUserRequest struct {
 }
 
 func (r *DeleteServerlessSpaceUserRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1795,8 +1795,8 @@ type DeleteServerlessSpaceUserResponse struct {
 }
 
 func (r *DeleteServerlessSpaceUserResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1819,7 +1819,7 @@ type DescribeClusterSnapshotRequestParams struct {
 
 type DescribeClusterSnapshotRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例Id，格式：es-xxxx
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -1831,8 +1831,8 @@ type DescribeClusterSnapshotRequest struct {
 }
 
 func (r *DescribeClusterSnapshotRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1872,8 +1872,8 @@ type DescribeClusterSnapshotResponse struct {
 }
 
 func (r *DescribeClusterSnapshotResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1896,7 +1896,7 @@ type DescribeDiagnoseRequestParams struct {
 
 type DescribeDiagnoseRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -1908,8 +1908,8 @@ type DescribeDiagnoseRequest struct {
 }
 
 func (r *DescribeDiagnoseRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1946,8 +1946,8 @@ type DescribeDiagnoseResponse struct {
 }
 
 func (r *DescribeDiagnoseResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1991,7 +1991,7 @@ type DescribeIndexListRequestParams struct {
 
 type DescribeIndexListRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 索引类型。auto：自治索引；normal：普通索引
 	IndexType *string `json:"IndexType,omitnil,omitempty" name:"IndexType"`
 
@@ -2024,8 +2024,8 @@ type DescribeIndexListRequest struct {
 }
 
 func (r *DescribeIndexListRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2071,8 +2071,8 @@ type DescribeIndexListResponse struct {
 }
 
 func (r *DescribeIndexListResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2101,7 +2101,7 @@ type DescribeIndexMetaRequestParams struct {
 
 type DescribeIndexMetaRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES集群ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -2119,8 +2119,8 @@ type DescribeIndexMetaRequest struct {
 }
 
 func (r *DescribeIndexMetaRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2157,8 +2157,8 @@ type DescribeIndexMetaResponse struct {
 }
 
 func (r *DescribeIndexMetaResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2202,7 +2202,7 @@ type DescribeInstanceLogsRequestParams struct {
 
 type DescribeInstanceLogsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -2235,8 +2235,8 @@ type DescribeInstanceLogsRequest struct {
 }
 
 func (r *DescribeInstanceLogsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2278,8 +2278,8 @@ type DescribeInstanceLogsResponse struct {
 }
 
 func (r *DescribeInstanceLogsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2308,7 +2308,7 @@ type DescribeInstanceOperationsRequestParams struct {
 
 type DescribeInstanceOperationsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -2326,8 +2326,8 @@ type DescribeInstanceOperationsRequest struct {
 }
 
 func (r *DescribeInstanceOperationsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2366,8 +2366,8 @@ type DescribeInstanceOperationsResponse struct {
 }
 
 func (r *DescribeInstanceOperationsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2422,7 +2422,7 @@ type DescribeInstancePluginListRequestParams struct {
 
 type DescribeInstancePluginListRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -2443,8 +2443,8 @@ type DescribeInstancePluginListRequest struct {
 }
 
 func (r *DescribeInstancePluginListRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2484,8 +2484,8 @@ type DescribeInstancePluginListResponse struct {
 }
 
 func (r *DescribeInstancePluginListResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2538,7 +2538,7 @@ type DescribeInstancesRequestParams struct {
 
 type DescribeInstancesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例所属可用区，不传则默认所有可用区
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
@@ -2580,8 +2580,8 @@ type DescribeInstancesRequest struct {
 }
 
 func (r *DescribeInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2628,8 +2628,8 @@ type DescribeInstancesResponse struct {
 }
 
 func (r *DescribeInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2672,7 +2672,7 @@ type DescribeLogstashInstanceLogsRequestParams struct {
 
 type DescribeLogstashInstanceLogsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -2704,8 +2704,8 @@ type DescribeLogstashInstanceLogsRequest struct {
 }
 
 func (r *DescribeLogstashInstanceLogsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2747,8 +2747,8 @@ type DescribeLogstashInstanceLogsResponse struct {
 }
 
 func (r *DescribeLogstashInstanceLogsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2777,7 +2777,7 @@ type DescribeLogstashInstanceOperationsRequestParams struct {
 
 type DescribeLogstashInstanceOperationsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -2795,8 +2795,8 @@ type DescribeLogstashInstanceOperationsRequest struct {
 }
 
 func (r *DescribeLogstashInstanceOperationsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2835,8 +2835,8 @@ type DescribeLogstashInstanceOperationsResponse struct {
 }
 
 func (r *DescribeLogstashInstanceOperationsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2877,7 +2877,7 @@ type DescribeLogstashInstancesRequestParams struct {
 
 type DescribeLogstashInstancesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例所属可用区，不传则默认所有可用区
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
@@ -2907,8 +2907,8 @@ type DescribeLogstashInstancesRequest struct {
 }
 
 func (r *DescribeLogstashInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2951,8 +2951,8 @@ type DescribeLogstashInstancesResponse struct {
 }
 
 func (r *DescribeLogstashInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2969,14 +2969,14 @@ type DescribeLogstashPipelinesRequestParams struct {
 
 type DescribeLogstashPipelinesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *DescribeLogstashPipelinesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3011,8 +3011,8 @@ type DescribeLogstashPipelinesResponse struct {
 }
 
 func (r *DescribeLogstashPipelinesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3056,7 +3056,7 @@ type DescribeServerlessInstancesRequestParams struct {
 
 type DescribeServerlessInstancesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 索引集群ID
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
@@ -3089,8 +3089,8 @@ type DescribeServerlessInstancesRequest struct {
 }
 
 func (r *DescribeServerlessInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3136,8 +3136,8 @@ type DescribeServerlessInstancesResponse struct {
 }
 
 func (r *DescribeServerlessInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3166,7 +3166,7 @@ type DescribeServerlessMetricsRequestParams struct {
 
 type DescribeServerlessMetricsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// space空间id
 	SpaceId *string `json:"SpaceId,omitnil,omitempty" name:"SpaceId"`
 
@@ -3184,8 +3184,8 @@ type DescribeServerlessMetricsRequest struct {
 }
 
 func (r *DescribeServerlessMetricsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3237,8 +3237,8 @@ type DescribeServerlessMetricsResponse struct {
 }
 
 func (r *DescribeServerlessMetricsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3270,7 +3270,7 @@ type DescribeServerlessSpaceUserRequestParams struct {
 
 type DescribeServerlessSpaceUserRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 空间的ID
 	SpaceId *string `json:"SpaceId,omitnil,omitempty" name:"SpaceId"`
 
@@ -3291,8 +3291,8 @@ type DescribeServerlessSpaceUserRequest struct {
 }
 
 func (r *DescribeServerlessSpaceUserRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3332,8 +3332,8 @@ type DescribeServerlessSpaceUserResponse struct {
 }
 
 func (r *DescribeServerlessSpaceUserResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3371,7 +3371,7 @@ type DescribeServerlessSpacesRequestParams struct {
 
 type DescribeServerlessSpacesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 过滤的空间ID
 	SpaceIds []*string `json:"SpaceIds,omitnil,omitempty" name:"SpaceIds"`
 
@@ -3398,8 +3398,8 @@ type DescribeServerlessSpacesRequest struct {
 }
 
 func (r *DescribeServerlessSpacesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3443,8 +3443,8 @@ type DescribeServerlessSpacesResponse struct {
 }
 
 func (r *DescribeServerlessSpacesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3461,14 +3461,14 @@ type DescribeSpaceKibanaToolsRequestParams struct {
 
 type DescribeSpaceKibanaToolsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// space的ID
 	SpaceId *string `json:"SpaceId,omitnil,omitempty" name:"SpaceId"`
 }
 
 func (r *DescribeSpaceKibanaToolsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3503,8 +3503,8 @@ type DescribeSpaceKibanaToolsResponse struct {
 }
 
 func (r *DescribeSpaceKibanaToolsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3527,7 +3527,7 @@ type DescribeUserCosSnapshotListRequestParams struct {
 
 type DescribeUserCosSnapshotListRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// cos桶名
 	CosBucket *string `json:"CosBucket,omitnil,omitempty" name:"CosBucket"`
 
@@ -3539,8 +3539,8 @@ type DescribeUserCosSnapshotListRequest struct {
 }
 
 func (r *DescribeUserCosSnapshotListRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3577,8 +3577,8 @@ type DescribeUserCosSnapshotListResponse struct {
 }
 
 func (r *DescribeUserCosSnapshotListResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3595,14 +3595,14 @@ type DescribeViewsRequestParams struct {
 
 type DescribeViewsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *DescribeViewsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3643,8 +3643,8 @@ type DescribeViewsResponse struct {
 }
 
 func (r *DescribeViewsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3850,7 +3850,7 @@ type DiagnoseInstanceRequestParams struct {
 
 type DiagnoseInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -3862,8 +3862,8 @@ type DiagnoseInstanceRequest struct {
 }
 
 func (r *DiagnoseInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3894,8 +3894,8 @@ type DiagnoseInstanceResponse struct {
 }
 
 func (r *DiagnoseInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4093,14 +4093,14 @@ type GetDiagnoseSettingsRequestParams struct {
 
 type GetDiagnoseSettingsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *GetDiagnoseSettingsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4144,8 +4144,8 @@ type GetDiagnoseSettingsResponse struct {
 }
 
 func (r *GetDiagnoseSettingsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4162,14 +4162,14 @@ type GetRequestTargetNodeTypesRequestParams struct {
 
 type GetRequestTargetNodeTypesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *GetRequestTargetNodeTypesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4201,14 +4201,22 @@ type GetRequestTargetNodeTypesResponse struct {
 }
 
 func (r *GetRequestTargetNodeTypesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetRequestTargetNodeTypesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type GpuInfo struct {
+	// Gpu块数
+	GpuCount *int64 `json:"GpuCount,omitnil,omitempty" name:"GpuCount"`
+
+	// Gpu类型
+	GpuType *string `json:"GpuType,omitnil,omitempty" name:"GpuType"`
 }
 
 type IndexMetaField struct {
@@ -4359,14 +4367,14 @@ type InquirePriceRenewInstanceRequestParams struct {
 
 type InquirePriceRenewInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例Id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *InquirePriceRenewInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4407,8 +4415,8 @@ type InquirePriceRenewInstanceResponse struct {
 }
 
 func (r *InquirePriceRenewInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4434,7 +4442,7 @@ type InstallInstanceModelRequestParams struct {
 
 type InstallInstanceModelRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -4449,8 +4457,8 @@ type InstallInstanceModelRequest struct {
 }
 
 func (r *InstallInstanceModelRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4488,8 +4496,8 @@ type InstallInstanceModelResponse struct {
 }
 
 func (r *InstallInstanceModelResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4527,7 +4535,7 @@ type InstanceInfo struct {
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 自动续费标识。取值范围：
-	// RENEW_FLAG_AUTO：自动续费  
+	// RENEW_FLAG_AUTO：自动续费
 	// RENEW_FLAG_MANUAL：不自动续费
 	// 默认取值：
 	// RENEW_FLAG_DEFAULT：不自动续费
@@ -4846,6 +4854,9 @@ type InstanceInfo struct {
 
 	// kibana内网访问地址
 	ShowKibanaIpPort *string `json:"ShowKibanaIpPort,omitnil,omitempty" name:"ShowKibanaIpPort"`
+
+	// 是否为CDZLite可用区
+	IsCdzLite *bool `json:"IsCdzLite,omitnil,omitempty" name:"IsCdzLite"`
 }
 
 type InstanceLog struct {
@@ -5254,7 +5265,7 @@ type ModifyEsVipSecurityGroupRequestParams struct {
 
 type ModifyEsVipSecurityGroupRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// es集群的实例id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -5263,8 +5274,8 @@ type ModifyEsVipSecurityGroupRequest struct {
 }
 
 func (r *ModifyEsVipSecurityGroupRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5294,8 +5305,8 @@ type ModifyEsVipSecurityGroupResponse struct {
 }
 
 func (r *ModifyEsVipSecurityGroupResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5344,6 +5355,10 @@ type NodeInfo struct {
 	// /
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskEnhance *int64 `json:"DiskEnhance,omitnil,omitempty" name:"DiskEnhance"`
+
+	// 节点Gpu信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GpuInfo *GpuInfo `json:"GpuInfo,omitnil,omitempty" name:"GpuInfo"`
 }
 
 type NodeView struct {
@@ -5572,7 +5587,7 @@ type RestartInstanceRequestParams struct {
 
 type RestartInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -5587,8 +5602,8 @@ type RestartInstanceRequest struct {
 }
 
 func (r *RestartInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5620,8 +5635,8 @@ type RestartInstanceResponse struct {
 }
 
 func (r *RestartInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5638,14 +5653,14 @@ type RestartKibanaRequestParams struct {
 
 type RestartKibanaRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *RestartKibanaRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5674,8 +5689,8 @@ type RestartKibanaResponse struct {
 }
 
 func (r *RestartKibanaResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5695,7 +5710,7 @@ type RestartLogstashInstanceRequestParams struct {
 
 type RestartLogstashInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -5704,8 +5719,8 @@ type RestartLogstashInstanceRequest struct {
 }
 
 func (r *RestartLogstashInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5735,8 +5750,8 @@ type RestartLogstashInstanceResponse struct {
 }
 
 func (r *RestartLogstashInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5783,7 +5798,7 @@ type RestartNodesRequestParams struct {
 
 type RestartNodesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -5819,8 +5834,8 @@ type RestartNodesRequest struct {
 }
 
 func (r *RestartNodesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5859,8 +5874,8 @@ type RestartNodesResponse struct {
 }
 
 func (r *RestartNodesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5893,19 +5908,19 @@ type RestoreClusterSnapshotRequestParams struct {
 	IncludeGlobalState []*string `json:"IncludeGlobalState,omitnil,omitempty" name:"IncludeGlobalState"`
 
 	// 需要恢复的索引名称，非必填，为空则表示恢复所有
-	// 
+	//
 	// 支持传多个索引名称
 	Indices *string `json:"Indices,omitnil,omitempty" name:"Indices"`
 
 	// 如果为 false，则如果快照中包含的一个或多个索引没有所有主分片可用，则整个恢复操作将失败。默认为 false,
-	// 
+	//
 	// 如果为 true，则允许恢复具有不可用分片的索引的部分快照。只有成功包含在快照中的分片才会被恢复。所有丢失的碎片将被重新创建为空
 	Partial *string `json:"Partial,omitnil,omitempty" name:"Partial"`
 }
 
 type RestoreClusterSnapshotRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 集群实例Id，格式：es-xxxx
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -5928,19 +5943,19 @@ type RestoreClusterSnapshotRequest struct {
 	IncludeGlobalState []*string `json:"IncludeGlobalState,omitnil,omitempty" name:"IncludeGlobalState"`
 
 	// 需要恢复的索引名称，非必填，为空则表示恢复所有
-	// 
+	//
 	// 支持传多个索引名称
 	Indices *string `json:"Indices,omitnil,omitempty" name:"Indices"`
 
 	// 如果为 false，则如果快照中包含的一个或多个索引没有所有主分片可用，则整个恢复操作将失败。默认为 false,
-	// 
+	//
 	// 如果为 true，则允许恢复具有不可用分片的索引的部分快照。只有成功包含在快照中的分片才会被恢复。所有丢失的碎片将被重新创建为空
 	Partial *string `json:"Partial,omitnil,omitempty" name:"Partial"`
 }
 
 func (r *RestoreClusterSnapshotRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5980,8 +5995,8 @@ type RestoreClusterSnapshotResponse struct {
 }
 
 func (r *RestoreClusterSnapshotResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6004,7 +6019,7 @@ type SaveAndDeployLogstashPipelineRequestParams struct {
 
 type SaveAndDeployLogstashPipelineRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -6016,8 +6031,8 @@ type SaveAndDeployLogstashPipelineRequest struct {
 }
 
 func (r *SaveAndDeployLogstashPipelineRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6048,8 +6063,8 @@ type SaveAndDeployLogstashPipelineResponse struct {
 }
 
 func (r *SaveAndDeployLogstashPipelineResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6343,13 +6358,13 @@ type Snapshots struct {
 	DataStreams []*string `json:"DataStreams,omitnil,omitempty" name:"DataStreams"`
 
 	// 备份的状态
-	// 
+	//
 	// FAILED            备份失败
-	// 
+	//
 	// IN_PROGRESS 备份执行中
-	// 
+	//
 	// PARTIAL          备份部分成功，部分失败，备份失败的索引和原因会在Failures字段中展示
-	// 
+	//
 	// SUCCESS     备份成功
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	State *string `json:"State,omitnil,omitempty" name:"State"`
@@ -6398,7 +6413,7 @@ type StartLogstashPipelinesRequestParams struct {
 
 type StartLogstashPipelinesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -6407,8 +6422,8 @@ type StartLogstashPipelinesRequest struct {
 }
 
 func (r *StartLogstashPipelinesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6438,8 +6453,8 @@ type StartLogstashPipelinesResponse struct {
 }
 
 func (r *StartLogstashPipelinesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6459,7 +6474,7 @@ type StopLogstashPipelinesRequestParams struct {
 
 type StopLogstashPipelinesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -6468,8 +6483,8 @@ type StopLogstashPipelinesRequest struct {
 }
 
 func (r *StopLogstashPipelinesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6499,8 +6514,8 @@ type StopLogstashPipelinesResponse struct {
 }
 
 func (r *StopLogstashPipelinesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6579,7 +6594,7 @@ type UpdateDiagnoseSettingsRequestParams struct {
 
 type UpdateDiagnoseSettingsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -6591,8 +6606,8 @@ type UpdateDiagnoseSettingsRequest struct {
 }
 
 func (r *UpdateDiagnoseSettingsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6623,8 +6638,8 @@ type UpdateDiagnoseSettingsResponse struct {
 }
 
 func (r *UpdateDiagnoseSettingsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6659,7 +6674,7 @@ type UpdateDictionariesRequestParams struct {
 
 type UpdateDictionariesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -6683,8 +6698,8 @@ type UpdateDictionariesRequest struct {
 }
 
 func (r *UpdateDictionariesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6719,8 +6734,8 @@ type UpdateDictionariesResponse struct {
 }
 
 func (r *UpdateDictionariesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6755,7 +6770,7 @@ type UpdateIndexRequestParams struct {
 
 type UpdateIndexRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES集群ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -6779,8 +6794,8 @@ type UpdateIndexRequest struct {
 }
 
 func (r *UpdateIndexRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6815,8 +6830,8 @@ type UpdateIndexResponse struct {
 }
 
 func (r *UpdateIndexResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6988,7 +7003,7 @@ type UpdateInstanceRequestParams struct {
 
 type UpdateInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7149,8 +7164,8 @@ type UpdateInstanceRequest struct {
 }
 
 func (r *UpdateInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7228,8 +7243,8 @@ type UpdateInstanceResponse struct {
 }
 
 func (r *UpdateInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7255,7 +7270,7 @@ type UpdateJdkRequestParams struct {
 
 type UpdateJdkRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// ES实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7270,8 +7285,8 @@ type UpdateJdkRequest struct {
 }
 
 func (r *UpdateJdkRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7303,8 +7318,8 @@ type UpdateJdkResponse struct {
 }
 
 func (r *UpdateJdkResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7345,7 +7360,7 @@ type UpdateLogstashInstanceRequestParams struct {
 
 type UpdateLogstashInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7375,8 +7390,8 @@ type UpdateLogstashInstanceRequest struct {
 }
 
 func (r *UpdateLogstashInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7413,8 +7428,8 @@ type UpdateLogstashInstanceResponse struct {
 }
 
 func (r *UpdateLogstashInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7437,7 +7452,7 @@ type UpdateLogstashPipelineDescRequestParams struct {
 
 type UpdateLogstashPipelineDescRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7449,8 +7464,8 @@ type UpdateLogstashPipelineDescRequest struct {
 }
 
 func (r *UpdateLogstashPipelineDescRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7481,8 +7496,8 @@ type UpdateLogstashPipelineDescResponse struct {
 }
 
 func (r *UpdateLogstashPipelineDescResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7514,7 +7529,7 @@ type UpdatePluginsRequestParams struct {
 
 type UpdatePluginsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7535,8 +7550,8 @@ type UpdatePluginsRequest struct {
 }
 
 func (r *UpdatePluginsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7570,8 +7585,8 @@ type UpdatePluginsResponse struct {
 }
 
 func (r *UpdatePluginsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7591,7 +7606,7 @@ type UpdateRequestTargetNodeTypesRequestParams struct {
 
 type UpdateRequestTargetNodeTypesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7600,8 +7615,8 @@ type UpdateRequestTargetNodeTypesRequest struct {
 }
 
 func (r *UpdateRequestTargetNodeTypesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7631,8 +7646,8 @@ type UpdateRequestTargetNodeTypesResponse struct {
 }
 
 func (r *UpdateRequestTargetNodeTypesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7664,7 +7679,7 @@ type UpdateServerlessInstanceRequestParams struct {
 
 type UpdateServerlessInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// Serveless实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7685,8 +7700,8 @@ type UpdateServerlessInstanceRequest struct {
 }
 
 func (r *UpdateServerlessInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7720,8 +7735,8 @@ type UpdateServerlessInstanceResponse struct {
 }
 
 func (r *UpdateServerlessInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7750,7 +7765,7 @@ type UpdateServerlessSpaceRequestParams struct {
 
 type UpdateServerlessSpaceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// Serveless索引空间ID
 	SpaceId *string `json:"SpaceId,omitnil,omitempty" name:"SpaceId"`
 
@@ -7768,8 +7783,8 @@ type UpdateServerlessSpaceRequest struct {
 }
 
 func (r *UpdateServerlessSpaceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7802,8 +7817,8 @@ type UpdateServerlessSpaceResponse struct {
 }
 
 func (r *UpdateServerlessSpaceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7856,7 +7871,7 @@ type UpgradeInstanceRequestParams struct {
 
 type UpgradeInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7898,8 +7913,8 @@ type UpgradeInstanceRequest struct {
 }
 
 func (r *UpgradeInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7940,8 +7955,8 @@ type UpgradeInstanceResponse struct {
 }
 
 func (r *UpgradeInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7973,7 +7988,7 @@ type UpgradeLicenseRequestParams struct {
 
 type UpgradeLicenseRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7994,8 +8009,8 @@ type UpgradeLicenseRequest struct {
 }
 
 func (r *UpgradeLicenseRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8033,8 +8048,8 @@ type UpgradeLicenseResponse struct {
 }
 
 func (r *UpgradeLicenseResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
