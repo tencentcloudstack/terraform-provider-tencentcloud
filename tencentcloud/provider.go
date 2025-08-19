@@ -1041,6 +1041,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rabbitmq_vip_instance":                            trabbit.DataSourceTencentCloudTdmqRabbitmqVipInstance(),
 			"tencentcloud_tdmq_vip_instance":                                     trocket.DataSourceTencentCloudTdmqVipInstance(),
 			"tencentcloud_tdmq_rocketmq_messages":                                trocket.DataSourceTencentCloudTdmqRocketmqMessages(),
+			"tencentcloud_trocket_rocketmq_instances":                            trocket.DataSourceTencentCloudTrocketRocketmqInstances(),
 			"tencentcloud_tdmq_pro_instances":                                    tpulsar.DataSourceTencentCloudTdmqProInstances(),
 			"tencentcloud_tdmq_pro_instance_detail":                              tpulsar.DataSourceTencentCloudTdmqProInstanceDetail(),
 			"tencentcloud_tcmq_queue":                                            tcmq.DataSourceTencentCloudTcmqQueue(),
