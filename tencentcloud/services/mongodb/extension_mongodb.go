@@ -75,10 +75,9 @@ const (
 func TencentMongodbBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_name": {
-			Type:         schema.TypeString,
-			Required:     true,
-			ValidateFunc: tccommon.ValidateStringLengthInRange(2, 35),
-			Description:  "Name of the Mongodb instance.",
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Mongodb instance.",
 		},
 		"memory": {
 			Type:         schema.TypeInt,
