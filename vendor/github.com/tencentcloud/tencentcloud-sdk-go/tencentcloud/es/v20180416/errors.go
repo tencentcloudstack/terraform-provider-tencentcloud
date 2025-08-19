@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@ package v20180416
 const (
 	// 此产品的特有错误码
 
+	// CAM签名/鉴权错误。
+	AUTHFAILURE = "AuthFailure"
+
 	// 当前用户对创建集群实例操作未授权，请添加CAM权限
 	AUTHFAILURE_UNAUTHCREATEINSTANCE = "AuthFailure.UnAuthCreateInstance"
 
@@ -26,17 +29,29 @@ const (
 	// 操作未授权。
 	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
 
+	// 操作失败。
+	FAILEDOPERATION = "FailedOperation"
+
+	// 更新ACL失败
+	FAILEDOPERATION_ACCESSCONTROLLIST = "FailedOperation.AccessControlList"
+
 	// 关闭数据层失败，至少要保留热层和温层其中一层。
 	FAILEDOPERATION_CLOSEDATATIER = "FailedOperation.CloseDataTier"
 
 	// 集群资源配额限制错误。
 	FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
 
+	// cos融合迁移失败
+	FAILEDOPERATION_COSMIGRATE = "FailedOperation.CosMigrate"
+
 	// 节点磁盘块数参数检查失败。
 	FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
 
 	// 集群状态错误。
 	FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+
+	// 集群状态不健康。
+	FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
 
 	// 由于EsDictionaryInfo错误，不允许操纵。
 	FAILEDOPERATION_ESDICTIONARYINFOERROR = "FailedOperation.EsDictionaryInfoError"
@@ -50,6 +65,12 @@ const (
 	// 获取实例的标签列表错误。
 	FAILEDOPERATION_GETTAGINFOERROR = "FailedOperation.GetTagInfoError"
 
+	// 获取user失败
+	FAILEDOPERATION_GETUSER = "FailedOperation.GetUser"
+
+	// 获取快照列表失败
+	FAILEDOPERATION_GETUSERCOSSNAPSHOTLIST = "FailedOperation.GetUserCosSnapshotList"
+
 	// 账户未绑定信用卡或paypal，无法支付。
 	FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
 
@@ -58,6 +79,9 @@ const (
 
 	// 用户未实名认证。
 	FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+
+	// 当前集群已开启销毁保护，无法直接销毁，请解除该保护后再尝试销毁
+	FAILEDOPERATION_OPENDESTROYPROTECTION = "FailedOperation.OpenDestroyProtection"
 
 	// 解码Password时出错。
 	FAILEDOPERATION_PASSWORD = "FailedOperation.Password"
@@ -68,11 +92,17 @@ const (
 	// 请求超时。
 	FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
 
+	// 变更space的kibana语言信息失败
+	FAILEDOPERATION_SPACELANGUAGE = "FailedOperation.SpaceLanguage"
+
 	// 生成询价或者下单签名有误。
 	FAILEDOPERATION_TRADESIGNERROR = "FailedOperation.TradeSignError"
 
 	// 不支持对本地盘集群通过滚动重启方式扩缩容。
 	FAILEDOPERATION_UNSUPPORTEDLOCALDISKROLLUPSCALEUPORDOWN = "FailedOperation.UnsupportedLocalDiskRollUpScaleUpOrDown"
+
+	// 不支持开启低频存储
+	FAILEDOPERATION_UNSUPPORTEDOPENLOWFREQUENCY = "FailedOperation.UnsupportedOpenLowFrequency"
 
 	// 不支持在滚动重启扩容计算资源同时扩容磁盘数量。
 	FAILEDOPERATION_UNSUPPORTEDRESETNODETYPEANDSCALEOUTDISK = "FailedOperation.UnsupportedResetNodeTypeAndScaleOutDisk"
@@ -83,6 +113,9 @@ const (
 	// 不支持反向调节节点配置和磁盘容量。
 	FAILEDOPERATION_UNSUPPORTEDREVERSEREGULATIONNODETYPEANDDISK = "FailedOperation.UnsupportedReverseRegulationNodeTypeAndDisk"
 
+	// 变更space的vpc信息失败
+	FAILEDOPERATION_UPDATEVPC = "FailedOperation.UpdateVpc"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
@@ -91,6 +124,12 @@ const (
 
 	// Gc类型的取值和预期不符。
 	INVALIDPARAMETER_GC = "InvalidParameter.GC"
+
+	// 索引名已存在。
+	INVALIDPARAMETER_INDEXNAMEEXIST = "InvalidParameter.IndexNameExist"
+
+	// 索引名不合法。
+	INVALIDPARAMETER_INDEXNAMEINVALID = "InvalidParameter.IndexNameInvalid"
 
 	// AppId的取值和预期不符。
 	INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
@@ -188,7 +227,7 @@ const (
 	// 节点规格NodeType的取值和预期不符。
 	INVALIDPARAMETER_INVALIDNODETYPE = "InvalidParameter.InvalidNodeType"
 
-	// 温热曾数据结构NodeTypeInfos的取值和预期不符。
+	// 温热层数据结构NodeTypeInfos的取值和预期不符。
 	INVALIDPARAMETER_INVALIDNODETYPESTORAGEINFO = "InvalidParameter.InvalidNodeTypeStorageInfo"
 
 	// 分页起始值Offset的取值和预期不符。
@@ -215,6 +254,9 @@ const (
 	// 外网访问PublicAccess的取值和预期不符。
 	INVALIDPARAMETER_INVALIDPUBLICACCESS = "InvalidParameter.InvalidPublicAccess"
 
+	// 无效的lucene语法
+	INVALIDPARAMETER_INVALIDQUERYSTRING = "InvalidParameter.InvalidQueryString"
+
 	// 地域Region的取值与预期不符。
 	INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
 
@@ -229,6 +271,15 @@ const (
 
 	// 安全组id列表SecurityGroupIds的取值和预期不符。
 	INVALIDPARAMETER_INVALIDSECURITYGROUPIDS = "InvalidParameter.InvalidSecurityGroupIds"
+
+	// ES serverless的serverlessId未找到
+	INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+
+	// ES Serverless的spaceId未找到
+	INVALIDPARAMETER_INVALIDSPACEID = "InvalidParameter.InvalidSpaceId"
+
+	// space的名称错误
+	INVALIDPARAMETER_INVALIDSPACENAMES = "InvalidParameter.InvalidSpaceNames"
 
 	// 子网ID SubnetId的取值与预期不符。
 	INVALIDPARAMETER_INVALIDSUBNETID = "InvalidParameter.InvalidSubnetId"
@@ -257,6 +308,9 @@ const (
 	// 节点类型Type的取值和预期不符。
 	INVALIDPARAMETER_INVALIDTYPE = "InvalidParameter.InvalidType"
 
+	// Uin的取值和预期不符。
+	INVALIDPARAMETER_INVALIDUIN = "InvalidParameter.InvalidUin"
+
 	// 更新的索引元数据json UpdateMetaJson的取值和预期不符。
 	INVALIDPARAMETER_INVALIDUPDATEMETAJSON = "InvalidParameter.InvalidUpdateMetaJson"
 
@@ -268,6 +322,15 @@ const (
 
 	// 可用区Zone的信息与预期不符。
 	INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+
+	// 空间名已存在。
+	INVALIDPARAMETER_SPACENAMEEXIST = "InvalidParameter.SpaceNameExist"
+
+	// 空间名不合法。
+	INVALIDPARAMETER_SPACENAMEINVALID = "InvalidParameter.SpaceNameInvalid"
+
+	// 用户名已存在。
+	INVALIDPARAMETER_USERNAMEEXIST = "InvalidParameter.UsernameExist"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -335,6 +398,9 @@ const (
 	// 升级方式UpgradeMode的取值有误。
 	INVALIDPARAMETERVALUE_UPGRADEMODE = "InvalidParameterValue.UpgradeMode"
 
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
 	// 该账号下的集群数超过限额。
 	LIMITEXCEEDED_CLUSTERNUM = "LimitExceeded.ClusterNum"
 
@@ -343,6 +409,12 @@ const (
 
 	// 节点磁盘块数超过最大限额。
 	LIMITEXCEEDED_DISKCOUNT = "LimitExceeded.DiskCount"
+
+	// 空间索引数超过配额。
+	LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+
+	// 空间索引每日创建数超过配额。
+	LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
 
 	// 节点数量或索引存储量超过限额。
 	LIMITEXCEEDED_NODENUMORINDICES = "LimitExceeded.NodeNumOrIndices"
@@ -353,17 +425,32 @@ const (
 	// 超出一个用户可以拥有的最大资源限制。
 	LIMITEXCEEDED_RESOURCELIMIT = "LimitExceeded.ResourceLimit"
 
+	// 空间数超过配额。
+	LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+
+	// 空间每日创建数超过配额。
+	LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+
 	// 更新参数值过多，超过限制。
 	LIMITEXCEEDED_UPDATEITEMLIMIT = "LimitExceeded.UpdateItemLimit"
 
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
+
 	// 地域错误
 	REGIONERROR = "RegionError"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
 
 	// 存在诊断中的作业，请等待作业诊断完成后重试。
 	RESOURCEINUSE_DIAGNOSE = "ResourceInUse.Diagnose"
+
+	// 索引状态处于隔离状态，不能进行其他操作。
+	RESOURCEINUSE_ISOLATEDSTATUS = "ResourceInUse.IsolatedStatus"
 
 	// 订单被锁定。
 	RESOURCEINUSE_ORDER = "ResourceInUse.Order"
@@ -380,6 +467,12 @@ const (
 	// cvm份额不足。
 	RESOURCEINSUFFICIENT_CVMQUOTA = "ResourceInsufficient.CVMQuota"
 
+	// clb资源不足
+	RESOURCEINSUFFICIENT_CLB = "ResourceInsufficient.Clb"
+
+	// es资源不足
+	RESOURCEINSUFFICIENT_ES = "ResourceInsufficient.Es"
+
 	// 隐藏可用区专用主节点资源不足。
 	RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
 
@@ -392,6 +485,9 @@ const (
 	// 可用区资源不足。
 	RESOURCEINSUFFICIENT_ZONE = "ResourceInsufficient.Zone"
 
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
+
 	// 账户信息未找到。
 	RESOURCENOTFOUND_ACCOUNTINFONOTFOUND = "ResourceNotFound.AccountInfoNotFound"
 
@@ -401,7 +497,7 @@ const (
 	// CAM资源未找到。
 	RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
 
-	// 负载均衡信息未找打。
+	// 负载均衡信息未找到。
 	RESOURCENOTFOUND_CLBNOTFOUND = "ResourceNotFound.CLBNotFound"
 
 	// 集群资源获取失败。
@@ -421,6 +517,9 @@ const (
 
 	// 磁盘相关资源获取失败。
 	RESOURCENOTFOUND_DISKINFONOTFOUND = "ResourceNotFound.DiskInfoNotFound"
+
+	// 集群信息获取失败
+	RESOURCENOTFOUND_ESINFONOTFOUND = "ResourceNotFound.EsInfoNotFound"
 
 	// 密钥管理系统资源获取失败。
 	RESOURCENOTFOUND_KMSNOTFOUND = "ResourceNotFound.KMSNotFound"
@@ -446,8 +545,14 @@ const (
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
+	// 未授权操作。
+	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
 	// Uin不在白名单中。
 	UNAUTHORIZEDOPERATION_UINNOTINWHITELIST = "UnauthorizedOperation.UinNotInWhiteList"
+
+	// 未知参数错误。
+	UNKNOWNPARAMETER = "UnknownParameter"
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -461,6 +566,9 @@ const (
 	// 不支持变配节点或磁盘的配置。
 	UNSUPPORTEDOPERATION_CHANGENODETYPE = "UnsupportedOperation.ChangeNodeType"
 
+	// 不支持该操作，在集群中存在分配的分片。
+	UNSUPPORTEDOPERATION_CLUSTERSHARDNUM = "UnsupportedOperation.ClusterShardNum"
+
 	// 集群中存在部分索引处于关闭状态。
 	UNSUPPORTEDOPERATION_CLUSTERSTATECLOSE = "UnsupportedOperation.ClusterStateClose"
 
@@ -473,17 +581,29 @@ const (
 	// 该版本不支持cos备份。集群需要重启来允许cos备份。
 	UNSUPPORTEDOPERATION_COSBACKUP = "UnsupportedOperation.CosBackUp"
 
+	// 有关机的cvm
+	UNSUPPORTEDOPERATION_CVMSTATUSSTOPPED = "UnsupportedOperation.CvmStatusStopped"
+
 	// 不支持该智能诊断任务。
 	UNSUPPORTEDOPERATION_DIAGNOSEJOB = "UnsupportedOperation.DiagnoseJob"
 
 	// 智能诊断未开启。
 	UNSUPPORTEDOPERATION_DIAGNOSENOTOPEN = "UnsupportedOperation.DiagnoseNotOpen"
 
+	// 节点磁盘可用空间不足
+	UNSUPPORTEDOPERATION_DISKFREESPACEINSUFFICIENT = "UnsupportedOperation.DiskFreeSpaceInsufficient"
+
 	// 不支持的读硬盘配置。
 	UNSUPPORTEDOPERATION_DISKUSE = "UnsupportedOperation.DiskUse"
 
 	// 不支持这个长度的editList的操作。
 	UNSUPPORTEDOPERATION_EDITLISTLENGTH = "UnsupportedOperation.EditListLength"
+
+	// 存在未完成的异构扩缩容流程
+	UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
+
+	// 集群有索引设置index.routing.allocation.require._name,or _ip, or _id
+	UNSUPPORTEDOPERATION_INDEXSETTINGSREQUIRESET = "UnsupportedOperation.IndexSettingsRequireSet"
 
 	// 不支持该操作，服务类型有误。
 	UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
@@ -500,6 +620,9 @@ const (
 	// 不支持多可用区变配。
 	UNSUPPORTEDOPERATION_MULTIZONESUPGRADE = "UnsupportedOperation.MultiZonesUpgrade"
 
+	// 抱歉，您需要前往ES控制台购买页完成确认认证，我们才能为您提供所选的腾讯云服务。如果对于确认流程有任何疑问，可以联系我们：https://www.tencentcloud.com/zh/contact-us。
+	UNSUPPORTEDOPERATION_NOTAGREEMENT = "UnsupportedOperation.NotAgreement"
+
 	// 用户同步日志的配置passLogstashId为空，不支持该操作。
 	UNSUPPORTEDOPERATION_PASSLOGSTASHID = "UnsupportedOperation.PassLogstashId"
 
@@ -514,6 +637,9 @@ const (
 
 	// 离线节点蓝绿变更存在风险，请直接选择重启“in-place”。
 	UNSUPPORTEDOPERATION_RESTARTMODE = "UnsupportedOperation.RestartMode"
+
+	// 纵向缩容太多资源。
+	UNSUPPORTEDOPERATION_SCALEDOWNTOOMUCH = "UnsupportedOperation.ScaleDownTooMuch"
 
 	// 不支持该操作，当前实例运行状态不为正常。
 	UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
