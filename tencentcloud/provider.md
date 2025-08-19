@@ -1875,6 +1875,7 @@ tencentcloud_tdmq_rocketmq_topic
 tencentcloud_tdmq_rocketmq_role
 tencentcloud_tdmq_rocketmq_group
 tencentcloud_tdmq_rocketmq_messages
+tencentcloud_trocket_rocketmq_instances
 
 Resource
 tencentcloud_tdmq_rocketmq_cluster
