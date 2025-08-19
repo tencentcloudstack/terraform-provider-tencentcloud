@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_elasticsearch_instance: support update protocol, node_info_list support without disk_type and disk_size
+```
