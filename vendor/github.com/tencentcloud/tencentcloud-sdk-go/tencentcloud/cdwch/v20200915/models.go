@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,7 +64,6 @@ func (r *ActionAlterCkUserRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ActionAlterCkUserResponseParams struct {
 	// 错误信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -153,6 +152,68 @@ type BackupTableContent struct {
 	Rip *string `json:"Rip,omitnil,omitempty" name:"Rip"`
 }
 
+type CNResource struct {
+	// 资源id
+	ID *int64 `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 集群的id
+	InstanceID *string `json:"InstanceID,omitnil,omitempty" name:"InstanceID"`
+
+	// 用户appid
+	AppID *int64 `json:"AppID,omitnil,omitempty" name:"AppID"`
+
+	// 用户uin
+	Uin *string `json:"Uin,omitnil,omitempty" name:"Uin"`
+
+	// 组件
+	Component *string `json:"Component,omitnil,omitempty" name:"Component"`
+
+	// 部署模式
+	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
+
+	// 规格名称
+	SpecName *string `json:"SpecName,omitnil,omitempty" name:"SpecName"`
+
+	// 资源id
+	ResourceID *string `json:"ResourceID,omitnil,omitempty" name:"ResourceID"`
+
+	// 资源的状态
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 私有网络ip
+	IP *string `json:"IP,omitnil,omitempty" name:"IP"`
+
+	// 核数
+	CPU *uint64 `json:"CPU,omitnil,omitempty" name:"CPU"`
+
+	// 内存
+	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
+
+	// 存储大小
+	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
+
+	// 服务器ID
+	UUID *string `json:"UUID,omitnil,omitempty" name:"UUID"`
+
+	// 地域
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 地区
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 详细信息
+	Details *string `json:"Details,omitnil,omitempty" name:"Details"`
+
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 过期时间
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+}
+
 type Charge struct {
 	// 计费类型，“PREPAID” 预付费，“POSTPAID_BY_HOUR” 后付费
 	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
@@ -204,6 +265,32 @@ type ClusterInfo struct {
 
 	// 当前cluster的IP列表
 	NodeIps []*string `json:"NodeIps,omitnil,omitempty" name:"NodeIps"`
+}
+
+type CnInstanceInfo struct {
+	// ID值
+	ID *int64 `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// cdwch-cn或者其他
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// cdwch-cn或者其他
+	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
+
+	// Running
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 运行中
+	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
+
+	// 无
+	InstanceStateInfo *InstanceStateInfo `json:"InstanceStateInfo,omitnil,omitempty" name:"InstanceStateInfo"`
+
+	// -
+	InstanceID *string `json:"InstanceID,omitnil,omitempty" name:"InstanceID"`
+
+	// 无
+	Resources []*CNResource `json:"Resources,omitnil,omitempty" name:"Resources"`
 }
 
 type ConfigSubmitContext struct {
@@ -370,15 +457,17 @@ type CreateInstanceNewRequestParams struct {
 	// 是否是ZK高可用
 	HAZk *bool `json:"HAZk,omitnil,omitempty" name:"HAZk"`
 
-	// ZK节点
-	// SpecName从DescribeSpec接口中返回的CommonSpec.Name（ZK节点）获取
+	// ZK节点SpecName从DescribeSpec接口中返回的CommonSpec结构体的Name（ZK节点）获取
 	CommonSpec *NodeSpec `json:"CommonSpec,omitnil,omitempty" name:"CommonSpec"`
 
 	// 标签列表
 	TagItems []*Tag `json:"TagItems,omitnil,omitempty" name:"TagItems"`
 
-	// 副可用去信息
+	// 副可用区信息
 	SecondaryZoneInfo []*SecondaryZoneInfo `json:"SecondaryZoneInfo,omitnil,omitempty" name:"SecondaryZoneInfo"`
+
+	// default账号登陆实例的密码。8-16个字符，至少包含大写字母、小写字母、数字和特殊字符!@#%^*中的三种，第一个字符不能为特殊字符
+	CkDefaultUserPwd *string `json:"CkDefaultUserPwd,omitnil,omitempty" name:"CkDefaultUserPwd"`
 }
 
 type CreateInstanceNewRequest struct {
@@ -424,15 +513,17 @@ type CreateInstanceNewRequest struct {
 	// 是否是ZK高可用
 	HAZk *bool `json:"HAZk,omitnil,omitempty" name:"HAZk"`
 
-	// ZK节点
-	// SpecName从DescribeSpec接口中返回的CommonSpec.Name（ZK节点）获取
+	// ZK节点SpecName从DescribeSpec接口中返回的CommonSpec结构体的Name（ZK节点）获取
 	CommonSpec *NodeSpec `json:"CommonSpec,omitnil,omitempty" name:"CommonSpec"`
 
 	// 标签列表
 	TagItems []*Tag `json:"TagItems,omitnil,omitempty" name:"TagItems"`
 
-	// 副可用去信息
+	// 副可用区信息
 	SecondaryZoneInfo []*SecondaryZoneInfo `json:"SecondaryZoneInfo,omitnil,omitempty" name:"SecondaryZoneInfo"`
+
+	// default账号登陆实例的密码。8-16个字符，至少包含大写字母、小写字母、数字和特殊字符!@#%^*中的三种，第一个字符不能为特殊字符
+	CkDefaultUserPwd *string `json:"CkDefaultUserPwd,omitnil,omitempty" name:"CkDefaultUserPwd"`
 }
 
 func (r *CreateInstanceNewRequest) ToJsonString() string {
@@ -463,6 +554,7 @@ func (r *CreateInstanceNewRequest) FromJsonString(s string) error {
 	delete(f, "CommonSpec")
 	delete(f, "TagItems")
 	delete(f, "SecondaryZoneInfo")
+	delete(f, "CkDefaultUserPwd")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstanceNewRequest has unknown keys!", "")
 	}
@@ -478,7 +570,6 @@ type CreateInstanceNewResponseParams struct {
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 错误信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -773,22 +864,18 @@ type DescribeBackUpScheduleResponseParams struct {
 	BackUpOpened *bool `json:"BackUpOpened,omitnil,omitempty" name:"BackUpOpened"`
 
 	// 元数据备份策略
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MetaStrategy *ScheduleStrategy `json:"MetaStrategy,omitnil,omitempty" name:"MetaStrategy"`
 
 	// 表数据备份策略
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DataStrategy *ScheduleStrategy `json:"DataStrategy,omitnil,omitempty" name:"DataStrategy"`
 
 	// 备份表列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackUpContents []*BackupTableContent `json:"BackUpContents,omitnil,omitempty" name:"BackUpContents"`
 
 	// 备份的状态
 	BackUpStatus *int64 `json:"BackUpStatus,omitnil,omitempty" name:"BackUpStatus"`
 
 	// 错误信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -872,6 +959,111 @@ func (r *DescribeBackUpTablesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeCNInstancesRequestParams struct {
+	// 搜索的集群id名称
+	SearchInstanceID *string `json:"SearchInstanceID,omitnil,omitempty" name:"SearchInstanceID"`
+
+	// 搜索的集群name
+	SearchInstanceName *string `json:"SearchInstanceName,omitnil,omitempty" name:"SearchInstanceName"`
+
+	// 分页参数，第一页为0，第二页为10
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页参数，分页步长，默认为10
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 搜索标签列表
+	SearchTags []*SearchTags `json:"SearchTags,omitnil,omitempty" name:"SearchTags"`
+
+	// 集群类型，弹性版或自研数仓版
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 组件名称列表
+	Components []*string `json:"Components,omitnil,omitempty" name:"Components"`
+}
+
+type DescribeCNInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 搜索的集群id名称
+	SearchInstanceID *string `json:"SearchInstanceID,omitnil,omitempty" name:"SearchInstanceID"`
+
+	// 搜索的集群name
+	SearchInstanceName *string `json:"SearchInstanceName,omitnil,omitempty" name:"SearchInstanceName"`
+
+	// 分页参数，第一页为0，第二页为10
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页参数，分页步长，默认为10
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 搜索标签列表
+	SearchTags []*SearchTags `json:"SearchTags,omitnil,omitempty" name:"SearchTags"`
+
+	// 集群类型，弹性版或自研数仓版
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 组件名称列表
+	Components []*string `json:"Components,omitnil,omitempty" name:"Components"`
+}
+
+func (r *DescribeCNInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCNInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SearchInstanceID")
+	delete(f, "SearchInstanceName")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "SearchTags")
+	delete(f, "InstanceType")
+	delete(f, "Components")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCNInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCNInstancesResponseParams struct {
+	// 实例总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 实例数组
+	InstancesList []*CnInstanceInfo `json:"InstancesList,omitnil,omitempty" name:"InstancesList"`
+
+	// 错误信息
+	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCNInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCNInstancesResponseParams `json:"Response"`
+}
+
+func (r *DescribeCNInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCNInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeCkSqlApisRequestParams struct {
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -890,7 +1082,7 @@ type DescribeCkSqlApisRequestParams struct {
 	// GET_USER_CONFIGS:获取用户配置列表  QUOTA、PROFILE、POLICY
 	ApiType *string `json:"ApiType,omitnil,omitempty" name:"ApiType"`
 
-	// 集群名称，GET_SYSTEM_USERS，GET_PRIVILEGE_USERS，GET_CLUSTER_DATABASES，GET_CLUSTER_TABLES 必填
+	// 集群名称，当ApiType取值为GET_SYSTEM_USERS，GET_PRIVILEGE_USERS，GET_CLUSTER_DATABASES，GET_CLUSTER_TABLES 时，此参数必填
 	Cluster *string `json:"Cluster,omitnil,omitempty" name:"Cluster"`
 
 	// 用户名称，api与user相关的必填
@@ -920,7 +1112,7 @@ type DescribeCkSqlApisRequest struct {
 	// GET_USER_CONFIGS:获取用户配置列表  QUOTA、PROFILE、POLICY
 	ApiType *string `json:"ApiType,omitnil,omitempty" name:"ApiType"`
 
-	// 集群名称，GET_SYSTEM_USERS，GET_PRIVILEGE_USERS，GET_CLUSTER_DATABASES，GET_CLUSTER_TABLES 必填
+	// 集群名称，当ApiType取值为GET_SYSTEM_USERS，GET_PRIVILEGE_USERS，GET_CLUSTER_DATABASES，GET_CLUSTER_TABLES 时，此参数必填
 	Cluster *string `json:"Cluster,omitnil,omitempty" name:"Cluster"`
 
 	// 用户名称，api与user相关的必填
@@ -1145,7 +1337,6 @@ type DescribeInstanceKeyValConfigsResponseParams struct {
 	MapConfigItems []*MapConfigItem `json:"MapConfigItems,omitnil,omitempty" name:"MapConfigItems"`
 
 	// 错误信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1831,7 +2022,7 @@ type InstanceInfo struct {
 	// zookeeper节点描述信息
 	CommonSummary *NodesSummary `json:"CommonSummary,omitnil,omitempty" name:"CommonSummary"`
 
-	// 高可用，“true" "false"
+	// 高可用,"true" "false"
 	HA *string `json:"HA,omitnil,omitempty" name:"HA"`
 
 	// 访问地址，例如 "10.0.0.1:9000"
@@ -1950,6 +2141,9 @@ type InstanceInfo struct {
 
 	// 是否开启公网clb
 	HasPublicCloudClb *bool `json:"HasPublicCloudClb,omitnil,omitempty" name:"HasPublicCloudClb"`
+
+	// 可升级的zk版本
+	UpgradeZkVersions *string `json:"UpgradeZkVersions,omitnil,omitempty" name:"UpgradeZkVersions"`
 }
 
 type InstanceNode struct {

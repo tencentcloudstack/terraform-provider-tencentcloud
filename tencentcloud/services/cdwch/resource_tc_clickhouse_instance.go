@@ -19,14 +19,13 @@ import (
 
 func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudClickhouseInstanceRead,
 		Create: resourceTencentCloudClickhouseInstanceCreate,
+		Read:   resourceTencentCloudClickhouseInstanceRead,
 		Update: resourceTencentCloudClickhouseInstanceUpdate,
 		Delete: resourceTencentCloudClickhouseInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
 			"zone": {
 				Type:        schema.TypeString,
@@ -181,6 +180,12 @@ func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 					},
 				},
 			},
+			"ck_default_user_pwd": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "The password for the default account to log in to the instance. 8-16 characters, including at least three of the following: uppercase letters, lowercase letters, numbers, and special characters `!@#%^*`. The first character cannot be a special character.",
+			},
 			"expire_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -190,17 +195,193 @@ func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 	}
 }
 
+func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwch_tmp_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request    = cdwch.NewCreateInstanceNewRequest()
+		response   = cdwch.NewCreateInstanceNewResponse()
+		instanceId string
+	)
+
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zone = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("ha_flag"); ok {
+		request.HaFlag = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("vpc_id"); ok {
+		request.UserVPCId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("subnet_id"); ok {
+		request.UserSubnetId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("product_version"); ok {
+		request.ProductVersion = helper.String(v.(string))
+	}
+
+	charge := cdwch.Charge{}
+	if v, ok := d.GetOk("charge_type"); ok {
+		charge.ChargeType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("renew_flag"); ok {
+		charge.RenewFlag = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("time_span"); ok {
+		charge.TimeSpan = helper.IntInt64(v.(int))
+	}
+
+	request.ChargeProperties = &charge
+
+	if v, ok := d.GetOk("instance_name"); ok {
+		request.InstanceName = helper.String(v.(string))
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "data_spec"); ok {
+		nodeSpec := cdwch.NodeSpec{}
+		if v, ok := dMap["spec_name"]; ok {
+			nodeSpec.SpecName = helper.String(v.(string))
+		}
+
+		if v, ok := dMap["count"]; ok {
+			nodeSpec.Count = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := dMap["disk_size"]; ok {
+			nodeSpec.DiskSize = helper.IntInt64(v.(int))
+		}
+
+		request.DataSpec = &nodeSpec
+	}
+
+	if v, ok := d.GetOk("cls_log_set_id"); ok {
+		request.ClsLogSetId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cos_bucket_name"); ok {
+		request.CosBucketName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("mount_disk_type"); ok {
+		request.MountDiskType = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("ha_zk"); ok {
+		request.HAZk = helper.Bool(v.(bool))
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "common_spec"); ok {
+		nodeSpec := cdwch.NodeSpec{}
+		if v, ok := dMap["spec_name"]; ok {
+			nodeSpec.SpecName = helper.String(v.(string))
+		}
+
+		if v, ok := dMap["count"]; ok {
+			nodeSpec.Count = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := dMap["disk_size"]; ok {
+			nodeSpec.DiskSize = helper.IntInt64(v.(int))
+		}
+
+		request.CommonSpec = &nodeSpec
+	}
+
+	if v, ok := d.GetOk("secondary_zone_info"); ok {
+		secondaryZoneInfo := make([]*cdwch.SecondaryZoneInfo, 0)
+		for _, item := range v.([]interface{}) {
+			itemMap := item.(map[string]interface{})
+			secondaryZoneInfo = append(secondaryZoneInfo, &cdwch.SecondaryZoneInfo{
+				SecondaryZone:   helper.String(itemMap["secondary_zone"].(string)),
+				SecondarySubnet: helper.String(itemMap["secondary_subnet"].(string)),
+			})
+		}
+
+		request.SecondaryZoneInfo = secondaryZoneInfo
+	}
+
+	if v, ok := d.GetOk("ck_default_user_pwd"); ok {
+		request.CkDefaultUserPwd = helper.String(v.(string))
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().CreateInstanceNew(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create cdwch tmpInstance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create cdwch tmpInstance failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
+	}
+
+	instanceId = *response.Response.InstanceId
+	d.SetId(instanceId)
+
+	// wait
+	err = resource.Retry(10*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		instanceInfo, innerErr := service.DescribeInstance(ctx, instanceId)
+		if innerErr != nil {
+			return tccommon.RetryError(innerErr)
+		}
+
+		if *instanceInfo.Status != "Serving" {
+			return resource.RetryableError(fmt.Errorf("Still creating"))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := fmt.Sprintf("qcs::cdwch:%s:uin/:cdwchInstance/%s", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudClickhouseInstanceRead(d, meta)
+}
+
 func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	instanceInfos, err := service.DescribeInstancesNew(ctx, instanceId)
 	if err != nil {
@@ -208,16 +389,18 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	if len(instanceInfos) == 0 {
+		log.Printf("[WARN]%s resource `tencentcloud_clickhouse_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource clickhouse instance [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
 	instanceInfo := instanceInfos[0]
 	_ = d.Set("zone", instanceInfo.Zone)
 	haFlag, err := strconv.ParseBool(*instanceInfo.HA)
 	if err != nil {
 		return err
 	}
+
 	_ = d.Set("ha_flag", haFlag)
 	_ = d.Set("vpc_id", instanceInfo.VpcId)
 	_ = d.Set("subnet_id", instanceInfo.SubnetId)
@@ -227,6 +410,7 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	if *instanceInfo.RenewFlag {
 		_ = d.Set("renew_flag", 1)
 	}
+
 	_ = d.Set("expire_time", instanceInfo.ExpireTime)
 	_ = d.Set("cos_bucket_name", instanceInfo.CosBucketName)
 	_ = d.Set("mount_disk_type", instanceInfo.MountDiskType)
@@ -250,12 +434,12 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	if instanceInfo.SecondaryZoneInfo != nil && *instanceInfo.SecondaryZoneInfo != "" {
-
 		data := make([]secondaryZoneInfo, 0)
 		err := json.Unmarshal([]byte(*instanceInfo.SecondaryZoneInfo), &data)
 		if err != nil {
 			return err
 		}
+
 		secondaryZoneInfoList := make([]interface{}, 0)
 		for _, item := range data {
 			secondaryZoneInfoList = append(secondaryZoneInfoList, map[string]interface{}{
@@ -266,6 +450,7 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 
 		_ = d.Set("secondary_zone_info", secondaryZoneInfoList)
 	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "cdwch", "cdwchInstance", tcClient.Region, d.Id())
@@ -277,161 +462,21 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	return nil
 }
 
-func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdwch_tmp_instance.create")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	var (
-		request    = cdwch.NewCreateInstanceNewRequest()
-		response   = cdwch.NewCreateInstanceNewResponse()
-		instanceId string
-	)
-	if v, ok := d.GetOk("zone"); ok {
-		request.Zone = helper.String(v.(string))
-	}
-
-	if v, _ := d.GetOk("ha_flag"); v != nil {
-		request.HaFlag = helper.Bool(v.(bool))
-	}
-
-	if v, ok := d.GetOk("vpc_id"); ok {
-		request.UserVPCId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("subnet_id"); ok {
-		request.UserSubnetId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("product_version"); ok {
-		request.ProductVersion = helper.String(v.(string))
-	}
-
-	charge := cdwch.Charge{}
-	if v, ok := d.GetOk("charge_type"); ok {
-		charge.ChargeType = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("renew_flag"); ok {
-		charge.RenewFlag = helper.IntInt64(v.(int))
-	}
-	if v, ok := d.GetOk("time_span"); ok {
-		charge.TimeSpan = helper.IntInt64(v.(int))
-	}
-	request.ChargeProperties = &charge
-
-	if v, ok := d.GetOk("instance_name"); ok {
-		request.InstanceName = helper.String(v.(string))
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "data_spec"); ok {
-		nodeSpec := cdwch.NodeSpec{}
-		if v, ok := dMap["spec_name"]; ok {
-			nodeSpec.SpecName = helper.String(v.(string))
-		}
-		if v, ok := dMap["count"]; ok {
-			nodeSpec.Count = helper.IntInt64(v.(int))
-		}
-		if v, ok := dMap["disk_size"]; ok {
-			nodeSpec.DiskSize = helper.IntInt64(v.(int))
-		}
-		request.DataSpec = &nodeSpec
-	}
-
-	if v, ok := d.GetOk("cls_log_set_id"); ok {
-		request.ClsLogSetId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("cos_bucket_name"); ok {
-		request.CosBucketName = helper.String(v.(string))
-	}
-
-	if v, _ := d.GetOk("mount_disk_type"); v != nil {
-		request.MountDiskType = helper.IntInt64(v.(int))
-	}
-
-	if v, _ := d.GetOk("ha_zk"); v != nil {
-		request.HAZk = helper.Bool(v.(bool))
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "common_spec"); ok {
-		nodeSpec := cdwch.NodeSpec{}
-		if v, ok := dMap["spec_name"]; ok {
-			nodeSpec.SpecName = helper.String(v.(string))
-		}
-		if v, ok := dMap["count"]; ok {
-			nodeSpec.Count = helper.IntInt64(v.(int))
-		}
-		if v, ok := dMap["disk_size"]; ok {
-			nodeSpec.DiskSize = helper.IntInt64(v.(int))
-		}
-		request.CommonSpec = &nodeSpec
-	}
-
-	if v, ok := d.GetOk("secondary_zone_info"); ok {
-		secondaryZoneInfo := make([]*cdwch.SecondaryZoneInfo, 0)
-		for _, item := range v.([]interface{}) {
-			itemMap := item.(map[string]interface{})
-			secondaryZoneInfo = append(secondaryZoneInfo, &cdwch.SecondaryZoneInfo{
-				SecondaryZone:   helper.String(itemMap["secondary_zone"].(string)),
-				SecondarySubnet: helper.String(itemMap["secondary_subnet"].(string)),
-			})
-		}
-		request.SecondaryZoneInfo = secondaryZoneInfo
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().CreateInstanceNew(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create cdwch tmpInstance failed, reason:%+v", logId, err)
-		return err
-	}
-	instanceId = *response.Response.InstanceId
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	err = resource.Retry(10*tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		instanceInfo, innerErr := service.DescribeInstance(ctx, instanceId)
-		if innerErr != nil {
-			return tccommon.RetryError(innerErr)
-		}
-		if *instanceInfo.Status != "Serving" {
-			return resource.RetryableError(fmt.Errorf("Still creating"))
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-		resourceName := fmt.Sprintf("qcs::cdwch:%s:uin/:cdwchInstance/%s", region, instanceId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-
-	d.SetId(instanceId)
-
-	return resourceTencentCloudClickhouseInstanceRead(d, meta)
-}
-
 func resourceTencentCloudClickhouseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	)
+
+	immutableArgs := []string{"zone", "ha_flag", "vpc_id", "subnet_id", "product_version", "instance_name", "charge_type", "renew_flag", "time_span", "data_spec", "cls_log_set_id", "cos_bucket_name", "mount_disk_type", "ha_zk", "common_spec", "secondary_zone_info", "ck_default_user_pwd"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("tags") {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -444,14 +489,6 @@ func resourceTencentCloudClickhouseInstanceUpdate(d *schema.ResourceData, meta i
 		}
 	}
 
-	immutableArgs := []string{"zone", "ha_flag", "vpc_id", "subnet_id", "product_version", "instance_name", "charge_type", "renew_flag", "time_span", "data_spec", "cls_log_set_id", "cos_bucket_name", "mount_disk_type", "ha_zk", "common_spec", "secondary_zone_info"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
 	return resourceTencentCloudClickhouseInstanceRead(d, meta)
 }
 
@@ -459,11 +496,12 @@ func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	if d.Get("charge_type").(string) == "PREPAID" {
 		if err := service.DestroyInstance(ctx, instanceId); err != nil {
@@ -475,11 +513,14 @@ func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta i
 			if innerErr != nil {
 				return tccommon.RetryError(innerErr)
 			}
+
 			if *instanceInfo.Status != "Isolated" {
 				return resource.RetryableError(fmt.Errorf("Still isolating"))
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
@@ -488,19 +529,24 @@ func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta i
 	if err := service.DestroyInstance(ctx, instanceId); err != nil {
 		return err
 	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		instancesList, innerErr := service.DescribeInstancesNew(ctx, instanceId)
 		if innerErr != nil {
 			return tccommon.RetryError(innerErr)
 		}
+
 		if len(instancesList) != 0 {
 			return resource.RetryableError(fmt.Errorf("Still destroying"))
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 

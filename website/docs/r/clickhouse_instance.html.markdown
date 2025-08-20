@@ -4,15 +4,17 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clickhouse_instance"
 sidebar_current: "docs-tencentcloud-resource-clickhouse_instance"
 description: |-
-  Provides a resource to create a clickhouse instance.
+  Provides a resource to create a Clickhouse instance.
 ---
 
 # tencentcloud_clickhouse_instance
 
-Provides a resource to create a clickhouse instance.
+Provides a resource to create a Clickhouse instance.
 
 ## Example Usage
 
+### Create POSTPAID instance
+
 ```hcl
 variable "availability_zone" {
   default = "ap-guangzhou-6"
@@ -44,28 +46,30 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
-resource "tencentcloud_clickhouse_instance" "cdwch_instance" {
-  zone            = var.availability_zone
-  ha_flag         = true
-  vpc_id          = tencentcloud_vpc.vpc.id
-  subnet_id       = tencentcloud_subnet.subnet.id
-  product_version = "21.8.12.29"
+resource "tencentcloud_clickhouse_instance" "example" {
+  instance_name       = "tf-example"
+  charge_type         = "POSTPAID_BY_HOUR"
+  zone                = var.availability_zone
+  ha_flag             = true
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  product_version     = "21.8.12.29"
+  ck_default_user_pwd = "Password@123"
   data_spec {
     spec_name = local.data_spec_name_4c16m
     count     = 2
     disk_size = 300
   }
+
   common_spec {
     spec_name = local.common_spec_name_4c16m
     count     = 3
     disk_size = 300
   }
-  charge_type   = "POSTPAID_BY_HOUR"
-  instance_name = "tf-test-clickhouse"
 }
 ```
 
-### PREPAID instance
+### Create PREPAID instance
 
 ```hcl
 variable "availability_zone" {
@@ -98,26 +102,28 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
-resource "tencentcloud_clickhouse_instance" "cdwch_instance_prepaid" {
-  zone            = var.availability_zone
-  ha_flag         = true
-  vpc_id          = tencentcloud_vpc.vpc.id
-  subnet_id       = tencentcloud_subnet.subnet.id
-  product_version = "21.8.12.29"
+resource "tencentcloud_clickhouse_instance" "example" {
+  instance_name       = "tf-example"
+  charge_type         = "PREPAID"
+  renew_flag          = 1
+  time_span           = 1
+  zone                = var.availability_zone
+  ha_flag             = true
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  product_version     = "21.8.12.29"
+  ck_default_user_pwd = "Password@123"
   data_spec {
     spec_name = local.data_spec_name_4c16m
     count     = 2
     disk_size = 300
   }
+
   common_spec {
     spec_name = local.common_spec_name_4c16m
     count     = 3
     disk_size = 300
   }
-  charge_type   = "PREPAID"
-  renew_flag    = 1
-  time_span     = 1
-  instance_name = "tf-test-clickhouse-prepaid"
 }
 ```
 
@@ -133,6 +139,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, String) Subnet.
 * `vpc_id` - (Required, String) Private network.
 * `zone` - (Required, String) Availability zone.
+* `ck_default_user_pwd` - (Optional, String) The password for the default account to log in to the instance. 8-16 characters, including at least three of the following: uppercase letters, lowercase letters, numbers, and special characters `!@#%^*`. The first character cannot be a special character.
 * `cls_log_set_id` - (Optional, String) CLS log set id.
 * `common_spec` - (Optional, List) ZK node.
 * `cos_bucket_name` - (Optional, String) COS bucket name.
@@ -173,6 +180,6 @@ In addition to all arguments above, the following attributes are exported:
 Clickhouse instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clickhouse_instance.foo cdwch-xxxxxx
+$ terraform import tencentcloud_clickhouse_instance.example cdwch-4l6mm8p7
 ```
 
