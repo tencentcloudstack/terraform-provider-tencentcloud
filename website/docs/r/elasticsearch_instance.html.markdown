@@ -160,7 +160,6 @@ resource "tencentcloud_elasticsearch_instance" "example_multi_zone" {
 
 The following arguments are supported:
 
-* `node_info_list` - (Required, Set) Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.
 * `password` - (Required, String) Password to an instance, the password needs to be 8 to 16 characters, including at least two items ([a-z,A-Z], [0-9] and [-!@#$%&^*+=_:;,.?] special symbols.
 * `version` - (Required, String) Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2`, `7.5.1` and `7.10.1`.
 * `vpc_id` - (Required, String, ForceNew) The ID of a VPC network.
@@ -177,6 +176,7 @@ The following arguments are supported:
 * `kibana_public_access` - (Optional, String) Kibana public network access status. Valid values are `OPEN` and `CLOSE`.
 * `license_type` - (Optional, String) License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.
 * `multi_zone_infos` - (Optional, List) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
+* `node_info_list` - (Optional, Set) Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.
 * `protocol` - (Optional, String) Create an https cluster, default is http.
 * `public_access` - (Optional, String) ES cluster public network access status. Valid values are `OPEN` and `CLOSE`. Cannot be changed at the same time as `es_acl`.
 * `renew_flag` - (Optional, String, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
@@ -207,8 +207,8 @@ The `node_info_list` object supports the following:
 
 * `node_num` - (Required, Int) Number of nodes.
 * `node_type` - (Required, String) Node specification, and valid values refer to [document of tencentcloud](https://intl.cloud.tencent.com/document/product/845/18376).
-* `disk_size` - (Optional, Int) Node disk size. Unit is GB, and default value is `100`.
-* `disk_type` - (Optional, String) Node disk type. Valid values are `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_HSSD`, `CLOUD_BSSD`, `CLOUD_BIGDATA` and `CLOUD_HIGHIO`. The default value is `CLOUD_SSD`.
+* `disk_size` - (Optional, Int) Node disk size. Unit is GB, and default value is `100`. Big Data and High IO models do not support the specified disk size and have no default values.
+* `disk_type` - (Optional, String) Node disk type. Valid values are `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_HSSD`, `CLOUD_BSSD`, `CLOUD_BIGDATA` and `CLOUD_HIGHIO`. The default value is `CLOUD_SSD`. Big Data and High IO models do not support the specified disk type and have no default values.
 * `encrypt` - (Optional, Bool) Decides to encrypt this disk or not.
 * `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`. The default value is 'hotData`.
 

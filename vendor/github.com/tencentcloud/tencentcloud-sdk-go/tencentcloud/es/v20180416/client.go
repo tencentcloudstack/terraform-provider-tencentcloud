@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,6 +44,166 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
     return
 }
 
+
+func NewCheckMigrateIndexMetaDataRequest() (request *CheckMigrateIndexMetaDataRequest) {
+    request = &CheckMigrateIndexMetaDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "CheckMigrateIndexMetaData")
+    
+    
+    return
+}
+
+func NewCheckMigrateIndexMetaDataResponse() (response *CheckMigrateIndexMetaDataResponse) {
+    response = &CheckMigrateIndexMetaDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CheckMigrateIndexMetaData
+// 检查cos迁移索引元数据
+func (c *Client) CheckMigrateIndexMetaData(request *CheckMigrateIndexMetaDataRequest) (response *CheckMigrateIndexMetaDataResponse, err error) {
+    return c.CheckMigrateIndexMetaDataWithContext(context.Background(), request)
+}
+
+// CheckMigrateIndexMetaData
+// 检查cos迁移索引元数据
+func (c *Client) CheckMigrateIndexMetaDataWithContext(ctx context.Context, request *CheckMigrateIndexMetaDataRequest) (response *CheckMigrateIndexMetaDataResponse, err error) {
+    if request == nil {
+        request = NewCheckMigrateIndexMetaDataRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CheckMigrateIndexMetaData")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CheckMigrateIndexMetaData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCheckMigrateIndexMetaDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateClusterSnapshotRequest() (request *CreateClusterSnapshotRequest) {
+    request = &CreateClusterSnapshotRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "CreateClusterSnapshot")
+    
+    
+    return
+}
+
+func NewCreateClusterSnapshotResponse() (response *CreateClusterSnapshotResponse) {
+    response = &CreateClusterSnapshotResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateClusterSnapshot
+// 集群快照手动创建
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETER_INVALIDUIN = "InvalidParameter.InvalidUin"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
+func (c *Client) CreateClusterSnapshot(request *CreateClusterSnapshotRequest) (response *CreateClusterSnapshotResponse, err error) {
+    return c.CreateClusterSnapshotWithContext(context.Background(), request)
+}
+
+// CreateClusterSnapshot
+// 集群快照手动创建
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETER_INVALIDUIN = "InvalidParameter.InvalidUin"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
+func (c *Client) CreateClusterSnapshotWithContext(ctx context.Context, request *CreateClusterSnapshotRequest) (response *CreateClusterSnapshotResponse, err error) {
+    if request == nil {
+        request = NewCreateClusterSnapshotRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CreateClusterSnapshot")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateClusterSnapshot require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateClusterSnapshotResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCosMigrateToServerlessInstanceRequest() (request *CreateCosMigrateToServerlessInstanceRequest) {
+    request = &CreateCosMigrateToServerlessInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "CreateCosMigrateToServerlessInstance")
+    
+    
+    return
+}
+
+func NewCreateCosMigrateToServerlessInstanceResponse() (response *CreateCosMigrateToServerlessInstanceResponse) {
+    response = &CreateCosMigrateToServerlessInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCosMigrateToServerlessInstance
+// cos迁移流程
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COSMIGRATE = "FailedOperation.CosMigrate"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  RESOURCENOTFOUND_ESINFONOTFOUND = "ResourceNotFound.EsInfoNotFound"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) CreateCosMigrateToServerlessInstance(request *CreateCosMigrateToServerlessInstanceRequest) (response *CreateCosMigrateToServerlessInstanceResponse, err error) {
+    return c.CreateCosMigrateToServerlessInstanceWithContext(context.Background(), request)
+}
+
+// CreateCosMigrateToServerlessInstance
+// cos迁移流程
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COSMIGRATE = "FailedOperation.CosMigrate"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  RESOURCENOTFOUND_ESINFONOTFOUND = "ResourceNotFound.EsInfoNotFound"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) CreateCosMigrateToServerlessInstanceWithContext(ctx context.Context, request *CreateCosMigrateToServerlessInstanceRequest) (response *CreateCosMigrateToServerlessInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateCosMigrateToServerlessInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CreateCosMigrateToServerlessInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCosMigrateToServerlessInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCosMigrateToServerlessInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
 
 func NewCreateIndexRequest() (request *CreateIndexRequest) {
     request = &CreateIndexRequest{
@@ -98,6 +258,7 @@ func (c *Client) CreateIndexWithContext(ctx context.Context, request *CreateInde
     if request == nil {
         request = NewCreateIndexRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CreateIndex")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateIndex require credential")
@@ -138,6 +299,7 @@ func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
 //  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NODENUMANDZONEERROR = "FailedOperation.NodeNumAndZoneError"
 //  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -160,6 +322,7 @@ func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
 //  INVALIDPARAMETERVALUE_CHARGETYPE = "InvalidParameterValue.ChargeType"
 //  INVALIDPARAMETERVALUE_RENEWFLAG = "InvalidParameterValue.RenewFlag"
 //  LIMITEXCEEDED_CLUSTERNUM = "LimitExceeded.ClusterNum"
+//  LIMITEXCEEDED_RESOURCELIMIT = "LimitExceeded.ResourceLimit"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_ORDER = "ResourceInUse.Order"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -169,10 +332,12 @@ func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
 //  RESOURCEINSUFFICIENT_ZONE = "ResourceInsufficient.Zone"
 //  RESOURCENOTFOUND_DISKINFONOTFOUND = "ResourceNotFound.DiskInfoNotFound"
 //  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+//  RESOURCENOTFOUND_VPCINFONOTFOUND = "ResourceNotFound.VPCInfoNotFound"
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
 //  UNAUTHORIZEDOPERATION_UINNOTINWHITELIST = "UnauthorizedOperation.UinNotInWhiteList"
 //  UNSUPPORTEDOPERATION_BASICSECURITYTYPE = "UnsupportedOperation.BasicSecurityType"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
+//  UNSUPPORTEDOPERATION_NOTAGREEMENT = "UnsupportedOperation.NotAgreement"
 //  UNSUPPORTEDOPERATION_VPCINFONOTFOUND = "UnsupportedOperation.VPCInfoNotFound"
 func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *CreateInstanceResponse, err error) {
     return c.CreateInstanceWithContext(context.Background(), request)
@@ -187,6 +352,7 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
 //  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NODENUMANDZONEERROR = "FailedOperation.NodeNumAndZoneError"
 //  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -209,6 +375,7 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 //  INVALIDPARAMETERVALUE_CHARGETYPE = "InvalidParameterValue.ChargeType"
 //  INVALIDPARAMETERVALUE_RENEWFLAG = "InvalidParameterValue.RenewFlag"
 //  LIMITEXCEEDED_CLUSTERNUM = "LimitExceeded.ClusterNum"
+//  LIMITEXCEEDED_RESOURCELIMIT = "LimitExceeded.ResourceLimit"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_ORDER = "ResourceInUse.Order"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -218,15 +385,18 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 //  RESOURCEINSUFFICIENT_ZONE = "ResourceInsufficient.Zone"
 //  RESOURCENOTFOUND_DISKINFONOTFOUND = "ResourceNotFound.DiskInfoNotFound"
 //  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+//  RESOURCENOTFOUND_VPCINFONOTFOUND = "ResourceNotFound.VPCInfoNotFound"
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
 //  UNAUTHORIZEDOPERATION_UINNOTINWHITELIST = "UnauthorizedOperation.UinNotInWhiteList"
 //  UNSUPPORTEDOPERATION_BASICSECURITYTYPE = "UnsupportedOperation.BasicSecurityType"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
+//  UNSUPPORTEDOPERATION_NOTAGREEMENT = "UnsupportedOperation.NotAgreement"
 //  UNSUPPORTEDOPERATION_VPCINFONOTFOUND = "UnsupportedOperation.VPCInfoNotFound"
 func (c *Client) CreateInstanceWithContext(ctx context.Context, request *CreateInstanceRequest) (response *CreateInstanceResponse, err error) {
     if request == nil {
         request = NewCreateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CreateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstance require credential")
@@ -360,6 +530,7 @@ func NewCreateLogstashInstanceResponse() (response *CreateLogstashInstanceRespon
 //  UNSUPPORTEDOPERATION_DISKUSE = "UnsupportedOperation.DiskUse"
 //  UNSUPPORTEDOPERATION_EDITLISTLENGTH = "UnsupportedOperation.EditListLength"
 //  UNSUPPORTEDOPERATION_MIGRATE = "UnsupportedOperation.Migrate"
+//  UNSUPPORTEDOPERATION_NOTAGREEMENT = "UnsupportedOperation.NotAgreement"
 //  UNSUPPORTEDOPERATION_PASSLOGSTASHID = "UnsupportedOperation.PassLogstashId"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_PROTOCOL = "UnsupportedOperation.Protocol"
@@ -477,6 +648,7 @@ func (c *Client) CreateLogstashInstance(request *CreateLogstashInstanceRequest) 
 //  UNSUPPORTEDOPERATION_DISKUSE = "UnsupportedOperation.DiskUse"
 //  UNSUPPORTEDOPERATION_EDITLISTLENGTH = "UnsupportedOperation.EditListLength"
 //  UNSUPPORTEDOPERATION_MIGRATE = "UnsupportedOperation.Migrate"
+//  UNSUPPORTEDOPERATION_NOTAGREEMENT = "UnsupportedOperation.NotAgreement"
 //  UNSUPPORTEDOPERATION_PASSLOGSTASHID = "UnsupportedOperation.PassLogstashId"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_PROTOCOL = "UnsupportedOperation.Protocol"
@@ -492,6 +664,7 @@ func (c *Client) CreateLogstashInstanceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateLogstashInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CreateLogstashInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLogstashInstance require credential")
@@ -500,6 +673,286 @@ func (c *Client) CreateLogstashInstanceWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewCreateLogstashInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateServerlessInstanceRequest() (request *CreateServerlessInstanceRequest) {
+    request = &CreateServerlessInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "CreateServerlessInstance")
+    
+    
+    return
+}
+
+func NewCreateServerlessInstanceResponse() (response *CreateServerlessInstanceResponse) {
+    response = &CreateServerlessInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateServerlessInstance
+// 创建Serverless索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INDEXNAMEEXIST = "InvalidParameter.IndexNameExist"
+//  INVALIDPARAMETER_INDEXNAMEINVALID = "InvalidParameter.IndexNameInvalid"
+//  INVALIDPARAMETER_INVALIDOPTYPE = "InvalidParameter.InvalidOpType"
+//  INVALIDPARAMETER_USERNAMEEXIST = "InvalidParameter.UsernameExist"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+func (c *Client) CreateServerlessInstance(request *CreateServerlessInstanceRequest) (response *CreateServerlessInstanceResponse, err error) {
+    return c.CreateServerlessInstanceWithContext(context.Background(), request)
+}
+
+// CreateServerlessInstance
+// 创建Serverless索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INDEXNAMEEXIST = "InvalidParameter.IndexNameExist"
+//  INVALIDPARAMETER_INDEXNAMEINVALID = "InvalidParameter.IndexNameInvalid"
+//  INVALIDPARAMETER_INVALIDOPTYPE = "InvalidParameter.InvalidOpType"
+//  INVALIDPARAMETER_USERNAMEEXIST = "InvalidParameter.UsernameExist"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+func (c *Client) CreateServerlessInstanceWithContext(ctx context.Context, request *CreateServerlessInstanceRequest) (response *CreateServerlessInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateServerlessInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CreateServerlessInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateServerlessInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateServerlessInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateServerlessSpaceV2Request() (request *CreateServerlessSpaceV2Request) {
+    request = &CreateServerlessSpaceV2Request{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "CreateServerlessSpaceV2")
+    
+    
+    return
+}
+
+func NewCreateServerlessSpaceV2Response() (response *CreateServerlessSpaceV2Response) {
+    response = &CreateServerlessSpaceV2Response{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateServerlessSpaceV2
+// 创建Serverless索引空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_SPACENAMEEXIST = "InvalidParameter.SpaceNameExist"
+//  INVALIDPARAMETER_SPACENAMEINVALID = "InvalidParameter.SpaceNameInvalid"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_CLB = "ResourceInsufficient.Clb"
+//  RESOURCEINSUFFICIENT_ES = "ResourceInsufficient.Es"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) CreateServerlessSpaceV2(request *CreateServerlessSpaceV2Request) (response *CreateServerlessSpaceV2Response, err error) {
+    return c.CreateServerlessSpaceV2WithContext(context.Background(), request)
+}
+
+// CreateServerlessSpaceV2
+// 创建Serverless索引空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_SPACENAMEEXIST = "InvalidParameter.SpaceNameExist"
+//  INVALIDPARAMETER_SPACENAMEINVALID = "InvalidParameter.SpaceNameInvalid"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_CLB = "ResourceInsufficient.Clb"
+//  RESOURCEINSUFFICIENT_ES = "ResourceInsufficient.Es"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) CreateServerlessSpaceV2WithContext(ctx context.Context, request *CreateServerlessSpaceV2Request) (response *CreateServerlessSpaceV2Response, err error) {
+    if request == nil {
+        request = NewCreateServerlessSpaceV2Request()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "CreateServerlessSpaceV2")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateServerlessSpaceV2 require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateServerlessSpaceV2Response()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteClusterSnapshotRequest() (request *DeleteClusterSnapshotRequest) {
+    request = &DeleteClusterSnapshotRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DeleteClusterSnapshot")
+    
+    
+    return
+}
+
+func NewDeleteClusterSnapshotResponse() (response *DeleteClusterSnapshotResponse) {
+    response = &DeleteClusterSnapshotResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteClusterSnapshot
+// 删除快照仓库里备份的快照
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_SPACENAMEEXIST = "InvalidParameter.SpaceNameExist"
+//  INVALIDPARAMETER_SPACENAMEINVALID = "InvalidParameter.SpaceNameInvalid"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_CLB = "ResourceInsufficient.Clb"
+//  RESOURCEINSUFFICIENT_ES = "ResourceInsufficient.Es"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) DeleteClusterSnapshot(request *DeleteClusterSnapshotRequest) (response *DeleteClusterSnapshotResponse, err error) {
+    return c.DeleteClusterSnapshotWithContext(context.Background(), request)
+}
+
+// DeleteClusterSnapshot
+// 删除快照仓库里备份的快照
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_SPACENAMEEXIST = "InvalidParameter.SpaceNameExist"
+//  INVALIDPARAMETER_SPACENAMEINVALID = "InvalidParameter.SpaceNameInvalid"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_CLB = "ResourceInsufficient.Clb"
+//  RESOURCEINSUFFICIENT_ES = "ResourceInsufficient.Es"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) DeleteClusterSnapshotWithContext(ctx context.Context, request *DeleteClusterSnapshotRequest) (response *DeleteClusterSnapshotResponse, err error) {
+    if request == nil {
+        request = NewDeleteClusterSnapshotRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DeleteClusterSnapshot")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteClusterSnapshot require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteClusterSnapshotResponse()
     err = c.Send(request, response)
     return
 }
@@ -553,6 +1006,7 @@ func (c *Client) DeleteIndexWithContext(ctx context.Context, request *DeleteInde
     if request == nil {
         request = NewDeleteIndexRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DeleteIndex")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteIndex require credential")
@@ -588,6 +1042,7 @@ func NewDeleteInstanceResponse() (response *DeleteInstanceResponse) {
 // 销毁集群实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_OPENDESTROYPROTECTION = "FailedOperation.OpenDestroyProtection"
 //  FAILEDOPERATION_REFUNDERROR = "FailedOperation.RefundError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
@@ -596,6 +1051,7 @@ func NewDeleteInstanceResponse() (response *DeleteInstanceResponse) {
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) DeleteInstance(request *DeleteInstanceRequest) (response *DeleteInstanceResponse, err error) {
     return c.DeleteInstanceWithContext(context.Background(), request)
@@ -605,6 +1061,7 @@ func (c *Client) DeleteInstance(request *DeleteInstanceRequest) (response *Delet
 // 销毁集群实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_OPENDESTROYPROTECTION = "FailedOperation.OpenDestroyProtection"
 //  FAILEDOPERATION_REFUNDERROR = "FailedOperation.RefundError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
@@ -613,11 +1070,13 @@ func (c *Client) DeleteInstance(request *DeleteInstanceRequest) (response *Delet
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) DeleteInstanceWithContext(ctx context.Context, request *DeleteInstanceRequest) (response *DeleteInstanceResponse, err error) {
     if request == nil {
         request = NewDeleteInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DeleteInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstance require credential")
@@ -673,6 +1132,7 @@ func (c *Client) DeleteLogstashInstanceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteLogstashInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DeleteLogstashInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLogstashInstance require credential")
@@ -726,6 +1186,7 @@ func (c *Client) DeleteLogstashPipelinesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteLogstashPipelinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DeleteLogstashPipelines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLogstashPipelines require credential")
@@ -734,6 +1195,218 @@ func (c *Client) DeleteLogstashPipelinesWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDeleteLogstashPipelinesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteServerlessInstanceRequest() (request *DeleteServerlessInstanceRequest) {
+    request = &DeleteServerlessInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DeleteServerlessInstance")
+    
+    
+    return
+}
+
+func NewDeleteServerlessInstanceResponse() (response *DeleteServerlessInstanceResponse) {
+    response = &DeleteServerlessInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteServerlessInstance
+// 删除Serverless索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) DeleteServerlessInstance(request *DeleteServerlessInstanceRequest) (response *DeleteServerlessInstanceResponse, err error) {
+    return c.DeleteServerlessInstanceWithContext(context.Background(), request)
+}
+
+// DeleteServerlessInstance
+// 删除Serverless索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) DeleteServerlessInstanceWithContext(ctx context.Context, request *DeleteServerlessInstanceRequest) (response *DeleteServerlessInstanceResponse, err error) {
+    if request == nil {
+        request = NewDeleteServerlessInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DeleteServerlessInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteServerlessInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteServerlessInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteServerlessSpaceUserRequest() (request *DeleteServerlessSpaceUserRequest) {
+    request = &DeleteServerlessSpaceUserRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DeleteServerlessSpaceUser")
+    
+    
+    return
+}
+
+func NewDeleteServerlessSpaceUserResponse() (response *DeleteServerlessSpaceUserResponse) {
+    response = &DeleteServerlessSpaceUserResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteServerlessSpaceUser
+// 删除Serverless空间子用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_USERNAMEEXIST = "InvalidParameter.UsernameExist"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) DeleteServerlessSpaceUser(request *DeleteServerlessSpaceUserRequest) (response *DeleteServerlessSpaceUserResponse, err error) {
+    return c.DeleteServerlessSpaceUserWithContext(context.Background(), request)
+}
+
+// DeleteServerlessSpaceUser
+// 删除Serverless空间子用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_USERNAMEEXIST = "InvalidParameter.UsernameExist"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) DeleteServerlessSpaceUserWithContext(ctx context.Context, request *DeleteServerlessSpaceUserRequest) (response *DeleteServerlessSpaceUserResponse, err error) {
+    if request == nil {
+        request = NewDeleteServerlessSpaceUserRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DeleteServerlessSpaceUser")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteServerlessSpaceUser require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteServerlessSpaceUserResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterSnapshotRequest() (request *DescribeClusterSnapshotRequest) {
+    request = &DescribeClusterSnapshotRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeClusterSnapshot")
+    
+    
+    return
+}
+
+func NewDescribeClusterSnapshotResponse() (response *DescribeClusterSnapshotResponse) {
+    response = &DescribeClusterSnapshotResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterSnapshot
+// 获取快照备份列表
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
+func (c *Client) DescribeClusterSnapshot(request *DescribeClusterSnapshotRequest) (response *DescribeClusterSnapshotResponse, err error) {
+    return c.DescribeClusterSnapshotWithContext(context.Background(), request)
+}
+
+// DescribeClusterSnapshot
+// 获取快照备份列表
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
+func (c *Client) DescribeClusterSnapshotWithContext(ctx context.Context, request *DescribeClusterSnapshotRequest) (response *DescribeClusterSnapshotResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterSnapshotRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeClusterSnapshot")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterSnapshot require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterSnapshotResponse()
     err = c.Send(request, response)
     return
 }
@@ -789,6 +1462,7 @@ func (c *Client) DescribeDiagnoseWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeDiagnoseRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeDiagnose")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDiagnose require credential")
@@ -824,6 +1498,7 @@ func NewDescribeIndexListResponse() (response *DescribeIndexListResponse) {
 // 获取索引列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
@@ -839,6 +1514,7 @@ func (c *Client) DescribeIndexList(request *DescribeIndexListRequest) (response 
 // 获取索引列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
@@ -850,6 +1526,7 @@ func (c *Client) DescribeIndexListWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeIndexListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeIndexList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIndexList require credential")
@@ -913,6 +1590,7 @@ func (c *Client) DescribeIndexMetaWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeIndexMetaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeIndexMeta")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIndexMeta require credential")
@@ -956,6 +1634,7 @@ func NewDescribeInstanceLogsResponse() (response *DescribeInstanceLogsResponse) 
 //  INVALIDPARAMETER_INVALIDLOGTYPE = "InvalidParameter.InvalidLogType"
 //  INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 //  INVALIDPARAMETER_INVALIDORDERBYKEY = "InvalidParameter.InvalidOrderByKey"
+//  INVALIDPARAMETER_INVALIDQUERYSTRING = "InvalidParameter.InvalidQueryString"
 //  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
 //  INVALIDPARAMETER_INVALIDTIMEPARAM = "InvalidParameter.InvalidTimeParam"
 //  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
@@ -976,6 +1655,7 @@ func (c *Client) DescribeInstanceLogs(request *DescribeInstanceLogsRequest) (res
 //  INVALIDPARAMETER_INVALIDLOGTYPE = "InvalidParameter.InvalidLogType"
 //  INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 //  INVALIDPARAMETER_INVALIDORDERBYKEY = "InvalidParameter.InvalidOrderByKey"
+//  INVALIDPARAMETER_INVALIDQUERYSTRING = "InvalidParameter.InvalidQueryString"
 //  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
 //  INVALIDPARAMETER_INVALIDTIMEPARAM = "InvalidParameter.InvalidTimeParam"
 //  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
@@ -984,6 +1664,7 @@ func (c *Client) DescribeInstanceLogsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeInstanceLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeInstanceLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceLogs require credential")
@@ -1043,6 +1724,7 @@ func (c *Client) DescribeInstanceOperationsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeInstanceOperationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeInstanceOperations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceOperations require credential")
@@ -1100,6 +1782,7 @@ func (c *Client) DescribeInstancePluginListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeInstancePluginListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeInstancePluginList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancePluginList require credential")
@@ -1183,6 +1866,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -1218,8 +1902,12 @@ func NewDescribeLogstashInstanceLogsResponse() (response *DescribeLogstashInstan
 // 查询用户该地域下符合条件的Logstash实例的日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDQUERYSTRING = "InvalidParameter.InvalidQueryString"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 func (c *Client) DescribeLogstashInstanceLogs(request *DescribeLogstashInstanceLogsRequest) (response *DescribeLogstashInstanceLogsResponse, err error) {
     return c.DescribeLogstashInstanceLogsWithContext(context.Background(), request)
 }
@@ -1228,12 +1916,17 @@ func (c *Client) DescribeLogstashInstanceLogs(request *DescribeLogstashInstanceL
 // 查询用户该地域下符合条件的Logstash实例的日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDQUERYSTRING = "InvalidParameter.InvalidQueryString"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 func (c *Client) DescribeLogstashInstanceLogsWithContext(ctx context.Context, request *DescribeLogstashInstanceLogsRequest) (response *DescribeLogstashInstanceLogsResponse, err error) {
     if request == nil {
         request = NewDescribeLogstashInstanceLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeLogstashInstanceLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogstashInstanceLogs require credential")
@@ -1287,6 +1980,7 @@ func (c *Client) DescribeLogstashInstanceOperationsWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeLogstashInstanceOperationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeLogstashInstanceOperations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogstashInstanceOperations require credential")
@@ -1340,6 +2034,7 @@ func (c *Client) DescribeLogstashInstancesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLogstashInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeLogstashInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogstashInstances require credential")
@@ -1391,6 +2086,7 @@ func (c *Client) DescribeLogstashPipelinesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLogstashPipelinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeLogstashPipelines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogstashPipelines require credential")
@@ -1399,6 +2095,424 @@ func (c *Client) DescribeLogstashPipelinesWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeLogstashPipelinesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeServerlessInstancesRequest() (request *DescribeServerlessInstancesRequest) {
+    request = &DescribeServerlessInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeServerlessInstances")
+    
+    
+    return
+}
+
+func NewDescribeServerlessInstancesResponse() (response *DescribeServerlessInstancesResponse) {
+    response = &DescribeServerlessInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServerlessInstances
+// Serverless获取索引列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  INVALIDPARAMETER_INVALIDSPACEID = "InvalidParameter.InvalidSpaceId"
+//  INVALIDPARAMETER_INVALIDTAGINFO = "InvalidParameter.InvalidTagInfo"
+//  INVALIDPARAMETER_INVALIDTAGLIST = "InvalidParameter.InvalidTagList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServerlessInstances(request *DescribeServerlessInstancesRequest) (response *DescribeServerlessInstancesResponse, err error) {
+    return c.DescribeServerlessInstancesWithContext(context.Background(), request)
+}
+
+// DescribeServerlessInstances
+// Serverless获取索引列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  INVALIDPARAMETER_INVALIDSPACEID = "InvalidParameter.InvalidSpaceId"
+//  INVALIDPARAMETER_INVALIDTAGINFO = "InvalidParameter.InvalidTagInfo"
+//  INVALIDPARAMETER_INVALIDTAGLIST = "InvalidParameter.InvalidTagList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServerlessInstancesWithContext(ctx context.Context, request *DescribeServerlessInstancesRequest) (response *DescribeServerlessInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeServerlessInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeServerlessInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServerlessInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServerlessInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeServerlessMetricsRequest() (request *DescribeServerlessMetricsRequest) {
+    request = &DescribeServerlessMetricsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeServerlessMetrics")
+    
+    
+    return
+}
+
+func NewDescribeServerlessMetricsResponse() (response *DescribeServerlessMetricsResponse) {
+    response = &DescribeServerlessMetricsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServerlessMetrics
+// 获取serverless实例对应指标，获取space维度时不需要传入indexid，获取index时不需要传入spaceid
+//
+// 获取一段时间时间范围内的指标数据
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeServerlessMetrics(request *DescribeServerlessMetricsRequest) (response *DescribeServerlessMetricsResponse, err error) {
+    return c.DescribeServerlessMetricsWithContext(context.Background(), request)
+}
+
+// DescribeServerlessMetrics
+// 获取serverless实例对应指标，获取space维度时不需要传入indexid，获取index时不需要传入spaceid
+//
+// 获取一段时间时间范围内的指标数据
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeServerlessMetricsWithContext(ctx context.Context, request *DescribeServerlessMetricsRequest) (response *DescribeServerlessMetricsResponse, err error) {
+    if request == nil {
+        request = NewDescribeServerlessMetricsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeServerlessMetrics")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServerlessMetrics require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServerlessMetricsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeServerlessSpaceUserRequest() (request *DescribeServerlessSpaceUserRequest) {
+    request = &DescribeServerlessSpaceUserRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeServerlessSpaceUser")
+    
+    
+    return
+}
+
+func NewDescribeServerlessSpaceUserResponse() (response *DescribeServerlessSpaceUserResponse) {
+    response = &DescribeServerlessSpaceUserResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServerlessSpaceUser
+// 查看Serverless空间子用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_GETUSER = "FailedOperation.GetUser"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDSPACEID = "InvalidParameter.InvalidSpaceId"
+//  INVALIDPARAMETER_USERNAMEEXIST = "InvalidParameter.UsernameExist"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) DescribeServerlessSpaceUser(request *DescribeServerlessSpaceUserRequest) (response *DescribeServerlessSpaceUserResponse, err error) {
+    return c.DescribeServerlessSpaceUserWithContext(context.Background(), request)
+}
+
+// DescribeServerlessSpaceUser
+// 查看Serverless空间子用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
+//  FAILEDOPERATION_GETUSER = "FailedOperation.GetUser"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDSPACEID = "InvalidParameter.InvalidSpaceId"
+//  INVALIDPARAMETER_USERNAMEEXIST = "InvalidParameter.UsernameExist"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXCOUNT = "LimitExceeded.IndexCount"
+//  LIMITEXCEEDED_INDEXCREATE = "LimitExceeded.IndexCreate"
+//  LIMITEXCEEDED_SPACECOUNT = "LimitExceeded.SpaceCount"
+//  LIMITEXCEEDED_SPACECREATE = "LimitExceeded.SpaceCreate"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_HIDDENZONE = "ResourceInsufficient.HiddenZone"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) DescribeServerlessSpaceUserWithContext(ctx context.Context, request *DescribeServerlessSpaceUserRequest) (response *DescribeServerlessSpaceUserResponse, err error) {
+    if request == nil {
+        request = NewDescribeServerlessSpaceUserRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeServerlessSpaceUser")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServerlessSpaceUser require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServerlessSpaceUserResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeServerlessSpacesRequest() (request *DescribeServerlessSpacesRequest) {
+    request = &DescribeServerlessSpacesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeServerlessSpaces")
+    
+    
+    return
+}
+
+func NewDescribeServerlessSpacesResponse() (response *DescribeServerlessSpacesResponse) {
+    response = &DescribeServerlessSpacesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServerlessSpaces
+// 获取Serverless索引空间列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  FAILEDOPERATION_GETTAGINFOERROR = "FailedOperation.GetTagInfoError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServerlessSpaces(request *DescribeServerlessSpacesRequest) (response *DescribeServerlessSpacesResponse, err error) {
+    return c.DescribeServerlessSpacesWithContext(context.Background(), request)
+}
+
+// DescribeServerlessSpaces
+// 获取Serverless索引空间列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  FAILEDOPERATION_GETTAGINFOERROR = "FailedOperation.GetTagInfoError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServerlessSpacesWithContext(ctx context.Context, request *DescribeServerlessSpacesRequest) (response *DescribeServerlessSpacesResponse, err error) {
+    if request == nil {
+        request = NewDescribeServerlessSpacesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeServerlessSpaces")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServerlessSpaces require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServerlessSpacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSpaceKibanaToolsRequest() (request *DescribeSpaceKibanaToolsRequest) {
+    request = &DescribeSpaceKibanaToolsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeSpaceKibanaTools")
+    
+    
+    return
+}
+
+func NewDescribeSpaceKibanaToolsResponse() (response *DescribeSpaceKibanaToolsResponse) {
+    response = &DescribeSpaceKibanaToolsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSpaceKibanaTools
+// space维度的kibana获取登录token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeSpaceKibanaTools(request *DescribeSpaceKibanaToolsRequest) (response *DescribeSpaceKibanaToolsResponse, err error) {
+    return c.DescribeSpaceKibanaToolsWithContext(context.Background(), request)
+}
+
+// DescribeSpaceKibanaTools
+// space维度的kibana获取登录token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeSpaceKibanaToolsWithContext(ctx context.Context, request *DescribeSpaceKibanaToolsRequest) (response *DescribeSpaceKibanaToolsResponse, err error) {
+    if request == nil {
+        request = NewDescribeSpaceKibanaToolsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeSpaceKibanaTools")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSpaceKibanaTools require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSpaceKibanaToolsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeUserCosSnapshotListRequest() (request *DescribeUserCosSnapshotListRequest) {
+    request = &DescribeUserCosSnapshotListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeUserCosSnapshotList")
+    
+    
+    return
+}
+
+func NewDescribeUserCosSnapshotListResponse() (response *DescribeUserCosSnapshotListResponse) {
+    response = &DescribeUserCosSnapshotListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeUserCosSnapshotList
+// 查询快照信息接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETUSERCOSSNAPSHOTLIST = "FailedOperation.GetUserCosSnapshotList"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeUserCosSnapshotList(request *DescribeUserCosSnapshotListRequest) (response *DescribeUserCosSnapshotListResponse, err error) {
+    return c.DescribeUserCosSnapshotListWithContext(context.Background(), request)
+}
+
+// DescribeUserCosSnapshotList
+// 查询快照信息接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETUSERCOSSNAPSHOTLIST = "FailedOperation.GetUserCosSnapshotList"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeUserCosSnapshotListWithContext(ctx context.Context, request *DescribeUserCosSnapshotListRequest) (response *DescribeUserCosSnapshotListResponse, err error) {
+    if request == nil {
+        request = NewDescribeUserCosSnapshotListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeUserCosSnapshotList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeUserCosSnapshotList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeUserCosSnapshotListResponse()
     err = c.Send(request, response)
     return
 }
@@ -1426,10 +2540,12 @@ func NewDescribeViewsResponse() (response *DescribeViewsResponse) {
 // 查询集群各视图数据，包括集群维度、节点维度、Kibana维度
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHCREATEINSTANCE = "AuthFailure.UnAuthCreateInstance"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -1441,10 +2557,12 @@ func (c *Client) DescribeViews(request *DescribeViewsRequest) (response *Describ
 // 查询集群各视图数据，包括集群维度、节点维度、Kibana维度
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHCREATEINSTANCE = "AuthFailure.UnAuthCreateInstance"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -1452,6 +2570,7 @@ func (c *Client) DescribeViewsWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeViewsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DescribeViews")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeViews require credential")
@@ -1521,6 +2640,7 @@ func (c *Client) DiagnoseInstanceWithContext(ctx context.Context, request *Diagn
     if request == nil {
         request = NewDiagnoseInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "DiagnoseInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DiagnoseInstance require credential")
@@ -1580,6 +2700,7 @@ func (c *Client) GetDiagnoseSettingsWithContext(ctx context.Context, request *Ge
     if request == nil {
         request = NewGetDiagnoseSettingsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "GetDiagnoseSettings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetDiagnoseSettings require credential")
@@ -1639,6 +2760,7 @@ func (c *Client) GetRequestTargetNodeTypesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewGetRequestTargetNodeTypesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "GetRequestTargetNodeTypes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRequestTargetNodeTypes require credential")
@@ -1647,6 +2769,122 @@ func (c *Client) GetRequestTargetNodeTypesWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewGetRequestTargetNodeTypesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquirePriceRenewInstanceRequest() (request *InquirePriceRenewInstanceRequest) {
+    request = &InquirePriceRenewInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "InquirePriceRenewInstance")
+    
+    
+    return
+}
+
+func NewInquirePriceRenewInstanceResponse() (response *InquirePriceRenewInstanceResponse) {
+    response = &InquirePriceRenewInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquirePriceRenewInstance
+// 集群续费询价接口，续费前通过调用该接口，可获取集群续费的价格。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+func (c *Client) InquirePriceRenewInstance(request *InquirePriceRenewInstanceRequest) (response *InquirePriceRenewInstanceResponse, err error) {
+    return c.InquirePriceRenewInstanceWithContext(context.Background(), request)
+}
+
+// InquirePriceRenewInstance
+// 集群续费询价接口，续费前通过调用该接口，可获取集群续费的价格。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+func (c *Client) InquirePriceRenewInstanceWithContext(ctx context.Context, request *InquirePriceRenewInstanceRequest) (response *InquirePriceRenewInstanceResponse, err error) {
+    if request == nil {
+        request = NewInquirePriceRenewInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "InquirePriceRenewInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquirePriceRenewInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquirePriceRenewInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInstallInstanceModelRequest() (request *InstallInstanceModelRequest) {
+    request = &InstallInstanceModelRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "InstallInstanceModel")
+    
+    
+    return
+}
+
+func NewInstallInstanceModelResponse() (response *InstallInstanceModelResponse) {
+    response = &InstallInstanceModelResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InstallInstanceModel
+// ES集群安装模型接口
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) InstallInstanceModel(request *InstallInstanceModelRequest) (response *InstallInstanceModelResponse, err error) {
+    return c.InstallInstanceModelWithContext(context.Background(), request)
+}
+
+// InstallInstanceModel
+// ES集群安装模型接口
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) InstallInstanceModelWithContext(ctx context.Context, request *InstallInstanceModelRequest) (response *InstallInstanceModelResponse, err error) {
+    if request == nil {
+        request = NewInstallInstanceModelRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "InstallInstanceModel")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InstallInstanceModel require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInstallInstanceModelResponse()
     err = c.Send(request, response)
     return
 }
@@ -1698,6 +2936,7 @@ func (c *Client) ModifyEsVipSecurityGroupWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyEsVipSecurityGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "ModifyEsVipSecurityGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyEsVipSecurityGroup require credential")
@@ -1743,6 +2982,9 @@ func NewRestartInstanceResponse() (response *RestartInstanceResponse) {
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_CVMSTATUSSTOPPED = "UnsupportedOperation.CvmStatusStopped"
+//  UNSUPPORTEDOPERATION_DISKFREESPACEINSUFFICIENT = "UnsupportedOperation.DiskFreeSpaceInsufficient"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -1764,6 +3006,9 @@ func (c *Client) RestartInstance(request *RestartInstanceRequest) (response *Res
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_CVMSTATUSSTOPPED = "UnsupportedOperation.CvmStatusStopped"
+//  UNSUPPORTEDOPERATION_DISKFREESPACEINSUFFICIENT = "UnsupportedOperation.DiskFreeSpaceInsufficient"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -1771,6 +3016,7 @@ func (c *Client) RestartInstanceWithContext(ctx context.Context, request *Restar
     if request == nil {
         request = NewRestartInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "RestartInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartInstance require credential")
@@ -1832,6 +3078,7 @@ func (c *Client) RestartKibanaWithContext(ctx context.Context, request *RestartK
     if request == nil {
         request = NewRestartKibanaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "RestartKibana")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartKibana require credential")
@@ -1889,6 +3136,7 @@ func (c *Client) RestartLogstashInstanceWithContext(ctx context.Context, request
     if request == nil {
         request = NewRestartLogstashInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "RestartLogstashInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartLogstashInstance require credential")
@@ -1933,11 +3181,14 @@ func NewRestartNodesResponse() (response *RestartNodesResponse) {
 //  INVALIDPARAMETER_INVALIDRESTARTMODE = "InvalidParameter.InvalidRestartMode"
 //  INVALIDPARAMETER_INVALIDSUBNETUIDLIST = "InvalidParameter.InvalidSubnetUidList"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT_CVM = "ResourceInsufficient.CVM"
 //  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
 //  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_DISKFREESPACEINSUFFICIENT = "UnsupportedOperation.DiskFreeSpaceInsufficient"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_RESTARTMODE = "UnsupportedOperation.RestartMode"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
@@ -1959,11 +3210,14 @@ func (c *Client) RestartNodes(request *RestartNodesRequest) (response *RestartNo
 //  INVALIDPARAMETER_INVALIDRESTARTMODE = "InvalidParameter.InvalidRestartMode"
 //  INVALIDPARAMETER_INVALIDSUBNETUIDLIST = "InvalidParameter.InvalidSubnetUidList"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT_CVM = "ResourceInsufficient.CVM"
 //  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
 //  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_DISKFREESPACEINSUFFICIENT = "UnsupportedOperation.DiskFreeSpaceInsufficient"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_RESTARTMODE = "UnsupportedOperation.RestartMode"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
@@ -1972,6 +3226,7 @@ func (c *Client) RestartNodesWithContext(ctx context.Context, request *RestartNo
     if request == nil {
         request = NewRestartNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "RestartNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartNodes require credential")
@@ -1980,6 +3235,60 @@ func (c *Client) RestartNodesWithContext(ctx context.Context, request *RestartNo
     request.SetContext(ctx)
     
     response = NewRestartNodesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRestoreClusterSnapshotRequest() (request *RestoreClusterSnapshotRequest) {
+    request = &RestoreClusterSnapshotRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "RestoreClusterSnapshot")
+    
+    
+    return
+}
+
+func NewRestoreClusterSnapshotResponse() (response *RestoreClusterSnapshotResponse) {
+    response = &RestoreClusterSnapshotResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RestoreClusterSnapshot
+// 快照备份恢复，从仓库中恢复快照到集群中
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETERVALUE_PASSWORD = "InvalidParameterValue.Password"
+//  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
+func (c *Client) RestoreClusterSnapshot(request *RestoreClusterSnapshotRequest) (response *RestoreClusterSnapshotResponse, err error) {
+    return c.RestoreClusterSnapshotWithContext(context.Background(), request)
+}
+
+// RestoreClusterSnapshot
+// 快照备份恢复，从仓库中恢复快照到集群中
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETERVALUE_PASSWORD = "InvalidParameterValue.Password"
+//  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
+func (c *Client) RestoreClusterSnapshotWithContext(ctx context.Context, request *RestoreClusterSnapshotRequest) (response *RestoreClusterSnapshotResponse, err error) {
+    if request == nil {
+        request = NewRestoreClusterSnapshotRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "RestoreClusterSnapshot")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RestoreClusterSnapshot require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRestoreClusterSnapshotResponse()
     err = c.Send(request, response)
     return
 }
@@ -2021,6 +3330,7 @@ func (c *Client) SaveAndDeployLogstashPipelineWithContext(ctx context.Context, r
     if request == nil {
         request = NewSaveAndDeployLogstashPipelineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "SaveAndDeployLogstashPipeline")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SaveAndDeployLogstashPipeline require credential")
@@ -2074,6 +3384,7 @@ func (c *Client) StartLogstashPipelinesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewStartLogstashPipelinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "StartLogstashPipelines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartLogstashPipelines require credential")
@@ -2127,6 +3438,7 @@ func (c *Client) StopLogstashPipelinesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewStopLogstashPipelinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "StopLogstashPipelines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopLogstashPipelines require credential")
@@ -2188,6 +3500,7 @@ func (c *Client) UpdateDiagnoseSettingsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateDiagnoseSettingsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateDiagnoseSettings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateDiagnoseSettings require credential")
@@ -2236,6 +3549,7 @@ func NewUpdateDictionariesResponse() (response *UpdateDictionariesResponse) {
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -2260,6 +3574,7 @@ func (c *Client) UpdateDictionaries(request *UpdateDictionariesRequest) (respons
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -2267,6 +3582,7 @@ func (c *Client) UpdateDictionariesWithContext(ctx context.Context, request *Upd
     if request == nil {
         request = NewUpdateDictionariesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateDictionaries")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateDictionaries require credential")
@@ -2334,6 +3650,7 @@ func (c *Client) UpdateIndexWithContext(ctx context.Context, request *UpdateInde
     if request == nil {
         request = NewUpdateIndexRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateIndex")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateIndex require credential")
@@ -2398,6 +3715,7 @@ func NewUpdateInstanceResponse() (response *UpdateInstanceResponse) {
 //  INVALIDPARAMETER_INVALIDCOSBACKUPINFO = "InvalidParameter.InvalidCosBackupInfo"
 //  INVALIDPARAMETER_INVALIDDISKCOUNT = "InvalidParameter.InvalidDiskCount"
 //  INVALIDPARAMETER_INVALIDDISKENCRYPT = "InvalidParameter.InvalidDiskEncrypt"
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
 //  INVALIDPARAMETER_INVALIDDISKTYPE = "InvalidParameter.InvalidDiskType"
 //  INVALIDPARAMETER_INVALIDESACL = "InvalidParameter.InvalidEsACL"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
@@ -2438,14 +3756,20 @@ func NewUpdateInstanceResponse() (response *UpdateInstanceResponse) {
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_BASICSECURITYTYPE = "UnsupportedOperation.BasicSecurityType"
 //  UNSUPPORTEDOPERATION_CHANGENODETYPE = "UnsupportedOperation.ChangeNodeType"
+//  UNSUPPORTEDOPERATION_CLUSTERSHARDNUM = "UnsupportedOperation.ClusterShardNum"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATECLOSE = "UnsupportedOperation.ClusterStateClose"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_CVMSTATUSSTOPPED = "UnsupportedOperation.CvmStatusStopped"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
+//  UNSUPPORTEDOPERATION_INDEXSETTINGSREQUIRESET = "UnsupportedOperation.IndexSettingsRequireSet"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
 //  UNSUPPORTEDOPERATION_MULTIZONESUPGRADE = "UnsupportedOperation.MultiZonesUpgrade"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
+//  UNSUPPORTEDOPERATION_SCALEDOWNTOOMUCH = "UnsupportedOperation.ScaleDownTooMuch"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
+//  UNSUPPORTEDOPERATION_UPDATEDISKTYPE = "UnsupportedOperation.UpdateDiskType"
 //  UNSUPPORTEDOPERATION_WEBSERVICETYPE = "UnsupportedOperation.WebServiceType"
 func (c *Client) UpdateInstance(request *UpdateInstanceRequest) (response *UpdateInstanceResponse, err error) {
     return c.UpdateInstanceWithContext(context.Background(), request)
@@ -2484,6 +3808,7 @@ func (c *Client) UpdateInstance(request *UpdateInstanceRequest) (response *Updat
 //  INVALIDPARAMETER_INVALIDCOSBACKUPINFO = "InvalidParameter.InvalidCosBackupInfo"
 //  INVALIDPARAMETER_INVALIDDISKCOUNT = "InvalidParameter.InvalidDiskCount"
 //  INVALIDPARAMETER_INVALIDDISKENCRYPT = "InvalidParameter.InvalidDiskEncrypt"
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
 //  INVALIDPARAMETER_INVALIDDISKTYPE = "InvalidParameter.InvalidDiskType"
 //  INVALIDPARAMETER_INVALIDESACL = "InvalidParameter.InvalidEsACL"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
@@ -2524,19 +3849,26 @@ func (c *Client) UpdateInstance(request *UpdateInstanceRequest) (response *Updat
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_BASICSECURITYTYPE = "UnsupportedOperation.BasicSecurityType"
 //  UNSUPPORTEDOPERATION_CHANGENODETYPE = "UnsupportedOperation.ChangeNodeType"
+//  UNSUPPORTEDOPERATION_CLUSTERSHARDNUM = "UnsupportedOperation.ClusterShardNum"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATECLOSE = "UnsupportedOperation.ClusterStateClose"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_CVMSTATUSSTOPPED = "UnsupportedOperation.CvmStatusStopped"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
+//  UNSUPPORTEDOPERATION_INDEXSETTINGSREQUIRESET = "UnsupportedOperation.IndexSettingsRequireSet"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
 //  UNSUPPORTEDOPERATION_MULTIZONESUPGRADE = "UnsupportedOperation.MultiZonesUpgrade"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
+//  UNSUPPORTEDOPERATION_SCALEDOWNTOOMUCH = "UnsupportedOperation.ScaleDownTooMuch"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
+//  UNSUPPORTEDOPERATION_UPDATEDISKTYPE = "UnsupportedOperation.UpdateDiskType"
 //  UNSUPPORTEDOPERATION_WEBSERVICETYPE = "UnsupportedOperation.WebServiceType"
 func (c *Client) UpdateInstanceWithContext(ctx context.Context, request *UpdateInstanceRequest) (response *UpdateInstanceResponse, err error) {
     if request == nil {
         request = NewUpdateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateInstance require credential")
@@ -2581,6 +3913,7 @@ func NewUpdateJdkResponse() (response *UpdateJdkResponse) {
 //  RESOURCENOTFOUND_OSSINFONOTFOUND = "ResourceNotFound.OssInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) UpdateJdk(request *UpdateJdkRequest) (response *UpdateJdkResponse, err error) {
     return c.UpdateJdkWithContext(context.Background(), request)
@@ -2599,11 +3932,13 @@ func (c *Client) UpdateJdk(request *UpdateJdkRequest) (response *UpdateJdkRespon
 //  RESOURCENOTFOUND_OSSINFONOTFOUND = "ResourceNotFound.OssInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) UpdateJdkWithContext(ctx context.Context, request *UpdateJdkRequest) (response *UpdateJdkResponse, err error) {
     if request == nil {
         request = NewUpdateJdkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateJdk")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateJdk require credential")
@@ -2695,6 +4030,7 @@ func (c *Client) UpdateLogstashInstanceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateLogstashInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateLogstashInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateLogstashInstance require credential")
@@ -2748,6 +4084,7 @@ func (c *Client) UpdateLogstashPipelineDescWithContext(ctx context.Context, requ
     if request == nil {
         request = NewUpdateLogstashPipelineDescRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateLogstashPipelineDesc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateLogstashPipelineDesc require credential")
@@ -2798,6 +4135,7 @@ func NewUpdatePluginsResponse() (response *UpdatePluginsResponse) {
 //  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -2824,6 +4162,7 @@ func (c *Client) UpdatePlugins(request *UpdatePluginsRequest) (response *UpdateP
 //  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -2831,6 +4170,7 @@ func (c *Client) UpdatePluginsWithContext(ctx context.Context, request *UpdatePl
     if request == nil {
         request = NewUpdatePluginsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdatePlugins")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdatePlugins require credential")
@@ -2894,6 +4234,7 @@ func (c *Client) UpdateRequestTargetNodeTypesWithContext(ctx context.Context, re
     if request == nil {
         request = NewUpdateRequestTargetNodeTypesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateRequestTargetNodeTypes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRequestTargetNodeTypes require credential")
@@ -2902,6 +4243,202 @@ func (c *Client) UpdateRequestTargetNodeTypesWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewUpdateRequestTargetNodeTypesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateServerlessInstanceRequest() (request *UpdateServerlessInstanceRequest) {
+    request = &UpdateServerlessInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "UpdateServerlessInstance")
+    
+    
+    return
+}
+
+func NewUpdateServerlessInstanceResponse() (response *UpdateServerlessInstanceResponse) {
+    response = &UpdateServerlessInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateServerlessInstance
+// 更新Serverless索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSCONTROLLIST = "FailedOperation.AccessControlList"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  FAILEDOPERATION_SPACELANGUAGE = "FailedOperation.SpaceLanguage"
+//  FAILEDOPERATION_UNSUPPORTEDOPENLOWFREQUENCY = "FailedOperation.UnsupportedOpenLowFrequency"
+//  FAILEDOPERATION_UPDATEVPC = "FailedOperation.UpdateVpc"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDESACL = "InvalidParameter.InvalidEsACL"
+//  INVALIDPARAMETER_INVALIDINDEXMETAJSON = "InvalidParameter.InvalidIndexMetaJson"
+//  INVALIDPARAMETER_INVALIDOPTYPE = "InvalidParameter.InvalidOpType"
+//  INVALIDPARAMETER_INVALIDPRIVATEACCESS = "InvalidParameter.InvalidPrivateAccess"
+//  INVALIDPARAMETER_INVALIDPUBLICACCESS = "InvalidParameter.InvalidPublicAccess"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  INVALIDPARAMETER_INVALIDUPDATEMETAJSON = "InvalidParameter.InvalidUpdateMetaJson"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ISOLATEDSTATUS = "ResourceInUse.IsolatedStatus"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UINNOTINWHITELIST = "UnauthorizedOperation.UinNotInWhiteList"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateServerlessInstance(request *UpdateServerlessInstanceRequest) (response *UpdateServerlessInstanceResponse, err error) {
+    return c.UpdateServerlessInstanceWithContext(context.Background(), request)
+}
+
+// UpdateServerlessInstance
+// 更新Serverless索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSCONTROLLIST = "FailedOperation.AccessControlList"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  FAILEDOPERATION_SPACELANGUAGE = "FailedOperation.SpaceLanguage"
+//  FAILEDOPERATION_UNSUPPORTEDOPENLOWFREQUENCY = "FailedOperation.UnsupportedOpenLowFrequency"
+//  FAILEDOPERATION_UPDATEVPC = "FailedOperation.UpdateVpc"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDESACL = "InvalidParameter.InvalidEsACL"
+//  INVALIDPARAMETER_INVALIDINDEXMETAJSON = "InvalidParameter.InvalidIndexMetaJson"
+//  INVALIDPARAMETER_INVALIDOPTYPE = "InvalidParameter.InvalidOpType"
+//  INVALIDPARAMETER_INVALIDPRIVATEACCESS = "InvalidParameter.InvalidPrivateAccess"
+//  INVALIDPARAMETER_INVALIDPUBLICACCESS = "InvalidParameter.InvalidPublicAccess"
+//  INVALIDPARAMETER_INVALIDSERVERLESSID = "InvalidParameter.InvalidServerlessId"
+//  INVALIDPARAMETER_INVALIDUPDATEMETAJSON = "InvalidParameter.InvalidUpdateMetaJson"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ISOLATEDSTATUS = "ResourceInUse.IsolatedStatus"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UINNOTINWHITELIST = "UnauthorizedOperation.UinNotInWhiteList"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateServerlessInstanceWithContext(ctx context.Context, request *UpdateServerlessInstanceRequest) (response *UpdateServerlessInstanceResponse, err error) {
+    if request == nil {
+        request = NewUpdateServerlessInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateServerlessInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateServerlessInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateServerlessInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateServerlessSpaceRequest() (request *UpdateServerlessSpaceRequest) {
+    request = &UpdateServerlessSpaceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "UpdateServerlessSpace")
+    
+    
+    return
+}
+
+func NewUpdateServerlessSpaceResponse() (response *UpdateServerlessSpaceResponse) {
+    response = &UpdateServerlessSpaceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateServerlessSpace
+// 更新Serverless索引空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSCONTROLLIST = "FailedOperation.AccessControlList"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDNODENAMES = "InvalidParameter.InvalidNodeNames"
+//  INVALIDPARAMETER_INVALIDOPTYPE = "InvalidParameter.InvalidOpType"
+//  INVALIDPARAMETER_INVALIDPUBLICACCESS = "InvalidParameter.InvalidPublicAccess"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_INVALIDSPACEID = "InvalidParameter.InvalidSpaceId"
+//  INVALIDPARAMETER_INVALIDSPACENAMES = "InvalidParameter.InvalidSpaceNames"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) UpdateServerlessSpace(request *UpdateServerlessSpaceRequest) (response *UpdateServerlessSpaceResponse, err error) {
+    return c.UpdateServerlessSpaceWithContext(context.Background(), request)
+}
+
+// UpdateServerlessSpace
+// 更新Serverless索引空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSCONTROLLIST = "FailedOperation.AccessControlList"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDNODENAMES = "InvalidParameter.InvalidNodeNames"
+//  INVALIDPARAMETER_INVALIDOPTYPE = "InvalidParameter.InvalidOpType"
+//  INVALIDPARAMETER_INVALIDPUBLICACCESS = "InvalidParameter.InvalidPublicAccess"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_INVALIDSPACEID = "InvalidParameter.InvalidSpaceId"
+//  INVALIDPARAMETER_INVALIDSPACENAMES = "InvalidParameter.InvalidSpaceNames"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+func (c *Client) UpdateServerlessSpaceWithContext(ctx context.Context, request *UpdateServerlessSpaceRequest) (response *UpdateServerlessSpaceResponse, err error) {
+    if request == nil {
+        request = NewUpdateServerlessSpaceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpdateServerlessSpace")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateServerlessSpace require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateServerlessSpaceResponse()
     err = c.Send(request, response)
     return
 }
@@ -2947,8 +4484,11 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
 //  UNAUTHORIZEDOPERATION_UINNOTINWHITELIST = "UnauthorizedOperation.UinNotInWhiteList"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATECLOSE = "UnsupportedOperation.ClusterStateClose"
+//  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
 //  UNSUPPORTEDOPERATION_COSBACKUP = "UnsupportedOperation.CosBackUp"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
+//  UNSUPPORTEDOPERATION_INDEXSETTINGSREQUIRESET = "UnsupportedOperation.IndexSettingsRequireSet"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -2978,8 +4518,11 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
 //  UNAUTHORIZEDOPERATION_UINNOTINWHITELIST = "UnauthorizedOperation.UinNotInWhiteList"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATECLOSE = "UnsupportedOperation.ClusterStateClose"
+//  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
 //  UNSUPPORTEDOPERATION_COSBACKUP = "UnsupportedOperation.CosBackUp"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
+//  UNSUPPORTEDOPERATION_INDEXSETTINGSREQUIRESET = "UnsupportedOperation.IndexSettingsRequireSet"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
@@ -2987,6 +4530,7 @@ func (c *Client) UpgradeInstanceWithContext(ctx context.Context, request *Upgrad
     if request == nil {
         request = NewUpgradeInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpgradeInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeInstance require credential")
@@ -3062,6 +4606,7 @@ func NewUpgradeLicenseResponse() (response *UpgradeLicenseResponse) {
 //  UNSUPPORTEDOPERATION_BASICSECURITYTYPE = "UnsupportedOperation.BasicSecurityType"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
 //  UNSUPPORTEDOPERATION_LOCALDISK = "UnsupportedOperation.LocalDisk"
@@ -3115,6 +4660,7 @@ func (c *Client) UpgradeLicense(request *UpgradeLicenseRequest) (response *Upgra
 //  UNSUPPORTEDOPERATION_BASICSECURITYTYPE = "UnsupportedOperation.BasicSecurityType"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
+//  UNSUPPORTEDOPERATION_HETEROSCALINGEXECUTING = "UnsupportedOperation.HeteroScalingExecuting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_LICENSEERROR = "UnsupportedOperation.LicenseError"
 //  UNSUPPORTEDOPERATION_LOCALDISK = "UnsupportedOperation.LocalDisk"
@@ -3124,6 +4670,7 @@ func (c *Client) UpgradeLicenseWithContext(ctx context.Context, request *Upgrade
     if request == nil {
         request = NewUpgradeLicenseRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "es", APIVersion, "UpgradeLicense")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeLicense require credential")
