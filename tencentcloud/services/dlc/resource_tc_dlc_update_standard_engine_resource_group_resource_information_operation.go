@@ -232,7 +232,7 @@ func resourceTencentCloudDlcUpdateStandardEngineResourceGroupResourceInformation
 	// wait
 	waitReq := dlcv20210125.NewDescribeStandardEngineResourceGroupsRequest()
 	waitReq.Filters = []*dlcv20210125.Filter{
-		&dlcv20210125.Filter{
+		{
 			Name:   helper.String("engine-resource-group-name-unique"),
 			Values: helper.Strings([]string{engineResourceGroupName}),
 		},
