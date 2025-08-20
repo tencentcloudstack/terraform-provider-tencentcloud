@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ func (c *Client) ActionAlterCkUserWithContext(ctx context.Context, request *Acti
     if request == nil {
         request = NewActionAlterCkUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ActionAlterCkUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ActionAlterCkUser require credential")
@@ -131,6 +132,7 @@ func (c *Client) CreateBackUpScheduleWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateBackUpScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "CreateBackUpSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateBackUpSchedule require credential")
@@ -180,6 +182,7 @@ func (c *Client) CreateInstanceNewWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateInstanceNewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "CreateInstanceNew")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceNew require credential")
@@ -229,6 +232,7 @@ func (c *Client) DeleteBackUpDataWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteBackUpDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DeleteBackUpData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBackUpData require credential")
@@ -278,6 +282,7 @@ func (c *Client) DescribeBackUpJobWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeBackUpJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeBackUpJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpJob require credential")
@@ -327,6 +332,7 @@ func (c *Client) DescribeBackUpJobDetailWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeBackUpJobDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeBackUpJobDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpJobDetail require credential")
@@ -362,7 +368,12 @@ func NewDescribeBackUpScheduleResponse() (response *DescribeBackUpScheduleRespon
 // 查询备份策略信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeBackUpSchedule(request *DescribeBackUpScheduleRequest) (response *DescribeBackUpScheduleResponse, err error) {
     return c.DescribeBackUpScheduleWithContext(context.Background(), request)
 }
@@ -371,11 +382,17 @@ func (c *Client) DescribeBackUpSchedule(request *DescribeBackUpScheduleRequest) 
 // 查询备份策略信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeBackUpScheduleWithContext(ctx context.Context, request *DescribeBackUpScheduleRequest) (response *DescribeBackUpScheduleResponse, err error) {
     if request == nil {
         request = NewDescribeBackUpScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeBackUpSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpSchedule require credential")
@@ -411,7 +428,12 @@ func NewDescribeBackUpTablesResponse() (response *DescribeBackUpTablesResponse) 
 // 获取可备份表信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeBackUpTables(request *DescribeBackUpTablesRequest) (response *DescribeBackUpTablesResponse, err error) {
     return c.DescribeBackUpTablesWithContext(context.Background(), request)
 }
@@ -420,11 +442,17 @@ func (c *Client) DescribeBackUpTables(request *DescribeBackUpTablesRequest) (res
 // 获取可备份表信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeBackUpTablesWithContext(ctx context.Context, request *DescribeBackUpTablesRequest) (response *DescribeBackUpTablesResponse, err error) {
     if request == nil {
         request = NewDescribeBackUpTablesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeBackUpTables")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpTables require credential")
@@ -433,6 +461,56 @@ func (c *Client) DescribeBackUpTablesWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeBackUpTablesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCNInstancesRequest() (request *DescribeCNInstancesRequest) {
+    request = &DescribeCNInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdwch", APIVersion, "DescribeCNInstances")
+    
+    
+    return
+}
+
+func NewDescribeCNInstancesResponse() (response *DescribeCNInstancesResponse) {
+    response = &DescribeCNInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCNInstances
+// 获取云原生实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeCNInstances(request *DescribeCNInstancesRequest) (response *DescribeCNInstancesResponse, err error) {
+    return c.DescribeCNInstancesWithContext(context.Background(), request)
+}
+
+// DescribeCNInstances
+// 获取云原生实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeCNInstancesWithContext(ctx context.Context, request *DescribeCNInstancesRequest) (response *DescribeCNInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCNInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeCNInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCNInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCNInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -460,6 +538,8 @@ func NewDescribeCkSqlApisResponse() (response *DescribeCkSqlApisResponse) {
 // 查询集群用户、集群表，数据库等相关信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTEREXECUTEEXCEEDED = "FailedOperation.ClusterExecuteExceeded"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeCkSqlApis(request *DescribeCkSqlApisRequest) (response *DescribeCkSqlApisResponse, err error) {
     return c.DescribeCkSqlApisWithContext(context.Background(), request)
@@ -469,11 +549,14 @@ func (c *Client) DescribeCkSqlApis(request *DescribeCkSqlApisRequest) (response 
 // 查询集群用户、集群表，数据库等相关信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTEREXECUTEEXCEEDED = "FailedOperation.ClusterExecuteExceeded"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeCkSqlApisWithContext(ctx context.Context, request *DescribeCkSqlApisRequest) (response *DescribeCkSqlApisResponse, err error) {
     if request == nil {
         request = NewDescribeCkSqlApisRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeCkSqlApis")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCkSqlApis require credential")
@@ -527,6 +610,7 @@ func (c *Client) DescribeClusterConfigsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeClusterConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeClusterConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterConfigs require credential")
@@ -580,6 +664,7 @@ func (c *Client) DescribeInstanceWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstance require credential")
@@ -633,6 +718,7 @@ func (c *Client) DescribeInstanceClustersWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeInstanceClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeInstanceClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceClusters require credential")
@@ -686,6 +772,7 @@ func (c *Client) DescribeInstanceKeyValConfigsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceKeyValConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeInstanceKeyValConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceKeyValConfigs require credential")
@@ -722,7 +809,9 @@ func NewDescribeInstanceNodesResponse() (response *DescribeInstanceNodesResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeInstanceNodes(request *DescribeInstanceNodesRequest) (response *DescribeInstanceNodesResponse, err error) {
     return c.DescribeInstanceNodesWithContext(context.Background(), request)
@@ -733,12 +822,15 @@ func (c *Client) DescribeInstanceNodes(request *DescribeInstanceNodesRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeInstanceNodesWithContext(ctx context.Context, request *DescribeInstanceNodesRequest) (response *DescribeInstanceNodesResponse, err error) {
     if request == nil {
         request = NewDescribeInstanceNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeInstanceNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceNodes require credential")
@@ -775,7 +867,9 @@ func NewDescribeInstanceShardsResponse() (response *DescribeInstanceShardsRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeInstanceShards(request *DescribeInstanceShardsRequest) (response *DescribeInstanceShardsResponse, err error) {
     return c.DescribeInstanceShardsWithContext(context.Background(), request)
@@ -786,12 +880,15 @@ func (c *Client) DescribeInstanceShards(request *DescribeInstanceShardsRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeInstanceShardsWithContext(ctx context.Context, request *DescribeInstanceShardsRequest) (response *DescribeInstanceShardsResponse, err error) {
     if request == nil {
         request = NewDescribeInstanceShardsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeInstanceShards")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceShards require credential")
@@ -828,7 +925,9 @@ func NewDescribeInstanceStateResponse() (response *DescribeInstanceStateResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeInstanceState(request *DescribeInstanceStateRequest) (response *DescribeInstanceStateResponse, err error) {
     return c.DescribeInstanceStateWithContext(context.Background(), request)
@@ -839,12 +938,15 @@ func (c *Client) DescribeInstanceState(request *DescribeInstanceStateRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeInstanceStateWithContext(ctx context.Context, request *DescribeInstanceStateRequest) (response *DescribeInstanceStateResponse, err error) {
     if request == nil {
         request = NewDescribeInstanceStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeInstanceState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceState require credential")
@@ -880,7 +982,11 @@ func NewDescribeInstancesNewResponse() (response *DescribeInstancesNewResponse) 
 // 获取实例列表，供外部sdk使用
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeInstancesNew(request *DescribeInstancesNewRequest) (response *DescribeInstancesNewResponse, err error) {
     return c.DescribeInstancesNewWithContext(context.Background(), request)
 }
@@ -889,11 +995,16 @@ func (c *Client) DescribeInstancesNew(request *DescribeInstancesNewRequest) (res
 // 获取实例列表，供外部sdk使用
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeInstancesNewWithContext(ctx context.Context, request *DescribeInstancesNewRequest) (response *DescribeInstancesNewResponse, err error) {
     if request == nil {
         request = NewDescribeInstancesNewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeInstancesNew")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesNew require credential")
@@ -929,7 +1040,11 @@ func NewDescribeSpecResponse() (response *DescribeSpecResponse) {
 // 购买页拉取集群的数据节点和zookeeper节点的规格列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeSpec(request *DescribeSpecRequest) (response *DescribeSpecResponse, err error) {
     return c.DescribeSpecWithContext(context.Background(), request)
 }
@@ -938,11 +1053,16 @@ func (c *Client) DescribeSpec(request *DescribeSpecRequest) (response *DescribeS
 // 购买页拉取集群的数据节点和zookeeper节点的规格列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeSpecWithContext(ctx context.Context, request *DescribeSpecRequest) (response *DescribeSpecResponse, err error) {
     if request == nil {
         request = NewDescribeSpecRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DescribeSpec")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSpec require credential")
@@ -978,7 +1098,11 @@ func NewDestroyInstanceResponse() (response *DestroyInstanceResponse) {
 // 销毁集群 open api
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DestroyInstance(request *DestroyInstanceRequest) (response *DestroyInstanceResponse, err error) {
     return c.DestroyInstanceWithContext(context.Background(), request)
 }
@@ -987,11 +1111,16 @@ func (c *Client) DestroyInstance(request *DestroyInstanceRequest) (response *Des
 // 销毁集群 open api
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DestroyInstanceWithContext(ctx context.Context, request *DestroyInstanceRequest) (response *DestroyInstanceResponse, err error) {
     if request == nil {
         request = NewDestroyInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "DestroyInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyInstance require credential")
@@ -1027,7 +1156,11 @@ func NewModifyClusterConfigsResponse() (response *ModifyClusterConfigsResponse) 
 // 在集群配置页面修改集群配置文件接口，xml模式
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyClusterConfigs(request *ModifyClusterConfigsRequest) (response *ModifyClusterConfigsResponse, err error) {
     return c.ModifyClusterConfigsWithContext(context.Background(), request)
 }
@@ -1036,11 +1169,16 @@ func (c *Client) ModifyClusterConfigs(request *ModifyClusterConfigsRequest) (res
 // 在集群配置页面修改集群配置文件接口，xml模式
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyClusterConfigsWithContext(ctx context.Context, request *ModifyClusterConfigsRequest) (response *ModifyClusterConfigsResponse, err error) {
     if request == nil {
         request = NewModifyClusterConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ModifyClusterConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyClusterConfigs require credential")
@@ -1076,7 +1214,11 @@ func NewModifyInstanceKeyValConfigsResponse() (response *ModifyInstanceKeyValCon
 // KV模式修改配置接口
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyInstanceKeyValConfigs(request *ModifyInstanceKeyValConfigsRequest) (response *ModifyInstanceKeyValConfigsResponse, err error) {
     return c.ModifyInstanceKeyValConfigsWithContext(context.Background(), request)
 }
@@ -1085,11 +1227,16 @@ func (c *Client) ModifyInstanceKeyValConfigs(request *ModifyInstanceKeyValConfig
 // KV模式修改配置接口
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyInstanceKeyValConfigsWithContext(ctx context.Context, request *ModifyInstanceKeyValConfigsRequest) (response *ModifyInstanceKeyValConfigsResponse, err error) {
     if request == nil {
         request = NewModifyInstanceKeyValConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ModifyInstanceKeyValConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceKeyValConfigs require credential")
@@ -1139,6 +1286,7 @@ func (c *Client) ModifyUserNewPrivilegeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyUserNewPrivilegeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ModifyUserNewPrivilege")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUserNewPrivilege require credential")
@@ -1188,6 +1336,7 @@ func (c *Client) OpenBackUpWithContext(ctx context.Context, request *OpenBackUpR
     if request == nil {
         request = NewOpenBackUpRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "OpenBackUp")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenBackUp require credential")
@@ -1237,6 +1386,7 @@ func (c *Client) RecoverBackUpJobWithContext(ctx context.Context, request *Recov
     if request == nil {
         request = NewRecoverBackUpJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "RecoverBackUpJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RecoverBackUpJob require credential")
@@ -1286,6 +1436,7 @@ func (c *Client) ResizeDiskWithContext(ctx context.Context, request *ResizeDiskR
     if request == nil {
         request = NewResizeDiskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ResizeDisk")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResizeDisk require credential")
@@ -1335,6 +1486,7 @@ func (c *Client) ScaleCNOutUpInstanceWithContext(ctx context.Context, request *S
     if request == nil {
         request = NewScaleCNOutUpInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ScaleCNOutUpInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleCNOutUpInstance require credential")
@@ -1384,6 +1536,7 @@ func (c *Client) ScaleOutInstanceWithContext(ctx context.Context, request *Scale
     if request == nil {
         request = NewScaleOutInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ScaleOutInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleOutInstance require credential")
@@ -1433,6 +1586,7 @@ func (c *Client) ScaleUpInstanceWithContext(ctx context.Context, request *ScaleU
     if request == nil {
         request = NewScaleUpInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwch", APIVersion, "ScaleUpInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleUpInstance require credential")
