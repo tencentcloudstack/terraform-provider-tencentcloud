@@ -1120,3 +1120,137 @@ func (me *DlcService) DescribeDlcStandardEngineResourceGroupConfigInformationByF
 	ret = response.Response
 	return
 }
+
+func (me *DlcService) DescribeDlcDataEngineNetworkByFilter(ctx context.Context, param map[string]interface{}) (ret []*dlc.EngineNetworkInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeEngineNetworksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+
+		if k == "Sorting" {
+			request.Sorting = v.(*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*dlc.Filter)
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDlcClient().DescribeEngineNetworks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EngineNetworkInfos) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.EngineNetworkInfos...)
+		if len(response.Response.EngineNetworkInfos) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DlcService) DescribeDlcDataEngineSessionParametersByFilter(ctx context.Context, param map[string]interface{}) (ret []*dlc.DataEngineImageSessionParameter, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeDataEngineSessionParametersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DataEngineId" {
+			request.DataEngineId = v.(*string)
+		}
+
+		if k == "DataEngineName" {
+			request.DataEngineName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDlcClient().DescribeDataEngineSessionParameters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.DataEngineParameters) < 1 {
+		return
+	}
+
+	ret = response.Response.DataEngineParameters
+	return
+}
+
+func (me *DlcService) DescribeDlcSessionImageVersionByFilter(ctx context.Context, param map[string]interface{}) (ret []*dlc.EngineSessionImage, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeSessionImageVersionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DataEngineId" {
+			request.DataEngineId = v.(*string)
+		}
+
+		if k == "FrameworkType" {
+			request.FrameworkType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDlcClient().DescribeSessionImageVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.EngineSessionImages) < 1 {
+		return
+	}
+
+	ret = response.Response.EngineSessionImages
+	return
+}
