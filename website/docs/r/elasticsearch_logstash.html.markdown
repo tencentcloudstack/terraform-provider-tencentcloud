@@ -38,21 +38,59 @@ resource "tencentcloud_elasticsearch_logstash" "logstash" {
 }
 ```
 
+### Create Multi Zone Instance
+
+```hcl
+resource "tencentcloud_elasticsearch_logstash" "logstash" {
+  instance_name    = "logstash-test"
+  zone             = "-"
+  logstash_version = "7.14.2"
+  vpc_id           = "vpc-axrsmmrv"
+  subnet_id        = "-"
+  node_num         = 2
+  charge_type      = "POSTPAID_BY_HOUR"
+  node_type        = "LOGSTASH.SA2.MEDIUM4"
+  disk_type        = "CLOUD_SSD"
+  disk_size        = 20
+  license_type     = "xpack"
+  operation_duration {
+    periods    = [1, 2, 3, 4, 5, 6, 0]
+    time_start = "02:00"
+    time_end   = "06:00"
+    time_zone  = "UTC+8"
+  }
+  tags = {
+    tagKey = "tagValue"
+  }
+  deploy_mode = 1
+  multi_zone_infos {
+    availability_zone = "ap-guangzhou-3"
+    subnet_id         = "subnet-j5vja918"
+  }
+  multi_zone_infos {
+    availability_zone = "ap-guangzhou-4"
+    subnet_id         = "subnet-oi7ya2j6"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `instance_name` - (Required, String) Instance name (compose of 1-50 letter, number, - or _).
 * `logstash_version` - (Required, String) Instance version(6.8.13, 7.10.1).
-* `subnet_id` - (Required, String) Subnet id.
+* `subnet_id` - (Required, String) Subnet id. Create multi zone instance, parameter subnet_id need input '-', details input to multi_zone_infos.
 * `vpc_id` - (Required, String) VPC id.
-* `zone` - (Required, String) Available zone.
+* `zone` - (Required, String) Available zone. Create multi zone instance, parameter zone need input '-', details input to multi_zone_infos.
 * `auto_voucher` - (Optional, Int) whether to use voucher auto, 1 when use, else 0.
 * `charge_period` - (Optional, Int) Period when charged by months or years(unit depends on TimeUnit).
 * `charge_type` - (Optional, String) Charge type. PREPAID: charged by months or years; POSTPAID_BY_HOUR: charged by hours; default vaule: POSTPAID_BY_HOUR.
+* `deploy_mode` - (Optional, Int) Deployment mode, 0: single availability zone, 1: multiple availability zones.
 * `disk_size` - (Optional, Int) node disk size (unit GB).
 * `disk_type` - (Optional, String) Disk type. CLOUD_SSD: SSD cloud disk; CLOUD_PREMIUM: high hard energy cloud disk; default: CLOUD_SSD.
 * `license_type` - (Optional, String) License type. oss: open source version; xpack:xpack version; default: xpack.
+* `multi_zone_infos` - (Optional, List) Details of availability zones when deploying multiple availability zones.
 * `node_num` - (Optional, Int) Node num(range 2-50).
 * `node_type` - (Optional, String) Node type. Valid values:
 - LOGSTASH.S1.SMALL2: 1 core 2G;
@@ -67,6 +105,12 @@ The following arguments are supported:
 * `tags` - (Optional, Map) Tag description list.
 * `time_unit` - (Optional, String) charge time unit(set when ChargeType is PREPAID, default value: ms).
 * `voucher_ids` - (Optional, Set: [`String`]) Voucher list(only can use one voucher by now).
+
+The `multi_zone_infos` object supports the following:
+
+* `availability_zone` - (Required, String) Availability zone.
+* `subnet_id` - (Required, String) Subnet id.
+* `hidden` - (Optional, Bool) Whether it is a hidden availability zone.
 
 The `operation_duration` object supports the following:
 
