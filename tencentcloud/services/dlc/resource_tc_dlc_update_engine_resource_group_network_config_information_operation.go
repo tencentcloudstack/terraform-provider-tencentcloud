@@ -85,7 +85,7 @@ func resourceTencentCloudDlcUpdateEngineResourceGroupNetworkConfigInformationOpe
 	// wait
 	waitReq := dlcv20210125.NewDescribeStandardEngineResourceGroupsRequest()
 	waitReq.Filters = []*dlcv20210125.Filter{
-		&dlcv20210125.Filter{
+		{
 			Name:   helper.String("engine-resource-group-id"),
 			Values: helper.Strings([]string{engineResourceGroupId}),
 		},
