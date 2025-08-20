@@ -208,13 +208,13 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Optional:     true,
 							Computed:     true,
 							ValidateFunc: tccommon.ValidateAllowedStringValue(ES_NODE_DISK_TYPE),
-							Description:  "Node disk type. Valid values are `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_HSSD`, `CLOUD_BSSD`, `CLOUD_BIGDATA` and `CLOUD_HIGHIO`. The default value is `CLOUD_SSD`.",
+							Description:  "Node disk type. Valid values are `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_HSSD`, `CLOUD_BSSD`, `CLOUD_BIGDATA` and `CLOUD_HIGHIO`. The default value is `CLOUD_SSD`. Big Data and High IO models do not support the specified disk type and have no default values.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Description: "Node disk size. Unit is GB, and default value is `100`.",
+							Description: "Node disk size. Unit is GB, and default value is `100`. Big Data and High IO models do not support the specified disk size and have no default values.",
 						},
 						"encrypt": {
 							Type:        schema.TypeBool,
@@ -1608,6 +1608,7 @@ func needSetDefault(nodeType string) bool {
 	if len(nodeTypeItems) < 3 {
 		return false
 	}
+	// 大数据型和高IO型,第二位以I和D开头(例如ES.I1.4XLARGE64的I1)
 	return !strings.HasPrefix(nodeTypeItems[1], "I") && !strings.HasPrefix(nodeTypeItems[1], "D")
 }
 
