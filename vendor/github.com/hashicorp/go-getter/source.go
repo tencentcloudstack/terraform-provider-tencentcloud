@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package getter
 
 import (
@@ -58,7 +61,9 @@ func SourceDirSubdir(src string) (string, string) {
 //
 // The returned path is the full absolute path.
 func SubdirGlob(dst, subDir string) (string, error) {
-	matches, err := filepath.Glob(filepath.Join(dst, subDir))
+	pattern := filepath.Join(dst, subDir)
+
+	matches, err := filepath.Glob(pattern)
 	if err != nil {
 		return "", err
 	}

@@ -1,8 +1,13 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package getter
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"os"
 )
 
 // readerFunc is syntactic sugar for read interface.
@@ -26,4 +31,63 @@ func Copy(ctx context.Context, dst io.Writer, src io.Reader) (int64, error) {
 			return src.Read(p)
 		}
 	}))
+}
+
+// copyReader copies from an io.Reader into a file, using umask to create the dst file
+func copyReader(dst string, src io.Reader, fmode, umask os.FileMode, fileSizeLimit int64) error {
+	dstF, err := os.OpenFile(dst, os.O_RDWR|os.O_CREATE|os.O_TRUNC, fmode)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = dstF.Close() }()
+
+	if fileSizeLimit > 0 {
+		src = io.LimitReader(src, fileSizeLimit)
+	}
+
+	_, err = io.Copy(dstF, src)
+	if err != nil {
+		return err
+	}
+
+	// Explicitly chmod; the process umask is unconditionally applied otherwise.
+	// We'll mask the mode with our own umask, but that may be different than
+	// the process umask
+	return os.Chmod(dst, mode(fmode, umask))
+}
+
+// copyFile copies a file in chunks from src path to dst path, using umask to create the dst file
+func copyFile(ctx context.Context, dst, src string, disableSymlinks bool, fmode, umask os.FileMode) (int64, error) {
+	if disableSymlinks {
+		fileInfo, err := os.Lstat(src)
+		if err != nil {
+			return 0, fmt.Errorf("failed to check copy file source for symlinks: %w", err)
+		}
+		if fileInfo.Mode()&os.ModeSymlink == os.ModeSymlink {
+			return 0, ErrSymlinkCopy
+		}
+	}
+
+	srcF, err := os.Open(src)
+	if err != nil {
+		return 0, err
+	}
+	defer func() { _ = srcF.Close() }()
+
+	dstF, err := os.OpenFile(dst, os.O_RDWR|os.O_CREATE|os.O_TRUNC, fmode)
+	if err != nil {
+		return 0, err
+	}
+	defer func() { _ = dstF.Close() }()
+
+	count, err := Copy(ctx, dstF, srcF)
+	if err != nil {
+		return 0, err
+	}
+
+	// Explicitly chmod; the process umask is unconditionally applied otherwise.
+	// We'll mask the mode with our own umask, but that may be different than
+	// the process umask
+	err = os.Chmod(dst, mode(fmode, umask))
+	return count, err
 }

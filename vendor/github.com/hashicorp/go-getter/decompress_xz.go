@@ -1,8 +1,11 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package getter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 
@@ -11,16 +14,21 @@ import (
 
 // XzDecompressor is an implementation of Decompressor that can
 // decompress xz files.
-type XzDecompressor struct{}
+type XzDecompressor struct {
+	// FileSizeLimit limits the size of a decompressed file.
+	//
+	// The zero value means no limit.
+	FileSizeLimit int64
+}
 
-func (d *XzDecompressor) Decompress(dst, src string, dir bool) error {
+func (d *XzDecompressor) Decompress(dst, src string, dir bool, umask os.FileMode) error {
 	// Directory isn't supported at all
 	if dir {
 		return fmt.Errorf("xz-compressed files can only unarchive to a single file")
 	}
 
 	// If we're going into a directory we should make that first
-	if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(dst), mode(0755, umask)); err != nil {
 		return err
 	}
 
@@ -29,21 +37,14 @@ func (d *XzDecompressor) Decompress(dst, src string, dir bool) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	// xz compression is second
-	xzR, err := xz.NewReader(f)
+	xzR, err := xz.NewReader(bufio.NewReader(f))
 	if err != nil {
 		return err
 	}
 
-	// Copy it out
-	dstF, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer dstF.Close()
-
-	_, err = io.Copy(dstF, xzR)
-	return err
+	// Copy it out, potentially using a file size limit.
+	return copyReader(dst, xzR, 0622, umask, d.FileSizeLimit)
 }
