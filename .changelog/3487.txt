@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clickhouse_instance: support `ck_default_user_pwd` params
+```
