@@ -1,3 +1,19 @@
+## 1.82.18(August 21 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_trocket_rocketmq_instances` ([#3482](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3482))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clickhouse_instance: support `ck_default_user_pwd` params ([#3487](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3487))
+* resource/tencentcloud_elasticsearch_instance: support update protocol, node_info_list support without disk_type and disk_size ([#3484](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3484))
+* resource/tencentcloud_elasticsearch_logstash: support deploy_mode and multi_zone_infos ([#3485](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3485))
+* resource/tencentcloud_instance: update doc ([#3480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3480))
+* resource/tencentcloud_mongodb_instance: update `instance_name` properties ([#3483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3483))
+* resource/tencentcloud_trocket_rocketmq_consumer_group: support `tags` ([#3481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3481))
+* resource/tencentcloud_trocket_rocketmq_topic: support `tags` ([#3481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3481))
+
 ## 1.82.17(August 14 , 2025)
 
 FEATURES:
