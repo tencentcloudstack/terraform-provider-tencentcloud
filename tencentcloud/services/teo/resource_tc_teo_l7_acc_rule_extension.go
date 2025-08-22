@@ -965,7 +965,6 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"header_actions": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									MaxItems:    1,
 									Description: "HTTP origin-pull header rules list.",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
@@ -1000,7 +999,6 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"header_actions": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									MaxItems:    1,
 									Description: "List of http header setting rules.",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
