@@ -912,6 +912,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_rule_engine_settings":                              teo.DataSourceTencentCloudTeoRuleEngineSettings(),
 			"tencentcloud_teo_zones":                                             teo.DataSourceTencentCloudTeoZones(),
 			"tencentcloud_teo_plans":                                             teo.DataSourceTencentCloudTeoPlans(),
+			"tencentcloud_teo_origin_acl":                                        teo.DataSourceTencentCloudTeoOriginAcl(),
 			"tencentcloud_sts_caller_identity":                                   sts.DataSourceTencentCloudStsCallerIdentity(),
 			"tencentcloud_dcdb_instances":                                        dcdb.DataSourceTencentCloudDcdbInstances(),
 			"tencentcloud_dcdb_accounts":                                         dcdb.DataSourceTencentCloudDcdbAccounts(),
