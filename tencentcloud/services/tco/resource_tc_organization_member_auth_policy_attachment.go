@@ -166,6 +166,10 @@ func resourceTencentCloudOrganizationMemberAuthPolicyAttachmentRead(d *schema.Re
 		return nil
 	}
 
+	if len(respData) != 1 {
+		return fmt.Errorf("Query organization members auth policy attachment by id return more than one.")
+	}
+
 	for _, item := range respData {
 		if item.PolicyId != nil {
 			_ = d.Set("policy_id", item.PolicyId)
