@@ -2019,6 +2019,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_identity_center_scim_credential":                                          tco.ResourceTencentCloudIdentityCenterScimCredential(),
 			"tencentcloud_identity_center_scim_synchronization_status":                              tco.ResourceTencentCloudIdentityCenterScimSynchronizationStatus(),
 			"tencentcloud_provision_role_configuration_operation":                                   tco.ResourceTencentCloudProvisionRoleConfigurationOperation(),
+			"tencentcloud_organization_member_auth_policy_attachment":                               tco.ResourceTencentCloudOrganizationMemberAuthPolicyAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                                                       dbbrain.ResourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":                                   dbbrain.ResourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                                              dbbrain.ResourceTencentCloudDbbrainDbDiagReportTask(),
