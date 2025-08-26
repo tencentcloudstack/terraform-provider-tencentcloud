@@ -15,19 +15,27 @@ func TestAccTencentCloudOrganizationMemberAuthPolicyAttachmentResource_basic(t *
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{{
-			Config: testAccOrganizationMemberAuthPolicyAttachment,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_member_auth_policy_attachment.organization_member_auth_policy_attachment", "id")),
-		}, {
-			ResourceName:      "tencentcloud_organization_member_auth_policy_attachment.organization_member_auth_policy_attachment",
-			ImportState:       true,
-			ImportStateVerify: true,
-		}},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccOrganizationMemberAuthPolicyAttachment,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_member_auth_policy_attachment.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_member_auth_policy_attachment.example", "policy_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_organization_member_auth_policy_attachment.example", "org_sub_account_uin"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_organization_member_auth_policy_attachment.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
 	})
 }
 
 const testAccOrganizationMemberAuthPolicyAttachment = `
-
-resource "tencentcloud_organization_member_auth_policy_attachment" "organization_member_auth_policy_attachment" {
+resource "tencentcloud_organization_member_auth_policy_attachment" "example" {
+  policy_id           = 250021751
+  org_sub_account_uin = 100037718139
 }
 `
