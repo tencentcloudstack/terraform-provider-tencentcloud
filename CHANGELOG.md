@@ -1,3 +1,19 @@
+## 1.82.27(August 27 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_teo_origin_acl` ([#3493](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3493))
+* **New Resource:** `tencentcloud_organization_member_auth_policy_attachment` ([#3492](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3492))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_acl: optmize the value of principal ([#3490](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3490))
+* resource/tencentcloud_cos_bucket: optmize delete function code logic ([#3491](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3491))
+* resource/tencentcloud_instance: optmize code logic for modify `hostname` ([#3495](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3495))
+* resource/tencentcloud_kubernetes_cluster: optmize default value for `container_runtime` ([#3494](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3494))
+* resource/tencentcloud_teo_l7_acc_rule_v2: update doc ([#3496](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3496))
+* resource/tencentcloud_teo_l7_acc_rule_v2: update header_actions properties ([#3489](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3489))
+
 ## 1.82.18(August 21 , 2025)
 
 FEATURES:
