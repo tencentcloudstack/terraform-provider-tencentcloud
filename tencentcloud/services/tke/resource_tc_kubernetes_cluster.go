@@ -5,8 +5,10 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -27,6 +29,9 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: customResourceImporter,
 		},
+		CustomizeDiff: customdiff.All(
+			customizeDiffForContainerRuntimeDefault,
+		),
 		Schema: map[string]*schema.Schema{
 			"cluster_name": {
 				Type:        schema.TypeString,
@@ -66,9 +71,9 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			"container_runtime": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ForceNew:     true,
-				Default:      "docker",
-				Description:  "Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher.Default is 'docker'.",
+				Description:  "Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher. The default value is `docker` for versions below v1.24 and `containerd` for versions above v1.24.",
 				ValidateFunc: tccommon.ValidateAllowedStringValue(TKE_RUNTIMES),
 			},
 
@@ -2451,6 +2456,46 @@ func resourceTencentCloudKubernetesClusterDelete(d *schema.ResourceData, meta in
 	_ = response
 	if err := resourceTencentCloudKubernetesClusterDeletePostHandleResponse0(ctx, response); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func customizeDiffForContainerRuntimeDefault(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
+	// example 1.22.5(maybe 1.22.5-tke.21)
+	if clusterVersion, ok := d.GetOk("cluster_version"); ok {
+		version := clusterVersion.(string)
+		parts := strings.Split(version, ".")
+		fmt.Println(parts)
+		if len(parts) < 2 {
+			log.Printf("[WARN] Invalid cluster version format: %s", version)
+			return nil
+		}
+
+		mainVersionStr := strings.Split(parts[1], "-")[0]
+		mainVersion, err := strconv.Atoi(mainVersionStr)
+		fmt.Println(mainVersion)
+		if err != nil {
+			log.Printf("[WARN] Failed to parse cluster version: %v", err)
+			return nil
+		}
+
+		runtimeValue := "docker"
+		if mainVersion >= 24 {
+			runtimeValue = "containerd"
+		}
+
+		if _, ok := d.GetOk("container_runtime"); !ok {
+			if err := d.SetNew("container_runtime", runtimeValue); err != nil {
+				return err
+			}
+		}
+	} else {
+		if _, ok := d.GetOk("container_runtime"); !ok {
+			if err := d.SetNew("container_runtime", "containerd"); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
