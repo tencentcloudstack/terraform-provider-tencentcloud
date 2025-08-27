@@ -2297,7 +2297,7 @@ func (me *OrganizationService) DescribeOrganizationResourceToShareMemberByFilter
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			result, e := me.client.UseOrganizationClient().DescribeResourceToShareMember(request)
 			if e != nil {
@@ -2308,6 +2308,64 @@ func (me *OrganizationService) DescribeOrganizationResourceToShareMemberByFilter
 
 			if result == nil || result.Response == nil {
 				return resource.NonRetryableError(fmt.Errorf("Describe resource to share member failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
+			return
+		}
+
+		if len(response.Response.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationMembersAuthPolicyAttachmentById(ctx context.Context, policyId, orgSubAccountUin string) (ret []*organization.OrgMembersAuthPolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribeOrganizationMembersAuthPolicyRequest()
+	response := organization.NewDescribeOrganizationMembersAuthPolicyResponse()
+	request.PolicyId = helper.StrToInt64Point(policyId)
+	request.OrgSubAccountUin = helper.StrToInt64Point(orgSubAccountUin)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = 50
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseOrganizationClient().DescribeOrganizationMembersAuthPolicy(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe organization members auth policy, Response is nil."))
 			}
 
 			response = result
