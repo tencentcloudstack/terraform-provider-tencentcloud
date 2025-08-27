@@ -1,15 +1,15 @@
-Provides a resource to create a TEO l7 acc rule
+Provides a resource to create a TEO l7 acc rule v2
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
-  zone_id     = "zone-39quuimqg8r6"
-  description = ["1"]
-  rule_name   = "网站加速1"
-  status = "enable"
+resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
+  zone_id     = "zone-3fkff38fyw8s"
+  description = ["description"]
+  rule_name   = "网站加速"
+  status      = "enable"
   branches {
-    condition = "$${http.request.host} in ['aaa.makn.cn']"
+    condition = "$${http.request.host} in ['www.example.com']"
     actions {
       name = "Cache"
       cache_parameters {
@@ -29,6 +29,28 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
         query_string {
           switch = "off"
           values = []
+        }
+      }
+    }
+
+    actions {
+      name = "ModifyRequestHeader"
+      modify_request_header_parameters {
+        header_actions {
+          action = "set"
+          name   = "EO-Client-OS"
+          value  = "*"
+        }
+
+        header_actions {
+          action = "add"
+          name   = "O-Client-Browser"
+          value  = "*"
+        }
+
+        header_actions {
+          action = "del"
+          name   = "Eo-Client-Device"
         }
       }
     }
@@ -67,8 +89,8 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
 
 Import
 
-TEO l7 acc rule can be imported using the id, e.g.
+TEO l7 acc rule v2 can be imported using the {zone_id}#{rule_id}, e.g.
 
 ````
-terraform import tencentcloud_teo_l7_acc_rule.example ${zone_id}#${rule_id}
+terraform import tencentcloud_teo_l7_acc_rule_v2.example zone-3fkff38fyw8s#rule-3ft1xeuhlj1b
 ````
