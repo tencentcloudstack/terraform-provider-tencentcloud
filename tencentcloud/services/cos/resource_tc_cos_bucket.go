@@ -1066,9 +1066,24 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	// wait for update cache
-	// if not, head bucket may be successful
-	time.Sleep(3 * time.Second)
+	// wait for bucket 404, means deleted
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		code, _, e := cosService.TencentcloudHeadBucket(ctx, bucket, cdcId)
+		if err != nil {
+			if code == 404 {
+				log.Printf("[WARN]%s bucket (%s) not found, error code (404)", logId, bucket)
+				return nil
+			} else {
+				return resource.NonRetryableError(e)
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
