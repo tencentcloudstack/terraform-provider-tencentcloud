@@ -81,7 +81,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifications may lead to the reinstallation of the instance's operating system.",
+				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Changing the `hostname` will cause the instance system to restart.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -1825,6 +1825,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	if d.HasChange("hostname") {
+		err := cvmService.ModifyHostName(ctx, instanceId, d.Get("hostname").(string))
+		if err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("disable_api_termination") {
 		err := cvmService.ModifyDisableApiTermination(ctx, instanceId, d.Get("disable_api_termination").(bool))
 		if err != nil {
@@ -1876,7 +1883,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	// Reset Instance
 	// Keep Login Info
 	if d.HasChange("image_id") ||
-		d.HasChange("hostname") ||
 		d.HasChange("disable_security_service") ||
 		d.HasChange("disable_monitor_service") ||
 		d.HasChange("disable_automation_service") ||
@@ -1887,10 +1893,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 		if v, ok := d.GetOk("image_id"); ok {
 			request.ImageId = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("hostname"); ok {
-			request.HostName = helper.String(v.(string))
 		}
 
 		// enhanced service

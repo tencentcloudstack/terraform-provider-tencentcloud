@@ -237,6 +237,25 @@ func (me *CvmService) ModifyInstanceName(ctx context.Context, instanceId, instan
 	return nil
 }
 
+func (me *CvmService) ModifyHostName(ctx context.Context, instanceId, hostname string) error {
+	logId := tccommon.GetLogId(ctx)
+	request := cvm.NewModifyInstancesAttributeRequest()
+	request.InstanceIds = []*string{&instanceId}
+	request.HostName = &hostname
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ModifyInstancesAttribute(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
 func (me *CvmService) ModifyUserData(ctx context.Context, instanceId, userData string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewModifyInstancesAttributeRequest()
