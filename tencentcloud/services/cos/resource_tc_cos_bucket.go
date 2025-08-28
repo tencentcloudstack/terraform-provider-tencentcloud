@@ -1078,7 +1078,7 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 			}
 		}
 
-		return nil
+		return resource.RetryableError(fmt.Errorf("Waiting for cos bucket [%s] deleted...", bucket))
 	})
 
 	if err != nil {
