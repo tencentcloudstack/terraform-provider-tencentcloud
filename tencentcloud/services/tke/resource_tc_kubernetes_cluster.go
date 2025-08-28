@@ -286,6 +286,14 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Description: "Indicates whether non-static ip mode is enabled. Default is false.",
 			},
 
+			"data_plane_v2": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Whether to enable DataPlaneV2 (cilium replaces kube-proxy).",
+			},
+
 			"deletion_protection": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -1675,6 +1683,9 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOkExists("is_non_static_ip_mode"); ok {
 		clusterAdvancedSettings.IsNonStaticIpMode = helper.Bool(v.(bool))
 	}
+	if v, ok := d.GetOkExists("data_plane_v2"); ok {
+		clusterAdvancedSettings.DataPlaneV2 = helper.Bool(v.(bool))
+	}
 	if v, ok := d.GetOkExists("deletion_protection"); ok {
 		clusterAdvancedSettings.DeletionProtection = helper.Bool(v.(bool))
 	}
@@ -1823,6 +1834,9 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 			_ = d.Set("eni_subnet_ids", respData.ClusterNetworkSettings.Subnets)
 		}
 
+		if respData.ClusterNetworkSettings.DataPlaneV2 != nil {
+			_ = d.Set("data_plane_v2", respData.ClusterNetworkSettings.DataPlaneV2)
+		}
 	}
 
 	if respData.ClusterNodeNum != nil {

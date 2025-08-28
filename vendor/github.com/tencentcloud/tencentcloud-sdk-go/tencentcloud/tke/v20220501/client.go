@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -86,6 +86,7 @@ func (c *Client) CreateHealthCheckPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateHealthCheckPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "CreateHealthCheckPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateHealthCheckPolicy require credential")
@@ -143,6 +144,7 @@ func (c *Client) CreateNodePoolWithContext(ctx context.Context, request *CreateN
     if request == nil {
         request = NewCreateNodePoolRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "CreateNodePool")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNodePool require credential")
@@ -202,6 +204,7 @@ func (c *Client) DeleteClusterMachinesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteClusterMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DeleteClusterMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteClusterMachines require credential")
@@ -255,6 +258,7 @@ func (c *Client) DeleteHealthCheckPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteHealthCheckPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DeleteHealthCheckPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteHealthCheckPolicy require credential")
@@ -314,6 +318,7 @@ func (c *Client) DeleteNodePoolWithContext(ctx context.Context, request *DeleteN
     if request == nil {
         request = NewDeleteNodePoolRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DeleteNodePool")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNodePool require credential")
@@ -387,6 +392,7 @@ func (c *Client) DescribeClusterInstancesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeClusterInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DescribeClusterInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterInstances require credential")
@@ -440,6 +446,7 @@ func (c *Client) DescribeHealthCheckPoliciesWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeHealthCheckPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DescribeHealthCheckPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHealthCheckPolicies require credential")
@@ -493,6 +500,7 @@ func (c *Client) DescribeHealthCheckPolicyBindingsWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeHealthCheckPolicyBindingsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DescribeHealthCheckPolicyBindings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHealthCheckPolicyBindings require credential")
@@ -542,6 +550,7 @@ func (c *Client) DescribeHealthCheckTemplateWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeHealthCheckTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DescribeHealthCheckTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHealthCheckTemplate require credential")
@@ -603,6 +612,7 @@ func (c *Client) DescribeNodePoolsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeNodePoolsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DescribeNodePools")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNodePools require credential")
@@ -656,6 +666,7 @@ func (c *Client) ModifyHealthCheckPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyHealthCheckPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "ModifyHealthCheckPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyHealthCheckPolicy require credential")
@@ -711,6 +722,7 @@ func (c *Client) ModifyNodePoolWithContext(ctx context.Context, request *ModifyN
     if request == nil {
         request = NewModifyNodePoolRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "ModifyNodePool")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNodePool require credential")
@@ -764,6 +776,7 @@ func (c *Client) RebootMachinesWithContext(ctx context.Context, request *RebootM
     if request == nil {
         request = NewRebootMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "RebootMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RebootMachines require credential")
@@ -772,6 +785,60 @@ func (c *Client) RebootMachinesWithContext(ctx context.Context, request *RebootM
     request.SetContext(ctx)
     
     response = NewRebootMachinesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSetMachineLoginRequest() (request *SetMachineLoginRequest) {
+    request = &SetMachineLoginRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "SetMachineLogin")
+    
+    
+    return
+}
+
+func NewSetMachineLoginResponse() (response *SetMachineLoginResponse) {
+    response = &SetMachineLoginResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SetMachineLogin
+// 设置是否开启节点登录
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) SetMachineLogin(request *SetMachineLoginRequest) (response *SetMachineLoginResponse, err error) {
+    return c.SetMachineLoginWithContext(context.Background(), request)
+}
+
+// SetMachineLogin
+// 设置是否开启节点登录
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) SetMachineLoginWithContext(ctx context.Context, request *SetMachineLoginRequest) (response *SetMachineLoginResponse, err error) {
+    if request == nil {
+        request = NewSetMachineLoginRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "SetMachineLogin")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SetMachineLogin require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSetMachineLoginResponse()
     err = c.Send(request, response)
     return
 }
@@ -837,6 +904,7 @@ func (c *Client) StartMachinesWithContext(ctx context.Context, request *StartMac
     if request == nil {
         request = NewStartMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "StartMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartMachines require credential")
@@ -914,6 +982,7 @@ func (c *Client) StopMachinesWithContext(ctx context.Context, request *StopMachi
     if request == nil {
         request = NewStopMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "StopMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopMachines require credential")
