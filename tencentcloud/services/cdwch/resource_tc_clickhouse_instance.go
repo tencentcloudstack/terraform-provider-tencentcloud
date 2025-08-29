@@ -191,6 +191,11 @@ func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Expire time.",
 			},
+			"access_info": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "access address info.",
+			},
 		},
 	}
 }
@@ -412,6 +417,7 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	_ = d.Set("expire_time", instanceInfo.ExpireTime)
+	_ = d.Set("access_info", instanceInfo.AccessInfo)
 	_ = d.Set("cos_bucket_name", instanceInfo.CosBucketName)
 	_ = d.Set("mount_disk_type", instanceInfo.MountDiskType)
 	_ = d.Set("ha_zk", instanceInfo.HAZk)
