@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -178,11 +178,17 @@ type CreateNativeNodePoolParam struct {
 	// 原生节点池数据盘列表
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
+	// qgpu开关
+	QGPUEnable *bool `json:"QGPUEnable,omitnil,omitempty" name:"QGPUEnable"`
+
 	// 节点池ssh公钥id数组
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
 	// 节点池类型
 	MachineType *string `json:"MachineType,omitnil,omitempty" name:"MachineType"`
+
+	// 原生节点池安装节点自动化助手开关
+	AutomationService *bool `json:"AutomationService,omitnil,omitempty" name:"AutomationService"`
 }
 
 // Predefined struct for user
@@ -211,7 +217,7 @@ type CreateNodePoolRequestParams struct {
 	// 节点是否默认不可调度
 	Unschedulable *bool `json:"Unschedulable,omitnil,omitempty" name:"Unschedulable"`
 
-	// 原生节点池创建参数
+	// 原生节点池创建参数（Type字段设置为Native时需填写）
 	Native *CreateNativeNodePoolParam `json:"Native,omitnil,omitempty" name:"Native"`
 
 	// 节点 Annotation 列表
@@ -245,7 +251,7 @@ type CreateNodePoolRequest struct {
 	// 节点是否默认不可调度
 	Unschedulable *bool `json:"Unschedulable,omitnil,omitempty" name:"Unschedulable"`
 
-	// 原生节点池创建参数
+	// 原生节点池创建参数（Type字段设置为Native时需填写）
 	Native *CreateNativeNodePoolParam `json:"Native,omitnil,omitempty" name:"Native"`
 
 	// 节点 Annotation 列表
@@ -1886,6 +1892,74 @@ type RuntimeConfig struct {
 	// 运行时根目录
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuntimeRootDir *string `json:"RuntimeRootDir,omitnil,omitempty" name:"RuntimeRootDir"`
+}
+
+// Predefined struct for user
+type SetMachineLoginRequestParams struct {
+	// 集群 ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 节点名称
+	MachineName *string `json:"MachineName,omitnil,omitempty" name:"MachineName"`
+
+	// 密钥 ID 列表
+	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
+}
+
+type SetMachineLoginRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群 ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 节点名称
+	MachineName *string `json:"MachineName,omitnil,omitempty" name:"MachineName"`
+
+	// 密钥 ID 列表
+	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
+}
+
+func (r *SetMachineLoginRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *SetMachineLoginRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "MachineName")
+	delete(f, "KeyIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SetMachineLoginRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type SetMachineLoginResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type SetMachineLoginResponse struct {
+	*tchttp.BaseResponse
+	Response *SetMachineLoginResponseParams `json:"Response"`
+}
+
+func (r *SetMachineLoginResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *SetMachineLoginResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type SortBy struct {

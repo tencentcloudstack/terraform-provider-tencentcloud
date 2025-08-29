@@ -618,6 +618,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   network_type            = "VPC-CNI"
   eni_subnet_ids          = ["subnet-bk1etlyu"]
   service_cidr            = "10.1.0.0/24"
+  data_plane_v2           = true
 
   labels = {
     "test1" = "test1",
@@ -793,6 +794,7 @@ The following arguments are supported:
 * `cluster_subnet_id` - (Optional, String, ForceNew) Subnet ID of the cluster, such as: subnet-b3p7d7q5.
 * `cluster_version` - (Optional, String) Version of the cluster. Use `tencentcloud_kubernetes_available_cluster_versions` to get the upgradable cluster version.
 * `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher. The default value is `docker` for versions below v1.24 and `containerd` for versions above v1.24.
+* `data_plane_v2` - (Optional, Bool, ForceNew) Whether to enable DataPlaneV2 (cilium replaces kube-proxy).
 * `deletion_protection` - (Optional, Bool) Indicates whether cluster deletion protection is enabled. Default is false.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `enable_customized_pod_cidr` - (Optional, Bool) Whether to enable the custom mode of node podCIDR size. Default is false.

@@ -607,6 +607,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   network_type            = "VPC-CNI"
   eni_subnet_ids          = ["subnet-bk1etlyu"]
   service_cidr            = "10.1.0.0/24"
+  data_plane_v2           = true
 
   labels = {
     "test1" = "test1",

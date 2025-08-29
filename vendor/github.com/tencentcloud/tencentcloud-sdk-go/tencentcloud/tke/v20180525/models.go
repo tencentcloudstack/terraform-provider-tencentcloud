@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -904,6 +904,9 @@ type ClusterAdvancedSettings struct {
 	// 集群使用的runtime类型，包括"docker"和"containerd"两种类型，默认为"docker"
 	ContainerRuntime *string `json:"ContainerRuntime,omitnil,omitempty" name:"ContainerRuntime"`
 
+	// 是否启用 DataPlaneV2（cilium替代kube-proxy） 
+	DataPlaneV2 *bool `json:"DataPlaneV2,omitnil,omitempty" name:"DataPlaneV2"`
+
 	// 是否启用集群删除保护
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 
@@ -934,7 +937,7 @@ type ClusterAdvancedSettings struct {
 	// 2. 系统镜像必须是: Tencent Linux 2.4；
 	KubeProxyMode *string `json:"KubeProxyMode,omitnil,omitempty" name:"KubeProxyMode"`
 
-	// 集群网络类型（包括GR(全局路由)和VPC-CNI两种模式，默认为GR。
+	// 集群网络类型。包括GR（全局路由）和VPC-CNI两种模式，默认为GR。
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// 集群中节点NodeName类型（包括 hostname,lan-ip两种形式，默认为lan-ip。如果开启了hostname模式，创建节点时需要设置HostName参数，并且InstanceName需要和HostName一致）
@@ -1059,7 +1062,9 @@ type ClusterBasicSettings struct {
 	// 是否开启节点的默认安全组(默认: 否，Alpha特性)
 	NeedWorkSecurityGroup *bool `json:"NeedWorkSecurityGroup,omitnil,omitempty" name:"NeedWorkSecurityGroup"`
 
-	// 当选择Cilium Overlay网络插件时，TKE会从该子网获取2个IP用来创建内网负载均衡
+	// 控制面子网信息，仅在以下场景使用时要求必填。
+	// - 容器网络插件为CiliumOverlay时，TKE会从该子网获取2个IP用来创建内网负载均衡。
+	// - 创建支持CDC的托管集群，且网络插件为VPC-CNI时，要求预留至少12个IP。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 集群等级，针对托管集群生效
@@ -1260,6 +1265,9 @@ type ClusterNetworkSettings struct {
 	// - 容器网络插件为CiliumOverlay。
 	// - 支持CDC的托管集群，且网络插件为VPC-CNI。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 是否启用了 DataPlaneV2（cilium替代kube-proxy）
+	DataPlaneV2 *bool `json:"DataPlaneV2,omitnil,omitempty" name:"DataPlaneV2"`
 }
 
 type ClusterProperty struct {
@@ -2150,6 +2158,9 @@ type CreateClusterRequestParams struct {
 
 	// 本地专用集群Id
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+
+	// 屏蔽安装指定Addon组件，填写相应的AddonName
+	DisableAddons []*string `json:"DisableAddons,omitnil,omitempty" name:"DisableAddons"`
 }
 
 type CreateClusterRequest struct {
@@ -2184,6 +2195,9 @@ type CreateClusterRequest struct {
 
 	// 本地专用集群Id
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+
+	// 屏蔽安装指定Addon组件，填写相应的AddonName
+	DisableAddons []*string `json:"DisableAddons,omitnil,omitempty" name:"DisableAddons"`
 }
 
 func (r *CreateClusterRequest) ToJsonString() string {
@@ -2208,6 +2222,7 @@ func (r *CreateClusterRequest) FromJsonString(s string) error {
 	delete(f, "InstanceDataDiskMountSettings")
 	delete(f, "ExtensionAddons")
 	delete(f, "CdcId")
+	delete(f, "DisableAddons")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateClusterRequest has unknown keys!", "")
 	}
@@ -2384,7 +2399,7 @@ func (r *CreateClusterRouteTableResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateClusterVirtualNodePoolRequestParams struct {
-	// 集群Id
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 节点池名称
@@ -2393,7 +2408,7 @@ type CreateClusterVirtualNodePoolRequestParams struct {
 	// 子网ID列表
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 安全组ID列表
+	// 安全组ID列表，必选参数
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 虚拟节点label
@@ -2405,7 +2420,7 @@ type CreateClusterVirtualNodePoolRequestParams struct {
 	// 节点列表
 	VirtualNodes []*VirtualNodeSpec `json:"VirtualNodes,omitnil,omitempty" name:"VirtualNodes"`
 
-	// 删除保护开关
+	// 删除保护开关，默认关闭
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 
 	// 节点池操作系统：
@@ -2417,7 +2432,7 @@ type CreateClusterVirtualNodePoolRequestParams struct {
 type CreateClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群Id
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 节点池名称
@@ -2426,7 +2441,7 @@ type CreateClusterVirtualNodePoolRequest struct {
 	// 子网ID列表
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 安全组ID列表
+	// 安全组ID列表，必选参数
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 虚拟节点label
@@ -2438,7 +2453,7 @@ type CreateClusterVirtualNodePoolRequest struct {
 	// 节点列表
 	VirtualNodes []*VirtualNodeSpec `json:"VirtualNodes,omitnil,omitempty" name:"VirtualNodes"`
 
-	// 删除保护开关
+	// 删除保护开关，默认关闭
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 
 	// 节点池操作系统：
@@ -2501,38 +2516,38 @@ func (r *CreateClusterVirtualNodePoolResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateClusterVirtualNodeRequestParams struct {
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 虚拟节点所属节点池
+	// 虚拟节点所属节点池，通过DescribeNodePools接口获取
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 虚拟节点所属子网
+	// 虚拟节点所属子网，SubnetId、SubnetIds、VirtualNodes必选一个。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 虚拟节点子网ID列表，和参数SubnetId互斥
+	// 虚拟节点子网ID列表，SubnetId、SubnetIds、VirtualNodes必选一个。
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 虚拟节点列表
+	// 虚拟节点列表，SubnetId、SubnetIds、VirtualNodes必选一个。
 	VirtualNodes []*VirtualNodeSpec `json:"VirtualNodes,omitnil,omitempty" name:"VirtualNodes"`
 }
 
 type CreateClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 虚拟节点所属节点池
+	// 虚拟节点所属节点池，通过DescribeNodePools接口获取
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 虚拟节点所属子网
+	// 虚拟节点所属子网，SubnetId、SubnetIds、VirtualNodes必选一个。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 虚拟节点子网ID列表，和参数SubnetId互斥
+	// 虚拟节点子网ID列表，SubnetId、SubnetIds、VirtualNodes必选一个。
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 虚拟节点列表
+	// 虚拟节点列表，SubnetId、SubnetIds、VirtualNodes必选一个。
 	VirtualNodes []*VirtualNodeSpec `json:"VirtualNodes,omitnil,omitempty" name:"VirtualNodes"`
 }
 
@@ -3340,6 +3355,9 @@ type CreateImageCacheRequestParams struct {
 	// 自定义制作镜像缓存过程中容器实例的宿主机上的 DNS。如：
 	// "nameserver 4.4.4.4\nnameserver 8.8.8.8"
 	ResolveConfig *string `json:"ResolveConfig,omitnil,omitempty" name:"ResolveConfig"`
+
+	// 腾讯云标签
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateImageCacheRequest struct {
@@ -3388,6 +3406,9 @@ type CreateImageCacheRequest struct {
 	// 自定义制作镜像缓存过程中容器实例的宿主机上的 DNS。如：
 	// "nameserver 4.4.4.4\nnameserver 8.8.8.8"
 	ResolveConfig *string `json:"ResolveConfig,omitnil,omitempty" name:"ResolveConfig"`
+
+	// 腾讯云标签
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateImageCacheRequest) ToJsonString() string {
@@ -3416,6 +3437,7 @@ func (r *CreateImageCacheRequest) FromJsonString(s string) error {
 	delete(f, "RegistrySkipVerifyList")
 	delete(f, "RegistryHttpEndPointList")
 	delete(f, "ResolveConfig")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateImageCacheRequest has unknown keys!", "")
 	}
@@ -4053,7 +4075,7 @@ type CreateReservedInstancesRequestParams struct {
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 预留券名称。
+	// 预留券名称，名称不得超过60个字符。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
@@ -4072,7 +4094,7 @@ type CreateReservedInstancesRequest struct {
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 预留券名称。
+	// 预留券名称，名称不得超过60个字符。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
@@ -4973,10 +4995,10 @@ func (r *DeleteClusterRouteTableResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteClusterVirtualNodePoolRequestParams struct {
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 超级节点池ID列表
+	// 节点池ID，通过DescribeNodePools接口获取
 	NodePoolIds []*string `json:"NodePoolIds,omitnil,omitempty" name:"NodePoolIds"`
 
 	// 是否强制删除，在超级节点上有pod的情况下，如果选择非强制删除，则删除会失败
@@ -4986,10 +5008,10 @@ type DeleteClusterVirtualNodePoolRequestParams struct {
 type DeleteClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 超级节点池ID列表
+	// 节点池ID，通过DescribeNodePools接口获取
 	NodePoolIds []*string `json:"NodePoolIds,omitnil,omitempty" name:"NodePoolIds"`
 
 	// 是否强制删除，在超级节点上有pod的情况下，如果选择非强制删除，则删除会失败
@@ -5041,10 +5063,10 @@ func (r *DeleteClusterVirtualNodePoolResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteClusterVirtualNodeRequestParams struct {
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 虚拟节点列表
+	// 虚拟节点ID列表
 	NodeNames []*string `json:"NodeNames,omitnil,omitempty" name:"NodeNames"`
 
 	// 是否强制删除：如果虚拟节点上有运行中Pod，则非强制删除状态下不会进行删除
@@ -5054,10 +5076,10 @@ type DeleteClusterVirtualNodeRequestParams struct {
 type DeleteClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 虚拟节点列表
+	// 虚拟节点ID列表
 	NodeNames []*string `json:"NodeNames,omitnil,omitempty" name:"NodeNames"`
 
 	// 是否强制删除：如果虚拟节点上有运行中Pod，则非强制删除状态下不会进行删除
@@ -6116,14 +6138,14 @@ func (r *DeletePrometheusTemplateSyncResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteReservedInstancesRequestParams struct {
-	// 预留券实例ID。
+	// 预留券实例ID。可通过 [DescribeReservedInstances](https://cloud.tencent.com/document/product/457/99162) 接口返回值中的ReservedInstanceId获取。
 	ReservedInstanceIds []*string `json:"ReservedInstanceIds,omitnil,omitempty" name:"ReservedInstanceIds"`
 }
 
 type DeleteReservedInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 预留券实例ID。
+	// 预留券实例ID。可通过 [DescribeReservedInstances](https://cloud.tencent.com/document/product/457/99162) 接口返回值中的ReservedInstanceId获取。
 	ReservedInstanceIds []*string `json:"ReservedInstanceIds,omitnil,omitempty" name:"ReservedInstanceIds"`
 }
 
@@ -8370,14 +8392,14 @@ func (r *DescribeClusterStatusResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClusterVirtualNodePoolsRequestParams struct {
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 type DescribeClusterVirtualNodePoolsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
@@ -8430,26 +8452,26 @@ func (r *DescribeClusterVirtualNodePoolsResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type DescribeClusterVirtualNodeRequestParams struct {
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池ID
+	// 节点池ID，通过DescribeNodePools接口获取
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点名称
+	// 节点名称，可搜索DescribeClusterVirtualNode接口节点
 	NodeNames []*string `json:"NodeNames,omitnil,omitempty" name:"NodeNames"`
 }
 
 type DescribeClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池ID
+	// 节点池ID，通过DescribeNodePools接口获取
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点名称
+	// 节点名称，可搜索DescribeClusterVirtualNode接口节点
 	NodeNames []*string `json:"NodeNames,omitnil,omitempty" name:"NodeNames"`
 }
 
@@ -10469,7 +10491,7 @@ func (r *DescribeOpenPolicyListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribePodChargeInfoRequestParams struct {
-	// 集群ID
+	// 集群 ID。TKE 集群可通过 [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) 接口返回值中的ClusterId获取。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 命名空间
@@ -10478,14 +10500,14 @@ type DescribePodChargeInfoRequestParams struct {
 	// Pod名称
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Pod的Uid
+	// Pod的Uid，可以通过Uids 来批量查询，也可以通过 Namespace 和 Name 来查询某个 Pod 的计费信息。Uids 不传时，Namespace 和 Name 必须同时传。
 	Uids []*string `json:"Uids,omitnil,omitempty" name:"Uids"`
 }
 
 type DescribePodChargeInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群 ID。TKE 集群可通过 [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) 接口返回值中的ClusterId获取。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 命名空间
@@ -10494,7 +10516,7 @@ type DescribePodChargeInfoRequest struct {
 	// Pod名称
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Pod的Uid
+	// Pod的Uid，可以通过Uids 来批量查询，也可以通过 Namespace 和 Name 来查询某个 Pod 的计费信息。Uids 不传时，Namespace 和 Name 必须同时传。
 	Uids []*string `json:"Uids,omitnil,omitempty" name:"Uids"`
 }
 
@@ -10553,7 +10575,7 @@ type DescribePodDeductionRateRequestParams struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	//  节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
@@ -10566,7 +10588,7 @@ type DescribePodDeductionRateRequest struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	//  节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
@@ -10621,10 +10643,10 @@ type DescribePodsBySpecRequestParams struct {
 	// 核数
 	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 内存
+	// 内存，单位：GiB
 	Memory *float64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 卡数，有0.25、0.5、1、2、4等
+	// 卡数，有0.25、0.5、1、2、4和8
 	GpuNum *string `json:"GpuNum,omitnil,omitempty" name:"GpuNum"`
 
 	// 可用区
@@ -10633,7 +10655,7 @@ type DescribePodsBySpecRequestParams struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 
 	// 偏移量，默认0。
@@ -10663,10 +10685,10 @@ type DescribePodsBySpecRequest struct {
 	// 核数
 	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 内存
+	// 内存，单位：GiB
 	Memory *float64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 卡数，有0.25、0.5、1、2、4等
+	// 卡数，有0.25、0.5、1、2、4和8
 	GpuNum *string `json:"GpuNum,omitnil,omitempty" name:"GpuNum"`
 
 	// 可用区
@@ -10675,7 +10697,7 @@ type DescribePodsBySpecRequest struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 
 	// 偏移量，默认0。
@@ -12429,7 +12451,7 @@ type DescribeReservedInstanceUtilizationRateRequestParams struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	//  节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
@@ -12442,7 +12464,7 @@ type DescribeReservedInstanceUtilizationRateRequest struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	//  节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
@@ -12507,7 +12529,7 @@ type DescribeReservedInstancesRequestParams struct {
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// status
-	// 按照**【状态**】进行过滤。状态：Creating、Active、Expired、Refunded。
+	// 按照**【状态**】进行过滤。状态：Creating：创建中、Active：生效中、Expired：已过期、Refunded：已退还。
 	// 类型：String
 	// 必选：否
 	// 
@@ -12582,7 +12604,7 @@ type DescribeReservedInstancesRequest struct {
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// status
-	// 按照**【状态**】进行过滤。状态：Creating、Active、Expired、Refunded。
+	// 按照**【状态**】进行过滤。状态：Creating：创建中、Active：生效中、Expired：已过期、Refunded：已退还。
 	// 类型：String
 	// 必选：否
 	// 
@@ -13693,20 +13715,20 @@ type DnsServerConf struct {
 
 // Predefined struct for user
 type DrainClusterVirtualNodeRequestParams struct {
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点名
+	// 节点ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
 type DrainClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点名
+	// 节点ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
@@ -15055,6 +15077,15 @@ type ImageCache struct {
 	// UpdateFailed：更新失败
 	// 只有状态为Ready时，才能正常使用镜像缓存
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 镜像缓存保留时间天数，过期将会自动清理，默认为0，永不过期。
+	RetentionDays *uint64 `json:"RetentionDays,omitnil,omitempty" name:"RetentionDays"`
+
+	// 镜像拉取凭证
+	ImageRegistryCredentials []*ImageRegistryCredential `json:"ImageRegistryCredentials,omitnil,omitempty" name:"ImageRegistryCredentials"`
+
+	// 腾讯云标签
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type ImageCacheEvent struct {
@@ -15360,11 +15391,11 @@ type InstanceAdvancedSettings struct {
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
 	// 数据盘挂载点, 默认不挂载数据盘. 已格式化的 ext3，ext4，xfs 文件系统的数据盘将直接挂载，其他文件系统或未格式化的数据盘将自动格式化为ext4 (tlinux系统格式化成xfs)并挂载，请注意备份数据! 无数据盘或有多块数据盘的云主机此设置不生效。
-	// 注意，注意，多盘场景请使用下方的DataDisks数据结构，设置对应的云盘类型、云盘大小、挂载路径、是否格式化等信息。
+	// 注意：多盘场景请使用下方的DataDisks数据结构，设置对应的云盘类型、云盘大小、挂载路径、是否格式化等信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MountTarget *string `json:"MountTarget,omitnil,omitempty" name:"MountTarget"`
 
-	// dockerd --graph 指定值, 默认为 /var/lib/docker
+	// dockerd --graph 指定值。若未指定此参数，将使用内置默认路径 /var/lib/docker 作为存储根目录。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DockerGraphPath *string `json:"DockerGraphPath,omitnil,omitempty" name:"DockerGraphPath"`
 
@@ -15388,7 +15419,7 @@ type InstanceAdvancedSettings struct {
 }
 
 type InstanceChargePrepaid struct {
-	// 购买实例的时长，单位：月。取值范围：1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60。
+	// 购买实例的时长，单位：月。取值范围：1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36。
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 自动续费标识。取值范围：
@@ -16591,50 +16622,50 @@ func (r *ModifyClusterTagsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyClusterVirtualNodePoolRequestParams struct {
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池ID
+	// 节点池ID，通过DescribeNodePools接口获取
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点池名称
+	// 节点池名称，必须修改至少一个参数
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 安全组ID列表
+	// 安全组ID列表，必须修改至少一个参数
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 虚拟节点label
+	// 虚拟节点label，必须修改至少一个参数
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 虚拟节点taint
+	// 虚拟节点taint，必须修改至少一个参数
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 删除保护开关
+	// 删除保护开关，必须修改至少一个参数
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 }
 
 type ModifyClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群ID，通过DescribeClusters接口获取
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池ID
+	// 节点池ID，通过DescribeNodePools接口获取
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点池名称
+	// 节点池名称，必须修改至少一个参数
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 安全组ID列表
+	// 安全组ID列表，必须修改至少一个参数
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 虚拟节点label
+	// 虚拟节点label，必须修改至少一个参数
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 虚拟节点taint
+	// 虚拟节点taint，必须修改至少一个参数
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 删除保护开关
+	// 删除保护开关，必须修改至少一个参数
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 }
 
@@ -17503,7 +17534,7 @@ func (r *ModifyPrometheusTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyReservedInstanceScopeRequestParams struct {
-	// 预留券唯一 ID
+	// 预留券实例ID。可通过 [DescribeReservedInstances](https://cloud.tencent.com/document/product/457/99162) 接口返回值中的ReservedInstanceId获取。
 	ReservedInstanceIds []*string `json:"ReservedInstanceIds,omitnil,omitempty" name:"ReservedInstanceIds"`
 
 	// 预留券抵扣范围信息
@@ -17513,7 +17544,7 @@ type ModifyReservedInstanceScopeRequestParams struct {
 type ModifyReservedInstanceScopeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 预留券唯一 ID
+	// 预留券实例ID。可通过 [DescribeReservedInstances](https://cloud.tencent.com/document/product/457/99162) 接口返回值中的ReservedInstanceId获取。
 	ReservedInstanceIds []*string `json:"ReservedInstanceIds,omitnil,omitempty" name:"ReservedInstanceIds"`
 
 	// 预留券抵扣范围信息
@@ -17867,10 +17898,10 @@ type PodDeductionRate struct {
 	// Pod的 CPU
 	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// Pod 的内存
+	// Pod 的内存，单位：GiB
 	Memory *float64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	//  Pod 的类型
+	//  Pod 的类型， intel，amd，windows-common，windows-amd，sa4，sa5，s7，s8，t4，v100，l20，l40，a10\*gnv4，a10\*gnv4v，a10\*pnv4
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	//  Pod 的 GPU 卡数，Pod 类型为 GPU 时有效。
@@ -17915,7 +17946,7 @@ type PodNodeInfo struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	//  节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 
 	// 可用区
@@ -18689,7 +18720,7 @@ type RIUtilizationDetail struct {
 	// Pod的命名空间
 	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 
-	// 工作负载类型
+	// 工作负载类型，如 deployment、statefulset和pod等。
 	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
 
 	// 工作负载名称
@@ -18917,7 +18948,7 @@ func (r *RemoveNodeFromNodePoolResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RenewReservedInstancesRequestParams struct {
-	// 预留券实例ID，每次请求实例的上限为100。
+	// 预留券实例ID。可通过 [DescribeReservedInstances](https://cloud.tencent.com/document/product/457/99162) 接口返回值中的ReservedInstanceId获取，每次请求实例的上限为100。
 	ReservedInstanceIds []*string `json:"ReservedInstanceIds,omitnil,omitempty" name:"ReservedInstanceIds"`
 
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的续费时长、是否设置自动续费等属性。
@@ -18930,7 +18961,7 @@ type RenewReservedInstancesRequestParams struct {
 type RenewReservedInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 预留券实例ID，每次请求实例的上限为100。
+	// 预留券实例ID。可通过 [DescribeReservedInstances](https://cloud.tencent.com/document/product/457/99162) 接口返回值中的ReservedInstanceId获取，每次请求实例的上限为100。
 	ReservedInstanceIds []*string `json:"ReservedInstanceIds,omitnil,omitempty" name:"ReservedInstanceIds"`
 
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的续费时长、是否设置自动续费等属性。
@@ -19029,7 +19060,7 @@ type ReservedInstance struct {
 	// 节点名称
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 
-	//  上个周期预留券的抵扣状态，Deduct、NotDeduct
+	//  上个周期预留券的抵扣状态，Deduct：已抵扣、NotDeduct：未抵扣
 	DeductStatus *string `json:"DeductStatus,omitnil,omitempty" name:"DeductStatus"`
 }
 
@@ -19043,7 +19074,7 @@ type ReservedInstanceScope struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	//  节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
@@ -19054,7 +19085,7 @@ type ReservedInstanceSpec struct {
 	// 核数
 	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 内存
+	// 内存，单位：GiB
 	Memory *float64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
 	// GPU卡数，当Type为GPU类型时设置。
@@ -19071,10 +19102,10 @@ type ReservedInstanceUtilizationRate struct {
 	// 核数
 	CPU *float64 `json:"CPU,omitnil,omitempty" name:"CPU"`
 
-	// 内存
+	// 内存，单位：GiB
 	Memory *float64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	//  预留券类型
+	//  预留券类型, common：CPU通用，amd：AMD专用，windows-common: Windows容器 CPU通用，windows-amd：Windows容器 AMD专用，sa4，sa5，s7，s8，t4，v100，l20，l40，a10\*gnv4，a10\*gnv4v，a10\*pnv4
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// GPU 卡数
@@ -19086,7 +19117,7 @@ type ReservedInstanceUtilizationRate struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点名称
+	// 节点 ID
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 
 	// Pod 数量
@@ -19717,11 +19748,11 @@ type SuperNodeResource struct {
 }
 
 type Switch struct {
-	// 集群ID
-	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
-
 	// 审计开关的详细信息
 	Audit *SwitchInfo `json:"Audit,omitnil,omitempty" name:"Audit"`
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 事件开关的详细信息
 	Event *SwitchInfo `json:"Event,omitnil,omitempty" name:"Event"`
@@ -19737,20 +19768,26 @@ type SwitchInfo struct {
 	// 开启标识符 true代表开启
 	Enable *bool `json:"Enable,omitnil,omitempty" name:"Enable"`
 
+	// 获取日志状态失败时，返回错误信息
+	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
+
 	// CLS日志集ID
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// 日志主题状态，opened表示已开启，opening开启中，closed表示已关闭，closing 表示关闭中
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// CLS日志主题ID
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 当前log-agent版本
-	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+	// CLS日志主题所属region
+	TopicRegion *string `json:"TopicRegion,omitnil,omitempty" name:"TopicRegion"`
 
 	// 是否可升级
 	UpgradeAble *bool `json:"UpgradeAble,omitnil,omitempty" name:"UpgradeAble"`
 
-	// CLS日志主题所属region
-	TopicRegion *string `json:"TopicRegion,omitnil,omitempty" name:"TopicRegion"`
+	// 当前log-agent版本
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
 }
 
 // Predefined struct for user
@@ -20696,6 +20733,9 @@ type UpdateImageCacheRequestParams struct {
 
 	// 安全组Id
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// 腾讯云标签
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type UpdateImageCacheRequest struct {
@@ -20721,6 +20761,9 @@ type UpdateImageCacheRequest struct {
 
 	// 安全组Id
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// 腾讯云标签
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *UpdateImageCacheRequest) ToJsonString() string {
@@ -20742,6 +20785,7 @@ func (r *UpdateImageCacheRequest) FromJsonString(s string) error {
 	delete(f, "ImageCacheSize")
 	delete(f, "RetentionDays")
 	delete(f, "SecurityGroupIds")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateImageCacheRequest has unknown keys!", "")
 	}
@@ -21225,6 +21269,9 @@ type VirtualNodePool struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 节点池生命周期
+	// - creating：创建中
+	// - normal：正常
+	// - updating：更新中
 	LifeState *string `json:"LifeState,omitnil,omitempty" name:"LifeState"`
 
 	// 虚拟节点label
@@ -21237,7 +21284,7 @@ type VirtualNodePool struct {
 }
 
 type VirtualNodeSpec struct {
-	// 节点展示名称
+	// 节点展示名称，建议不超过20个字符
 	DisplayName *string `json:"DisplayName,omitnil,omitempty" name:"DisplayName"`
 
 	// 子网ID
