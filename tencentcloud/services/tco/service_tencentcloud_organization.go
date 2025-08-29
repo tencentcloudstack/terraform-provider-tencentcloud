@@ -105,44 +105,53 @@ func (me *OrganizationService) DeleteOrganizationOrgNodeById(ctx context.Context
 
 func (me *OrganizationService) DescribeOrganizationOrgMember(ctx context.Context, uin string) (orgMember *organization.OrgMember, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = organization.NewDescribeOrganizationMembersRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = organization.NewDescribeOrganizationMembersRequest()
+		response = organization.NewDescribeOrganizationMembersResponse()
 	)
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	var offset uint64 = 0
-	var pageSize uint64 = 50
-	instances := make([]*organization.OrgMember, 0)
+	var (
+		offset    uint64 = 0
+		pageSize  uint64 = 50
+		instances        = make([]*organization.OrgMember, 0)
+	)
 
 	for {
 		request.Offset = &offset
 		request.Limit = &pageSize
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseOrganizationClient().DescribeOrganizationMembers(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseOrganizationClient().DescribeOrganizationMembers(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe organization members failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
 
 		if response == nil || len(response.Response.Items) < 1 {
 			break
 		}
+
 		instances = append(instances, response.Response.Items...)
 		if len(response.Response.Items) < int(pageSize) {
 			break
 		}
+
 		offset += pageSize
 	}
 
@@ -153,37 +162,65 @@ func (me *OrganizationService) DescribeOrganizationOrgMember(ctx context.Context
 	for _, instance := range instances {
 		if helper.Int64ToStr(*instance.MemberUin) == uin {
 			orgMember = instance
+			break
 		}
 	}
 
 	return
+}
 
+func (me *OrganizationService) DeleteOrganizationAccountById(ctx context.Context, uin string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeleteAccountRequest()
+	request.MemberUin = helper.StrToInt64Point(uin)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseOrganizationClient().DeleteAccount(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	return errRet
 }
 
 func (me *OrganizationService) DeleteOrganizationOrgMemberById(ctx context.Context, uin string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := organization.NewDeleteOrganizationMembersRequest()
-
 	request.MemberUin = []*int64{helper.Int64(helper.StrToInt64(uin))}
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete object", request.ToJsonString(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseOrganizationClient().DeleteOrganizationMembers(request)
-	if err != nil {
-		errRet = err
-		return err
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseOrganizationClient().DeleteOrganizationMembers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	return
+		return nil
+	})
+
+	return errRet
 }
 
 func (me *OrganizationService) DescribeOrganizationPolicySubAccountAttachment(ctx context.Context, policyId, memberUin string) (policySubAccountAttachment *organization.OrgMemberAuthAccount, errRet error) {

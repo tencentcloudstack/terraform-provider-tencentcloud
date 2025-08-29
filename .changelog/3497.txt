@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_organization_org_member: add new params `force_delete_account`
+```
