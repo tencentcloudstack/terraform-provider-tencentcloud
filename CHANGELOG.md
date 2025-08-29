@@ -1,3 +1,14 @@
+## 1.82.20(August 29 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clickhouse_instance: add field `access_info` ([#3503](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3503))
+* resource/tencentcloud_cos_bucket: optmize delete function code logic ([#3498](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3498))
+* resource/tencentcloud_kubernetes_cluster: add new params `data_plane_v2` ([#3500](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3500))
+* resource/tencentcloud_organization_org_member: add new params `force_delete_account` ([#3497](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3497))
+* resource/tencentcloud_postgresql_backup_plan_config: update desc of `base_backup_retention_period` ([#3502](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3502))
+* resource/tencentcloud_private_dns_record: add new parasm `status` ([#3499](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3499))
+
 ## 1.82.19(August 27 , 2025)
 
 FEATURES:
