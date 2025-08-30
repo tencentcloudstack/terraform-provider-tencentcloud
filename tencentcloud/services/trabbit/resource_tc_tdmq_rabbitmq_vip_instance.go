@@ -2,6 +2,7 @@ package trabbit
 
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	svctdmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmq"
 
 	"context"
@@ -87,6 +88,11 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30` and `3.11.8`.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
 			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
@@ -199,6 +205,10 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create tdmq rabbitmqVipInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -206,6 +216,10 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 	if err != nil {
 		log.Printf("[CRITAL]%s create tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
 	}
 
 	instanceId = *response.Response.InstanceId
@@ -247,6 +261,15 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(instanceId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudTdmqRabbitmqVipInstanceRead(d, meta)
 }
@@ -338,17 +361,22 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 				if vpc.VpcId != nil {
 					vpcMap["vpc_id"] = vpc.VpcId
 				}
+
 				if vpc.SubnetId != nil {
 					vpcMap["subnet_id"] = vpc.SubnetId
 				}
+
 				if vpc.VpcEndpoint != nil {
 					vpcMap["vpc_endpoint"] = vpc.VpcEndpoint
 				}
+
 				if vpc.VpcDataStreamEndpointStatus != nil {
 					vpcMap["vpc_data_stream_endpoint_status"] = vpc.VpcDataStreamEndpointStatus
 				}
+
 				tmpList = append(tmpList, vpcMap)
 			}
+
 			_ = d.Set("vpcs", tmpList)
 		}
 
@@ -360,6 +388,15 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		log.Printf("[WARN]%s resource `TdmqRabbitmqVipInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(tcClient)
+	tags, err := tagService.DescribeResourceTags(ctx, "tdmq", "cluster", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -386,28 +423,39 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	request.InstanceId = &instanceId
-
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
 		}
+
+		request.InstanceId = &instanceId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if d.HasChange("tags") {
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("tdmq", "cluster", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
 		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudTdmqRabbitmqVipInstanceRead(d, meta)
@@ -424,7 +472,16 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceDelete(d *schema.ResourceData, m
 		instanceId = d.Id()
 	)
 
-	if err := service.DeleteTdmqRabbitmqVipInstanceById(ctx, instanceId); err != nil {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		e := service.DeleteTdmqRabbitmqVipInstanceById(ctx, instanceId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		return nil
+	})
+
+	if err != nil {
 		return err
 	}
 
