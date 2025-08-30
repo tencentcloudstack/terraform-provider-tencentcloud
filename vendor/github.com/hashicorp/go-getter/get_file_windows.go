@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // +build windows
 
 package getter
@@ -45,7 +48,7 @@ func (g *FileGetter) Get(dst string, u *url.URL) error {
 	}
 
 	// Create all the parent directories
-	if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(dst), g.client.mode(0755)); err != nil {
 		return err
 	}
 
@@ -88,7 +91,7 @@ func (g *FileGetter) GetFile(dst string, u *url.URL) error {
 	}
 
 	// Create all the parent directories
-	if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(dst), g.client.mode(0755)); err != nil {
 		return err
 	}
 
@@ -111,20 +114,14 @@ func (g *FileGetter) GetFile(dst string, u *url.URL) error {
 		}
 	}
 
+	var disableSymlinks bool
+
+	if g.client != nil && g.client.DisableSymlinks {
+		disableSymlinks = true
+	}
+
 	// Copy
-	srcF, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-	defer srcF.Close()
-
-	dstF, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer dstF.Close()
-
-	_, err = Copy(ctx, dstF, srcF)
+	_, err = copyFile(ctx, dst, path, disableSymlinks, 0666, g.client.umask())
 	return err
 }
 

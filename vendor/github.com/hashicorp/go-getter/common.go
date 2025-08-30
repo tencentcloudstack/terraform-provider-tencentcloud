@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package getter
 
 import (
@@ -9,6 +12,6 @@ func tmpFile(dir, pattern string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	f.Close()
+	_ = f.Close()
 	return f.Name(), nil
 }
