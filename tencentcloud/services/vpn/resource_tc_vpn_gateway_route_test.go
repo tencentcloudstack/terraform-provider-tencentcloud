@@ -146,30 +146,27 @@ resource "tencentcloud_vpn_connection" "connection" {
   ike_dh_group_name          = "GROUP1"
   ike_sa_lifetime_seconds    = 86400
   ike_version                = "IKEV1"
+  route_type                 = "StaticRoute"
   ipsec_encrypt_algorithm    = "3DES-CBC"
   ipsec_integrity_algorithm  = "MD5"
   ipsec_sa_lifetime_seconds  = 3600
   ipsec_pfs_dh_group         = "DH-GROUP1"
   ipsec_sa_lifetime_traffic  = 2560
-  dpd_enable = 1
-  dpd_timeout = "30"
-  dpd_action = "clear"
-  security_group_policy {
-    local_cidr_block  = "172.16.0.0/16"
-    remote_cidr_block = ["3.3.3.0/32", ]
-  }
+  dpd_enable                 = 1
+  dpd_timeout                = "30"
+  dpd_action                 = "clear"
   tags = {
     test = "test"
   }
 }
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
-  vpn_gateway_id = tencentcloud_vpn_gateway.vpn.id
+  vpn_gateway_id         = tencentcloud_vpn_gateway.vpn.id
   destination_cidr_block = "10.0.0.0/16"
-  instance_type = "VPNCONN"
-  instance_id = tencentcloud_vpn_connection.connection.id
-  priority = "100"
-  status = "ENABLE"
+  instance_type          = "VPNCONN"
+  instance_id            = tencentcloud_vpn_connection.connection.id
+  priority               = "100"
+  status                 = "ENABLE"
 }
 `
 const testVpnGatewayRouteUpdate = tcacctest.DefaultVpnDataSource + `
@@ -210,29 +207,26 @@ resource "tencentcloud_vpn_connection" "connection" {
   ike_dh_group_name          = "GROUP1"
   ike_sa_lifetime_seconds    = 86400
   ike_version                = "IKEV1"
+  route_type                 = "StaticRoute"
   ipsec_encrypt_algorithm    = "3DES-CBC"
   ipsec_integrity_algorithm  = "MD5"
   ipsec_sa_lifetime_seconds  = 3600
   ipsec_pfs_dh_group         = "DH-GROUP1"
   ipsec_sa_lifetime_traffic  = 2560
-  dpd_enable = 1
-  dpd_timeout = "30"
-  dpd_action = "clear"
-  security_group_policy {
-    local_cidr_block  = "172.16.0.0/16"
-    remote_cidr_block = ["3.3.3.0/32", ]
-  }
+  dpd_enable                 = 1
+  dpd_timeout                = "30"
+  dpd_action                 = "clear"
   tags = {
     test = "test"
   }
 }
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
-  vpn_gateway_id = tencentcloud_vpn_gateway.vpn.id
+  vpn_gateway_id         = tencentcloud_vpn_gateway.vpn.id
   destination_cidr_block = "10.0.0.0/16"
-  instance_type = "VPNCONN"
-  instance_id = tencentcloud_vpn_connection.connection.id
-  priority = "100"
-  status = "DISABLE"
+  instance_type          = "VPNCONN"
+  instance_id            = tencentcloud_vpn_connection.connection.id
+  priority               = "100"
+  status                 = "DISABLE"
 }
 `
