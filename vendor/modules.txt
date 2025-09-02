@@ -1116,6 +1116,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.0
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.1071
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
