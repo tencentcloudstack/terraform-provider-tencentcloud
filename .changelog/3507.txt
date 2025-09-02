@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_billing_allocation_tag
+```

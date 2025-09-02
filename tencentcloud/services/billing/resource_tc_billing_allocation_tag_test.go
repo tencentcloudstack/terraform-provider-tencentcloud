@@ -15,19 +15,29 @@ func TestAccTencentCloudBillingAllocationTagResource_basic(t *testing.T) {
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{{
-			Config: testAccBillingAllocationTag,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_billing_allocation_tag.billing_allocation_tag", "id")),
-		}, {
-			ResourceName:      "tencentcloud_billing_allocation_tag.billing_allocation_tag",
-			ImportState:       true,
-			ImportStateVerify: true,
-		}},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBillingAllocationTag,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_billing_allocation_tag.example", "id"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_billing_allocation_tag.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
 	})
 }
 
 const testAccBillingAllocationTag = `
+resource "tencentcloud_tag" "example" {
+  tag_key   = "tagKey"
+  tag_value = "tagValue"
+}
 
-resource "tencentcloud_billing_allocation_tag" "billing_allocation_tag" {
+resource "tencentcloud_billing_allocation_tag" "example" {
+  tag_key = tencentcloud_tag.example.tag_key
 }
 `
