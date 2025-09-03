@@ -2339,6 +2339,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_elastic_public_ipv6":                                                      vpc.ResourceTencentCloudElasticPublicIpv6(),
 			"tencentcloud_classic_elastic_public_ipv6":                                              vpc.ResourceTencentCloudClassicElasticPublicIpv6(),
 			"tencentcloud_elastic_public_ipv6_attachment":                                           vpc.ResourceTencentCloudElasticPublicIpv6Attachment(),
+			"tencentcloud_ha_vip_instance_attachment":                                               vpc.ResourceTencentCloudHaVipInstanceAttachment(),
 			"tencentcloud_csip_risk_center":                                                         csip.ResourceTencentCloudCsipRiskCenter(),
 			"tencentcloud_organization_org_share_unit_member":                                       tco.ResourceTencentCloudOrganizationOrgShareUnitMember(),
 			"tencentcloud_organization_org_share_unit":                                              tco.ResourceTencentCloudOrganizationOrgShareUnit(),
