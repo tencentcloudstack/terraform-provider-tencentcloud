@@ -82,15 +82,24 @@ func ResourceTencentCloudWafCc() *schema.Resource {
 			"options_arr": {
 				Optional: true,
 				Type:     schema.TypeString,
-				Description: `JSON serialized string of CC matching conditions, example:[{\"key\":\"Method\",\"args\":[\"=R0VU\"],\"match\":\"0\",\"encodeflag\":true}]
-        Key optional values are Method, Post, Referer, Cookie, User-Agent, CustomHeader
-        Match optional values are, when Key is Method, optional values are 0 (equal), 3 (not equal).
-        When the key is Post, the optional values are 0 (equal to), 3 (not equal to), when the key is Cookie, the optional values are 0 (equal to), 2 (included), 3 (not equal to), 7 (not included),
-        When the key is Referer, the optional values are 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (included), 7 (not included), 12 (exists), 5 (not included), 4 (content is empty),
-        When the key is Cookie, the optional values are 0 (equal to), 3 (not equal to), 2 (included), 7 (not included),
-        When the key is User-Agent, the optional values are 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (included), 7 (not included), 12 (exists), 5 (not included), 4 (content is empty),
-        When the key is CustomHeader, the optional values are 0 (equal to), 3 (not equal to), 2 (included), 7 (not included), 12 (exists), 5 (not included), 4 (content is empty).
-        args is used to indicate the matching content. You need to set encodeflag to true. When the Key is Post, Cookie, or CustomHeader, use the equal sign = to concatenate the Key and Value, and encode them using Base64, similar to YWJj=YWJj. When the Key is Referer or User-Agent, use the equal sign = to concatenate the Value, similar to =YWJj.`,
+				Description: `CC matching conditions JSON serialized string, example: [{"key":"Method","args":["=R0VU"],"match":"0","encodeflag":true}] 
+
+				Available key values: Method, Post, Referer, Cookie, User-Agent, CustomHeader, CaptchaRisk, CaptchaDeviceRisk, CaptchaScore
+
+				Available match values:
+				- When Key is Method: 0 (equal to), 3 (not equal to)
+				- When Key is Post: 0 (equal to), 3 (not equal to)
+				- When Key is Cookie: 0 (equal to), 2 (contains), 3 (not equal to), 7 (does not contain)
+				- When Key is Referer: 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
+				- When Key is Cookie: 0 (equal to), 3 (not equal to), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
+				- When Key is User-Agent: 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
+				- When Key is CustomHeader: 0 (equal to), 3 (not equal to), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
+				- When Key is IPLocation: 13 (belongs to), 14 (does not belong to)
+				- When Key is CaptchaRisk: 0 (equal to), 3 (not equal to), 13 (belongs to), 14 (does not belong to), 12 (exists), 5 (does not exist)
+				- When Key is CaptchaDeviceRisk: 0 (equal to), 3 (not equal to), 13 (belongs to), 14 (does not belong to), 12 (exists), 5 (does not exist)
+				- When Key is CaptchaScore: 15 (numerically equal to), 16 (numerically not equal to), 17 (numerically greater than), 18 (numerically less than), 19 (numerically greater than or equal to), 20 (numerically less than or equal to), 12 (exists), 5 (does not exist)
+
+				The args parameter represents matching content and requires encodeflag to be set to true. When Key is Post, Cookie, or CustomHeader, use equals sign = to concatenate Key and Value separately, and encode both with Base64, similar to YWJj=YWJj. When Key is Referer or User-Agent, use equals sign = to concatenate Value, similar to =YWJj.`,
 			},
 			"edition": {
 				Required:     true,
