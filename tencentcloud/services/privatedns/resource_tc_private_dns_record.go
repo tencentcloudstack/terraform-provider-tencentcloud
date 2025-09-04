@@ -203,13 +203,33 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	_ = d.Set("zone_id", record.ZoneId)
-	_ = d.Set("record_type", record.RecordType)
-	_ = d.Set("sub_domain", record.SubDomain)
-	_ = d.Set("record_value", record.RecordValue)
-	_ = d.Set("weight", record.Weight)
-	_ = d.Set("mx", record.MX)
-	_ = d.Set("ttl", record.TTL)
+	if record.ZoneId != nil {
+		_ = d.Set("zone_id", record.ZoneId)
+	}
+
+	if record.RecordType != nil {
+		_ = d.Set("record_type", record.RecordType)
+	}
+
+	if record.SubDomain != nil {
+		_ = d.Set("sub_domain", record.SubDomain)
+	}
+
+	if record.RecordValue != nil {
+		_ = d.Set("record_value", record.RecordValue)
+	}
+
+	if record.Weight != nil {
+		_ = d.Set("weight", record.Weight)
+	}
+
+	if record.MX != nil {
+		_ = d.Set("mx", record.MX)
+	}
+
+	if record.TTL != nil {
+		_ = d.Set("ttl", record.TTL)
+	}
 
 	if record.Enabled != nil {
 		if *record.Enabled == 1 {
