@@ -17,6 +17,8 @@ Provides a resource to create a TEO acceleration domain
 
 ~> **NOTE:** If you use a third-party storage bucket configured for back-to-source, you need to ignore changes to `SecretAccessKey`.
 
+~> **NOTE:** Before creating an accelerated domain, please verify the domain ownership of the site.
+
 ## Example Usage
 
 ```hcl
