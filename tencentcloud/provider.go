@@ -28,6 +28,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/audit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
@@ -2373,6 +2374,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_jwt_authenticator":                                                   mqtt.ResourceTencentCloudMqttJwtAuthenticator(),
 			"tencentcloud_mqtt_jwks_authenticator":                                                  mqtt.ResourceTencentCloudMqttJwksAuthenticator(),
 			"tencentcloud_mqtt_http_authenticator":                                                  mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
+			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
 		},
 
 		ConfigureFunc: providerConfigure,

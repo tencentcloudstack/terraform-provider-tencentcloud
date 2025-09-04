@@ -24,6 +24,7 @@ import (
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
+	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -237,6 +238,7 @@ type TencentCloudClient struct {
 	mqttv20240516Conn           *mqtt.Client
 	cdwpgv20201230Conn          *cdwpg.Client
 	gwlbv20240906Conn           *gwlb.Client
+	billingv20180709Conn        *billing.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2080,4 +2082,17 @@ func (me *TencentCloudClient) UseGwlbV20240906Client() *gwlb.Client {
 	me.gwlbv20240906Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.gwlbv20240906Conn
+}
+
+// UseBillingV20180709Client return BILLING client for service
+func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
+	if me.billingv20180709Conn != nil {
+		return me.billingv20180709Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.billingv20180709Conn, _ = billing.NewClient(me.Credential, me.Region, cpf)
+	me.billingv20180709Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.billingv20180709Conn
 }
