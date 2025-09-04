@@ -1,6 +1,7 @@
 package dnspod
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strconv"
@@ -69,8 +70,7 @@ func ResourceTencentCloudDnspodRecord() *schema.Resource {
 			"weight": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
-				Description: "Weight information. An integer from 0 to 100. Only enterprise VIP domain names are available, 0 means off, does not pass this parameter, means that the weight information is not set. Default is 0.",
+				Description: "Weight information. An integer from 1 to 100. Only enterprise VIP domain names are available, does not pass this parameter, means that the weight information is not set.",
 			},
 			"status": {
 				Type:        schema.TypeString,
@@ -88,6 +88,16 @@ func ResourceTencentCloudDnspodRecord() *schema.Resource {
 				Optional:    true,
 				Description: "The Remark of record.",
 			},
+		},
+		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
+			// weight设置后不能单独关闭
+			if d.HasChange("weight") {
+				old, new := d.GetChange("weight")
+				if old.(int) != 0 && new.(int) == 0 {
+					return fmt.Errorf("field `weight` cannot be unset once specified")
+				}
+			}
+			return nil
 		},
 	}
 }
