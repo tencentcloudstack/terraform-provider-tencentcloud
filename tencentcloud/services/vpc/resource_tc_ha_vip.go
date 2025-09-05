@@ -156,17 +156,20 @@ func resourceTencentCloudHaVipRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	haVip := response.Response.HaVipSet[0]
-
-	_ = d.Set("name", *haVip.HaVipName)
-	_ = d.Set("create_time", *haVip.CreatedTime)
-	_ = d.Set("vip", *haVip.Vip)
-	_ = d.Set("vpc_id", *haVip.VpcId)
-	_ = d.Set("subnet_id", *haVip.SubnetId)
-	_ = d.Set("address_ip", *haVip.AddressIp)
-	_ = d.Set("state", *haVip.State)
-	_ = d.Set("network_interface_id", *haVip.NetworkInterfaceId)
-	_ = d.Set("instance_id", *haVip.InstanceId)
-	_ = d.Set("check_associate", *haVip.CheckAssociate)
+	if haVip != nil {
+		_ = d.Set("name", haVip.HaVipName)
+		_ = d.Set("create_time", haVip.CreatedTime)
+		_ = d.Set("vip", haVip.Vip)
+		_ = d.Set("vpc_id", haVip.VpcId)
+		_ = d.Set("subnet_id", haVip.SubnetId)
+		_ = d.Set("address_ip", haVip.AddressIp)
+		_ = d.Set("state", haVip.State)
+		_ = d.Set("network_interface_id", haVip.NetworkInterfaceId)
+		_ = d.Set("instance_id", haVip.InstanceId)
+		if haVip.CheckAssociate != nil {
+			_ = d.Set("check_associate", *haVip.CheckAssociate)
+		}
+	}
 
 	return nil
 }

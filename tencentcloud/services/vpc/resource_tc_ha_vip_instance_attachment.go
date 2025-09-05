@@ -92,7 +92,7 @@ func resourceTencentCloudHaVipInstanceAttachmentCreate(d *schema.ResourceData, m
 
 	_ = response
 
-	d.SetId(strings.Join([]string{haVipId, instanceType, instanceId}, tccommon.FILED_SP))
+	d.SetId(strings.Join([]string{haVipId, instanceId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudHaVipInstanceAttachmentRead(d, meta)
 }
@@ -108,18 +108,16 @@ func resourceTencentCloudHaVipInstanceAttachmentRead(d *schema.ResourceData, met
 	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	haVipId := idSplit[0]
-	instanceType := idSplit[1]
-	instanceId := idSplit[2]
+	instanceId := idSplit[1]
 
 	var haVips []*vpc.HaVip
 	filters := map[string]string{
-		"havip-id":                        haVipId,
-		"havip-association.instance-id":   instanceId,
-		"havip-association.instance-type": instanceType,
+		"havip-id":                      haVipId,
+		"havip-association.instance-id": instanceId,
 	}
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeHaVipByFilter(ctx, filters)
@@ -145,7 +143,6 @@ func resourceTencentCloudHaVipInstanceAttachmentRead(d *schema.ResourceData, met
 
 	_ = instanceId
 	_ = haVipId
-	_ = instanceType
 	return nil
 }
 
@@ -157,12 +154,11 @@ func resourceTencentCloudHaVipInstanceAttachmentDelete(d *schema.ResourceData, m
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	haVipId := idSplit[0]
-	instanceType := idSplit[1]
-	instanceId := idSplit[2]
+	instanceId := idSplit[1]
 
 	var (
 		request  = vpc.NewDisassociateHaVipInstanceRequest()
@@ -171,9 +167,8 @@ func resourceTencentCloudHaVipInstanceAttachmentDelete(d *schema.ResourceData, m
 
 	request.HaVipAssociationSet = []*vpc.HaVipAssociation{
 		{
-			HaVipId:      helper.String(haVipId),
-			InstanceType: helper.String(instanceType),
-			InstanceId:   helper.String(instanceId),
+			HaVipId:    helper.String(haVipId),
+			InstanceId: helper.String(instanceId),
 		},
 	}
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -194,6 +189,5 @@ func resourceTencentCloudHaVipInstanceAttachmentDelete(d *schema.ResourceData, m
 	_ = response
 	_ = instanceId
 	_ = haVipId
-	_ = instanceType
 	return nil
 }
