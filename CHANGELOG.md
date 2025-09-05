@@ -1,3 +1,22 @@
+## 1.82.21(September 5 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_billing_allocation_tag` ([#3507](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3507))
+* **New Resource:** `tencentcloud_ha_vip_instance_attachment` ([#3508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3508))
+
+ENHANCEMENTS:
+
+* provider: optmize common sdk error code logic ([#3505](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3505))
+* resource/tencentcloud_ha_vip: support `check_associate` ([#3508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3508))
+* resource/tencentcloud_kubernetes_cluster: optmize code logic ([#3511](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3511))
+* resource/tencentcloud_private_dns_record: optmize code logic for read function ([#3510](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3510))
+* resource/tencentcloud_teo_acceleration_domain: Add document prompts. ([#3509](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3509))
+* resource/tencentcloud_vpn_gateway_route: optmize unit test ([#3506](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3506))
+* resource/tencentcloud_waf_cc: update doc ([#3504](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3504))
+* resource/tencentcloud_waf_custom_rule: update doc ([#3504](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3504))
+* resource/tencentcloud_watencentcloud_waf_custom_white_rulef_cc: update doc ([#3504](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3504))
+
 ## 1.82.20(August 29 , 2025)
 
 ENHANCEMENTS:
