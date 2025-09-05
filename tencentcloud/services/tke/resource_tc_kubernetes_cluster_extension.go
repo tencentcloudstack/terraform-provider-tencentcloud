@@ -1805,8 +1805,9 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		if len(keyIds) != 0 {
 			request.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
 			for i := range keyIds {
-				keyId := keyIds[i].(string)
-				request.LoginSettings.KeyIds = append(request.LoginSettings.KeyIds, &keyId)
+				if keyId, ok := keyIds[i].(string); ok && keyId != "" {
+					request.LoginSettings.KeyIds = append(request.LoginSettings.KeyIds, &keyId)
+				}
 			}
 		}
 	}
@@ -1825,8 +1826,9 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		securityGroups := v.([]interface{})
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
-			securityGroup := securityGroups[i].(string)
-			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroup)
+			if securityGroup, ok := securityGroups[i].(string); ok && securityGroup != "" {
+				request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroup)
+			}
 		}
 	}
 
@@ -1834,8 +1836,9 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		disasterGroups := v.([]interface{})
 		request.DisasterRecoverGroupIds = make([]*string, 0, len(disasterGroups))
 		for i := range disasterGroups {
-			disasterGroup := disasterGroups[i].(string)
-			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterGroup)
+			if disasterGroup, ok := disasterGroups[i].(string); ok && disasterGroup != "" {
+				request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterGroup)
+			}
 		}
 	}
 
@@ -1960,8 +1963,9 @@ func tkeGetCvmExistInstancesPara(dMap map[string]interface{}) (tke.ExistedInstan
 				sgIds := v.([]interface{})
 				inst.ExistedInstancesPara.SecurityGroupIds = make([]*string, 0, len(sgIds))
 				for i := range sgIds {
-					sgId := sgIds[i].(string)
-					inst.ExistedInstancesPara.SecurityGroupIds = append(inst.ExistedInstancesPara.SecurityGroupIds, &sgId)
+					if sgId, ok := sgIds[i].(string); ok && sgId != "" {
+						inst.ExistedInstancesPara.SecurityGroupIds = append(inst.ExistedInstancesPara.SecurityGroupIds, &sgId)
+					}
 				}
 			}
 
@@ -1974,8 +1978,9 @@ func tkeGetCvmExistInstancesPara(dMap map[string]interface{}) (tke.ExistedInstan
 				keyIds := v.([]interface{})
 				loginSettings.KeyIds = make([]*string, 0, len(keyIds))
 				for i := range keyIds {
-					keyId := keyIds[i].(string)
-					loginSettings.KeyIds = append(loginSettings.KeyIds, &keyId)
+					if keyId, ok := keyIds[i].(string); ok && keyId != "" {
+						loginSettings.KeyIds = append(loginSettings.KeyIds, &keyId)
+					}
 				}
 
 				inst.ExistedInstancesPara.LoginSettings = loginSettings

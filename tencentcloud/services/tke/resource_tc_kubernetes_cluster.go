@@ -1654,22 +1654,25 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 		if v, ok := extraArgsMap["kube_apiserver"]; ok {
 			kubeAPIServerSet := v.([]interface{})
 			for i := range kubeAPIServerSet {
-				kubeAPIServer := kubeAPIServerSet[i].(string)
-				clusterExtraArgs.KubeAPIServer = append(clusterExtraArgs.KubeAPIServer, helper.String(kubeAPIServer))
+				if kubeAPIServer, ok := kubeAPIServerSet[i].(string); ok && kubeAPIServer != "" {
+					clusterExtraArgs.KubeAPIServer = append(clusterExtraArgs.KubeAPIServer, helper.String(kubeAPIServer))
+				}
 			}
 		}
 		if v, ok := extraArgsMap["kube_controller_manager"]; ok {
 			kubeControllerManagerSet := v.([]interface{})
 			for i := range kubeControllerManagerSet {
-				kubeControllerManager := kubeControllerManagerSet[i].(string)
-				clusterExtraArgs.KubeControllerManager = append(clusterExtraArgs.KubeControllerManager, helper.String(kubeControllerManager))
+				if kubeControllerManager, ok := kubeControllerManagerSet[i].(string); ok && kubeControllerManager != "" {
+					clusterExtraArgs.KubeControllerManager = append(clusterExtraArgs.KubeControllerManager, helper.String(kubeControllerManager))
+				}
 			}
 		}
 		if v, ok := extraArgsMap["kube_scheduler"]; ok {
 			kubeSchedulerSet := v.([]interface{})
 			for i := range kubeSchedulerSet {
-				kubeScheduler := kubeSchedulerSet[i].(string)
-				clusterExtraArgs.KubeScheduler = append(clusterExtraArgs.KubeScheduler, helper.String(kubeScheduler))
+				if kubeScheduler, ok := kubeSchedulerSet[i].(string); ok && kubeScheduler != "" {
+					clusterExtraArgs.KubeScheduler = append(clusterExtraArgs.KubeScheduler, helper.String(kubeScheduler))
+				}
 			}
 		}
 		clusterAdvancedSettings.ExtraArgs = &clusterExtraArgs
