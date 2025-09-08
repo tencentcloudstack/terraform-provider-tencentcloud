@@ -125,6 +125,9 @@ const (
 	// 退押金失败。
 	FAILEDOPERATION_REFUNDDEPOSITFAILED = "FailedOperation.RefundDepositFailed"
 
+	// 结果过期
+	FAILEDOPERATION_RESULTEXPIRED = "FailedOperation.ResultExpired"
+
 	// 取消授权失败。
 	FAILEDOPERATION_REVOKEPOLICYFAILED = "FailedOperation.RevokePolicyFailed"
 
@@ -148,6 +151,9 @@ const (
 
 	// 标签数量超出限制。
 	FAILEDOPERATION_TOOMANYTAGS = "FailedOperation.TooManyTags"
+
+	// 更新权限信息失败。
+	FAILEDOPERATION_UPDATEPOLICYFAILED = "FailedOperation.UpdatePolicyFailed"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -419,6 +425,9 @@ const (
 	// 任务类型TaskType错误，Spark引擎任务类型为SparkSQLTask,Presto引擎任务类型为SQLTask
 	INVALIDPARAMETER_INVALIDTASKTYPE = "InvalidParameter.InvalidTaskType"
 
+	// 任务长度超限
+	INVALIDPARAMETER_INVALIDTASKSFILTERLENGTH = "InvalidParameter.InvalidTasksFilterLength"
+
 	// 指定的TCR Spark镜像格式不匹配，参考样例: my-image/ndf/python/latest
 	INVALIDPARAMETER_INVALIDTCRSPARKIMAGEFORMAT = "InvalidParameter.InvalidTcrSparkImageFormat"
 
@@ -457,6 +466,9 @@ const (
 
 	// 指定参数Base64解析失败
 	INVALIDPARAMETER_PARAMETERBASE64DECODEFAILED = "InvalidParameter.ParameterBase64DecodeFailed"
+
+	// 传入参数不合法
+	INVALIDPARAMETER_PARAMETERILLEGAL = "InvalidParameter.ParameterIllegal"
 
 	// 找不到参数或参数为空
 	INVALIDPARAMETER_PARAMETERNOTFOUNDORBENONE = "InvalidParameter.ParameterNotFoundOrBeNone"
@@ -622,6 +634,9 @@ const (
 
 	// 找不到Spark Shuffle存储路径，请到控制台->数据探索页面->存储配置中设置
 	RESOURCENOTFOUND_SHUFFLEDIRNOTFOUND = "ResourceNotFound.ShuffleDirNotFound"
+
+	// 任务资源不足，请调整driver或executor指定规格大小
+	RESOURCENOTFOUND_SPARKJOBINSUFFICIENTRESOURCES = "ResourceNotFound.SparkJobInsufficientResources"
 
 	// 表不存在，请重试，或者提交工单联系我们
 	RESOURCENOTFOUND_TABLENOTFOUND = "ResourceNotFound.TableNotFound"
