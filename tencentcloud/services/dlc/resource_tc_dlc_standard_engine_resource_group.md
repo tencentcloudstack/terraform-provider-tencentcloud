@@ -12,7 +12,6 @@ resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
   data_engine_name           = "tf-engine"
   auto_launch                = 0
   auto_pause                 = 0
-  is_launch_now              = 1
   auto_pause_time            = 10
   static_config_pairs {
     config_item  = "key"

@@ -15,23 +15,45 @@ func TestAccTencentCloudDlcStandardEngineResourceGroupResource_basic(t *testing.
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{{
-			Config: testAccDlcStandardEngineResourceGroup,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.dlc_standard_engine_resource_group", "id")),
-		}, {
-			ResourceName:      "tencentcloud_dlc_standard_engine_resource_group.dlc_standard_engine_resource_group",
-			ImportState:       true,
-			ImportStateVerify: true,
-		}},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDlcStandardEngineResourceGroup,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "engine_resource_group_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "data_engine_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "auto_launch"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "auto_pause"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "auto_pause_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "max_concurrency"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "resource_group_scene"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "spark_spec_mode"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_standard_engine_resource_group.example", "spark_size"),
+				),
+			},
+		},
 	})
 }
 
 const testAccDlcStandardEngineResourceGroup = `
+resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
+  engine_resource_group_name = "tf-example"
+  data_engine_name           = "tf-engine"
+  auto_launch                = 0
+  auto_pause                 = 0
+  auto_pause_time            = 10
+  static_config_pairs {
+    config_item  = "key"
+    config_value = "value"
+  }
 
-resource "tencentcloud_dlc_standard_engine_resource_group" "dlc_standard_engine_resource_group" {
-  static_config_pairs = {
+  dynamic_config_pairs {
+    config_item  = "key"
+    config_value = "value"
   }
-  dynamic_config_pairs = {
-  }
+  max_concurrency      = 5
+  resource_group_scene = "SparkSQL"
+  spark_spec_mode      = "fast"
+  spark_size           = 16
 }
 `
