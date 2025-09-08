@@ -452,99 +452,99 @@ func resourceTencentCloudDlcStandardEngineResourceGroupRead(d *schema.ResourceDa
 	}
 
 	if respData.EngineResourceGroupName != nil {
-		d.Set("engine_resource_group_name", respData.EngineResourceGroupName)
+		_ = d.Set("engine_resource_group_name", respData.EngineResourceGroupName)
 	}
 
 	if respData.DataEngineName != nil {
-		d.Set("data_engine_name", respData.DataEngineName)
+		_ = d.Set("data_engine_name", respData.DataEngineName)
 	}
 
 	if respData.AutoLaunch != nil {
-		d.Set("auto_launch", respData.AutoLaunch)
+		_ = d.Set("auto_launch", respData.AutoLaunch)
 	}
 
 	if respData.AutoPause != nil {
-		d.Set("auto_pause", respData.AutoPause)
+		_ = d.Set("auto_pause", respData.AutoPause)
 	}
 
 	if respData.DriverCuSpec != nil {
-		d.Set("driver_cu_spec", respData.DriverCuSpec)
+		_ = d.Set("driver_cu_spec", respData.DriverCuSpec)
 	}
 
 	if respData.ExecutorCuSpec != nil {
-		d.Set("executor_cu_spec", respData.ExecutorCuSpec)
+		_ = d.Set("executor_cu_spec", respData.ExecutorCuSpec)
 	}
 
 	if respData.MinExecutorNums != nil {
-		d.Set("min_executor_nums", respData.MinExecutorNums)
+		_ = d.Set("min_executor_nums", respData.MinExecutorNums)
 	}
 
 	if respData.MaxExecutorNums != nil {
-		d.Set("max_executor_nums", respData.MaxExecutorNums)
+		_ = d.Set("max_executor_nums", respData.MaxExecutorNums)
 	}
 
 	if respData.AutoPauseTime != nil {
-		d.Set("auto_pause_time", respData.AutoPauseTime)
+		_ = d.Set("auto_pause_time", respData.AutoPauseTime)
 	}
 
 	if respData.MaxConcurrency != nil {
-		d.Set("max_concurrency", respData.MaxConcurrency)
+		_ = d.Set("max_concurrency", respData.MaxConcurrency)
 	}
 
 	if respData.NetworkConfigNames != nil {
-		d.Set("network_config_names", respData.NetworkConfigNames)
+		_ = d.Set("network_config_names", respData.NetworkConfigNames)
 	}
 
 	if respData.PublicDomain != nil {
-		d.Set("public_domain", respData.PublicDomain)
+		_ = d.Set("public_domain", respData.PublicDomain)
 	}
 
 	if respData.RegistryId != nil {
-		d.Set("registry_id", respData.RegistryId)
+		_ = d.Set("registry_id", respData.RegistryId)
 	}
 
 	if respData.FrameType != nil {
-		d.Set("frame_type", respData.FrameType)
+		_ = d.Set("frame_type", respData.FrameType)
 	}
 
 	if respData.ImageType != nil {
-		d.Set("image_type", respData.ImageType)
+		_ = d.Set("image_type", respData.ImageType)
 	}
 
 	if respData.ImageName != nil {
-		d.Set("image_name", respData.ImageName)
+		_ = d.Set("image_name", respData.ImageName)
 	}
 
 	if respData.ImageVersion != nil {
-		d.Set("image_version", respData.ImageVersion)
+		_ = d.Set("image_version", respData.ImageVersion)
 	}
 
 	if respData.Size != nil {
-		d.Set("size", respData.Size)
+		_ = d.Set("size", respData.Size)
 	}
 
 	if respData.ResourceGroupScene != nil {
-		d.Set("resource_group_scene", respData.ResourceGroupScene)
+		_ = d.Set("resource_group_scene", respData.ResourceGroupScene)
 	}
 
 	if respData.RegionName != nil {
-		d.Set("region_name", respData.RegionName)
+		_ = d.Set("region_name", respData.RegionName)
 	}
 
 	if respData.PythonCuSpec != nil {
-		d.Set("python_cu_spec", respData.PythonCuSpec)
+		_ = d.Set("python_cu_spec", respData.PythonCuSpec)
 	}
 
 	if respData.SparkSpecMode != nil {
-		d.Set("spark_spec_mode", respData.SparkSpecMode)
+		_ = d.Set("spark_spec_mode", respData.SparkSpecMode)
 	}
 
 	if respData.SparkSize != nil {
-		d.Set("spark_size", respData.SparkSize)
+		_ = d.Set("spark_size", respData.SparkSize)
 	}
 
 	if respData.EngineResourceGroupId != nil {
-		d.Set("engine_resource_group_id", respData.EngineResourceGroupId)
+		_ = d.Set("engine_resource_group_id", respData.EngineResourceGroupId)
 	}
 
 	return nil
