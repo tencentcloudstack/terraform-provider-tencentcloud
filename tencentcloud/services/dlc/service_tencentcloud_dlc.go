@@ -1254,3 +1254,95 @@ func (me *DlcService) DescribeDlcSessionImageVersionByFilter(ctx context.Context
 	ret = response.Response.EngineSessionImages
 	return
 }
+
+func (me *DlcService) DescribeDlcUserVpcConnectionById(ctx context.Context, engineNetworkId, userVpcEndpointId string) (ret *dlc.UserVpcConnectionInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeUserVpcConnectionRequest()
+	response := dlc.NewDescribeUserVpcConnectionResponse()
+	request.EngineNetworkId = &engineNetworkId
+	request.UserVpcEndpointIds = helper.Strings([]string{userVpcEndpointId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeUserVpcConnection(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc user vpc connection failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc user vpc connection failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	if len(response.Response.UserVpcConnectionInfos) != 1 {
+		return
+	}
+
+	ret = response.Response.UserVpcConnectionInfos[0]
+	return
+}
+
+func (me *DlcService) DescribeDlcStandardEngineResourceGroupById(ctx context.Context, engineResourceGroupName string) (ret *dlc.StandardEngineResourceGroupInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeStandardEngineResourceGroupsRequest()
+	response := dlc.NewDescribeStandardEngineResourceGroupsResponse()
+	request.Filters = []*dlc.Filter{
+		{
+			Name:   helper.String("engine-resource-group-name-unique"),
+			Values: helper.Strings([]string{engineResourceGroupName}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeStandardEngineResourceGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc standard engine resource groups failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc standard engine resource groups failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	if len(response.Response.UserEngineResourceGroupInfos) != 1 {
+		return
+	}
+
+	ret = response.Response.UserEngineResourceGroupInfos[0]
+	return
+}

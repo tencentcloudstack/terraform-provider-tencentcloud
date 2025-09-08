@@ -1170,7 +1170,11 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
+<<<<<<< HEAD
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.31
+=======
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.23
+>>>>>>> bb6625576 (add)
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1208,7 +1212,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.1.5
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.1.23
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.1056
