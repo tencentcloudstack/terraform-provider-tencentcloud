@@ -159,19 +159,19 @@ func resourceTencentCloudDlcUserVpcConnectionRead(d *schema.ResourceData, meta i
 	}
 
 	if respData.UserVpcId != nil {
-		d.Set("user_vpc_id", respData.UserVpcId)
+		_ = d.Set("user_vpc_id", respData.UserVpcId)
 	}
 
 	if respData.UserVpcEndpointName != nil {
-		d.Set("user_vpc_endpoint_name", respData.UserVpcEndpointName)
+		_ = d.Set("user_vpc_endpoint_name", respData.UserVpcEndpointName)
 	}
 
 	if respData.EngineNetworkId != nil {
-		d.Set("engine_network_id", respData.EngineNetworkId)
+		_ = d.Set("engine_network_id", respData.EngineNetworkId)
 	}
 
 	if respData.UserVpcEndpointId != nil {
-		d.Set("user_vpc_endpoint_id", respData.UserVpcEndpointId)
+		_ = d.Set("user_vpc_endpoint_id", respData.UserVpcEndpointId)
 	}
 
 	return nil
