@@ -177,7 +177,7 @@ func dataSourceTencentCloudEbBusRead(d *schema.ResourceData, meta interface{}) e
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["filters"] = tmpSet
+		paramMap["Filters"] = tmpSet
 	}
 
 	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
