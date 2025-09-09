@@ -840,6 +840,60 @@ func (r *AssociateDatasourceHouseResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type AttachDataMaskPolicyRequestParams struct {
+	// 要绑定的数据脱敏策略权限对象集合
+	DataMaskStrategyPolicySet []*DataMaskStrategyPolicy `json:"DataMaskStrategyPolicySet,omitnil,omitempty" name:"DataMaskStrategyPolicySet"`
+}
+
+type AttachDataMaskPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 要绑定的数据脱敏策略权限对象集合
+	DataMaskStrategyPolicySet []*DataMaskStrategyPolicy `json:"DataMaskStrategyPolicySet,omitnil,omitempty" name:"DataMaskStrategyPolicySet"`
+}
+
+func (r *AttachDataMaskPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AttachDataMaskPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DataMaskStrategyPolicySet")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AttachDataMaskPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AttachDataMaskPolicyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type AttachDataMaskPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *AttachDataMaskPolicyResponseParams `json:"Response"`
+}
+
+func (r *AttachDataMaskPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AttachDataMaskPolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type AttachUserPolicyRequestParams struct {
 	// 用户Id，和子用户uin相同，需要先使用CreateUser接口创建用户。可以使用DescribeUsers接口查看。
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
@@ -2130,10 +2184,10 @@ type CreateDataEngineRequestParams struct {
 	// 计费类型，后付费：0，预付费：1。当前只支持后付费，不填默认为后付费。
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 资源使用时长，后付费：固定填3600，预付费：最少填1，代表购买资源一个月，最长不超过120。默认1
+	// 资源使用时长，后付费：固定填1，预付费：最少填1，代表购买资源一个月，最长不超过120。默认1
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 资源使用时长的单位，后付费：s，预付费：m。默认为s
+	// 资源使用时长的单位，后付费：h，预付费：m。默认为h
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
 	// 资源的自动续费标志。后付费无需续费，固定填0；预付费下：0表示手动续费、1代表自动续费、2代表不续费，在0下如果是大客户，会自动帮大客户续费。默认为0
@@ -2151,7 +2205,7 @@ type CreateDataEngineRequestParams struct {
 	// 定时启停策略，复杂类型：包含启停时间、挂起集群策略
 	CrontabResumeSuspendStrategy *CrontabResumeSuspendStrategy `json:"CrontabResumeSuspendStrategy,omitnil,omitempty" name:"CrontabResumeSuspendStrategy"`
 
-	// 引擎执行任务类型，有效值：SQL/BATCH，默认为SQL
+	// 引擎执行任务类型，有效值：SQL/BATCH，标准引擎默认为BATCH
 	EngineExecType *string `json:"EngineExecType,omitnil,omitempty" name:"EngineExecType"`
 
 	// 单个集群最大并发任务数，默认5
@@ -2233,10 +2287,10 @@ type CreateDataEngineRequest struct {
 	// 计费类型，后付费：0，预付费：1。当前只支持后付费，不填默认为后付费。
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 资源使用时长，后付费：固定填3600，预付费：最少填1，代表购买资源一个月，最长不超过120。默认1
+	// 资源使用时长，后付费：固定填1，预付费：最少填1，代表购买资源一个月，最长不超过120。默认1
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 资源使用时长的单位，后付费：s，预付费：m。默认为s
+	// 资源使用时长的单位，后付费：h，预付费：m。默认为h
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
 	// 资源的自动续费标志。后付费无需续费，固定填0；预付费下：0表示手动续费、1代表自动续费、2代表不续费，在0下如果是大客户，会自动帮大客户续费。默认为0
@@ -2254,7 +2308,7 @@ type CreateDataEngineRequest struct {
 	// 定时启停策略，复杂类型：包含启停时间、挂起集群策略
 	CrontabResumeSuspendStrategy *CrontabResumeSuspendStrategy `json:"CrontabResumeSuspendStrategy,omitnil,omitempty" name:"CrontabResumeSuspendStrategy"`
 
-	// 引擎执行任务类型，有效值：SQL/BATCH，默认为SQL
+	// 引擎执行任务类型，有效值：SQL/BATCH，标准引擎默认为BATCH
 	EngineExecType *string `json:"EngineExecType,omitnil,omitempty" name:"EngineExecType"`
 
 	// 单个集群最大并发任务数，默认5
@@ -2370,6 +2424,60 @@ func (r *CreateDataEngineResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateDataEngineResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDataMaskStrategyRequestParams struct {
+	// 数据脱敏策略详情
+	Strategy *DataMaskStrategyInfo `json:"Strategy,omitnil,omitempty" name:"Strategy"`
+}
+
+type CreateDataMaskStrategyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数据脱敏策略详情
+	Strategy *DataMaskStrategyInfo `json:"Strategy,omitnil,omitempty" name:"Strategy"`
+}
+
+func (r *CreateDataMaskStrategyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDataMaskStrategyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Strategy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDataMaskStrategyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDataMaskStrategyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateDataMaskStrategyResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDataMaskStrategyResponseParams `json:"Response"`
+}
+
+func (r *CreateDataMaskStrategyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDataMaskStrategyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4387,6 +4495,97 @@ func (r *CreateTasksResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateTcIcebergTableRequestParams struct {
+	// 表基本信息
+	TableBaseInfo *TableBaseInfo `json:"TableBaseInfo,omitnil,omitempty" name:"TableBaseInfo"`
+
+	// 表字段信息
+	Columns []*TColumn `json:"Columns,omitnil,omitempty" name:"Columns"`
+
+	// 为true时只获取sql而不执行
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+
+	// 表分区信息
+	Partitions []*TPartition `json:"Partitions,omitnil,omitempty" name:"Partitions"`
+
+	// 表属性信息
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
+}
+
+type CreateTcIcebergTableRequest struct {
+	*tchttp.BaseRequest
+	
+	// 表基本信息
+	TableBaseInfo *TableBaseInfo `json:"TableBaseInfo,omitnil,omitempty" name:"TableBaseInfo"`
+
+	// 表字段信息
+	Columns []*TColumn `json:"Columns,omitnil,omitempty" name:"Columns"`
+
+	// 为true时只获取sql而不执行
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+
+	// 表分区信息
+	Partitions []*TPartition `json:"Partitions,omitnil,omitempty" name:"Partitions"`
+
+	// 表属性信息
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
+}
+
+func (r *CreateTcIcebergTableRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateTcIcebergTableRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TableBaseInfo")
+	delete(f, "Columns")
+	delete(f, "DryRun")
+	delete(f, "Partitions")
+	delete(f, "Properties")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTcIcebergTableRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateTcIcebergTableResponseParams struct {
+	// amoro的SessionId
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// 执行的sql
+	SQL *string `json:"SQL,omitnil,omitempty" name:"SQL"`
+
+	// 为true时只返回sql而不实际执行
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateTcIcebergTableResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateTcIcebergTableResponseParams `json:"Response"`
+}
+
+func (r *CreateTcIcebergTableResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateTcIcebergTableResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateUserRequestParams struct {
 	// 需要授权的子用户uin，可以通过腾讯云控制台右上角 → “账号信息” → “账号ID进行查看”。
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
@@ -4537,6 +4736,9 @@ func (r *CreateUserVpcConnectionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateUserVpcConnectionResponseParams struct {
+	// 终端节点IP
+	UserVpcEndpointId *string `json:"UserVpcEndpointId,omitnil,omitempty" name:"UserVpcEndpointId"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -5303,6 +5505,56 @@ type DataGovernPolicy struct {
 	GovernEngine *string `json:"GovernEngine,omitnil,omitempty" name:"GovernEngine"`
 }
 
+type DataMaskStrategy struct {
+	// 策略ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
+
+	// 用户AppId
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UserAppId *string `json:"UserAppId,omitnil,omitempty" name:"UserAppId"`
+
+	// 用户Uin
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Uin *string `json:"Uin,omitnil,omitempty" name:"Uin"`
+
+	// 操作用户子账号uin
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubAccountUin *string `json:"SubAccountUin,omitnil,omitempty" name:"SubAccountUin"`
+
+	// 策略名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
+
+	// MASK_SHOW_FIRST_4; MASK_SHOW_LAST_4;MASK_HASH; MASK_DATE_SHOW_YEAR; MASK_NULL; MASK_DEFAULT 等
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StrategyType *string `json:"StrategyType,omitnil,omitempty" name:"StrategyType"`
+
+	// 策略描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StrategyDesc *string `json:"StrategyDesc,omitnil,omitempty" name:"StrategyDesc"`
+
+	// 用户组策略列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Groups []*GroupInfo `json:"Groups,omitnil,omitempty" name:"Groups"`
+
+	// 用户子账号uin列表，按;拼接
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Users *string `json:"Users,omitnil,omitempty" name:"Users"`
+
+	// 1: 生效中； 0：已删除
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	State *int64 `json:"State,omitnil,omitempty" name:"State"`
+
+	// 策略创建时间，毫秒时间戳
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *int64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 策略更新时间，毫秒时间戳
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *int64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
 type DataMaskStrategyInfo struct {
 	// 策略名称
 	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
@@ -5322,6 +5574,20 @@ type DataMaskStrategyInfo struct {
 
 	// 策略Id
 	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
+}
+
+type DataMaskStrategyPolicy struct {
+	// 数据脱敏权限对象
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PolicyInfo *Policy `json:"PolicyInfo,omitnil,omitempty" name:"PolicyInfo"`
+
+	// 数据脱敏策略ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataMaskStrategyId *string `json:"DataMaskStrategyId,omitnil,omitempty" name:"DataMaskStrategyId"`
+
+	// 绑定字段类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ColumnType *string `json:"ColumnType,omitnil,omitempty" name:"ColumnType"`
 }
 
 type DataSourceInfo struct {
@@ -5660,6 +5926,60 @@ func (r *DeleteDataEngineResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteDataEngineResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteDataMaskStrategyRequestParams struct {
+	// 数据脱敏策略Id
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
+}
+
+type DeleteDataMaskStrategyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数据脱敏策略Id
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
+}
+
+func (r *DeleteDataMaskStrategyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDataMaskStrategyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StrategyId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteDataMaskStrategyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteDataMaskStrategyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteDataMaskStrategyResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteDataMaskStrategyResponseParams `json:"Response"`
+}
+
+func (r *DeleteDataMaskStrategyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDataMaskStrategyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7637,6 +7957,80 @@ func (r *DescribeDataEnginesScaleDetailResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDataEnginesScaleDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDataMaskStrategiesRequestParams struct {
+	// 分页参数，单页返回数据量，默认10
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页参数，数据便偏移量，默认0
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 过滤字段，strategy-name: 按策略名称搜索
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeDataMaskStrategiesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 分页参数，单页返回数据量，默认10
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页参数，数据便偏移量，默认0
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 过滤字段，strategy-name: 按策略名称搜索
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeDataMaskStrategiesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataMaskStrategiesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDataMaskStrategiesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDataMaskStrategiesResponseParams struct {
+	// 总数据脱敏策略数
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 数据脱敏策略列表
+	Strategies []*DataMaskStrategy `json:"Strategies,omitnil,omitempty" name:"Strategies"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDataMaskStrategiesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDataMaskStrategiesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDataMaskStrategiesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataMaskStrategiesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -11179,6 +11573,77 @@ func (r *DescribeThirdPartyAccessUserResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeUDFPolicyRequestParams struct {
+	// udf名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数据库名(全局UDF：global-function)
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据目录名
+	CatalogName *string `json:"CatalogName,omitnil,omitempty" name:"CatalogName"`
+}
+
+type DescribeUDFPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// udf名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数据库名(全局UDF：global-function)
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据目录名
+	CatalogName *string `json:"CatalogName,omitnil,omitempty" name:"CatalogName"`
+}
+
+func (r *DescribeUDFPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUDFPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	delete(f, "DatabaseName")
+	delete(f, "CatalogName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUDFPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUDFPolicyResponseParams struct {
+	// UDF权限信息
+	UDFPolicyInfos []*UDFPolicyInfo `json:"UDFPolicyInfos,omitnil,omitempty" name:"UDFPolicyInfos"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeUDFPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeUDFPolicyResponseParams `json:"Response"`
+}
+
+func (r *DescribeUDFPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUDFPolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeUpdatableDataEnginesRequestParams struct {
 	// 引擎配置操作命令，UpdateSparkSQLLakefsPath 更新托管表路径，UpdateSparkSQLResultPath 更新结果桶路径
 	DataEngineConfigCommand *string `json:"DataEngineConfigCommand,omitnil,omitempty" name:"DataEngineConfigCommand"`
@@ -11708,6 +12173,9 @@ type DescribeUserVpcConnectionRequestParams struct {
 
 	// 引擎ID集合
 	DataEngineIds []*string `json:"DataEngineIds,omitnil,omitempty" name:"DataEngineIds"`
+
+	// 终端节点ID集合
+	UserVpcEndpointIds []*string `json:"UserVpcEndpointIds,omitnil,omitempty" name:"UserVpcEndpointIds"`
 }
 
 type DescribeUserVpcConnectionRequest struct {
@@ -11718,6 +12186,9 @@ type DescribeUserVpcConnectionRequest struct {
 
 	// 引擎ID集合
 	DataEngineIds []*string `json:"DataEngineIds,omitnil,omitempty" name:"DataEngineIds"`
+
+	// 终端节点ID集合
+	UserVpcEndpointIds []*string `json:"UserVpcEndpointIds,omitnil,omitempty" name:"UserVpcEndpointIds"`
 }
 
 func (r *DescribeUserVpcConnectionRequest) ToJsonString() string {
@@ -11734,6 +12205,7 @@ func (r *DescribeUserVpcConnectionRequest) FromJsonString(s string) error {
 	}
 	delete(f, "EngineNetworkId")
 	delete(f, "DataEngineIds")
+	delete(f, "UserVpcEndpointIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUserVpcConnectionRequest has unknown keys!", "")
 	}
@@ -16642,6 +17114,9 @@ type TaskResponseInfo struct {
 
 	// spark引擎资源组名称
 	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
+
+	// 任务执行耗时
+	JobTimeSum *int64 `json:"JobTimeSum,omitnil,omitempty" name:"JobTimeSum"`
 }
 
 type TaskResultInfo struct {
@@ -16767,6 +17242,18 @@ type TextFile struct {
 
 	// 处理文本用的正则表达式。
 	Regex *string `json:"Regex,omitnil,omitempty" name:"Regex"`
+}
+
+type UDFPolicyInfo struct {
+	// 权限类型
+	// 示例：select，alter，drop
+	Accesses []*string `json:"Accesses,omitnil,omitempty" name:"Accesses"`
+
+	// 拥有权限的用户信息
+	Users []*string `json:"Users,omitnil,omitempty" name:"Users"`
+
+	// 拥有权限的工作组的信息
+	Groups []*string `json:"Groups,omitnil,omitempty" name:"Groups"`
 }
 
 // Predefined struct for user
@@ -17177,6 +17664,60 @@ func (r *UpdateDataEngineResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateDataEngineResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateDataMaskStrategyRequestParams struct {
+	// 数据脱敏策略详情
+	Strategy *DataMaskStrategyInfo `json:"Strategy,omitnil,omitempty" name:"Strategy"`
+}
+
+type UpdateDataMaskStrategyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数据脱敏策略详情
+	Strategy *DataMaskStrategyInfo `json:"Strategy,omitnil,omitempty" name:"Strategy"`
+}
+
+func (r *UpdateDataMaskStrategyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateDataMaskStrategyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Strategy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateDataMaskStrategyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateDataMaskStrategyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateDataMaskStrategyResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateDataMaskStrategyResponseParams `json:"Response"`
+}
+
+func (r *UpdateDataMaskStrategyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateDataMaskStrategyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -17687,6 +18228,84 @@ func (r *UpdateStandardEngineResourceGroupResourceInfoResponse) ToJsonString() s
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateStandardEngineResourceGroupResourceInfoResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateUDFPolicyRequestParams struct {
+	// UDF名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数据库名
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据目录名
+	CatalogName *string `json:"CatalogName,omitnil,omitempty" name:"CatalogName"`
+
+	// UDF权限信息
+	UDFPolicyInfos []*UDFPolicyInfo `json:"UDFPolicyInfos,omitnil,omitempty" name:"UDFPolicyInfos"`
+}
+
+type UpdateUDFPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// UDF名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数据库名
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 数据目录名
+	CatalogName *string `json:"CatalogName,omitnil,omitempty" name:"CatalogName"`
+
+	// UDF权限信息
+	UDFPolicyInfos []*UDFPolicyInfo `json:"UDFPolicyInfos,omitnil,omitempty" name:"UDFPolicyInfos"`
+}
+
+func (r *UpdateUDFPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateUDFPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	delete(f, "DatabaseName")
+	delete(f, "CatalogName")
+	delete(f, "UDFPolicyInfos")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateUDFPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateUDFPolicyResponseParams struct {
+	// UDF权限信息
+	UDFPolicyInfos []*UDFPolicyInfo `json:"UDFPolicyInfos,omitnil,omitempty" name:"UDFPolicyInfos"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateUDFPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateUDFPolicyResponseParams `json:"Response"`
+}
+
+func (r *UpdateUDFPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateUDFPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
