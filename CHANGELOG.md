@@ -1,3 +1,9 @@
+## 1.82.22(September 9 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_eb_bus: fix typo error ([#3512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3512))
+
 ## 1.82.21(September 5 , 2025)
 
 FEATURES:
