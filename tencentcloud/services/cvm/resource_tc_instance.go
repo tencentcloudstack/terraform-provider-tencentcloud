@@ -1743,7 +1743,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	if instance.VirtualPrivateCloud != nil && instance.VirtualPrivateCloud.Ipv6AddressCount != nil {
-		_ = d.Set("internet_max_bandwidth_out", instance.VirtualPrivateCloud.Ipv6AddressCount)
+		_ = d.Set("ipv6_address_count", instance.VirtualPrivateCloud.Ipv6AddressCount)
 	}
 
 	return nil

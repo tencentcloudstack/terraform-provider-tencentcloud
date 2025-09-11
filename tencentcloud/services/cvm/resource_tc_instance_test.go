@@ -3054,6 +3054,10 @@ func TestAccTencentCloudNeedFixCvmInstanceResource_ReleaseAddress(t *testing.T) 
 				Config: testAccCvmInstanceResource_ReleaseAddress,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCvmInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "ipv4_address_type", "HighQualityEIP"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "ipv6_address_type", "HighQualityEIPv6"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "ipv6_address_count", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "release_address", "true"),
 				),
 			},
 		},
