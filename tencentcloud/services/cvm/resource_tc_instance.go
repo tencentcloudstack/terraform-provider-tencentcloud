@@ -205,6 +205,21 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"WanIP", "HighQualityEIP", "AntiDDoSEIP"}),
 				Description:  "AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.",
 			},
+			"ipv6_address_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"EIPv6", "HighQualityEIPv6"}),
+				Description:  "IPv6 AddressType. Default value: WanIP. EIPv6: Elastic IPv6; HighQualityEIPv6: Premium IPv6, only China Hong Kong supports premium IPv6. To allocate IPv6 addresses to resources, please specify the Elastic IPv6 type.",
+			},
+			"ipv6_address_count": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Specify the number of randomly generated IPv6 addresses for the Elastic Network Interface.",
+			},
 			"anti_ddos_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -478,6 +493,11 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "The instance launch template version number. If given, a new instance launch template will be created based on the given version number.",
 			},
+			"release_address": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Release elastic IP. Under EIP 2.0, only the first EIP under the primary network card is provided, and the EIP types are limited to HighQualityEIP, AntiDDoSEIP, EIPv6, and HighQualityEIPv6. Default behavior is not released.",
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -674,6 +694,11 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		netWorkFlag = true
 	}
 
+	if v, ok := d.GetOk("ipv6_address_type"); ok {
+		internetAccessible.IPv6AddressType = helper.String(v.(string))
+		netWorkFlag = true
+	}
+
 	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
 		internetAccessible.AntiDDoSPackageId = helper.String(v.(string))
 		netWorkFlag = true
@@ -694,6 +719,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 		if v, ok = d.GetOk("private_ip"); ok {
 			request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
+		}
+		if v, ok = d.GetOkExists("ipv6_address_count"); ok {
+			request.VirtualPrivateCloud.Ipv6AddressCount = helper.IntUint64(v.(int))
 		}
 	}
 
@@ -1190,6 +1218,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if instance.InternetAccessible != nil {
 		if instance.InternetAccessible.IPv4AddressType != nil {
 			_ = d.Set("ipv4_address_type", instance.InternetAccessible.IPv4AddressType)
+		}
+
+		if instance.InternetAccessible.IPv6AddressType != nil {
+			_ = d.Set("ipv6_address_type", instance.InternetAccessible.IPv6AddressType)
 		}
 
 		if instance.InternetAccessible.AntiDDoSPackageId != nil {
@@ -1708,6 +1740,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			return e
 		}
 		_ = d.Set("user_data_raw", string(userDataRaw))
+	}
+
+	if instance.VirtualPrivateCloud != nil && instance.VirtualPrivateCloud.Ipv6AddressCount != nil {
+		_ = d.Set("internet_max_bandwidth_out", instance.VirtualPrivateCloud.Ipv6AddressCount)
 	}
 
 	return nil
@@ -2359,8 +2395,12 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	var releaseAddress bool
+	if v, ok := d.GetOkExists("release_address"); ok {
+		releaseAddress = v.(bool)
+	}
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		errRet := cvmService.DeleteInstance(ctx, instanceId, releaseAddress)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -2510,7 +2550,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 
 	// exist in recycle, delete again
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		errRet := cvmService.DeleteInstance(ctx, instanceId, releaseAddress)
 		//when state is terminating, do not delete but check exist
 		if errRet != nil {
 			//check InvalidInstanceState.Terminating

@@ -75,7 +75,7 @@ func testSweepCvmInstance(region string) error {
 			continue
 		}
 
-		if err = cvmService.DeleteInstance(ctx, instanceId); err != nil {
+		if err = cvmService.DeleteInstance(ctx, instanceId, false); err != nil {
 			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
 		}
 	}
@@ -2993,5 +2993,102 @@ resource "tencentcloud_instance" "hpc" {
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
   hpc_cluster_id    = tencentcloud_cvm_hpc_cluster.hpc_cluster.id
+}
+`
+
+func TestAccTencentCloudNeedFixCvmInstanceResource_IPv6AddressType(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceResource_IPv6AddressType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "ipv6_address_type", "EIPv6"),
+				),
+			},
+		},
+	})
+}
+
+const testAccCvmInstanceResource_IPv6AddressType = `
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["S3"]
+  }
+  cpu_core_count = 2
+  memory_size    = 2
+}
+resource "tencentcloud_instance" "foo" {
+  instance_name                           = "tf-ci-test"
+  availability_zone                       = "ap-guangzhou-3"
+  vpc_id                                  = "vpc-mvhjjprd"
+  subnet_id                               = "subnet-2qfyfvv8"
+  lifecycle {
+    ignore_changes = [instance_type]
+  }
+  image_id          = "img-2lr9q49h"
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  force_delete      = true
+  orderly_security_groups = ["sg-05f7wnhn"]
+  ipv6_address_type = "EIPv6"
+}
+`
+
+func TestAccTencentCloudNeedFixCvmInstanceResource_ReleaseAddress(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+			tcacctest.AccStepSetRegion(t, "ap-hongkong")
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceResource_ReleaseAddress,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.foo"),
+				),
+			},
+		},
+	})
+}
+
+const testAccCvmInstanceResource_ReleaseAddress = `
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["S5"]
+  }
+  cpu_core_count = 2
+  memory_size    = 2
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "tf-ci-test"
+  availability_zone = "ap-hongkong-3"
+  vpc_id            = "vpc-0rlhss58"
+  subnet_id         = "subnet-73ckwxez"
+  lifecycle {
+    ignore_changes = [instance_type]
+  }
+  image_id                   = "img-l8og963d"
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type           = "CLOUD_PREMIUM"
+  force_delete               = true
+  internet_charge_type       = "BANDWIDTH_PACKAGE"
+  bandwidth_package_id       = "bwp-rcql8f4c"
+  ipv4_address_type          = "HighQualityEIP"
+  ipv6_address_type          = "HighQualityEIPv6"
+  ipv6_address_count         = 1
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 1
+  release_address            = true
 }
 `

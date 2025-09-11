@@ -475,10 +475,13 @@ func (me *CvmService) StartInstance(ctx context.Context, instanceId string) erro
 	return nil
 }
 
-func (me *CvmService) DeleteInstance(ctx context.Context, instanceId string) error {
+func (me *CvmService) DeleteInstance(ctx context.Context, instanceId string, releaseAddress bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewTerminateInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
+	if releaseAddress {
+		request.ReleaseAddress = helper.Bool(releaseAddress)
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().TerminateInstances(request)
