@@ -1041,21 +1041,11 @@ func resourceTencentCloudKubernetesClusterUpdatePostHandleResponse1(ctx context.
 			return resource.RetryableError(fmt.Errorf("cluster %s status %s, retry...", id, ins.ClusterStatus))
 		}
 	})
+
 	if err != nil {
 		return err
 	}
 
-	// upgrade instances version
-	upgrade := false
-	if v, ok := d.GetOk("upgrade_instances_follow_cluster"); ok {
-		upgrade = v.(bool)
-	}
-	if upgrade {
-		err = upgradeClusterInstances(tkeService, ctx, id)
-		if err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
