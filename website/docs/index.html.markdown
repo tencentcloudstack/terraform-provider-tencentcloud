@@ -68,24 +68,25 @@ resource "tencentcloud_security_group" "default" {
   description = "make it accessible for both production and stage ports"
 }
 
-# Create security group rule allow web request
-resource "tencentcloud_security_group_rule" "web" {
+# Create security group rule allow web and ssh request
+resource "tencentcloud_security_group_rule_set" "base" {
   security_group_id = tencentcloud_security_group.default.id
-  type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
-  port_range        = "80,8080"
-  policy            = "accept"
-}
 
-# Create security group rule allow ssh request
-resource "tencentcloud_security_group_rule" "ssh" {
-  security_group_id = tencentcloud_security_group.default.id
-  type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
-  port_range        = "22"
-  policy            = "accept"
+  ingress {
+    action      = "ACCEPT"
+    cidr_block  = "0.0.0.0/0"
+    protocol    = "TCP"
+    port        = "80,8080"
+    description = "Create security group rule allow web request"
+  }
+
+  egress {
+    action      = "ACCEPT"
+    cidr_block  = "0.0.0.0/0"
+    protocol    = "TCP"
+    port        = "22"
+    description = "Create security group rule allow ssh request"
+  }
 }
 ```
 
