@@ -291,7 +291,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "Whether to enable DataPlaneV2 (cilium replaces kube-proxy).",
+				Description: "Whether to enable DataPlaneV2 (replace kube-proxy with cilium). `data_plane_v2` and `cluster_ipvs` should not be set at the same time.",
 			},
 
 			"deletion_protection": {
