@@ -217,7 +217,9 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 	_ = d.Set("mx", recordInfo.MX)
 	_ = d.Set("ttl", recordInfo.TTL)
 	_ = d.Set("monitor_status", recordInfo.MonitorStatus)
-	_ = d.Set("weight", recordInfo.Weight)
+	if recordInfo.Weight != nil {
+		_ = d.Set("weight", recordInfo.Weight)
+	}
 	_ = d.Set("domain", items[0])
 	_ = d.Set("record_line", recordInfo.RecordLine)
 	_ = d.Set("record_type", recordInfo.RecordType)
