@@ -1,3 +1,13 @@
+## 1.82.23(September 15 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_elasticsearch_instance: update availability_zone and subnet_id description ([#3516](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3516))
+* resource/tencentcloud_instance: support ipv6_address_type, ipv6_address_count and release_address ([#3518](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3518))
+* resource/tencentcloud_kubernetes_cluster: support only node(instances) upgrade ([#3520](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3520))
+* resource/tencentcloud_kubernetes_cluster: update doc ([#3515](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3515))
+* resource/tencentcloud_waf_saas_domain: update doc ([#3514](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3514))
+
 ## 1.82.22(September 9 , 2025)
 
 ENHANCEMENTS:
