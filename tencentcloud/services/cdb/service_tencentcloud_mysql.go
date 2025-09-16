@@ -3529,3 +3529,51 @@ func (me *MysqlService) DeleteMysqlDatabaseById(ctx context.Context, instanceId 
 
 	return
 }
+
+func (me *MysqlService) DescribeMysqlAuditInstanceListById(ctx context.Context, instanceId string) (ret *cdb.InstanceDbAuditStatus, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cdb.NewDescribeAuditInstanceListRequest()
+	response := cdb.NewDescribeAuditInstanceListResponse()
+	request.Filters = []*cdb.AuditInstanceFilters{
+		{
+			Name:       helper.String("InstanceId"),
+			ExactMatch: helper.Bool(true),
+			Values:     helper.Strings([]string{instanceId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMysqlClient().DescribeAuditInstanceList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Items == nil || len(result.Response.Items) == 0 {
+			return resource.RetryableError(fmt.Errorf("Describe audit instance list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	if len(response.Response.Items) != 1 {
+		return nil, fmt.Errorf("Describe audit instance list failed, Response items count is not 1.")
+	}
+
+	ret = response.Response.Items[0]
+	return
+}

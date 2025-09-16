@@ -1460,6 +1460,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_switch_proxy":                                                       cdb.ResourceTencentCloudMysqlSwitchProxy(),
 			"tencentcloud_mysql_ssl":                                                                cdb.ResourceTencentCloudMysqlSsl(),
 			"tencentcloud_mysql_cls_log_attachment":                                                 cdb.ResourceTencentCloudMysqlClsLogAttachment(),
+			"tencentcloud_mysql_audit_service":                                                      cdb.ResourceTencentCloudMysqlAuditService(),
 			"tencentcloud_cos_bucket":                                                               cos.ResourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                                                        cos.ResourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_bucket_referer":                                                       cos.ResourceTencentCloudCosBucketReferer(),
