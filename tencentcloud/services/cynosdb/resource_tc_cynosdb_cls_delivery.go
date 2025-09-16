@@ -347,7 +347,8 @@ func resourceTencentCloudCynosdbClsDeliveryRead(d *schema.ResourceData, meta int
 	}
 
 	if respData.TopicName != nil {
-		tmpMap["topic_name"] = respData.TopicName
+		tmpStr := trimPrefixSuffix(*respData.TopicName, "_topic")
+		tmpMap["topic_name"] = tmpStr
 	}
 
 	if respData.GroupId != nil {
@@ -355,7 +356,8 @@ func resourceTencentCloudCynosdbClsDeliveryRead(d *schema.ResourceData, meta int
 	}
 
 	if respData.GroupName != nil {
-		tmpMap["group_name"] = respData.GroupName
+		tmpStr := trimPrefixSuffix(*respData.GroupName, "_group")
+		tmpMap["group_name"] = tmpStr
 	}
 
 	tmpList = append(tmpList, tmpMap)
@@ -593,4 +595,19 @@ func resourceTencentCloudCynosdbClsDeliveryDelete(d *schema.ResourceData, meta i
 	}
 
 	return nil
+}
+
+func trimPrefixSuffix(str string, suffixStr string) string {
+	prefix := "cloud_cynos_"
+	suffix := suffixStr
+
+	if strings.HasPrefix(str, prefix) {
+		str = strings.TrimPrefix(str, prefix)
+	}
+
+	if strings.HasSuffix(str, suffix) {
+		str = strings.TrimSuffix(str, suffix)
+	}
+
+	return str
 }
