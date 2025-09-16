@@ -121,7 +121,7 @@ func resourceTencentCloudMysqlAuditServiceCreate(d *schema.ResourceData, meta in
 	// wait
 	waitRequest := cdbv20170320.NewDescribeAuditInstanceListRequest()
 	waitRequest.Filters = []*cdbv20170320.AuditInstanceFilters{
-		&cdbv20170320.AuditInstanceFilters{
+		{
 			Name:       helper.String("InstanceId"),
 			ExactMatch: helper.Bool(true),
 			Values:     helper.Strings([]string{instanceId}),
@@ -301,7 +301,7 @@ func resourceTencentCloudMysqlAuditServiceDelete(d *schema.ResourceData, meta in
 	// wait
 	waitRequest := cdbv20170320.NewDescribeAuditInstanceListRequest()
 	waitRequest.Filters = []*cdbv20170320.AuditInstanceFilters{
-		&cdbv20170320.AuditInstanceFilters{
+		{
 			Name:       helper.String("InstanceId"),
 			ExactMatch: helper.Bool(true),
 			Values:     helper.Strings([]string{instanceId}),
@@ -332,7 +332,7 @@ func resourceTencentCloudMysqlAuditServiceDelete(d *schema.ResourceData, meta in
 			}
 		}
 
-		return resource.RetryableError(fmt.Errorf("waiting for mysql [%s] audit service closeing", instanceId))
+		return resource.RetryableError(fmt.Errorf("waiting for mysql [%s] audit service closing", instanceId))
 	})
 
 	if reqErr != nil {
