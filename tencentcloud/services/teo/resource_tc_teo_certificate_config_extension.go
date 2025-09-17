@@ -178,6 +178,23 @@ func resourceTencentCloudTeoCertificateConfigUpdateOnStart(ctx context.Context) 
 			if v, ok := dMap["cert_id"]; ok {
 				serverCertInfo.CertId = helper.String(v.(string))
 			}
+			if v, ok := dMap["alias"]; ok && v.(string) != "" {
+				serverCertInfo.Alias = helper.String(v.(string))
+			}
+			if v, ok := dMap["type"]; ok && v.(string) != "" {
+				serverCertInfo.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["expire_time"]; ok && v.(string) != "" {
+				serverCertInfo.ExpireTime = helper.String(v.(string))
+			} else {
+				serverCertInfo.ExpireTime = nil
+			}
+			if v, ok := dMap["sign_algo"]; ok && v.(string) != "" {
+				serverCertInfo.SignAlgo = helper.String(v.(string))
+			}
+			if v, ok := dMap["common_name"]; ok && v.(string) != "" {
+				serverCertInfo.CommonName = helper.String(v.(string))
+			}
 			request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
 		}
 	}
@@ -195,24 +212,6 @@ func resourceTencentCloudTeoCertificateConfigUpdateOnStart(ctx context.Context) 
 					certificateInfo := teo.CertificateInfo{}
 					if v, ok := certInfosMap["cert_id"].(string); ok && v != "" {
 						certificateInfo.CertId = helper.String(v)
-					}
-					if v, ok := certInfosMap["alias"].(string); ok && v != "" {
-						certificateInfo.Alias = helper.String(v)
-					}
-					if v, ok := certInfosMap["type"].(string); ok && v != "" {
-						certificateInfo.Type = helper.String(v)
-					}
-					if v, ok := certInfosMap["expire_time"].(string); ok && v != "" {
-						certificateInfo.ExpireTime = helper.String(v)
-					}
-					if v, ok := certInfosMap["deploy_time"].(string); ok && v != "" {
-						certificateInfo.DeployTime = helper.String(v)
-					}
-					if v, ok := certInfosMap["sign_algo"].(string); ok && v != "" {
-						certificateInfo.SignAlgo = helper.String(v)
-					}
-					if v, ok := certInfosMap["status"].(string); ok && v != "" {
-						certificateInfo.Status = helper.String(v)
 					}
 					mutualTLS2.CertInfos = append(mutualTLS2.CertInfos, &certificateInfo)
 				}
