@@ -1535,7 +1535,7 @@ type ClientAttester struct {
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 认证方法。取值有：
-	// <li>TC-RCE: 使用全栈式风控引擎进行认证；</li>
+	// <li>TC-RCE: 使用风险识别 RCE 进行认证；</li>
 	// <li>TC-CAPTCHA: 使用天御验证码进行认证。</li>
 	AttesterSource *string `json:"AttesterSource,omitnil,omitempty" name:"AttesterSource"`
 
@@ -3563,6 +3563,9 @@ type CreateOriginGroupRequestParams struct {
 	// 站点 ID
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
+	// 源站记录信息，此参数必填。
+	Records []*OriginRecord `json:"Records,omitnil,omitempty" name:"Records"`
+
 	// 源站组名称，可输入1 - 200个字符，允许的字符为 a - z, A - Z, 0 - 9, _, - 。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -3570,9 +3573,6 @@ type CreateOriginGroupRequestParams struct {
 	// <li>GENERAL：通用型源站组，仅支持添加 IP/域名 源站，可以被域名服务、规则引擎、四层代理、通用型负载均衡、HTTP 专用型负载均衡引用；</li>
 	// <li>HTTP： HTTP 专用型源站组，支持添加 IP/域名、对象存储源站作为源站，无法被四层代理引用，仅支持被添加加速域名、规则引擎-修改源站、HTTP 专用型负载均衡引用。</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
-
-	// 源站记录信息，此参数必填。
-	Records []*OriginRecord `json:"Records,omitnil,omitempty" name:"Records"`
 
 	// 回源 Host Header，仅 Type = HTTP 时传入生效，规则引擎修改 Host Header 配置优先级高于源站组的 Host Header。
 	HostHeader *string `json:"HostHeader,omitnil,omitempty" name:"HostHeader"`
@@ -3584,6 +3584,9 @@ type CreateOriginGroupRequest struct {
 	// 站点 ID
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
+	// 源站记录信息，此参数必填。
+	Records []*OriginRecord `json:"Records,omitnil,omitempty" name:"Records"`
+
 	// 源站组名称，可输入1 - 200个字符，允许的字符为 a - z, A - Z, 0 - 9, _, - 。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -3591,9 +3594,6 @@ type CreateOriginGroupRequest struct {
 	// <li>GENERAL：通用型源站组，仅支持添加 IP/域名 源站，可以被域名服务、规则引擎、四层代理、通用型负载均衡、HTTP 专用型负载均衡引用；</li>
 	// <li>HTTP： HTTP 专用型源站组，支持添加 IP/域名、对象存储源站作为源站，无法被四层代理引用，仅支持被添加加速域名、规则引擎-修改源站、HTTP 专用型负载均衡引用。</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
-
-	// 源站记录信息，此参数必填。
-	Records []*OriginRecord `json:"Records,omitnil,omitempty" name:"Records"`
 
 	// 回源 Host Header，仅 Type = HTTP 时传入生效，规则引擎修改 Host Header 配置优先级高于源站组的 Host Header。
 	HostHeader *string `json:"HostHeader,omitnil,omitempty" name:"HostHeader"`
@@ -3612,9 +3612,9 @@ func (r *CreateOriginGroupRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ZoneId")
+	delete(f, "Records")
 	delete(f, "Name")
 	delete(f, "Type")
-	delete(f, "Records")
 	delete(f, "HostHeader")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateOriginGroupRequest has unknown keys!", "")
@@ -11956,6 +11956,121 @@ func (r *DescribeTimingL7CacheDataResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeTimingL7OriginPullDataRequestParams struct {
+	// 开始时间。
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 指标列表，取值有:
+	// <li>l7Flow_outFlux_hy: EdgeOne 节点至源站方向的请求流量，单位：Byte；</li>
+	// <li>l7Flow_outBandwidth_hy: EdgeOne 节点至源站方向的请求带宽，单位：bps；</li>
+	// <li>l7Flow_request_hy: EdgeOne 节点至源站方向的请求数，单位：次。</li>
+	// <li>l7Flow_inFlux_hy: 源站至 EdgeOne 节点方向的响应流量，单位：Byte；</li>
+	// <li>l7Flow_inBandwidth_hy: 源站至 EdgeOne 节点方向的响应带宽，单位：bps；</li>
+	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
+
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
+	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// 查询时间粒度，取值有：
+	// <li>min: 1分钟；</li>
+	// <li>5min: 5分钟；</li>
+	// <li>hour: 1小时；</li>
+	// <li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
+
+	// 过滤条件，详细的过滤条件如下：
+	// <li>domain：客户端请求的域名。若按泛域名接入 EdgeOne，则数据中记录为泛域名，而不是具体域名。</li>
+	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeTimingL7OriginPullDataRequest struct {
+	*tchttp.BaseRequest
+	
+	// 开始时间。
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 指标列表，取值有:
+	// <li>l7Flow_outFlux_hy: EdgeOne 节点至源站方向的请求流量，单位：Byte；</li>
+	// <li>l7Flow_outBandwidth_hy: EdgeOne 节点至源站方向的请求带宽，单位：bps；</li>
+	// <li>l7Flow_request_hy: EdgeOne 节点至源站方向的请求数，单位：次。</li>
+	// <li>l7Flow_inFlux_hy: 源站至 EdgeOne 节点方向的响应流量，单位：Byte；</li>
+	// <li>l7Flow_inBandwidth_hy: 源站至 EdgeOne 节点方向的响应带宽，单位：bps；</li>
+	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
+
+	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
+	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// 查询时间粒度，取值有：
+	// <li>min: 1分钟；</li>
+	// <li>5min: 5分钟；</li>
+	// <li>hour: 1小时；</li>
+	// <li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
+
+	// 过滤条件，详细的过滤条件如下：
+	// <li>domain：客户端请求的域名。若按泛域名接入 EdgeOne，则数据中记录为泛域名，而不是具体域名。</li>
+	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeTimingL7OriginPullDataRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTimingL7OriginPullDataRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "MetricNames")
+	delete(f, "ZoneIds")
+	delete(f, "Interval")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTimingL7OriginPullDataRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTimingL7OriginPullDataResponseParams struct {
+	// 查询结果的总条数。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 回源时序数据列表。
+	TimingDataRecords []*TimingDataRecord `json:"TimingDataRecords,omitnil,omitempty" name:"TimingDataRecords"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTimingL7OriginPullDataResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTimingL7OriginPullDataResponseParams `json:"Response"`
+}
+
+func (r *DescribeTimingL7OriginPullDataResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTimingL7OriginPullDataResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeTopL7AnalysisDataRequestParams struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
@@ -13621,6 +13736,26 @@ type ForceRedirectHTTPSParameters struct {
 	RedirectStatusCode *int64 `json:"RedirectStatusCode,omitnil,omitempty" name:"RedirectStatusCode"`
 }
 
+type FrequentScanningProtection struct {
+	// 高频扫描防护规则是否开启。取值有：<li>on：开启，高频扫描防护规则生效；</li><li>off：关闭，高频扫描防护规则不生效。</li>	
+	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 高频扫描防护的处置动作。 当 Enabled 为 on 时，此字段必填。SecurityAction 的 Name 取值支持：<li>Deny：拦截，响应拦截页面；</li><li>Monitor：观察，不处理请求记录安全事件到日志中；</li><li>JSChallenge：JavaScript 挑战，响应 JavaScript 挑战页面。</li>
+	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// 请求统计的匹配方式，当 Enabled 为 on 时，此字段必填。取值有：<li>http.request.xff_header_ip：客户端 IP（优先匹配 XFF 头部）；</li><li>http.request.ip：客户端 IP。</li> 
+	CountBy *string `json:"CountBy,omitnil,omitempty" name:"CountBy"`
+
+	// 此参数指定高频扫描防护的阈值，即在 CountingPeriod 所设置时间范围内命中「配置为拦截」的托管规则时的累计拦截次数，取值范围 1 ~ 4294967294，例如 100，当超过此统计值时，后续请求将触发 Action 所设置的处置动作。当 Enabled 为 on 时，此字段必填。
+	BlockThreshold *int64 `json:"BlockThreshold,omitnil,omitempty" name:"BlockThreshold"`
+
+	// 此参数指定高频扫描防护所统计的时间窗口，即命中「配置为拦截」的托管规则的请求的统计时间窗口，取值 5 ~ 1800，单位仅支持秒（s），例如 5s。 当 Enabled 为 on 时，此字段必填。
+	CountingPeriod *string `json:"CountingPeriod,omitnil,omitempty" name:"CountingPeriod"`
+
+	// 此参数指定高频扫描防护 Action 参数所设置处置动作的持续时长，取值范围 60 ~ 86400，单位仅支持秒（s），例如 60s。当 Enabled 为 on 时，此字段必填。
+	ActionDuration *string `json:"ActionDuration,omitnil,omitempty" name:"ActionDuration"`
+}
+
 type Function struct {
 	// 函数 ID。
 	FunctionId *string `json:"FunctionId,omitnil,omitempty" name:"FunctionId"`
@@ -14794,6 +14929,9 @@ type ManagedRules struct {
 
 	// 托管规则组的配置。如果此结构传空数组或 GroupId 未包含在列表内将按照默认方式处理。
 	ManagedRuleGroups []*ManagedRuleGroup `json:"ManagedRuleGroups,omitnil,omitempty" name:"ManagedRuleGroups"`
+
+	// 高频扫描防护配置选项，当某一访客的请求频繁命中「配置为拦截」的托管规则时，在一段时间内封禁该访客所有请求。
+	FrequentScanningProtection *FrequentScanningProtection `json:"FrequentScanningProtection,omitnil,omitempty" name:"FrequentScanningProtection"`
 }
 
 type MaxAge struct {
@@ -16189,6 +16327,9 @@ type ModifyHostsCertificateRequestParams struct {
 
 	// 在边缘双向认证场景下，该字段为客户端的 CA 证书，部署在 EO 节点内，用于客户端对 EO 节点进行认证。默认关闭，不填写表示保持原有配置。
 	ClientCertInfo *MutualTLS `json:"ClientCertInfo,omitnil,omitempty" name:"ClientCertInfo"`
+
+	// 用于配置 EO 节点回源时携带的证书，用于回源双向认证握手，默认关闭，不填写表示保持原有配置。该配置当前为白名单内测中，如需使用，请[联系我们](https://cloud.tencent.com/online-service)。
+	UpstreamCertInfo *UpstreamCertInfo `json:"UpstreamCertInfo,omitnil,omitempty" name:"UpstreamCertInfo"`
 }
 
 type ModifyHostsCertificateRequest struct {
@@ -16218,6 +16359,9 @@ type ModifyHostsCertificateRequest struct {
 
 	// 在边缘双向认证场景下，该字段为客户端的 CA 证书，部署在 EO 节点内，用于客户端对 EO 节点进行认证。默认关闭，不填写表示保持原有配置。
 	ClientCertInfo *MutualTLS `json:"ClientCertInfo,omitnil,omitempty" name:"ClientCertInfo"`
+
+	// 用于配置 EO 节点回源时携带的证书，用于回源双向认证握手，默认关闭，不填写表示保持原有配置。该配置当前为白名单内测中，如需使用，请[联系我们](https://cloud.tencent.com/online-service)。
+	UpstreamCertInfo *UpstreamCertInfo `json:"UpstreamCertInfo,omitnil,omitempty" name:"UpstreamCertInfo"`
 }
 
 func (r *ModifyHostsCertificateRequest) ToJsonString() string {
@@ -16238,6 +16382,7 @@ func (r *ModifyHostsCertificateRequest) FromJsonString(s string) error {
 	delete(f, "ServerCertInfo")
 	delete(f, "ApplyType")
 	delete(f, "ClientCertInfo")
+	delete(f, "UpstreamCertInfo")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyHostsCertificateRequest has unknown keys!", "")
 	}
@@ -18962,7 +19107,7 @@ type OriginRecord struct {
 	// 源站记录ID。
 	RecordId *string `json:"RecordId,omitnil,omitempty" name:"RecordId"`
 
-	// 源站权重，取值为0-100, 不填表示不设置权重，由系统自由调度，填0表示权重为0, 流量将不会调度到此源站。
+	// 【源站权重】：用于控制流量分配优先级的参数，取值范围：0-100（整数）：<li>空值：不设置权重，系统按默认策略调度；</li><li>0 值：明确设置权重为0，流量将不会分配到该源站，注意事项：必须确保至少有一个源站的权重值大于0；</li><li>正常值：数值越大分配流量越多 ；</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 
@@ -19699,8 +19844,8 @@ type Resource struct {
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
 	// 地域，取值有：
-	// <li>mainland：国内；</li>
-	// <li>overseas：海外。</li>
+	// <li>mainland：中国大陆境内；</li>
+	// <li>overseas：中国大陆境外。</li>
 	// <li>global：全球。</li>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
@@ -20663,7 +20808,7 @@ type Task struct {
 	// <li>originPullFailed：回源失败。</li>
 	FailType *string `json:"FailType,omitnil,omitempty" name:"FailType"`
 
-	// 刷新、预热失败描述。
+	// 清除缓存、预热缓存的失败原因描述。
 	FailMessage *string `json:"FailMessage,omitnil,omitempty" name:"FailMessage"`
 }
 
