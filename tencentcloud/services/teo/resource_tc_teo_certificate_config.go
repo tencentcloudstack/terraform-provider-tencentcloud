@@ -120,18 +120,16 @@ func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 												},
 												"alias": {
 													Type:        schema.TypeString,
-													Optional:    true,
+													Computed:    true,
 													Description: "Alias of the certificate.",
 												},
 												"type": {
 													Type:        schema.TypeString,
-													Optional:    true,
 													Computed:    true,
 													Description: "Type of the certificate. Values: `default`: Default certificate `upload`: Specified certificate `managed`: Tencent Cloud-managed certificate.",
 												},
 												"expire_time": {
 													Type:        schema.TypeString,
-													Optional:    true,
 													Computed:    true,
 													Description: "The certificate expiration time.",
 												},
@@ -142,7 +140,6 @@ func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 												},
 												"sign_algo": {
 													Type:        schema.TypeString,
-													Optional:    true,
 													Computed:    true,
 													Description: "Signature algorithm.",
 												},
