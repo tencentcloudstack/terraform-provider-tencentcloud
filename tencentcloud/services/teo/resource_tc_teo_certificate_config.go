@@ -126,27 +126,25 @@ func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 												"type": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Type of the certificate. Values: `default`: Default certificate `upload`: Specified certificate `managed`: Tencent Cloud-managed certificate.",
 												},
 												"expire_time": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "The certificate expiration time.",
 												},
 												"deploy_time": {
 													Type:        schema.TypeString,
-													Optional:    true,
+													Computed:    true,
 													Description: "Time when the certificate is deployed.",
 												},
 												"sign_algo": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Signature algorithm.",
-												},
-												"status": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "Status of the certificate. Values:\n`deployed`: The deployment has completed\n`processing`: Deployment in progress\n`applying`: Application in progress\n`failed`: Application rejected\n`issued`: Binding failed.",
 												},
 											},
 										},

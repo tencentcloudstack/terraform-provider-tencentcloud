@@ -110,10 +110,6 @@ func resourceTencentCloudTeoCertificateConfigReadPostHandleResponse0(ctx context
 							certInfosMap["sign_algo"] = certInfos.SignAlgo
 						}
 
-						if certInfos.Status != nil {
-							certInfosMap["status"] = certInfos.Status
-						}
-
 						certInfosList = append(certInfosList, certInfosMap)
 					}
 
@@ -192,11 +188,6 @@ func resourceTencentCloudTeoCertificateConfigUpdateOnStart(ctx context.Context) 
 				serverCertInfo.ExpireTime = helper.String(v.(string))
 			} else {
 				serverCertInfo.ExpireTime = nil
-			}
-			if v, ok := dMap["deploy_time"]; ok && v.(string) != "" {
-				serverCertInfo.DeployTime = helper.String(v.(string))
-			} else {
-				serverCertInfo.DeployTime = nil
 			}
 			if v, ok := dMap["sign_algo"]; ok && v.(string) != "" {
 				serverCertInfo.SignAlgo = helper.String(v.(string))

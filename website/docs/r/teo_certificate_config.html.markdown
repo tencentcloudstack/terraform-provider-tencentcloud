@@ -49,15 +49,8 @@ The `cert_infos` object of `upstream_mutual_tls` supports the following:
 
 * `cert_id` - (Required, String) Certificate ID, which originates from the SSL side. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).
 * `alias` - (Optional, String) Alias of the certificate.
-* `deploy_time` - (Optional, String) Time when the certificate is deployed.
 * `expire_time` - (Optional, String) The certificate expiration time.
 * `sign_algo` - (Optional, String) Signature algorithm.
-* `status` - (Optional, String) Status of the certificate. Values:
-`deployed`: The deployment has completed
-`processing`: Deployment in progress
-`applying`: Application in progress
-`failed`: Application rejected
-`issued`: Binding failed.
 * `type` - (Optional, String) Type of the certificate. Values: `default`: Default certificate `upload`: Specified certificate `managed`: Tencent Cloud-managed certificate.
 
 The `server_cert_info` object supports the following:
