@@ -178,23 +178,6 @@ func resourceTencentCloudTeoCertificateConfigUpdateOnStart(ctx context.Context) 
 			if v, ok := dMap["cert_id"]; ok {
 				serverCertInfo.CertId = helper.String(v.(string))
 			}
-			if v, ok := dMap["alias"]; ok && v.(string) != "" {
-				serverCertInfo.Alias = helper.String(v.(string))
-			}
-			if v, ok := dMap["type"]; ok && v.(string) != "" {
-				serverCertInfo.Type = helper.String(v.(string))
-			}
-			if v, ok := dMap["expire_time"]; ok && v.(string) != "" {
-				serverCertInfo.ExpireTime = helper.String(v.(string))
-			} else {
-				serverCertInfo.ExpireTime = nil
-			}
-			if v, ok := dMap["sign_algo"]; ok && v.(string) != "" {
-				serverCertInfo.SignAlgo = helper.String(v.(string))
-			}
-			if v, ok := dMap["common_name"]; ok && v.(string) != "" {
-				serverCertInfo.CommonName = helper.String(v.(string))
-			}
 			request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
 		}
 	}
