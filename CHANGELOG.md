@@ -1,3 +1,16 @@
+## 1.82.24(September 18 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mysql_audit_service` ([#3522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3522))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_teo_origin_acl: update doc ([#3527](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3527))
+* resource/tencentcloud_cynosdb_cluster: support `instance_count` params ([#3525](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3525))
+* resource/tencentcloud_instance: support ipv6_addresses and public_ipv6_addresses ([#3528](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3528))
+* resource/tencentcloud_tcss_image_registry: This resource has been deprecated ([#3526](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3526))
+
 ## 1.82.23(September 15 , 2025)
 
 ENHANCEMENTS:
