@@ -539,6 +539,18 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Instance os name.",
 			},
+			"ipv6_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed:    true,
+				Description: "IPv6 address of the instance.",
+			},
+			"public_ipv6_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed:    true,
+				Description: "The public IPv6 address to which the instance is bound.",
+			},
 		},
 
 		CustomizeDiff: customdiff.All(
@@ -1198,6 +1210,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("memory", instance.Memory)
 	_ = d.Set("os_name", instance.OsName)
 	_ = d.Set("hpc_cluster_id", instance.HpcClusterId)
+	_ = d.Set("ipv6_addresses", instance.IPv6Addresses)
+	_ = d.Set("public_ipv6_addresses", instance.PublicIPv6Addresses)
 
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)

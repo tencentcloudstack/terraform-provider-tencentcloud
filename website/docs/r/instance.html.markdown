@@ -372,9 +372,11 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the instance.
 * `expired_time` - Expired time of the instance.
 * `instance_status` - Current status of the instance.
+* `ipv6_addresses` - IPv6 address of the instance.
 * `memory` - Instance memory capacity, unit in GB.
 * `os_name` - Instance os name.
 * `public_ip` - Public IP of the instance.
+* `public_ipv6_addresses` - The public IPv6 address to which the instance is bound.
 * `uuid` - Globally unique ID of the instance.
 
 
