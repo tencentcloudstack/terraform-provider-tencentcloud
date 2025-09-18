@@ -2331,10 +2331,6 @@ THPC
 Resource
 tencentcloud_thpc_workspaces
 
-Tencent Container Security Service(TCSS)
-Resource
-tencentcloud_tcss_image_registry
-
 TDMQ for MQTT(MQTT)
 Data Source
 tencentcloud_mqtt_registration_code
