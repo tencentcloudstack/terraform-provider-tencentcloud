@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster: support `instance_count` params 
+```

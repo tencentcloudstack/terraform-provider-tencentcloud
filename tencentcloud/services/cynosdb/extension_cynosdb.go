@@ -12,6 +12,7 @@ const (
 	CYNOSDB_CHARGE_TYPE_POSTPAID = svcpostgresql.COMMON_PAYTYPE_POSTPAID
 	CYNOSDB_CHARGE_TYPE_PREPAID  = svcpostgresql.COMMON_PAYTYPE_PREPAID
 	CYNOSDB_SERVERLESS           = "SERVERLESS"
+	CYNOSDB_NORMAL               = "NORMAL"
 
 	CYNOSDB_STATUS_RUNNING  = "running"
 	CYNOSDB_STATUS_OFFLINE  = "offlined"
@@ -184,6 +185,13 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Required:    true,
 			Sensitive:   true,
 			Description: "Password of `root` account.",
+		},
+		"instance_count": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "The number of instances, the range is (0,16], the default value is 2 (i.e. one RW instance + one Ro instance), the passed n means 1 RW instance + n-1 Ro instances (with the same specifications), if you need a more accurate cluster composition, please use InstanceInitInfos.",
 		},
 		// payment
 		"charge_type": {

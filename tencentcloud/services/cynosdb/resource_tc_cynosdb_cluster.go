@@ -95,6 +95,10 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		request.SlaveZone = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("instance_count"); ok {
+		request.InstanceCount = helper.IntInt64(v.(int))
+	}
+
 	// set params
 	if v, ok := d.GetOk("param_items"); ok {
 		paramItems := v.([]interface{})
@@ -432,8 +436,12 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("serverless_status_flag", status)
 	}
 
-	if _, ok := d.GetOk("db_mode"); ok || *item.DbMode == CYNOSDB_SERVERLESS {
+	if _, ok := d.GetOk("db_mode"); ok || *item.DbMode == CYNOSDB_SERVERLESS || *item.DbMode == CYNOSDB_NORMAL {
 		_ = d.Set("db_mode", item.DbMode)
+	}
+
+	if item.InstanceNum != nil {
+		_ = d.Set("instance_count", item.InstanceNum)
 	}
 
 	//tag
