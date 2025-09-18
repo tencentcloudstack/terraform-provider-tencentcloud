@@ -29,7 +29,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"l7_hosts": {
 							Type:        schema.TypeSet,
-							Optional:    true,
+							Computed:    true,
 							Description: "The list of L7 accelerated domains that enable the origin ACLs. This field is empty when origin protection is not enabled.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -37,7 +37,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 						},
 						"l4_proxy_ids": {
 							Type:        schema.TypeSet,
-							Optional:    true,
+							Computed:    true,
 							Description: "The list of L4 proxy instances that enable the origin ACLs. This field is empty when origin protection is not enabled.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -45,21 +45,21 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 						},
 						"current_origin_acl": {
 							Type:        schema.TypeList,
-							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Currently effective origin ACLs. This field is empty when origin protection is not enabled.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"entire_addresses": {
 										Type:        schema.TypeList,
-										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "IP range details.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"i_pv4": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv4 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -67,7 +67,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 												},
 												"i_pv6": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv6 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -78,17 +78,17 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									},
 									"version": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version number.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 									},
 									"active_time": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version effective time in UTC+8, following the date and time format of the ISO 8601 standard.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 									},
 									"is_planed": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "This parameter is used to record whether \"I've upgraded to the lastest version\" is completed before the origin ACLs version is effective. valid values:.\n- true: specifies that the version is effective and the update to the latest version is confirmed.\n- false: when the version takes effect, the confirmation of updating to the latest origin ACLs are not completed. The IP range is forcibly updated to the latest version in the backend. When this parameter returns false, please confirm in time whether your origin server firewall configuration has been updated to the latest version to avoid origin-pull failure.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 									},
 								},
@@ -96,31 +96,31 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 						},
 						"next_origin_acl": {
 							Type:        schema.TypeList,
-							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "When the origin ACLs are updated, this field will be returned with the next version's origin IP range to take effect, including a comparison with the current origin IP range. This field is empty if not updated or origin protection is not enabled.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"version": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version number.",
 									},
 									"planned_active_time": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version effective time, which adopts UTC+8 and follows the date and time format of the ISO 8601 standard.",
 									},
 									"entire_addresses": {
 										Type:        schema.TypeList,
-										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "IP range details.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"i_pv4": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv4 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -128,7 +128,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 												},
 												"i_pv6": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv6 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -139,14 +139,14 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									},
 									"added_addresses": {
 										Type:        schema.TypeList,
-										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "The latest origin IP range newly-added compared with the origin IP range in CurrentOrginACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"i_pv4": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv4 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -154,7 +154,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 												},
 												"i_pv6": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv6 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -165,14 +165,14 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									},
 									"removed_addresses": {
 										Type:        schema.TypeList,
-										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "The latest origin IP range deleted compared with the origin IP range in CurrentOrginACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"i_pv4": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv4 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -180,7 +180,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 												},
 												"i_pv6": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv6 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -191,14 +191,14 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									},
 									"no_change_addresses": {
 										Type:        schema.TypeList,
-										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "The latest origin IP range is unchanged compared with the origin IP range in CurrentOrginACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"i_pv4": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv4 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -206,7 +206,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 												},
 												"i_pv6": {
 													Type:        schema.TypeSet,
-													Optional:    true,
+													Computed:    true,
 													Description: "IPv6 subnet.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -220,7 +220,7 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 						},
 						"status": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Origin protection status. Vaild values:\n- online: in effect;\n- offline: disabled;\n- updating: configuration deployment in progress.",
 						},
 					},
