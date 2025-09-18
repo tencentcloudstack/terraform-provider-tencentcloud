@@ -1,5 +1,7 @@
 Provide a resource to create a CynosDB cluster.
 
+~> **NOTE:** params `instance_count` and `instance_init_infos` only choose one. If neither parameter is set, the CynosDB cluster is created with parameter `instance_count` set to `2` by default(one RW instance + one Ro instance).
+
 Example Usage
 
 Create a single availability zone NORMAL CynosDB cluster
