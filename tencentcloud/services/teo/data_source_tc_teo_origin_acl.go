@@ -46,14 +46,12 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 						"current_origin_acl": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "Currently effective origin ACLs. This field is empty when origin protection is not enabled.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"entire_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "IP range details.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -97,7 +95,6 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 						"next_origin_acl": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "When the origin ACLs are updated, this field will be returned with the next version's origin IP range to take effect, including a comparison with the current origin IP range. This field is empty if not updated or origin protection is not enabled.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -114,7 +111,6 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									"entire_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "IP range details.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -140,7 +136,6 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									"added_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "The latest origin IP range newly-added compared with the origin IP range in CurrentOrginACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -166,7 +161,6 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									"removed_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "The latest origin IP range deleted compared with the origin IP range in CurrentOrginACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -192,7 +186,6 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 									"no_change_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "The latest origin IP range is unchanged compared with the origin IP range in CurrentOrginACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
