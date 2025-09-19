@@ -1,3 +1,15 @@
+## 1.82.25(September 19 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tag_keys` ([#3530](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3530))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_eb_event_target: support scf batch parameters ([#3531](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3531))
+* resource/tencentcloud_mysql_instance: support custom timeout parameters ([#3529](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3529))
+* resource/tencentcloud_teo_certificate_config: support `upstream_cert_info` fields ([#3524](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3524))
+
 ## 1.82.24(September 18 , 2025)
 
 FEATURES:
