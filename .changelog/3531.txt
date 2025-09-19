@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_eb_event_target: support scf batch parameters
+```
