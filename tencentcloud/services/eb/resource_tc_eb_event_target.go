@@ -53,23 +53,27 @@ func ResourceTencentCloudEbEventTarget() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "cloud function parameters.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"batch_timeout": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Description: "Maximum waiting time for bulk delivery.",
+										Computed:    true,
+										Description: "Maximum waiting time for batch delivery. This parameter is no longer effective, please use the batch_timeout parameter at the outer level.",
 									},
 									"batch_event_count": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Description: "Maximum number of events for batch delivery.",
+										Computed:    true,
+										Description: "Maximum number of events for batch delivery. This parameter is no longer effective, please use the batch_event_count parameter at the outer level.",
 									},
 									"enable_batch_delivery": {
 										Type:        schema.TypeBool,
 										Optional:    true,
-										Description: "Enable batch delivery.",
+										Computed:    true,
+										Description: "Enable batch delivery. This parameter is no longer effective, please use the enable_batch_delivery parameter at the outer level.",
 									},
 								},
 							},
@@ -157,6 +161,27 @@ func ResourceTencentCloudEbEventTarget() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "event rule id.",
+			},
+
+			"batch_timeout": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Maximum waiting time for batch delivery.",
+			},
+
+			"batch_event_count": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Maximum number of events for batch delivery.",
+			},
+
+			"enable_batch_delivery": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Enable batch delivery.",
 			},
 		},
 	}
@@ -247,6 +272,18 @@ func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("rule_id"); ok {
 		ruleId = v.(string)
 		request.RuleId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("batch_timeout"); ok {
+		request.BatchTimeout = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("batch_event_count"); ok {
+		request.BatchEventCount = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("enable_batch_delivery"); ok {
+		request.EnableBatchDelivery = helper.Bool(v.(bool))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -393,6 +430,16 @@ func resourceTencentCloudEbEventTargetRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("rule_id", eventTarget.RuleId)
 	}
 
+	if eventTarget.BatchTimeout != nil {
+		_ = d.Set("batch_timeout", eventTarget.BatchTimeout)
+	}
+	if eventTarget.BatchEventCount != nil {
+		_ = d.Set("batch_event_count", eventTarget.BatchEventCount)
+	}
+	if eventTarget.EnableBatchDelivery != nil {
+		_ = d.Set("enable_batch_delivery", eventTarget.EnableBatchDelivery)
+	}
+
 	return nil
 }
 
@@ -412,10 +459,6 @@ func resourceTencentCloudEbEventTargetUpdate(d *schema.ResourceData, meta interf
 	ruleId := idSplit[1]
 	targetId := idSplit[2]
 
-	request.EventBusId = &eventBusId
-	request.RuleId = &ruleId
-	request.TargetId = &targetId
-
 	immutableArgs := []string{"event_bus_id", "type", "target_description", "rule_id"}
 
 	for _, v := range immutableArgs {
@@ -424,18 +467,37 @@ func resourceTencentCloudEbEventTargetUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().UpdateTarget(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if d.HasChange("batch_timeout") || d.HasChange("batch_event_count") || d.HasChange("enable_batch_delivery") {
+
+		request.EventBusId = &eventBusId
+		request.RuleId = &ruleId
+		request.TargetId = &targetId
+
+		if v, ok := d.GetOkExists("batch_timeout"); ok {
+			request.BatchTimeout = helper.IntInt64(v.(int))
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update eb eventTarget failed, reason:%+v", logId, err)
-		return err
+
+		if v, ok := d.GetOkExists("batch_event_count"); ok {
+			request.BatchEventCount = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("enable_batch_delivery"); ok {
+			request.EnableBatchDelivery = helper.Bool(v.(bool))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().UpdateTarget(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update eb eventTarget failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	return resourceTencentCloudEbEventTargetRead(d, meta)

@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1107
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.27
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.30
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1206
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.1161
@@ -58,7 +58,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.1056
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.1.30
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1115
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
@@ -107,6 +107,7 @@ require (
 
 require (
 	github.com/hashicorp/go-uuid v1.0.3
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.1126
@@ -312,7 +313,6 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.0 // indirect
 	github.com/tetafro/godot v1.4.11 // indirect
 	github.com/tidwall/gjson v1.17.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
