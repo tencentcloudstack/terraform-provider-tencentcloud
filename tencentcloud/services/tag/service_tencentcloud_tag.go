@@ -417,3 +417,60 @@ func (me *TagService) DeleteTagTagAttachmentById(ctx context.Context, tagKey str
 
 	return
 }
+
+func (me *TagService) DescribeTagKeysByFilter(ctx context.Context, param map[string]interface{}) (ret []*string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tag.NewDescribeTagKeysRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CreateUin" {
+			request.CreateUin = v.(*uint64)
+		}
+
+		if k == "ShowProject" {
+			request.ShowProject = v.(*uint64)
+		}
+
+		if k == "Category" {
+			request.Category = v.(*string)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 1000
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTagClient().DescribeTagKeys(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || len(response.Response.Tags) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Tags...)
+		if len(response.Response.Tags) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

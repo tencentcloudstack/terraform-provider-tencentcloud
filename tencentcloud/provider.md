@@ -2105,6 +2105,8 @@ tencentcloud_clickhouse_keyval_config
 tencentcloud_clickhouse_xml_config
 
 Tag
+Data Source
+tencentcloud_tag_keys
 Resource
 tencentcloud_tag
 tencentcloud_tag_attachment
