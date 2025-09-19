@@ -91,6 +91,7 @@ func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 			"upstream_cert_info": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Configures the certificate presented by the EO node during origin-pull for mutual TLS authentication. Disabled by default; leaving the field blank will retain the current configuration. This feature is currently in beta testing. please [contact us](https://cloud.tencent.com/online-service) to request access.",
 				Elem: &schema.Resource{
@@ -98,6 +99,7 @@ func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 						"upstream_mutual_tls": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "In the origin-pull mutual authentication scenario, this field represents the certificate (including the public and private keys) carried during EO node origin-pull, which is deployed in the EO node for the origin server to authenticate the EO node. When used as an input parameter, it is left blank to indicate retaining the original configuration.",
 							Elem: &schema.Resource{
@@ -110,6 +112,7 @@ func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 									"cert_infos": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "Mutual authentication certificate list.\nNote: When using MutualTLS as an input parameter in ModifyHostsCertificate, you only need to provide the CertId of the corresponding certificate. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
