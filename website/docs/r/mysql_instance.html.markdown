@@ -4,16 +4,16 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_instance"
 sidebar_current: "docs-tencentcloud-resource-mysql_instance"
 description: |-
-  Provides a mysql instance resource to create master database instances.
+  Provides a MySQL instance resource to create master database instances.
 ---
 
 # tencentcloud_mysql_instance
 
-Provides a mysql instance resource to create master database instances.
+Provides a MySQL instance resource to create master database instances.
 
 ~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
-~> **NOTE:** The value of parameter `parameters` can be used with tencentcloud_mysql_parameter_list to obtain.
+~> **NOTE:** The value of parameter `parameters` can be used with `tencentcloud_mysql_parameter_list` to obtain.
 
 ## Example Usage
 
@@ -67,6 +67,11 @@ resource "tencentcloud_mysql_instance" "example" {
     character_set_server = "utf8"
     max_connections      = "1000"
   }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
 }
 ```
 
@@ -97,6 +102,11 @@ resource "tencentcloud_mysql_instance" "example" {
   parameters = {
     character_set_server = "utf8"
     max_connections      = "1000"
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
   }
 }
 ```
@@ -129,6 +139,11 @@ resource "tencentcloud_mysql_instance" "example" {
   parameters = {
     character_set_server = "utf8"
     max_connections      = "1000"
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
   }
 }
 ```
@@ -195,6 +210,6 @@ In addition to all arguments above, the following attributes are exported:
 MySQL instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mysql_instance.foo cdb-12345678
+$ terraform import tencentcloud_mysql_instance.example cdb-12345678
 ```
 

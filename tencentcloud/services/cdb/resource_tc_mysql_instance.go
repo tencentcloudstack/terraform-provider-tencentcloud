@@ -339,6 +339,10 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 				return []*schema.ResourceData{d}, nil
 			},
 		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
+		},
 	}
 }
 
@@ -711,7 +715,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	err := resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -721,17 +725,17 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 			return resource.NonRetryableError(err)
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_DELIVING {
-			return resource.RetryableError(fmt.Errorf("create mysql task  status is MYSQL_STATUS_DELIVING(%d)", MYSQL_STATUS_DELIVING))
+			return resource.RetryableError(fmt.Errorf("create mysql task status is MYSQL_STATUS_DELIVING(%d)", MYSQL_STATUS_DELIVING))
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
 			return nil
 		}
-		err = fmt.Errorf("create mysql    task status is %v,we won't wait for it finish", *mysqlInfo.Status)
+		err = fmt.Errorf("create mysql task status is %v,we won't wait for it finish", *mysqlInfo.Status)
 		return resource.NonRetryableError(err)
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -755,7 +759,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 				return nil
 			}
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
+				return resource.RetryableError(fmt.Errorf("create account task status is %s", taskStatus))
 			}
 			err = fmt.Errorf("open internet service task status is %s,we won't wait for it finish ,it show message:%s", ",",
 				message)
@@ -763,7 +767,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s open internet service   fail, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s open internet service fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
 	}
@@ -1633,7 +1637,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 
 	payType := getPayType(d).(int)
 	forceDelete := d.Get("force_delete").(bool)
-	err = resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 		if err != nil {
