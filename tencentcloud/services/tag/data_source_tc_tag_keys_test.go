@@ -17,13 +17,13 @@ func TestAccTencentCloudTagKeysDataSource_basic(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{{
 			Config: testAccTagKeysDataSource,
-			Check:  resource.ComposeTestCheckFunc(resource.AccCheckTencentCloudDataSourceID("data.tencentcloud_tag_keys.tag_keys")),
+			Check: resource.ComposeTestCheckFunc(
+				tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_tag_keys.tags"),
+			),
 		}},
 	})
 }
 
 const testAccTagKeysDataSource = `
-
-data "tencentcloud_tag_keys" "tag_keys" {
-}
+data "tencentcloud_tag_keys" "tags" {}
 `
