@@ -179,6 +179,64 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.",
 		},
+		"cluster_topology": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			MaxItems:    1,
+			Description: "Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"read_write_node": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "RW Node Topology.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"zone": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "The availability zone where the RW node is located.",
+								},
+								"node_id": {
+									Type:        schema.TypeString,
+									Optional:    true,
+									Computed:    true,
+									Description: "When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.",
+								},
+							},
+						},
+					},
+					"read_only_nodes": {
+						Type:        schema.TypeSet,
+						Optional:    true,
+						Description: "RO Node Topology.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"is_random_zone": {
+									Type:        schema.TypeBool,
+									Optional:    true,
+									Computed:    true,
+									Description: "Whether to distribute in random availability zones. Enter `true` to specify a random availability zone. Otherwise, use the availability zone specified by Zone.",
+								},
+								"zone": {
+									Type:        schema.TypeString,
+									Optional:    true,
+									Computed:    true,
+									Description: "Specifies the availability zone where the node is distributed.",
+								},
+								"node_id": {
+									Type:        schema.TypeString,
+									Optional:    true,
+									Computed:    true,
+									Description: "When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -560,6 +618,64 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 	} else {
 		requestByUse.ProtectMode = &slaveSyncMode
 	}
+
+	if v, ok := d.GetOk("cluster_topology"); ok {
+		clusterTopologyList := v.([]interface{})
+		if len(clusterTopologyList) > 0 {
+			clusterTopology := clusterTopologyList[0].(map[string]interface{})
+			tmpObj := cdb.ClusterTopology{}
+			if readWriteNodeList, ok := clusterTopology["read_write_node"].([]interface{}); ok {
+				if len(readWriteNodeList) > 0 {
+					item := readWriteNodeList[0].(map[string]interface{})
+					readWriteNode := cdb.ReadWriteNode{}
+					if item["zone"] != nil && item["zone"].(string) != "" {
+						readWriteNode.Zone = helper.String(item["zone"].(string))
+					}
+
+					if item["node_id"] != nil && item["node_id"].(string) != "" {
+						readWriteNode.NodeId = helper.String(item["node_id"].(string))
+					}
+
+					tmpObj.ReadWriteNode = &readWriteNode
+				}
+			}
+
+			if readOnlyNodesSet, ok := clusterTopology["read_only_nodes"].(*schema.Set); ok {
+				readOnlyNodes := readOnlyNodesSet.List()
+				if len(readOnlyNodes) > 0 {
+					requestRoList := make([]*cdb.ReadonlyNode, 0, len(readOnlyNodes))
+					for _, v := range readOnlyNodes {
+						item := v.(map[string]interface{})
+						readonlyNode := cdb.ReadonlyNode{}
+						if item["is_random_zone"] != nil {
+							if item["is_random_zone"].(bool) == true {
+								readonlyNode.IsRandomZone = helper.String("YES")
+							}
+						}
+
+						if item["zone"] != nil && item["zone"].(string) != "" {
+							readonlyNode.Zone = helper.String(item["zone"].(string))
+						}
+
+						if item["node_id"] != nil && item["node_id"].(string) != "" {
+							readonlyNode.NodeId = helper.String(item["node_id"].(string))
+						}
+
+						requestRoList = append(requestRoList, &readonlyNode)
+					}
+
+					tmpObj.ReadOnlyNodes = requestRoList
+				}
+			}
+
+			if okByMonth {
+				requestByMonth.ClusterTopology = &tmpObj
+			} else {
+				requestByUse.ClusterTopology = &tmpObj
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -869,6 +985,60 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	_ = d.Set("status", mysqlInfo.Status)
 	_ = d.Set("task_status", mysqlInfo.TaskStatus)
+
+	if mysqlInfo.MasterInfo != nil || mysqlInfo.ClusterInfo != nil {
+		ctTmpList := make([]map[string]interface{}, 0, 1)
+		ctMap := make(map[string]interface{})
+		if mysqlInfo.ClusterInfo != nil {
+			var masterZone string
+			rwTmpList := make([]map[string]interface{}, 0, 1)
+			for _, item := range mysqlInfo.ClusterInfo {
+				dMap := make(map[string]interface{})
+				if item.Role != nil && *item.Role == "master" {
+					if item.Zone != nil {
+						dMap["zone"] = *item.Zone
+						masterZone = *item.Zone
+					}
+
+					if item.NodeId != nil {
+						dMap["node_id"] = *item.NodeId
+					}
+
+					rwTmpList = append(rwTmpList, dMap)
+					break
+				}
+			}
+
+			ctMap["read_write_node"] = rwTmpList
+
+			roTmpList := make([]map[string]interface{}, 0, len(mysqlInfo.ClusterInfo))
+			for _, item := range mysqlInfo.ClusterInfo {
+				dMap := make(map[string]interface{})
+				if item.Role != nil && *item.Role == "slave" {
+					if item.Zone != nil {
+						dMap["zone"] = *item.Zone
+						if masterZone == *item.Zone {
+							dMap["is_random_zone"] = false
+						} else {
+							dMap["is_random_zone"] = true
+						}
+					}
+
+					if item.NodeId != nil {
+						dMap["node_id"] = *item.NodeId
+					}
+
+					roTmpList = append(roTmpList, dMap)
+				}
+			}
+
+			ctMap["read_only_nodes"] = roTmpList
+		}
+
+		ctTmpList = append(ctTmpList, ctMap)
+		_ = d.Set("cluster_topology", ctTmpList)
+	}
+
 	return
 }
 
@@ -1330,6 +1500,152 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				return err
 			}
 
+		}
+	}
+
+	if d.HasChange("cluster_topology") {
+		var (
+			waitSwitch     int64
+			asyncRequestId string
+		)
+
+		if v, ok := d.GetOkExists("wait_switch"); ok {
+			waitSwitch = int64(v.(int))
+		}
+
+		request := cdb.NewUpgradeDBInstanceRequest()
+		response := cdb.NewUpgradeDBInstanceResponse()
+		if v, ok := d.GetOk("cluster_topology"); ok {
+			clusterTopologyList := v.([]interface{})
+			if len(clusterTopologyList) > 0 {
+				clusterTopology := clusterTopologyList[0].(map[string]interface{})
+				tmpObj := cdb.ClusterTopology{}
+				if readWriteNodeList, ok := clusterTopology["read_write_node"].([]interface{}); ok {
+					if len(readWriteNodeList) > 0 {
+						item := readWriteNodeList[0].(map[string]interface{})
+						readWriteNode := cdb.ReadWriteNode{}
+						if item["zone"] != nil && item["zone"].(string) != "" {
+							readWriteNode.Zone = helper.String(item["zone"].(string))
+						}
+
+						if item["node_id"] != nil && item["node_id"].(string) != "" {
+							readWriteNode.NodeId = helper.String(item["node_id"].(string))
+						}
+
+						tmpObj.ReadWriteNode = &readWriteNode
+					}
+				}
+
+				if readOnlyNodesSet, ok := clusterTopology["read_only_nodes"].(*schema.Set); ok {
+					readOnlyNodes := readOnlyNodesSet.List()
+					if len(readOnlyNodes) > 0 {
+						requestRoList := make([]*cdb.ReadonlyNode, 0, len(readOnlyNodes))
+						for _, v := range readOnlyNodes {
+							item := v.(map[string]interface{})
+							readonlyNode := cdb.ReadonlyNode{}
+							if item["is_random_zone"] != nil {
+								if item["is_random_zone"].(bool) == true {
+									readonlyNode.IsRandomZone = helper.String("YES")
+								}
+							}
+
+							if item["zone"] != nil && item["zone"].(string) != "" {
+								readonlyNode.Zone = helper.String(item["zone"].(string))
+							}
+
+							if item["node_id"] != nil && item["node_id"].(string) != "" {
+								readonlyNode.NodeId = helper.String(item["node_id"].(string))
+							}
+
+							requestRoList = append(requestRoList, &readonlyNode)
+						}
+
+						tmpObj.ReadOnlyNodes = requestRoList
+					}
+				}
+
+				request.ClusterTopology = &tmpObj
+			}
+		}
+
+		// required parameter
+		memSize := int64(d.Get("mem_size").(int))
+		volumeSize := int64(d.Get("volume_size").(int))
+		request.Memory = &memSize
+		request.Volume = &volumeSize
+
+		request.InstanceId = helper.String(d.Id())
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().UpgradeDBInstance(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.AsyncRequestId == nil {
+				return resource.NonRetryableError(fmt.Errorf("update mysql cluster topology failed, response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s Update mysql cluster topology failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+
+		asyncRequestId = *response.Response.AsyncRequestId
+		if waitSwitch != InWindow {
+			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
+				}
+
+				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+					return nil
+				}
+
+				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("update mysql cluster topology status is %s", taskStatus))
+				}
+
+				err = fmt.Errorf("update mysql cluster topology task status is %s, we won't wait for it finish, it show message:%s", taskStatus, message)
+				return resource.NonRetryableError(err)
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql cluster topology fail, reason:%s\n ", logId, err.Error())
+				return err
+			}
+		} else {
+			err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+				mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
+				}
+
+				if *mysqlInfo.TaskStatus == 15 {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("update mysql cluster topology task status is %v", mysqlInfo.TaskStatus))
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql cluster topology fail, reason:%s\n", logId, err.Error())
+				return err
+			}
 		}
 	}
 

@@ -857,6 +857,7 @@ func (me *MysqlService) _innerDescribeDBInstanceById(ctx context.Context, mysqlI
 	logId := tccommon.GetLogId(ctx)
 	request := cdb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
+	request.QueryClusterInfo = helper.Bool(true)
 
 	defer func() {
 		if errRet != nil {
@@ -1093,60 +1094,6 @@ func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId st
 
 	backupConfig = response
 
-	return
-}
-
-// DEPRECATED: Specify these arguments while creating.
-func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, charset, lowerCase string, port int) (asyncRequestId string, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-	request := cdb.NewInitDBInstancesRequest()
-	request.InstanceIds = []*string{&mysqlId}
-	if password != "" {
-		request.NewPassword = &password
-	}
-
-	if port != 0 {
-		request.Vport = helper.IntInt64(port)
-	}
-
-	paramsMap := map[string]string{
-		"character_set_server": "LATIN1", // ["utf8","latin1","gbk","utf8mb4"]
-	}
-
-	if charset != "" {
-		paramsMap["character_set_server"] = charset // ["utf8","latin1","gbk","utf8mb4"]
-	}
-
-	if lowerCase != "" {
-		paramsMap["lower_case_table_names"] = lowerCase // ["0","1"]
-	}
-
-	for k, v := range paramsMap {
-		name := k
-		value := v
-		param := cdb.ParamInfo{Name: &name, Value: &value}
-		request.Parameters = append(request.Parameters, &param)
-	}
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseMysqlClient().InitDBInstances(request)
-
-	if err != nil {
-		errRet = err
-		return
-	}
-	if len(response.Response.AsyncRequestIds) != 1 {
-		errRet = fmt.Errorf("init one  mysql id got %d async ids", len(response.Response.AsyncRequestIds))
-		return
-	}
-
-	asyncRequestId = *response.Response.AsyncRequestIds[0]
 	return
 }
 

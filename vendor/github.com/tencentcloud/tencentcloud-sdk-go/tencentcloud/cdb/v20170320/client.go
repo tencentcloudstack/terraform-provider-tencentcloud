@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ func NewAddTimeWindowResponse() (response *AddTimeWindowResponse) {
 }
 
 // AddTimeWindow
-// 本接口(AddTimeWindow)用于添加云数据库实例的维护时间窗口，以指定实例在哪些时间段可以自动执行切换访问操作。
+// 本接口（AddTimeWindow）用于添加云数据库实例的维护时间窗口，以指定实例在哪些时间段可以自动执行切换访问操作。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -77,7 +77,7 @@ func (c *Client) AddTimeWindow(request *AddTimeWindowRequest) (response *AddTime
 }
 
 // AddTimeWindow
-// 本接口(AddTimeWindow)用于添加云数据库实例的维护时间窗口，以指定实例在哪些时间段可以自动执行切换访问操作。
+// 本接口（AddTimeWindow）用于添加云数据库实例的维护时间窗口，以指定实例在哪些时间段可以自动执行切换访问操作。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -88,6 +88,7 @@ func (c *Client) AddTimeWindowWithContext(ctx context.Context, request *AddTimeW
     if request == nil {
         request = NewAddTimeWindowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "AddTimeWindow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddTimeWindow require credential")
@@ -120,7 +121,7 @@ func NewAdjustCdbProxyResponse() (response *AdjustCdbProxyResponse) {
 }
 
 // AdjustCdbProxy
-// 调整数据库代理配置
+// 本接口（AdjustCdbProxy）用于调整数据库代理配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -132,7 +133,7 @@ func (c *Client) AdjustCdbProxy(request *AdjustCdbProxyRequest) (response *Adjus
 }
 
 // AdjustCdbProxy
-// 调整数据库代理配置
+// 本接口（AdjustCdbProxy）用于调整数据库代理配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -143,6 +144,7 @@ func (c *Client) AdjustCdbProxyWithContext(ctx context.Context, request *AdjustC
     if request == nil {
         request = NewAdjustCdbProxyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "AdjustCdbProxy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AdjustCdbProxy require credential")
@@ -175,7 +177,7 @@ func NewAdjustCdbProxyAddressResponse() (response *AdjustCdbProxyAddressResponse
 }
 
 // AdjustCdbProxyAddress
-// 调整数据库代理地址配置
+// 本接口（AdjustCdbProxyAddress）用于调整数据库代理地址配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -185,13 +187,13 @@ func NewAdjustCdbProxyAddressResponse() (response *AdjustCdbProxyAddressResponse
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_PROXYUPGRADETASKSTATUSERROR = "OperationDenied.ProxyUpgradeTaskStatusError"
 //  OPERATIONDENIED_UNSUPPORTCREATEADDRESSERROR = "OperationDenied.UnsupportCreateAddressError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) AdjustCdbProxyAddress(request *AdjustCdbProxyAddressRequest) (response *AdjustCdbProxyAddressResponse, err error) {
     return c.AdjustCdbProxyAddressWithContext(context.Background(), request)
 }
 
 // AdjustCdbProxyAddress
-// 调整数据库代理地址配置
+// 本接口（AdjustCdbProxyAddress）用于调整数据库代理地址配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -201,11 +203,12 @@ func (c *Client) AdjustCdbProxyAddress(request *AdjustCdbProxyAddressRequest) (r
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_PROXYUPGRADETASKSTATUSERROR = "OperationDenied.ProxyUpgradeTaskStatusError"
 //  OPERATIONDENIED_UNSUPPORTCREATEADDRESSERROR = "OperationDenied.UnsupportCreateAddressError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) AdjustCdbProxyAddressWithContext(ctx context.Context, request *AdjustCdbProxyAddressRequest) (response *AdjustCdbProxyAddressResponse, err error) {
     if request == nil {
         request = NewAdjustCdbProxyAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "AdjustCdbProxyAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AdjustCdbProxyAddress require credential")
@@ -238,9 +241,10 @@ func NewAnalyzeAuditLogsResponse() (response *AnalyzeAuditLogsResponse) {
 }
 
 // AnalyzeAuditLogs
-// 在不同过滤条件下的审计日志结果集中，选定特定的数据列进行聚合统计。
+// 本接口（AnalyzeAuditLogs）用于在不同过滤条件下的审计日志结果集中，选定特定的数据列进行聚合统计。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALINNERSERVICEERROR = "InternalError.InternalInnerServiceError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
@@ -250,9 +254,10 @@ func (c *Client) AnalyzeAuditLogs(request *AnalyzeAuditLogsRequest) (response *A
 }
 
 // AnalyzeAuditLogs
-// 在不同过滤条件下的审计日志结果集中，选定特定的数据列进行聚合统计。
+// 本接口（AnalyzeAuditLogs）用于在不同过滤条件下的审计日志结果集中，选定特定的数据列进行聚合统计。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALINNERSERVICEERROR = "InternalError.InternalInnerServiceError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
@@ -261,6 +266,7 @@ func (c *Client) AnalyzeAuditLogsWithContext(ctx context.Context, request *Analy
     if request == nil {
         request = NewAnalyzeAuditLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "AnalyzeAuditLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AnalyzeAuditLogs require credential")
@@ -324,6 +330,7 @@ func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request
     if request == nil {
         request = NewAssociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "AssociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateSecurityGroups require credential")
@@ -385,6 +392,7 @@ func (c *Client) BalanceRoGroupLoadWithContext(ctx context.Context, request *Bal
     if request == nil {
         request = NewBalanceRoGroupLoadRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "BalanceRoGroupLoad")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BalanceRoGroupLoad require credential")
@@ -417,7 +425,7 @@ func NewCheckMigrateClusterResponse() (response *CheckMigrateClusterResponse) {
 }
 
 // CheckMigrateCluster
-// 高可用实例一键迁移到集群版校验
+// 本接口（CheckMigrateCluster）用于高可用实例一键迁移到云盘版校验。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
@@ -432,7 +440,7 @@ func (c *Client) CheckMigrateCluster(request *CheckMigrateClusterRequest) (respo
 }
 
 // CheckMigrateCluster
-// 高可用实例一键迁移到集群版校验
+// 本接口（CheckMigrateCluster）用于高可用实例一键迁移到云盘版校验。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
@@ -446,6 +454,7 @@ func (c *Client) CheckMigrateClusterWithContext(ctx context.Context, request *Ch
     if request == nil {
         request = NewCheckMigrateClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CheckMigrateCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckMigrateCluster require credential")
@@ -501,6 +510,7 @@ func (c *Client) CloseAuditServiceWithContext(ctx context.Context, request *Clos
     if request == nil {
         request = NewCloseAuditServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CloseAuditService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseAuditService require credential")
@@ -533,7 +543,7 @@ func NewCloseCDBProxyResponse() (response *CloseCDBProxyResponse) {
 }
 
 // CloseCDBProxy
-// 关闭数据库代理
+// 本接口（CloseCDBProxy）用于关闭数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -545,7 +555,7 @@ func (c *Client) CloseCDBProxy(request *CloseCDBProxyRequest) (response *CloseCD
 }
 
 // CloseCDBProxy
-// 关闭数据库代理
+// 本接口（CloseCDBProxy）用于关闭数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -556,6 +566,7 @@ func (c *Client) CloseCDBProxyWithContext(ctx context.Context, request *CloseCDB
     if request == nil {
         request = NewCloseCDBProxyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CloseCDBProxy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseCDBProxy require credential")
@@ -588,7 +599,7 @@ func NewCloseCdbProxyAddressResponse() (response *CloseCdbProxyAddressResponse) 
 }
 
 // CloseCdbProxyAddress
-// 请求关闭数据库代理地址
+// 本接口（CloseCdbProxyAddress）用于请求关闭数据库代理地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -601,7 +612,7 @@ func (c *Client) CloseCdbProxyAddress(request *CloseCdbProxyAddressRequest) (res
 }
 
 // CloseCdbProxyAddress
-// 请求关闭数据库代理地址
+// 本接口（CloseCdbProxyAddress）用于请求关闭数据库代理地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -613,6 +624,7 @@ func (c *Client) CloseCdbProxyAddressWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCloseCdbProxyAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CloseCdbProxyAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseCdbProxyAddress require credential")
@@ -645,7 +657,7 @@ func NewCloseSSLResponse() (response *CloseSSLResponse) {
 }
 
 // CloseSSL
-// 关闭SSL连接功能。
+// 本接口（CloseSSL）用于关闭 SSL 连接功能。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -656,7 +668,7 @@ func (c *Client) CloseSSL(request *CloseSSLRequest) (response *CloseSSLResponse,
 }
 
 // CloseSSL
-// 关闭SSL连接功能。
+// 本接口（CloseSSL）用于关闭 SSL 连接功能。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -666,6 +678,7 @@ func (c *Client) CloseSSLWithContext(ctx context.Context, request *CloseSSLReque
     if request == nil {
         request = NewCloseSSLRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CloseSSL")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseSSL require credential")
@@ -725,6 +738,7 @@ func (c *Client) CloseWanServiceWithContext(ctx context.Context, request *CloseW
     if request == nil {
         request = NewCloseWanServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CloseWanService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseWanService require credential")
@@ -757,7 +771,7 @@ func NewCreateAccountsResponse() (response *CreateAccountsResponse) {
 }
 
 // CreateAccounts
-// 本接口(CreateAccounts)用于创建云数据库的账户，需要指定新的账户名和域名，以及所对应的密码，同时可以设置账号的备注信息以及最大可用连接数。
+// 本接口（CreateAccounts）用于创建云数据库的账户，需要指定新的账户名和域名，以及所对应的密码，同时可以设置账号的备注信息以及最大可用连接数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEACCOUNTERROR = "FailedOperation.CreateAccountError"
@@ -798,7 +812,7 @@ func (c *Client) CreateAccounts(request *CreateAccountsRequest) (response *Creat
 }
 
 // CreateAccounts
-// 本接口(CreateAccounts)用于创建云数据库的账户，需要指定新的账户名和域名，以及所对应的密码，同时可以设置账号的备注信息以及最大可用连接数。
+// 本接口（CreateAccounts）用于创建云数据库的账户，需要指定新的账户名和域名，以及所对应的密码，同时可以设置账号的备注信息以及最大可用连接数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEACCOUNTERROR = "FailedOperation.CreateAccountError"
@@ -838,6 +852,7 @@ func (c *Client) CreateAccountsWithContext(ctx context.Context, request *CreateA
     if request == nil {
         request = NewCreateAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAccounts require credential")
@@ -870,7 +885,7 @@ func NewCreateAuditLogFileResponse() (response *CreateAuditLogFileResponse) {
 }
 
 // CreateAuditLogFile
-// 本接口(CreateAuditLogFile)用于创建云数据库实例的审计日志文件。
+// 本接口（CreateAuditLogFile）用于创建云数据库实例的审计日志文件。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEAUDITLOGFILEERROR = "FailedOperation.CreateAuditLogFileError"
@@ -899,7 +914,7 @@ func (c *Client) CreateAuditLogFile(request *CreateAuditLogFileRequest) (respons
 }
 
 // CreateAuditLogFile
-// 本接口(CreateAuditLogFile)用于创建云数据库实例的审计日志文件。
+// 本接口（CreateAuditLogFile）用于创建云数据库实例的审计日志文件。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEAUDITLOGFILEERROR = "FailedOperation.CreateAuditLogFileError"
@@ -927,6 +942,7 @@ func (c *Client) CreateAuditLogFileWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateAuditLogFileRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateAuditLogFile")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAuditLogFile require credential")
@@ -1042,6 +1058,7 @@ func (c *Client) CreateAuditPolicyWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateAuditPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateAuditPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAuditPolicy require credential")
@@ -1074,6 +1091,10 @@ func NewCreateAuditRuleResponse() (response *CreateAuditRuleResponse) {
 }
 
 // CreateAuditRule
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(CreateAuditRule)用于创建用户在当前地域的审计规则。
 //
 // 可能返回的错误码:
@@ -1094,6 +1115,10 @@ func (c *Client) CreateAuditRule(request *CreateAuditRuleRequest) (response *Cre
 }
 
 // CreateAuditRule
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(CreateAuditRule)用于创建用户在当前地域的审计规则。
 //
 // 可能返回的错误码:
@@ -1113,6 +1138,7 @@ func (c *Client) CreateAuditRuleWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateAuditRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateAuditRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAuditRule require credential")
@@ -1145,7 +1171,7 @@ func NewCreateAuditRuleTemplateResponse() (response *CreateAuditRuleTemplateResp
 }
 
 // CreateAuditRuleTemplate
-// 创建审计规则模板
+// 本接口（CreateAuditRuleTemplate）用于创建审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -1155,7 +1181,7 @@ func (c *Client) CreateAuditRuleTemplate(request *CreateAuditRuleTemplateRequest
 }
 
 // CreateAuditRuleTemplate
-// 创建审计规则模板
+// 本接口（CreateAuditRuleTemplate）用于创建审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -1164,6 +1190,7 @@ func (c *Client) CreateAuditRuleTemplateWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateAuditRuleTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateAuditRuleTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAuditRuleTemplate require credential")
@@ -1196,12 +1223,14 @@ func NewCreateBackupResponse() (response *CreateBackupResponse) {
 }
 
 // CreateBackup
-// 本接口(CreateBackup)用于创建数据库备份。
+// 本接口（CreateBackup）用于创建数据库备份。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR = "CdbError"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  FAILEDOPERATION_TASKCONFLICTERROR = "FailedOperation.TaskConflictError"
 //  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_DESERROR = "InternalError.DesError"
@@ -1222,12 +1251,14 @@ func (c *Client) CreateBackup(request *CreateBackupRequest) (response *CreateBac
 }
 
 // CreateBackup
-// 本接口(CreateBackup)用于创建数据库备份。
+// 本接口（CreateBackup）用于创建数据库备份。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR = "CdbError"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  FAILEDOPERATION_TASKCONFLICTERROR = "FailedOperation.TaskConflictError"
 //  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_DESERROR = "InternalError.DesError"
@@ -1247,6 +1278,7 @@ func (c *Client) CreateBackupWithContext(ctx context.Context, request *CreateBac
     if request == nil {
         request = NewCreateBackupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateBackup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateBackup require credential")
@@ -1279,29 +1311,30 @@ func NewCreateCdbProxyResponse() (response *CreateCdbProxyResponse) {
 }
 
 // CreateCdbProxy
-// 主实例创建数据库代理
+// 本接口（CreateCdbProxy）用于主实例创建数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REPEATCREATEPROXYERROR = "FailedOperation.RepeatCreateProxyError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) CreateCdbProxy(request *CreateCdbProxyRequest) (response *CreateCdbProxyResponse, err error) {
     return c.CreateCdbProxyWithContext(context.Background(), request)
 }
 
 // CreateCdbProxy
-// 主实例创建数据库代理
+// 本接口（CreateCdbProxy）用于主实例创建数据库代理。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REPEATCREATEPROXYERROR = "FailedOperation.RepeatCreateProxyError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) CreateCdbProxyWithContext(ctx context.Context, request *CreateCdbProxyRequest) (response *CreateCdbProxyResponse, err error) {
     if request == nil {
         request = NewCreateCdbProxyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateCdbProxy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCdbProxy require credential")
@@ -1334,7 +1367,7 @@ func NewCreateCdbProxyAddressResponse() (response *CreateCdbProxyAddressResponse
 }
 
 // CreateCdbProxyAddress
-// 数据库代理增加代理地址
+// 本接口（CreateCdbProxyAddress）用于数据库代理增加代理地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -1349,7 +1382,7 @@ func (c *Client) CreateCdbProxyAddress(request *CreateCdbProxyAddressRequest) (r
 }
 
 // CreateCdbProxyAddress
-// 数据库代理增加代理地址
+// 本接口（CreateCdbProxyAddress）用于数据库代理增加代理地址。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -1363,6 +1396,7 @@ func (c *Client) CreateCdbProxyAddressWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateCdbProxyAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateCdbProxyAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCdbProxyAddress require credential")
@@ -1395,7 +1429,7 @@ func NewCreateCloneInstanceResponse() (response *CreateCloneInstanceResponse) {
 }
 
 // CreateCloneInstance
-// 本接口(CreateCloneInstance) 用于从目标源实例创建一个克隆实例，可以指定克隆实例回档到源实例的指定物理备份文件或者指定的回档时间点。
+// 本接口（CreateCloneInstance）用于从目标源实例创建一个克隆实例，可以指定克隆实例回档到源实例的指定物理备份文件或者指定的回档时间点。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -1416,7 +1450,7 @@ func (c *Client) CreateCloneInstance(request *CreateCloneInstanceRequest) (respo
 }
 
 // CreateCloneInstance
-// 本接口(CreateCloneInstance) 用于从目标源实例创建一个克隆实例，可以指定克隆实例回档到源实例的指定物理备份文件或者指定的回档时间点。
+// 本接口（CreateCloneInstance）用于从目标源实例创建一个克隆实例，可以指定克隆实例回档到源实例的指定物理备份文件或者指定的回档时间点。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -1436,6 +1470,7 @@ func (c *Client) CreateCloneInstanceWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateCloneInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateCloneInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloneInstance require credential")
@@ -1468,9 +1503,7 @@ func NewCreateDBImportJobResponse() (response *CreateDBImportJobResponse) {
 }
 
 // CreateDBImportJob
-// 本接口(CreateDBImportJob)用于创建云数据库数据导入任务。
-//
-// 
+// 本接口（CreateDBImportJob）用于创建云数据库数据导入任务。
 //
 // 注意，用户进行数据导入任务的文件，必须提前上传到腾讯云。用户须在控制台进行文件导入。
 //
@@ -1495,9 +1528,7 @@ func (c *Client) CreateDBImportJob(request *CreateDBImportJobRequest) (response 
 }
 
 // CreateDBImportJob
-// 本接口(CreateDBImportJob)用于创建云数据库数据导入任务。
-//
-// 
+// 本接口（CreateDBImportJob）用于创建云数据库数据导入任务。
 //
 // 注意，用户进行数据导入任务的文件，必须提前上传到腾讯云。用户须在控制台进行文件导入。
 //
@@ -1521,6 +1552,7 @@ func (c *Client) CreateDBImportJobWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateDBImportJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateDBImportJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDBImportJob require credential")
@@ -1553,7 +1585,7 @@ func NewCreateDBInstanceResponse() (response *CreateDBInstanceResponse) {
 }
 
 // CreateDBInstance
-// 本接口(CreateDBInstance)用于创建包年包月的云数据库实例（包括主实例、灾备实例和只读实例），可通过传入实例规格、MySQL 版本号、购买时长和数量等信息创建云数据库实例。
+// 本接口（CreateDBInstance）用于创建包年包月的云数据库实例（包括主实例、灾备实例和只读实例），可通过传入实例规格、MySQL 版本号、购买时长和数量等信息创建云数据库实例。
 //
 // 
 //
@@ -1569,9 +1601,7 @@ func NewCreateDBInstanceResponse() (response *CreateDBInstanceResponse) {
 //
 // 4. 支持创建主实例、只读实例、灾备实例；
 //
-// 5. 当入参指定 Port 和 ParamTemplateType 参数模板，相关参数才会自动初始化（不支持基础版实例）；
-//
-// 6. 当入参指定 ParamTemplateId 或 AlarmPolicyList 时，需将SDK提升至最新版本方可支持；
+// 5. 当入参指定 ParamTemplateId 或 AlarmPolicyList 时，需将SDK提升至最新版本方可支持；
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -1596,7 +1626,7 @@ func (c *Client) CreateDBInstance(request *CreateDBInstanceRequest) (response *C
 }
 
 // CreateDBInstance
-// 本接口(CreateDBInstance)用于创建包年包月的云数据库实例（包括主实例、灾备实例和只读实例），可通过传入实例规格、MySQL 版本号、购买时长和数量等信息创建云数据库实例。
+// 本接口（CreateDBInstance）用于创建包年包月的云数据库实例（包括主实例、灾备实例和只读实例），可通过传入实例规格、MySQL 版本号、购买时长和数量等信息创建云数据库实例。
 //
 // 
 //
@@ -1612,9 +1642,7 @@ func (c *Client) CreateDBInstance(request *CreateDBInstanceRequest) (response *C
 //
 // 4. 支持创建主实例、只读实例、灾备实例；
 //
-// 5. 当入参指定 Port 和 ParamTemplateType 参数模板，相关参数才会自动初始化（不支持基础版实例）；
-//
-// 6. 当入参指定 ParamTemplateId 或 AlarmPolicyList 时，需将SDK提升至最新版本方可支持；
+// 5. 当入参指定 ParamTemplateId 或 AlarmPolicyList 时，需将SDK提升至最新版本方可支持；
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -1638,6 +1666,7 @@ func (c *Client) CreateDBInstanceWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDBInstance require credential")
@@ -1670,7 +1699,7 @@ func NewCreateDBInstanceHourResponse() (response *CreateDBInstanceHourResponse) 
 }
 
 // CreateDBInstanceHour
-// 本接口(CreateDBInstanceHour)用于创建按量计费的实例，可通过传入实例规格、MySQL 版本号和数量等信息创建云数据库实例，支持主实例、灾备实例和只读实例的创建。
+// 本接口（CreateDBInstanceHour）用于创建按量计费的实例，可通过传入实例规格、MySQL 版本号和数量等信息创建云数据库实例，支持主实例、灾备实例和只读实例的创建。
 //
 // 
 //
@@ -1685,8 +1714,6 @@ func NewCreateDBInstanceHourResponse() (response *CreateDBInstanceHourResponse) 
 // 3. 支持创建 MySQL 5.5、MySQL 5.6 、MySQL 5.7 和 MySQL 8.0 版本；
 //
 // 4. 支持创建主实例、灾备实例和只读实例；
-//
-// 5. 当入参指定 Port，ParamTemplateType 或 Password 时，该实例会进行初始化操作；
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -1709,7 +1736,7 @@ func (c *Client) CreateDBInstanceHour(request *CreateDBInstanceHourRequest) (res
 }
 
 // CreateDBInstanceHour
-// 本接口(CreateDBInstanceHour)用于创建按量计费的实例，可通过传入实例规格、MySQL 版本号和数量等信息创建云数据库实例，支持主实例、灾备实例和只读实例的创建。
+// 本接口（CreateDBInstanceHour）用于创建按量计费的实例，可通过传入实例规格、MySQL 版本号和数量等信息创建云数据库实例，支持主实例、灾备实例和只读实例的创建。
 //
 // 
 //
@@ -1724,8 +1751,6 @@ func (c *Client) CreateDBInstanceHour(request *CreateDBInstanceHourRequest) (res
 // 3. 支持创建 MySQL 5.5、MySQL 5.6 、MySQL 5.7 和 MySQL 8.0 版本；
 //
 // 4. 支持创建主实例、灾备实例和只读实例；
-//
-// 5. 当入参指定 Port，ParamTemplateType 或 Password 时，该实例会进行初始化操作；
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -1747,6 +1772,7 @@ func (c *Client) CreateDBInstanceHourWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateDBInstanceHourRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateDBInstanceHour")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDBInstanceHour require credential")
@@ -1824,6 +1850,7 @@ func (c *Client) CreateDatabaseWithContext(ctx context.Context, request *CreateD
     if request == nil {
         request = NewCreateDatabaseRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateDatabase")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDatabase require credential")
@@ -1856,7 +1883,7 @@ func NewCreateDeployGroupResponse() (response *CreateDeployGroupResponse) {
 }
 
 // CreateDeployGroup
-// 本接口(CreateDeployGroup)用于创建放置实例的置放群组
+// 本接口（CreateDeployGroup）用于创建放置实例的置放群组。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDBERROR = "InternalError.CdbError"
@@ -1871,7 +1898,7 @@ func (c *Client) CreateDeployGroup(request *CreateDeployGroupRequest) (response 
 }
 
 // CreateDeployGroup
-// 本接口(CreateDeployGroup)用于创建放置实例的置放群组
+// 本接口（CreateDeployGroup）用于创建放置实例的置放群组。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDBERROR = "InternalError.CdbError"
@@ -1885,6 +1912,7 @@ func (c *Client) CreateDeployGroupWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateDeployGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateDeployGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDeployGroup require credential")
@@ -1917,7 +1945,9 @@ func NewCreateParamTemplateResponse() (response *CreateParamTemplateResponse) {
 }
 
 // CreateParamTemplate
-// 该接口（CreateParamTemplate）用于创建参数模板，全地域公共参数Region均为ap-guangzhou。
+// 该接口（CreateParamTemplate）用于创建参数模板。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1934,7 +1964,9 @@ func (c *Client) CreateParamTemplate(request *CreateParamTemplateRequest) (respo
 }
 
 // CreateParamTemplate
-// 该接口（CreateParamTemplate）用于创建参数模板，全地域公共参数Region均为ap-guangzhou。
+// 该接口（CreateParamTemplate）用于创建参数模板。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1950,6 +1982,7 @@ func (c *Client) CreateParamTemplateWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateParamTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateParamTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateParamTemplate require credential")
@@ -2031,6 +2064,7 @@ func (c *Client) CreateRoInstanceIpWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateRoInstanceIpRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateRoInstanceIp")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRoInstanceIp require credential")
@@ -2039,6 +2073,88 @@ func (c *Client) CreateRoInstanceIpWithContext(ctx context.Context, request *Cre
     request.SetContext(ctx)
     
     response = NewCreateRoInstanceIpResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRotationPasswordRequest() (request *CreateRotationPasswordRequest) {
+    request = &CreateRotationPasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "CreateRotationPassword")
+    
+    
+    return
+}
+
+func NewCreateRotationPasswordResponse() (response *CreateRotationPasswordResponse) {
+    response = &CreateRotationPasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRotationPassword
+// 本接口（CreateRotationPassword）用于开启密码轮转。
+//
+// 可能返回的错误码:
+//  CDBERROR = "CdbError"
+//  FAILEDOPERATION_CREATEROVIPERROR = "FailedOperation.CreateRoVipError"
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_DESERROR = "InternalError.DesError"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACTIONINPROCESS = "OperationDenied.ActionInProcess"
+//  OPERATIONDENIED_WRONGSTATUS = "OperationDenied.WrongStatus"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) CreateRotationPassword(request *CreateRotationPasswordRequest) (response *CreateRotationPasswordResponse, err error) {
+    return c.CreateRotationPasswordWithContext(context.Background(), request)
+}
+
+// CreateRotationPassword
+// 本接口（CreateRotationPassword）用于开启密码轮转。
+//
+// 可能返回的错误码:
+//  CDBERROR = "CdbError"
+//  FAILEDOPERATION_CREATEROVIPERROR = "FailedOperation.CreateRoVipError"
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_DESERROR = "InternalError.DesError"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACTIONINPROCESS = "OperationDenied.ActionInProcess"
+//  OPERATIONDENIED_WRONGSTATUS = "OperationDenied.WrongStatus"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) CreateRotationPasswordWithContext(ctx context.Context, request *CreateRotationPasswordRequest) (response *CreateRotationPasswordResponse, err error) {
+    if request == nil {
+        request = NewCreateRotationPasswordRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "CreateRotationPassword")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRotationPassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRotationPasswordResponse()
     err = c.Send(request, response)
     return
 }
@@ -2063,7 +2179,7 @@ func NewDeleteAccountsResponse() (response *DeleteAccountsResponse) {
 }
 
 // DeleteAccounts
-// 本接口(DeleteAccounts)用于删除云数据库的账户。
+// 本接口（DeleteAccounts）用于删除云数据库的账户。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEACCOUNTERROR = "FailedOperation.CreateAccountError"
@@ -2101,7 +2217,7 @@ func (c *Client) DeleteAccounts(request *DeleteAccountsRequest) (response *Delet
 }
 
 // DeleteAccounts
-// 本接口(DeleteAccounts)用于删除云数据库的账户。
+// 本接口（DeleteAccounts）用于删除云数据库的账户。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEACCOUNTERROR = "FailedOperation.CreateAccountError"
@@ -2138,6 +2254,7 @@ func (c *Client) DeleteAccountsWithContext(ctx context.Context, request *DeleteA
     if request == nil {
         request = NewDeleteAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAccounts require credential")
@@ -2193,6 +2310,7 @@ func (c *Client) DeleteAuditLogFileWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteAuditLogFileRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteAuditLogFile")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAuditLogFile require credential")
@@ -2270,6 +2388,7 @@ func (c *Client) DeleteAuditPolicyWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteAuditPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteAuditPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAuditPolicy require credential")
@@ -2302,6 +2421,10 @@ func NewDeleteAuditRuleResponse() (response *DeleteAuditRuleResponse) {
 }
 
 // DeleteAuditRule
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(DeleteAuditRule)用于删除用户的审计规则。
 //
 // 可能返回的错误码:
@@ -2321,6 +2444,10 @@ func (c *Client) DeleteAuditRule(request *DeleteAuditRuleRequest) (response *Del
 }
 
 // DeleteAuditRule
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(DeleteAuditRule)用于删除用户的审计规则。
 //
 // 可能返回的错误码:
@@ -2339,6 +2466,7 @@ func (c *Client) DeleteAuditRuleWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteAuditRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteAuditRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAuditRule require credential")
@@ -2371,7 +2499,7 @@ func NewDeleteAuditRuleTemplatesResponse() (response *DeleteAuditRuleTemplatesRe
 }
 
 // DeleteAuditRuleTemplates
-// 删除审计规则模板
+// 本接口（DeleteAuditRuleTemplates）用于删除审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -2381,7 +2509,7 @@ func (c *Client) DeleteAuditRuleTemplates(request *DeleteAuditRuleTemplatesReque
 }
 
 // DeleteAuditRuleTemplates
-// 删除审计规则模板
+// 本接口（DeleteAuditRuleTemplates）用于删除审计规则模板。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
@@ -2390,6 +2518,7 @@ func (c *Client) DeleteAuditRuleTemplatesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteAuditRuleTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteAuditRuleTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAuditRuleTemplates require credential")
@@ -2422,7 +2551,7 @@ func NewDeleteBackupResponse() (response *DeleteBackupResponse) {
 }
 
 // DeleteBackup
-// 本接口(DeleteBackup)用于删除数据库备份。本接口只支持删除手动发起的备份。
+// 本接口（DeleteBackup）用于删除数据库备份。本接口只支持删除手动发起的备份。
 //
 // 可能返回的错误码:
 //  CDBERROR_BACKUPERROR = "CdbError.BackupError"
@@ -2436,7 +2565,7 @@ func (c *Client) DeleteBackup(request *DeleteBackupRequest) (response *DeleteBac
 }
 
 // DeleteBackup
-// 本接口(DeleteBackup)用于删除数据库备份。本接口只支持删除手动发起的备份。
+// 本接口（DeleteBackup）用于删除数据库备份。本接口只支持删除手动发起的备份。
 //
 // 可能返回的错误码:
 //  CDBERROR_BACKUPERROR = "CdbError.BackupError"
@@ -2449,6 +2578,7 @@ func (c *Client) DeleteBackupWithContext(ctx context.Context, request *DeleteBac
     if request == nil {
         request = NewDeleteBackupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteBackup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBackup require credential")
@@ -2528,6 +2658,7 @@ func (c *Client) DeleteDatabaseWithContext(ctx context.Context, request *DeleteD
     if request == nil {
         request = NewDeleteDatabaseRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteDatabase")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDatabase require credential")
@@ -2589,6 +2720,7 @@ func (c *Client) DeleteDeployGroupsWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteDeployGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteDeployGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDeployGroups require credential")
@@ -2621,7 +2753,9 @@ func NewDeleteParamTemplateResponse() (response *DeleteParamTemplateResponse) {
 }
 
 // DeleteParamTemplate
-// 该接口（DeleteParamTemplate）用于删除参数模板，全地域公共参数Region均为ap-guangzhou。
+// 该接口（DeleteParamTemplate）用于删除参数模板。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2633,7 +2767,9 @@ func (c *Client) DeleteParamTemplate(request *DeleteParamTemplateRequest) (respo
 }
 
 // DeleteParamTemplate
-// 该接口（DeleteParamTemplate）用于删除参数模板，全地域公共参数Region均为ap-guangzhou。
+// 该接口（DeleteParamTemplate）用于删除参数模板。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2644,6 +2780,7 @@ func (c *Client) DeleteParamTemplateWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteParamTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteParamTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteParamTemplate require credential")
@@ -2652,6 +2789,62 @@ func (c *Client) DeleteParamTemplateWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDeleteParamTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRotationPasswordRequest() (request *DeleteRotationPasswordRequest) {
+    request = &DeleteRotationPasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DeleteRotationPassword")
+    
+    
+    return
+}
+
+func NewDeleteRotationPasswordResponse() (response *DeleteRotationPasswordResponse) {
+    response = &DeleteRotationPasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRotationPassword
+// 本接口（DeleteRotationPassword）用于关闭实例账户密码轮转。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteRotationPassword(request *DeleteRotationPasswordRequest) (response *DeleteRotationPasswordResponse, err error) {
+    return c.DeleteRotationPasswordWithContext(context.Background(), request)
+}
+
+// DeleteRotationPassword
+// 本接口（DeleteRotationPassword）用于关闭实例账户密码轮转。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteRotationPasswordWithContext(ctx context.Context, request *DeleteRotationPasswordRequest) (response *DeleteRotationPasswordResponse, err error) {
+    if request == nil {
+        request = NewDeleteRotationPasswordRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteRotationPassword")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRotationPassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRotationPasswordResponse()
     err = c.Send(request, response)
     return
 }
@@ -2676,7 +2869,7 @@ func NewDeleteTimeWindowResponse() (response *DeleteTimeWindowResponse) {
 }
 
 // DeleteTimeWindow
-// 本接口(DeleteTimeWindow)用于删除云数据库实例的维护时间窗口。删除实例维护时间窗口之后，默认的维护时间窗为 03:00-04:00，即当选择在维护时间窗口内切换访问新实例时，默认会在 03:00-04:00 点进行切换访问新实例。
+// 本接口（DeleteTimeWindow）用于删除云数据库实例的维护时间窗口。删除实例维护时间窗口之后，默认的维护时间窗为每天的03:00-04:00，数据校验延迟阈值为10秒，即当选择在维护时间窗口内切换访问新实例时，默认会在03:00-04:00点进行切换访问新实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2687,7 +2880,7 @@ func (c *Client) DeleteTimeWindow(request *DeleteTimeWindowRequest) (response *D
 }
 
 // DeleteTimeWindow
-// 本接口(DeleteTimeWindow)用于删除云数据库实例的维护时间窗口。删除实例维护时间窗口之后，默认的维护时间窗为 03:00-04:00，即当选择在维护时间窗口内切换访问新实例时，默认会在 03:00-04:00 点进行切换访问新实例。
+// 本接口（DeleteTimeWindow）用于删除云数据库实例的维护时间窗口。删除实例维护时间窗口之后，默认的维护时间窗为每天的03:00-04:00，数据校验延迟阈值为10秒，即当选择在维护时间窗口内切换访问新实例时，默认会在03:00-04:00点进行切换访问新实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2697,6 +2890,7 @@ func (c *Client) DeleteTimeWindowWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteTimeWindowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DeleteTimeWindow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTimeWindow require credential")
@@ -2729,7 +2923,7 @@ func NewDescribeAccountPrivilegesResponse() (response *DescribeAccountPrivileges
 }
 
 // DescribeAccountPrivileges
-// 本接口(DescribeAccountPrivileges)用于查询云数据库账户支持的权限信息。
+// 本接口（DescribeAccountPrivileges）用于查询云数据库账户支持的权限信息。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -2764,14 +2958,14 @@ func NewDescribeAccountPrivilegesResponse() (response *DescribeAccountPrivileges
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
 //  OPERATIONDENIED_NOTSUPPORTMODIFYLOCALROOTHOSTERROR = "OperationDenied.NotSupportModifyLocalRootHostError"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNSUPPORTEDOPERATION_PRIVILEGESUNSUPPORTEDERROR = "UnsupportedOperation.PrivilegesUnsupportedError"
 func (c *Client) DescribeAccountPrivileges(request *DescribeAccountPrivilegesRequest) (response *DescribeAccountPrivilegesResponse, err error) {
     return c.DescribeAccountPrivilegesWithContext(context.Background(), request)
 }
 
 // DescribeAccountPrivileges
-// 本接口(DescribeAccountPrivileges)用于查询云数据库账户支持的权限信息。
+// 本接口（DescribeAccountPrivileges）用于查询云数据库账户支持的权限信息。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -2806,12 +3000,13 @@ func (c *Client) DescribeAccountPrivileges(request *DescribeAccountPrivilegesReq
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
 //  OPERATIONDENIED_NOTSUPPORTMODIFYLOCALROOTHOSTERROR = "OperationDenied.NotSupportModifyLocalRootHostError"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNSUPPORTEDOPERATION_PRIVILEGESUNSUPPORTEDERROR = "UnsupportedOperation.PrivilegesUnsupportedError"
 func (c *Client) DescribeAccountPrivilegesWithContext(ctx context.Context, request *DescribeAccountPrivilegesRequest) (response *DescribeAccountPrivilegesResponse, err error) {
     if request == nil {
         request = NewDescribeAccountPrivilegesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAccountPrivileges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccountPrivileges require credential")
@@ -2844,7 +3039,7 @@ func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
 }
 
 // DescribeAccounts
-// 本接口(DescribeAccounts)用于查询云数据库的所有账户信息。
+// 本接口（DescribeAccounts）用于查询云数据库的所有账户信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEACCOUNTERROR = "FailedOperation.CreateAccountError"
@@ -2884,7 +3079,7 @@ func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
 //  OPERATIONDENIED_NOTSUPPORTMODIFYLOCALROOTHOSTERROR = "OperationDenied.NotSupportModifyLocalRootHostError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_PRIVILEGESUNSUPPORTEDERROR = "UnsupportedOperation.PrivilegesUnsupportedError"
 func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *DescribeAccountsResponse, err error) {
@@ -2892,7 +3087,7 @@ func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *D
 }
 
 // DescribeAccounts
-// 本接口(DescribeAccounts)用于查询云数据库的所有账户信息。
+// 本接口（DescribeAccounts）用于查询云数据库的所有账户信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEACCOUNTERROR = "FailedOperation.CreateAccountError"
@@ -2932,13 +3127,14 @@ func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *D
 //  OPERATIONDENIED_NOTSUPPORTMODIFYLOCALROOTHOSTERROR = "OperationDenied.NotSupportModifyLocalRootHostError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_PRIVILEGESUNSUPPORTEDERROR = "UnsupportedOperation.PrivilegesUnsupportedError"
 func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *DescribeAccountsRequest) (response *DescribeAccountsResponse, err error) {
     if request == nil {
         request = NewDescribeAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccounts require credential")
@@ -3000,6 +3196,7 @@ func (c *Client) DescribeAsyncRequestInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeAsyncRequestInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAsyncRequestInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAsyncRequestInfo require credential")
@@ -3061,6 +3258,7 @@ func (c *Client) DescribeAuditConfigWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeAuditConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditConfig require credential")
@@ -3093,7 +3291,7 @@ func NewDescribeAuditInstanceListResponse() (response *DescribeAuditInstanceList
 }
 
 // DescribeAuditInstanceList
-// 获取审计实例列表
+// 本接口（DescribeAuditInstanceList）用于获取审计实例列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
@@ -3108,7 +3306,7 @@ func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListReq
 }
 
 // DescribeAuditInstanceList
-// 获取审计实例列表
+// 本接口（DescribeAuditInstanceList）用于获取审计实例列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
@@ -3122,6 +3320,7 @@ func (c *Client) DescribeAuditInstanceListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAuditInstanceListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditInstanceList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditInstanceList require credential")
@@ -3154,10 +3353,11 @@ func NewDescribeAuditLogFilesResponse() (response *DescribeAuditLogFilesResponse
 }
 
 // DescribeAuditLogFiles
-// 本接口(DescribeAuditLogFiles)用于查询云数据库实例的审计日志文件。
+// 本接口（DescribeAuditLogFiles）用于查询云数据库实例的审计日志文件。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_TRANSACTIOBEGINERROR = "InternalError.TransactioBeginError"
 //  INTERNALERROR_TRANSACTIONBEGINERROR = "InternalError.TransactionBeginError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
@@ -3167,10 +3367,11 @@ func (c *Client) DescribeAuditLogFiles(request *DescribeAuditLogFilesRequest) (r
 }
 
 // DescribeAuditLogFiles
-// 本接口(DescribeAuditLogFiles)用于查询云数据库实例的审计日志文件。
+// 本接口（DescribeAuditLogFiles）用于查询云数据库实例的审计日志文件。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_TRANSACTIOBEGINERROR = "InternalError.TransactioBeginError"
 //  INTERNALERROR_TRANSACTIONBEGINERROR = "InternalError.TransactionBeginError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
@@ -3179,6 +3380,7 @@ func (c *Client) DescribeAuditLogFilesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAuditLogFilesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditLogFiles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditLogFiles require credential")
@@ -3211,7 +3413,7 @@ func NewDescribeAuditLogsResponse() (response *DescribeAuditLogsResponse) {
 }
 
 // DescribeAuditLogs
-// 本接口(DescribeAuditLogs)用于查询数据库审计日志。
+// 本接口（DescribeAuditLogs）用于查询数据库审计日志。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYAUDITTASKFAILERROR = "FailedOperation.QueryAuditTaskFailError"
@@ -3236,7 +3438,7 @@ func (c *Client) DescribeAuditLogs(request *DescribeAuditLogsRequest) (response 
 }
 
 // DescribeAuditLogs
-// 本接口(DescribeAuditLogs)用于查询数据库审计日志。
+// 本接口（DescribeAuditLogs）用于查询数据库审计日志。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYAUDITTASKFAILERROR = "FailedOperation.QueryAuditTaskFailError"
@@ -3260,6 +3462,7 @@ func (c *Client) DescribeAuditLogsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeAuditLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditLogs require credential")
@@ -3292,7 +3495,7 @@ func NewDescribeAuditPoliciesResponse() (response *DescribeAuditPoliciesResponse
 }
 
 // DescribeAuditPolicies
-// 本接口(DescribeAuditPolicies)用于查询云数据库实例的审计策略。
+// 本接口（DescribeAuditPolicies）用于查询云数据库实例的审计策略。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
@@ -3309,7 +3512,7 @@ func (c *Client) DescribeAuditPolicies(request *DescribeAuditPoliciesRequest) (r
 }
 
 // DescribeAuditPolicies
-// 本接口(DescribeAuditPolicies)用于查询云数据库实例的审计策略。
+// 本接口（DescribeAuditPolicies）用于查询云数据库实例的审计策略。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
@@ -3325,6 +3528,7 @@ func (c *Client) DescribeAuditPoliciesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAuditPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditPolicies require credential")
@@ -3357,7 +3561,7 @@ func NewDescribeAuditRuleTemplateModifyHistoryResponse() (response *DescribeAudi
 }
 
 // DescribeAuditRuleTemplateModifyHistory
-// 查询规则模板变更记录
+// 本接口（DescribeAuditRuleTemplateModifyHistory）用于查询规则模板变更记录。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
@@ -3366,7 +3570,7 @@ func (c *Client) DescribeAuditRuleTemplateModifyHistory(request *DescribeAuditRu
 }
 
 // DescribeAuditRuleTemplateModifyHistory
-// 查询规则模板变更记录
+// 本接口（DescribeAuditRuleTemplateModifyHistory）用于查询规则模板变更记录。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
@@ -3374,6 +3578,7 @@ func (c *Client) DescribeAuditRuleTemplateModifyHistoryWithContext(ctx context.C
     if request == nil {
         request = NewDescribeAuditRuleTemplateModifyHistoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditRuleTemplateModifyHistory")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditRuleTemplateModifyHistory require credential")
@@ -3406,7 +3611,7 @@ func NewDescribeAuditRuleTemplatesResponse() (response *DescribeAuditRuleTemplat
 }
 
 // DescribeAuditRuleTemplates
-// 查询审计规则模板信息
+// 本接口（DescribeAuditRuleTemplates）用于查询审计规则模板信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONACTIONERROR = "FailedOperation.DBOperationActionError"
@@ -3416,7 +3621,7 @@ func (c *Client) DescribeAuditRuleTemplates(request *DescribeAuditRuleTemplatesR
 }
 
 // DescribeAuditRuleTemplates
-// 查询审计规则模板信息
+// 本接口（DescribeAuditRuleTemplates）用于查询审计规则模板信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONACTIONERROR = "FailedOperation.DBOperationActionError"
@@ -3425,6 +3630,7 @@ func (c *Client) DescribeAuditRuleTemplatesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeAuditRuleTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditRuleTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditRuleTemplates require credential")
@@ -3457,6 +3663,10 @@ func NewDescribeAuditRulesResponse() (response *DescribeAuditRulesResponse) {
 }
 
 // DescribeAuditRules
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(DescribeAuditRules)用于查询用户在当前地域的审计规则。
 //
 // 可能返回的错误码:
@@ -3471,6 +3681,10 @@ func (c *Client) DescribeAuditRules(request *DescribeAuditRulesRequest) (respons
 }
 
 // DescribeAuditRules
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(DescribeAuditRules)用于查询用户在当前地域的审计规则。
 //
 // 可能返回的错误码:
@@ -3484,6 +3698,7 @@ func (c *Client) DescribeAuditRulesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeAuditRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeAuditRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditRules require credential")
@@ -3516,7 +3731,7 @@ func NewDescribeBackupConfigResponse() (response *DescribeBackupConfigResponse) 
 }
 
 // DescribeBackupConfig
-// 本接口(DescribeBackupConfig)用于查询数据库备份配置信息。
+// 本接口（DescribeBackupConfig）用于查询数据库备份配置信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
@@ -3533,7 +3748,7 @@ func (c *Client) DescribeBackupConfig(request *DescribeBackupConfigRequest) (res
 }
 
 // DescribeBackupConfig
-// 本接口(DescribeBackupConfig)用于查询数据库备份配置信息。
+// 本接口（DescribeBackupConfig）用于查询数据库备份配置信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
@@ -3549,6 +3764,7 @@ func (c *Client) DescribeBackupConfigWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBackupConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBackupConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupConfig require credential")
@@ -3581,7 +3797,7 @@ func NewDescribeBackupDecryptionKeyResponse() (response *DescribeBackupDecryptio
 }
 
 // DescribeBackupDecryptionKey
-// 本接口(DescribeBackupDecryptionKey)用于查询备份文件解密密钥。
+// 本接口（DescribeBackupDecryptionKey）用于查询备份文件解密密钥。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -3592,7 +3808,7 @@ func (c *Client) DescribeBackupDecryptionKey(request *DescribeBackupDecryptionKe
 }
 
 // DescribeBackupDecryptionKey
-// 本接口(DescribeBackupDecryptionKey)用于查询备份文件解密密钥。
+// 本接口（DescribeBackupDecryptionKey）用于查询备份文件解密密钥。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -3602,6 +3818,7 @@ func (c *Client) DescribeBackupDecryptionKeyWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeBackupDecryptionKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBackupDecryptionKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupDecryptionKey require credential")
@@ -3655,6 +3872,7 @@ func (c *Client) DescribeBackupDownloadRestrictionWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeBackupDownloadRestrictionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBackupDownloadRestriction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupDownloadRestriction require credential")
@@ -3706,6 +3924,7 @@ func (c *Client) DescribeBackupEncryptionStatusWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBackupEncryptionStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBackupEncryptionStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupEncryptionStatus require credential")
@@ -3765,6 +3984,7 @@ func (c *Client) DescribeBackupOverviewWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeBackupOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBackupOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupOverview require credential")
@@ -3797,7 +4017,7 @@ func NewDescribeBackupSummariesResponse() (response *DescribeBackupSummariesResp
 }
 
 // DescribeBackupSummaries
-// 本接口(DescribeBackupSummaries)用于查询备份的统计情况，返回以实例为维度的备份占用容量，以及每个实例的数据备份和日志备份的个数和容量（容量单位为字节）。
+// 本接口（DescribeBackupSummaries）用于查询备份的统计情况，返回以实例为维度的备份占用容量，以及每个实例的数据备份和日志备份的个数和容量（容量单位为字节）。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3813,7 +4033,7 @@ func (c *Client) DescribeBackupSummaries(request *DescribeBackupSummariesRequest
 }
 
 // DescribeBackupSummaries
-// 本接口(DescribeBackupSummaries)用于查询备份的统计情况，返回以实例为维度的备份占用容量，以及每个实例的数据备份和日志备份的个数和容量（容量单位为字节）。
+// 本接口（DescribeBackupSummaries）用于查询备份的统计情况，返回以实例为维度的备份占用容量，以及每个实例的数据备份和日志备份的个数和容量（容量单位为字节）。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3828,6 +4048,7 @@ func (c *Client) DescribeBackupSummariesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeBackupSummariesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBackupSummaries")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupSummaries require credential")
@@ -3911,6 +4132,7 @@ func (c *Client) DescribeBackupsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeBackupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBackups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackups require credential")
@@ -3968,6 +4190,7 @@ func (c *Client) DescribeBinlogBackupOverviewWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeBinlogBackupOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBinlogBackupOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBinlogBackupOverview require credential")
@@ -4037,6 +4260,7 @@ func (c *Client) DescribeBinlogsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeBinlogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeBinlogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBinlogs require credential")
@@ -4045,6 +4269,64 @@ func (c *Client) DescribeBinlogsWithContext(ctx context.Context, request *Descri
     request.SetContext(ctx)
     
     response = NewDescribeBinlogsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCPUExpandStrategyInfoRequest() (request *DescribeCPUExpandStrategyInfoRequest) {
+    request = &DescribeCPUExpandStrategyInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeCPUExpandStrategyInfo")
+    
+    
+    return
+}
+
+func NewDescribeCPUExpandStrategyInfoResponse() (response *DescribeCPUExpandStrategyInfoResponse) {
+    response = &DescribeCPUExpandStrategyInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCPUExpandStrategyInfo
+// 通过该 API 可以查询实例的 CPU 弹性扩容信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REMOTECALLUNMARSHALERROR = "FailedOperation.RemoteCallUnmarshalError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
+func (c *Client) DescribeCPUExpandStrategyInfo(request *DescribeCPUExpandStrategyInfoRequest) (response *DescribeCPUExpandStrategyInfoResponse, err error) {
+    return c.DescribeCPUExpandStrategyInfoWithContext(context.Background(), request)
+}
+
+// DescribeCPUExpandStrategyInfo
+// 通过该 API 可以查询实例的 CPU 弹性扩容信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REMOTECALLUNMARSHALERROR = "FailedOperation.RemoteCallUnmarshalError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
+func (c *Client) DescribeCPUExpandStrategyInfoWithContext(ctx context.Context, request *DescribeCPUExpandStrategyInfoRequest) (response *DescribeCPUExpandStrategyInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeCPUExpandStrategyInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeCPUExpandStrategyInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCPUExpandStrategyInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCPUExpandStrategyInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -4069,7 +4351,7 @@ func NewDescribeCdbProxyInfoResponse() (response *DescribeCdbProxyInfoResponse) 
 }
 
 // DescribeCdbProxyInfo
-// 查询数据库代理详情信息
+// 本接口（DescribeCdbProxyInfo）用于查询数据库代理详情信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -4082,7 +4364,7 @@ func (c *Client) DescribeCdbProxyInfo(request *DescribeCdbProxyInfoRequest) (res
 }
 
 // DescribeCdbProxyInfo
-// 查询数据库代理详情信息
+// 本接口（DescribeCdbProxyInfo）用于查询数据库代理详情信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -4094,6 +4376,7 @@ func (c *Client) DescribeCdbProxyInfoWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeCdbProxyInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeCdbProxyInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCdbProxyInfo require credential")
@@ -4151,6 +4434,7 @@ func (c *Client) DescribeCdbZoneConfigWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeCdbZoneConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeCdbZoneConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCdbZoneConfig require credential")
@@ -4183,7 +4467,7 @@ func NewDescribeCloneListResponse() (response *DescribeCloneListResponse) {
 }
 
 // DescribeCloneList
-// 本接口(DescribeCloneList) 用于查询用户实例的克隆任务列表。
+// 本接口（DescribeCloneList）用于查询用户实例的克隆任务列表。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -4194,7 +4478,7 @@ func (c *Client) DescribeCloneList(request *DescribeCloneListRequest) (response 
 }
 
 // DescribeCloneList
-// 本接口(DescribeCloneList) 用于查询用户实例的克隆任务列表。
+// 本接口（DescribeCloneList）用于查询用户实例的克隆任务列表。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -4204,6 +4488,7 @@ func (c *Client) DescribeCloneListWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeCloneListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeCloneList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloneList require credential")
@@ -4236,7 +4521,7 @@ func NewDescribeClusterInfoResponse() (response *DescribeClusterInfoResponse) {
 }
 
 // DescribeClusterInfo
-// 本接口(DescribeClusterInfo)用于查询集群版实例信息。
+// 本接口（DescribeClusterInfo）用于查询云盘版实例信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
@@ -4247,7 +4532,7 @@ func (c *Client) DescribeClusterInfo(request *DescribeClusterInfoRequest) (respo
 }
 
 // DescribeClusterInfo
-// 本接口(DescribeClusterInfo)用于查询集群版实例信息。
+// 本接口（DescribeClusterInfo）用于查询云盘版实例信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
@@ -4257,6 +4542,7 @@ func (c *Client) DescribeClusterInfoWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeClusterInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeClusterInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterInfo require credential")
@@ -4269,59 +4555,56 @@ func (c *Client) DescribeClusterInfoWithContext(ctx context.Context, request *De
     return
 }
 
-func NewDescribeCpuExpandStrategyRequest() (request *DescribeCpuExpandStrategyRequest) {
-    request = &DescribeCpuExpandStrategyRequest{
+func NewDescribeCpuExpandHistoryRequest() (request *DescribeCpuExpandHistoryRequest) {
+    request = &DescribeCpuExpandHistoryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cdb", APIVersion, "DescribeCpuExpandStrategy")
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeCpuExpandHistory")
     
     
     return
 }
 
-func NewDescribeCpuExpandStrategyResponse() (response *DescribeCpuExpandStrategyResponse) {
-    response = &DescribeCpuExpandStrategyResponse{
+func NewDescribeCpuExpandHistoryResponse() (response *DescribeCpuExpandHistoryResponse) {
+    response = &DescribeCpuExpandHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// DescribeCpuExpandStrategy
-// 通过该 API 可以查询实例的 CPU 弹性扩容策略
+// DescribeCpuExpandHistory
+// 本接口（DescribeCpuExpandHistory）用于查询扩容历史。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_REMOTECALLUNMARSHALERROR = "FailedOperation.RemoteCallUnmarshalError"
-//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
-//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
-func (c *Client) DescribeCpuExpandStrategy(request *DescribeCpuExpandStrategyRequest) (response *DescribeCpuExpandStrategyResponse, err error) {
-    return c.DescribeCpuExpandStrategyWithContext(context.Background(), request)
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeCpuExpandHistory(request *DescribeCpuExpandHistoryRequest) (response *DescribeCpuExpandHistoryResponse, err error) {
+    return c.DescribeCpuExpandHistoryWithContext(context.Background(), request)
 }
 
-// DescribeCpuExpandStrategy
-// 通过该 API 可以查询实例的 CPU 弹性扩容策略
+// DescribeCpuExpandHistory
+// 本接口（DescribeCpuExpandHistory）用于查询扩容历史。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_REMOTECALLUNMARSHALERROR = "FailedOperation.RemoteCallUnmarshalError"
-//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
-//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
-func (c *Client) DescribeCpuExpandStrategyWithContext(ctx context.Context, request *DescribeCpuExpandStrategyRequest) (response *DescribeCpuExpandStrategyResponse, err error) {
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeCpuExpandHistoryWithContext(ctx context.Context, request *DescribeCpuExpandHistoryRequest) (response *DescribeCpuExpandHistoryResponse, err error) {
     if request == nil {
-        request = NewDescribeCpuExpandStrategyRequest()
+        request = NewDescribeCpuExpandHistoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeCpuExpandHistory")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCpuExpandStrategy require credential")
+        return nil, errors.New("DescribeCpuExpandHistory require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeCpuExpandStrategyResponse()
+    response = NewDescribeCpuExpandHistoryResponse()
     err = c.Send(request, response)
     return
 }
@@ -4346,7 +4629,7 @@ func NewDescribeDBFeaturesResponse() (response *DescribeDBFeaturesResponse) {
 }
 
 // DescribeDBFeatures
-// 本接口(DescribeDBFeatures)用于查询云数据库版本属性，包括是否支持数据库加密、数据库审计等功能。
+// 本接口（DescribeDBFeatures）用于查询云数据库版本属性，包括是否支持数据库加密、数据库审计等功能。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4363,7 +4646,7 @@ func (c *Client) DescribeDBFeatures(request *DescribeDBFeaturesRequest) (respons
 }
 
 // DescribeDBFeatures
-// 本接口(DescribeDBFeatures)用于查询云数据库版本属性，包括是否支持数据库加密、数据库审计等功能。
+// 本接口（DescribeDBFeatures）用于查询云数据库版本属性，包括是否支持数据库加密、数据库审计等功能。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4379,6 +4662,7 @@ func (c *Client) DescribeDBFeaturesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeDBFeaturesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBFeatures")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBFeatures require credential")
@@ -4434,6 +4718,7 @@ func (c *Client) DescribeDBImportRecordsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeDBImportRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBImportRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBImportRecords require credential")
@@ -4503,6 +4788,7 @@ func (c *Client) DescribeDBInstanceCharsetWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeDBInstanceCharsetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBInstanceCharset")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceCharset require credential")
@@ -4535,7 +4821,7 @@ func NewDescribeDBInstanceConfigResponse() (response *DescribeDBInstanceConfigRe
 }
 
 // DescribeDBInstanceConfig
-// 本接口(DescribeDBInstanceConfig)用于云数据库实例的配置信息，包括同步模式，部署模式等。
+// 本接口（DescribeDBInstanceConfig）用于查询云数据库实例的配置信息，包括同步模式，部署模式等。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4557,7 +4843,7 @@ func (c *Client) DescribeDBInstanceConfig(request *DescribeDBInstanceConfigReque
 }
 
 // DescribeDBInstanceConfig
-// 本接口(DescribeDBInstanceConfig)用于云数据库实例的配置信息，包括同步模式，部署模式等。
+// 本接口（DescribeDBInstanceConfig）用于查询云数据库实例的配置信息，包括同步模式，部署模式等。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4578,6 +4864,7 @@ func (c *Client) DescribeDBInstanceConfigWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDBInstanceConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBInstanceConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceConfig require credential")
@@ -4639,6 +4926,7 @@ func (c *Client) DescribeDBInstanceGTIDWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeDBInstanceGTIDRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBInstanceGTID")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceGTID require credential")
@@ -4671,7 +4959,7 @@ func NewDescribeDBInstanceInfoResponse() (response *DescribeDBInstanceInfoRespon
 }
 
 // DescribeDBInstanceInfo
-// 查询实例基本信息（实例 ID ，实例名称，是否开通加密 ）
+// 本接口（DescribeDBInstanceInfo）用于查询实例基本信息（实例 ID，实例名称，是否开通加密），只读实例不支持查询。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4687,7 +4975,7 @@ func (c *Client) DescribeDBInstanceInfo(request *DescribeDBInstanceInfoRequest) 
 }
 
 // DescribeDBInstanceInfo
-// 查询实例基本信息（实例 ID ，实例名称，是否开通加密 ）
+// 本接口（DescribeDBInstanceInfo）用于查询实例基本信息（实例 ID，实例名称，是否开通加密），只读实例不支持查询。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4702,6 +4990,7 @@ func (c *Client) DescribeDBInstanceInfoWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeDBInstanceInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBInstanceInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceInfo require credential")
@@ -4734,7 +5023,7 @@ func NewDescribeDBInstanceLogToCLSResponse() (response *DescribeDBInstanceLogToC
 }
 
 // DescribeDBInstanceLogToCLS
-// 本接口(DescribeDBInstanceLogToCLS)用于查询实例慢日志、错误日志投递CLS的配置，通过AppId、Region以及实例ID过滤出当前实例日志投递CLS的配置。
+// 本接口（DescribeDBInstanceLogToCLS）用于查询实例慢日志、错误日志投递CLS的配置，通过AppId、Region以及实例ID过滤出当前实例日志投递CLS的配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TIMEOUTERROR = "FailedOperation.TimeoutError"
@@ -4750,7 +5039,7 @@ func (c *Client) DescribeDBInstanceLogToCLS(request *DescribeDBInstanceLogToCLSR
 }
 
 // DescribeDBInstanceLogToCLS
-// 本接口(DescribeDBInstanceLogToCLS)用于查询实例慢日志、错误日志投递CLS的配置，通过AppId、Region以及实例ID过滤出当前实例日志投递CLS的配置。
+// 本接口（DescribeDBInstanceLogToCLS）用于查询实例慢日志、错误日志投递CLS的配置，通过AppId、Region以及实例ID过滤出当前实例日志投递CLS的配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TIMEOUTERROR = "FailedOperation.TimeoutError"
@@ -4765,6 +5054,7 @@ func (c *Client) DescribeDBInstanceLogToCLSWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeDBInstanceLogToCLSRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBInstanceLogToCLS")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceLogToCLS require credential")
@@ -4797,7 +5087,7 @@ func NewDescribeDBInstanceRebootTimeResponse() (response *DescribeDBInstanceRebo
 }
 
 // DescribeDBInstanceRebootTime
-// 本接口(DescribeDBInstanceRebootTime)用于查询云数据库实例重启预计所需的时间。
+// 本接口（DescribeDBInstanceRebootTime）用于查询云数据库实例重启预计所需的时间。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4808,7 +5098,7 @@ func (c *Client) DescribeDBInstanceRebootTime(request *DescribeDBInstanceRebootT
 }
 
 // DescribeDBInstanceRebootTime
-// 本接口(DescribeDBInstanceRebootTime)用于查询云数据库实例重启预计所需的时间。
+// 本接口（DescribeDBInstanceRebootTime）用于查询云数据库实例重启预计所需的时间。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4818,6 +5108,7 @@ func (c *Client) DescribeDBInstanceRebootTimeWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeDBInstanceRebootTimeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBInstanceRebootTime")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceRebootTime require credential")
@@ -4850,7 +5141,7 @@ func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
 }
 
 // DescribeDBInstances
-// 本接口(DescribeDBInstances)用于查询云数据库实例列表，支持通过项目 ID、实例 ID、访问地址、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
+// 本接口（DescribeDBInstances）用于查询云数据库实例列表，支持通过项目 ID、实例 ID、访问地址、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4876,7 +5167,7 @@ func (c *Client) DescribeDBInstances(request *DescribeDBInstancesRequest) (respo
 }
 
 // DescribeDBInstances
-// 本接口(DescribeDBInstances)用于查询云数据库实例列表，支持通过项目 ID、实例 ID、访问地址、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
+// 本接口（DescribeDBInstances）用于查询云数据库实例列表，支持通过项目 ID、实例 ID、访问地址、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4901,6 +5192,7 @@ func (c *Client) DescribeDBInstancesWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstances require credential")
@@ -4933,7 +5225,7 @@ func NewDescribeDBPriceResponse() (response *DescribeDBPriceResponse) {
 }
 
 // DescribeDBPrice
-// 本接口(DescribeDBPrice)用于查询购买或续费云数据库实例的价格，支持查询按量计费或者包年包月的价格。可传入实例类型、购买时长、购买数量、内存大小、硬盘大小和可用区信息等来查询实例价格。可传入实例名称来查询实例续费价格。
+// 本接口（DescribeDBPrice）用于查询购买或续费云数据库实例的价格，支持查询按量计费或者包年包月的价格。可传入实例类型、购买时长、购买数量、内存大小、硬盘大小和可用区信息等来查询实例价格。可传入实例名称来查询实例续费价格。
 //
 // 
 //
@@ -4951,7 +5243,7 @@ func (c *Client) DescribeDBPrice(request *DescribeDBPriceRequest) (response *Des
 }
 
 // DescribeDBPrice
-// 本接口(DescribeDBPrice)用于查询购买或续费云数据库实例的价格，支持查询按量计费或者包年包月的价格。可传入实例类型、购买时长、购买数量、内存大小、硬盘大小和可用区信息等来查询实例价格。可传入实例名称来查询实例续费价格。
+// 本接口（DescribeDBPrice）用于查询购买或续费云数据库实例的价格，支持查询按量计费或者包年包月的价格。可传入实例类型、购买时长、购买数量、内存大小、硬盘大小和可用区信息等来查询实例价格。可传入实例名称来查询实例续费价格。
 //
 // 
 //
@@ -4968,6 +5260,7 @@ func (c *Client) DescribeDBPriceWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeDBPriceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBPrice")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBPrice require credential")
@@ -5047,6 +5340,7 @@ func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDBSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBSecurityGroups require credential")
@@ -5108,6 +5402,7 @@ func (c *Client) DescribeDBSwitchRecordsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeDBSwitchRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDBSwitchRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBSwitchRecords require credential")
@@ -5163,6 +5458,7 @@ func (c *Client) DescribeDataBackupOverviewWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeDataBackupOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDataBackupOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDataBackupOverview require credential")
@@ -5238,6 +5534,7 @@ func (c *Client) DescribeDatabasesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDatabasesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDatabases")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatabases require credential")
@@ -5299,6 +5596,7 @@ func (c *Client) DescribeDefaultParamsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeDefaultParamsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDefaultParams")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDefaultParams require credential")
@@ -5360,6 +5658,7 @@ func (c *Client) DescribeDeployGroupListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeDeployGroupListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDeployGroupList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDeployGroupList require credential")
@@ -5431,6 +5730,7 @@ func (c *Client) DescribeDeviceMonitorInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeDeviceMonitorInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeDeviceMonitorInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDeviceMonitorInfo require credential")
@@ -5510,6 +5810,7 @@ func (c *Client) DescribeErrorLogDataWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeErrorLogDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeErrorLogData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeErrorLogData require credential")
@@ -5542,7 +5843,7 @@ func NewDescribeInstanceAlarmEventsResponse() (response *DescribeInstanceAlarmEv
 }
 
 // DescribeInstanceAlarmEvents
-// 查询实例发生的事件信息
+// 本接口（DescribeInstanceAlarmEvents）用于查询实例发生的事件信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYLOGERROR = "FailedOperation.QueryLogError"
@@ -5564,7 +5865,7 @@ func (c *Client) DescribeInstanceAlarmEvents(request *DescribeInstanceAlarmEvent
 }
 
 // DescribeInstanceAlarmEvents
-// 查询实例发生的事件信息
+// 本接口（DescribeInstanceAlarmEvents）用于查询实例发生的事件信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYLOGERROR = "FailedOperation.QueryLogError"
@@ -5585,6 +5886,7 @@ func (c *Client) DescribeInstanceAlarmEventsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeInstanceAlarmEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeInstanceAlarmEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceAlarmEvents require credential")
@@ -5646,6 +5948,7 @@ func (c *Client) DescribeInstanceParamRecordsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeInstanceParamRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeInstanceParamRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceParamRecords require credential")
@@ -5715,6 +6018,7 @@ func (c *Client) DescribeInstanceParamsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceParamsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeInstanceParams")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceParams require credential")
@@ -5723,6 +6027,118 @@ func (c *Client) DescribeInstanceParamsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeInstanceParamsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceUpgradeCheckJobRequest() (request *DescribeInstanceUpgradeCheckJobRequest) {
+    request = &DescribeInstanceUpgradeCheckJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeInstanceUpgradeCheckJob")
+    
+    
+    return
+}
+
+func NewDescribeInstanceUpgradeCheckJobResponse() (response *DescribeInstanceUpgradeCheckJobResponse) {
+    response = &DescribeInstanceUpgradeCheckJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceUpgradeCheckJob
+// 该接口（DescribeInstanceUpgradeCheckJob）查询实例版本升级校验任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_INSTANCETASKSTATUSERROR = "OperationDenied.InstanceTaskStatusError"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) DescribeInstanceUpgradeCheckJob(request *DescribeInstanceUpgradeCheckJobRequest) (response *DescribeInstanceUpgradeCheckJobResponse, err error) {
+    return c.DescribeInstanceUpgradeCheckJobWithContext(context.Background(), request)
+}
+
+// DescribeInstanceUpgradeCheckJob
+// 该接口（DescribeInstanceUpgradeCheckJob）查询实例版本升级校验任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_INSTANCETASKSTATUSERROR = "OperationDenied.InstanceTaskStatusError"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) DescribeInstanceUpgradeCheckJobWithContext(ctx context.Context, request *DescribeInstanceUpgradeCheckJobRequest) (response *DescribeInstanceUpgradeCheckJobResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceUpgradeCheckJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeInstanceUpgradeCheckJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceUpgradeCheckJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceUpgradeCheckJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceUpgradeTypeRequest() (request *DescribeInstanceUpgradeTypeRequest) {
+    request = &DescribeInstanceUpgradeTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeInstanceUpgradeType")
+    
+    
+    return
+}
+
+func NewDescribeInstanceUpgradeTypeResponse() (response *DescribeInstanceUpgradeTypeResponse) {
+    response = &DescribeInstanceUpgradeTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceUpgradeType
+// 本接口（DescribeInstanceUpgradeType）用于查询数据库实例升级类型。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_INSTANCETASKSTATUSERROR = "OperationDenied.InstanceTaskStatusError"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) DescribeInstanceUpgradeType(request *DescribeInstanceUpgradeTypeRequest) (response *DescribeInstanceUpgradeTypeResponse, err error) {
+    return c.DescribeInstanceUpgradeTypeWithContext(context.Background(), request)
+}
+
+// DescribeInstanceUpgradeType
+// 本接口（DescribeInstanceUpgradeType）用于查询数据库实例升级类型。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_INSTANCETASKSTATUSERROR = "OperationDenied.InstanceTaskStatusError"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) DescribeInstanceUpgradeTypeWithContext(ctx context.Context, request *DescribeInstanceUpgradeTypeRequest) (response *DescribeInstanceUpgradeTypeResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceUpgradeTypeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeInstanceUpgradeType")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceUpgradeType require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceUpgradeTypeResponse()
     err = c.Send(request, response)
     return
 }
@@ -5768,6 +6184,7 @@ func (c *Client) DescribeLocalBinlogConfigWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLocalBinlogConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeLocalBinlogConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLocalBinlogConfig require credential")
@@ -5800,7 +6217,9 @@ func NewDescribeParamTemplateInfoResponse() (response *DescribeParamTemplateInfo
 }
 
 // DescribeParamTemplateInfo
-// 该接口（DescribeParamTemplateInfo）用于查询参数模板详情，全地域公共参数Region均为ap-guangzhou。
+// 该接口（DescribeParamTemplateInfo）用于查询参数模板详情。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5813,7 +6232,9 @@ func (c *Client) DescribeParamTemplateInfo(request *DescribeParamTemplateInfoReq
 }
 
 // DescribeParamTemplateInfo
-// 该接口（DescribeParamTemplateInfo）用于查询参数模板详情，全地域公共参数Region均为ap-guangzhou。
+// 该接口（DescribeParamTemplateInfo）用于查询参数模板详情。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5825,6 +6246,7 @@ func (c *Client) DescribeParamTemplateInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeParamTemplateInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeParamTemplateInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeParamTemplateInfo require credential")
@@ -5857,7 +6279,9 @@ func NewDescribeParamTemplatesResponse() (response *DescribeParamTemplatesRespon
 }
 
 // DescribeParamTemplates
-// 该接口（DescribeParamTemplates）查询参数模板列表，全地域公共参数Region均为ap-guangzhou。
+// 该接口（DescribeParamTemplates）查询参数模板列表。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5871,7 +6295,9 @@ func (c *Client) DescribeParamTemplates(request *DescribeParamTemplatesRequest) 
 }
 
 // DescribeParamTemplates
-// 该接口（DescribeParamTemplates）查询参数模板列表，全地域公共参数Region均为ap-guangzhou。
+// 该接口（DescribeParamTemplates）查询参数模板列表。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5884,6 +6310,7 @@ func (c *Client) DescribeParamTemplatesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeParamTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeParamTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeParamTemplates require credential")
@@ -5945,6 +6372,7 @@ func (c *Client) DescribeProjectSecurityGroupsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeProjectSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeProjectSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProjectSecurityGroups require credential")
@@ -5996,6 +6424,7 @@ func (c *Client) DescribeProxyCustomConfWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeProxyCustomConfRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeProxyCustomConf")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProxyCustomConf require credential")
@@ -6028,7 +6457,7 @@ func NewDescribeProxySupportParamResponse() (response *DescribeProxySupportParam
 }
 
 // DescribeProxySupportParam
-// 查询实例支持代理版本和参数
+// 本接口（DescribeProxySupportParam）用于查询实例支持代理版本和参数。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -6042,7 +6471,7 @@ func (c *Client) DescribeProxySupportParam(request *DescribeProxySupportParamReq
 }
 
 // DescribeProxySupportParam
-// 查询实例支持代理版本和参数
+// 本接口（DescribeProxySupportParam）用于查询实例支持代理版本和参数。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -6055,6 +6484,7 @@ func (c *Client) DescribeProxySupportParamWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeProxySupportParamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeProxySupportParam")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProxySupportParam require credential")
@@ -6106,6 +6536,7 @@ func (c *Client) DescribeRemoteBackupConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeRemoteBackupConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeRemoteBackupConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRemoteBackupConfig require credential")
@@ -6138,7 +6569,7 @@ func NewDescribeRoGroupsResponse() (response *DescribeRoGroupsResponse) {
 }
 
 // DescribeRoGroups
-// 本接口(DescribeRoGroups)用于查询云数据库实例的所有的RO组的信息。
+// 本接口（DescribeRoGroups）用于查询云数据库实例的所有的 RO 组的信息。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -6156,7 +6587,7 @@ func (c *Client) DescribeRoGroups(request *DescribeRoGroupsRequest) (response *D
 }
 
 // DescribeRoGroups
-// 本接口(DescribeRoGroups)用于查询云数据库实例的所有的RO组的信息。
+// 本接口（DescribeRoGroups）用于查询云数据库实例的所有的 RO 组的信息。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -6173,6 +6604,7 @@ func (c *Client) DescribeRoGroupsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeRoGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeRoGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRoGroups require credential")
@@ -6232,6 +6664,7 @@ func (c *Client) DescribeRoMinScaleWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeRoMinScaleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeRoMinScale")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRoMinScale require credential")
@@ -6291,6 +6724,7 @@ func (c *Client) DescribeRollbackRangeTimeWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRollbackRangeTimeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeRollbackRangeTime")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRollbackRangeTime require credential")
@@ -6323,7 +6757,7 @@ func NewDescribeRollbackTaskDetailResponse() (response *DescribeRollbackTaskDeta
 }
 
 // DescribeRollbackTaskDetail
-// 本接口(DescribeRollbackTaskDetail)用于查询云数据库实例回档任务详情。
+// 本接口（DescribeRollbackTaskDetail）用于查询云数据库实例回档任务详情。
 //
 // 可能返回的错误码:
 //  CDBERROR_DATABASEERROR = "CdbError.DatabaseError"
@@ -6335,7 +6769,7 @@ func (c *Client) DescribeRollbackTaskDetail(request *DescribeRollbackTaskDetailR
 }
 
 // DescribeRollbackTaskDetail
-// 本接口(DescribeRollbackTaskDetail)用于查询云数据库实例回档任务详情。
+// 本接口（DescribeRollbackTaskDetail）用于查询云数据库实例回档任务详情。
 //
 // 可能返回的错误码:
 //  CDBERROR_DATABASEERROR = "CdbError.DatabaseError"
@@ -6346,6 +6780,7 @@ func (c *Client) DescribeRollbackTaskDetailWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeRollbackTaskDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeRollbackTaskDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRollbackTaskDetail require credential")
@@ -6378,7 +6813,7 @@ func NewDescribeSSLStatusResponse() (response *DescribeSSLStatusResponse) {
 }
 
 // DescribeSSLStatus
-// 查询 SSL 开通情况。如果已经开通 SSL ，会同步返回证书下载链接。
+// 本接口（DescribeSSLStatus）用于查询 SSL 开通情况。如果已经开通 SSL ，会同步返回证书下载链接。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -6393,7 +6828,7 @@ func (c *Client) DescribeSSLStatus(request *DescribeSSLStatusRequest) (response 
 }
 
 // DescribeSSLStatus
-// 查询 SSL 开通情况。如果已经开通 SSL ，会同步返回证书下载链接。
+// 本接口（DescribeSSLStatus）用于查询 SSL 开通情况。如果已经开通 SSL ，会同步返回证书下载链接。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -6407,6 +6842,7 @@ func (c *Client) DescribeSSLStatusWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeSSLStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeSSLStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSSLStatus require credential")
@@ -6439,7 +6875,7 @@ func NewDescribeSlowLogDataResponse() (response *DescribeSlowLogDataResponse) {
 }
 
 // DescribeSlowLogData
-// 条件检索实例的慢日志。只允许查看一个月之内的慢日志。
+// 本接口（DescribeSlowLogData）用于使用条件检索实例的慢日志。只允许查看一个月之内的慢日志。
 //
 // 使用时需要注意：可能存在单条慢日志太大，导致整个http请求的回包太大，进而引发接口超时。一旦发生超时，建议您缩小查询时的Limit参数值，从而降低包的大小，让接口能够及时返回内容。
 //
@@ -6465,7 +6901,7 @@ func (c *Client) DescribeSlowLogData(request *DescribeSlowLogDataRequest) (respo
 }
 
 // DescribeSlowLogData
-// 条件检索实例的慢日志。只允许查看一个月之内的慢日志。
+// 本接口（DescribeSlowLogData）用于使用条件检索实例的慢日志。只允许查看一个月之内的慢日志。
 //
 // 使用时需要注意：可能存在单条慢日志太大，导致整个http请求的回包太大，进而引发接口超时。一旦发生超时，建议您缩小查询时的Limit参数值，从而降低包的大小，让接口能够及时返回内容。
 //
@@ -6490,6 +6926,7 @@ func (c *Client) DescribeSlowLogDataWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeSlowLogDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeSlowLogData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSlowLogData require credential")
@@ -6522,7 +6959,9 @@ func NewDescribeSlowLogsResponse() (response *DescribeSlowLogsResponse) {
 }
 
 // DescribeSlowLogs
-// 本接口(DescribeSlowLogs)用于获取云数据库实例的慢查询日志。说明：若单次查询数据量过大，则有可能响应超时，建议缩短单次查询时间范围，如一小时，避免导致超时。
+// 本接口（DescribeSlowLogs）用于获取云数据库实例的慢查询日志。
+//
+// 说明：若单次查询数据量过大，则有可能响应超时，建议缩短单次查询时间范围，如一小时，避免导致超时。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6541,7 +6980,9 @@ func (c *Client) DescribeSlowLogs(request *DescribeSlowLogsRequest) (response *D
 }
 
 // DescribeSlowLogs
-// 本接口(DescribeSlowLogs)用于获取云数据库实例的慢查询日志。说明：若单次查询数据量过大，则有可能响应超时，建议缩短单次查询时间范围，如一小时，避免导致超时。
+// 本接口（DescribeSlowLogs）用于获取云数据库实例的慢查询日志。
+//
+// 说明：若单次查询数据量过大，则有可能响应超时，建议缩短单次查询时间范围，如一小时，避免导致超时。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6559,6 +7000,7 @@ func (c *Client) DescribeSlowLogsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeSlowLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeSlowLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSlowLogs require credential")
@@ -6660,6 +7102,7 @@ func (c *Client) DescribeSupportedPrivilegesWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeSupportedPrivilegesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeSupportedPrivileges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSupportedPrivileges require credential")
@@ -6668,6 +7111,58 @@ func (c *Client) DescribeSupportedPrivilegesWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDescribeSupportedPrivilegesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTableColumnsRequest() (request *DescribeTableColumnsRequest) {
+    request = &DescribeTableColumnsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeTableColumns")
+    
+    
+    return
+}
+
+func NewDescribeTableColumnsResponse() (response *DescribeTableColumnsResponse) {
+    response = &DescribeTableColumnsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTableColumns
+// 本接口（DescribeTableColumns）用于查询云数据库实例的指定数据库表的列信息，仅支持主实例和灾备实例。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+func (c *Client) DescribeTableColumns(request *DescribeTableColumnsRequest) (response *DescribeTableColumnsResponse, err error) {
+    return c.DescribeTableColumnsWithContext(context.Background(), request)
+}
+
+// DescribeTableColumns
+// 本接口（DescribeTableColumns）用于查询云数据库实例的指定数据库表的列信息，仅支持主实例和灾备实例。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+func (c *Client) DescribeTableColumnsWithContext(ctx context.Context, request *DescribeTableColumnsRequest) (response *DescribeTableColumnsResponse, err error) {
+    if request == nil {
+        request = NewDescribeTableColumnsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeTableColumns")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTableColumns require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTableColumnsResponse()
     err = c.Send(request, response)
     return
 }
@@ -6725,6 +7220,7 @@ func (c *Client) DescribeTablesWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeTablesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeTables")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTables require credential")
@@ -6757,7 +7253,7 @@ func NewDescribeTagsOfInstanceIdsResponse() (response *DescribeTagsOfInstanceIds
 }
 
 // DescribeTagsOfInstanceIds
-// 本接口(DescribeTagsOfInstanceIds)用于获取云数据库实例的标签信息。
+// 本接口（DescribeTagsOfInstanceIds）用于获取云数据库实例的标签信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6776,7 +7272,7 @@ func (c *Client) DescribeTagsOfInstanceIds(request *DescribeTagsOfInstanceIdsReq
 }
 
 // DescribeTagsOfInstanceIds
-// 本接口(DescribeTagsOfInstanceIds)用于获取云数据库实例的标签信息。
+// 本接口（DescribeTagsOfInstanceIds）用于获取云数据库实例的标签信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6794,6 +7290,7 @@ func (c *Client) DescribeTagsOfInstanceIdsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeTagsOfInstanceIdsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeTagsOfInstanceIds")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagsOfInstanceIds require credential")
@@ -6867,6 +7364,7 @@ func (c *Client) DescribeTasksWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTasks require credential")
@@ -6924,6 +7422,7 @@ func (c *Client) DescribeTimeWindowWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeTimeWindowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeTimeWindow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTimeWindow require credential")
@@ -6979,6 +7478,7 @@ func (c *Client) DescribeUploadedFilesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeUploadedFilesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeUploadedFiles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUploadedFiles require credential")
@@ -7044,6 +7544,7 @@ func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDisassociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DisassociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateSecurityGroups require credential")
@@ -7052,73 +7553,6 @@ func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDisassociateSecurityGroupsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewInitDBInstancesRequest() (request *InitDBInstancesRequest) {
-    request = &InitDBInstancesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "InitDBInstances")
-    
-    
-    return
-}
-
-func NewInitDBInstancesResponse() (response *InitDBInstancesResponse) {
-    response = &InitDBInstancesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// InitDBInstances
-// 该接口不再维护，参考CreateDBInstance+API文档，在发货时即可完成初始化。
-//
-// 
-//
-// 本接口(InitDBInstances)用于初始化云数据库实例，包括初始化密码、默认字符集、实例端口号等。该接口已经废弃，在发货接口CreateDBInstance、CreateDBInstanceHour可以直接使用参数Password设置密码，使用参数ParamList设置字符集，使用参数Port设置端口号。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
-//  OPERATIONDENIED_WRONGPASSWORD = "OperationDenied.WrongPassword"
-func (c *Client) InitDBInstances(request *InitDBInstancesRequest) (response *InitDBInstancesResponse, err error) {
-    return c.InitDBInstancesWithContext(context.Background(), request)
-}
-
-// InitDBInstances
-// 该接口不再维护，参考CreateDBInstance+API文档，在发货时即可完成初始化。
-//
-// 
-//
-// 本接口(InitDBInstances)用于初始化云数据库实例，包括初始化密码、默认字符集、实例端口号等。该接口已经废弃，在发货接口CreateDBInstance、CreateDBInstanceHour可以直接使用参数Password设置密码，使用参数ParamList设置字符集，使用参数Port设置端口号。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
-//  OPERATIONDENIED_WRONGPASSWORD = "OperationDenied.WrongPassword"
-func (c *Client) InitDBInstancesWithContext(ctx context.Context, request *InitDBInstancesRequest) (response *InitDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewInitDBInstancesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("InitDBInstances require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewInitDBInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -7143,7 +7577,7 @@ func NewInquiryPriceUpgradeInstancesResponse() (response *InquiryPriceUpgradeIns
 }
 
 // InquiryPriceUpgradeInstances
-// 本接口(InquiryPriceUpgradeInstances)用于查询云数据库实例升级的价格，支持查询按量计费或者包年包月实例的升级价格，实例类型支持主实例、灾备实例和只读实例。
+// 本接口（InquiryPriceUpgradeInstances）用于查询云数据库实例升级的价格，支持查询按量计费或者包年包月实例的升级价格，实例类型支持主实例、灾备实例和只读实例。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
@@ -7157,7 +7591,7 @@ func (c *Client) InquiryPriceUpgradeInstances(request *InquiryPriceUpgradeInstan
 }
 
 // InquiryPriceUpgradeInstances
-// 本接口(InquiryPriceUpgradeInstances)用于查询云数据库实例升级的价格，支持查询按量计费或者包年包月实例的升级价格，实例类型支持主实例、灾备实例和只读实例。
+// 本接口（InquiryPriceUpgradeInstances）用于查询云数据库实例升级的价格，支持查询按量计费或者包年包月实例的升级价格，实例类型支持主实例、灾备实例和只读实例。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
@@ -7170,6 +7604,7 @@ func (c *Client) InquiryPriceUpgradeInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewInquiryPriceUpgradeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "InquiryPriceUpgradeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceUpgradeInstances require credential")
@@ -7202,7 +7637,7 @@ func NewIsolateDBInstanceResponse() (response *IsolateDBInstanceResponse) {
 }
 
 // IsolateDBInstance
-// 本接口(IsolateDBInstance)用于隔离云数据库实例，隔离后不能通过IP和端口访问数据库。隔离的实例可在回收站中进行开机。若为欠费隔离，请尽快进行充值。
+// 本接口（IsolateDBInstance）用于隔离云数据库实例，隔离后不能通过IP和端口访问数据库。隔离的实例可在回收站中进行开机。若为欠费隔离，请尽快进行充值。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDBINSTANCELOCKFAILERROR = "FailedOperation.CdbInstanceLockFailError"
@@ -7229,7 +7664,7 @@ func (c *Client) IsolateDBInstance(request *IsolateDBInstanceRequest) (response 
 }
 
 // IsolateDBInstance
-// 本接口(IsolateDBInstance)用于隔离云数据库实例，隔离后不能通过IP和端口访问数据库。隔离的实例可在回收站中进行开机。若为欠费隔离，请尽快进行充值。
+// 本接口（IsolateDBInstance）用于隔离云数据库实例，隔离后不能通过IP和端口访问数据库。隔离的实例可在回收站中进行开机。若为欠费隔离，请尽快进行充值。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDBINSTANCELOCKFAILERROR = "FailedOperation.CdbInstanceLockFailError"
@@ -7255,6 +7690,7 @@ func (c *Client) IsolateDBInstanceWithContext(ctx context.Context, request *Isol
     if request == nil {
         request = NewIsolateDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "IsolateDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateDBInstance require credential")
@@ -7360,6 +7796,7 @@ func (c *Client) ModifyAccountDescriptionWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyAccountDescriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAccountDescription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAccountDescription require credential")
@@ -7453,6 +7890,7 @@ func (c *Client) ModifyAccountHostWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyAccountHostRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAccountHost")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAccountHost require credential")
@@ -7485,7 +7923,7 @@ func NewModifyAccountMaxUserConnectionsResponse() (response *ModifyAccountMaxUse
 }
 
 // ModifyAccountMaxUserConnections
-// 本接口(ModifyAccountMaxUserConnections)用于修改云数据库账户最大可用连接数。
+// 本接口（ModifyAccountMaxUserConnections）用于修改云数据库账户最大可用连接数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ASYNCTASKSTATUSERROR = "FailedOperation.AsyncTaskStatusError"
@@ -7499,7 +7937,7 @@ func (c *Client) ModifyAccountMaxUserConnections(request *ModifyAccountMaxUserCo
 }
 
 // ModifyAccountMaxUserConnections
-// 本接口(ModifyAccountMaxUserConnections)用于修改云数据库账户最大可用连接数。
+// 本接口（ModifyAccountMaxUserConnections）用于修改云数据库账户最大可用连接数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ASYNCTASKSTATUSERROR = "FailedOperation.AsyncTaskStatusError"
@@ -7512,6 +7950,7 @@ func (c *Client) ModifyAccountMaxUserConnectionsWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyAccountMaxUserConnectionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAccountMaxUserConnections")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAccountMaxUserConnections require credential")
@@ -7623,6 +8062,7 @@ func (c *Client) ModifyAccountPasswordWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyAccountPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAccountPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAccountPassword require credential")
@@ -7744,6 +8184,7 @@ func (c *Client) ModifyAccountPrivilegesWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyAccountPrivilegesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAccountPrivileges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAccountPrivileges require credential")
@@ -7815,6 +8256,7 @@ func (c *Client) ModifyAuditConfigWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyAuditConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAuditConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAuditConfig require credential")
@@ -7847,6 +8289,10 @@ func NewModifyAuditRuleResponse() (response *ModifyAuditRuleResponse) {
 }
 
 // ModifyAuditRule
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(ModifyAuditRule)用于修改用户的审计规则。
 //
 // 可能返回的错误码:
@@ -7867,6 +8313,10 @@ func (c *Client) ModifyAuditRule(request *ModifyAuditRuleRequest) (response *Mod
 }
 
 // ModifyAuditRule
+// 不再支持审计规则创建
+//
+// 
+//
 // 本接口(ModifyAuditRule)用于修改用户的审计规则。
 //
 // 可能返回的错误码:
@@ -7886,6 +8336,7 @@ func (c *Client) ModifyAuditRuleWithContext(ctx context.Context, request *Modify
     if request == nil {
         request = NewModifyAuditRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAuditRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAuditRule require credential")
@@ -7937,6 +8388,7 @@ func (c *Client) ModifyAuditRuleTemplatesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyAuditRuleTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAuditRuleTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAuditRuleTemplates require credential")
@@ -8002,6 +8454,7 @@ func (c *Client) ModifyAuditServiceWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyAuditServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAuditService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAuditService require credential")
@@ -8034,7 +8487,7 @@ func NewModifyAutoRenewFlagResponse() (response *ModifyAutoRenewFlagResponse) {
 }
 
 // ModifyAutoRenewFlag
-// 本接口(ModifyAutoRenewFlag)用于修改云数据库实例的自动续费标记。仅支持包年包月的实例设置自动续费标记。
+// 本接口（ModifyAutoRenewFlag）用于修改云数据库实例的自动续费标记。仅支持包年包月的实例设置自动续费标记。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8051,7 +8504,7 @@ func (c *Client) ModifyAutoRenewFlag(request *ModifyAutoRenewFlagRequest) (respo
 }
 
 // ModifyAutoRenewFlag
-// 本接口(ModifyAutoRenewFlag)用于修改云数据库实例的自动续费标记。仅支持包年包月的实例设置自动续费标记。
+// 本接口（ModifyAutoRenewFlag）用于修改云数据库实例的自动续费标记。仅支持包年包月的实例设置自动续费标记。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8067,6 +8520,7 @@ func (c *Client) ModifyAutoRenewFlagWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyAutoRenewFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyAutoRenewFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAutoRenewFlag require credential")
@@ -8099,7 +8553,7 @@ func NewModifyBackupConfigResponse() (response *ModifyBackupConfigResponse) {
 }
 
 // ModifyBackupConfig
-// 本接口(ModifyBackupConfig)用于修改数据库备份配置信息。
+// 本接口（ModifyBackupConfig）用于修改数据库备份配置信息。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -8115,7 +8569,7 @@ func (c *Client) ModifyBackupConfig(request *ModifyBackupConfigRequest) (respons
 }
 
 // ModifyBackupConfig
-// 本接口(ModifyBackupConfig)用于修改数据库备份配置信息。
+// 本接口（ModifyBackupConfig）用于修改数据库备份配置信息。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -8130,6 +8584,7 @@ func (c *Client) ModifyBackupConfigWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyBackupConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyBackupConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBackupConfig require credential")
@@ -8191,6 +8646,7 @@ func (c *Client) ModifyBackupDownloadRestrictionWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyBackupDownloadRestrictionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyBackupDownloadRestriction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBackupDownloadRestriction require credential")
@@ -8262,6 +8718,7 @@ func (c *Client) ModifyBackupEncryptionStatusWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyBackupEncryptionStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyBackupEncryptionStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBackupEncryptionStatus require credential")
@@ -8294,7 +8751,7 @@ func NewModifyCdbProxyAddressDescResponse() (response *ModifyCdbProxyAddressDesc
 }
 
 // ModifyCdbProxyAddressDesc
-// 修改代理地址描述信息
+// 本接口（ModifyCdbProxyAddressDesc）用于修改代理地址描述信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -8303,7 +8760,7 @@ func (c *Client) ModifyCdbProxyAddressDesc(request *ModifyCdbProxyAddressDescReq
 }
 
 // ModifyCdbProxyAddressDesc
-// 修改代理地址描述信息
+// 本接口（ModifyCdbProxyAddressDesc）用于修改代理地址描述信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -8311,6 +8768,7 @@ func (c *Client) ModifyCdbProxyAddressDescWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyCdbProxyAddressDescRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyCdbProxyAddressDesc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCdbProxyAddressDesc require credential")
@@ -8343,7 +8801,7 @@ func NewModifyCdbProxyAddressVipAndVPortResponse() (response *ModifyCdbProxyAddr
 }
 
 // ModifyCdbProxyAddressVipAndVPort
-// 修改数据库代理地址VPC信息
+// 本接口（ModifyCdbProxyAddressVipAndVPort）用于修改数据库代理地址VPC信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -8357,7 +8815,7 @@ func (c *Client) ModifyCdbProxyAddressVipAndVPort(request *ModifyCdbProxyAddress
 }
 
 // ModifyCdbProxyAddressVipAndVPort
-// 修改数据库代理地址VPC信息
+// 本接口（ModifyCdbProxyAddressVipAndVPort）用于修改数据库代理地址VPC信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -8370,6 +8828,7 @@ func (c *Client) ModifyCdbProxyAddressVipAndVPortWithContext(ctx context.Context
     if request == nil {
         request = NewModifyCdbProxyAddressVipAndVPortRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyCdbProxyAddressVipAndVPort")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCdbProxyAddressVipAndVPort require credential")
@@ -8402,7 +8861,7 @@ func NewModifyCdbProxyParamResponse() (response *ModifyCdbProxyParamResponse) {
 }
 
 // ModifyCdbProxyParam
-// 配置数据库代理参数
+// 本接口（ModifyCdbProxyParam）用于配置数据库代理参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -8413,7 +8872,7 @@ func (c *Client) ModifyCdbProxyParam(request *ModifyCdbProxyParamRequest) (respo
 }
 
 // ModifyCdbProxyParam
-// 配置数据库代理参数
+// 本接口（ModifyCdbProxyParam）用于配置数据库代理参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -8423,6 +8882,7 @@ func (c *Client) ModifyCdbProxyParamWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyCdbProxyParamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyCdbProxyParam")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCdbProxyParam require credential")
@@ -8480,6 +8940,7 @@ func (c *Client) ModifyDBInstanceLogToCLSWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyDBInstanceLogToCLSRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyDBInstanceLogToCLS")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceLogToCLS require credential")
@@ -8537,6 +8998,7 @@ func (c *Client) ModifyDBInstanceNameWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyDBInstanceNameRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyDBInstanceName")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceName require credential")
@@ -8598,6 +9060,7 @@ func (c *Client) ModifyDBInstanceProjectWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyDBInstanceProjectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyDBInstanceProject")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceProject require credential")
@@ -8606,6 +9069,68 @@ func (c *Client) ModifyDBInstanceProjectWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceProjectResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBInstanceReadOnlyStatusRequest() (request *ModifyDBInstanceReadOnlyStatusRequest) {
+    request = &ModifyDBInstanceReadOnlyStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyDBInstanceReadOnlyStatus")
+    
+    
+    return
+}
+
+func NewModifyDBInstanceReadOnlyStatusResponse() (response *ModifyDBInstanceReadOnlyStatusResponse) {
+    response = &ModifyDBInstanceReadOnlyStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBInstanceReadOnlyStatus
+// 本接口（ModifyDBInstanceReadOnlyStatus）用户设置MySQL云数据库实例为只读
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyDBInstanceReadOnlyStatus(request *ModifyDBInstanceReadOnlyStatusRequest) (response *ModifyDBInstanceReadOnlyStatusResponse, err error) {
+    return c.ModifyDBInstanceReadOnlyStatusWithContext(context.Background(), request)
+}
+
+// ModifyDBInstanceReadOnlyStatus
+// 本接口（ModifyDBInstanceReadOnlyStatus）用户设置MySQL云数据库实例为只读
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyDBInstanceReadOnlyStatusWithContext(ctx context.Context, request *ModifyDBInstanceReadOnlyStatusRequest) (response *ModifyDBInstanceReadOnlyStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyDBInstanceReadOnlyStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyDBInstanceReadOnlyStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceReadOnlyStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBInstanceReadOnlyStatusResponse()
     err = c.Send(request, response)
     return
 }
@@ -8659,6 +9184,7 @@ func (c *Client) ModifyDBInstanceSecurityGroupsWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyDBInstanceSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyDBInstanceSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceSecurityGroups require credential")
@@ -8691,7 +9217,7 @@ func NewModifyDBInstanceVipVportResponse() (response *ModifyDBInstanceVipVportRe
 }
 
 // ModifyDBInstanceVipVport
-// 本接口(ModifyDBInstanceVipVport)用于修改云数据库实例的IP和端口号，也可进行基础网络转 VPC 网络和 VPC 网络下的子网变更。
+// 本接口（ModifyDBInstanceVipVport）用于修改云数据库实例的IP和端口号，也可进行基础网络转 VPC 网络和 VPC 网络下的子网变更。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8708,7 +9234,7 @@ func (c *Client) ModifyDBInstanceVipVport(request *ModifyDBInstanceVipVportReque
 }
 
 // ModifyDBInstanceVipVport
-// 本接口(ModifyDBInstanceVipVport)用于修改云数据库实例的IP和端口号，也可进行基础网络转 VPC 网络和 VPC 网络下的子网变更。
+// 本接口（ModifyDBInstanceVipVport）用于修改云数据库实例的IP和端口号，也可进行基础网络转 VPC 网络和 VPC 网络下的子网变更。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8724,6 +9250,7 @@ func (c *Client) ModifyDBInstanceVipVportWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyDBInstanceVipVportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyDBInstanceVipVport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceVipVport require credential")
@@ -8805,6 +9332,7 @@ func (c *Client) ModifyInstanceParamWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyInstanceParamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyInstanceParam")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceParam require credential")
@@ -8837,7 +9365,7 @@ func NewModifyInstancePasswordComplexityResponse() (response *ModifyInstancePass
 }
 
 // ModifyInstancePasswordComplexity
-// 本接口(ModifyInstancePasswordComplexity)用于修改云数据库实例的密码复杂度。
+// 本接口（ModifyInstancePasswordComplexity）用于修改云数据库实例的密码复杂度。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8862,7 +9390,7 @@ func (c *Client) ModifyInstancePasswordComplexity(request *ModifyInstancePasswor
 }
 
 // ModifyInstancePasswordComplexity
-// 本接口(ModifyInstancePasswordComplexity)用于修改云数据库实例的密码复杂度。
+// 本接口（ModifyInstancePasswordComplexity）用于修改云数据库实例的密码复杂度。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8886,6 +9414,7 @@ func (c *Client) ModifyInstancePasswordComplexityWithContext(ctx context.Context
     if request == nil {
         request = NewModifyInstancePasswordComplexityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyInstancePasswordComplexity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancePasswordComplexity require credential")
@@ -8963,6 +9492,7 @@ func (c *Client) ModifyInstanceTagWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyInstanceTagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyInstanceTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceTag require credential")
@@ -8995,7 +9525,7 @@ func NewModifyLocalBinlogConfigResponse() (response *ModifyLocalBinlogConfigResp
 }
 
 // ModifyLocalBinlogConfig
-// 该接口用于修改实例本地binlog保留策略。
+// 本接口（ModifyLocalBinlogConfig）用于修改实例本地 binlog 保留策略。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -9008,7 +9538,7 @@ func (c *Client) ModifyLocalBinlogConfig(request *ModifyLocalBinlogConfigRequest
 }
 
 // ModifyLocalBinlogConfig
-// 该接口用于修改实例本地binlog保留策略。
+// 本接口（ModifyLocalBinlogConfig）用于修改实例本地 binlog 保留策略。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
@@ -9020,6 +9550,7 @@ func (c *Client) ModifyLocalBinlogConfigWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyLocalBinlogConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyLocalBinlogConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLocalBinlogConfig require credential")
@@ -9079,6 +9610,7 @@ func (c *Client) ModifyNameOrDescByDpIdWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyNameOrDescByDpIdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyNameOrDescByDpId")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNameOrDescByDpId require credential")
@@ -9111,7 +9643,9 @@ func NewModifyParamTemplateResponse() (response *ModifyParamTemplateResponse) {
 }
 
 // ModifyParamTemplate
-// 该接口（ModifyParamTemplate）用于修改参数模板，全地域公共参数Region均为ap-guangzhou。
+// 该接口（ModifyParamTemplate）用于修改参数模板。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -9126,7 +9660,9 @@ func (c *Client) ModifyParamTemplate(request *ModifyParamTemplateRequest) (respo
 }
 
 // ModifyParamTemplate
-// 该接口（ModifyParamTemplate）用于修改参数模板，全地域公共参数Region均为ap-guangzhou。
+// 该接口（ModifyParamTemplate）用于修改参数模板。
+//
+// 说明：参数模板为公共组件，配置完成后全地域生效。接口调用配置地域可选择广州、新加坡。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -9140,6 +9676,7 @@ func (c *Client) ModifyParamTemplateWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyParamTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyParamTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyParamTemplate require credential")
@@ -9148,6 +9685,66 @@ func (c *Client) ModifyParamTemplateWithContext(ctx context.Context, request *Mo
     request.SetContext(ctx)
     
     response = NewModifyParamTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyProtectModeRequest() (request *ModifyProtectModeRequest) {
+    request = &ModifyProtectModeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyProtectMode")
+    
+    
+    return
+}
+
+func NewModifyProtectModeResponse() (response *ModifyProtectModeResponse) {
+    response = &ModifyProtectModeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyProtectMode
+// 该接口（ModifyProtectMode）用于修改实例的同步方式。
+//
+// 说明：仅专属集群可调用，该接口即将下线。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED_ACTIONINPROCESS = "OperationDenied.ActionInProcess"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) ModifyProtectMode(request *ModifyProtectModeRequest) (response *ModifyProtectModeResponse, err error) {
+    return c.ModifyProtectModeWithContext(context.Background(), request)
+}
+
+// ModifyProtectMode
+// 该接口（ModifyProtectMode）用于修改实例的同步方式。
+//
+// 说明：仅专属集群可调用，该接口即将下线。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED_ACTIONINPROCESS = "OperationDenied.ActionInProcess"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) ModifyProtectModeWithContext(ctx context.Context, request *ModifyProtectModeRequest) (response *ModifyProtectModeResponse, err error) {
+    if request == nil {
+        request = NewModifyProtectModeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyProtectMode")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyProtectMode require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyProtectModeResponse()
     err = c.Send(request, response)
     return
 }
@@ -9197,6 +9794,7 @@ func (c *Client) ModifyRemoteBackupConfigWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyRemoteBackupConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyRemoteBackupConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRemoteBackupConfig require credential")
@@ -9276,6 +9874,7 @@ func (c *Client) ModifyRoGroupInfoWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyRoGroupInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyRoGroupInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRoGroupInfo require credential")
@@ -9284,6 +9883,64 @@ func (c *Client) ModifyRoGroupInfoWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyRoGroupInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRoGroupVipVportRequest() (request *ModifyRoGroupVipVportRequest) {
+    request = &ModifyRoGroupVipVportRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyRoGroupVipVport")
+    
+    
+    return
+}
+
+func NewModifyRoGroupVipVportResponse() (response *ModifyRoGroupVipVportResponse) {
+    response = &ModifyRoGroupVipVportResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRoGroupVipVport
+// 该接口（ModifyRoGroupVipVport）用于修改Ro组的vip和vport。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyRoGroupVipVport(request *ModifyRoGroupVipVportRequest) (response *ModifyRoGroupVipVportResponse, err error) {
+    return c.ModifyRoGroupVipVportWithContext(context.Background(), request)
+}
+
+// ModifyRoGroupVipVport
+// 该接口（ModifyRoGroupVipVport）用于修改Ro组的vip和vport。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyRoGroupVipVportWithContext(ctx context.Context, request *ModifyRoGroupVipVportRequest) (response *ModifyRoGroupVipVportResponse, err error) {
+    if request == nil {
+        request = NewModifyRoGroupVipVportRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyRoGroupVipVport")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRoGroupVipVport require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRoGroupVipVportResponse()
     err = c.Send(request, response)
     return
 }
@@ -9339,6 +9996,7 @@ func (c *Client) ModifyTimeWindowWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyTimeWindowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyTimeWindow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTimeWindow require credential")
@@ -9375,7 +10033,7 @@ func NewOfflineIsolatedInstancesResponse() (response *OfflineIsolatedInstancesRe
 //
 // 
 //
-// 该接口为异步操作，部分资源的回收可能存在延迟。您可以通过使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口，指定实例 InstanceId 和状态 Status 为 [5,6,7] 进行查询，若返回实例为空，则实例资源已全部释放。
+// 该接口为异步操作，部分资源的回收可能存在延迟。您可以通过使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口，指定实例 InstanceId 和状态 Status 为 [5,6,7] 进行查询，其中5代表已隔离，6代表下线中，7代表已下线。若返回实例为空，则实例资源已全部释放。
 //
 // 
 //
@@ -9396,7 +10054,7 @@ func (c *Client) OfflineIsolatedInstances(request *OfflineIsolatedInstancesReque
 //
 // 
 //
-// 该接口为异步操作，部分资源的回收可能存在延迟。您可以通过使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口，指定实例 InstanceId 和状态 Status 为 [5,6,7] 进行查询，若返回实例为空，则实例资源已全部释放。
+// 该接口为异步操作，部分资源的回收可能存在延迟。您可以通过使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口，指定实例 InstanceId 和状态 Status 为 [5,6,7] 进行查询，其中5代表已隔离，6代表下线中，7代表已下线。若返回实例为空，则实例资源已全部释放。
 //
 // 
 //
@@ -9412,6 +10070,7 @@ func (c *Client) OfflineIsolatedInstancesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewOfflineIsolatedInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "OfflineIsolatedInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OfflineIsolatedInstances require credential")
@@ -9444,7 +10103,7 @@ func NewOpenAuditServiceResponse() (response *OpenAuditServiceResponse) {
 }
 
 // OpenAuditService
-// CDB实例开通审计服务
+// 本接口（OpenAuditService）用 CDB 实例开通审计服务。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEAUDITFAILERROR = "FailedOperation.CreateAuditFailError"
@@ -9465,7 +10124,7 @@ func (c *Client) OpenAuditService(request *OpenAuditServiceRequest) (response *O
 }
 
 // OpenAuditService
-// CDB实例开通审计服务
+// 本接口（OpenAuditService）用 CDB 实例开通审计服务。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEAUDITFAILERROR = "FailedOperation.CreateAuditFailError"
@@ -9485,6 +10144,7 @@ func (c *Client) OpenAuditServiceWithContext(ctx context.Context, request *OpenA
     if request == nil {
         request = NewOpenAuditServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "OpenAuditService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenAuditService require credential")
@@ -9517,7 +10177,7 @@ func NewOpenDBInstanceEncryptionResponse() (response *OpenDBInstanceEncryptionRe
 }
 
 // OpenDBInstanceEncryption
-// 本接口(OpenDBInstanceEncryption)用于启用实例数据存储加密功能，支持用户指定自定义密钥。
+// 本接口（OpenDBInstanceEncryption）用于启用实例数据存储加密功能，支持用户指定自定义密钥。
 //
 // 
 //
@@ -9535,9 +10195,11 @@ func NewOpenDBInstanceEncryptionResponse() (response *OpenDBInstanceEncryptionRe
 //
 // 3、对云数据库(MySQL)[授予访问KMS密钥的权限](https://console.cloud.tencent.com/cam/role)，角色名为MySQL_QCSRole，预设策略名为QcloudAccessForMySQLRole；
 //
+// 4、开启加密后不允许关闭。
+//
 // 
 //
-// 该 API 耗时可能到10s，客户端可能超时，如果调用 API 返回 InternalError ，请您调用DescribeDBInstanceInfo 确认后端加密是否开通成功。
+// 该 API 耗时可能到10s，客户端可能超时，如果调用 API 返回 InternalError ，请您调用 [DescribeDBInstanceInfo](https://cloud.tencent.com/document/product/236/44160) 确认后端加密是否开通成功，调用后参数 Encryption 为 YES 表示已开通成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -9553,7 +10215,7 @@ func (c *Client) OpenDBInstanceEncryption(request *OpenDBInstanceEncryptionReque
 }
 
 // OpenDBInstanceEncryption
-// 本接口(OpenDBInstanceEncryption)用于启用实例数据存储加密功能，支持用户指定自定义密钥。
+// 本接口（OpenDBInstanceEncryption）用于启用实例数据存储加密功能，支持用户指定自定义密钥。
 //
 // 
 //
@@ -9571,9 +10233,11 @@ func (c *Client) OpenDBInstanceEncryption(request *OpenDBInstanceEncryptionReque
 //
 // 3、对云数据库(MySQL)[授予访问KMS密钥的权限](https://console.cloud.tencent.com/cam/role)，角色名为MySQL_QCSRole，预设策略名为QcloudAccessForMySQLRole；
 //
+// 4、开启加密后不允许关闭。
+//
 // 
 //
-// 该 API 耗时可能到10s，客户端可能超时，如果调用 API 返回 InternalError ，请您调用DescribeDBInstanceInfo 确认后端加密是否开通成功。
+// 该 API 耗时可能到10s，客户端可能超时，如果调用 API 返回 InternalError ，请您调用 [DescribeDBInstanceInfo](https://cloud.tencent.com/document/product/236/44160) 确认后端加密是否开通成功，调用后参数 Encryption 为 YES 表示已开通成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -9588,6 +10252,7 @@ func (c *Client) OpenDBInstanceEncryptionWithContext(ctx context.Context, reques
     if request == nil {
         request = NewOpenDBInstanceEncryptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "OpenDBInstanceEncryption")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenDBInstanceEncryption require credential")
@@ -9643,6 +10308,7 @@ func (c *Client) OpenDBInstanceGTIDWithContext(ctx context.Context, request *Ope
     if request == nil {
         request = NewOpenDBInstanceGTIDRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "OpenDBInstanceGTID")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenDBInstanceGTID require credential")
@@ -9675,11 +10341,11 @@ func NewOpenSSLResponse() (response *OpenSSLResponse) {
 }
 
 // OpenSSL
-// 开启SSL连接功能。
+// 本接口（OpenSSL）用于开启 SSL 连接功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONACTIONERROR = "FailedOperation.DBOperationActionError"
-//  FAILEDOPERATION_OPERATIONINCONFLICTERR = "FailedOperation.OperationInConflictErr"
+//  FAILEDOPERATION_OPERATIONINCONFLICTERROR = "FailedOperation.OperationInConflictError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  MISSINGPARAMETER_MISSINGPARAMERROR = "MissingParameter.MissingParamError"
 //  OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"
@@ -9688,11 +10354,11 @@ func (c *Client) OpenSSL(request *OpenSSLRequest) (response *OpenSSLResponse, er
 }
 
 // OpenSSL
-// 开启SSL连接功能。
+// 本接口（OpenSSL）用于开启 SSL 连接功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONACTIONERROR = "FailedOperation.DBOperationActionError"
-//  FAILEDOPERATION_OPERATIONINCONFLICTERR = "FailedOperation.OperationInConflictErr"
+//  FAILEDOPERATION_OPERATIONINCONFLICTERROR = "FailedOperation.OperationInConflictError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  MISSINGPARAMETER_MISSINGPARAMERROR = "MissingParameter.MissingParamError"
 //  OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"
@@ -9700,6 +10366,7 @@ func (c *Client) OpenSSLWithContext(ctx context.Context, request *OpenSSLRequest
     if request == nil {
         request = NewOpenSSLRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "OpenSSL")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenSSL require credential")
@@ -9771,6 +10438,7 @@ func (c *Client) OpenWanServiceWithContext(ctx context.Context, request *OpenWan
     if request == nil {
         request = NewOpenWanServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "OpenWanService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenWanService require credential")
@@ -9806,7 +10474,7 @@ func NewReleaseIsolatedDBInstancesResponse() (response *ReleaseIsolatedDBInstanc
 // 本接口（ReleaseIsolatedDBInstances）用于恢复已隔离云数据库实例。仅用于按量计费实例的解隔离，包年包月实例的解隔离请使用 RenewDBInstance 。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_OPERATIONINCONFLICTERR = "FailedOperation.OperationInConflictErr"
+//  FAILEDOPERATION_OPERATIONINCONFLICTERROR = "FailedOperation.OperationInConflictError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -9826,7 +10494,7 @@ func (c *Client) ReleaseIsolatedDBInstances(request *ReleaseIsolatedDBInstancesR
 // 本接口（ReleaseIsolatedDBInstances）用于恢复已隔离云数据库实例。仅用于按量计费实例的解隔离，包年包月实例的解隔离请使用 RenewDBInstance 。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_OPERATIONINCONFLICTERR = "FailedOperation.OperationInConflictErr"
+//  FAILEDOPERATION_OPERATIONINCONFLICTERROR = "FailedOperation.OperationInConflictError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -9842,6 +10510,7 @@ func (c *Client) ReleaseIsolatedDBInstancesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewReleaseIsolatedDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ReleaseIsolatedDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReleaseIsolatedDBInstances require credential")
@@ -9895,6 +10564,7 @@ func (c *Client) ReloadBalanceProxyNodeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewReloadBalanceProxyNodeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ReloadBalanceProxyNode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReloadBalanceProxyNode require credential")
@@ -9927,7 +10597,7 @@ func NewRenewDBInstanceResponse() (response *RenewDBInstanceResponse) {
 }
 
 // RenewDBInstance
-// 本接口(RenewDBInstance)用于续费云数据库实例，支持付费模式为包年包月的实例。按量计费实例可通过该接口续费为包年包月的实例。
+// 本接口（RenewDBInstance）用于续费云数据库实例，支持付费模式为包年包月的实例。按量计费实例可通过该接口续费为包年包月的实例。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
@@ -9942,7 +10612,7 @@ func (c *Client) RenewDBInstance(request *RenewDBInstanceRequest) (response *Ren
 }
 
 // RenewDBInstance
-// 本接口(RenewDBInstance)用于续费云数据库实例，支持付费模式为包年包月的实例。按量计费实例可通过该接口续费为包年包月的实例。
+// 本接口（RenewDBInstance）用于续费云数据库实例，支持付费模式为包年包月的实例。按量计费实例可通过该接口续费为包年包月的实例。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
@@ -9956,6 +10626,7 @@ func (c *Client) RenewDBInstanceWithContext(ctx context.Context, request *RenewD
     if request == nil {
         request = NewRenewDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "RenewDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewDBInstance require credential")
@@ -9964,6 +10635,68 @@ func (c *Client) RenewDBInstanceWithContext(ctx context.Context, request *RenewD
     request.SetContext(ctx)
     
     response = NewRenewDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetPasswordRequest() (request *ResetPasswordRequest) {
+    request = &ResetPasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ResetPassword")
+    
+    
+    return
+}
+
+func NewResetPasswordResponse() (response *ResetPasswordResponse) {
+    response = &ResetPasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetPassword
+// 手动刷新轮转密码
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
+//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) ResetPassword(request *ResetPasswordRequest) (response *ResetPasswordResponse, err error) {
+    return c.ResetPasswordWithContext(context.Background(), request)
+}
+
+// ResetPassword
+// 手动刷新轮转密码
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
+//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) ResetPasswordWithContext(ctx context.Context, request *ResetPasswordRequest) (response *ResetPasswordResponse, err error) {
+    if request == nil {
+        request = NewResetPasswordRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ResetPassword")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetPassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetPasswordResponse()
     err = c.Send(request, response)
     return
 }
@@ -10011,6 +10744,7 @@ func (c *Client) ResetRootAccountWithContext(ctx context.Context, request *Reset
     if request == nil {
         request = NewResetRootAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ResetRootAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetRootAccount require credential")
@@ -10043,13 +10777,13 @@ func NewRestartDBInstancesResponse() (response *RestartDBInstancesResponse) {
 }
 
 // RestartDBInstances
-// 本接口(RestartDBInstances)用于重启云数据库实例。
+// 本接口（RestartDBInstances）用于重启云数据库实例。
 //
 // 
 //
 // 注意：
 //
-// 1、本接口只支持主实例进行重启操作；
+// 1、本接口支持主实例、只读实例、灾备实例进行重启操作。
 //
 // 2、实例状态必须为正常，并且没有其他异步任务在执行中。
 //
@@ -10068,13 +10802,13 @@ func (c *Client) RestartDBInstances(request *RestartDBInstancesRequest) (respons
 }
 
 // RestartDBInstances
-// 本接口(RestartDBInstances)用于重启云数据库实例。
+// 本接口（RestartDBInstances）用于重启云数据库实例。
 //
 // 
 //
 // 注意：
 //
-// 1、本接口只支持主实例进行重启操作；
+// 1、本接口支持主实例、只读实例、灾备实例进行重启操作。
 //
 // 2、实例状态必须为正常，并且没有其他异步任务在执行中。
 //
@@ -10092,6 +10826,7 @@ func (c *Client) RestartDBInstancesWithContext(ctx context.Context, request *Res
     if request == nil {
         request = NewRestartDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "RestartDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartDBInstances require credential")
@@ -10159,6 +10894,7 @@ func (c *Client) StartBatchRollbackWithContext(ctx context.Context, request *Sta
     if request == nil {
         request = NewStartBatchRollbackRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "StartBatchRollback")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartBatchRollback require credential")
@@ -10191,7 +10927,7 @@ func NewStartCpuExpandResponse() (response *StartCpuExpandResponse) {
 }
 
 // StartCpuExpand
-// 通过该API，可以开启CPU弹性扩容，包括一次性的手动扩容以及自动弹性扩容。
+// 通过该 API，可以开启 CPU 弹性扩容，包括一次性的手动扩容以及自动弹性扩容。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INSTANCETASKCONFLICTERROR = "FailedOperation.InstanceTaskConflictError"
@@ -10206,7 +10942,7 @@ func (c *Client) StartCpuExpand(request *StartCpuExpandRequest) (response *Start
 }
 
 // StartCpuExpand
-// 通过该API，可以开启CPU弹性扩容，包括一次性的手动扩容以及自动弹性扩容。
+// 通过该 API，可以开启 CPU 弹性扩容，包括一次性的手动扩容以及自动弹性扩容。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INSTANCETASKCONFLICTERROR = "FailedOperation.InstanceTaskConflictError"
@@ -10220,6 +10956,7 @@ func (c *Client) StartCpuExpandWithContext(ctx context.Context, request *StartCp
     if request == nil {
         request = NewStartCpuExpandRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "StartCpuExpand")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartCpuExpand require credential")
@@ -10252,7 +10989,7 @@ func NewStartReplicationResponse() (response *StartReplicationResponse) {
 }
 
 // StartReplication
-// 开启 RO 复制，从主实例同步数据。
+// 本接口（StartReplication）用于开启 RO 复制，从主实例同步数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -10260,13 +10997,13 @@ func NewStartReplicationResponse() (response *StartReplicationResponse) {
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_INSTANCETASKRUNNING = "OperationDenied.InstanceTaskRunning"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) StartReplication(request *StartReplicationRequest) (response *StartReplicationResponse, err error) {
     return c.StartReplicationWithContext(context.Background(), request)
 }
 
 // StartReplication
-// 开启 RO 复制，从主实例同步数据。
+// 本接口（StartReplication）用于开启 RO 复制，从主实例同步数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -10274,11 +11011,12 @@ func (c *Client) StartReplication(request *StartReplicationRequest) (response *S
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_INSTANCETASKRUNNING = "OperationDenied.InstanceTaskRunning"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) StartReplicationWithContext(ctx context.Context, request *StartReplicationRequest) (response *StartReplicationResponse, err error) {
     if request == nil {
         request = NewStartReplicationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "StartReplication")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartReplication require credential")
@@ -10336,6 +11074,7 @@ func (c *Client) StopCpuExpandWithContext(ctx context.Context, request *StopCpuE
     if request == nil {
         request = NewStopCpuExpandRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "StopCpuExpand")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopCpuExpand require credential")
@@ -10368,7 +11107,9 @@ func NewStopDBImportJobResponse() (response *StopDBImportJobResponse) {
 }
 
 // StopDBImportJob
-// 本接口(StopDBImportJob)用于终止数据导入任务。
+// 本接口（StopDBImportJob）用于终止数据导入任务。
+//
+// 说明：只有未完成的导入任务支持被终止，且终止后已执行的 SQL 部分会被保留。
 //
 // 可能返回的错误码:
 //  CDBERROR_IMPORTERROR = "CdbError.ImportError"
@@ -10382,7 +11123,9 @@ func (c *Client) StopDBImportJob(request *StopDBImportJobRequest) (response *Sto
 }
 
 // StopDBImportJob
-// 本接口(StopDBImportJob)用于终止数据导入任务。
+// 本接口（StopDBImportJob）用于终止数据导入任务。
+//
+// 说明：只有未完成的导入任务支持被终止，且终止后已执行的 SQL 部分会被保留。
 //
 // 可能返回的错误码:
 //  CDBERROR_IMPORTERROR = "CdbError.ImportError"
@@ -10395,6 +11138,7 @@ func (c *Client) StopDBImportJobWithContext(ctx context.Context, request *StopDB
     if request == nil {
         request = NewStopDBImportJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "StopDBImportJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopDBImportJob require credential")
@@ -10427,7 +11171,7 @@ func NewStopReplicationResponse() (response *StopReplicationResponse) {
 }
 
 // StopReplication
-// 停止 RO 复制，中断从主实例同步数据。
+// 本接口（StopReplication）用于停止 RO 复制，中断从主实例同步数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -10436,13 +11180,13 @@ func NewStopReplicationResponse() (response *StopReplicationResponse) {
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_INSTANCETASKRUNNING = "OperationDenied.InstanceTaskRunning"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) StopReplication(request *StopReplicationRequest) (response *StopReplicationResponse, err error) {
     return c.StopReplicationWithContext(context.Background(), request)
 }
 
 // StopReplication
-// 停止 RO 复制，中断从主实例同步数据。
+// 本接口（StopReplication）用于停止 RO 复制，中断从主实例同步数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -10451,11 +11195,12 @@ func (c *Client) StopReplication(request *StopReplicationRequest) (response *Sto
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_INSTANCETASKRUNNING = "OperationDenied.InstanceTaskRunning"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) StopReplicationWithContext(ctx context.Context, request *StopReplicationRequest) (response *StopReplicationResponse, err error) {
     if request == nil {
         request = NewStopReplicationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "StopReplication")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopReplication require credential")
@@ -10488,7 +11233,7 @@ func NewStopRollbackResponse() (response *StopRollbackResponse) {
 }
 
 // StopRollback
-// 本接口(StopRollback) 用于撤销实例正在进行的回档任务，该接口返回一个异步任务id。 撤销结果可以通过 DescribeAsyncRequestInfo 查询任务的执行情况。
+// 本接口（StopRollback）用于撤销实例正在进行的回档任务，该接口返回一个异步任务 ID。撤销结果可以通过 [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) 查询任务的执行情况。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -10504,7 +11249,7 @@ func (c *Client) StopRollback(request *StopRollbackRequest) (response *StopRollb
 }
 
 // StopRollback
-// 本接口(StopRollback) 用于撤销实例正在进行的回档任务，该接口返回一个异步任务id。 撤销结果可以通过 DescribeAsyncRequestInfo 查询任务的执行情况。
+// 本接口（StopRollback）用于撤销实例正在进行的回档任务，该接口返回一个异步任务 ID。撤销结果可以通过 [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) 查询任务的执行情况。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -10519,6 +11264,7 @@ func (c *Client) StopRollbackWithContext(ctx context.Context, request *StopRollb
     if request == nil {
         request = NewStopRollbackRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "StopRollback")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopRollback require credential")
@@ -10527,6 +11273,64 @@ func (c *Client) StopRollbackWithContext(ctx context.Context, request *StopRollb
     request.SetContext(ctx)
     
     response = NewStopRollbackResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSubmitInstanceUpgradeCheckJobRequest() (request *SubmitInstanceUpgradeCheckJobRequest) {
+    request = &SubmitInstanceUpgradeCheckJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "SubmitInstanceUpgradeCheckJob")
+    
+    
+    return
+}
+
+func NewSubmitInstanceUpgradeCheckJobResponse() (response *SubmitInstanceUpgradeCheckJobResponse) {
+    response = &SubmitInstanceUpgradeCheckJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SubmitInstanceUpgradeCheckJob
+// 该接口（SubmitInstanceUpgradeCheckJob）提交实例版本升级校验任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  OPERATIONDENIED_INSTANCETASKSTATUSERROR = "OperationDenied.InstanceTaskStatusError"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) SubmitInstanceUpgradeCheckJob(request *SubmitInstanceUpgradeCheckJobRequest) (response *SubmitInstanceUpgradeCheckJobResponse, err error) {
+    return c.SubmitInstanceUpgradeCheckJobWithContext(context.Background(), request)
+}
+
+// SubmitInstanceUpgradeCheckJob
+// 该接口（SubmitInstanceUpgradeCheckJob）提交实例版本升级校验任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  OPERATIONDENIED_INSTANCETASKSTATUSERROR = "OperationDenied.InstanceTaskStatusError"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
+func (c *Client) SubmitInstanceUpgradeCheckJobWithContext(ctx context.Context, request *SubmitInstanceUpgradeCheckJobRequest) (response *SubmitInstanceUpgradeCheckJobResponse, err error) {
+    if request == nil {
+        request = NewSubmitInstanceUpgradeCheckJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "SubmitInstanceUpgradeCheckJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SubmitInstanceUpgradeCheckJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSubmitInstanceUpgradeCheckJobResponse()
     err = c.Send(request, response)
     return
 }
@@ -10551,7 +11355,7 @@ func NewSwitchCDBProxyResponse() (response *SwitchCDBProxyResponse) {
 }
 
 // SwitchCDBProxy
-// 数据库代理配置变更或则升级版本后手动发起立即切换
+// 本接口（SwitchCDBProxy）用于数据库代理配置变更或者升级版本后手动发起立即切换。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -10563,7 +11367,7 @@ func (c *Client) SwitchCDBProxy(request *SwitchCDBProxyRequest) (response *Switc
 }
 
 // SwitchCDBProxy
-// 数据库代理配置变更或则升级版本后手动发起立即切换
+// 本接口（SwitchCDBProxy）用于数据库代理配置变更或者升级版本后手动发起立即切换。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -10574,6 +11378,7 @@ func (c *Client) SwitchCDBProxyWithContext(ctx context.Context, request *SwitchC
     if request == nil {
         request = NewSwitchCDBProxyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "SwitchCDBProxy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchCDBProxy require credential")
@@ -10639,6 +11444,7 @@ func (c *Client) SwitchDBInstanceMasterSlaveWithContext(ctx context.Context, req
     if request == nil {
         request = NewSwitchDBInstanceMasterSlaveRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "SwitchDBInstanceMasterSlave")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchDBInstanceMasterSlave require credential")
@@ -10671,7 +11477,7 @@ func NewSwitchDrInstanceToMasterResponse() (response *SwitchDrInstanceToMasterRe
 }
 
 // SwitchDrInstanceToMaster
-// 本接口(SwitchDrInstanceToMaster)用于将云数据库灾备实例切换为主实例，注意请求必须发到灾备实例所在的地域。
+// 本接口（SwitchDrInstanceToMaster）用于将云数据库灾备实例切换为主实例，注意请求必须发到灾备实例所在的地域。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
@@ -10684,7 +11490,7 @@ func (c *Client) SwitchDrInstanceToMaster(request *SwitchDrInstanceToMasterReque
 }
 
 // SwitchDrInstanceToMaster
-// 本接口(SwitchDrInstanceToMaster)用于将云数据库灾备实例切换为主实例，注意请求必须发到灾备实例所在的地域。
+// 本接口（SwitchDrInstanceToMaster）用于将云数据库灾备实例切换为主实例，注意请求必须发到灾备实例所在的地域。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
@@ -10696,6 +11502,7 @@ func (c *Client) SwitchDrInstanceToMasterWithContext(ctx context.Context, reques
     if request == nil {
         request = NewSwitchDrInstanceToMasterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "SwitchDrInstanceToMaster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchDrInstanceToMaster require credential")
@@ -10753,6 +11560,7 @@ func (c *Client) SwitchForUpgradeWithContext(ctx context.Context, request *Switc
     if request == nil {
         request = NewSwitchForUpgradeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "SwitchForUpgrade")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchForUpgrade require credential")
@@ -10785,7 +11593,7 @@ func NewUpgradeCDBProxyVersionResponse() (response *UpgradeCDBProxyVersionRespon
 }
 
 // UpgradeCDBProxyVersion
-// 升级数据库代理版本
+// 本接口（UpgradeCDBProxyVersion）用于升级数据库代理版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -10796,7 +11604,7 @@ func (c *Client) UpgradeCDBProxyVersion(request *UpgradeCDBProxyVersionRequest) 
 }
 
 // UpgradeCDBProxyVersion
-// 升级数据库代理版本
+// 本接口（UpgradeCDBProxyVersion）用于升级数据库代理版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
@@ -10806,6 +11614,7 @@ func (c *Client) UpgradeCDBProxyVersionWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpgradeCDBProxyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "UpgradeCDBProxyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeCDBProxyVersion require credential")
@@ -10838,7 +11647,7 @@ func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
 }
 
 // UpgradeDBInstance
-// 本接口(UpgradeDBInstance)用于升级或降级云数据库实例的配置，实例类型支持主实例、灾备实例和只读实例。如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
+// 本接口（UpgradeDBInstance）用于升级或降级云数据库实例的配置，实例类型支持主实例、灾备实例和只读实例。如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -10858,7 +11667,7 @@ func (c *Client) UpgradeDBInstance(request *UpgradeDBInstanceRequest) (response 
 }
 
 // UpgradeDBInstance
-// 本接口(UpgradeDBInstance)用于升级或降级云数据库实例的配置，实例类型支持主实例、灾备实例和只读实例。如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
+// 本接口（UpgradeDBInstance）用于升级或降级云数据库实例的配置，实例类型支持主实例、灾备实例和只读实例。如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
@@ -10877,6 +11686,7 @@ func (c *Client) UpgradeDBInstanceWithContext(ctx context.Context, request *Upgr
     if request == nil {
         request = NewUpgradeDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "UpgradeDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeDBInstance require credential")
@@ -10909,7 +11719,7 @@ func NewUpgradeDBInstanceEngineVersionResponse() (response *UpgradeDBInstanceEng
 }
 
 // UpgradeDBInstanceEngineVersion
-// 本接口(UpgradeDBInstanceEngineVersion)用于升级云数据库实例版本，实例类型支持主实例、灾备实例和只读实例。
+// 本接口（UpgradeDBInstanceEngineVersion）用于升级云数据库实例版本，实例类型支持主实例、灾备实例和只读实例等。升级前请通过 [SubmitInstanceUpgradeCheckJob](https://cloud.tencent.com/document/product/236/110468) 提交升级检查任务，通过后才能升级。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
@@ -10928,7 +11738,7 @@ func (c *Client) UpgradeDBInstanceEngineVersion(request *UpgradeDBInstanceEngine
 }
 
 // UpgradeDBInstanceEngineVersion
-// 本接口(UpgradeDBInstanceEngineVersion)用于升级云数据库实例版本，实例类型支持主实例、灾备实例和只读实例。
+// 本接口（UpgradeDBInstanceEngineVersion）用于升级云数据库实例版本，实例类型支持主实例、灾备实例和只读实例等。升级前请通过 [SubmitInstanceUpgradeCheckJob](https://cloud.tencent.com/document/product/236/110468) 提交升级检查任务，通过后才能升级。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
@@ -10946,6 +11756,7 @@ func (c *Client) UpgradeDBInstanceEngineVersionWithContext(ctx context.Context, 
     if request == nil {
         request = NewUpgradeDBInstanceEngineVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "UpgradeDBInstanceEngineVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeDBInstanceEngineVersion require credential")
@@ -11053,6 +11864,7 @@ func (c *Client) VerifyRootAccountWithContext(ctx context.Context, request *Veri
     if request == nil {
         request = NewVerifyRootAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "VerifyRootAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("VerifyRootAccount require credential")
