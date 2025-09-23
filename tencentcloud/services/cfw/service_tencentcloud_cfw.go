@@ -826,6 +826,7 @@ func (me *CfwService) DescribeCfwEdgeFirewallSwitchById(ctx context.Context, pub
 			OperatorType: common.Int64Ptr(1),
 		},
 	}
+	request.Limit = helper.Int64(10)
 
 	defer func() {
 		if errRet != nil {
