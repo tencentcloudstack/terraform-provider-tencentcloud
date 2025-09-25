@@ -148,6 +148,55 @@ resource "tencentcloud_mysql_instance" "example" {
 }
 ```
 
+### Create instance by custom cluster_topology
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  instance_name     = "tf-example"
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord@123"
+  slave_deploy_mode = 1
+  slave_sync_mode   = 1
+  device_type       = "CLOUD_NATIVE_CLUSTER"
+  availability_zone = "ap-guangzhou-6"
+  cpu               = 2
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = "vpc-i5yyodl9"
+  subnet_id         = "subnet-hhi88a58"
+  intranet_port     = 3306
+  security_groups   = ["sg-e6a8xxib"]
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+  tags = {
+    createBy = "Terraform"
+  }
+
+  cluster_topology {
+    read_write_node {
+      zone = "ap-guangzhou-6"
+    }
+
+    read_only_nodes {
+      is_random_zone = true
+    }
+
+    read_only_nodes {
+      zone = "ap-guangzhou-7"
+    }
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -158,6 +207,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. NOTES: Only supported prepaid instance.
 * `availability_zone` - (Optional, String) Indicates which availability zone will be used.
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
+* `cluster_topology` - (Optional, List) Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.
 * `cpu` - (Optional, Int) CPU cores.
 * `device_type` - (Optional, String) Specify device type, available values:
 	- `UNIVERSAL` (default): universal instance,
@@ -190,6 +240,22 @@ If it is not specified, it defaults to a universal instance.
 * `upgrade_subversion` - (Optional, Int) Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.
 * `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.
 * `wait_switch` - (Optional, Int) Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.
+
+The `cluster_topology` object supports the following:
+
+* `read_only_nodes` - (Optional, Set) RO Node Topology.
+* `read_write_node` - (Optional, List) RW Node Topology.
+
+The `read_only_nodes` object of `cluster_topology` supports the following:
+
+* `is_random_zone` - (Optional, Bool) Whether to distribute in random availability zones. Enter `true` to specify a random availability zone. Otherwise, use the availability zone specified by Zone.
+* `node_id` - (Optional, String) When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.
+* `zone` - (Optional, String) Specifies the availability zone where the node is distributed.
+
+The `read_write_node` object of `cluster_topology` supports the following:
+
+* `zone` - (Required, String) The availability zone where the RW node is located.
+* `node_id` - (Optional, String) When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.
 
 ## Attributes Reference
 
