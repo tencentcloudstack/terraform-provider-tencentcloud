@@ -235,46 +235,6 @@ func (me *WedataService) DescribeWedataDataSourceInfoListByFilter(ctx context.Co
 	return
 }
 
-func (me *WedataService) DescribeWedataDataSourceWithoutInfoByFilter(ctx context.Context, param map[string]interface{}) (dataSourceWithoutInfo []*wedata.DataSourceInfo, errRet error) {
-	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = wedata.NewDescribeDataSourceWithoutInfoRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	for k, v := range param {
-		if k == "OrderFields" {
-			request.OrderFields = v.([]*wedata.OrderField)
-		}
-
-		if k == "Filters" {
-			request.Filters = v.([]*wedata.Filter)
-		}
-	}
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseWedataClient().DescribeDataSourceWithoutInfo(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || len(response.Response.Data) < 1 {
-		return
-	}
-
-	dataSourceWithoutInfo = response.Response.Data
-	return
-}
-
 func (me *WedataService) DescribeWedataDatasourceById(ctx context.Context, ownerProjectId, datasourceId string) (datasource *wedata.DataSourceInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -637,63 +597,6 @@ func (me *WedataService) DeleteWedataDqRuleTemplateById(ctx context.Context, pro
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseWedataClient().DeleteRuleTemplate(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	return
-}
-
-func (me *WedataService) DescribeWedataBaselineById(ctx context.Context, projectId, baselineId string) (baseline *wedata.BaselineDetailResponse, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := wedata.NewDescribeBaselineByIdRequest()
-	request.ProjectId = &projectId
-	request.BaselineId = &baselineId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseWedataClient().DescribeBaselineById(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil {
-		return
-	}
-
-	baseline = response.Response.Data
-	return
-}
-
-func (me *WedataService) DeleteWedataBaselineById(ctx context.Context, projectId, baselineId string) (errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := wedata.NewDeleteBaselineRequest()
-	request.ProjectId = &projectId
-	request.BaselineId = &baselineId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseWedataClient().DeleteBaseline(request)
 	if err != nil {
 		errRet = err
 		return
