@@ -2032,3 +2032,69 @@ func (me *CamService) DescribeCamRoleDetailByFilter(ctx context.Context, param m
 	ret = response.Response
 	return
 }
+
+func (me *CamService) DescribeCamMessageReceiverById(ctx context.Context, name string) (ret *cam.Receiver, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cam.NewListReceiverRequest()
+	response := cam.NewListReceiverResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset    uint64 = 0
+		limit     uint64 = 200
+		receivers []*cam.Receiver
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCamV20190116Client().ListReceiver(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe receiver failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
+			log.Printf("[CRITAL]%s describe receiver failed, reason:%+v", logId, errRet)
+			return nil, errRet
+		}
+
+		if len(response.Response.Receivers) < 1 {
+			break
+		}
+
+		receivers = append(receivers, response.Response.Receivers...)
+		if len(response.Response.Receivers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	for _, item := range receivers {
+		if item.Name != nil && *item.Name == name {
+			ret = item
+			break
+		}
+	}
+
+	return
+}
