@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_wedata_resource: This resource has been deprecated.
+```
+
+```release-note:enhancement
+resource/tencentcloud_wedata_baseline: This resource has been deprecated.
+```
+
+```release-note:enhancement
+datasource/tencentcloud_wedata_data_source_without_info: This data source has been deprecated.
+```
