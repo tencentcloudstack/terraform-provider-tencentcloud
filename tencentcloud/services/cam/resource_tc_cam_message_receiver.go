@@ -183,6 +183,10 @@ func resourceTencentCloudCamMessageReceiverRead(d *schema.ResourceData, meta int
 		_ = d.Set("remark", respData.Remark)
 	}
 
+	if respData.CountryCode != nil {
+		_ = d.Set("country_code", respData.CountryCode)
+	}
+
 	if respData.PhoneNumber != nil {
 		_ = d.Set("phone_number", respData.PhoneNumber)
 	}
