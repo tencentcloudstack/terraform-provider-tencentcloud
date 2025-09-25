@@ -43,5 +43,9 @@ resource "tencentcloud_cam_message_receiver" "example" {
   country_code = "86"
   phone_number = "18123456789"
   email        = "demo@qq.com"
+
+  lifecycle {
+    ignore_changes = [ email, phone_number ]
+  }
 }
 `
