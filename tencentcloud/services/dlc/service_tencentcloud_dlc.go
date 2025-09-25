@@ -1346,3 +1346,92 @@ func (me *DlcService) DescribeDlcStandardEngineResourceGroupById(ctx context.Con
 	ret = response.Response.UserEngineResourceGroupInfos[0]
 	return
 }
+
+func (me *DlcService) DescribeDlcDataMaskStrategyById(ctx context.Context, strategyId string) (ret *dlc.DataMaskStrategy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeDataMaskStrategiesRequest()
+	response := dlc.NewDescribeDataMaskStrategiesResponse()
+	request.Filters = []*dlc.Filter{
+		&dlc.Filter{
+			Name:   helper.String("strategy-id"),
+			Values: helper.Strings([]string{strategyId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeDataMaskStrategies(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc data mask strategies failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc data mask strategies failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	if len(response.Response.Strategies) != 1 {
+		return
+	}
+
+	ret = response.Response.Strategies[0]
+	return
+}
+
+func (me *DlcService) DescribeDlcAttachDataMaskPolicyById(ctx context.Context, catalog, dataBase, table string) (ret *dlc.TableResponseInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeTableRequest()
+	response := dlc.NewDescribeTableResponse()
+	request.DatasourceConnectionName = &catalog
+	request.DatabaseName = &dataBase
+	request.TableName = &table
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeTable(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc table failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc table failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	ret = response.Response.Table
+	return
+}

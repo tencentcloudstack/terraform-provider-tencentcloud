@@ -2171,6 +2171,8 @@ tencentcloud_dlc_update_row_filter_operation
 tencentcloud_dlc_bind_work_groups_to_user_attachment
 tencentcloud_dlc_user_vpc_connection
 tencentcloud_dlc_standard_engine_resource_group
+tencentcloud_dlc_data_mask_strategy
+tencentcloud_dlc_attach_data_mask_policy
 
 Web Application Firewall(WAF)
 Data Source
