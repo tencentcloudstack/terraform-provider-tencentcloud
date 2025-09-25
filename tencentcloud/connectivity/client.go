@@ -106,7 +106,6 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
-	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 	cos "github.com/tencentyun/cos-go-sdk-v5"
 )
@@ -127,91 +126,90 @@ type TencentCloudClient struct {
 	Domain     string
 	CosDomain  string
 
-	cosConn             *s3.S3
-	tencentCosConn      *cos.Client
-	mysqlConn           *cdb.Client
-	redisConn           *redis.Client
-	asConn              *as.Client
-	vpcConn             *vpc.Client
-	cbsConn             *cbs.Client
-	cvmv20170312Conn    *cvmv20170312.Client
-	cvmIntlConn         *cvmintl.Client
-	clbConn             *clb.Client
-	dayuConn            *dayu.Client
-	dcConn              *dc.Client
-	tagConn             *tag.Client
-	mongodbConn         *mongodb.Client
-	tkev20180525Conn    *tkev20180525.Client
-	tdmqConn            *tdmq.Client
-	tcrConn             *tcr.Client
-	camConn             *cam.Client
-	stsConn             *sts.Client
-	gaapConn            *gaap.Client
-	sslConn             *ssl.Client
-	cfsConn             *cfs.Client
-	scfConn             *scf.Client
-	tcaplusConn         *tcaplusdb.Client
-	cdnConn             *cdn.Client
-	monitorConn         *monitor.Client
-	esConn              *es.Client
-	sqlserverConn       *sqlserver.Client
-	postgreConn         *postgre.Client
-	ckafkaConn          *ckafka.Client
-	auditConn           *audit.Client
-	cynosConn           *cynosdb.Client
-	vodConn             *vod.Client
-	apiGatewayConn      *apigateway.Client
-	sslCertificateConn  *sslCertificate.Client
-	kmsConn             *kms.Client
-	ssmConn             *ssm.Client
-	apiConn             *api.Client
-	emrConn             *emr.Client
-	clsConn             *cls.Client
-	dnsPodConn          *dnspod.Client
-	privateDnsConn      *privatedns.Client
-	antiddosConn        *antiddos.Client
-	domainConn          *domain.Client
-	lighthouseConn      *lighthouse.Client
-	temConn             *tem.Client
-	teoConn             *teo.Client
-	tcmConn             *tcm.Client
-	cssConn             *css.Client
-	sesConn             *ses.Client
-	dcdbConn            *dcdb.Client
-	smsConn             *sms.Client
-	catConn             *cat.Client
-	mariadbConn         *mariadb.Client
-	rumConn             *rum.Client
-	ptsConn             *pts.Client
-	tatConn             *tat.Client
-	organizationConn    *organization.Client
-	tdcpgConn           *tdcpg.Client
-	dbbrainConn         *dbbrain.Client
-	dtsConn             *dts.Client
-	ciConn              *cos.Client
-	cosBatchConn        *cos.Client
-	tsfConn             *tsf.Client
-	mpsConn             *mps.Client
-	cwpConn             *cwp.Client
-	chdfsConn           *chdfs.Client
-	mdlConn             *mdl.Client
-	apmConn             *apm.Client
-	ciamConn            *ciam.Client
-	tseConn             *tse.Client
-	cdwchConn           *cdwch.Client
-	ebConn              *eb.Client
-	dlcConn             *dlc.Client
-	wedataConn          *wedata.Client
-	wedatav20250806Conn *wedatav20250806.Client
-	wafConn             *waf.Client
-	cfwConn             *cfw.Client
-	oceanusConn         *oceanus.Client
-	dasbConn            *dasb.Client
-	trocketConn         *trocket.Client
-	biConn              *bi.Client
-	cdwpgConn           *cdwpg.Client
-	csipConn            *csip.Client
-	regionConn          *region.Client
+	cosConn            *s3.S3
+	tencentCosConn     *cos.Client
+	mysqlConn          *cdb.Client
+	redisConn          *redis.Client
+	asConn             *as.Client
+	vpcConn            *vpc.Client
+	cbsConn            *cbs.Client
+	cvmv20170312Conn   *cvmv20170312.Client
+	cvmIntlConn        *cvmintl.Client
+	clbConn            *clb.Client
+	dayuConn           *dayu.Client
+	dcConn             *dc.Client
+	tagConn            *tag.Client
+	mongodbConn        *mongodb.Client
+	tkev20180525Conn   *tkev20180525.Client
+	tdmqConn           *tdmq.Client
+	tcrConn            *tcr.Client
+	camConn            *cam.Client
+	stsConn            *sts.Client
+	gaapConn           *gaap.Client
+	sslConn            *ssl.Client
+	cfsConn            *cfs.Client
+	scfConn            *scf.Client
+	tcaplusConn        *tcaplusdb.Client
+	cdnConn            *cdn.Client
+	monitorConn        *monitor.Client
+	esConn             *es.Client
+	sqlserverConn      *sqlserver.Client
+	postgreConn        *postgre.Client
+	ckafkaConn         *ckafka.Client
+	auditConn          *audit.Client
+	cynosConn          *cynosdb.Client
+	vodConn            *vod.Client
+	apiGatewayConn     *apigateway.Client
+	sslCertificateConn *sslCertificate.Client
+	kmsConn            *kms.Client
+	ssmConn            *ssm.Client
+	apiConn            *api.Client
+	emrConn            *emr.Client
+	clsConn            *cls.Client
+	dnsPodConn         *dnspod.Client
+	privateDnsConn     *privatedns.Client
+	antiddosConn       *antiddos.Client
+	domainConn         *domain.Client
+	lighthouseConn     *lighthouse.Client
+	temConn            *tem.Client
+	teoConn            *teo.Client
+	tcmConn            *tcm.Client
+	cssConn            *css.Client
+	sesConn            *ses.Client
+	dcdbConn           *dcdb.Client
+	smsConn            *sms.Client
+	catConn            *cat.Client
+	mariadbConn        *mariadb.Client
+	rumConn            *rum.Client
+	ptsConn            *pts.Client
+	tatConn            *tat.Client
+	organizationConn   *organization.Client
+	tdcpgConn          *tdcpg.Client
+	dbbrainConn        *dbbrain.Client
+	dtsConn            *dts.Client
+	ciConn             *cos.Client
+	cosBatchConn       *cos.Client
+	tsfConn            *tsf.Client
+	mpsConn            *mps.Client
+	cwpConn            *cwp.Client
+	chdfsConn          *chdfs.Client
+	mdlConn            *mdl.Client
+	apmConn            *apm.Client
+	ciamConn           *ciam.Client
+	tseConn            *tse.Client
+	cdwchConn          *cdwch.Client
+	ebConn             *eb.Client
+	dlcConn            *dlc.Client
+	wedataConn         *wedata.Client
+	wafConn            *waf.Client
+	cfwConn            *cfw.Client
+	oceanusConn        *oceanus.Client
+	dasbConn           *dasb.Client
+	trocketConn        *trocket.Client
+	biConn             *bi.Client
+	cdwpgConn          *cdwpg.Client
+	csipConn           *csip.Client
+	regionConn         *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tkev20220501Conn  *tkev20220501.Client
@@ -1628,19 +1626,6 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.wedataConn
-}
-
-// UseWedataV20250806Client return WEDATA client for service
-func (me *TencentCloudClient) UseWedataV20250806Client() *wedatav20250806.Client {
-	if me.wedatav20250806Conn != nil {
-		return me.wedatav20250806Conn
-	}
-	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
-	me.wedatav20250806Conn, _ = wedatav20250806.NewClient(me.Credential, me.Region, cpf)
-	me.wedatav20250806Conn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.wedatav20250806Conn
 }
 
 func (me *TencentCloudClient) UseWafClient(iacExtInfo ...IacExtInfo) *waf.Client {
