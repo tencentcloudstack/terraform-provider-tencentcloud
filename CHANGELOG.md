@@ -1,3 +1,17 @@
+## 1.82.26(September 26 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cam_message_receiver` ([#3469](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3469))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_wedata_data_source_without_info: This data source has been deprecated. ([#3536](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3536))
+* resource/tencentcloud_cfw_edge_firewall_switch: fix read failed ([#3533](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3533))
+* resource/tencentcloud_mysql_instance: support `cluster_topology` fields ([#3532](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3532))
+* resource/tencentcloud_wedata_baseline: This resource has been deprecated. ([#3536](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3536))
+* resource/tencentcloud_wedata_resource: This resource has been deprecated. ([#3536](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3536))
+
 ## 1.82.25(September 19 , 2025)
 
 FEATURES:
