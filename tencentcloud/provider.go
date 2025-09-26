@@ -1250,6 +1250,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_instances":                                        mqtt.DataSourceTencentCloudMqttInstances(),
 			"tencentcloud_mqtt_instance_detail":                                  mqtt.DataSourceTencentCloudMqttInstanceDetail(),
 			"tencentcloud_mqtt_topics":                                           mqtt.DataSourceTencentCloudMqttTopics(),
+			"tencentcloud_billing_budget_operation_log":                          billing.DataSourceTencentCloudBillingBudgetOperationLog(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2376,6 +2377,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_jwks_authenticator":                                                  mqtt.ResourceTencentCloudMqttJwksAuthenticator(),
 			"tencentcloud_mqtt_http_authenticator":                                                  mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
 			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
+			"tencentcloud_billing_budget":                                                           billing.ResourceTencentCloudBillingBudget(),
 		},
 
 		ConfigureFunc: providerConfigure,

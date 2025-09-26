@@ -2349,5 +2349,8 @@ tencentcloud_mqtt_jwks_authenticator
 tencentcloud_mqtt_http_authenticator
 
 Billing
+Data Source
+tencentcloud_billing_budget_operation_log
 Resource
 tencentcloud_billing_allocation_tag
+tencentcloud_billing_budget
