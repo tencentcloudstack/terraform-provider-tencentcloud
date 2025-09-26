@@ -833,6 +833,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824 h1:DVKvZ6h+
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824/go.mod h1:DvBpDX/qdJG4KKLeULmRvhAjPYiw8za0HeTSu2y/lFw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.0 h1:tfTh+fIqYPgWV2wi4oDvG963pi8tljtZ+5OdnhEqRnU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.0/go.mod h1:OKowLuHQjXN5pk3KnYnbmZLQucfBUUEpqWsa/3Cl+jY=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.31 h1:teA14cAcXuGxas6+5YANQ5KCoPaQBKIb2Q8+sk08Mu0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.31/go.mod h1:1P9mCHgZ9pk/xftRsGC05XanvIk/sC5kLIy5jfD6DqU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.1071 h1:2CeivXYc7PtD2kgZEJXk9/SDQA9dzLejH5FmNzAW3QU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.1071/go.mod h1:UAjX3Vq52SQLKTe6o2HyGA/841Rnc+f4ZRATEsFHJDM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.1.27 h1:Jo/5JV8oiPbXKXQg2xv3ZeKxLst/xXl3nWUgXalq9eg=
