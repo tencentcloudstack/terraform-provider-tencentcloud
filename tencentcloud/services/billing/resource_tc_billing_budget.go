@@ -512,34 +512,34 @@ func resourceTencentCloudBillingBudgetRead(d *schema.ResourceData, meta interfac
 	record := respData.Data.Records[0]
 
 	if record.BudgetName != nil {
-		d.Set("budget_name", record.BudgetName)
+		_ = d.Set("budget_name", record.BudgetName)
 	}
 	if record.CycleType != nil {
-		d.Set("cycle_type", record.CycleType)
+		_ = d.Set("cycle_type", record.CycleType)
 	}
 
 	if record.PeriodBegin != nil {
-		d.Set("period_begin", record.PeriodBegin)
+		_ = d.Set("period_begin", record.PeriodBegin)
 	}
 
 	if record.PeriodEnd != nil {
-		d.Set("period_end", record.PeriodEnd)
+		_ = d.Set("period_end", record.PeriodEnd)
 	}
 
 	if record.PlanType != nil {
-		d.Set("plan_type", record.PlanType)
+		_ = d.Set("plan_type", record.PlanType)
 	}
 
 	if record.BudgetQuota != nil {
-		d.Set("budget_quota", record.BudgetQuota)
+		_ = d.Set("budget_quota", record.BudgetQuota)
 	}
 
 	if record.BillType != nil {
-		d.Set("bill_type", record.BillType)
+		_ = d.Set("bill_type", record.BillType)
 	}
 
 	if record.FeeType != nil {
-		d.Set("fee_type", record.FeeType)
+		_ = d.Set("fee_type", record.FeeType)
 	}
 
 	warnJsonList := make([]map[string]interface{}, 0, len(record.WarnJson))
@@ -562,11 +562,11 @@ func resourceTencentCloudBillingBudgetRead(d *schema.ResourceData, meta interfac
 			warnJsonList = append(warnJsonList, warnJsonMap)
 		}
 
-		d.Set("warn_json", warnJsonList)
+		_ = d.Set("warn_json", warnJsonList)
 	}
 
 	if record.BudgetNote != nil {
-		d.Set("budget_note", record.BudgetNote)
+		_ = d.Set("budget_note", record.BudgetNote)
 	}
 
 	waveThresholdJsonList := make([]map[string]interface{}, 0, len(record.WaveThresholdJson))
@@ -593,7 +593,7 @@ func resourceTencentCloudBillingBudgetRead(d *schema.ResourceData, meta interfac
 			waveThresholdJsonList = append(waveThresholdJsonList, waveThresholdJsonMap)
 		}
 
-		d.Set("wave_threshold_json", waveThresholdJsonList)
+		_ = d.Set("wave_threshold_json", waveThresholdJsonList)
 	}
 
 	if record.DimensionsRange != nil {
@@ -670,9 +670,9 @@ func resourceTencentCloudBillingBudgetRead(d *schema.ResourceData, meta interfac
 			}
 		}
 		if hasNotNullItem {
-			d.Set("dimensions_range", []interface{}{dimensionsRangeMap})
+			_ = d.Set("dimensions_range", []interface{}{dimensionsRangeMap})
 		} else {
-			d.Set("dimensions_range", []interface{}{})
+			_ = d.Set("dimensions_range", []interface{}{})
 		}
 
 	}
