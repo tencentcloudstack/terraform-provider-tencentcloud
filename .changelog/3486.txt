@@ -17,3 +17,11 @@ tencentcloud_dlc_user_vpc_connection
 ```release-note:new-resource
 tencentcloud_dlc_standard_engine_resource_group
 ```
+
+```release-note:new-resource
+tencentcloud_dlc_data_mask_strategy
+```
+
+```release-note:new-resource
+tencentcloud_dlc_attach_data_mask_policy
+```
