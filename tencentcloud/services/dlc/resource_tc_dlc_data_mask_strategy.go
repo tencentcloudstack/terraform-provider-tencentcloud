@@ -150,7 +150,7 @@ func resourceTencentCloudDlcDataMaskStrategyRead(d *schema.ResourceData, meta in
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service    = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		strategyId string
+		strategyId = d.Id()
 	)
 
 	respData, err := service.DescribeDlcDataMaskStrategyById(ctx, strategyId)
@@ -164,42 +164,40 @@ func resourceTencentCloudDlcDataMaskStrategyRead(d *schema.ResourceData, meta in
 		return nil
 	}
 
-	if respData != nil {
-		strategiesList := make([]map[string]interface{}, 0, 1)
-		strategiesMap := map[string]interface{}{}
-		if respData.StrategyName != nil {
-			strategiesMap["strategy_name"] = respData.StrategyName
-		}
+	strategiesList := make([]map[string]interface{}, 0, 1)
+	strategiesMap := map[string]interface{}{}
+	if respData.StrategyName != nil {
+		strategiesMap["strategy_name"] = respData.StrategyName
+	}
 
-		if respData.StrategyDesc != nil {
-			strategiesMap["strategy_desc"] = respData.StrategyDesc
-		}
+	if respData.StrategyDesc != nil {
+		strategiesMap["strategy_desc"] = respData.StrategyDesc
+	}
 
-		if respData.Groups != nil {
-			groupsList := make([]map[string]interface{}, 0, len(respData.Groups))
-			for _, groups := range respData.Groups {
-				groupsMap := map[string]interface{}{}
-				if groups.WorkGroupId != nil {
-					groupsMap["work_group_id"] = groups.WorkGroupId
-				}
-
-				if groups.StrategyType != nil {
-					groupsMap["strategy_type"] = groups.StrategyType
-				}
-
-				groupsList = append(groupsList, groupsMap)
+	if respData.Groups != nil {
+		groupsList := make([]map[string]interface{}, 0, len(respData.Groups))
+		for _, groups := range respData.Groups {
+			groupsMap := map[string]interface{}{}
+			if groups.WorkGroupId != nil {
+				groupsMap["work_group_id"] = groups.WorkGroupId
 			}
 
-			strategiesMap["groups"] = groupsList
+			if groups.StrategyType != nil {
+				groupsMap["strategy_type"] = groups.StrategyType
+			}
+
+			groupsList = append(groupsList, groupsMap)
 		}
 
-		if respData.StrategyId != nil {
-			strategiesMap["strategy_id"] = respData.StrategyId
-		}
-
-		strategiesList = append(strategiesList, strategiesMap)
-		_ = d.Set("strategies", strategiesList)
+		strategiesMap["groups"] = groupsList
 	}
+
+	if respData.StrategyId != nil {
+		strategiesMap["strategy_id"] = respData.StrategyId
+	}
+
+	strategiesList = append(strategiesList, strategiesMap)
+	_ = d.Set("strategy", strategiesList)
 
 	return nil
 }
@@ -211,7 +209,7 @@ func resourceTencentCloudDlcDataMaskStrategyUpdate(d *schema.ResourceData, meta 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		strategyId string
+		strategyId = d.Id()
 	)
 
 	needChange := false
@@ -283,7 +281,7 @@ func resourceTencentCloudDlcDataMaskStrategyDelete(d *schema.ResourceData, meta 
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		request    = dlcv20210125.NewDeleteDataMaskStrategyRequest()
-		strategyId string
+		strategyId = d.Id()
 	)
 
 	request.StrategyId = &strategyId

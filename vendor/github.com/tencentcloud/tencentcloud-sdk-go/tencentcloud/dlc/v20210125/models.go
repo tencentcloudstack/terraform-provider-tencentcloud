@@ -1801,6 +1801,14 @@ type CommonMetrics struct {
 	ProcessedRows *int64 `json:"ProcessedRows,omitnil,omitempty" name:"ProcessedRows"`
 }
 
+type CoreInfo struct {
+	// 时间戳(毫秒)数组
+	Timestamp []*int64 `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
+
+	// core 用量
+	CoreUsage []*int64 `json:"CoreUsage,omitnil,omitempty" name:"CoreUsage"`
+}
+
 type CosPermission struct {
 	// cos路径
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -2461,6 +2469,9 @@ func (r *CreateDataMaskStrategyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDataMaskStrategyResponseParams struct {
+	// 策略id
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -3963,6 +3974,21 @@ type CreateStandardEngineResourceGroupRequestParams struct {
 
 	// 仅SQL资源组资源上限，仅用于快速模块
 	SparkSize *int64 `json:"SparkSize,omitnil,omitempty" name:"SparkSize"`
+
+	// GPUDriver规格
+	DriverGPUSpec *int64 `json:"DriverGPUSpec,omitnil,omitempty" name:"DriverGPUSpec"`
+
+	// GPUExecutor规格
+	ExecutorGPUSpec *int64 `json:"ExecutorGPUSpec,omitnil,omitempty" name:"ExecutorGPUSpec"`
+
+	// GPU上限
+	GPULimitSize *int64 `json:"GPULimitSize,omitnil,omitempty" name:"GPULimitSize"`
+
+	// GPU规格
+	GPUSize *int64 `json:"GPUSize,omitnil,omitempty" name:"GPUSize"`
+
+	// Pod GPU规格上限
+	PythonGPUSpec *int64 `json:"PythonGPUSpec,omitnil,omitempty" name:"PythonGPUSpec"`
 }
 
 type CreateStandardEngineResourceGroupRequest struct {
@@ -4047,6 +4073,21 @@ type CreateStandardEngineResourceGroupRequest struct {
 
 	// 仅SQL资源组资源上限，仅用于快速模块
 	SparkSize *int64 `json:"SparkSize,omitnil,omitempty" name:"SparkSize"`
+
+	// GPUDriver规格
+	DriverGPUSpec *int64 `json:"DriverGPUSpec,omitnil,omitempty" name:"DriverGPUSpec"`
+
+	// GPUExecutor规格
+	ExecutorGPUSpec *int64 `json:"ExecutorGPUSpec,omitnil,omitempty" name:"ExecutorGPUSpec"`
+
+	// GPU上限
+	GPULimitSize *int64 `json:"GPULimitSize,omitnil,omitempty" name:"GPULimitSize"`
+
+	// GPU规格
+	GPUSize *int64 `json:"GPUSize,omitnil,omitempty" name:"GPUSize"`
+
+	// Pod GPU规格上限
+	PythonGPUSpec *int64 `json:"PythonGPUSpec,omitnil,omitempty" name:"PythonGPUSpec"`
 }
 
 func (r *CreateStandardEngineResourceGroupRequest) ToJsonString() string {
@@ -4087,6 +4128,11 @@ func (r *CreateStandardEngineResourceGroupRequest) FromJsonString(s string) erro
 	delete(f, "PythonCuSpec")
 	delete(f, "SparkSpecMode")
 	delete(f, "SparkSize")
+	delete(f, "DriverGPUSpec")
+	delete(f, "ExecutorGPUSpec")
+	delete(f, "GPULimitSize")
+	delete(f, "GPUSize")
+	delete(f, "PythonGPUSpec")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateStandardEngineResourceGroupRequest has unknown keys!", "")
 	}
@@ -10398,12 +10444,57 @@ func (r *DescribeSubUserAccessPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTablePartitionsRequestParams struct {
+	// 数据目录名称
+	Catalog *string `json:"Catalog,omitnil,omitempty" name:"Catalog"`
 
+	// 数据库名称
+	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
+
+	// 数据表名称
+	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
+
+	// 查询偏移位置
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 当次查询的数量限制
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 模糊查询的分区名称
+	FuzzyPartition *string `json:"FuzzyPartition,omitnil,omitempty" name:"FuzzyPartition"`
+
+	// 排序信息
+	Sorts []*Sort `json:"Sorts,omitnil,omitempty" name:"Sorts"`
+
+	// 分页查询的游标信息
+	Cursor *string `json:"Cursor,omitnil,omitempty" name:"Cursor"`
 }
 
 type DescribeTablePartitionsRequest struct {
 	*tchttp.BaseRequest
 	
+	// 数据目录名称
+	Catalog *string `json:"Catalog,omitnil,omitempty" name:"Catalog"`
+
+	// 数据库名称
+	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
+
+	// 数据表名称
+	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
+
+	// 查询偏移位置
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 当次查询的数量限制
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 模糊查询的分区名称
+	FuzzyPartition *string `json:"FuzzyPartition,omitnil,omitempty" name:"FuzzyPartition"`
+
+	// 排序信息
+	Sorts []*Sort `json:"Sorts,omitnil,omitempty" name:"Sorts"`
+
+	// 分页查询的游标信息
+	Cursor *string `json:"Cursor,omitnil,omitempty" name:"Cursor"`
 }
 
 func (r *DescribeTablePartitionsRequest) ToJsonString() string {
@@ -10418,7 +10509,14 @@ func (r *DescribeTablePartitionsRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "Catalog")
+	delete(f, "Database")
+	delete(f, "Table")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "FuzzyPartition")
+	delete(f, "Sorts")
+	delete(f, "Cursor")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTablePartitionsRequest has unknown keys!", "")
 	}
@@ -10427,6 +10525,9 @@ func (r *DescribeTablePartitionsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTablePartitionsResponseParams struct {
+	// 分区信息值
+	MixedPartitions *MixedTablePartitions `json:"MixedPartitions,omitnil,omitempty" name:"MixedPartitions"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -11002,6 +11103,63 @@ func (r *DescribeTaskMonitorInfosResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTaskMonitorInfosResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTaskResourceUsageRequestParams struct {
+	// 任务 id
+	TaskInstanceId *string `json:"TaskInstanceId,omitnil,omitempty" name:"TaskInstanceId"`
+}
+
+type DescribeTaskResourceUsageRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 id
+	TaskInstanceId *string `json:"TaskInstanceId,omitnil,omitempty" name:"TaskInstanceId"`
+}
+
+func (r *DescribeTaskResourceUsageRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskResourceUsageRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskInstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTaskResourceUsageRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTaskResourceUsageResponseParams struct {
+	// core 用量信息
+	CoreInfo *CoreInfo `json:"CoreInfo,omitnil,omitempty" name:"CoreInfo"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTaskResourceUsageResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTaskResourceUsageResponseParams `json:"Response"`
+}
+
+func (r *DescribeTaskResourceUsageResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskResourceUsageResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -13528,6 +13686,26 @@ type HiveInfo struct {
 	KerberosEnable *bool `json:"KerberosEnable,omitnil,omitempty" name:"KerberosEnable"`
 }
 
+type HiveTablePartition struct {
+	// 分区信息名称
+	Partition *string `json:"Partition,omitnil,omitempty" name:"Partition"`
+
+	// 分区记录数
+	Records *int64 `json:"Records,omitnil,omitempty" name:"Records"`
+
+	// 分区数据文件存储量
+	DataFileStorage *int64 `json:"DataFileStorage,omitnil,omitempty" name:"DataFileStorage"`
+
+	// 分区创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 分区schema更新时间
+	ModifiedTime *string `json:"ModifiedTime,omitnil,omitempty" name:"ModifiedTime"`
+
+	// 最后一次分区更新的访问时间
+	LastAccessTime *string `json:"LastAccessTime,omitnil,omitempty" name:"LastAccessTime"`
+}
+
 type HouseEventsInfo struct {
 	// 事件时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -13540,6 +13718,32 @@ type HouseEventsInfo struct {
 	// 集群信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClusterInfo []*string `json:"ClusterInfo,omitnil,omitempty" name:"ClusterInfo"`
+}
+
+type IcebergTablePartition struct {
+	// 分区信息名称
+	Partition *string `json:"Partition,omitnil,omitempty" name:"Partition"`
+
+	// 分区记录数
+	Records *int64 `json:"Records,omitnil,omitempty" name:"Records"`
+
+	// 分区数据文件数量
+	DataFileSize *int64 `json:"DataFileSize,omitnil,omitempty" name:"DataFileSize"`
+
+	// 分区数据文件存储量
+	DataFileStorage *int64 `json:"DataFileStorage,omitnil,omitempty" name:"DataFileStorage"`
+
+	// 分区创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 分区更新时间
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// 最后一次分区更新的快照ID
+	LastUpdateSnapshotId *string `json:"LastUpdateSnapshotId,omitnil,omitempty" name:"LastUpdateSnapshotId"`
+
+	// 分区的location
+	Location *LocationInfo `json:"Location,omitnil,omitempty" name:"Location"`
 }
 
 type IpPortPair struct {
@@ -13895,6 +14099,14 @@ func (r *ListTaskJobLogNameResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type LocationInfo struct {
+	// 桶名称
+	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
+
+	// location路径
+	DataLocation *string `json:"DataLocation,omitnil,omitempty" name:"DataLocation"`
+}
+
 type LockComponentInfo struct {
 	// 数据库名称
 	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
@@ -14007,6 +14219,23 @@ func (r *LockMetaDataResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *LockMetaDataResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type MixedTablePartitions struct {
+	// 数据表格式
+	TableFormat *string `json:"TableFormat,omitnil,omitempty" name:"TableFormat"`
+
+	// 分区总数
+	TotalSize *int64 `json:"TotalSize,omitnil,omitempty" name:"TotalSize"`
+
+	// 分页查询的游标信息，在获取下一页信息时需要回传到服务端
+	NextCursor *string `json:"NextCursor,omitnil,omitempty" name:"NextCursor"`
+
+	// iceberg表分区信息
+	IcebergPartitions []*IcebergTablePartition `json:"IcebergPartitions,omitnil,omitempty" name:"IcebergPartitions"`
+
+	// hive表分区信息
+	HivePartitions []*HiveTablePartition `json:"HivePartitions,omitnil,omitempty" name:"HivePartitions"`
 }
 
 // Predefined struct for user
@@ -16098,6 +16327,14 @@ type SmartPolicyBaseInfo struct {
 	AppId *string `json:"AppId,omitnil,omitempty" name:"AppId"`
 }
 
+type Sort struct {
+	// 排序字段
+	Field *string `json:"Field,omitnil,omitempty" name:"Field"`
+
+	// 是否按照ASC排序，否则DESC排序
+	Asc *bool `json:"Asc,omitnil,omitempty" name:"Asc"`
+}
+
 type SparkJobInfo struct {
 	// spark作业ID
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
@@ -17180,6 +17417,9 @@ type TaskResultInfo struct {
 
 	// 获取结果消耗的时间
 	QueryResultTime *float64 `json:"QueryResultTime,omitnil,omitempty" name:"QueryResultTime"`
+
+	// base64 编码结果集
+	ResultSetEncode *string `json:"ResultSetEncode,omitnil,omitempty" name:"ResultSetEncode"`
 }
 
 type TasksInfo struct {
@@ -18115,6 +18355,21 @@ type UpdateStandardEngineResourceGroupResourceInfoRequestParams struct {
 
 	// 仅SQL资源组资源上限，仅用于快速模式
 	SparkSize *int64 `json:"SparkSize,omitnil,omitempty" name:"SparkSize"`
+
+	// gpuDriver规格
+	DriverGPUSpec *int64 `json:"DriverGPUSpec,omitnil,omitempty" name:"DriverGPUSpec"`
+
+	// gpuExcutor 规格
+	ExecutorGPUSpec *int64 `json:"ExecutorGPUSpec,omitnil,omitempty" name:"ExecutorGPUSpec"`
+
+	// gpu 上限
+	GPULimitSize *int64 `json:"GPULimitSize,omitnil,omitempty" name:"GPULimitSize"`
+
+	// gpu 规格
+	GPUSize *int64 `json:"GPUSize,omitnil,omitempty" name:"GPUSize"`
+
+	// gpupod 规格
+	PythonGPUSpec *int64 `json:"PythonGPUSpec,omitnil,omitempty" name:"PythonGPUSpec"`
 }
 
 type UpdateStandardEngineResourceGroupResourceInfoRequest struct {
@@ -18172,6 +18427,21 @@ type UpdateStandardEngineResourceGroupResourceInfoRequest struct {
 
 	// 仅SQL资源组资源上限，仅用于快速模式
 	SparkSize *int64 `json:"SparkSize,omitnil,omitempty" name:"SparkSize"`
+
+	// gpuDriver规格
+	DriverGPUSpec *int64 `json:"DriverGPUSpec,omitnil,omitempty" name:"DriverGPUSpec"`
+
+	// gpuExcutor 规格
+	ExecutorGPUSpec *int64 `json:"ExecutorGPUSpec,omitnil,omitempty" name:"ExecutorGPUSpec"`
+
+	// gpu 上限
+	GPULimitSize *int64 `json:"GPULimitSize,omitnil,omitempty" name:"GPULimitSize"`
+
+	// gpu 规格
+	GPUSize *int64 `json:"GPUSize,omitnil,omitempty" name:"GPUSize"`
+
+	// gpupod 规格
+	PythonGPUSpec *int64 `json:"PythonGPUSpec,omitnil,omitempty" name:"PythonGPUSpec"`
 }
 
 func (r *UpdateStandardEngineResourceGroupResourceInfoRequest) ToJsonString() string {
@@ -18203,6 +18473,11 @@ func (r *UpdateStandardEngineResourceGroupResourceInfoRequest) FromJsonString(s 
 	delete(f, "PythonCuSpec")
 	delete(f, "SparkSpecMode")
 	delete(f, "SparkSize")
+	delete(f, "DriverGPUSpec")
+	delete(f, "ExecutorGPUSpec")
+	delete(f, "GPULimitSize")
+	delete(f, "GPUSize")
+	delete(f, "PythonGPUSpec")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateStandardEngineResourceGroupResourceInfoRequest has unknown keys!", "")
 	}

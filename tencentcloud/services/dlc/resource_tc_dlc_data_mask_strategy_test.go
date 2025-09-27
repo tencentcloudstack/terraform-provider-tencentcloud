@@ -44,8 +44,8 @@ resource "tencentcloud_dlc_data_mask_strategy" "example" {
   strategy {
     strategy_name = "tf-example"
     strategy_desc = "description."
-    groups = {
-      work_group_id = 221498
+    groups {
+      work_group_id = 70220
       strategy_type = "MASK"
     }
   }
@@ -57,9 +57,9 @@ resource "tencentcloud_dlc_data_mask_strategy" "example" {
   strategy {
     strategy_name = "tf-example-update"
     strategy_desc = "description update."
-    groups = {
-      work_group_id = 221498
-      strategy_type = "MASK"
+    groups {
+      work_group_id = 70219
+      strategy_type = "MASK_NONE"
     }
   }
 }

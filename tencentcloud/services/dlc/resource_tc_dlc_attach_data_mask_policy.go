@@ -54,29 +54,11 @@ func ResourceTencentCloudDlcAttachDataMaskPolicy() *schema.Resource {
 										ForceNew:    true,
 										Description: "The name of the table to be authorized. Use * to represent all tables under the current Database. For administrator-level authorization, only * is allowed. For data connection-level and database-level authorization, leave it empty. For other types, specify the table name.",
 									},
-									"operation": {
-										Type:        schema.TypeString,
-										Required:    true,
-										ForceNew:    true,
-										Description: "The permission operation to be granted, varying by authorization level. Administrator-level: ALL (default). Data connection-level: CREATE. Database-level: ALL, CREATE, ALTER, DROP. Table-level: ALL, SELECT, INSERT, ALTER, DELETE, DROP, UPDATE. Note: For table-level permissions, only SELECT is supported if the data source is not COSDataCatalog.",
-									},
-									"policy_type": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "The type of authorization. Currently supports eight types: ADMIN (administrator-level), DATASOURCE (data connection-level), DATABASE (database-level), TABLE (table-level), VIEW (view-level), FUNCTION (function-level), COLUMN (column-level), ENGINE (data engine-level). Defaults to administrator-level.",
-									},
 									"column": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										ForceNew:    true,
 										Description: "The name of the column to be authorized. Use * to represent all columns. For administrator-level authorization, only * is allowed.",
-									},
-									"mode": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "The authorization mode. Do not fill in this parameter. COMMON: Normal mode. SENIOR: Advanced mode.",
 									},
 								},
 							},
@@ -136,23 +118,13 @@ func resourceTencentCloudDlcAttachDataMaskPolicyCreate(d *schema.ResourceData, m
 					table = v
 				}
 
-				if v, ok := policyInfoMap["operation"].(string); ok && v != "" {
-					policy.Operation = helper.String(v)
-				}
-
-				if v, ok := policyInfoMap["policy_type"].(string); ok && v != "" {
-					policy.PolicyType = helper.String(v)
-				}
-
 				if v, ok := policyInfoMap["column"].(string); ok && v != "" {
 					policy.Column = helper.String(v)
 					column = v
 				}
 
-				if v, ok := policyInfoMap["mode"].(string); ok && v != "" {
-					policy.Mode = helper.String(v)
-				}
-
+				policy.Operation = helper.String("SELECT")
+				policy.PolicyType = helper.String("DATAMASK")
 				dataMaskStrategyPolicy.PolicyInfo = &policy
 			}
 
@@ -237,6 +209,7 @@ func resourceTencentCloudDlcAttachDataMaskPolicyRead(d *schema.ResourceData, met
 				policyInfoMap["database"] = dataBase
 				policyInfoMap["table"] = table
 				policyInfoMap["column"] = column
+
 				policyInfoList = append(policyInfoList, policyInfoMap)
 				dMap["policy_info"] = policyInfoList
 
@@ -287,42 +260,15 @@ func resourceTencentCloudDlcAttachDataMaskPolicyDelete(d *schema.ResourceData, m
 		for _, item := range v.([]interface{}) {
 			dataMaskStrategyPolicySetMap := item.(map[string]interface{})
 			dataMaskStrategyPolicy := dlcv20210125.DataMaskStrategyPolicy{}
-			if policyInfoMap, ok := helper.ConvertInterfacesHeadToMap(dataMaskStrategyPolicySetMap["policy_info"]); ok {
-				policy := dlcv20210125.Policy{}
-				if v, ok := policyInfoMap["database"].(string); ok && v != "" {
-					policy.Database = &dataBase
-				}
-
-				if v, ok := policyInfoMap["catalog"].(string); ok && v != "" {
-					policy.Catalog = &catalog
-				}
-
-				if v, ok := policyInfoMap["table"].(string); ok && v != "" {
-					policy.Table = &table
-				}
-
-				if v, ok := policyInfoMap["operation"].(string); ok && v != "" {
-					policy.Operation = helper.String(v)
-				}
-
-				if v, ok := policyInfoMap["policy_type"].(string); ok && v != "" {
-					policy.PolicyType = helper.String(v)
-				}
-
-				if v, ok := policyInfoMap["column"].(string); ok && v != "" {
-					policy.Column = &column
-				}
-
-				if v, ok := policyInfoMap["mode"].(string); ok && v != "" {
-					policy.Mode = helper.String(v)
-				}
-
-				dataMaskStrategyPolicy.PolicyInfo = &policy
-			}
-
-			if v, ok := dataMaskStrategyPolicySetMap["data_mask_strategy_id"].(string); ok && v != "" {
-				dataMaskStrategyPolicy.DataMaskStrategyId = helper.String(v)
-			}
+			policy := dlcv20210125.Policy{}
+			policy.Database = &dataBase
+			policy.Catalog = &catalog
+			policy.Table = &table
+			policy.Column = &column
+			policy.Operation = helper.String("SELECT")
+			policy.PolicyType = helper.String("DATAMASK")
+			dataMaskStrategyPolicy.PolicyInfo = &policy
+			dataMaskStrategyPolicy.DataMaskStrategyId = helper.String("-1")
 
 			if v, ok := dataMaskStrategyPolicySetMap["column_type"].(string); ok && v != "" {
 				dataMaskStrategyPolicy.ColumnType = helper.String(v)

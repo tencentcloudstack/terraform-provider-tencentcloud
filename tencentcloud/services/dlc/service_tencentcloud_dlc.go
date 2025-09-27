@@ -1353,7 +1353,7 @@ func (me *DlcService) DescribeDlcDataMaskStrategyById(ctx context.Context, strat
 	request := dlc.NewDescribeDataMaskStrategiesRequest()
 	response := dlc.NewDescribeDataMaskStrategiesResponse()
 	request.Filters = []*dlc.Filter{
-		&dlc.Filter{
+		{
 			Name:   helper.String("strategy-id"),
 			Values: helper.Strings([]string{strategyId}),
 		},
