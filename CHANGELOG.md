@@ -1,3 +1,17 @@
+## 1.82.27(September 28 , 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_billing_budget_operation_log` ([#3537](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3537))
+* **New Data Source:** `tencentcloud_dlc_data_engine_network` ([#3486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3486))
+* **New Data Source:** `tencentcloud_dlc_data_engine_session_parameters` ([#3486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3486))
+* **New Data Source:** `tencentcloud_dlc_session_image_version` ([#3486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3486))
+* **New Resource:** `tencentcloud_billing_budget` ([#3537](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3537))
+* **New Resource:** `tencentcloud_dlc_attach_data_mask_policy` ([#3486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3486))
+* **New Resource:** `tencentcloud_dlc_data_mask_strategy` ([#3486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3486))
+* **New Resource:** `tencentcloud_dlc_standard_engine_resource_group` ([#3486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3486))
+* **New Resource:** `tencentcloud_dlc_user_vpc_connection` ([#3486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3486))
+
 ## 1.82.26(September 26 , 2025)
 
 FEATURES:
