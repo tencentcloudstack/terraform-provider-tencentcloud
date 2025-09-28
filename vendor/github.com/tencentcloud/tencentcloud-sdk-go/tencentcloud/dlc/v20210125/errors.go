@@ -125,6 +125,9 @@ const (
 	// 退押金失败。
 	FAILEDOPERATION_REFUNDDEPOSITFAILED = "FailedOperation.RefundDepositFailed"
 
+	// 结果过期
+	FAILEDOPERATION_RESULTEXPIRED = "FailedOperation.ResultExpired"
+
 	// 取消授权失败。
 	FAILEDOPERATION_REVOKEPOLICYFAILED = "FailedOperation.RevokePolicyFailed"
 
@@ -149,6 +152,9 @@ const (
 	// 标签数量超出限制。
 	FAILEDOPERATION_TOOMANYTAGS = "FailedOperation.TooManyTags"
 
+	// 更新权限信息失败。
+	FAILEDOPERATION_UPDATEPOLICYFAILED = "FailedOperation.UpdatePolicyFailed"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
@@ -169,6 +175,9 @@ const (
 
 	// 交互式SQL任务指定SortBy类型不匹配，当前仅支持: create-time/resource-usage
 	INVALIDPARAMETER_BATCHSQLTASKSORTBYTYPENOTMATCH = "InvalidParameter.BatchSQLTaskSortByTypeNotMatch"
+
+	// 当前配置不被允许
+	INVALIDPARAMETER_CONFIGKEYPROHIBITED = "InvalidParameter.ConfigKeyProhibited"
 
 	// 指定集群资源类型不匹配，当前仅支持: spark_cu（对应Spark集群）,presto_cu(对应Presto集群)
 	INVALIDPARAMETER_DATAENGINECLUSTERTYPENOTMATCH = "InvalidParameter.DataEngineClusterTypeNotMatch"
@@ -362,6 +371,9 @@ const (
 	// 无效的Offset值。
 	INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 
+	// 排序列不合法
+	INVALIDPARAMETER_INVALIDPARAMETER_SQLTASKANALYSISSORTBYTYPENOTMATCH = "InvalidParameter.InvalidParameter_SQLTaskAnalysisSortByTypeNotMatch"
+
 	// 无效的计费模式。
 	INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPayMode"
 
@@ -419,6 +431,9 @@ const (
 	// 任务类型TaskType错误，Spark引擎任务类型为SparkSQLTask,Presto引擎任务类型为SQLTask
 	INVALIDPARAMETER_INVALIDTASKTYPE = "InvalidParameter.InvalidTaskType"
 
+	// 任务长度超限
+	INVALIDPARAMETER_INVALIDTASKSFILTERLENGTH = "InvalidParameter.InvalidTasksFilterLength"
+
 	// 指定的TCR Spark镜像格式不匹配，参考样例: my-image/ndf/python/latest
 	INVALIDPARAMETER_INVALIDTCRSPARKIMAGEFORMAT = "InvalidParameter.InvalidTcrSparkImageFormat"
 
@@ -458,6 +473,9 @@ const (
 	// 指定参数Base64解析失败
 	INVALIDPARAMETER_PARAMETERBASE64DECODEFAILED = "InvalidParameter.ParameterBase64DecodeFailed"
 
+	// 传入参数不合法
+	INVALIDPARAMETER_PARAMETERILLEGAL = "InvalidParameter.ParameterIllegal"
+
 	// 找不到参数或参数为空
 	INVALIDPARAMETER_PARAMETERNOTFOUNDORBENONE = "InvalidParameter.ParameterNotFoundOrBeNone"
 
@@ -466,6 +484,9 @@ const (
 
 	// SQL参数预处理失败
 	INVALIDPARAMETER_SQLPARAMETERPREPROCESSINGFAILED = "InvalidParameter.SQLParameterPreprocessingFailed"
+
+	// 不支持的过滤类型或者参数不合法
+	INVALIDPARAMETER_SQLTASKANALYSISFILTERSKEYTYPENOTMATH = "InvalidParameter.SQLTaskAnalysisFiltersKeyTypeNotMath"
 
 	// 指定的Filter.Key不匹配，当前仅支持: task-id/task-sql-keyword/task-kind/task-operator/batch-id/session-id/task-state
 	INVALIDPARAMETER_SQLTASKFILTERSKEYTYPENOTMATH = "InvalidParameter.SQLTaskFiltersKeyTypeNotMath"
@@ -499,6 +520,9 @@ const (
 
 	// 任务已经结束，不能取消。
 	INVALIDPARAMETER_TASKALREADYFINISHED = "InvalidParameter.TaskAlreadyFinished"
+
+	// 任务不存在。
+	INVALIDPARAMETER_TASKNOTFOUND = "InvalidParameter.TaskNotFound"
 
 	// 指定的任务状态不匹配，当前仅支持: 0:初始化, 1:运行中, 2:成功, 3:数据写入中, 4:排队中, -1:失败, -3:删除
 	INVALIDPARAMETER_TASKSTATETYPENOTMATH = "InvalidParameter.TaskStateTypeNotMath"
@@ -622,6 +646,9 @@ const (
 
 	// 找不到Spark Shuffle存储路径，请到控制台->数据探索页面->存储配置中设置
 	RESOURCENOTFOUND_SHUFFLEDIRNOTFOUND = "ResourceNotFound.ShuffleDirNotFound"
+
+	// 任务资源不足，请调整driver或executor指定规格大小
+	RESOURCENOTFOUND_SPARKJOBINSUFFICIENTRESOURCES = "ResourceNotFound.SparkJobInsufficientResources"
 
 	// 表不存在，请重试，或者提交工单联系我们
 	RESOURCENOTFOUND_TABLENOTFOUND = "ResourceNotFound.TableNotFound"
