@@ -2,6 +2,8 @@ Provides a resource to create a DLC standard engine resource group
 
 ~> **NOTE:** If you are creating a machine learning resource group for the first time, you need to contact DLC product for whitelisting.
 
+~> **NOTE:** Field `auto_pause_time` is meaningful only when the values ​​of fields `auto_launch` and `auto_pause` are 0.
+
 Example Usage
 
 Only SQL analysis resource group 

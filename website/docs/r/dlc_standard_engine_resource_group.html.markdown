@@ -13,6 +13,8 @@ Provides a resource to create a DLC standard engine resource group
 
 ~> **NOTE:** If you are creating a machine learning resource group for the first time, you need to contact DLC product for whitelisting.
 
+~> **NOTE:** Field `auto_pause_time` is meaningful only when the values ​​of fields `auto_launch` and `auto_pause` are 0.
+
 ## Example Usage
 
 ### Only SQL analysis resource group
@@ -72,10 +74,8 @@ The following arguments are supported:
 * `dynamic_config_pairs` - (Optional, List) Dynamic parameters of the resource group, effective in the next task.
 * `executor_cu_spec` - (Optional, String) Executor CU specifications: Currently supported: small (default, 1 CU), medium (2 CU), large (4 CU), xlarge (8 CU). Memory CUs are CPUs with a ratio of 1:8, m.small (1 CU memory), m.medium (2 CU memory), m.large (4 CU memory), and m.xlarge (8 CU memory).
 * `frame_type` - (Optional, String) The framework type of the AI type resource group, machine-learning, python, spark-ml, if not filled in, the default is machine-learning.
-* `image_name` - (Optional, String) Image name.
-machine-learning: pytorch-v2.5.1, scikit-learn-v1.6.0, tensorflow-v2.18.0
-spark-ml: Standard-S 1.1
-python: python-v3.10.
+* `image_name` - (Optional, String) Image Name. 
+Example value: image-xxx. If using a built-in image (ImageType is built-in), the ImageName for different frameworks is: machine-learning: pytorch-v2.5.1, scikit-learn-v1.6.0, tensorflow-v2.18.0, python: python-v3.10, spark-m: Standard-S 1.1.
 * `image_type` - (Optional, String) Image type, build-in: built-in, custom: custom, if not filled in, the default is build-in.
 * `image_version` - (Optional, String) Image ID.
 * `max_concurrency` - (Optional, Int) The number of concurrent tasks is 5 by default.
