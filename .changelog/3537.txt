@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_billing_budget_operation_log
+```
+
+```release-note:new-resource
+tencentcloud_billing_budget
+```
