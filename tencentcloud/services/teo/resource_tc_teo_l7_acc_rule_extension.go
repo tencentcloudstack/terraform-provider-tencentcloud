@@ -576,7 +576,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"protocol": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Back-to-origin protocol configuration. Possible values ​​are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.",
+									Description: "Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.",
 								},
 							},
 						},
