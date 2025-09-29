@@ -2221,6 +2221,7 @@ Wedata
 Data Source
 tencentcloud_wedata_rule_templates
 tencentcloud_wedata_ops_workflows
+tencentcloud_wedata_ops_workflow
 tencentcloud_wedata_data_source_list
 
 Resource

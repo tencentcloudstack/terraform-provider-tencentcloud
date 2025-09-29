@@ -1160,6 +1160,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_plateform_event_template":                           eb.DataSourceTencentCloudEbPlateformEventTemplate(),
 			"tencentcloud_wedata_rule_templates":                                 wedata.DataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_wedata_ops_workflows":                                  wedata.DataSourceTencentCloudWedataOpsWorkflows(),
+			"tencentcloud_wedata_ops_workflow":                                   wedata.DataSourceTencentCloudWedataOpsWorkflow(),
 			"tencentcloud_wedata_data_source_list":                               wedata.DataSourceTencentCloudWedataDataSourceList(),
 			"tencentcloud_private_dns_records":                                   privatedns.DataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_private_dns_private_zone_list":                         privatedns.DataSourceTencentCloudPrivateDnsPrivateZoneList(),
