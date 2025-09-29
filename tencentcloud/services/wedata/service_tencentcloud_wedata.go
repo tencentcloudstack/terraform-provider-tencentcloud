@@ -9,6 +9,7 @@ import (
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -111,6 +112,84 @@ func (me *WedataService) DescribeWedataRuleTemplatesByFilter(ctx context.Context
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ruleTemplates = response.Response.Data
+
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsWorkflowsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.OpsWorkflow, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListOpsWorkflowsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "FolderId" {
+			request.FolderId = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+		if k == "OwnerUin" {
+			request.OwnerUin = v.(*string)
+		}
+		if k == "WorkflowType" {
+			request.WorkflowType = v.(*string)
+		}
+		if k == "KeyWord" {
+			request.KeyWord = v.(*string)
+		}
+		if k == "SortItem" {
+			request.SortItem = v.(*string)
+		}
+		if k == "SortType" {
+			request.SortType = v.(*string)
+		}
+		if k == "CreateUserUin" {
+			request.CreateUserUin = v.(*string)
+		}
+		if k == "ModifyTime" {
+			request.ModifyTime = v.(*string)
+		}
+		if k == "CreateTime" {
+			request.CreateTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 1 // page number starts from 1
+		limit  uint64 = 100
+	)
+	for {
+		request.PageNumber = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseWedataV20250806Client().ListOpsWorkflows(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
 
 	return
 }
