@@ -1411,13 +1411,13 @@ func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{})
 						}
 						ruleEngineAction.ForceRedirectHTTPSParameters = &forceRedirectHTTPSParameters
 					}
-					// if originPullProtocolParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["origin_pull_protocol_parameters"]); ok {
-					// 	originPullProtocolParameters := teov20220901.OriginPullProtocol{}
-					// 	if v, ok := originPullProtocolParametersMap["protocol"].(string); ok && v != "" {
-					// 		originPullProtocolParameters.Protocol = helper.String(v)
-					// 	}
-					// 	ruleEngineAction.OriginPullProtocolParameters = &originPullProtocolParameters
-					// }
+					if originPullProtocolParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["origin_pull_protocol_parameters"]); ok {
+						originPullProtocolParameters := teov20220901.OriginPullProtocolParameters{}
+						if v, ok := originPullProtocolParametersMap["protocol"].(string); ok && v != "" {
+							originPullProtocolParameters.Protocol = helper.String(v)
+						}
+						ruleEngineAction.OriginPullProtocolParameters = &originPullProtocolParameters
+					}
 					if compressionParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["compression_parameters"]); ok {
 						compressionParameters := teov20220901.CompressionParameters{}
 						if v, ok := compressionParametersMap["switch"].(string); ok && v != "" {
@@ -2110,15 +2110,15 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 						actionsMap["force_redirect_https_parameters"] = []interface{}{forceRedirectHTTPSParametersMap}
 					}
 
-					// originPullProtocolParametersMap := map[string]interface{}{}
+					originPullProtocolParametersMap := map[string]interface{}{}
 
-					// if actions.OriginPullProtocolParameters != nil {
-					// 	if actions.OriginPullProtocolParameters.Protocol != nil {
-					// 		originPullProtocolParametersMap["protocol"] = actions.OriginPullProtocolParameters.Protocol
-					// 	}
+					if actions.OriginPullProtocolParameters != nil {
+						if actions.OriginPullProtocolParameters.Protocol != nil {
+							originPullProtocolParametersMap["protocol"] = actions.OriginPullProtocolParameters.Protocol
+						}
 
-					// 	actionsMap["origin_pull_protocol_parameters"] = []interface{}{originPullProtocolParametersMap}
-					// }
+						actionsMap["origin_pull_protocol_parameters"] = []interface{}{originPullProtocolParametersMap}
+					}
 
 					compressionParametersMap := map[string]interface{}{}
 
