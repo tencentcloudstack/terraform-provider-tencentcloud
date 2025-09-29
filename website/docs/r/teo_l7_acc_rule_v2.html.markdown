@@ -175,6 +175,7 @@ The `actions` object of `branches` supports the following:
 * `modify_response_header_parameters` - (Optional, List) Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
 * `ocsp_stapling_parameters` - (Optional, List) OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
 * `offline_cache_parameters` - (Optional, List) Offline cache configuration parameter. this parameter is required when name is offlinecache.
+* `origin_pull_protocol_parameters` - (Optional, List) Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
 * `post_max_size_parameters` - (Optional, List) Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
 * `quic_parameters` - (Optional, List) The quic configuration parameter. this parameter is required when name is quic.
 * `range_origin_pull_parameters` - (Optional, List) Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
@@ -376,6 +377,10 @@ The `ocsp_stapling_parameters` object of `actions` supports the following:
 The `offline_cache_parameters` object of `actions` supports the following:
 
 * `switch` - (Optional, String) Whether to enable offline caching. values: on: enable; Off: disable.
+
+The `origin_pull_protocol_parameters` object of `actions` supports the following:
+
+* `protocol` - (Optional, String) Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
 
 The `post_max_size_parameters` object of `actions` supports the following:
 

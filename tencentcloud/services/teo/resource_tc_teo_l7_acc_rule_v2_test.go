@@ -17,7 +17,7 @@ func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
 				Config: testAccTeoL7V2AccRule,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "zone_id", "zone-39quuimqg8r6"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "zone_id", "zone-3fkff38fyw8s"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "description.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_name", "网站加速1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "status", "enable"),
@@ -63,9 +63,11 @@ func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "description.0", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_name", "网站加速2"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.actions.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.actions.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.sub_rules.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.sub_rules.0.description.0", "01-1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.actions.1.name", "OriginPullProtocol"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.actions.1.origin_pull_protocol_parameters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.actions.1.origin_pull_protocol_parameters.0.protocol", "https"),
 				),
 			},
 			{
@@ -79,7 +81,7 @@ func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
 
 const testAccTeoL7V2AccRule = `
 resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
-  zone_id     = "zone-39quuimqg8r6"
+  zone_id     = "zone-3fkff38fyw8s"
   description = ["1"]
   rule_name   = "网站加速1"
   status = "enable"
@@ -142,7 +144,7 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
 
 const testAccTeoL7V2AccRuleUpdate = `
 resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
-  zone_id     = "zone-39quuimqg8r6"
+  zone_id     = "zone-3fkff38fyw8s"
   description = ["2"]
   rule_name   = "网站加速2"
   status = "enable"
@@ -156,6 +158,12 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
           ignore_cache_control = "off"
           switch               = "on"
         }
+      }
+    }
+    actions {
+      name = "OriginPullProtocol"
+      origin_pull_protocol_parameters {
+          protocol = "https"
       }
     }
 
