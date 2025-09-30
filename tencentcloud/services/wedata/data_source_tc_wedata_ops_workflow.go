@@ -145,12 +145,16 @@ func dataSourceTencentCloudWedataOpsWorkflowRead(d *schema.ResourceData, meta in
 
 	service := WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
+	var projectId string
+	var workflowId string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("project_id"); ok {
+		projectId = v.(string)
 		paramMap["ProjectId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("workflow_id"); ok {
+		workflowId = v.(string)
 		paramMap["WorkflowId"] = helper.String(v.(string))
 	}
 
@@ -167,8 +171,6 @@ func dataSourceTencentCloudWedataOpsWorkflowRead(d *schema.ResourceData, meta in
 		return reqErr
 	}
 
-	var projectId string
-	var workflowId string
 	dataMap := map[string]interface{}{}
 
 	if respData.Data != nil {
