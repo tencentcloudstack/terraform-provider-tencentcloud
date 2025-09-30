@@ -2,14 +2,17 @@ package wedata
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -1745,6 +1748,216 @@ func (me *WedataService) DeleteWedataIntegrationTaskNodeById(ctx context.Context
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *WedataService) DescribeWedataSqlScriptRunsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.JobDto, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListSQLScriptRunsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+
+		if k == "ScriptId" {
+			request.ScriptId = v.(*string)
+		}
+
+		if k == "JobId" {
+			request.JobId = v.(*string)
+		}
+
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+
+		if k == "ExecuteUserUin" {
+			request.ExecuteUserUin = v.(*string)
+		}
+
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseWedataV20250806Client().ListSQLScriptRuns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataSqlFolderById(ctx context.Context, projectId, folderId string) (ret *wedatav20250806.SQLFolderNode, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListSQLFolderContentsRequest()
+	response := wedatav20250806.NewListSQLFolderContentsResponse()
+	request.ProjectId = helper.String(projectId)
+	request.ParentFolderPath = helper.String(folderId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().ListSQLFolderContents(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata sql folder contents failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data[0]
+	return
+}
+
+func (me *WedataService) DescribeWedataSqlScriptById(ctx context.Context, projectId, scriptId string) (ret *wedatav20250806.SQLScript, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetSQLScriptRequest()
+	response := wedatav20250806.NewGetSQLScriptResponse()
+	request.ProjectId = &projectId
+	request.ScriptId = &scriptId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetSQLScript(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get wedata sql folder script failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataCodeFolderById(ctx context.Context, projectId, folderId string) (ret *wedatav20250806.CodeFolderNode, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListCodeFolderContentsRequest()
+	response := wedatav20250806.NewListCodeFolderContentsResponse()
+	request.ProjectId = &projectId
+	request.ParentFolderPath = &folderId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().ListCodeFolderContents(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get wedata code folder contents failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data[0]
+	return
+}
+
+func (me *WedataService) DescribeWedataCodeFileById(ctx context.Context, projectId, codeFileId string) (ret *wedatav20250806.CodeFile, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetCodeFileRequest()
+	response := wedatav20250806.NewGetCodeFileResponse()
+	request.ProjectId = &projectId
+	request.CodeFileId = &codeFileId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetCodeFile(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get wedata code file failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data
 	return
 }
 
