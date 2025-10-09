@@ -16,9 +16,10 @@ import (
 
 func ResourceTencentCloudOrganizationOrgShareUnitMember() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudOrganizationOrgShareUnitMemberCreate,
-		Read:   resourceTencentCloudOrganizationOrgShareUnitMemberRead,
-		Delete: resourceTencentCloudOrganizationOrgShareUnitMemberDelete,
+		DeprecationMessage: "This resource is deprecated, please use `tencentcloud_organization_org_share_unit_member_v2` instead.",
+		Create:             resourceTencentCloudOrganizationOrgShareUnitMemberCreate,
+		Read:               resourceTencentCloudOrganizationOrgShareUnitMemberRead,
+		Delete:             resourceTencentCloudOrganizationOrgShareUnitMemberDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
