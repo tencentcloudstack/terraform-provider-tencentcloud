@@ -927,6 +927,62 @@ func (me *OrganizationService) DescribeOrganizationOrgShareUnitMemberById(ctx co
 	return
 }
 
+func (me *OrganizationService) DescribeOrganizationOrgShareUnitMemberV2ById(ctx context.Context, unitId, area string) (orgShareUnitMembers []*organization.ShareUnitMember, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDescribeShareUnitMembersRequest()
+	response := organization.NewDescribeShareUnitMembersResponse()
+	request.UnitId = &unitId
+	request.Area = &area
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 50
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseOrganizationClient().DescribeShareUnitMembers(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+
+		orgShareUnitMembers = append(orgShareUnitMembers, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *OrganizationService) DeleteOrganizationOrgShareUnitMemberById(ctx context.Context, unitId, area, shareMemberUins string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -956,6 +1012,104 @@ func (me *OrganizationService) DeleteOrganizationOrgShareUnitMemberById(ctx cont
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgShareUnitMemberV2ById(ctx context.Context, unitId, area string, orgShareUnitMembers []*organization.ShareUnitMember) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewDeleteShareUnitMembersRequest()
+	request.UnitId = &unitId
+	request.Area = &area
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for i := 0; i < len(orgShareUnitMembers); i += batchSize {
+		end := i + batchSize
+		if end > len(orgShareUnitMembers) {
+			end = len(orgShareUnitMembers)
+		}
+
+		batch := orgShareUnitMembers[i:end]
+		// clear Members value
+		request.Members = nil
+		for _, item := range batch {
+			shareMember := organization.ShareMember{}
+			shareMember.ShareMemberUin = item.ShareMemberUin
+			request.Members = append(request.Members, &shareMember)
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseOrganizationClient().DeleteShareUnitMembers(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+	}
+
+	return
+}
+
+func (me *OrganizationService) AddOrganizationOrgShareUnitMemberV2ById(ctx context.Context, unitId, area string, orgShareUnitMembers []*organization.ShareUnitMember) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewAddShareUnitMembersRequest()
+	request.UnitId = &unitId
+	request.Area = &area
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for i := 0; i < len(orgShareUnitMembers); i += batchSize {
+		end := i + batchSize
+		if end > len(orgShareUnitMembers) {
+			end = len(orgShareUnitMembers)
+		}
+
+		batch := orgShareUnitMembers[i:end]
+		// clear Members value
+		request.Members = nil
+		for _, item := range batch {
+			shareMember := organization.ShareMember{}
+			shareMember.ShareMemberUin = item.ShareMemberUin
+			request.Members = append(request.Members, &shareMember)
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseOrganizationClient().AddShareUnitMembers(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+	}
 
 	return
 }

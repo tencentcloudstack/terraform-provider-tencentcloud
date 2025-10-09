@@ -1,17 +1,17 @@
 ---
 subcategory: "Tencent Cloud Organization (TCO)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_organization_org_share_unit_member"
-sidebar_current: "docs-tencentcloud-resource-organization_org_share_unit_member"
+page_title: "TencentCloud: tencentcloud_organization_org_share_unit_member_v2"
+sidebar_current: "docs-tencentcloud-resource-organization_org_share_unit_member_v2"
 description: |-
   Provides a resource to create a Organization share unit member
 ---
 
-# tencentcloud_organization_org_share_unit_member
+# tencentcloud_organization_org_share_unit_member_v2
 
 Provides a resource to create a Organization share unit member
 
-~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.82.28, Please use `tencentcloud_organization_org_share_unit_member_v2` instead.
+~> **NOTE:** ~> **NOTE:** This resource must exclusive in one share unit, do not declare additional members resources of this share unit elsewhere.
 
 ## Example Usage
 
@@ -22,11 +22,19 @@ resource "tencentcloud_organization_org_share_unit" "example" {
   description = "description."
 }
 
-resource "tencentcloud_organization_org_share_unit_member" "example" {
+resource "tencentcloud_organization_org_share_unit_member_v2" "example" {
   unit_id = tencentcloud_organization_org_share_unit.example.unit_id
   area    = tencentcloud_organization_org_share_unit.example.area
   members {
-    share_member_uin = 100035309479
+    share_member_uin = 100042257812
+  }
+
+  members {
+    share_member_uin = 100043990767
+  }
+
+  members {
+    share_member_uin = 100042234123
   }
 }
 ```
@@ -36,7 +44,7 @@ resource "tencentcloud_organization_org_share_unit_member" "example" {
 The following arguments are supported:
 
 * `area` - (Required, String, ForceNew) Shared unit region.
-* `members` - (Required, List, ForceNew) Shared member list. Up to 10 items.
+* `members` - (Required, Set) Shared member list.
 * `unit_id` - (Required, String, ForceNew) Shared unit ID.
 
 The `members` object supports the following:
@@ -50,4 +58,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+
+## Import
+
+Organization share unit member can be imported using the unitId#area, e.g.
+
+```
+terraform import tencentcloud_organization_org_share_unit_member_v2.example shareUnit-switt8i4s4#ap-guangzhou
+```
 

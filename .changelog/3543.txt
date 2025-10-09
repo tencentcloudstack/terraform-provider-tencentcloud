@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_organization_org_share_unit_member_v2
+```
+
+```release-note:enhancement
+resource/tencentcloud_organization_org_share_unit_member: This resource has been deprecated, please use `tencentcloud_organization_org_share_unit_member_v2` instead.
+```

@@ -2351,6 +2351,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ha_vip_instance_attachment":                                               vpc.ResourceTencentCloudHaVipInstanceAttachment(),
 			"tencentcloud_csip_risk_center":                                                         csip.ResourceTencentCloudCsipRiskCenter(),
 			"tencentcloud_organization_org_share_unit_member":                                       tco.ResourceTencentCloudOrganizationOrgShareUnitMember(),
+			"tencentcloud_organization_org_share_unit_member_v2":                                    tco.ResourceTencentCloudOrganizationOrgShareUnitMemberV2(),
 			"tencentcloud_organization_org_share_unit":                                              tco.ResourceTencentCloudOrganizationOrgShareUnit(),
 			"tencentcloud_organization_org_share_unit_resource":                                     tco.ResourceTencentCloudOrganizationOrgShareUnitResource(),
 			"tencentcloud_accept_join_share_unit_invitation_operation":                              tco.ResourceTencentCloudAcceptJoinShareUnitInvitationOperation(),
