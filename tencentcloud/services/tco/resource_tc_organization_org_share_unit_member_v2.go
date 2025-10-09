@@ -81,8 +81,8 @@ func resourceTencentCloudOrganizationOrgShareUnitMemberV2Create(d *schema.Resour
 		area = v.(string)
 	}
 
+	orgShareUnitMembers := make([]*organization.ShareMember, 0, 10)
 	if v, ok := d.GetOk("members"); ok {
-		orgShareUnitMembers := make([]*organization.ShareMember, 0, 10)
 		for _, item := range v.(*schema.Set).List() {
 			if dMap, ok := item.(map[string]interface{}); ok {
 				if v, ok := dMap["share_member_uin"]; ok {
