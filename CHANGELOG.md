@@ -1,3 +1,15 @@
+## 1.82.28(October 9 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_organization_org_share_unit_member_v2` ([#3543](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3543))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_teo_origin_acl: update doc. ([#3542](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3542))
+* resource/tencentcloud_cfw_edge_policy: optmize code logic ([#3541](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3541))
+* resource/tencentcloud_organization_org_share_unit_member: This resource has been deprecated, please use `tencentcloud_organization_org_share_unit_member_v2` instead. ([#3543](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3543))
+
 ## 1.82.27(September 28 , 2025)
 
 FEATURES:
