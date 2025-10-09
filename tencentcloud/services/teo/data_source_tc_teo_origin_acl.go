@@ -59,11 +59,29 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv4 subnet.",
+													Deprecated:  "Field `i_pv4` has been deprecated from version 1.82.27. Use new field `ipv4` instead.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"i_pv6": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv6 subnet.",
+													Deprecated:  "Field `i_pv6` has been deprecated from version 1.82.27. Use new field `ipv6` instead.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv4": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv4 subnet.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv6": {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv6 subnet.",
@@ -118,11 +136,29 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv4 subnet.",
+													Deprecated:  "Field `i_pv4` has been deprecated from version 1.82.27. Use new field `ipv4` instead.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"i_pv6": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv6 subnet.",
+													Deprecated:  "Field `i_pv6` has been deprecated from version 1.82.27. Use new field `ipv6` instead.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv4": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv4 subnet.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv6": {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv6 subnet.",
@@ -143,11 +179,29 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv4 subnet.",
+													Deprecated:  "Field `i_pv4` has been deprecated from version 1.82.27. Use new field `ipv4` instead.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"i_pv6": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv6 subnet.",
+													Deprecated:  "Field `i_pv6` has been deprecated from version 1.82.27. Use new field `ipv6` instead.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv4": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv4 subnet.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv6": {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv6 subnet.",
@@ -168,11 +222,29 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv4 subnet.",
+													Deprecated:  "Field `i_pv4` has been deprecated from version 1.82.27. Use new field `ipv4` instead.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"i_pv6": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv6 subnet.",
+													Deprecated:  "Field `i_pv6` has been deprecated from version 1.82.27. Use new field `ipv6` instead.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv4": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv4 subnet.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv6": {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv6 subnet.",
@@ -193,11 +265,29 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv4 subnet.",
+													Deprecated:  "Field `i_pv4` has been deprecated from version 1.82.27. Use new field `ipv4` instead.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"i_pv6": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv6 subnet.",
+													Deprecated:  "Field `i_pv6` has been deprecated from version 1.82.27. Use new field `ipv6` instead.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv4": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "IPv4 subnet.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ipv6": {
 													Type:        schema.TypeSet,
 													Computed:    true,
 													Description: "IPv6 subnet.",
@@ -277,10 +367,12 @@ func dataSourceTencentCloudTeoOriginAclRead(d *schema.ResourceData, meta interfa
 			if respData.OriginACLInfo.CurrentOriginACL.EntireAddresses != nil {
 				if respData.OriginACLInfo.CurrentOriginACL.EntireAddresses.IPv4 != nil {
 					entireAddressesMap["i_pv4"] = respData.OriginACLInfo.CurrentOriginACL.EntireAddresses.IPv4
+					entireAddressesMap["ipv4"] = respData.OriginACLInfo.CurrentOriginACL.EntireAddresses.IPv4
 				}
 
 				if respData.OriginACLInfo.CurrentOriginACL.EntireAddresses.IPv6 != nil {
 					entireAddressesMap["i_pv6"] = respData.OriginACLInfo.CurrentOriginACL.EntireAddresses.IPv6
+					entireAddressesMap["ipv6"] = respData.OriginACLInfo.CurrentOriginACL.EntireAddresses.IPv6
 				}
 
 				currentOriginACLMap["entire_addresses"] = []interface{}{entireAddressesMap}
@@ -315,10 +407,12 @@ func dataSourceTencentCloudTeoOriginAclRead(d *schema.ResourceData, meta interfa
 			if respData.OriginACLInfo.NextOriginACL.EntireAddresses != nil {
 				if respData.OriginACLInfo.NextOriginACL.EntireAddresses.IPv4 != nil {
 					entireAddressesMap["i_pv4"] = respData.OriginACLInfo.NextOriginACL.EntireAddresses.IPv4
+					entireAddressesMap["ipv4"] = respData.OriginACLInfo.NextOriginACL.EntireAddresses.IPv4
 				}
 
 				if respData.OriginACLInfo.NextOriginACL.EntireAddresses.IPv6 != nil {
 					entireAddressesMap["i_pv6"] = respData.OriginACLInfo.NextOriginACL.EntireAddresses.IPv6
+					entireAddressesMap["ipv6"] = respData.OriginACLInfo.NextOriginACL.EntireAddresses.IPv6
 				}
 
 				nextOriginACLMap["entire_addresses"] = []interface{}{entireAddressesMap}
@@ -328,10 +422,12 @@ func dataSourceTencentCloudTeoOriginAclRead(d *schema.ResourceData, meta interfa
 			if respData.OriginACLInfo.NextOriginACL.AddedAddresses != nil {
 				if respData.OriginACLInfo.NextOriginACL.AddedAddresses.IPv4 != nil {
 					addedAddressesMap["i_pv4"] = respData.OriginACLInfo.NextOriginACL.AddedAddresses.IPv4
+					addedAddressesMap["ipv4"] = respData.OriginACLInfo.NextOriginACL.AddedAddresses.IPv4
 				}
 
 				if respData.OriginACLInfo.NextOriginACL.AddedAddresses.IPv6 != nil {
 					addedAddressesMap["i_pv6"] = respData.OriginACLInfo.NextOriginACL.AddedAddresses.IPv6
+					addedAddressesMap["ipv6"] = respData.OriginACLInfo.NextOriginACL.AddedAddresses.IPv6
 				}
 
 				nextOriginACLMap["added_addresses"] = []interface{}{addedAddressesMap}
@@ -341,10 +437,12 @@ func dataSourceTencentCloudTeoOriginAclRead(d *schema.ResourceData, meta interfa
 			if respData.OriginACLInfo.NextOriginACL.RemovedAddresses != nil {
 				if respData.OriginACLInfo.NextOriginACL.RemovedAddresses.IPv4 != nil {
 					removedAddressesMap["i_pv4"] = respData.OriginACLInfo.NextOriginACL.RemovedAddresses.IPv4
+					removedAddressesMap["ipv4"] = respData.OriginACLInfo.NextOriginACL.RemovedAddresses.IPv4
 				}
 
 				if respData.OriginACLInfo.NextOriginACL.RemovedAddresses.IPv6 != nil {
 					removedAddressesMap["i_pv6"] = respData.OriginACLInfo.NextOriginACL.RemovedAddresses.IPv6
+					removedAddressesMap["ipv6"] = respData.OriginACLInfo.NextOriginACL.RemovedAddresses.IPv6
 				}
 
 				nextOriginACLMap["removed_addresses"] = []interface{}{removedAddressesMap}
@@ -354,10 +452,12 @@ func dataSourceTencentCloudTeoOriginAclRead(d *schema.ResourceData, meta interfa
 			if respData.OriginACLInfo.NextOriginACL.NoChangeAddresses != nil {
 				if respData.OriginACLInfo.NextOriginACL.NoChangeAddresses.IPv4 != nil {
 					noChangeAddressesMap["i_pv4"] = respData.OriginACLInfo.NextOriginACL.NoChangeAddresses.IPv4
+					noChangeAddressesMap["ipv4"] = respData.OriginACLInfo.NextOriginACL.NoChangeAddresses.IPv4
 				}
 
 				if respData.OriginACLInfo.NextOriginACL.NoChangeAddresses.IPv6 != nil {
 					noChangeAddressesMap["i_pv6"] = respData.OriginACLInfo.NextOriginACL.NoChangeAddresses.IPv6
+					noChangeAddressesMap["ipv6"] = respData.OriginACLInfo.NextOriginACL.NoChangeAddresses.IPv6
 				}
 
 				nextOriginACLMap["no_change_addresses"] = []interface{}{noChangeAddressesMap}
