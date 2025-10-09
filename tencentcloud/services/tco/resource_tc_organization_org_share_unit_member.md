@@ -1,6 +1,6 @@
 Provides a resource to create a Organization share unit member
 
-~> **NOTE:** This resource is deprecated, please use `tencentcloud_organization_org_share_unit_member_v2` instead.
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.82.28, Please use `tencentcloud_organization_org_share_unit_member_v2` instead.
 
 Example Usage
 

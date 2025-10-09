@@ -16,7 +16,7 @@ import (
 
 func ResourceTencentCloudOrganizationOrgShareUnitMember() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource is deprecated, please use `tencentcloud_organization_org_share_unit_member_v2` instead.",
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.82.28, Please use `tencentcloud_organization_org_share_unit_member_v2` instead.",
 		Create:             resourceTencentCloudOrganizationOrgShareUnitMemberCreate,
 		Read:               resourceTencentCloudOrganizationOrgShareUnitMemberRead,
 		Delete:             resourceTencentCloudOrganizationOrgShareUnitMemberDelete,
