@@ -1,3 +1,10 @@
+## 1.82.29(October 10 , 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_teo_l7_acc_rule_v2: support `origin_pull_protocol_parameters` fields ([#3538](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3538))
+* resource/tencentcloud_teo_zone: Fix unnecessary change ownership_verification. ([#3545](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3545))
+
 ## 1.82.28(October 9 , 2025)
 
 FEATURES:
