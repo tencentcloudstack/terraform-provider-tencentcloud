@@ -268,6 +268,8 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 		}
 
 		_ = d.Set("ownership_verification", []interface{}{ownershipVerificationMap})
+	} else {
+		_ = d.Set("ownership_verification", []interface{}{})
 	}
 
 	if err := resourceTencentCloudTeoZoneReadPostHandleResponse0(ctx, respData); err != nil {
