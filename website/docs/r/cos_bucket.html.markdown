@@ -13,7 +13,7 @@ Provides a COS resource to create a COS bucket and set its attributes.
 
 ~> **NOTE:** The following capabilities do not support cdc scenarios: `multi_az`, `website`, and bucket replication `replica_role`.
 
-~> **NOTE:** If `chdfs_ofs` is `true`, cannot set `acl_body`, `acl`, `origin_pull_rules`, `origin_domain_rules`, `website`, `encryption_algorithm`, `kms_id`, `versioning_enable`, `acceleration_enable` at the same time
+~> **NOTE:** If `chdfs_ofs` is `true`, cannot set `acl_body`, `acl`, `origin_pull_rules`, `origin_domain_rules`, `website`, `encryption_algorithm`, `kms_id`, `versioning_enable`, `acceleration_enable` at the same time. For more information, please refer to `https://www.tencentcloud.com/document/product/436/43305`.
 
 ## Example Usage
 
@@ -469,7 +469,7 @@ The following arguments are supported:
 * `acl_body` - (Optional, String) ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.
 * `acl` - (Optional, String) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
 * `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
-* `chdfs_ofs` - (Optional, Bool, ForceNew) Indicates whether to create a bucket of metadata acceleration.
+* `chdfs_ofs` - (Optional, Bool, ForceNew) Indicates whether to create a bucket of metadata acceleration. For more information, please refer to `https://www.tencentcloud.com/document/product/436/43305`.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
 * `enable_intelligent_tiering` - (Optional, Bool) Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.
 * `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `SM4`.

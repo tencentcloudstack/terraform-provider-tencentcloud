@@ -583,7 +583,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Indicates whether to create a bucket of metadata acceleration.",
+				Description: "Indicates whether to create a bucket of metadata acceleration. For more information, please refer to `https://www.tencentcloud.com/document/product/436/43305`.",
 			},
 			"enable_intelligent_tiering": {
 				Type:        schema.TypeBool,
