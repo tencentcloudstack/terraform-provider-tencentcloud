@@ -579,6 +579,12 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 				ForceNew:    true,
 				Description: "Indicates whether to create a bucket of multi available zone.",
 			},
+			"chdfs_ofs": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates whether to create a bucket of metadata acceleration.",
+			},
 			"enable_intelligent_tiering": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -683,10 +689,17 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if header != nil && len(header["X-Cos-Bucket-Az-Type"]) > 0 && header["X-Cos-Bucket-Az-Type"][0] == "MAZ" {
-		_ = d.Set("multi_az", true)
+	if header != nil {
+		if len(header["X-Cos-Bucket-Az-Type"]) > 0 && header["X-Cos-Bucket-Az-Type"][0] == "MAZ" {
+			_ = d.Set("multi_az", true)
+		}
+
+		if len(header["X-Cos-Bucket-Arch"]) > 0 && header["X-Cos-Bucket-Arch"][0] == "OFS" {
+			_ = d.Set("chdfs_ofs", true)
+		}
 	}
 
+	ofs := d.Get("chdfs_ofs").(bool)
 	cosDomain := meta.(tccommon.ProviderMeta).GetAPIV3Conn().CosDomain
 	var cosBucketUrl string
 	if cdcId == "" && cosDomain == "" {
@@ -705,23 +718,101 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("bucket", d.Id())
 	}
 
-	// acl
-	aclResult, err := cosService.GetBucketACL(ctx, bucket, cdcId)
+	if !ofs {
+		// acl
+		aclResult, err := cosService.GetBucketACL(ctx, bucket, cdcId)
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+
+		aclBody, err := xml.Marshal(aclResult)
+		if err != nil {
+			return err
+		}
+
+		_ = d.Set("acl_body", string(aclBody))
+
+		acl := GetBucketPublicACL(aclResult)
+
+		_ = d.Set("acl", acl)
+
+		if cdcId == "" && cosDomain == "" {
+			originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket)
+			if err != nil {
+				return err
+			}
+
+			if err = d.Set("origin_pull_rules", originPullRules); err != nil {
+				return fmt.Errorf("setting origin_pull_rules error: %v", err)
+			}
+
+			originDomainRules, err := cosService.GetBucketOriginDomain(ctx, bucket)
+			if err != nil {
+				return err
+			}
+
+			if err = d.Set("origin_domain_rules", originDomainRules); err != nil {
+				return fmt.Errorf("setting origin_domain_rules error: %v", err)
+			}
+
+			replicaResult, err := cosService.GetBucketReplication(ctx, bucket, cdcId)
+			if err != nil {
+				return err
+			}
+
+			if replicaResult != nil {
+				err := setBucketReplication(d, *replicaResult)
+				if err != nil {
+					return err
+				}
+			}
+		}
+
+		// read the website
+		website, err := cosService.GetBucketWebsite(ctx, bucket, cdcId)
+		if err != nil {
+			return err
+		}
+		if len(website) > 0 && cosDomain == "" {
+			// {bucket}.cos-website.{region}.myqcloud.com
+			endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
+			website[0]["endpoint"] = endPointUrl
+		}
+		if err = d.Set("website", website); err != nil {
+			return fmt.Errorf("setting website error: %v", err)
+		}
+
+		// read the encryption algorithm
+		encryption, kmsId, err := cosService.GetBucketEncryption(ctx, bucket, cdcId)
+		if err != nil {
+			return err
+		}
+		if err = d.Set("encryption_algorithm", encryption); err != nil {
+			return fmt.Errorf("setting encryption error: %v", err)
+		}
+		if err = d.Set("kms_id", kmsId); err != nil {
+			return fmt.Errorf("setting kms_id error: %v", err)
+		}
+
+		// read the versioning
+		versioning, err := cosService.GetBucketVersioning(ctx, bucket, cdcId)
+		if err != nil {
+			return err
+		}
+		if err = d.Set("versioning_enable", versioning); err != nil {
+			return fmt.Errorf("setting versioning_enable error: %v", err)
+		}
+
+		// read the acceleration
+		acceleration, err := cosService.GetBucketAccleration(ctx, bucket, cdcId)
+		if err != nil {
+			return err
+		}
+		if err = d.Set("acceleration_enable", acceleration); err != nil {
+			return fmt.Errorf("setting acceleration_enable error: %v", err)
+		}
 	}
-
-	aclBody, err := xml.Marshal(aclResult)
-	if err != nil {
-		return err
-	}
-
-	_ = d.Set("acl_body", string(aclBody))
-
-	acl := GetBucketPublicACL(aclResult)
-
-	_ = d.Set("acl", acl)
 
 	// read the cors
 	corsRules, err := cosService.GetBucketCors(ctx, bucket, cdcId)
@@ -732,38 +823,6 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting cors_rules error: %v", err)
 	}
 
-	if cdcId == "" && cosDomain == "" {
-		originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket)
-		if err != nil {
-			return err
-		}
-
-		if err = d.Set("origin_pull_rules", originPullRules); err != nil {
-			return fmt.Errorf("setting origin_pull_rules error: %v", err)
-		}
-
-		originDomainRules, err := cosService.GetBucketOriginDomain(ctx, bucket)
-		if err != nil {
-			return err
-		}
-
-		if err = d.Set("origin_domain_rules", originDomainRules); err != nil {
-			return fmt.Errorf("setting origin_domain_rules error: %v", err)
-		}
-
-		replicaResult, err := cosService.GetBucketReplication(ctx, bucket, cdcId)
-		if err != nil {
-			return err
-		}
-
-		if replicaResult != nil {
-			err := setBucketReplication(d, *replicaResult)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
 	// read the lifecycle
 	lifecycleRules, err := cosService.GetBucketLifecycle(ctx, bucket, cdcId)
 	if err != nil {
@@ -771,50 +830,6 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 	if err = d.Set("lifecycle_rules", lifecycleRules); err != nil {
 		return fmt.Errorf("setting lifecycle_rules error: %v", err)
-	}
-
-	// read the website
-	website, err := cosService.GetBucketWebsite(ctx, bucket, cdcId)
-	if err != nil {
-		return err
-	}
-	if len(website) > 0 && cosDomain == "" {
-		// {bucket}.cos-website.{region}.myqcloud.com
-		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
-		website[0]["endpoint"] = endPointUrl
-	}
-	if err = d.Set("website", website); err != nil {
-		return fmt.Errorf("setting website error: %v", err)
-	}
-
-	// read the encryption algorithm
-	encryption, kmsId, err := cosService.GetBucketEncryption(ctx, bucket, cdcId)
-	if err != nil {
-		return err
-	}
-	if err = d.Set("encryption_algorithm", encryption); err != nil {
-		return fmt.Errorf("setting encryption error: %v", err)
-	}
-	if err = d.Set("kms_id", kmsId); err != nil {
-		return fmt.Errorf("setting kms_id error: %v", err)
-	}
-
-	// read the versioning
-	versioning, err := cosService.GetBucketVersioning(ctx, bucket, cdcId)
-	if err != nil {
-		return err
-	}
-	if err = d.Set("versioning_enable", versioning); err != nil {
-		return fmt.Errorf("setting versioning_enable error: %v", err)
-	}
-
-	// read the acceleration
-	acceleration, err := cosService.GetBucketAccleration(ctx, bucket, cdcId)
-	if err != nil {
-		return err
-	}
-	if err = d.Set("acceleration_enable", acceleration); err != nil {
-		return fmt.Errorf("setting acceleration_enable error: %v", err)
 	}
 
 	//read the log
@@ -1067,7 +1082,7 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 	}
 
 	// wait for bucket 404, means deleted
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
 		code, _, e := cosService.TencentcloudHeadBucket(ctx, bucket, cdcId)
 		if e != nil {
 			if code == 404 {
@@ -1829,6 +1844,7 @@ func getBucketPutOptions(d *schema.ResourceData) (useCosService bool, options *c
 	}
 	grants, hasGrantHeaders := d.GetOk("grant_headers")
 	maz, hasMAZ := d.GetOk("multi_az")
+	ofs, hasOFS := d.GetOk("chdfs_ofs")
 
 	if !hasGrantHeaders && !hasMAZ {
 		return false, opt
@@ -1853,11 +1869,18 @@ func getBucketPutOptions(d *schema.ResourceData) (useCosService bool, options *c
 		}
 	}
 
+	configOpt := cos.CreateBucketConfiguration{}
 	if hasMAZ {
 		if maz.(bool) {
-			opt.CreateBucketConfiguration = &cos.CreateBucketConfiguration{
-				BucketAZConfig: "MAZ",
-			}
+			configOpt.BucketAZConfig = "MAZ"
+			opt.CreateBucketConfiguration = &configOpt
+		}
+	}
+
+	if hasOFS {
+		if ofs.(bool) {
+			configOpt.BucketArchConfig = "OFS"
+			opt.CreateBucketConfiguration = &configOpt
 		}
 	}
 

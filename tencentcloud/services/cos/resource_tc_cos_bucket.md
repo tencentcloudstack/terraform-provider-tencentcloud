@@ -2,6 +2,8 @@ Provides a COS resource to create a COS bucket and set its attributes.
 
 ~> **NOTE:** The following capabilities do not support cdc scenarios: `multi_az`, `website`, and bucket replication `replica_role`.
 
+~> **NOTE:** If `chdfs_ofs` is `true`, cannot set `acl_body`, `acl`, `origin_pull_rules`, `origin_domain_rules`, `website`, `encryption_algorithm`, `kms_id`, `versioning_enable`, `acceleration_enable` at the same time
+
 Example Usage
 
 Private Bucket
@@ -431,6 +433,21 @@ resource "tencentcloud_cos_bucket" "bucket_with_replication" {
 }
 ```
 
+Using OFS
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket    = "private-ofs-bucket-${local.app_id}"
+  acl       = "private"
+  chdfs_ofs = true
+}
+```
 Import
 
 COS bucket can be imported, e.g.
