@@ -176,6 +176,13 @@ func ResourceTencentCloudWedataWorkflow() *schema.Resource {
 				Optional:    true,
 				Description: "Bundle Information.",
 			},
+
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate whether to delete workflow instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.",
+			},
 		},
 	}
 }
@@ -640,6 +647,24 @@ func resourceTencentCloudWedataWorkflowDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
+	forceDelete := d.Get("force_delete").(bool)
+	if forceDelete {
+		// removed from the recycle bin
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().DeleteWorkflowWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete wedata workflow failed, reason:%+v", logId, err)
+			return err
+		}
+	}
 	_ = response
 	_ = projectId
 	return nil
