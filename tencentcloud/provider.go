@@ -1161,6 +1161,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_rule_templates":                                 wedata.DataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_wedata_ops_workflows":                                  wedata.DataSourceTencentCloudWedataOpsWorkflows(),
 			"tencentcloud_wedata_ops_workflow":                                   wedata.DataSourceTencentCloudWedataOpsWorkflow(),
+			"tencentcloud_wedata_ops_async_job":                                  wedata.DataSourceTencentCloudWedataOpsAsyncJob(),
 			"tencentcloud_wedata_ops_alarm_rules":                                wedata.DataSourceTencentCloudWedataOpsAlarmRules(),
 			"tencentcloud_wedata_task_instance":                                  wedata.DataSourceTencentCloudWedataTaskInstance(),
 			"tencentcloud_wedata_task_instances":                                 wedata.DataSourceTencentCloudWedataTaskInstances(),
