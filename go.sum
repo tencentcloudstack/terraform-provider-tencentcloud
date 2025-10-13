@@ -829,6 +829,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.825 h1:yiC2lsZ
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.825/go.mod h1:6qtSa8OZKwJOWoOCYWVZd6+T62O96AxbPll0I43d4yw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.1.4 h1:9EguBiOzGyfCm4ZlO4QnnsZf/kpyTWS6DHz3bse9lNY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.1.4/go.mod h1:jUF68ck1rxCqXkdmYRT2B2GtLrXAxmp7T0CcyWZ8BbM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.1.21 h1:Y1miKK/dhfGn3AtCXMFDE3+kOUXyJMUnVlHCGC6EKSw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.1.21/go.mod h1:JqVqVFUzcEVksJT1WNRUsRQPgyfLSpJ8C0PxnTXinuY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824 h1:DVKvZ6h+qd7tadUrCjVAkCCmE3TsbK2ZmwGd3AJcpWc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824/go.mod h1:DvBpDX/qdJG4KKLeULmRvhAjPYiw8za0HeTSu2y/lFw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.0 h1:tfTh+fIqYPgWV2wi4oDvG963pi8tljtZ+5OdnhEqRnU=
@@ -941,6 +943,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.5/go.mod h1
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.7/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.13/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.14/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.21/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.22 h1:1unTmvNXynDN0mOZSWh9tL5Wp9Rb5paMGwFvua+HHoI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.22/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.23 h1:YZOxepoaH/yNaD1sYpCXR6PuFd22hbKdlXAGXWre8aM=

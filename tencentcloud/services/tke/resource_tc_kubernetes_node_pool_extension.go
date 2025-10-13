@@ -261,6 +261,9 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 		if launchCfg.InternetAccessible.PublicIpAssigned != nil {
 			launchConfig["public_ip_assigned"] = launchCfg.InternetAccessible.PublicIpAssigned
 		}
+		if launchCfg.InternetAccessible.IPv4AddressType != nil {
+			launchConfig["ipv4_address_type"] = launchCfg.InternetAccessible.IPv4AddressType
+		}
 		if launchCfg.InstanceChargeType != nil {
 			launchConfig["instance_charge_type"] = launchCfg.InstanceChargeType
 			if *launchCfg.InstanceChargeType == svcas.INSTANCE_CHARGE_TYPE_SPOTPAID && launchCfg.InstanceMarketOptions != nil {
@@ -1012,6 +1015,10 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
 	}
+	if v, ok := dMap["ipv4_address_type"]; ok && v != "" {
+		ipv4AddressType := v.(string)
+		request.InternetAccessible.IPv4AddressType = &ipv4AddressType
+	}
 
 	request.LoginSettings = &as.LoginSettings{}
 
@@ -1221,6 +1228,10 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	if v, ok := dMap["public_ip_assigned"]; ok {
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
+	}
+	if v, ok := dMap["ipv4_address_type"]; ok && v != "" {
+		ipv4AddressType := v.(string)
+		request.InternetAccessible.IPv4AddressType = &ipv4AddressType
 	}
 
 	if d.HasChange("auto_scaling_config.0.security_group_ids") {
