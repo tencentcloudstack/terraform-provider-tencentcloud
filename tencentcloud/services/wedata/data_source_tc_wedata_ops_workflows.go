@@ -280,6 +280,7 @@ func dataSourceTencentCloudWedataOpsWorkflowsRead(d *schema.ResourceData, meta i
 
 			if data.ProjectId != nil {
 				dataMap["project_id"] = data.ProjectId
+				projectId = *data.ProjectId
 			}
 
 			if data.ProjectName != nil {
@@ -310,7 +311,7 @@ func dataSourceTencentCloudWedataOpsWorkflowsRead(d *schema.ResourceData, meta i
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), dataList); e != nil {
