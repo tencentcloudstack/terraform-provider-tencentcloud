@@ -9,11 +9,3 @@ resource "tencentcloud_wedata_workflow_folder" "wedata_workflow_folder" {
   folder_name        = "test"
 }
 ```
-
-Import
-
-wedata wedata_workflow_folder can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_wedata_workflow_folder.wedata_workflow_folder wedata_workflow_folder_id
-```

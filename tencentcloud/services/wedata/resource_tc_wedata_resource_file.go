@@ -174,6 +174,7 @@ func resourceTencentCloudWedataResourceFileRead(d *schema.ResourceData, meta int
 		return nil
 	}
 
+	_ = d.Set("project_id", projectId)
 	if respData.ResourceName != nil {
 		_ = d.Set("resource_name", respData.ResourceName)
 	}

@@ -2416,7 +2416,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_http_authenticator":                                                  mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
 			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
 			"tencentcloud_billing_budget":                                                           billing.ResourceTencentCloudBillingBudget(),
-		},
+			"tencentcloud_wedata_task":                                                              wedata.ResourceTencentCloudWedataTask()},
 
 		ConfigureFunc: providerConfigure,
 	}

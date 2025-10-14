@@ -20,6 +20,9 @@ func ResourceTencentCloudWedataWorkflow() *schema.Resource {
 		Read:   resourceTencentCloudWedataWorkflowRead,
 		Update: resourceTencentCloudWedataWorkflowUpdate,
 		Delete: resourceTencentCloudWedataWorkflowDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"project_id": {
 				Type:        schema.TypeString,
@@ -177,11 +180,10 @@ func ResourceTencentCloudWedataWorkflow() *schema.Resource {
 				Description: "Bundle Information.",
 			},
 
-			"force_delete": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     false,
-				Description: "Indicate whether to delete workflow instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.",
+			"workflow_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Workflow id.",
 			},
 		},
 	}
@@ -362,6 +364,11 @@ func resourceTencentCloudWedataWorkflowRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
+	_ = d.Set("project_id", projectId)
+
+	if respData.Path != nil && respData.WorkflowName != nil {
+		_ = d.Set("parent_folder_path", strings.TrimSuffix(*respData.Path, fmt.Sprintf("/%s", *respData.WorkflowName)))
+	}
 	if respData.WorkflowName != nil {
 		_ = d.Set("workflow_name", respData.WorkflowName)
 	}
@@ -369,10 +376,6 @@ func resourceTencentCloudWedataWorkflowRead(d *schema.ResourceData, meta interfa
 	if respData.OwnerUin != nil {
 		_ = d.Set("owner_uin", respData.OwnerUin)
 	}
-
-	// if respData.CreateUserUin != nil {
-	// 	_ = d.Set("create_user_uin", respData.CreateUserUin)
-	// }
 
 	if respData.WorkflowType != nil {
 		_ = d.Set("workflow_type", respData.WorkflowType)
@@ -455,10 +458,6 @@ func resourceTencentCloudWedataWorkflowRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("workflow_desc", respData.WorkflowDesc)
 	}
 
-	// if respData.Path != nil {
-	// 	_ = d.Set("path", respData.Path)
-	// }
-
 	if respData.BundleId != nil {
 		_ = d.Set("bundle_id", respData.BundleId)
 	}
@@ -467,6 +466,7 @@ func resourceTencentCloudWedataWorkflowRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("bundle_info", respData.BundleInfo)
 	}
 
+	_ = d.Set("workflow_id", workflowId)
 	_ = projectId
 	return nil
 }
@@ -647,24 +647,6 @@ func resourceTencentCloudWedataWorkflowDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	forceDelete := d.Get("force_delete").(bool)
-	if forceDelete {
-		// removed from the recycle bin
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().DeleteWorkflowWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			response = result
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s delete wedata workflow failed, reason:%+v", logId, err)
-			return err
-		}
-	}
 	_ = response
 	_ = projectId
 	return nil

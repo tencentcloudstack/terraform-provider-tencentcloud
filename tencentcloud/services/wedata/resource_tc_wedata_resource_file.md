@@ -12,11 +12,3 @@ resource "tencentcloud_wedata_resource_file" "wedata_resource_file" {
     resource_file = "/datastudio/resource/2905622749543821312/test"
 }
 ```
-
-Import
-
-wedata wedata_resource_file can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_wedata_resource_file.wedata_resource_file wedata_resource_file_id
-```

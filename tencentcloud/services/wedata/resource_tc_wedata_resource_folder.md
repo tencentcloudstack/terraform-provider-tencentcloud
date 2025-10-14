@@ -9,11 +9,3 @@ resource "tencentcloud_wedata_resource_folder" "wedata_resource_folder" {
   folder_name        = "folder"
 }
 ```
-
-Import
-
-wedata wedata_resource_folder can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_wedata_resource_folder.wedata_resource_folder wedata_resource_folder_id
-```
