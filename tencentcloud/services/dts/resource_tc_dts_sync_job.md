@@ -1,5 +1,7 @@
 Provides a resource to create a DTS sync job
 
+~> **NOTE:** Import function does not support field `existed_job_id`.
+
 Example Usage
 
 ```hcl

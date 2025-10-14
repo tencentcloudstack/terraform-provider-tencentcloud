@@ -20,9 +20,9 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 		Read:   resourceTencentCloudDtsSyncJobRead,
 		Create: resourceTencentCloudDtsSyncJobCreate,
 		Delete: resourceTencentCloudDtsSyncJobDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"pay_mode": {
 				Type:        schema.TypeString,
@@ -279,6 +279,14 @@ func resourceTencentCloudDtsSyncJobRead(d *schema.ResourceData, meta interface{}
 			tagsList = append(tagsList, tagsMap)
 		}
 		_ = d.Set("tags", tagsList)
+	}
+
+	if syncJob.AutoRenew != nil {
+		_ = d.Set("auto_renew", syncJob.AutoRenew)
+	}
+
+	if syncJob.InstanceClass != nil {
+		_ = d.Set("instance_class", syncJob.InstanceClass)
 	}
 
 	if syncJob.JobName != nil {
