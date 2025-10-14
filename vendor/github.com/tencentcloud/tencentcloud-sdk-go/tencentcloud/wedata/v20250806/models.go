@@ -2577,6 +2577,7 @@ type DLCClusterInfo struct {
 	SubAccountUin *string `json:"SubAccountUin,omitnil,omitempty" name:"SubAccountUin"`
 }
 
+<<<<<<< HEAD
 type DataBackfill struct {
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
@@ -2647,6 +2648,8 @@ type DataBackfill struct {
 	DataTimeOrder *string `json:"DataTimeOrder,omitnil,omitempty" name:"DataTimeOrder"`
 }
 
+=======
+>>>>>>> ce7e47889 (add)
 type DataBackfillRange struct {
 	// 开始日期，格式yyyy-MM-dd 表示从指定日期的00:00:00开始
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -4270,6 +4273,7 @@ func (r *GetCodeFileResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+<<<<<<< HEAD
 type GetCodeFolderRequestParams struct {
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
@@ -4405,6 +4409,8 @@ func (r *GetDataBackfillPlanResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+=======
+>>>>>>> ce7e47889 (add)
 type GetDataSourceRelatedTasksRequestParams struct {
 	// 数据源id
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
@@ -5064,6 +5070,7 @@ func (r *GetResourceGroupMetricsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+<<<<<<< HEAD
 type GetSQLFolderRequestParams struct {
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
@@ -5128,6 +5135,8 @@ func (r *GetSQLFolderResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+=======
+>>>>>>> ce7e47889 (add)
 type GetSQLScriptRequestParams struct {
 	// 探索脚本Id
 	ScriptId *string `json:"ScriptId,omitnil,omitempty" name:"ScriptId"`
@@ -5738,12 +5747,17 @@ type GrantMemberProjectRoleRequestParams struct {
 	// 用户id
 	UserUin *string `json:"UserUin,omitnil,omitempty" name:"UserUin"`
 
+<<<<<<< HEAD
 	// 角色id列表，目前支持的项目角色有
 	// - 308335260274237440 (项目管理员)
 	// - 308335260676890624 (数据工程师)
 	// - 308335260844662784 (运维工程师)
 	// - 308335260945326080 (普通成员)
 	RoleIds []*string `json:"RoleIds,omitnil,omitempty" name:"RoleIds"`
+=======
+	// 角色id
+	RoleId *string `json:"RoleId,omitnil,omitempty" name:"RoleId"`
+>>>>>>> ce7e47889 (add)
 }
 
 type GrantMemberProjectRoleRequest struct {
@@ -5755,12 +5769,17 @@ type GrantMemberProjectRoleRequest struct {
 	// 用户id
 	UserUin *string `json:"UserUin,omitnil,omitempty" name:"UserUin"`
 
+<<<<<<< HEAD
 	// 角色id列表，目前支持的项目角色有
 	// - 308335260274237440 (项目管理员)
 	// - 308335260676890624 (数据工程师)
 	// - 308335260844662784 (运维工程师)
 	// - 308335260945326080 (普通成员)
 	RoleIds []*string `json:"RoleIds,omitnil,omitempty" name:"RoleIds"`
+=======
+	// 角色id
+	RoleId *string `json:"RoleId,omitnil,omitempty" name:"RoleId"`
+>>>>>>> ce7e47889 (add)
 }
 
 func (r *GrantMemberProjectRoleRequest) ToJsonString() string {
@@ -5777,7 +5796,11 @@ func (r *GrantMemberProjectRoleRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ProjectId")
 	delete(f, "UserUin")
+<<<<<<< HEAD
 	delete(f, "RoleIds")
+=======
+	delete(f, "RoleId")
+>>>>>>> ce7e47889 (add)
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GrantMemberProjectRoleRequest has unknown keys!", "")
 	}
@@ -11058,12 +11081,17 @@ type RemoveMemberProjectRoleRequestParams struct {
 	// 用户id
 	UserUin *string `json:"UserUin,omitnil,omitempty" name:"UserUin"`
 
+<<<<<<< HEAD
 	// 角色id列表，目前支持的项目角色有
 	// - 308335260274237440 (项目管理员)
 	// - 308335260676890624 (数据工程师)
 	// - 308335260844662784 (运维工程师)
 	// - 308335260945326080 (普通成员)
 	RoleIds []*string `json:"RoleIds,omitnil,omitempty" name:"RoleIds"`
+=======
+	// 角色id
+	RoleId *string `json:"RoleId,omitnil,omitempty" name:"RoleId"`
+>>>>>>> ce7e47889 (add)
 }
 
 type RemoveMemberProjectRoleRequest struct {
@@ -11075,12 +11103,17 @@ type RemoveMemberProjectRoleRequest struct {
 	// 用户id
 	UserUin *string `json:"UserUin,omitnil,omitempty" name:"UserUin"`
 
+<<<<<<< HEAD
 	// 角色id列表，目前支持的项目角色有
 	// - 308335260274237440 (项目管理员)
 	// - 308335260676890624 (数据工程师)
 	// - 308335260844662784 (运维工程师)
 	// - 308335260945326080 (普通成员)
 	RoleIds []*string `json:"RoleIds,omitnil,omitempty" name:"RoleIds"`
+=======
+	// 角色id
+	RoleId *string `json:"RoleId,omitnil,omitempty" name:"RoleId"`
+>>>>>>> ce7e47889 (add)
 }
 
 func (r *RemoveMemberProjectRoleRequest) ToJsonString() string {
@@ -11097,7 +11130,11 @@ func (r *RemoveMemberProjectRoleRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ProjectId")
 	delete(f, "UserUin")
+<<<<<<< HEAD
 	delete(f, "RoleIds")
+=======
+	delete(f, "RoleId")
+>>>>>>> ce7e47889 (add)
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveMemberProjectRoleRequest has unknown keys!", "")
 	}

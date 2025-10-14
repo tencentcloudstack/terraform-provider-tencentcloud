@@ -1971,6 +1971,7 @@ func (c *Client) GetCodeFileWithContext(ctx context.Context, request *GetCodeFil
     return
 }
 
+<<<<<<< HEAD
 func NewGetCodeFolderRequest() (request *GetCodeFolderRequest) {
     request = &GetCodeFolderRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2073,6 +2074,8 @@ func (c *Client) GetDataBackfillPlanWithContext(ctx context.Context, request *Ge
     return
 }
 
+=======
+>>>>>>> ce7e47889 (add)
 func NewGetDataSourceRequest() (request *GetDataSourceRequest) {
     request = &GetDataSourceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2605,6 +2608,7 @@ func (c *Client) GetResourceGroupMetricsWithContext(ctx context.Context, request
     return
 }
 
+<<<<<<< HEAD
 func NewGetSQLFolderRequest() (request *GetSQLFolderRequest) {
     request = &GetSQLFolderRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2655,6 +2659,8 @@ func (c *Client) GetSQLFolderWithContext(ctx context.Context, request *GetSQLFol
     return
 }
 
+=======
+>>>>>>> ce7e47889 (add)
 func NewGetSQLScriptRequest() (request *GetSQLScriptRequest) {
     request = &GetSQLScriptRequest{
         BaseRequest: &tchttp.BaseRequest{},

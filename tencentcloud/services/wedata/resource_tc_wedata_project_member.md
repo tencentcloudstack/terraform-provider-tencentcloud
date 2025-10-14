@@ -1,0 +1,24 @@
+Provides a resource to create a WeData project member
+
+~> **NOTE:** 
+
+Example Usage
+
+```hcl
+resource "tencentcloud_wedata_project_member" "example" {
+  project_id = "2983848457986924544"
+  user_uin   = "100044238258"
+  role_ids = [
+    "308335260274237440",
+    "308335260844662784"
+  ]
+}
+```
+
+Import
+
+WeData project member can be imported using the projectId#userUin, e.g.
+
+```
+terraform import tencentcloud_wedata_project_member.example 2983848457986924544#100044238258
+```
