@@ -409,10 +409,10 @@ func (me *WedataService) DescribeWedataTaskInstanceLogByFilter(ctx context.Conte
 	return
 }
 
-func (me *WedataService) DescribeWedataTaskInstanceExecutionsByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetTaskInstanceResponseParams, errRet error) {
+func (me *WedataService) DescribeWedataTaskInstanceExecutionsByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListTaskInstanceExecutionsResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
-		request = wedatav20250806.NewGetTaskInstanceRequest()
+		request = wedatav20250806.NewListTaskInstanceExecutionsRequest()
 	)
 
 	defer func() {
@@ -435,7 +435,7 @@ func (me *WedataService) DescribeWedataTaskInstanceExecutionsByFilter(ctx contex
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseWedataV20250806Client().GetTaskInstance(request)
+	response, err := me.client.UseWedataV20250806Client().ListTaskInstanceExecutions(request)
 	if err != nil {
 		errRet = err
 		return
@@ -491,10 +491,10 @@ func (me *WedataService) DescribeWedataUpstreamTaskInstancesByFilter(ctx context
 	return
 }
 
-func (me *WedataService) DescribeWedataDownTaskInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListUpstreamTaskInstancesResponseParams, errRet error) {
+func (me *WedataService) DescribeWedataDownstreamTaskInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListDownstreamTaskInstancesResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
-		request = wedatav20250806.NewListUpstreamTaskInstancesRequest()
+		request = wedatav20250806.NewListDownstreamTaskInstancesRequest()
 	)
 
 	defer func() {
@@ -517,7 +517,7 @@ func (me *WedataService) DescribeWedataDownTaskInstancesByFilter(ctx context.Con
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseWedataV20250806Client().ListUpstreamTaskInstances(request)
+	response, err := me.client.UseWedataV20250806Client().ListDownstreamTaskInstances(request)
 	if err != nil {
 		errRet = err
 		return
@@ -532,10 +532,12 @@ func (me *WedataService) DescribeWedataDownTaskInstancesByFilter(ctx context.Con
 	return
 }
 
-func (me *WedataService) DescribeWedataOpsTaskOwnerById(ctx context.Context) (ret *wedatav20250806.Task, errRet error) {
+func (me *WedataService) DescribeWedataOpsTaskOwnerById(ctx context.Context, projectId, taskId string) (ret *wedatav20250806.Task, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := wedatav20250806.NewGetOpsTaskRequest()
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
 
 	defer func() {
 		if errRet != nil {
@@ -560,10 +562,50 @@ func (me *WedataService) DescribeWedataOpsTaskOwnerById(ctx context.Context) (re
 	return
 }
 
-func (me *WedataService) DescribeWedataOpsAlarmRuleById(ctx context.Context) (ret *wedatav20250806.AlarmRuleData, errRet error) {
+func (me *WedataService) DescribeWedataOpsAsyncJobByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetOpsAsyncJobResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetOpsAsyncJobRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "AsyncId" {
+			request.AsyncId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsAsyncJob(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsAlarmRuleById(ctx context.Context, projectId, alarmRuleId string) (ret *wedatav20250806.AlarmRuleData, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := wedatav20250806.NewGetOpsAlarmRuleRequest()
+	request.ProjectId = &projectId
+	request.AlarmRuleId = &alarmRuleId
 
 	defer func() {
 		if errRet != nil {

@@ -19,6 +19,9 @@ func TestAccTencentCloudWedataOpsAlarmRulesDataSource_basic(t *testing.T) {
 				Config: testAccWedataOpsAlarmRulesDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_wedata_ops_alarm_rules.wedata_ops_alarm_rules"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_ops_alarm_rules.wedata_ops_alarm_rules", "id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_wedata_ops_alarm_rules.wedata_ops_alarm_rules", "data.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_wedata_ops_alarm_rules.wedata_ops_alarm_rules", "data.0.items.#", "20"),
 				),
 			},
 		},
@@ -28,5 +31,6 @@ func TestAccTencentCloudWedataOpsAlarmRulesDataSource_basic(t *testing.T) {
 const testAccWedataOpsAlarmRulesDataSource = `
 
 data "tencentcloud_wedata_ops_alarm_rules" "wedata_ops_alarm_rules" {
+  project_id = "1859317240494305280"
 }
 `

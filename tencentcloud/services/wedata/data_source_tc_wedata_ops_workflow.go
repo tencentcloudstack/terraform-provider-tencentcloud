@@ -3,12 +3,13 @@ package wedata
 
 import (
 	"context"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"strings"
 )
 
 func DataSourceTencentCloudWedataOpsWorkflow() *schema.Resource {
@@ -154,7 +155,6 @@ func dataSourceTencentCloudWedataOpsWorkflowRead(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("workflow_id"); ok {
-		workflowId = v.(string)
 		paramMap["WorkflowId"] = helper.String(v.(string))
 	}
 

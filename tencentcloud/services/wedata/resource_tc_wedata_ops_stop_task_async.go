@@ -4,14 +4,15 @@ package wedata
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
-	"time"
 )
 
 func ResourceTencentCloudWedataOpsStopTaskAsync() *schema.Resource {
@@ -64,6 +65,7 @@ func resourceTencentCloudWedataOpsStopTaskAsyncCreate(d *schema.ResourceData, me
 	)
 
 	if v, ok := d.GetOk("project_id"); ok {
+		projectId = v.(string)
 		request.ProjectId = helper.String(v.(string))
 	}
 
@@ -107,7 +109,7 @@ func resourceTencentCloudWedataOpsStopTaskAsyncCreate(d *schema.ResourceData, me
 	if _, err := (&resource.StateChangeConf{
 		Delay:      1 * time.Second,
 		MinTimeout: 3 * time.Second,
-		Pending:    []string{},
+		Pending:    []string{"INIT", "RUNNING"},
 		Refresh:    resourceWedataOpsStopTaskAsyncCreateStateRefreshFunc_0_0(ctx, projectId, asyncId),
 		Target:     []string{"SUCCESS"},
 		Timeout:    timeout,

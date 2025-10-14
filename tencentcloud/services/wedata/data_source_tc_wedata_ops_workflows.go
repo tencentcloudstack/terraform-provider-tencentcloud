@@ -3,12 +3,13 @@ package wedata
 
 import (
 	"context"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"strings"
 )
 
 func DataSourceTencentCloudWedataOpsWorkflows() *schema.Resource {
@@ -30,7 +31,7 @@ func DataSourceTencentCloudWedataOpsWorkflows() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Workflow status filter: `ALL_RUNNING`: All scheduled; `ALL_FREEZED`: All paused; `ALL_STOPPTED`: All offline; `PART_RUNNING`: Partially scheduled; `ALL_NO_RUNNING`: All unscheduled; `ALL_INVALID`: All invalid.",
+				Description: "Workflow status filter: `ALL_RUNNING`: All scheduled, `ALL_FREEZED`: All paused, `ALL_STOPPTED`: All offline, `PART_RUNNING`: Partially scheduled, `ALL_NO_RUNNING`: All unscheduled, `ALL_INVALID`: All invalid.",
 			},
 
 			"owner_uin": {
@@ -140,7 +141,7 @@ func DataSourceTencentCloudWedataOpsWorkflows() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Workflow status: `ALL_RUNNING` : All scheduled; `ALL_FREEZED` : All paused; `ALL_STOPPTED` : All offline; `PART_RUNNING` : Partially scheduled; `ALL_NO_RUNNING` : All unscheduled; `ALL_INVALID` : All invalid.",
+							Description: "Workflow status: `ALL_RUNNING`: All scheduled; `ALL_FREEZED`: All paused; `ALL_STOPPTED`: All offline; `PART_RUNNING`: Partially scheduled; `ALL_NO_RUNNING`: All unscheduled; `ALL_INVALID`: All invalid.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,

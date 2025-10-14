@@ -1,9 +1,10 @@
 package wedata_test
 
 import (
+	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	"testing"
 )
 
 func TestAccTencentCloudWedataTaskSetSuccessInstanceAsyncResource_basic(t *testing.T) {
@@ -13,19 +14,21 @@ func TestAccTencentCloudWedataTaskSetSuccessInstanceAsyncResource_basic(t *testi
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{{
-			Config: testAccWedataTaskSetSuccessInstanceAsync,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_wedata_task_set_success_instance_async.wedata_task_set_success_instance_async", "id")),
-		}, {
-			ResourceName:      "tencentcloud_wedata_task_set_success_instance_async.wedata_task_set_success_instance_async",
-			ImportState:       true,
-			ImportStateVerify: true,
-		}},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccWedataTaskSetSuccessInstanceAsync,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_wedata_task_set_success_instance_async.wedata_task_set_success_instance_async", "id"),
+				),
+			},
+		},
 	})
 }
 
 const testAccWedataTaskSetSuccessInstanceAsync = `
 
 resource "tencentcloud_wedata_task_set_success_instance_async" "wedata_task_set_success_instance_async" {
+  project_id        = "1859317240494305280"
+  instance_key_list = ["20251013154418424_2025-10-13 18:10:00"]
 }
 `

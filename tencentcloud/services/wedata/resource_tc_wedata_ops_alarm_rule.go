@@ -4,13 +4,14 @@ package wedata
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func ResourceTencentCloudWedataOpsAlarmRule() *schema.Resource {
@@ -310,7 +311,7 @@ func ResourceTencentCloudWedataOpsAlarmRule() *schema.Resource {
 									"rule_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Offline alarm rule types: reconciliationFailure: Offline reconciliation failure alarm; reconciliationOvertime: Offline reconciliation task timeout alarm (timeout must be configured); reconciliationMismatch: Offline reconciliation mismatch alarm (mismatch threshold must be configured)",
+										Description: "Offline alarm rule types: reconciliationFailure: Offline reconciliation failure alarm; reconciliationOvertime: Offline reconciliation task timeout alarm (timeout must be configured); reconciliationMismatch: Offline reconciliation mismatch alarm (mismatch threshold must be configured).",
 									},
 									"mismatch_count": {
 										Type:        schema.TypeInt,
@@ -630,7 +631,7 @@ func resourceTencentCloudWedataOpsAlarmRuleRead(d *schema.ResourceData, meta int
 	projectId := idSplit[0]
 	alarmRuleId := idSplit[1]
 
-	respData, err := service.DescribeWedataOpsAlarmRuleById(ctx)
+	respData, err := service.DescribeWedataOpsAlarmRuleById(ctx, projectId, alarmRuleId)
 	if err != nil {
 		return err
 	}
@@ -640,6 +641,8 @@ func resourceTencentCloudWedataOpsAlarmRuleRead(d *schema.ResourceData, meta int
 		log.Printf("[WARN]%s resource `wedata_ops_alarm_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	_ = d.Set("project_id", projectId)
 
 	if respData.AlarmRuleName != nil {
 		_ = d.Set("alarm_rule_name", respData.AlarmRuleName)
@@ -659,10 +662,6 @@ func resourceTencentCloudWedataOpsAlarmRuleRead(d *schema.ResourceData, meta int
 
 	if respData.AlarmTypes != nil {
 		_ = d.Set("alarm_types", respData.AlarmTypes)
-	}
-
-	if respData.Status != nil {
-		_ = d.Set("status", respData.Status)
 	}
 
 	alarmRuleDetailMap := map[string]interface{}{}
@@ -807,18 +806,6 @@ func resourceTencentCloudWedataOpsAlarmRuleRead(d *schema.ResourceData, meta int
 		_ = d.Set("alarm_level", respData.AlarmLevel)
 	}
 
-	if respData.OwnerUin != nil {
-		_ = d.Set("owner_uin", respData.OwnerUin)
-	}
-
-	if respData.BundleId != nil {
-		_ = d.Set("bundle_id", respData.BundleId)
-	}
-
-	if respData.BundleInfo != nil {
-		_ = d.Set("bundle_info", respData.BundleInfo)
-	}
-
 	alarmGroupsList := make([]map[string]interface{}, 0, len(respData.AlarmGroups))
 	if respData.AlarmGroups != nil {
 		for _, alarmGroups := range respData.AlarmGroups {
@@ -904,8 +891,6 @@ func resourceTencentCloudWedataOpsAlarmRuleRead(d *schema.ResourceData, meta int
 		_ = d.Set("alarm_groups", alarmGroupsList)
 	}
 
-	_ = projectId
-	_ = alarmRuleId
 	return nil
 }
 

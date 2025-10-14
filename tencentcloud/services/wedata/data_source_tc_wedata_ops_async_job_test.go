@@ -19,6 +19,8 @@ func TestAccTencentCloudWedataOpsAsyncJobDataSource_basic(t *testing.T) {
 				Config: testAccWedataOpsAsyncJobDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_wedata_ops_async_job.wedata_ops_async_job"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_ops_async_job.wedata_ops_async_job", "id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_wedata_ops_async_job.wedata_ops_async_job", "data.#", "1"),
 				),
 			},
 		},
@@ -28,5 +30,7 @@ func TestAccTencentCloudWedataOpsAsyncJobDataSource_basic(t *testing.T) {
 const testAccWedataOpsAsyncJobDataSource = `
 
 data "tencentcloud_wedata_ops_async_job" "wedata_ops_async_job" {
+    project_id = "1859317240494305280"
+    async_id = "9ba294ff-46d9-4a77-ae4a-acd0b4bdca3c"
 }
 `

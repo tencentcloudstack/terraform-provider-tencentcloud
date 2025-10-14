@@ -4,13 +4,14 @@ package wedata
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func ResourceTencentCloudWedataOpsTaskOwner() *schema.Resource {
@@ -19,6 +20,9 @@ func ResourceTencentCloudWedataOpsTaskOwner() *schema.Resource {
 		Read:   resourceTencentCloudWedataOpsTaskOwnerRead,
 		Update: resourceTencentCloudWedataOpsTaskOwnerUpdate,
 		Delete: resourceTencentCloudWedataOpsTaskOwnerDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"project_id": {
 				Type:        schema.TypeString,
@@ -35,7 +39,7 @@ func ResourceTencentCloudWedataOpsTaskOwner() *schema.Resource {
 			"owner_uin": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Task owner id",
+				Description: "Task owner id.",
 			},
 		},
 	}
@@ -80,7 +84,7 @@ func resourceTencentCloudWedataOpsTaskOwnerRead(d *schema.ResourceData, meta int
 	projectId := idSplit[0]
 	taskId := idSplit[1]
 
-	respData, err := service.DescribeWedataOpsTaskOwnerById(ctx)
+	respData, err := service.DescribeWedataOpsTaskOwnerById(ctx, projectId, taskId)
 	if err != nil {
 		return err
 	}
@@ -90,17 +94,15 @@ func resourceTencentCloudWedataOpsTaskOwnerRead(d *schema.ResourceData, meta int
 		log.Printf("[WARN]%s resource `wedata_ops_task_owner` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	taskBaseAttributeMap := map[string]interface{}{}
+	_ = d.Set("project_id", projectId)
+	_ = d.Set("task_id", taskId)
 
 	if respData.TaskBaseAttribute != nil {
 		if respData.TaskBaseAttribute.OwnerUin != nil {
-			taskBaseAttributeMap["owner_uin"] = respData.TaskBaseAttribute.OwnerUin
 			_ = d.Set("owner_uin", respData.TaskBaseAttribute.OwnerUin)
 		}
 	}
 
-	_ = projectId
-	_ = taskId
 	return nil
 }
 

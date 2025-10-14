@@ -3,12 +3,13 @@ package wedata
 
 import (
 	"context"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"strings"
 )
 
 func DataSourceTencentCloudWedataOpsAlarmRules() *schema.Resource {
@@ -18,7 +19,7 @@ func DataSourceTencentCloudWedataOpsAlarmRules() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "项目id",
+				Description: "Project id.",
 			},
 
 			"monitor_object_type": {
@@ -298,7 +299,7 @@ func DataSourceTencentCloudWedataOpsAlarmRules() *schema.Resource {
 															"rule_type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Offline alarm rule types: reconciliationFailure: Offline reconciliation failure alarm; reconciliationOvertime: Offline reconciliation task timeout alarm (timeout must be configured); reconciliationMismatch: Offline reconciliation mismatch alarm (mismatch threshold must be configured)",
+																Description: "Offline alarm rule types: reconciliationFailure: Offline reconciliation failure alarm; reconciliationOvertime: Offline reconciliation task timeout alarm (timeout must be configured); reconciliationMismatch: Offline reconciliation mismatch alarm (mismatch threshold must be configured).",
 															},
 															"mismatch_count": {
 																Type:        schema.TypeInt,

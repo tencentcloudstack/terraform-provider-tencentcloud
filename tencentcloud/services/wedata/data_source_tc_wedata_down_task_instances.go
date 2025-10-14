@@ -3,17 +3,18 @@ package wedata
 
 import (
 	"context"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"strings"
 )
 
-func DataSourceTencentCloudWedataDownTaskInstances() *schema.Resource {
+func DataSourceTencentCloudWedataDownstreamTaskInstances() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudWedataDownTaskInstancesRead,
+		Read: dataSourceTencentCloudWedataDownstreamTaskInstancesRead,
 		Schema: map[string]*schema.Schema{
 			"project_id": {
 				Type:        schema.TypeString,
@@ -24,19 +25,19 @@ func DataSourceTencentCloudWedataDownTaskInstances() *schema.Resource {
 			"instance_key": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Unique instance identifier.",
+				Description: "Instance unique identifier.",
 			},
 
 			"time_zone": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Time zone, default UTC+8.",
+				Description: "Time zone timeZone, default UTC+8.",
 			},
 
 			"data": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Upstream instance list.",
+				Description: "Direct downstream task instances list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"total_count": {
@@ -47,7 +48,7 @@ func DataSourceTencentCloudWedataDownTaskInstances() *schema.Resource {
 						"total_page_number": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Total pages.",
+							Description: "Total page number.",
 						},
 						"page_number": {
 							Type:        schema.TypeInt,
@@ -68,12 +69,12 @@ func DataSourceTencentCloudWedataDownTaskInstances() *schema.Resource {
 									"project_id": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Project ID.",
+										Description: "Project ID to which it belongs.",
 									},
 									"instance_key": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Unique instance identifier.",
+										Description: "Instance unique identifier.",
 									},
 									"folder_id": {
 										Type:        schema.TypeString,
@@ -113,17 +114,17 @@ func DataSourceTencentCloudWedataDownTaskInstances() *schema.Resource {
 									"instance_state": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Instance status. - WAIT_EVENT: Waiting for event, - WAIT_UPSTREAM: Waiting for upstream, - WAIT_RUN: Waiting to run, - RUNNING: Running, - SKIP_RUNNING: Skipped running, - FAILED_RETRY: Failed retry, - EXPIRED: Failed, - COMPLETED: Success.",
+										Description: "Instance state: WAIT_EVENT: Waiting for event, WAIT_UPSTREAM: Waiting for upstream, WAIT_RUN: Waiting to run, RUNNING: Running, SKIP_RUNNING: Skip running, FAILED_RETRY: Failed and retrying, EXPIRED: Failed, COMPLETED: Completed.",
 									},
 									"instance_type": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Instance type. - 0: Backfill type, - 1: Periodic instance, - 2: Non-periodic instance.",
+										Description: "Instance type: 0: Backfill instance, 1: Periodic instance, 2: Non-periodic instance.",
 									},
 									"owner_uin_list": {
 										Type:        schema.TypeSet,
 										Required:    true,
-										Description: "Owner list.",
+										Description: "List of owners.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
@@ -146,42 +147,42 @@ func DataSourceTencentCloudWedataDownTaskInstances() *schema.Resource {
 									"cycle_type": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Task cycle type.Supports filtering multiple types with OR relationship. O: ONEOFF_CYCLE, Y: YEAR_CYCLE, M: MONTH_CYCLE, W: WEEK_CYCLE, D: DAY_CYCLE, H: HOUR_CYCLE, I: MINUTE_CYCLE, C: CRONTAB_CYCLE.",
+										Description: "Task cycle type. Supports filtering multiple conditions, and the relationship between conditions is OR. O: ONEOFF_CYCLE, Y: YEAR_CYCLE, M: MONTH_CYCLE, W: WEEK_CYCLE, D: DAY_CYCLE, H: HOUR_CYCLE, I: MINUTE_CYCLE, C: CRONTAB_CYCLE.",
 									},
 									"try_limit": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Retry limit per run failure.",
+										Description: "Retry limit after each run failure.",
 									},
 									"tries": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Failed retry count. Reset to 0 when manually rerun or backfilled.",
+										Description: "Failure retry count. When triggered again by manual rerun or backfill instance, it will be reset to 0 and recounted.",
 									},
 									"start_time": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Execution start time.",
+										Description: "Run start time.",
 									},
 									"end_time": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Execution end time.",
+										Description: "Run end time.",
 									},
 									"cost_time": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Execution duration, in ms.",
+										Description: "Cost time, in milliseconds.",
 									},
 									"scheduler_time": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Scheduled time.",
+										Description: "Scheduled time",
 									},
 									"last_update_time": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Last update time, format yyyy-MM-dd HH:mm:ss.",
+										Description: "Instance last update time, format: yyyy-MM-dd HH:mm:ss.",
 									},
 									"executor_group_id": {
 										Type:        schema.TypeString,
@@ -209,8 +210,8 @@ func DataSourceTencentCloudWedataDownTaskInstances() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudWedataDownTaskInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("data_source.tencentcloud_wedata_down_task_instances.read")()
+func dataSourceTencentCloudWedataDownstreamTaskInstancesRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_wedata_downstream_task_instances.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(nil)
@@ -231,9 +232,9 @@ func dataSourceTencentCloudWedataDownTaskInstancesRead(d *schema.ResourceData, m
 		paramMap["TimeZone"] = helper.String(v.(string))
 	}
 
-	var respData *wedatav20250806.ListUpstreamTaskInstancesResponseParams
+	var respData *wedatav20250806.ListDownstreamTaskInstancesResponseParams
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeWedataDownTaskInstancesByFilter(ctx, paramMap)
+		result, e := service.DescribeWedataDownstreamTaskInstancesByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -382,7 +383,6 @@ func dataSourceTencentCloudWedataDownTaskInstancesRead(d *schema.ResourceData, m
 		_ = d.Set("data", []interface{}{dataMap})
 	}
 
-	d.SetId(strings.Join([]string{projectId, taskId}, tccommon.FILED_SP))
 	d.SetId(helper.DataResourceIdsHash(ids))
 
 	output, ok := d.GetOk("result_output_file")

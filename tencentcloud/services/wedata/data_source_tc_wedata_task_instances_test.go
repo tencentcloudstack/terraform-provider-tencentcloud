@@ -19,6 +19,9 @@ func TestAccTencentCloudWedataTaskInstancesDataSource_basic(t *testing.T) {
 				Config: testAccWedataTaskInstancesDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_wedata_task_instances.wedata_task_instances"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_task_instances.wedata_task_instances", "id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_wedata_task_instances.wedata_task_instances", "data.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_wedata_task_instances.wedata_task_instances", "data.0.items.#", "10"),
 				),
 			},
 		},
@@ -28,5 +31,6 @@ func TestAccTencentCloudWedataTaskInstancesDataSource_basic(t *testing.T) {
 const testAccWedataTaskInstancesDataSource = `
 
 data "tencentcloud_wedata_task_instances" "wedata_task_instances" {
+  project_id = "1859317240494305280"
 }
 `

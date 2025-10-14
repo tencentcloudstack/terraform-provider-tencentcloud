@@ -19,6 +19,8 @@ func TestAccTencentCloudWedataOpsWorkflowDataSource_basic(t *testing.T) {
 				Config: testAccWedataOpsWorkflowDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_wedata_ops_workflow.wedata_ops_workflow"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_ops_workflow.wedata_ops_workflow", "id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_wedata_ops_workflow.wedata_ops_workflow", "data.#", "1"),
 				),
 			},
 		},
@@ -28,5 +30,7 @@ func TestAccTencentCloudWedataOpsWorkflowDataSource_basic(t *testing.T) {
 const testAccWedataOpsWorkflowDataSource = `
 
 data "tencentcloud_wedata_ops_workflow" "wedata_ops_workflow" {
+    project_id = "2905622749543821312"
+    workflow_id = "f328ab83-62e1-4b0a-9a18-a79b42722792"
 }
 `

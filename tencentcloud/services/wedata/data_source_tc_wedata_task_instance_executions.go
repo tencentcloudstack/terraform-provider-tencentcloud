@@ -3,12 +3,13 @@ package wedata
 
 import (
 	"context"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"strings"
 )
 
 func DataSourceTencentCloudWedataTaskInstanceExecutions() *schema.Resource {
@@ -18,159 +19,109 @@ func DataSourceTencentCloudWedataTaskInstanceExecutions() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Project ID.",
+				Description: "Project ID to which it belongs",
 			},
 
 			"instance_key": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Unique instance identifier, can be obtained via ListInstances.",
+				Description: "Instance unique identifier, can be obtained via ListInstances",
 			},
 
 			"time_zone": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "**Time zone**, the time zone of the input time string, default UTC+8.",
+				Description: "**Time zone** timeZone, the time zone of the input time string, default UTC+8",
 			},
 
 			"data": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Instance details.",
+				Description: "Instance details",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"project_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Project ID.",
-						},
-						"instance_key": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "**Unique instance identifier**.",
-						},
-						"folder_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Folder ID.",
-						},
-						"folder_name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Folder name.",
-						},
-						"workflow_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Workflow ID.",
-						},
-						"workflow_name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Workflow name.",
-						},
-						"task_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Task ID.",
-						},
-						"task_name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Task name.",
-						},
-						"task_type_id": {
+						"total_count": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "ID corresponding to taskType.",
+							Description: "Total count of results",
 						},
-						"task_type": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Task type.",
-						},
-						"cycle_type": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "**Task cycle type**.\n* ONEOFF_CYCLE: One-time\n* YEAR_CYCLE: Year\n* MONTH_CYCLE: Month\n* WEEK_CYCLE: Week\n* DAY_CYCLE: Day\n* HOUR_CYCLE: Hour\n* MINUTE_CYCLE: Minute\n* CRONTAB_CYCLE: Crontab expression type.",
-						},
-						"cur_run_date": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Instance data time.",
-						},
-						"instance_state": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "**Instance status**.\n- WAIT_EVENT: Waiting for event\n- WAIT_UPSTREAM: Waiting for upstream\n- WAIT_RUN: Waiting to run\n- RUNNING: Running\n- SKIP_RUNNING: Skipped running\n- FAILED_RETRY: Failed retry\n- EXPIRED: Failed\n- COMPLETED: Success.",
-						},
-						"instance_type": {
+						"total_page_number": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "**Instance type**.\n\n- 0: Backfill type\n- 1: Periodic instance\n- 2: Non-periodic instance.",
+							Description: "Total number of pages",
 						},
-						"owner_uin_list": {
-							Type:        schema.TypeSet,
+						"items": {
+							Type:        schema.TypeList,
 							Required:    true,
-							Description: "Owner list.",
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
+							Description: "Record list",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"instance_key": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Instance unique identifier",
+									},
+									"life_round_num": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "**Instance lifecycle round number, identifying a specific execution of the instance**\n\nFor example: The first run of a periodic instance has a round number of 0; if the user reruns the instance later, the second execution will have a round number of 1.",
+									},
+									"instance_state": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "**Instance state**\n- WAIT_EVENT: Waiting for event\n- WAIT_UPSTREAM: Waiting for upstream\n- WAIT_RUN: Waiting to run\n- RUNNING: Running\n- SKIP_RUNNING: Skip running\n- FAILED_RETRY: Failed and retrying\n- EXPIRED: Failed\n- COMPLETED: Completed",
+									},
+									"run_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "**Instance run trigger type**\n\n- RERUN: Rerun\n- ADDITION: Backfill\n- PERIODIC: Periodic\n- APERIODIC: Non-periodic\n- RERUN_SKIP_RUN: Rerun - Skip run\n- ADDITION_SKIP_RUN: Backfill - Skip run\n- PERIODIC_SKIP_RUN: Periodic - Skip run\n- APERIODIC_SKIP_RUN: Non-periodic - Skip run\n- MANUAL_TRIGGER: Manual trigger\n- RERUN_MANUAL_TRIGGER: Manual trigger - Rerun",
+									},
+									"tries": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Failure retry count",
+									},
+									"execution_phase_list": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "**Instance execution lifecycle list**",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"start_time": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Start time of this state",
+												},
+												"detail_state": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "**Instance lifecycle phase state**\n\n- WAIT_UPSTREAM: Waiting for event/upstream\n- WAIT_RUN: Waiting to run\n- RUNNING: Running\n- COMPLETE: Final state - Completed\n- FAILED: Final state - Failed and retrying\n- EXPIRED: Final state - Failed\n- SKIP_RUNNING: Final state - Branch skipped by upstream branch node\n- HISTORY: For compatibility with historical instances before 2024-03-30, instances after that date do not need to pay attention to this enum type.",
+												},
+												"end_time": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "End time of this state",
+												},
+											},
+										},
+									},
+									"cost_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Cost time, in milliseconds",
+									},
+								},
 							},
 						},
-						"total_run_num": {
+						"page_number": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Total run count.",
+							Description: "Page number",
 						},
-						"try_limit": {
+						"page_size": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Retry limit per run failure.",
-						},
-						"tries": {
-							Type:        schema.TypeInt,
-							Required:    true,
-							Description: "**Failed retry count**.\nReset to 0 when manually rerun or backfilled.",
-						},
-						"cost_time": {
-							Type:        schema.TypeInt,
-							Required:    true,
-							Description: "Execution duration, in ms.",
-						},
-						"start_time": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Execution start time.",
-						},
-						"end_time": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Execution end time.",
-						},
-						"scheduler_time": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Scheduled time.",
-						},
-						"last_update_time": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Last update time, format yyyy-MM-dd HH:mm:ss.",
-						},
-						"executor_group_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Executor resource group ID.",
-						},
-						"executor_group_name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Resource group name.",
-						},
-						"job_error_msg": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Brief task failure message.",
+							Description: "Page size",
 						},
 					},
 				},
@@ -207,7 +158,7 @@ func dataSourceTencentCloudWedataTaskInstanceExecutionsRead(d *schema.ResourceDa
 		paramMap["TimeZone"] = helper.String(v.(string))
 	}
 
-	var respData *wedatav20250806.GetTaskInstanceResponseParams
+	var respData *wedatav20250806.ListTaskInstanceExecutionsResponseParams
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeWedataTaskInstanceExecutionsByFilter(ctx, paramMap)
 		if e != nil {
@@ -221,120 +172,88 @@ func dataSourceTencentCloudWedataTaskInstanceExecutionsRead(d *schema.ResourceDa
 	}
 
 	var projectId string
-	var taskId string
+	var instanceKey string
 	dataMap := map[string]interface{}{}
+	ids := []string{}
 
 	if respData.Data != nil {
-		if respData.Data.ProjectId != nil {
-			dataMap["project_id"] = respData.Data.ProjectId
-			projectId = *respData.Data.ProjectId
+		if respData.Data.TotalCount != nil {
+			dataMap["total_count"] = respData.Data.TotalCount
 		}
 
-		if respData.Data.InstanceKey != nil {
-			dataMap["instance_key"] = respData.Data.InstanceKey
+		if respData.Data.TotalPageNumber != nil {
+			dataMap["total_page_number"] = respData.Data.TotalPageNumber
 		}
 
-		if respData.Data.FolderId != nil {
-			dataMap["folder_id"] = respData.Data.FolderId
+		itemsList := make([]map[string]interface{}, 0, len(respData.Data.Items))
+		if respData.Data.Items != nil {
+			for _, items := range respData.Data.Items {
+				itemsMap := map[string]interface{}{}
+
+				if items.InstanceKey != nil {
+					itemsMap["instance_key"] = items.InstanceKey
+				}
+
+				if items.LifeRoundNum != nil {
+					itemsMap["life_round_num"] = items.LifeRoundNum
+				}
+
+				if items.InstanceState != nil {
+					itemsMap["instance_state"] = items.InstanceState
+				}
+
+				if items.RunType != nil {
+					itemsMap["run_type"] = items.RunType
+				}
+
+				if items.Tries != nil {
+					itemsMap["tries"] = items.Tries
+				}
+
+				executionPhaseListList := make([]map[string]interface{}, 0, len(items.ExecutionPhaseList))
+				if items.ExecutionPhaseList != nil {
+					for _, executionPhaseList := range items.ExecutionPhaseList {
+						executionPhaseListMap := map[string]interface{}{}
+
+						if executionPhaseList.StartTime != nil {
+							executionPhaseListMap["start_time"] = executionPhaseList.StartTime
+						}
+
+						if executionPhaseList.DetailState != nil {
+							executionPhaseListMap["detail_state"] = executionPhaseList.DetailState
+						}
+
+						if executionPhaseList.EndTime != nil {
+							executionPhaseListMap["end_time"] = executionPhaseList.EndTime
+						}
+
+						executionPhaseListList = append(executionPhaseListList, executionPhaseListMap)
+					}
+
+					itemsMap["execution_phase_list"] = executionPhaseListList
+				}
+				if items.CostTime != nil {
+					itemsMap["cost_time"] = items.CostTime
+				}
+
+				ids = append(ids, strings.Join([]string{projectId, instanceKey}, tccommon.FILED_SP))
+				itemsList = append(itemsList, itemsMap)
+			}
+
+			dataMap["items"] = itemsList
+		}
+		if respData.Data.PageNumber != nil {
+			dataMap["page_number"] = respData.Data.PageNumber
 		}
 
-		if respData.Data.FolderName != nil {
-			dataMap["folder_name"] = respData.Data.FolderName
-		}
-
-		if respData.Data.WorkflowId != nil {
-			dataMap["workflow_id"] = respData.Data.WorkflowId
-		}
-
-		if respData.Data.WorkflowName != nil {
-			dataMap["workflow_name"] = respData.Data.WorkflowName
-		}
-
-		if respData.Data.TaskId != nil {
-			dataMap["task_id"] = respData.Data.TaskId
-			taskId = *respData.Data.TaskId
-		}
-
-		if respData.Data.TaskName != nil {
-			dataMap["task_name"] = respData.Data.TaskName
-		}
-
-		if respData.Data.TaskTypeId != nil {
-			dataMap["task_type_id"] = respData.Data.TaskTypeId
-		}
-
-		if respData.Data.TaskType != nil {
-			dataMap["task_type"] = respData.Data.TaskType
-		}
-
-		if respData.Data.CycleType != nil {
-			dataMap["cycle_type"] = respData.Data.CycleType
-		}
-
-		if respData.Data.CurRunDate != nil {
-			dataMap["cur_run_date"] = respData.Data.CurRunDate
-		}
-
-		if respData.Data.InstanceState != nil {
-			dataMap["instance_state"] = respData.Data.InstanceState
-		}
-
-		if respData.Data.InstanceType != nil {
-			dataMap["instance_type"] = respData.Data.InstanceType
-		}
-
-		if respData.Data.OwnerUinList != nil {
-			dataMap["owner_uin_list"] = respData.Data.OwnerUinList
-		}
-
-		if respData.Data.TotalRunNum != nil {
-			dataMap["total_run_num"] = respData.Data.TotalRunNum
-		}
-
-		if respData.Data.TryLimit != nil {
-			dataMap["try_limit"] = respData.Data.TryLimit
-		}
-
-		if respData.Data.Tries != nil {
-			dataMap["tries"] = respData.Data.Tries
-		}
-
-		if respData.Data.CostTime != nil {
-			dataMap["cost_time"] = respData.Data.CostTime
-		}
-
-		if respData.Data.StartTime != nil {
-			dataMap["start_time"] = respData.Data.StartTime
-		}
-
-		if respData.Data.EndTime != nil {
-			dataMap["end_time"] = respData.Data.EndTime
-		}
-
-		if respData.Data.SchedulerTime != nil {
-			dataMap["scheduler_time"] = respData.Data.SchedulerTime
-		}
-
-		if respData.Data.LastUpdateTime != nil {
-			dataMap["last_update_time"] = respData.Data.LastUpdateTime
-		}
-
-		if respData.Data.ExecutorGroupId != nil {
-			dataMap["executor_group_id"] = respData.Data.ExecutorGroupId
-		}
-
-		if respData.Data.ExecutorGroupName != nil {
-			dataMap["executor_group_name"] = respData.Data.ExecutorGroupName
-		}
-
-		if respData.Data.JobErrorMsg != nil {
-			dataMap["job_error_msg"] = respData.Data.JobErrorMsg
+		if respData.Data.PageSize != nil {
+			dataMap["page_size"] = respData.Data.PageSize
 		}
 
 		_ = d.Set("data", []interface{}{dataMap})
 	}
 
-	d.SetId(strings.Join([]string{projectId, taskId}, tccommon.FILED_SP))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
