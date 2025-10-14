@@ -15,15 +15,23 @@ func TestAccTencentCloudWedataWorkflowResource_basic(t *testing.T) {
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{{
-			Config: testAccWedataWorkflow,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_wedata_workflow.wedata_workflow", "id")),
-		}, {
-			ResourceName:            "tencentcloud_wedata_workflow.wedata_workflow",
-			ImportState:             true,
-			ImportStateVerify:       true,
-			ImportStateVerifyIgnore: []string{"workflow_scheduler_configuration.0.start_time"},
-		}},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccWedataWorkflow,
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_wedata_workflow.wedata_workflow", "id")),
+			},
+			{
+				Config: testAccWedataWorkflowUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_wedata_workflow.wedata_workflow", "workflow_name", "test1"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_wedata_workflow.wedata_workflow",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"workflow_scheduler_configuration.0.start_time"},
+			}},
 	})
 }
 
@@ -37,6 +45,21 @@ resource "tencentcloud_wedata_workflow_folder" "wedata_workflow_folder" {
 resource "tencentcloud_wedata_workflow" "wedata_workflow" {
   project_id = 2905622749543821312
   workflow_name = "test"
+  parent_folder_path = "${tencentcloud_wedata_workflow_folder.wedata_workflow_folder.parent_folder_path}${tencentcloud_wedata_workflow_folder.wedata_workflow_folder.folder_name}"
+  workflow_type = "cycle"
+}
+`
+
+const testAccWedataWorkflowUpdate = `
+resource "tencentcloud_wedata_workflow_folder" "wedata_workflow_folder" {
+  project_id         = "2905622749543821312"
+  parent_folder_path = "/"
+  folder_name        = "tftest"
+}
+
+resource "tencentcloud_wedata_workflow" "wedata_workflow" {
+  project_id = 2905622749543821312
+  workflow_name = "test1"
   parent_folder_path = "${tencentcloud_wedata_workflow_folder.wedata_workflow_folder.parent_folder_path}${tencentcloud_wedata_workflow_folder.wedata_workflow_folder.folder_name}"
   workflow_type = "cycle"
 }

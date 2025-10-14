@@ -268,16 +268,16 @@ func resourceTencentCloudWedataWorkflowCreate(d *schema.ResourceData, meta inter
 		if v, ok := workflowSchedulerConfigurationMap["dependency_workflow"]; ok {
 			workflowSchedulerConfigurationInfo.DependencyWorkflow = helper.String(v.(string))
 		}
-		if v, ok := workflowSchedulerConfigurationMap["modify_cycle_value"]; ok {
+		if v, ok := workflowSchedulerConfigurationMap["modify_cycle_value"]; ok && v.(string) != "" {
 			workflowSchedulerConfigurationInfo.ModifyCycleValue = helper.String(v.(string))
 		}
 		if v, ok := workflowSchedulerConfigurationMap["clear_link"]; ok {
 			workflowSchedulerConfigurationInfo.ClearLink = helper.Bool(v.(bool))
 		}
-		if v, ok := workflowSchedulerConfigurationMap["main_cyclic_config"]; ok {
+		if v, ok := workflowSchedulerConfigurationMap["main_cyclic_config"]; ok && v.(string) != "" {
 			workflowSchedulerConfigurationInfo.MainCyclicConfig = helper.String(v.(string))
 		}
-		if v, ok := workflowSchedulerConfigurationMap["subordinate_cyclic_config"]; ok {
+		if v, ok := workflowSchedulerConfigurationMap["subordinate_cyclic_config"]; ok && v.(string) != "" {
 			workflowSchedulerConfigurationInfo.SubordinateCyclicConfig = helper.String(v.(string))
 		}
 		if v, ok := workflowSchedulerConfigurationMap["execution_start_time"]; ok {
@@ -286,7 +286,7 @@ func resourceTencentCloudWedataWorkflowCreate(d *schema.ResourceData, meta inter
 		if v, ok := workflowSchedulerConfigurationMap["execution_end_time"]; ok {
 			workflowSchedulerConfigurationInfo.ExecutionEndTime = helper.String(v.(string))
 		}
-		if v, ok := workflowSchedulerConfigurationMap["calendar_open"]; ok {
+		if v, ok := workflowSchedulerConfigurationMap["calendar_open"]; ok && v.(string) != "" {
 			workflowSchedulerConfigurationInfo.CalendarOpen = helper.String(v.(string))
 		}
 		if v, ok := workflowSchedulerConfigurationMap["calendar_id"]; ok {
@@ -555,16 +555,16 @@ func resourceTencentCloudWedataWorkflowUpdate(d *schema.ResourceData, meta inter
 			if v, ok := workflowSchedulerConfigurationMap["dependency_workflow"]; ok {
 				workflowSchedulerConfigurationInfo.DependencyWorkflow = helper.String(v.(string))
 			}
-			if v, ok := workflowSchedulerConfigurationMap["modify_cycle_value"]; ok {
+			if v, ok := workflowSchedulerConfigurationMap["modify_cycle_value"]; ok && v.(string) != "" {
 				workflowSchedulerConfigurationInfo.ModifyCycleValue = helper.String(v.(string))
 			}
 			if v, ok := workflowSchedulerConfigurationMap["clear_link"]; ok {
 				workflowSchedulerConfigurationInfo.ClearLink = helper.Bool(v.(bool))
 			}
-			if v, ok := workflowSchedulerConfigurationMap["main_cyclic_config"]; ok {
+			if v, ok := workflowSchedulerConfigurationMap["main_cyclic_config"]; ok && v.(string) != "" {
 				workflowSchedulerConfigurationInfo.MainCyclicConfig = helper.String(v.(string))
 			}
-			if v, ok := workflowSchedulerConfigurationMap["subordinate_cyclic_config"]; ok {
+			if v, ok := workflowSchedulerConfigurationMap["subordinate_cyclic_config"]; ok && v.(string) != "" {
 				workflowSchedulerConfigurationInfo.SubordinateCyclicConfig = helper.String(v.(string))
 			}
 			if v, ok := workflowSchedulerConfigurationMap["execution_start_time"]; ok {
@@ -573,7 +573,7 @@ func resourceTencentCloudWedataWorkflowUpdate(d *schema.ResourceData, meta inter
 			if v, ok := workflowSchedulerConfigurationMap["execution_end_time"]; ok {
 				workflowSchedulerConfigurationInfo.ExecutionEndTime = helper.String(v.(string))
 			}
-			if v, ok := workflowSchedulerConfigurationMap["calendar_open"]; ok {
+			if v, ok := workflowSchedulerConfigurationMap["calendar_open"]; ok && v.(string) != "" {
 				workflowSchedulerConfigurationInfo.CalendarOpen = helper.String(v.(string))
 			}
 			if v, ok := workflowSchedulerConfigurationMap["calendar_id"]; ok {
