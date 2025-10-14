@@ -9,6 +9,7 @@ import (
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -112,6 +113,588 @@ func (me *WedataService) DescribeWedataRuleTemplatesByFilter(ctx context.Context
 
 	ruleTemplates = response.Response.Data
 
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsWorkflowsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.OpsWorkflow, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListOpsWorkflowsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "FolderId" {
+			request.FolderId = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+		if k == "OwnerUin" {
+			request.OwnerUin = v.(*string)
+		}
+		if k == "WorkflowType" {
+			request.WorkflowType = v.(*string)
+		}
+		if k == "KeyWord" {
+			request.KeyWord = v.(*string)
+		}
+		if k == "SortItem" {
+			request.SortItem = v.(*string)
+		}
+		if k == "SortType" {
+			request.SortType = v.(*string)
+		}
+		if k == "CreateUserUin" {
+			request.CreateUserUin = v.(*string)
+		}
+		if k == "ModifyTime" {
+			request.ModifyTime = v.(*string)
+		}
+		if k == "CreateTime" {
+			request.CreateTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 1 // page number starts from 1
+		limit  uint64 = 100
+	)
+	for {
+		request.PageNumber = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseWedataV20250806Client().ListOpsWorkflows(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsWorkflowByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetOpsWorkflowResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetOpsWorkflowRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "WorkflowId" {
+			request.WorkflowId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsWorkflow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataTaskInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListTaskInstancesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListTaskInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+		if k == "InstanceType" {
+			request.InstanceType = v.(*uint64)
+		}
+		if k == "InstanceState" {
+			request.InstanceState = v.(*string)
+		}
+		if k == "TaskTypeId" {
+			request.TaskTypeId = v.(*uint64)
+		}
+		if k == "CycleType" {
+			request.CycleType = v.(*string)
+		}
+		if k == "OwnerUin" {
+			request.OwnerUin = v.(*string)
+		}
+		if k == "FolderId" {
+			request.FolderId = v.(*string)
+		}
+		if k == "WorkflowId" {
+			request.WorkflowId = v.(*string)
+		}
+		if k == "ExecutorGroupId" {
+			request.ExecutorGroupId = v.(*string)
+		}
+		if k == "ScheduleTimeFrom" {
+			request.ScheduleTimeFrom = v.(*string)
+		}
+		if k == "ScheduleTimeTo" {
+			request.ScheduleTimeTo = v.(*string)
+		}
+		if k == "StartTimeFrom" {
+			request.StartTimeFrom = v.(*string)
+		}
+		if k == "StartTimeTo" {
+			request.StartTimeTo = v.(*string)
+		}
+		if k == "LastUpdateTimeFrom" {
+			request.LastUpdateTimeFrom = v.(*string)
+		}
+		if k == "LastUpdateTimeTo" {
+			request.LastUpdateTimeTo = v.(*string)
+		}
+		if k == "SortColumn" {
+			request.SortColumn = v.(*string)
+		}
+		if k == "SortType" {
+			request.SortType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListTaskInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataTaskInstanceByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetTaskInstanceResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTaskInstanceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "InstanceKey" {
+			request.InstanceKey = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTaskInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataTaskInstanceLogByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetTaskInstanceLogResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTaskInstanceLogRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "InstanceKey" {
+			request.InstanceKey = v.(*string)
+		}
+		if k == "LifeRoundNum" {
+			request.LifeRoundNum = v.(*uint64)
+		}
+		if k == "LogLevel" {
+			request.LogLevel = v.(*string)
+		}
+		if k == "NextCursor" {
+			request.NextCursor = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTaskInstanceLog(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataTaskInstanceExecutionsByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListTaskInstanceExecutionsResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListTaskInstanceExecutionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "InstanceKey" {
+			request.InstanceKey = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListTaskInstanceExecutions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataUpstreamTaskInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListUpstreamTaskInstancesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListUpstreamTaskInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "InstanceKey" {
+			request.InstanceKey = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListUpstreamTaskInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataDownstreamTaskInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListDownstreamTaskInstancesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListDownstreamTaskInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "InstanceKey" {
+			request.InstanceKey = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListDownstreamTaskInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsTaskOwnerById(ctx context.Context, projectId, taskId string) (ret *wedatav20250806.Task, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetOpsTaskRequest()
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsAsyncJobByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetOpsAsyncJobResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetOpsAsyncJobRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "AsyncId" {
+			request.AsyncId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsAsyncJob(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsAlarmRuleById(ctx context.Context, projectId, alarmRuleId string) (ret *wedatav20250806.AlarmRuleData, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetOpsAlarmRuleRequest()
+	request.ProjectId = &projectId
+	request.AlarmRuleId = &alarmRuleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsAlarmRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsAlarmRulesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListOpsAlarmRulesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListOpsAlarmRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "MonitorObjectType" {
+			request.MonitorObjectType = v.(*int64)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+		if k == "AlarmType" {
+			request.AlarmType = v.(*string)
+		}
+		if k == "AlarmLevel" {
+			request.AlarmLevel = v.(*int64)
+		}
+		if k == "AlarmRecipientId" {
+			request.AlarmRecipientId = v.(*string)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+		if k == "CreateUserUin" {
+			request.CreateUserUin = v.(*string)
+		}
+		if k == "CreateTimeFrom" {
+			request.CreateTimeFrom = v.(*string)
+		}
+		if k == "CreateTimeTo" {
+			request.CreateTimeTo = v.(*string)
+		}
+		if k == "UpdateTimeFrom" {
+			request.UpdateTimeFrom = v.(*string)
+		}
+		if k == "UpdateTimeTo" {
+			request.UpdateTimeTo = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListOpsAlarmRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }
 
