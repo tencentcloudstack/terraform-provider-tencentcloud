@@ -39,7 +39,7 @@ func ResourceTencentCloudWedataOpsTaskOwner() *schema.Resource {
 			"owner_uin": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Task owner id.",
+				Description: "Task Owner ID. For multiple owners, separate them with `;`, for example: `100029411056;100042282926`.",
 			},
 		},
 	}

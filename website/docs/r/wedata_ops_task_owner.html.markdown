@@ -15,7 +15,7 @@ Provides a resource to create a wedata ops task owner
 
 ```hcl
 resource "tencentcloud_wedata_ops_task_owner" "wedata_ops_task_owner" {
-  owner_uin  = "100029411056"
+  owner_uin  = "100029411056;100042282926"
   project_id = "2430455587205529600"
   task_id    = "20251009144419600"
 }
@@ -25,7 +25,7 @@ resource "tencentcloud_wedata_ops_task_owner" "wedata_ops_task_owner" {
 
 The following arguments are supported:
 
-* `owner_uin` - (Required, String) Task owner id.
+* `owner_uin` - (Required, String) Task Owner ID. For multiple owners, separate them with `;`, for example: `100029411056;100042282926`.
 * `project_id` - (Required, String) Project id.
 * `task_id` - (Required, String) Task id.
 
