@@ -2295,6 +2295,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_bot_scene_ucb_rule":                                                   waf.ResourceTencentCloudWafBotSceneUCBRule(),
 			"tencentcloud_waf_attack_white_rule":                                                    waf.ResourceTencentCloudWafAttackWhiteRule(),
 			"tencentcloud_wedata_submit_task_operation":                                             wedata.ResourceTencentCloudWedataSubmitTaskOperation(),
+			"tencentcloud_wedata_task":                                                              wedata.ResourceTencentCloudWedataTask(),
 			"tencentcloud_wedata_workflow_folder":                                                   wedata.ResourceTencentCloudWedataWorkflowFolder(),
 			"tencentcloud_wedata_workflow":                                                          wedata.ResourceTencentCloudWedataWorkflow(),
 			"tencentcloud_wedata_resource_file":                                                     wedata.ResourceTencentCloudWedataResourceFile(),
@@ -2416,7 +2417,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_http_authenticator":                                                  mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
 			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
 			"tencentcloud_billing_budget":                                                           billing.ResourceTencentCloudBillingBudget(),
-			"tencentcloud_wedata_task":                                                              wedata.ResourceTencentCloudWedataTask()},
+		},
 
 		ConfigureFunc: providerConfigure,
 	}

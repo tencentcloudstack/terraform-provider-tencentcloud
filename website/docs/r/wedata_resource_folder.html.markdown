@@ -37,11 +37,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-wedata wedata_resource_folder can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_wedata_resource_folder.wedata_resource_folder wedata_resource_folder_id
-```
-

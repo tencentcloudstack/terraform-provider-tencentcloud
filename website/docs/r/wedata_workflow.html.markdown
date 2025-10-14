@@ -113,7 +113,7 @@ https://capi.woa.com/object/detail? product=wedata&env=api_dev&version=2025-08-0
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `workflow_id` - Workflow id.
 
 
 ## Import
