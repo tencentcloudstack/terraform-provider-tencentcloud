@@ -57,7 +57,7 @@ resource "tencentcloud_wedata_task" "wedata_task" {
     workflow_id = tencentcloud_wedata_workflow.wedata_workflow.workflow_id
   }
   task_configuration {
-    code_content = "IyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiMKIyNhdXRob3I6IEFQSV9URVNUCiMjY3JlYXRlIHRpbWU6IDIwMjUtMTAtMTMgMTc6MjY6MTcKIyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiMK"
+    code_content = base64encode("Hello World")
     task_ext_configuration_list {
       param_key = "bucket"
       param_value = "wedata-fusion-bjjr-1257305158"
@@ -123,7 +123,7 @@ resource "tencentcloud_wedata_task" "wedata_task" {
     workflow_id = tencentcloud_wedata_workflow.wedata_workflow.workflow_id
   }
   task_configuration {
-    code_content = "IyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiMKIyNhdXRob3I6IEFQSV9URVNUCiMjY3JlYXRlIHRpbWU6IDIwMjUtMTAtMTMgMTc6MjY6MTcKIyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiMK"
+    code_content = base64encode("Hello World")
     task_ext_configuration_list {
       param_key = "bucket"
       param_value = "wedata-fusion-bjjr-1257305158"

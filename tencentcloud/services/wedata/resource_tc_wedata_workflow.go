@@ -27,6 +27,7 @@ func ResourceTencentCloudWedataWorkflow() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Project id.",
 			},
 
@@ -62,7 +63,7 @@ func ResourceTencentCloudWedataWorkflow() *schema.Resource {
 			},
 
 			"workflow_params": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "workflow parameter.",
 				Elem: &schema.Resource{
@@ -232,7 +233,7 @@ func resourceTencentCloudWedataWorkflowCreate(d *schema.ResourceData, meta inter
 	}
 
 	if v, ok := d.GetOk("workflow_params"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			workflowParamsMap := item.(map[string]interface{})
 			paramInfo := wedatav20250806.ParamInfo{}
 			if v, ok := workflowParamsMap["param_key"]; ok {
@@ -519,7 +520,7 @@ func resourceTencentCloudWedataWorkflowUpdate(d *schema.ResourceData, meta inter
 		}
 
 		if v, ok := d.GetOk("workflow_params"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				workflowParamsMap := item.(map[string]interface{})
 				paramInfo := wedatav20250806.ParamInfo{}
 				if v, ok := workflowParamsMap["param_key"]; ok {
