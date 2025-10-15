@@ -27,13 +27,13 @@ resource "tencentcloud_wedata_workflow" "wedata_workflow" {
 The following arguments are supported:
 
 * `parent_folder_path` - (Required, String) Parent folder path.
-* `project_id` - (Required, String) Project id.
+* `project_id` - (Required, String, ForceNew) Project id.
 * `workflow_name` - (Required, String) Workflow name.
 * `bundle_id` - (Optional, String) Bundle Id.
 * `bundle_info` - (Optional, String) Bundle Information.
 * `owner_uin` - (Optional, String) Workflow Owner ID.
 * `workflow_desc` - (Optional, String) Workflow description.
-* `workflow_params` - (Optional, List) workflow parameter.
+* `workflow_params` - (Optional, Set) workflow parameter.
 * `workflow_scheduler_configuration` - (Optional, List) Unified dispatch information.
 * `workflow_type` - (Optional, String) Workflow type, value example: cycle cycle workflow;manual manual workflow, passed in cycle by default.
 

@@ -27,7 +27,7 @@ The following arguments are supported:
 
 * `folder_name` - (Required, String) Name of the folder to create.
 * `parent_folder_path` - (Required, String) The absolute path of the parent folder, such as/abc/de, if it is the root directory, pass/.
-* `project_id` - (Required, String) Project id.
+* `project_id` - (Required, String, ForceNew) Project id.
 
 ## Attributes Reference
 

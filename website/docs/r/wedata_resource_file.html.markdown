@@ -31,7 +31,7 @@ The following arguments are supported:
 * `bucket_name` - (Required, String) cos bucket name, which can be obtained from the GetResourceCosPath interface.
 * `cos_region` - (Required, String) The cos bucket area corresponding to the BucketName bucket.
 * `parent_folder_path` - (Required, String) The path to upload resource files in the project, example value: /wedata/qxxxm/, root directory, please use/.
-* `project_id` - (Required, String) Project id.
+* `project_id` - (Required, String, ForceNew) Project id.
 * `resource_file` - (Required, String) - You can only choose one of the two methods of uploading a file and manually filling. If both are provided, the order of values is file> manual filling value
 -the manual filling value must be the existing cos path, /datastudio/resource/is a fixed prefix, projectId is the project ID, and a specific value needs to be passed in, parentFolderPath is the parent folder path, name is the file name, and examples of manual filling value values are: /datastudio/resource/projectId/parentFolderPath/name 
 .

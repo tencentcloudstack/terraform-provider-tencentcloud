@@ -27,7 +27,7 @@ The following arguments are supported:
 
 * `folder_name` - (Required, String) Folder name.
 * `parent_folder_path` - (Required, String) Absolute path of parent folder, value example/wedata/test, root directory, please use/.
-* `project_id` - (Required, String) Project id.
+* `project_id` - (Required, String, ForceNew) Project id.
 
 ## Attributes Reference
 
