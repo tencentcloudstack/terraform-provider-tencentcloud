@@ -689,9 +689,9 @@ func dataSourceTencentCloudWedataTaskVersionRead(d *schema.ResourceData, meta in
 
 	var (
 		projectId string
-		taskId string
+		taskId    string
 	)
-	
+
 	service := WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
@@ -1238,7 +1238,7 @@ func dataSourceTencentCloudWedataTaskVersionRead(d *schema.ResourceData, meta in
 		_ = d.Set("data", []interface{}{dataMap})
 	}
 
-	d.SetId(projectId+tccommon.FILED_SP+ taskId)
+	d.SetId(projectId + tccommon.FILED_SP + taskId)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
