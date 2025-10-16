@@ -909,6 +909,97 @@ func (me *WedataService) DescribeWedataOpsTaskById(ctx context.Context, projectI
 	return
 }
 
+func (me *WedataService) DescribeWedataOpsAlarmMessageByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetAlarmMessageResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetAlarmMessageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "AlarmMessageId" {
+			request.AlarmMessageId = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetAlarmMessage(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsAlarmMessagesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListAlarmMessagesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListAlarmMessagesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "AlarmLevel" {
+			request.AlarmLevel = v.(*uint64)
+		}
+		if k == "AlarmRecipientId" {
+			request.AlarmRecipientId = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListAlarmMessages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
 func (me *WedataService) DescribeWedataDataSourceListByFilter(ctx context.Context, param map[string]interface{}) (dataSourceList []*wedata.DataSourceInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
