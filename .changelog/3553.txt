@@ -22,6 +22,14 @@ tencentcloud_wedata_ops_alarm_messages
 tencentcloud_wedata_ops_upstream_tasks
 ```
 
+```release-note:new-data-source
+tencentcloud_wedata_data_backfill_instances
+```
+
+```release-note:new-data-source
+tencentcloud_wedata_data_backfill_plan
+```
+
 ```release-note:new-resource
 tencentcloud_wedata_ops_task
 ```

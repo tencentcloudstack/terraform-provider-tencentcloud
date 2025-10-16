@@ -1168,6 +1168,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_task_code":                                      wedata.DataSourceTencentCloudWedataTaskCode(),
 			"tencentcloud_wedata_task_version":                                   wedata.DataSourceTencentCloudWedataTaskVersion(),
 			"tencentcloud_wedata_rule_templates":                                 wedata.DataSourceTencentCloudWedataRuleTemplates(),
+			"tencentcloud_wedata_data_backfill_plan":                             wedata.DataSourceTencentCloudWedataDataBackfillPlan(),
+			"tencentcloud_wedata_data_backfill_instances":                        wedata.DataSourceTencentCloudWedataDataBackfillInstances(),
 			"tencentcloud_wedata_ops_workflows":                                  wedata.DataSourceTencentCloudWedataOpsWorkflows(),
 			"tencentcloud_wedata_ops_workflow":                                   wedata.DataSourceTencentCloudWedataOpsWorkflow(),
 			"tencentcloud_wedata_ops_async_job":                                  wedata.DataSourceTencentCloudWedataOpsAsyncJob(),

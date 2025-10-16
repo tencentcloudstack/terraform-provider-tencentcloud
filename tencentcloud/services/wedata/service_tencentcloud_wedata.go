@@ -1000,6 +1000,88 @@ func (me *WedataService) DescribeWedataOpsAlarmMessagesByFilter(ctx context.Cont
 	return
 }
 
+func (me *WedataService) DescribeWedataDataBackfillInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListDataBackfillInstancesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListDataBackfillInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "DataBackfillPlanId" {
+			request.DataBackfillPlanId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListDataBackfillInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataDataBackfillPlanByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetDataBackfillPlanResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetDataBackfillPlanRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "DataBackfillPlanId" {
+			request.DataBackfillPlanId = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetDataBackfillPlan(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
 func (me *WedataService) DescribeWedataDataSourceListByFilter(ctx context.Context, param map[string]interface{}) (dataSourceList []*wedata.DataSourceInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
