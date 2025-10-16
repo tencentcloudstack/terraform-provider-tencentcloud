@@ -697,6 +697,218 @@ func (me *WedataService) DescribeWedataOpsAlarmRulesByFilter(ctx context.Context
 	return
 }
 
+func (me *WedataService) DescribeWedataOpsTaskCodeByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetOpsTaskCodeResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetOpsTaskCodeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsTaskCode(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsUpstreamTasksByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListUpstreamOpsTasksResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListUpstreamOpsTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListUpstreamOpsTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsDownstreamTasksByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListDownstreamOpsTasksResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListDownstreamOpsTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListDownstreamOpsTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsTasksByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListOpsTasksResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListOpsTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskTypeId" {
+			request.TaskTypeId = v.(*string)
+		}
+		if k == "WorkflowId" {
+			request.WorkflowId = v.(*string)
+		}
+		if k == "WorkflowName" {
+			request.WorkflowName = v.(*string)
+		}
+		if k == "OwnerUin" {
+			request.OwnerUin = v.(*string)
+		}
+		if k == "FolderId" {
+			request.FolderId = v.(*string)
+		}
+		if k == "SourceServiceId" {
+			request.SourceServiceId = v.(*string)
+		}
+		if k == "TargetServiceId" {
+			request.TargetServiceId = v.(*string)
+		}
+		if k == "ExecutorGroupId" {
+			request.ExecutorGroupId = v.(*string)
+		}
+		if k == "CycleType" {
+			request.CycleType = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+		if k == "TimeZone" {
+			request.TimeZone = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListOpsTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsTaskById(ctx context.Context, projectId, taskId string) (ret *wedatav20250806.Task, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetOpsTaskRequest()
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
 func (me *WedataService) DescribeWedataDataSourceListByFilter(ctx context.Context, param map[string]interface{}) (dataSourceList []*wedata.DataSourceInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
