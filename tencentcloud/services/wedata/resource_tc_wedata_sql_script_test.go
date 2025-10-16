@@ -23,8 +23,6 @@ func TestAccTencentCloudWedataSqlScriptResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "script_name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "project_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "parent_folder_path"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "parent_folder_path"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "parent_folder_path"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "script_config.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "script_content"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "access_scope"),
@@ -36,8 +34,6 @@ func TestAccTencentCloudWedataSqlScriptResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "script_name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "project_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "parent_folder_path"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "parent_folder_path"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "parent_folder_path"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "script_config.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_sql_script.example", "script_content"),
@@ -55,38 +51,30 @@ func TestAccTencentCloudWedataSqlScriptResource_basic(t *testing.T) {
 
 const testAccWedataSqlScript = `
 resource "tencentcloud_wedata_sql_script" "example" {
-  script_name        = "tf-example"
-  project_id         = ""
-  parent_folder_path = ""
+  script_name        = "tf_example_script"
+  project_id         = "2983848457986924544"
+  parent_folder_path = "/tf_example"
   script_config {
-    datasource_id     = ""
-    datasource_env    = ""
-    compute_resource  = ""
-    executor_group_id = ""
-    params            = ""
-    advance_config    = ""
+    datasource_id    = "108826"
+    compute_resource = "svmgao_stability"
   }
 
-  script_content = ""
-  access_scope   = ""
+  script_content = "SHOW DATABASES;"
+  access_scope   = "SHARED"
 }
 `
 
 const testAccWedataSqlScriptUpdate = `
 resource "tencentcloud_wedata_sql_script" "example" {
-  script_name        = "tf-example"
-  project_id         = ""
-  parent_folder_path = ""
+  script_name        = "tf_example_script"
+  project_id         = "2983848457986924544"
+  parent_folder_path = "/tf_example"
   script_config {
-    datasource_id     = ""
-    datasource_env    = ""
-    compute_resource  = ""
-    executor_group_id = ""
-    params            = ""
-    advance_config    = ""
+    datasource_id    = "108826"
+    compute_resource = "svmgao_stability"
   }
 
-  script_content = ""
-  access_scope   = ""
+  script_content = "SHOW DATABASES;"
+  access_scope   = "PRIVATE"
 }
 `

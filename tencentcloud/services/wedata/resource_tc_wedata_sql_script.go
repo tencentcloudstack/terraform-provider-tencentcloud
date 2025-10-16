@@ -20,6 +20,9 @@ func ResourceTencentCloudWedataSqlScript() *schema.Resource {
 		Read:   resourceTencentCloudWedataSqlScriptRead,
 		Update: resourceTencentCloudWedataSqlScriptUpdate,
 		Delete: resourceTencentCloudWedataSqlScriptDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"script_name": {
 				Type:        schema.TypeString,
@@ -45,6 +48,7 @@ func ResourceTencentCloudWedataSqlScript() *schema.Resource {
 			"script_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Data exploration script configuration.",
 				Elem: &schema.Resource{
@@ -86,12 +90,13 @@ func ResourceTencentCloudWedataSqlScript() *schema.Resource {
 			"script_content": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Script content, if there is a value, it needs to be base64 encoded.",
+				Description: "Script content, if there is a value.",
 			},
 
 			"access_scope": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Permission scope: SHARED, PRIVATE.",
 			},
@@ -101,6 +106,12 @@ func ResourceTencentCloudWedataSqlScript() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Script ID.",
+			},
+
+			"path": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The full path of the node, /aaa/bbb/ccc.ipynb, consists of the names of each node.",
 			},
 		},
 	}
@@ -162,7 +173,7 @@ func resourceTencentCloudWedataSqlScriptCreate(d *schema.ResourceData, meta inte
 	}
 
 	if v, ok := d.GetOk("script_content"); ok {
-		request.ScriptContent = helper.String(v.(string))
+		request.ScriptContent = helper.String(tccommon.StringToBase64(v.(string)))
 	}
 
 	if v, ok := d.GetOk("access_scope"); ok {
@@ -270,7 +281,13 @@ func resourceTencentCloudWedataSqlScriptRead(d *schema.ResourceData, meta interf
 	}
 
 	if respData.ScriptContent != nil {
-		_ = d.Set("script_content", respData.ScriptContent)
+		sqlStr, err := tccommon.Base64ToString(*respData.ScriptContent)
+		if err != nil {
+			log.Printf("[ERROR]%s base64 decode failed, reason:%+v", logId, err)
+			return err
+		}
+
+		_ = d.Set("script_content", sqlStr)
 	}
 
 	if respData.AccessScope != nil {
@@ -279,6 +296,10 @@ func resourceTencentCloudWedataSqlScriptRead(d *schema.ResourceData, meta interf
 
 	if respData.ScriptId != nil {
 		_ = d.Set("script_id", respData.ScriptId)
+	}
+
+	if respData.Path != nil {
+		_ = d.Set("path", *respData.Path)
 	}
 
 	return nil

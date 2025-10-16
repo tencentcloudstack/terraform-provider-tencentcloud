@@ -50,6 +50,18 @@ func ResourceTencentCloudWedataCodeFolder() *schema.Resource {
 				Computed:    true,
 				Description: "Folder ID.",
 			},
+
+			"access_scope": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Permission range: SHARED, PRIVATE.",
+			},
+
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type. folder, script.",
+			},
 		},
 	}
 }
@@ -128,7 +140,7 @@ func resourceTencentCloudWedataCodeFolderRead(d *schema.ResourceData, meta inter
 	projectId := idSplit[0]
 	folderId := idSplit[1]
 
-	respData, err := service.DescribeWedataCodeFolderById(ctx, projectId, folderId)
+	respData, err := service.DescribeWedataGetCodeFolderById(ctx, projectId, folderId)
 	if err != nil {
 		return err
 	}
@@ -145,12 +157,24 @@ func resourceTencentCloudWedataCodeFolderRead(d *schema.ResourceData, meta inter
 		_ = d.Set("folder_name", *respData.Title)
 	}
 
-	if respData.Path != nil {
-		_ = d.Set("parent_folder_path", *respData.Path)
+	if respData.ParentFolderPath != nil {
+		if *respData.ParentFolderPath == "" {
+			_ = d.Set("parent_folder_path", "/")
+		} else {
+			_ = d.Set("parent_folder_path", *respData.ParentFolderPath)
+		}
 	}
 
 	if respData.Id != nil {
 		_ = d.Set("folder_id", *respData.Id)
+	}
+
+	if respData.AccessScope != nil {
+		_ = d.Set("access_scope", *respData.AccessScope)
+	}
+
+	if respData.Type != nil {
+		_ = d.Set("type", *respData.Type)
 	}
 
 	return nil

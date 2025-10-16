@@ -93,6 +93,18 @@ func ResourceTencentCloudWedataCodeFile() *schema.Resource {
 				Computed:    true,
 				Description: "Code file ID.",
 			},
+
+			"access_scope": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Permission range: SHARED, PRIVATE.",
+			},
+
+			"path": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The full path of the node, /aaa/bbb/ccc.ipynb, consists of the names of each node.",
+			},
 		},
 	}
 }
@@ -216,8 +228,12 @@ func resourceTencentCloudWedataCodeFileRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("code_file_name", respData.CodeFileName)
 	}
 
-	if respData.Path != nil {
-		_ = d.Set("parent_folder_path", respData.Path)
+	if respData.ParentFolderPath != nil {
+		if *respData.ParentFolderPath == "" {
+			_ = d.Set("parent_folder_path", "/")
+		} else {
+			_ = d.Set("parent_folder_path", *respData.ParentFolderPath)
+		}
 	}
 
 	if respData.CodeFileConfig != nil {
@@ -248,6 +264,14 @@ func resourceTencentCloudWedataCodeFileRead(d *schema.ResourceData, meta interfa
 
 	if respData.CodeFileId != nil {
 		_ = d.Set("code_file_id", respData.CodeFileId)
+	}
+
+	if respData.AccessScope != nil {
+		_ = d.Set("access_scope", *respData.AccessScope)
+	}
+
+	if respData.Path != nil {
+		_ = d.Set("path", *respData.Path)
 	}
 
 	return nil

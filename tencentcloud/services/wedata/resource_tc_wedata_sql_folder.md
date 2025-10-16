@@ -4,8 +4,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_wedata_sql_folder" "example" {
-  folder_name        = "tf-example"
-  project_id         = "2917455276892352512"
+  folder_name        = "tf_example"
+  project_id         = "2983848457986924544"
   parent_folder_path = "/"
   access_scope       = "SHARED"
 }

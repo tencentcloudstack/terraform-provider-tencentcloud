@@ -1844,6 +1844,45 @@ func (me *WedataService) DescribeWedataSqlFolderById(ctx context.Context, projec
 	return
 }
 
+func (me *WedataService) DescribeWedataGetSqlFolderById(ctx context.Context, projectId, folderId string) (ret *wedatav20250806.SQLFolderNode, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetSQLFolderRequest()
+	response := wedatav20250806.NewGetSQLFolderResponse()
+	request.ProjectId = helper.String(projectId)
+	request.FolderId = helper.String(folderId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetSQLFolder(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata get sql folder failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
 func (me *WedataService) DescribeWedataSqlScriptById(ctx context.Context, projectId, scriptId string) (ret *wedatav20250806.SQLScript, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -1919,6 +1958,45 @@ func (me *WedataService) DescribeWedataCodeFolderById(ctx context.Context, proje
 	}
 
 	ret = response.Response.Data[0]
+	return
+}
+
+func (me *WedataService) DescribeWedataGetCodeFolderById(ctx context.Context, projectId, folderId string) (ret *wedatav20250806.CodeFolderNode, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetCodeFolderRequest()
+	response := wedatav20250806.NewGetCodeFolderResponse()
+	request.ProjectId = &projectId
+	request.FolderId = &folderId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetCodeFolder(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get wedata get code folder failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data
 	return
 }
 

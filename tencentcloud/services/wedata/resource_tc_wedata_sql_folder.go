@@ -56,6 +56,12 @@ func ResourceTencentCloudWedataSqlFolder() *schema.Resource {
 				Computed:    true,
 				Description: "Folder ID.",
 			},
+
+			"path": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Node path.",
+			},
 		},
 	}
 }
@@ -138,7 +144,7 @@ func resourceTencentCloudWedataSqlFolderRead(d *schema.ResourceData, meta interf
 	projectId := idSplit[0]
 	folderId := idSplit[1]
 
-	respData, err := service.DescribeWedataSqlFolderById(ctx, projectId, folderId)
+	respData, err := service.DescribeWedataGetSqlFolderById(ctx, projectId, folderId)
 	if err != nil {
 		return err
 	}
@@ -156,7 +162,11 @@ func resourceTencentCloudWedataSqlFolderRead(d *schema.ResourceData, meta interf
 	}
 
 	if respData.ParentFolderPath != nil {
-		_ = d.Set("parent_folder_path", *respData.ParentFolderPath)
+		if *respData.ParentFolderPath == "" {
+			_ = d.Set("parent_folder_path", "/")
+		} else {
+			_ = d.Set("parent_folder_path", *respData.ParentFolderPath)
+		}
 	}
 
 	if respData.AccessScope != nil {
@@ -165,6 +175,10 @@ func resourceTencentCloudWedataSqlFolderRead(d *schema.ResourceData, meta interf
 
 	if respData.Id != nil {
 		_ = d.Set("folder_id", *respData.Id)
+	}
+
+	if respData.Path != nil {
+		_ = d.Set("path", *respData.Path)
 	}
 
 	return nil
