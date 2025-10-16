@@ -5,12 +5,11 @@ import (
 	"log"
 	"strconv"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
 	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -1862,4 +1861,187 @@ func (me *WedataService) DescribeWedataTaskVersionByFilter(ctx context.Context, 
 
 func NewWedataService(client *connectivity.TencentCloudClient) WedataService {
 	return WedataService{client: client}
+}
+
+func (me *WedataService) DescribeWedataWorkflowFolders(ctx context.Context, projectId, folderId, parentFolderPath string) (folders []*wedatav20250806.WorkflowFolder, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListWorkflowFoldersRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ProjectId = helper.String(projectId)
+	request.ParentFolderPath = helper.String(parentFolderPath)
+	ratelimit.Check(request.GetAction())
+
+	var (
+		pageNum  uint64 = 1
+		pageSize uint64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		response, err := me.client.UseWedataV20250806Client().ListWorkflowFolders(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		folders = append(folders, response.Response.Data.Items...)
+		for _, item := range response.Response.Data.Items {
+			if folderId != "" && item.FolderId != nil && *item.FolderId == folderId {
+				folders = append(folders, item)
+			}
+		}
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataWorkflowById(ctx context.Context, projectId, workflowId string) (ret *wedatav20250806.WorkflowDetail, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetWorkflowRequest()
+	request.ProjectId = helper.String(projectId)
+	request.WorkflowId = helper.String(workflowId)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetWorkflow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataResourceFileById(ctx context.Context, projectId, resourceId string) (ret *wedatav20250806.ResourceFile, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetResourceFileRequest()
+	request.ProjectId = helper.String(projectId)
+	request.ResourceId = helper.String(resourceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetResourceFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataResourceFolderById(ctx context.Context, projectId, folderId, parentFolderPath string) (folders []*wedatav20250806.ResourceFolder, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListResourceFoldersRequest()
+	request.ProjectId = helper.String(projectId)
+	request.ParentFolderPath = helper.String(parentFolderPath)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		pageNum  uint64 = 1
+		pageSize uint64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		response, err := me.client.UseWedataV20250806Client().ListResourceFolders(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		folders = append(folders, response.Response.Data.Items...)
+		for _, item := range response.Response.Data.Items {
+			if folderId != "" && item.FolderId != nil && *item.FolderId == folderId {
+				folders = append(folders, item)
+			}
+		}
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+	return
+}
+
+func (me *WedataService) DescribeWedataTaskById(ctx context.Context, projectId, taskId string) (ret *wedatav20250806.GetTaskResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetTaskRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ProjectId = helper.String(projectId)
+	request.TaskId = helper.String(taskId)
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
 }
