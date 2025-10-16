@@ -47,7 +47,7 @@ func ResourceTencentCloudMonitorTmpInstance() *schema.Resource {
 			"data_retention_time": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Data retention time(in days). Value range: 15, 30, 45, 90, 180, 360, 720.",
+				Description: "Data retention time(in days). Value range: 15, 30, 45, 90, 180, 365, 730.",
 			},
 
 			"zone": {
