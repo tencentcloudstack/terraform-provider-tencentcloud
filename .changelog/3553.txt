@@ -11,6 +11,14 @@ tencentcloud_wedata_ops_tasks
 ```
 
 ```release-note:new-data-source
+tencentcloud_wedata_ops_alarm_message
+```
+
+```release-note:new-data-source
+tencentcloud_wedata_ops_alarm_messages
+```
+
+```release-note:new-data-source
 tencentcloud_wedata_ops_upstream_tasks
 ```
 
