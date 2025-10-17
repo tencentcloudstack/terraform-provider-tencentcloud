@@ -29,15 +29,15 @@ func resourceTencentCloudClsCloudProductLogTaskReadPreRequest0(ctx context.Conte
 	logType := idSplit[2]
 
 	req.Filters = []*clsv20201016.Filter{
-		&clsv20201016.Filter{
+		{
 			Key:    common.StringPtr("instanceId"),
 			Values: common.StringPtrs([]string{instanceId}),
 		},
-		&clsv20201016.Filter{
+		{
 			Key:    common.StringPtr("assumerName"),
 			Values: common.StringPtrs([]string{assumerName}),
 		},
-		&clsv20201016.Filter{
+		{
 			Key:    common.StringPtr("logType"),
 			Values: common.StringPtrs([]string{logType}),
 		},
@@ -87,7 +87,7 @@ func resourceTencentCloudClsCloudProductLogTaskReadPreHandleResponse0(ctx contex
 	logsetRequest := clsv20201016.NewDescribeLogsetsRequest()
 	logsetResponse := clsv20201016.NewDescribeLogsetsResponse()
 	logsetRequest.Filters = []*clsv20201016.Filter{
-		&clsv20201016.Filter{
+		{
 			Key:    common.StringPtr("logsetId"),
 			Values: common.StringPtrs([]string{logsetId}),
 		},
@@ -128,7 +128,7 @@ func resourceTencentCloudClsCloudProductLogTaskReadPreHandleResponse0(ctx contex
 	topicRequest := clsv20201016.NewDescribeTopicsRequest()
 	topicResponse := clsv20201016.NewDescribeTopicsResponse()
 	topicRequest.Filters = []*clsv20201016.Filter{
-		&clsv20201016.Filter{
+		{
 			Key:    common.StringPtr("topicId"),
 			Values: common.StringPtrs([]string{topicId}),
 		},
