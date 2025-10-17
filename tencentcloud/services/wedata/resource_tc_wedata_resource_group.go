@@ -38,7 +38,7 @@ func ResourceTencentCloudWedataResourceGroup() *schema.Resource {
 						"resource_group_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Resource group type.\n\n- Schedule --- Scheduling resource group\n- Integration --- Integration resource group  \n- DataService -- Data service resource group",
+							Description: "Resource group type.\n\n- Schedule --- Scheduling resource group\n- Integration --- Integration resource group  \n- DataService -- Data service resource group.",
 						},
 						"integration": {
 							Type:        schema.TypeList,
@@ -51,7 +51,7 @@ func ResourceTencentCloudWedataResourceGroup() *schema.Resource {
 										Type:        schema.TypeList,
 										Optional:    true,
 										MaxItems:    1,
-										Description: "Real-time integration resource group.\n\n- i32c (Real-time data synchronization - 16C64G)",
+										Description: "Real-time integration resource group.\n\n- i32c (Real-time data synchronization - 16C64G).",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"specification": {
@@ -71,7 +71,7 @@ func ResourceTencentCloudWedataResourceGroup() *schema.Resource {
 										Type:        schema.TypeList,
 										Optional:    true,
 										MaxItems:    1,
-										Description: "Offline integration resource group.\n\n- integrated (Offline data synchronization - 8C16G)\n- i16 (Offline data synchronization - 8C32G)",
+										Description: "Offline integration resource group.\n\n- integrated (Offline data synchronization - 8C16G)\n- i16 (Offline data synchronization - 8C32G).",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"specification": {
@@ -94,7 +94,7 @@ func ResourceTencentCloudWedataResourceGroup() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
-							Description: "Scheduling resource group (Integration, scheduling, and data service resource groups cannot be purchased simultaneously).\n\n- s_test (Test specification)\n- s_small (Basic specification)\n- s_medium (Popular specification)\n- s_large (Professional specification)\n\n\n\n",
+							Description: "Scheduling resource group (Integration, scheduling, and data service resource groups cannot be purchased simultaneously).\n\n- s_test (Test specification)\n- s_small (Basic specification)\n- s_medium (Popular specification)\n- s_large (Professional specification).",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"specification": {
@@ -114,7 +114,7 @@ func ResourceTencentCloudWedataResourceGroup() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
-							Description: "Data service resource group (Integration, scheduling, and data service resource groups cannot be purchased simultaneously).\n\n- ds_t (Test specification)\n- ds_s (Basic specification)\n- ds_m (Popular specification)\n- ds_l (Professional specification)",
+							Description: "Data service resource group (Integration, scheduling, and data service resource groups cannot be purchased simultaneously).\n\n- ds_t (Test specification)\n- ds_s (Basic specification)\n- ds_m (Popular specification)\n- ds_l (Professional specification).",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"specification": {

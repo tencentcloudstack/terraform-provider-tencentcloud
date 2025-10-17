@@ -68,7 +68,7 @@ func resourceTencentCloudWedataProjectMemberCreate(d *schema.ResourceData, meta 
 	}
 
 	if v, ok := d.GetOk("user_uin"); ok {
-		request.UseUins = append(request.UseUins, helper.String(v.(string)))
+		request.UserUins = append(request.UserUins, helper.String(v.(string)))
 		userUin = v.(string)
 	}
 
@@ -169,8 +169,6 @@ func resourceTencentCloudWedataProjectMemberUpdate(d *schema.ResourceData, meta 
 	userUin := idSplit[1]
 
 	if d.HasChange("role_ids") {
-		return fmt.Errorf("role_ids can not be updated now.")
-
 		oldInterface, newInterface := d.GetChange("role_ids")
 		oldInstances := oldInterface.(*schema.Set)
 		newInstances := newInterface.(*schema.Set)
@@ -181,23 +179,24 @@ func resourceTencentCloudWedataProjectMemberUpdate(d *schema.ResourceData, meta 
 			request := wedatav20250806.NewGrantMemberProjectRoleRequest()
 			request.ProjectId = &projectId
 			request.UserUin = &userUin
-			for _, item := range remove {
-				request.RoleId = helper.String(item.(string))
-				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().GrantMemberProjectRoleWithContext(ctx, request)
-					if e != nil {
-						return tccommon.RetryError(e)
-					} else {
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-					}
+			for _, item := range add {
+				request.RoleIds = append(request.RoleIds, helper.String(item.(string)))
+			}
 
-					return nil
-				})
-
-				if reqErr != nil {
-					log.Printf("[CRITAL]%s update wedata project member failed, reason:%+v", logId, reqErr)
-					return reqErr
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().GrantMemberProjectRoleWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update wedata project member failed, reason:%+v", logId, reqErr)
+				return reqErr
 			}
 		}
 
@@ -206,22 +205,23 @@ func resourceTencentCloudWedataProjectMemberUpdate(d *schema.ResourceData, meta 
 			request.ProjectId = &projectId
 			request.UserUin = &userUin
 			for _, item := range remove {
-				request.RoleId = helper.String(item.(string))
-				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().RemoveMemberProjectRoleWithContext(ctx, request)
-					if e != nil {
-						return tccommon.RetryError(e)
-					} else {
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-					}
+				request.RoleIds = append(request.RoleIds, helper.String(item.(string)))
+			}
 
-					return nil
-				})
-
-				if reqErr != nil {
-					log.Printf("[CRITAL]%s update wedata project member failed, reason:%+v", logId, reqErr)
-					return reqErr
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().RemoveMemberProjectRoleWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update wedata project member failed, reason:%+v", logId, reqErr)
+				return reqErr
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 Provides a resource to create a WeData project member
 
-~> **NOTE:** 
+~> **NOTE:** This resource must exclusive in one share unit, do not declare additional roleIds resources of this project member elsewhere.
 
 Example Usage
 

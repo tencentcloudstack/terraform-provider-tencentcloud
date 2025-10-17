@@ -36,7 +36,7 @@ func DataSourceTencentCloudWedataResourceGroupMetrics() *schema.Resource {
 			"metric_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Metric dimension.\n\n- all --- All\n- task --- Task metrics\n- system --- System metrics",
+				Description: "Metric dimension.\n\n- all --- All\n- task --- Task metrics\n- system --- System metrics.",
 			},
 
 			"granularity": {
@@ -79,7 +79,7 @@ func DataSourceTencentCloudWedataResourceGroupMetrics() *schema.Resource {
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Resource group status.\n\n- 0 --- Initializing\n- 1 --- Running\n- 2 --- Running abnormally\n- 3 --- Releasing\n- 4 --- Released\n- 5 --- Creating\n- 6 --- Creation failed\n- 7 --- Updating\n- 8 --- Update failed\n- 9 --- Expired\n- 10 --- Release failed\n- 11 --- In use\n- 12 --- Not in use",
+							Description: "Resource group status.\n\n- 0 --- Initializing\n- 1 --- Running\n- 2 --- Running abnormally\n- 3 --- Releasing\n- 4 --- Released\n- 5 --- Creating\n- 6 --- Creation failed\n- 7 --- Updating\n- 8 --- Update failed\n- 9 --- Expired\n- 10 --- Release failed\n- 11 --- In use\n- 12 --- Not in use.",
 						},
 						"metric_snapshots": {
 							Type:        schema.TypeList,
@@ -90,7 +90,7 @@ func DataSourceTencentCloudWedataResourceGroupMetrics() *schema.Resource {
 									"metric_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Metric name.\n\n- ConcurrencyUsage --- Concurrency usage rate\n- CpuCoreUsage --- CPU usage rate\n- CpuLoad --- CPU load\n- DevelopQueueTask --- Number of development tasks in queue\n- DevelopRunningTask --- Number of running development tasks\n- DevelopSchedulingTask --- Number of scheduling development tasks\n- DiskUsage --- Disk usage\n- DiskUsed --- Disk used amount\n- MaximumConcurrency --- Maximum concurrency\n- MemoryLoad --- Memory load\n- MemoryUsage --- Memory usage",
+										Description: "Metric name.\n\n- ConcurrencyUsage --- Concurrency usage rate\n- CpuCoreUsage --- CPU usage rate\n- CpuLoad --- CPU load\n- DevelopQueueTask --- Number of development tasks in queue\n- DevelopRunningTask --- Number of running development tasks\n- DevelopSchedulingTask --- Number of scheduling development tasks\n- DiskUsage --- Disk usage\n- DiskUsed --- Disk used amount\n- MaximumConcurrency --- Maximum concurrency\n- MemoryLoad --- Memory load\n- MemoryUsage --- Memory usage.",
 									},
 									"snapshot_value": {
 										Type:        schema.TypeInt,

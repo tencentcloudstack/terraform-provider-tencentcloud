@@ -36,7 +36,7 @@ func DataSourceTencentCloudWedataDataSources() *schema.Resource {
 			"type": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Data source type: enumeration values.\n\n- MYSQL\n- TENCENT_MYSQL\n- POSTGRE\n- ORACLE\n- SQLSERVER\n- FTP\n- HIVE\n- HUDI\n- HDFS\n- ICEBERG\n- KAFKA\n- HBASE\n- SPARK\n- VIRTUAL\n- TBASE\n- DB2\n- DM\n- GAUSSDB\n- GBASE\n- IMPALA\n- ES\n- TENCENT_ES\n- GREENPLUM\n- PHOENIX\n- SAP_HANA\n- SFTP\n- OCEANBASE\n- CLICKHOUSE\n- KUDU\n- VERTICA\n- REDIS\n- COS\n- DLC\n- DORIS\n- CKAFKA\n- S3\n- TDSQL\n- TDSQL_MYSQL\n- MONGODB\n- TENCENT_MONGODB\n- REST_API\n- SuperSQL\n- PRESTO\n- TiDB\n- StarRocks\n- Trino\n- Kyuubi\n- TCHOUSE_X\n- TCHOUSE_P\n- TCHOUSE_C\n- TCHOUSE_D\n- INFLUXDB\n- BIG_QUERY\n- SSH\n- BLOB",
+				Description: "Data source type: enumeration values.\n\n- MYSQL\n- TENCENT_MYSQL\n- POSTGRE\n- ORACLE\n- SQLSERVER\n- FTP\n- HIVE\n- HUDI\n- HDFS\n- ICEBERG\n- KAFKA\n- HBASE\n- SPARK\n- VIRTUAL\n- TBASE\n- DB2\n- DM\n- GAUSSDB\n- GBASE\n- IMPALA\n- ES\n- TENCENT_ES\n- GREENPLUM\n- PHOENIX\n- SAP_HANA\n- SFTP\n- OCEANBASE\n- CLICKHOUSE\n- KUDU\n- VERTICA\n- REDIS\n- COS\n- DLC\n- DORIS\n- CKAFKA\n- S3\n- TDSQL\n- TDSQL_MYSQL\n- MONGODB\n- TENCENT_MONGODB\n- REST_API\n- SuperSQL\n- PRESTO\n- TiDB\n- StarRocks\n- Trino\n- Kyuubi\n- TCHOUSE_X\n- TCHOUSE_P\n- TCHOUSE_C\n- TCHOUSE_D\n- INFLUXDB\n- BIG_QUERY\n- SSH\n- BLOB.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -122,7 +122,7 @@ func DataSourceTencentCloudWedataDataSources() *schema.Resource {
 						"category": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Data source category:\n\n- DB - custom source\n- CLUSTER - system source",
+							Description: "Data source category:\n\n- DB - custom source\n- CLUSTER - system source.",
 						},
 					},
 				},

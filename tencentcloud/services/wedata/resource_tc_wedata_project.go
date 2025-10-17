@@ -74,12 +74,12 @@ func ResourceTencentCloudWedataProject() *schema.Resource {
 						"standard_mode_env_tag": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Cluster configuration tag (only effective for standard mode projects and required for standard mode). Enum values:\n- Prod  (Production environment)\n- Dev  (Development environment)",
+							Description: "Cluster configuration tag (only effective for standard mode projects and required for standard mode). Enum values:\n- Prod  (Production environment)\n- Dev  (Development environment).",
 						},
 						"access_account": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Access account (only effective for standard mode projects and required for standard mode), used to submit DLC tasks.\nIt is recommended to use a specified sub-account and set corresponding database table permissions for the sub-account; task runner mode may cause task failure when the responsible person leaves; main account mode is not easy for permission control when multiple projects have different permissions.\n\nEnum values:\n- TASK_RUNNER (Task Runner)\n- OWNER (Main Account Mode)\n- SUB (Sub Account Mode)",
+							Description: "Access account (only effective for standard mode projects and required for standard mode), used to submit DLC tasks.\nIt is recommended to use a specified sub-account and set corresponding database table permissions for the sub-account; task runner mode may cause task failure when the responsible person leaves; main account mode is not easy for permission control when multiple projects have different permissions.\n\nEnum values:\n- TASK_RUNNER (Task Runner)\n- OWNER (Main Account Mode)\n- SUB (Sub Account Mode).",
 						},
 						"sub_account_uin": {
 							Type:        schema.TypeString,
