@@ -62,6 +62,12 @@ func ResourceTencentCloudWedataCodeFolder() *schema.Resource {
 				Computed:    true,
 				Description: "Type. folder, script.",
 			},
+
+			"path": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Node path.",
+			},
 		},
 	}
 }
@@ -175,6 +181,10 @@ func resourceTencentCloudWedataCodeFolderRead(d *schema.ResourceData, meta inter
 
 	if respData.Type != nil {
 		_ = d.Set("type", *respData.Type)
+	}
+
+	if respData.Path != nil {
+		_ = d.Set("path", *respData.Path)
 	}
 
 	return nil

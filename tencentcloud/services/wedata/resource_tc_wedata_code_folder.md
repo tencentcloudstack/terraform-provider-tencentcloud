@@ -8,6 +8,13 @@ resource "tencentcloud_wedata_code_folder" "example" {
   folder_name        = "tf_example"
   parent_folder_path = "/"
 }
+
+resource "tencentcloud_wedata_code_file" "example" {
+  project_id         = "2983848457986924544"
+  code_file_name     = "tf_example_code_file"
+  parent_folder_path = tencentcloud_wedata_code_folder.example.path
+  code_file_content  = "Hello Terraform"
+}
 ```
 
 Import

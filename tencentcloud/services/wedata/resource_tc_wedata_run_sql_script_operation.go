@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -63,22 +62,19 @@ func resourceTencentCloudWedataRunSqlScriptOperationCreate(d *schema.ResourceDat
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = tccommon.GetLogId(tccommon.ContextNil)
-		ctx       = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request   = wedatav20250806.NewRunSQLScriptRequest()
-		response  = wedatav20250806.NewRunSQLScriptResponse()
-		projectId string
-		scriptId  string
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request  = wedatav20250806.NewRunSQLScriptRequest()
+		response = wedatav20250806.NewRunSQLScriptResponse()
+		jobId    string
 	)
 
 	if v, ok := d.GetOk("script_id"); ok {
 		request.ScriptId = helper.String(v.(string))
-		scriptId = v.(string)
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
 		request.ProjectId = helper.String(v.(string))
-		projectId = v.(string)
 	}
 
 	if v, ok := d.GetOk("script_content"); ok {
@@ -110,11 +106,14 @@ func resourceTencentCloudWedataRunSqlScriptOperationCreate(d *schema.ResourceDat
 		return reqErr
 	}
 
-	if response.Response.Data.JobId != nil {
-		_ = d.Set("job_id", *response.Response.Data.JobId)
+	if response.Response.Data.JobId == nil {
+		return fmt.Errorf("JobId is nil")
 	}
 
-	d.SetId(strings.Join([]string{projectId, scriptId}, tccommon.FILED_SP))
+	jobId = *response.Response.Data.JobId
+	_ = d.Set("job_id", jobId)
+
+	d.SetId(jobId)
 	return resourceTencentCloudWedataRunSqlScriptOperationRead(d, meta)
 }
 
