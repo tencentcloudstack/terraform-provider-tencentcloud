@@ -66,6 +66,13 @@ func ResourceTencentCloudEipAssociation() *schema.Resource {
 				},
 				Description: "Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.",
 			},
+
+			// computed
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ID of the dedicated cluster.",
+			},
 		},
 	}
 }
