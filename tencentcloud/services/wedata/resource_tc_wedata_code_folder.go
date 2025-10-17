@@ -107,7 +107,7 @@ func resourceTencentCloudWedataCodeFolderCreate(d *schema.ResourceData, meta int
 		}
 
 		if result == nil || result.Response == nil || result.Response.Data == nil {
-			return tccommon.RetryError(fmt.Errorf("create wedata code folder failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("create wedata code folder failed, Response is nil."))
 		}
 
 		response = result
@@ -223,12 +223,8 @@ func resourceTencentCloudWedataCodeFolderUpdate(d *schema.ResourceData, meta int
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 
-			if result == nil || result.Response == nil || result.Response.Data == nil {
+			if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
 				return resource.NonRetryableError(fmt.Errorf("Update wedata code folder failed, Response is nil."))
-			}
-
-			if result.Response.Data.Status == nil {
-				return resource.NonRetryableError(fmt.Errorf("Update wedata code folder failed, Status is nil."))
 			}
 
 			if !*result.Response.Data.Status {
@@ -275,12 +271,8 @@ func resourceTencentCloudWedataCodeFolderDelete(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.Data == nil {
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
 			return resource.NonRetryableError(fmt.Errorf("Delete wedata code folder failed, Response is nil."))
-		}
-
-		if result.Response.Data.Status == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete wedata code folder failed, Status is nil."))
 		}
 
 		if !*result.Response.Data.Status {

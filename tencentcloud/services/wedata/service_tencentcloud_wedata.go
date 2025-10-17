@@ -1694,6 +1694,477 @@ func (me *WedataService) DeleteWedataIntegrationRealtimeTaskById(ctx context.Con
 	return
 }
 
+func (me *WedataService) DescribeWedataProjectsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.Project, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListProjectsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*string)
+		}
+
+		if k == "ProjectName" {
+			request.ProjectName = v.(*string)
+		}
+
+		if k == "Status" {
+			request.Status = v.(*int64)
+		}
+
+		if k == "ProjectModel" {
+			request.ProjectModel = v.(*string)
+		}
+	}
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 50
+	)
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+		response, err := me.client.UseWedataV20250806Client().ListProjects(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNumber += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataDataSourcesByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.DataSource, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListDataSourcesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+
+		if k == "DisplayName" {
+			request.DisplayName = v.(*string)
+		}
+
+		if k == "Type" {
+			request.Type = v.([]*string)
+		}
+
+		if k == "Creator" {
+			request.Creator = v.(*string)
+		}
+	}
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 50
+	)
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+		response, err := me.client.UseWedataV20250806Client().ListDataSources(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNumber += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataProjectById(ctx context.Context, projectId string) (ret *wedatav20250806.Project, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetProjectRequest()
+	response := wedatav20250806.NewGetProjectResponse()
+	request.ProjectId = &projectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetProject(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata project failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataDataSourceById(ctx context.Context, projectId, datasourceId string) (ret *wedatav20250806.DataSource, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetDataSourceRequest()
+	response := wedatav20250806.NewGetDataSourceResponse()
+	request.ProjectId = &projectId
+	datasourceIdInt64 := helper.StrToInt64Point(datasourceId)
+	request.Id = datasourceIdInt64
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetDataSource(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata data source failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataProjectMemberById(ctx context.Context, projectId, userUin string) (ret []*wedatav20250806.ProjectUserRole, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListProjectMembersRequest()
+	response := wedatav20250806.NewListProjectMembersResponse()
+	request.ProjectId = &projectId
+	request.UserUin = &userUin
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().ListProjectMembers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata project member failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data.Items
+	return
+}
+
+func (me *WedataService) DescribeWedataProjectRolesByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.SystemRole, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListProjectRolesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "RoleDisplayName" {
+			request.RoleDisplayName = v.(*string)
+		}
+	}
+
+	var (
+		pageNumber int64 = 1
+		pageSize   int64 = 50
+	)
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+		response, err := me.client.UseWedataV20250806Client().ListProjectRoles(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNumber += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataTenantRolesByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.SystemRole, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListTenantRolesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RoleDisplayName" {
+			request.RoleDisplayName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseWedataV20250806Client().ListTenantRoles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataResourceGroupById(ctx context.Context, resourceGroupId string) (ret []*wedatav20250806.ExecutorResourceGroupInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListResourceGroupsRequest()
+	response := wedatav20250806.NewListResourceGroupsResponse()
+	request.Id = &resourceGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().ListResourceGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata resource groups failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data.Items
+	return
+}
+
+func (me *WedataService) DescribeWedataResourceGroupToProjectAttachmentById(ctx context.Context, resourceGroupId, projectId string) (ret *wedatav20250806.BindProject, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListResourceGroupsRequest()
+	response := wedatav20250806.NewListResourceGroupsResponse()
+	request.Id = &resourceGroupId
+	request.ProjectIds = helper.Strings([]string{projectId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().ListResourceGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata resource groups failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	if response.Response.Data.Items == nil {
+		return
+	}
+
+	item := response.Response.Data.Items[0]
+	for _, item := range item.AssociateProjects {
+		if item.ProjectId != nil && *item.ProjectId == projectId {
+			ret = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataResourceGroupMetricsByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ResourceGroupMetrics, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = wedatav20250806.NewGetResourceGroupMetricsRequest()
+		response = wedatav20250806.NewGetResourceGroupMetricsResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ResourceGroupId" {
+			request.ResourceGroupId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*uint64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*uint64)
+		}
+		if k == "MetricType" {
+			request.MetricType = v.(*string)
+		}
+		if k == "Granularity" {
+			request.Granularity = v.(*uint64)
+		}
+	}
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetResourceGroupMetrics(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe wedata resource group metrics failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
 func (me *WedataService) DescribeWedataIntegrationTaskNodeById(ctx context.Context, projectId, nodeId string) (integrationTaskNode *wedata.DescribeIntegrationNodeResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

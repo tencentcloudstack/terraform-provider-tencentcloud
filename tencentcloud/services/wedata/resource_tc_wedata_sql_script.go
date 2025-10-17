@@ -416,12 +416,8 @@ func resourceTencentCloudWedataSqlScriptDelete(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.Data == nil {
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
 			return resource.NonRetryableError(fmt.Errorf("Delete wedata sql script failed, Response is nil."))
-		}
-
-		if result.Response.Data.Status == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete wedata sql script failed, Status is nil."))
 		}
 
 		if !*result.Response.Data.Status {

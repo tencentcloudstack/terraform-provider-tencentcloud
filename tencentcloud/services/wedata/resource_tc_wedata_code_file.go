@@ -170,7 +170,7 @@ func resourceTencentCloudWedataCodeFileCreate(d *schema.ResourceData, meta inter
 		}
 
 		if result == nil || result.Response == nil || result.Response.Data == nil {
-			return tccommon.RetryError(fmt.Errorf("create wedata code file failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("create wedata code file failed, Response is nil."))
 		}
 
 		response = result
@@ -381,12 +381,8 @@ func resourceTencentCloudWedataCodeFileDelete(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.Data == nil {
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
 			return resource.NonRetryableError(fmt.Errorf("Delete wedata code file failed, Response is nil."))
-		}
-
-		if result.Response.Data.Status == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete wedata code file failed, Status is nil."))
 		}
 
 		if !*result.Response.Data.Status {

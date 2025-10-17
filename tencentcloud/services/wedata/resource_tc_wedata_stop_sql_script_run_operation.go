@@ -2,6 +2,7 @@ package wedata
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 
@@ -64,6 +65,14 @@ func resourceTencentCloudWedataStopSqlScriptRunOperationCreate(d *schema.Resourc
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create wedata stop sql script run operation failed, Response is nil."))
+		}
+
+		if !*result.Response.Data.Status {
+			return resource.NonRetryableError(fmt.Errorf("Create wedata stop sql script run operation failed, Status is false."))
 		}
 
 		return nil
