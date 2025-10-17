@@ -15,18 +15,10 @@ Provides a resource to create a WeData code file
 
 ```hcl
 resource "tencentcloud_wedata_code_file" "example" {
-  project_id         = ""
-  code_file_name     = ""
-  parent_folder_path = ""
-  code_file_config {
-    params = ""
-    notebook_session_info {
-      notebook_session_id   = ""
-      notebook_session_name = ""
-    }
-  }
-
-  code_file_content = ""
+  project_id         = "2983848457986924544"
+  code_file_name     = "tf_example_code_file"
+  parent_folder_path = "/tf_example"
+  code_file_content  = "Hello Terraform"
 }
 ```
 
