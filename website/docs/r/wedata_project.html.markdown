@@ -68,9 +68,9 @@ Enum values:
 
 The `project` object supports the following:
 
-* `display_name` - (Required, String) Project display name, can be Chinese name starting with a letter, can contain letters, numbers, and underscores, cannot exceed 32 characters.
+* `display_name` - (Required, String, ForceNew) Project display name, can be Chinese name starting with a letter, can contain letters, numbers, and underscores, cannot exceed 32 characters.
 * `project_name` - (Required, String) Project identifier, English name starting with a letter, can contain letters, numbers, and underscores, cannot exceed 32 characters.
-* `project_model` - (Optional, String) Project mode, SIMPLE (default): Simple mode STANDARD: Standard mode.
+* `project_model` - (Optional, String, ForceNew) Project mode, SIMPLE (default): Simple mode STANDARD: Standard mode.
 
 ## Attributes Reference
 

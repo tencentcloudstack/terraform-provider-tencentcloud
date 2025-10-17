@@ -35,11 +35,13 @@ func ResourceTencentCloudWedataProject() *schema.Resource {
 						"display_name": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Project display name, can be Chinese name starting with a letter, can contain letters, numbers, and underscores, cannot exceed 32 characters.",
 						},
 						"project_model": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Project mode, SIMPLE (default): Simple mode STANDARD: Standard mode.",
 						},
 					},
