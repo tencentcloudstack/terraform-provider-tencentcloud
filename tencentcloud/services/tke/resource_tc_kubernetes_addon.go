@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -24,6 +25,11 @@ func ResourceTencentCloudKubernetesAddon() *schema.Resource {
 		Delete: resourceTencentCloudKubernetesAddonDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(10 * time.Minute),
+			Update: schema.DefaultTimeout(10 * time.Minute),
+			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
@@ -127,7 +133,7 @@ func resourceTencentCloudKubernetesAddonCreate(d *schema.ResourceData, meta inte
 	waitRequest := tke.NewDescribeAddonRequest()
 	waitRequest.ClusterId = &clusterId
 	waitRequest.AddonName = &addonName
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeAddonWithContext(ctx, waitRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -275,7 +281,7 @@ func resourceTencentCloudKubernetesAddonUpdate(d *schema.ResourceData, meta inte
 		waitRequest := tke.NewDescribeAddonRequest()
 		waitRequest.ClusterId = &clusterId
 		waitRequest.AddonName = &addonName
-		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeAddonWithContext(ctx, waitRequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -357,7 +363,7 @@ func resourceTencentCloudKubernetesAddonDelete(d *schema.ResourceData, meta inte
 	waitRequest := tke.NewDescribeAddonRequest()
 	waitRequest.ClusterId = &clusterId
 	waitRequest.AddonName = &addonName
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeAddonWithContext(ctx, waitRequest)
 		if e != nil {
 			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
