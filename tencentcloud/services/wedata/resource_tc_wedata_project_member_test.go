@@ -17,13 +17,13 @@ func TestAccTencentCloudWedataProjectMemberResource_basic(t *testing.T) {
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccWedataProject,
+				Config: testAccWedataProjectMember,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_project_member.example", "id"),
 				),
 			},
 			{
-				Config: testAccWedataProjectUpdate,
+				Config: testAccWedataProjectMemberUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_project_member.example", "id"),
 				),
@@ -39,23 +39,21 @@ func TestAccTencentCloudWedataProjectMemberResource_basic(t *testing.T) {
 
 const testAccWedataProjectMember = `
 resource "tencentcloud_wedata_project_member" "example" {
-  project_id = "2982667120655491072"
-  user_uin   = ""
+  project_id = "2983848457986924544"
+  user_uin   = "100044238258"
   role_ids = [
-    "",
-    "",
-	""
+    "308335260274237440",
+    "308335260844662784"
   ]
 }
 `
 
 const testAccWedataProjectMemberUpdate = `
 resource "tencentcloud_wedata_project_member" "example" {
-  project_id = "2982667120655491072"
-  user_uin   = ""
+  project_id = "2983848457986924544"
+  user_uin   = "100044238258"
   role_ids = [
-    "",
-    ""
+    "308335260274237440",
   ]
 }
 `
