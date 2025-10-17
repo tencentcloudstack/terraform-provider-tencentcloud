@@ -200,7 +200,7 @@ func testAccCheckVpnCustomerGatewayExists(n string) resource.TestCheckFunc {
 const testAccVpnCustomerGatewayConfig = `
 resource "tencentcloud_vpn_customer_gateway" "my_cgw" {
   name              = "terraform_test"
-  public_ip_address = "1.1.1.2" 
+  public_ip_address = "1.5.5.5"
 
   tags = {
     test = "tf"
@@ -210,7 +210,7 @@ resource "tencentcloud_vpn_customer_gateway" "my_cgw" {
 const testAccVpnCustomerGatewayConfigUpdate = `
 resource "tencentcloud_vpn_customer_gateway" "my_cgw" {
   name              = "terraform_update"
-  public_ip_address = "1.1.1.2"
+  public_ip_address = "1.5.5.5"
 
   tags = {
     test = "test"
