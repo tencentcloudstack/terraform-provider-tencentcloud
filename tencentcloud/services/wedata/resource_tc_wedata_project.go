@@ -195,8 +195,8 @@ func resourceTencentCloudWedataProjectCreate(d *schema.ResourceData, meta interf
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil {
-			return tccommon.RetryError(fmt.Errorf("Create wedata project failed, Response is nil."))
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create wedata project failed, Response is nil."))
 		}
 
 		response = result
@@ -208,7 +208,7 @@ func resourceTencentCloudWedataProjectCreate(d *schema.ResourceData, meta interf
 		return reqErr
 	}
 
-	if response.Response.Data == nil && response.Response.Data.ProjectId == nil {
+	if response.Response.Data.ProjectId == nil {
 		return fmt.Errorf("ProjectId is nil.")
 	}
 
@@ -227,7 +227,15 @@ func resourceTencentCloudWedataProjectCreate(d *schema.ResourceData, meta interf
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, disableReq.GetAction(), disableReq.ToJsonString(), result.ToJsonString())
 				}
 
-				return nil
+				if result == nil || result.Response == nil || result.Response.Data == nil {
+					return resource.NonRetryableError(fmt.Errorf("Disable wedata project failed, Response is nil."))
+				}
+
+				if result.Response.Data.Status != nil && *result.Response.Data.Status {
+					return nil
+				}
+
+				return resource.NonRetryableError(fmt.Errorf("Disable wedata project failed, Status is false."))
 			})
 
 			if reqErr != nil {
@@ -342,7 +350,15 @@ func resourceTencentCloudWedataProjectUpdate(d *schema.ResourceData, meta interf
 						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, enableReq.GetAction(), enableReq.ToJsonString(), result.ToJsonString())
 					}
 
-					return nil
+					if result == nil || result.Response == nil || result.Response.Data == nil {
+						return resource.NonRetryableError(fmt.Errorf("Enable wedata project failed, Response is nil."))
+					}
+
+					if result.Response.Data.Status != nil && *result.Response.Data.Status {
+						return nil
+					}
+
+					return resource.NonRetryableError(fmt.Errorf("Enable wedata project failed, Status is false."))
 				})
 
 				if reqErr != nil {
@@ -360,7 +376,15 @@ func resourceTencentCloudWedataProjectUpdate(d *schema.ResourceData, meta interf
 						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, disableReq.GetAction(), disableReq.ToJsonString(), result.ToJsonString())
 					}
 
-					return nil
+					if result == nil || result.Response == nil || result.Response.Data == nil {
+						return resource.NonRetryableError(fmt.Errorf("Disable wedata project failed, Response is nil."))
+					}
+
+					if result.Response.Data.Status != nil && *result.Response.Data.Status {
+						return nil
+					}
+
+					return resource.NonRetryableError(fmt.Errorf("Disable wedata project failed, Status is false."))
 				})
 
 				if reqErr != nil {

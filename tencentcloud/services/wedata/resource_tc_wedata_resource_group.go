@@ -309,8 +309,8 @@ func resourceTencentCloudWedataResourceGroupCreate(d *schema.ResourceData, meta 
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.Data == nil {
-			return tccommon.RetryError(fmt.Errorf("Create wedata resource group failed, Response is nil."))
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create wedata resource group failed, Response is nil."))
 		}
 
 		response = result
@@ -322,7 +322,11 @@ func resourceTencentCloudWedataResourceGroupCreate(d *schema.ResourceData, meta 
 		return reqErr
 	}
 
-	if response.Response.Data.ResourceGroupId == nil {
+	if !*response.Response.Data.Status {
+		return fmt.Errorf("Create wedata resource group failed, Status is false.")
+	}
+
+	if response.Response.Data.ResourceGroupId == nil || *response.Response.Data.ResourceGroupId == "" {
 		return fmt.Errorf("ResourceGroupId is nil.")
 	}
 
@@ -412,6 +416,14 @@ func resourceTencentCloudWedataResourceGroupUpdate(d *schema.ResourceData, meta 
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 
+			if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
+				return resource.NonRetryableError(fmt.Errorf("Update wedata resource group failed, Response is nil."))
+			}
+
+			if !*result.Response.Data.Status {
+				return resource.NonRetryableError(fmt.Errorf("Update wedata resource group failed, Status is false."))
+			}
+
 			return nil
 		})
 
@@ -446,7 +458,7 @@ func resourceTencentCloudWedataResourceGroupDelete(d *schema.ResourceData, meta 
 		}
 
 		if result == nil || result.Response == nil || result.Response.Data == nil {
-			return tccommon.RetryError(fmt.Errorf("Delete wedata resource group failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Delete wedata resource group failed, Response is nil."))
 		}
 
 		response = result

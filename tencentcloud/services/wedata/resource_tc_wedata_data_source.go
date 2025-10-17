@@ -341,7 +341,7 @@ func resourceTencentCloudWedataDataSourceCreate(d *schema.ResourceData, meta int
 		}
 
 		if result == nil || result.Response == nil || result.Response.Data == nil {
-			return tccommon.RetryError(fmt.Errorf("Create wedata data source failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create wedata data source failed, Response is nil."))
 		}
 
 		response = result
@@ -351,6 +351,10 @@ func resourceTencentCloudWedataDataSourceCreate(d *schema.ResourceData, meta int
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s create wedata data source failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	if response.Response.Data.Status == nil || !*response.Response.Data.Status {
+		return fmt.Errorf("Create wedata data source failed, Status is false")
 	}
 
 	if response.Response.Data.DataSourceId == nil {

@@ -88,8 +88,12 @@ func resourceTencentCloudWedataProjectMemberCreate(d *schema.ResourceData, meta 
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil {
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
 			return resource.NonRetryableError(fmt.Errorf("Create wedata project member failed, Response is nil."))
+		}
+
+		if !*result.Response.Data.Status {
+			return resource.NonRetryableError(fmt.Errorf("Create wedata project member failed, Status is false"))
 		}
 
 		return nil

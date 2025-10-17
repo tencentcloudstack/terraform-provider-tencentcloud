@@ -70,6 +70,14 @@ func resourceTencentCloudWedataResourceGroupToProjectAttachmentCreate(d *schema.
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create wedata resource group to project attachment failed, Response is nil."))
+		}
+
+		if !*result.Response.Data.Status {
+			return resource.NonRetryableError(fmt.Errorf("Create wedata resource group to project attachment failed, Status is false."))
+		}
+
 		return nil
 	})
 
@@ -147,6 +155,14 @@ func resourceTencentCloudWedataResourceGroupToProjectAttachmentDelete(d *schema.
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete wedata resource group to project attachment failed, Response is nil."))
+		}
+
+		if !*result.Response.Data.Status {
+			return resource.NonRetryableError(fmt.Errorf("Delete wedata resource group to project attachment failed, Status is false."))
 		}
 
 		return nil
