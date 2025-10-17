@@ -17,3 +17,11 @@ tencentcloud_wedata_code_folder
 ```release-note:new-resource
 tencentcloud_wedata_code_file
 ```
+
+```release-note:new-resource
+tencentcloud_wedata_run_sql_script_operation
+```
+
+```release-note:new-resource
+tencentcloud_wedata_stop_sql_script_run_operation
+```

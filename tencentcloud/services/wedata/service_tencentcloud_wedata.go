@@ -2007,6 +2007,7 @@ func (me *WedataService) DescribeWedataCodeFileById(ctx context.Context, project
 	response := wedatav20250806.NewGetCodeFileResponse()
 	request.ProjectId = &projectId
 	request.CodeFileId = &codeFileId
+	request.IncludeContent = helper.Bool(true)
 
 	defer func() {
 		if errRet != nil {

@@ -2328,6 +2328,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_sql_script":                                                        wedata.ResourceTencentCloudWedataSqlScript(),
 			"tencentcloud_wedata_code_folder":                                                       wedata.ResourceTencentCloudWedataCodeFolder(),
 			"tencentcloud_wedata_code_file":                                                         wedata.ResourceTencentCloudWedataCodeFile(),
+			"tencentcloud_wedata_run_sql_script_operation":                                          wedata.ResourceTencentCloudWedataRunSqlScriptOperation(),
+			"tencentcloud_wedata_stop_sql_script_run_operation":                                     wedata.ResourceTencentCloudWedataStopSqlScriptRunOperation(),
 			"tencentcloud_cfw_address_template":                                                     cfw.ResourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                                         cfw.ResourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                                          cfw.ResourceTencentCloudCfwEdgePolicy(),
