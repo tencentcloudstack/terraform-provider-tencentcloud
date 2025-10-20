@@ -1,28 +1,29 @@
-Provides a resource to create a tke kubernetes_health_check_policy
+Provides a resource to create a TKE kubernetes health check policy
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_kubernetes_health_check_policy" "kubernetes_health_check_policy" {
-    cluster_id = "cls-xxxxx"
-    name = "example"
-    rules {
-        name = "OOMKilling"
-        auto_repair_enabled = true
-        enabled = true
-    }
-    rules {
-        name = "KubeletUnhealthy"
-        auto_repair_enabled = true
-        enabled = true
-    }
+resource "tencentcloud_kubernetes_health_check_policy" "example" {
+  cluster_id = "cls-fdy7hm1q"
+  name       = "tf-example"
+  rules {
+    name                = "OOMKilling"
+    auto_repair_enabled = true
+    enabled             = true
+  }
+
+  rules {
+    name                = "KubeletUnhealthy"
+    auto_repair_enabled = true
+    enabled             = true
+  }
 }
 ```
 
 Import
 
-tke kubernetes_health_check_policy can be imported using the id, e.g.
+TKE kubernetes health check policy can be imported using the clusterId#name, e.g.
 
 ```
-terraform import tencentcloud_kubernetes_health_check_policy.kubernetes_health_check_policy cls-xxxxx#healthcheckpolicyname
+terraform import tencentcloud_kubernetes_health_check_policy.example cls-fdy7hm1q#tf-example
 ```
