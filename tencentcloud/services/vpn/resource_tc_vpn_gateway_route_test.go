@@ -111,7 +111,7 @@ func testAccCheckVpnGatewayRouteExists(n string) resource.TestCheckFunc {
 const testVpnGatewayRouteCreate = tcacctest.DefaultVpnDataSource + `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "1.4.4.4"
+  public_ip_address = "1.14.14.14"
 
 }
 
@@ -172,7 +172,7 @@ resource "tencentcloud_vpn_gateway_route" "route1" {
 const testVpnGatewayRouteUpdate = tcacctest.DefaultVpnDataSource + `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "1.4.4.4"
+  public_ip_address = "1.14.14.14"
 
 }
 
