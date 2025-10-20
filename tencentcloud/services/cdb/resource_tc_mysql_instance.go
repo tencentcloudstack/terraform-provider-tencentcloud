@@ -182,6 +182,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"cluster_topology": {
 			Type:        schema.TypeList,
 			Optional:    true,
+			Computed:    true,
 			MaxItems:    1,
 			Description: "Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.",
 			Elem: &schema.Resource{
