@@ -95,6 +95,16 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.",
 			},
+			"stop_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Instance shutdown mode. Valid values: SOFT_FIRST: perform a soft shutdown first, and force shut down the instance if the soft shutdown fails; HARD: force shut down the instance directly; SOFT: soft shutdown only. Default value: SOFT.",
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{
+					CVM_STOP_TYPE_SOFT_FIRST,
+					CVM_STOP_TYPE_HARD,
+					CVM_STOP_TYPE_SOFT,
+				}),
+			},
 			"stopped_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -1086,8 +1096,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOkExists("running_flag"); ok {
 		if !v.(bool) {
+			stopType := d.Get("stop_type").(string)
 			stoppedMode := d.Get("stopped_mode").(string)
-			err = cvmService.StopInstance(ctx, instanceId, stoppedMode)
+			err = cvmService.StopInstance(ctx, instanceId, stopType, stoppedMode)
 			if err != nil {
 				return err
 			}
@@ -2784,12 +2795,13 @@ func switchInstance(cvmService *CvmService, ctx context.Context, d *schema.Resou
 			return err
 		}
 	} else {
+		stopType := d.Get("stop_type").(string)
 		stoppedMode := d.Get("stopped_mode").(string)
 		skipStopApi := false
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			// when retry polling instance status, stop instance should skipped
 			if !skipStopApi {
-				err := cvmService.StopInstance(ctx, instanceId, stoppedMode)
+				err := cvmService.StopInstance(ctx, instanceId, stopType, stoppedMode)
 				if err != nil {
 					return resource.NonRetryableError(err)
 				}

@@ -436,10 +436,14 @@ func (me *CvmService) ModifyVpc(ctx context.Context, instanceId, vpcId, subnetId
 	return nil
 }
 
-func (me *CvmService) StopInstance(ctx context.Context, instanceId string, stoppedMode string) error {
+func (me *CvmService) StopInstance(ctx context.Context, instanceId string, stopType string, stoppedMode string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewStopInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
+	if stopType != "" {
+		request.StopType = &stopType
+	}
+
 	if stoppedMode != "" {
 		request.StoppedMode = &stoppedMode
 	}
