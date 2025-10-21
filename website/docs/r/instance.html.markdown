@@ -379,6 +379,11 @@ In addition to all arguments above, the following attributes are exported:
 * `public_ipv6_addresses` - The public IPv6 address to which the instance is bound.
 * `uuid` - Globally unique ID of the instance.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `15m`) Used when creating the resource.
 
 ## Import
 

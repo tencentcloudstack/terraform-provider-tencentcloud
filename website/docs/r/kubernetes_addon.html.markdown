@@ -54,6 +54,13 @@ In addition to all arguments above, the following attributes are exported:
 * `phase` - Status of addon.
 * `reason` - Reason of addon failed.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `3m`) Used when creating the resource.
+* `update` - (Defaults to `3m`) Used when updating the resource.
+* `delete` - (Defaults to `3m`) Used when deleting the resource.
 
 ## Import
 
