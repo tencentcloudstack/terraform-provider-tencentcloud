@@ -290,6 +290,35 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+### Create CVM instance with setting running flag
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name           = "tf-example"
+  availability_zone       = "ap-guangzhou-6"
+  image_id                = "img-eb30mz89"
+  instance_type           = "S5.MEDIUM4"
+  system_disk_type        = "CLOUD_HSSD"
+  system_disk_size        = 50
+  hostname                = "user"
+  project_id              = 0
+  vpc_id                  = "vpc-i5yyodl9"
+  subnet_id               = "subnet-hhi88a58"
+  orderly_security_groups = ["sg-ma82yjwp"]
+  running_flag            = false
+  stop_type               = "SOFT_FIRST"
+  stopped_mode            = "KEEP_CHARGING"
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -337,6 +366,7 @@ The following arguments are supported:
 * `security_groups` - (Optional, Set: [`String`], **Deprecated**) It will be deprecated. Use `orderly_security_groups` instead. A list of security group IDs to associate with.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `ONE-TIME` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String, ForceNew) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
+* `stop_type` - (Optional, String) Instance shutdown mode. Valid values: SOFT_FIRST: perform a soft shutdown first, and force shut down the instance if the soft shutdown fails; HARD: force shut down the instance directly; SOFT: soft shutdown only. Default value: SOFT.
 * `stopped_mode` - (Optional, String) Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.
 * `subnet_id` - (Optional, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
 * `system_disk_id` - (Optional, String) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.

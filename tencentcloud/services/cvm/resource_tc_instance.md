@@ -279,6 +279,35 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+Create CVM instance with setting running flag
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name                           = "tf-example"
+  availability_zone                       = "ap-guangzhou-6"
+  image_id                                = "img-eb30mz89"
+  instance_type                           = "S5.MEDIUM4"
+  system_disk_type                        = "CLOUD_HSSD"
+  system_disk_size                        = 50
+  hostname                                = "user"
+  project_id                              = 0
+  vpc_id                                  = "vpc-i5yyodl9"
+  subnet_id                               = "subnet-hhi88a58"
+  orderly_security_groups                 = ["sg-ma82yjwp"]
+  running_flag                            = false
+  stop_type                               = "SOFT_FIRST"
+  stopped_mode                            = "KEEP_CHARGING"
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 Import
 
 CVM instance can be imported using the id, e.g.
