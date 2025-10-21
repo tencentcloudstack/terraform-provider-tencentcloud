@@ -3606,26 +3606,28 @@ func (me *TkeService) DescribeKubernetesHealthCheckPolicyById(ctx context.Contex
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
 	var (
-		offset int64 = 0
-		limit  int64 = 20
+		offset    int64 = 0
+		limit     int64 = 100
+		instances []*tke2.HealthCheckPolicy
 	)
-	var instances []*tke2.HealthCheckPolicy
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseTkeV20220501Client().DescribeHealthCheckPolicies(request)
 		if err != nil {
 			errRet = err
 			return
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.HealthCheckPolicies) < 1 {
 			break
 		}
+
 		instances = append(instances, response.Response.HealthCheckPolicies...)
 		if len(response.Response.HealthCheckPolicies) < int(limit) {
 			break
