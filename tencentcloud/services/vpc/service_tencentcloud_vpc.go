@@ -8557,3 +8557,57 @@ func (me *VpcService) DescribeElasticPublicIpv6sByFilter(ctx context.Context, pa
 
 	return
 }
+
+func (me *VpcService) DescribeVpcPrivateNatGatewayTranslationNatRuleById(ctx context.Context, natGatewayId string) (ret []*vpc.TranslationNatRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribePrivateNatGatewayTranslationNatRulesRequest()
+	response := vpc.NewDescribePrivateNatGatewayTranslationNatRulesResponse()
+	request.NatGatewayId = &natGatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseVpcClient().DescribePrivateNatGatewayTranslationNatRules(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.TranslationNatRuleSet) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.TranslationNatRuleSet...)
+		if len(response.Response.TranslationNatRuleSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
