@@ -49,8 +49,4 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - Group state description (commonly Empty, Stable, and Dead states): Dead: The consumption group does not exist Empty: The consumption group does not currently have any consumer subscriptions PreparingRebalance: The consumption group is in the rebalance state CompletingRebalance: The consumption group is in the rebalance state Stable: Each consumer in the consumption group has joined and is in a stable state.
 
 
-## Timeouts
-
-<no value>
-
 

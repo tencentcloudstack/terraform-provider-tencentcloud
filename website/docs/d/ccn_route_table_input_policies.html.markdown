@@ -36,8 +36,4 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_set` - Policy set.
 
 
-## Timeouts
-
-<no value>
-
 

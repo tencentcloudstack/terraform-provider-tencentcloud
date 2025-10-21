@@ -71,8 +71,4 @@ In addition to all arguments above, the following attributes are exported:
 * `retention_id` - The ID of the retention task.
 
 
-## Timeouts
-
-<no value>
-
 

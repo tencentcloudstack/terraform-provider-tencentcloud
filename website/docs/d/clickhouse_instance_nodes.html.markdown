@@ -52,8 +52,4 @@ In addition to all arguments above, the following attributes are exported:
   * `spec` - Model, such as S1.
 
 
-## Timeouts
-
-<no value>
-
 

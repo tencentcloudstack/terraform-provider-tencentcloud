@@ -62,8 +62,4 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_name` - Vpc Name.
 
 
-## Timeouts
-
-<no value>
-
 

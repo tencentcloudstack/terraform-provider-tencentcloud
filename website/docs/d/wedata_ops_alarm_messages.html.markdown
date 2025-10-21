@@ -42,8 +42,4 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - Alarm information list.
 
 
-## Timeouts
-
-<no value>
-
 

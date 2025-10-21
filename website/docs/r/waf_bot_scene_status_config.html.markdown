@@ -39,10 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Scene type, default: Default scenario, custom: Non default scenario.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

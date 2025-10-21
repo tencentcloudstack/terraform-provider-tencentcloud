@@ -325,8 +325,4 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_id` - Created EMR instance id.
 
 
-## Timeouts
-
-<no value>
-
 

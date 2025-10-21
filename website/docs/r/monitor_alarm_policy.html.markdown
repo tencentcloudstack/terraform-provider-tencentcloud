@@ -339,10 +339,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - The alarm policy update time.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -151,8 +151,4 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - region id.
 
 
-## Timeouts
-
-<no value>
-
 

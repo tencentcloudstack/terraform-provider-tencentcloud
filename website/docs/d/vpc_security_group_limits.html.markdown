@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `security_group_referred_svc_limit` - number of svc can be referred.
 
 
-## Timeouts
-
-<no value>
-
 

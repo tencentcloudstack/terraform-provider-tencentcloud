@@ -73,10 +73,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vips` - Gateway Load Balancer provides virtual IP services.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

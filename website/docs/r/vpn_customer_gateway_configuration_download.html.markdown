@@ -49,8 +49,4 @@ In addition to all arguments above, the following attributes are exported:
 * `customer_gateway_configuration` - xml configuration.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -42,8 +42,4 @@ In addition to all arguments above, the following attributes are exported:
   * `modified_time` - ApiApp modified time.
 
 
-## Timeouts
-
-<no value>
-
 

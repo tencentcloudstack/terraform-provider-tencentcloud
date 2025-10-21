@@ -57,8 +57,4 @@ In addition to all arguments above, the following attributes are exported:
   * `inner_download_url` - Backup file intranet download address (6 hours).
 
 
-## Timeouts
-
-<no value>
-
 

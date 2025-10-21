@@ -55,8 +55,4 @@ Note: This field may return null, indicating that no valid values can be obtaine
   * `service_id` - Organization service ID. Note: This field may return null, indicating that no valid values can be obtained.
 
 
-## Timeouts
-
-<no value>
-
 

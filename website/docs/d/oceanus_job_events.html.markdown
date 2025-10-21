@@ -48,8 +48,4 @@ In addition to all arguments above, the following attributes are exported:
 * `running_order_ids` - Array of running instance IDs.
 
 
-## Timeouts
-
-<no value>
-
 

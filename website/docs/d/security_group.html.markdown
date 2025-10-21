@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
 * `project_id` - Project ID of the security group.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -33,8 +33,4 @@ In addition to all arguments above, the following attributes are exported:
   * `product_type` - Platform product type.
 
 
-## Timeouts
-
-<no value>
-
 

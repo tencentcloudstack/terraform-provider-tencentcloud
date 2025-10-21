@@ -116,10 +116,6 @@ In addition to all arguments above, the following attributes are exported:
 * `workflow_id` - Workflow id.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

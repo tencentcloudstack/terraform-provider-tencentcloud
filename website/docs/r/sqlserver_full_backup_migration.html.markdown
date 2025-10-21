@@ -104,10 +104,6 @@ In addition to all arguments above, the following attributes are exported:
 * `backup_migration_id` - Backup import task ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -34,8 +34,4 @@ In addition to all arguments above, the following attributes are exported:
   * `api_doc_status` - Api Doc Status.
 
 
-## Timeouts
-
-<no value>
-
 

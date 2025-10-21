@@ -64,8 +64,4 @@ In addition to all arguments above, the following attributes are exported:
     * `version` - Software version.
 
 
-## Timeouts
-
-<no value>
-
 

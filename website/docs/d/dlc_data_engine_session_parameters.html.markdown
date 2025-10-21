@@ -34,8 +34,4 @@ In addition to all arguments above, the following attributes are exported:
 * `data_engine_parameters` - Engine Session Configuration List.
 
 
-## Timeouts
-
-<no value>
-
 

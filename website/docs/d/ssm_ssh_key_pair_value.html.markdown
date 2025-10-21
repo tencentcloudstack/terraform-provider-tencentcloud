@@ -57,8 +57,4 @@ In addition to all arguments above, the following attributes are exported:
 * `ssh_key_name` - SSH key name.
 
 
-## Timeouts
-
-<no value>
-
 

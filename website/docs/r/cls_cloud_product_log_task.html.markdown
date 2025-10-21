@@ -63,10 +63,6 @@ In addition to all arguments above, the following attributes are exported:
 * `topic_id` - Log theme ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

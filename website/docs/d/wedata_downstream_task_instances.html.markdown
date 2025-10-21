@@ -36,8 +36,4 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - Direct downstream task instances list.
 
 
-## Timeouts
-
-<no value>
-
 

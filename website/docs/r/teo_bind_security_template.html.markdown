@@ -46,10 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance configuration delivery status, the possible values are: `online`: the configuration has taken effect; `fail`: the configuration failed; `process`: the configuration is being delivered.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

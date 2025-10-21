@@ -62,8 +62,4 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - The update time of the monitoring task, in Unix timestamp format.Note: This field may return null, indicating that no valid value is available.
 
 
-## Timeouts
-
-<no value>
-
 

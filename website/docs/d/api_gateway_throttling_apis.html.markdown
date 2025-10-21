@@ -94,8 +94,4 @@ In addition to all arguments above, the following attributes are exported:
   * `service_id` - Unique service ID of API.
 
 
-## Timeouts
-
-<no value>
-
 

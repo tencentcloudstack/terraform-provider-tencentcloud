@@ -61,8 +61,4 @@ In addition to all arguments above, the following attributes are exported:
   * `network_type` - IP of the DCG.
 
 
-## Timeouts
-
-<no value>
-
 

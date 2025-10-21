@@ -158,10 +158,6 @@ In addition to all arguments above, the following attributes are exported:
 * `job_id` - Job id.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

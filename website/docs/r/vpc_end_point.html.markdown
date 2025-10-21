@@ -51,10 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - state of end point.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

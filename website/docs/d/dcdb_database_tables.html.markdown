@@ -45,8 +45,4 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Column type.
 
 
-## Timeouts
-
-<no value>
-
 

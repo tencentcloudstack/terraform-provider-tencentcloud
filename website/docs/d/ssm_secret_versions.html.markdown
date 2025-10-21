@@ -53,8 +53,4 @@ In addition to all arguments above, the following attributes are exported:
   * `version_id` - Version of secret.
 
 
-## Timeouts
-
-<no value>
-
 

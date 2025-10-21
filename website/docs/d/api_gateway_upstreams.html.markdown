@@ -57,8 +57,4 @@ In addition to all arguments above, the following attributes are exported:
   * `service_name` - Service NameNote: This field may return null, indicating that a valid value cannot be obtained.
 
 
-## Timeouts
-
-<no value>
-
 

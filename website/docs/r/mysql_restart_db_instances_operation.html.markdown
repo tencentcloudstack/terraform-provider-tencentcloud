@@ -81,10 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

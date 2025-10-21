@@ -35,10 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 * `msg` - Interface call information.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

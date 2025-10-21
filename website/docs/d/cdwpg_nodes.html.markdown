@@ -33,8 +33,4 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_nodes` - Node list.
 
 
-## Timeouts
-
-<no value>
-
 

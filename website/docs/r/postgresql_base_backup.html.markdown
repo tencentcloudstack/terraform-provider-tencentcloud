@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
 * `base_backup_id` - Base backup ID.
 
 
-## Timeouts
-
-<no value>
-
 

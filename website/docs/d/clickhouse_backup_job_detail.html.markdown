@@ -42,8 +42,4 @@ In addition to all arguments above, the following attributes are exported:
   * `zoo_path` - ZK path.
 
 
-## Timeouts
-
-<no value>
-
 

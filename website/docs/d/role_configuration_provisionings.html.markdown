@@ -39,8 +39,4 @@ In addition to all arguments above, the following attributes are exported:
 * `role_configuration_provisionings` - Department member account list.
 
 
-## Timeouts
-
-<no value>
-
 

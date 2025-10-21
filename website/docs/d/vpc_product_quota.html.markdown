@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `quota_region` - Quota region.
 
 
-## Timeouts
-
-<no value>
-
 

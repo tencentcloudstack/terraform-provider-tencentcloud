@@ -41,8 +41,4 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - mount point status.
 
 
-## Timeouts
-
-<no value>
-
 

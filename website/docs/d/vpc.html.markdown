@@ -48,8 +48,4 @@ In addition to all arguments above, the following attributes are exported:
 * `is_multicast` - Whether or not the VPC has Multicast support.
 
 
-## Timeouts
-
-<no value>
-
 

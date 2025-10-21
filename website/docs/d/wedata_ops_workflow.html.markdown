@@ -35,8 +35,4 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - Workflow scheduling details.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -48,8 +48,4 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Key status. Values: `on`, `off`.
 
 
-## Timeouts
-
-<no value>
-
 

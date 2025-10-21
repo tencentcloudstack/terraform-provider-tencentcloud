@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `switch_name` - Firewall switch name.
 
 
-## Timeouts
-
-<no value>
-
 

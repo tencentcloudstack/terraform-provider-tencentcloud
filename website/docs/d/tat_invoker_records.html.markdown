@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `result` - Trigger result.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -48,8 +48,4 @@ In addition to all arguments above, the following attributes are exported:
 - `0` installation.
 
 
-## Timeouts
-
-<no value>
-
 

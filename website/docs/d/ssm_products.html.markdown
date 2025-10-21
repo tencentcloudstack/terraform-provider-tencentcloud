@@ -30,8 +30,4 @@ In addition to all arguments above, the following attributes are exported:
 * `products` - List of supported services.
 
 
-## Timeouts
-
-<no value>
-
 

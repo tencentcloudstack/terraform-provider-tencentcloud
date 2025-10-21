@@ -60,8 +60,4 @@ In addition to all arguments above, the following attributes are exported:
 * `cc_count` - CC attack count.
 
 
-## Timeouts
-
-<no value>
-
 

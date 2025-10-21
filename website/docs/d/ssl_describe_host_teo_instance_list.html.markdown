@@ -47,8 +47,4 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - Regional IDNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
 
-## Timeouts
-
-<no value>
-
 

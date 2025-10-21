@@ -40,8 +40,4 @@ In addition to all arguments above, the following attributes are exported:
   * `proxy_name` - Proxy Name.
 
 
-## Timeouts
-
-<no value>
-
 

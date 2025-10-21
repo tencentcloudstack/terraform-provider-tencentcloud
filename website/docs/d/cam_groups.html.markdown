@@ -45,8 +45,4 @@ In addition to all arguments above, the following attributes are exported:
   * `remark` - Description of CAM group.
 
 
-## Timeouts
-
-<no value>
-
 

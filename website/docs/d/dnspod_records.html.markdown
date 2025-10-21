@@ -84,8 +84,4 @@ Note: This field may return null, indicating that no valid values can be obtaine
   * `weight` - The record weight, which is required for round-robin DNS records.
 
 
-## Timeouts
-
-<no value>
-
 

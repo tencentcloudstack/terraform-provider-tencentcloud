@@ -33,8 +33,4 @@ In addition to all arguments above, the following attributes are exported:
   * `version_id` - TLS version IDNote: This field may return null, indicating that a valid value cannot be obtained.
 
 
-## Timeouts
-
-<no value>
-
 

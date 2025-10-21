@@ -41,8 +41,4 @@ In addition to all arguments above, the following attributes are exported:
   * `email_address` - Blocklisted email address.
 
 
-## Timeouts
-
-<no value>
-
 

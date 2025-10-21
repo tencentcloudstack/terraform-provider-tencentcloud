@@ -83,10 +83,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Database status, could be `creating`, `running`, `modifying` which means changing the remark, and `deleting`.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

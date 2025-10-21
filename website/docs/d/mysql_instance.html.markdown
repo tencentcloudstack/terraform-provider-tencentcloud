@@ -77,8 +77,4 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Information of available zone.
 
 
-## Timeouts
-
-<no value>
-
 

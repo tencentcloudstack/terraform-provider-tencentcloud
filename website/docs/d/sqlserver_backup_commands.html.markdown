@@ -40,8 +40,4 @@ In addition to all arguments above, the following attributes are exported:
   * `request_id` - Request ID.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -44,8 +44,4 @@ In addition to all arguments above, the following attributes are exported:
 * `metric_set` - Return JSON string.
 
 
-## Timeouts
-
-<no value>
-
 

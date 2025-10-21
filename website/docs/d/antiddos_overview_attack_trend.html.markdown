@@ -42,8 +42,4 @@ In addition to all arguments above, the following attributes are exported:
 * `period_point_count` - Number of period points included.
 
 
-## Timeouts
-
-<no value>
-
 

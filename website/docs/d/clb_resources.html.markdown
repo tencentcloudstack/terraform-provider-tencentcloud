@@ -54,8 +54,4 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_resource_type` - Type of resources in the zone. Values: SHARED, EXCLUSIVE.
 
 
-## Timeouts
-
-<no value>
-
 

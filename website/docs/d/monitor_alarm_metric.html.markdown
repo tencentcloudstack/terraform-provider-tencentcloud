@@ -55,8 +55,4 @@ In addition to all arguments above, the following attributes are exported:
   * `unit` - Unit.
 
 
-## Timeouts
-
-<no value>
-
 

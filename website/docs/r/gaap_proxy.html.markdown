@@ -55,10 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 * `support_protocols` - Supported protocols of the GAAP proxy.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

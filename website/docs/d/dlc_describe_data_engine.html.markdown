@@ -106,8 +106,4 @@ In addition to all arguments above, the following attributes are exported:
   * `user_uin` - User uin.
 
 
-## Timeouts
-
-<no value>
-
 

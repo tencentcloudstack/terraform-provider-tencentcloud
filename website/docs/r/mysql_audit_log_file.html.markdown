@@ -122,8 +122,4 @@ In addition to all arguments above, the following attributes are exported:
 * `file_size` - size of file(KB).
 
 
-## Timeouts
-
-<no value>
-
 

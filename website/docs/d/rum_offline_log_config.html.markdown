@@ -34,8 +34,4 @@ In addition to all arguments above, the following attributes are exported:
 * `unique_id_set` - Unique identifier of the user to be listened on(aid or uin).
 
 
-## Timeouts
-
-<no value>
-
 

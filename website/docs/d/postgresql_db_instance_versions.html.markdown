@@ -37,8 +37,4 @@ In addition to all arguments above, the following attributes are exported:
   * `supported_feature_names` - List of features supported by the database kernel, such as:TDE: Supports data encryption.
 
 
-## Timeouts
-
-<no value>
-
 

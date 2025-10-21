@@ -84,10 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vport` - Port for private access.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

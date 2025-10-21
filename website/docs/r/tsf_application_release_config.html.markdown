@@ -46,10 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 * `release_time` - release time.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

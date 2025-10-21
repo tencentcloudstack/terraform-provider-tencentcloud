@@ -35,8 +35,4 @@ In addition to all arguments above, the following attributes are exported:
   * `header_value` - Header Value.
 
 
-## Timeouts
-
-<no value>
-
 

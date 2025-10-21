@@ -79,8 +79,4 @@ In addition to all arguments above, the following attributes are exported:
 - 12 --- Not in use.
 
 
-## Timeouts
-
-<no value>
-
 

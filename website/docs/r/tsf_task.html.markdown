@@ -84,10 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 * `trigger_type` - trigger type.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

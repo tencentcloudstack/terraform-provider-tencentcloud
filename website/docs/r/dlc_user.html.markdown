@@ -39,10 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `work_group_ids` - Collection of IDs of working groups bound to users.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

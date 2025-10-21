@@ -47,8 +47,4 @@ The following arguments are supported:
 * `uniform_social_credit_code` - (Optional, String) (Exact match) Uniform Social Credit Code.
 
 
-## Timeouts
-
-<no value>
-
 

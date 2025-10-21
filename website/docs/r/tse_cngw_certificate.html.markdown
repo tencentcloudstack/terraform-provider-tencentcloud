@@ -40,10 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 * `key` - Private key of certificate.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

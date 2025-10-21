@@ -39,8 +39,4 @@ In addition to all arguments above, the following attributes are exported:
   * `pay_mode` - Payment mode. Valid values: 0 (postpaid), 1 (prepaid).
 
 
-## Timeouts
-
-<no value>
-
 

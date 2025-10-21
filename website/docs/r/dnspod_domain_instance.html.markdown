@@ -40,10 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 * `slave_dns` - Is secondary DNS enabled.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

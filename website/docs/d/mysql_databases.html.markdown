@@ -40,8 +40,4 @@ In addition to all arguments above, the following attributes are exported:
 * `items` - Returned instance information.
 
 
-## Timeouts
-
-<no value>
-
 

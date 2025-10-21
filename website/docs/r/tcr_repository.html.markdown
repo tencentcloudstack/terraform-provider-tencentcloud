@@ -64,10 +64,6 @@ In addition to all arguments above, the following attributes are exported:
 * `url` - URL of the repository.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

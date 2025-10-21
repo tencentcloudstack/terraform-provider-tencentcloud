@@ -91,8 +91,4 @@ In addition to all arguments above, the following attributes are exported:
   * `version` - Version 1.0, 2.0, 3.0.
 
 
-## Timeouts
-
-<no value>
-
 

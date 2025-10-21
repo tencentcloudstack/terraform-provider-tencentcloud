@@ -75,8 +75,4 @@ In addition to all arguments above, the following attributes are exported:
   * `route_id` - ID of the DCG route.
 
 
-## Timeouts
-
-<no value>
-
 

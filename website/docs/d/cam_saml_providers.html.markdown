@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of CAM SAML provider.
 
 
-## Timeouts
-
-<no value>
-
 

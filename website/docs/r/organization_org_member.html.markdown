@@ -59,10 +59,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Member update time.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

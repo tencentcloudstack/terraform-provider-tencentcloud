@@ -61,8 +61,4 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - The VPC ID for NAT Gateway.
 
 
-## Timeouts
-
-<no value>
-
 

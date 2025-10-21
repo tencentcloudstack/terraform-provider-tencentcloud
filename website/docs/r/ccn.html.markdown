@@ -84,10 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - States of instance. Valid values: `ISOLATED`(arrears) and `AVAILABLE`.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

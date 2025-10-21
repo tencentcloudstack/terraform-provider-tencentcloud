@@ -36,8 +36,4 @@ In addition to all arguments above, the following attributes are exported:
   * `shard_id` - Instance shard ID.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -63,8 +63,4 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - ID of VPC.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -120,10 +120,6 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - ID of this CLB listener rule.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -63,8 +63,4 @@ In addition to all arguments above, the following attributes are exported:
 * `file_size` - File size, The unit is KB.
 
 
-## Timeouts
-
-<no value>
-
 

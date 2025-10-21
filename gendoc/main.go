@@ -168,7 +168,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		var timeoutMethods []string
 		if resource.Timeouts.Create != nil {
 			timeoutStr := resource.Timeouts.Create.String()
-			// 提取分钟部分，去掉秒
 			if strings.Contains(timeoutStr, "m") {
 				parts := strings.Split(timeoutStr, "m")
 				if len(parts) > 0 {
@@ -181,7 +180,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 
 		if resource.Timeouts.Read != nil {
 			timeoutStr := resource.Timeouts.Read.String()
-			// 提取分钟部分，去掉秒
 			if strings.Contains(timeoutStr, "m") {
 				parts := strings.Split(timeoutStr, "m")
 				if len(parts) > 0 {
@@ -194,7 +192,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 
 		if resource.Timeouts.Update != nil {
 			timeoutStr := resource.Timeouts.Update.String()
-			// 提取分钟部分，去掉秒
 			if strings.Contains(timeoutStr, "m") {
 				parts := strings.Split(timeoutStr, "m")
 				if len(parts) > 0 {
@@ -207,7 +204,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 
 		if resource.Timeouts.Delete != nil {
 			timeoutStr := resource.Timeouts.Delete.String()
-			// 提取分钟部分，去掉秒
 			if strings.Contains(timeoutStr, "m") {
 				parts := strings.Split(timeoutStr, "m")
 				if len(parts) > 0 {

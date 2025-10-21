@@ -68,8 +68,4 @@ In addition to all arguments above, the following attributes are exported:
 * `integration_id` - integration id.
 
 
-## Timeouts
-
-<no value>
-
 

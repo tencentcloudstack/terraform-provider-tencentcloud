@@ -251,8 +251,4 @@ In addition to all arguments above, the following attributes are exported:
   * `use_sum` - Number of instances bound to policy groupNote: this field may return null, indicating that no valid values can be obtained.
 
 
-## Timeouts
-
-<no value>
-
 

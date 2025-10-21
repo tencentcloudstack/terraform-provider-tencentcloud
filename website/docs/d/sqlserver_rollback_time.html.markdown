@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Start time of time range available for rollback.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -56,10 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The current status of layer.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

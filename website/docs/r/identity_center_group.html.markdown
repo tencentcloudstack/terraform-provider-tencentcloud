@@ -41,10 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Modification time for the user group.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

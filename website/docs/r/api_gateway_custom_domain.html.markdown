@@ -47,8 +47,4 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Domain name resolution status. `1` means normal analysis, `0` means parsing failed.
 
 
-## Timeouts
-
-<no value>
-
 

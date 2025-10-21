@@ -91,8 +91,4 @@ In addition to all arguments above, the following attributes are exported:
 * `deal_id` - Deal id.
 
 
-## Timeouts
-
-<no value>
-
 

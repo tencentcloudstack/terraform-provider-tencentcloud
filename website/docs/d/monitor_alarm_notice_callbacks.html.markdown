@@ -38,8 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `weekday` - Notification period 1-7 represents Monday to Sunday.
 
 
-## Timeouts
-
-<no value>
-
 

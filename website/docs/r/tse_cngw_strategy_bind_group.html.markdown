@@ -39,10 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Binding status.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

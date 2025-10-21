@@ -60,10 +60,6 @@ In addition to all arguments above, the following attributes are exported:
 * `user_type` - User type.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

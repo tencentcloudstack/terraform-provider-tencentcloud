@@ -33,8 +33,4 @@ In addition to all arguments above, the following attributes are exported:
 * `charset` - The default character set of the instance, such as `latin1`, `utf8` etc.
 
 
-## Timeouts
-
-<no value>
-
 

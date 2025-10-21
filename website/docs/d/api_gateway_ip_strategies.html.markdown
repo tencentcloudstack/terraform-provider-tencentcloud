@@ -81,8 +81,4 @@ In addition to all arguments above, the following attributes are exported:
   * `strategy_type` - Type of the strategy.
 
 
-## Timeouts
-
-<no value>
-
 

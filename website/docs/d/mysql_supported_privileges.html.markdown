@@ -36,8 +36,4 @@ In addition to all arguments above, the following attributes are exported:
 * `table_supported_privileges` - Database table permissions supported by the instance.
 
 
-## Timeouts
-
-<no value>
-
 

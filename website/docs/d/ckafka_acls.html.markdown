@@ -45,8 +45,4 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_type` - ACL resource type.
 
 
-## Timeouts
-
-<no value>
-
 

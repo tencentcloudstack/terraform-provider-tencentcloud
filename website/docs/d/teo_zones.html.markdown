@@ -54,8 +54,4 @@ In addition to all arguments above, the following attributes are exported:
 * `zones` - Details of sites.
 
 
-## Timeouts
-
-<no value>
-
 

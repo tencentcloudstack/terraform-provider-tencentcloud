@@ -36,8 +36,4 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Async event status. Values: `RUNNING` (running); `FINISHED` (invoked successfully); `ABORTED` (invocation ended); `FAILED` (invocation failed).
 
 
-## Timeouts
-
-<no value>
-
 

@@ -45,10 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vpc_endpoint` - VPC access point address.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

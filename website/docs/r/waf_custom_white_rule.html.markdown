@@ -215,10 +215,6 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - rule ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

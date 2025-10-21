@@ -59,8 +59,4 @@ In addition to all arguments above, the following attributes are exported:
 * `command_id` - Command ID.
 
 
-## Timeouts
-
-<no value>
-
 

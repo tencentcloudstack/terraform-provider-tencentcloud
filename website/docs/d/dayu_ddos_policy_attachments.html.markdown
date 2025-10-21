@@ -46,8 +46,4 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_type` - Type of the resource that the DDoS policy works for.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -43,8 +43,4 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Xlog file created start time.
 
 
-## Timeouts
-
-<no value>
-
 

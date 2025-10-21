@@ -62,8 +62,4 @@ In addition to all arguments above, the following attributes are exported:
   * `total_count` - Total count.
 
 
-## Timeouts
-
-<no value>
-
 

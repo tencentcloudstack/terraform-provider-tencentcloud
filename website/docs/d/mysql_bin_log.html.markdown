@@ -52,8 +52,4 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Specific log type, possible values are: binlog - binary log.
 
 
-## Timeouts
-
-<no value>
-
 

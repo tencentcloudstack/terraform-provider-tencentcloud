@@ -52,8 +52,4 @@ In addition to all arguments above, the following attributes are exported:
   * `protocol` - Custom domain name agreement type.
 
 
-## Timeouts
-
-<no value>
-
 

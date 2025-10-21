@@ -44,8 +44,4 @@ In addition to all arguments above, the following attributes are exported:
   * `snapshot_policy_id` - Snapshot Policy Id.
 
 
-## Timeouts
-
-<no value>
-
 

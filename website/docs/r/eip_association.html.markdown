@@ -142,10 +142,6 @@ In addition to all arguments above, the following attributes are exported:
 * `cdc_id` - ID of the dedicated cluster.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

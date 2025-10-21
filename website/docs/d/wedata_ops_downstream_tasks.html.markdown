@@ -35,8 +35,4 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - Downstream dependency description.
 
 
-## Timeouts
-
-<no value>
-
 

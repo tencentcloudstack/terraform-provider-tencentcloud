@@ -49,8 +49,4 @@ In addition to all arguments above, the following attributes are exported:
   * `role_id` - ID of CAM role.
 
 
-## Timeouts
-
-<no value>
-
 

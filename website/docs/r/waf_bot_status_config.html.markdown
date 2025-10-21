@@ -44,10 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 * `valid_scene_count` - Number of effective scenarios.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

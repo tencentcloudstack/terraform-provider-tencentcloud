@@ -55,8 +55,4 @@ In addition to all arguments above, the following attributes are exported:
 * `address_set` - List of IPv6 details.
 
 
-## Timeouts
-
-<no value>
-
 

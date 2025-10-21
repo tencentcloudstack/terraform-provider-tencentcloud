@@ -62,10 +62,6 @@ In addition to all arguments above, the following attributes are exported:
 * `segment_bytes` - Number of bytes rolled by shard.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

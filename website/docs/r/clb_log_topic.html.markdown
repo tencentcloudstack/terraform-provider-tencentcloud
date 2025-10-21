@@ -36,10 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The status of log topic.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

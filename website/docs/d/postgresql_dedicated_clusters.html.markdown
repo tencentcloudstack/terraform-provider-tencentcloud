@@ -49,8 +49,4 @@ In addition to all arguments above, the following attributes are exported:
 * `dedicated_cluster_set` - Dedicated cluster set info.
 
 
-## Timeouts
-
-<no value>
-
 

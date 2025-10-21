@@ -109,10 +109,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - SSL certificate status.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

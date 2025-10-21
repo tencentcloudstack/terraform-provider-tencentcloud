@@ -51,10 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - The time when the rule was last updated.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

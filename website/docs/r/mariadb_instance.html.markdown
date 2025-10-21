@@ -125,10 +125,6 @@ In addition to all arguments above, the following attributes are exported:
 * `wan_vipv6` - Internet IPv6.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

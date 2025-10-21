@@ -38,10 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 * `owner` - APPID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -305,10 +305,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Current statues of a launch configuration.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

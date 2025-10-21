@@ -41,10 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the backup storage location.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

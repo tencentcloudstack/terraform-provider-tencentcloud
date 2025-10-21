@@ -65,10 +65,6 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_time` - Group update time such as: 2019-06-20 15:51:28.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

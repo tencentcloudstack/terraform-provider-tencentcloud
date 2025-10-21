@@ -35,8 +35,4 @@ In addition to all arguments above, the following attributes are exported:
 * `monitor_types` - Monitoring type, cloud product monitoring is MT_ QCE.
 
 
-## Timeouts
-
-<no value>
-
 

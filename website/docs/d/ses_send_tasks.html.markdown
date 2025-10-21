@@ -59,8 +59,4 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Task update time.
 
 
-## Timeouts
-
-<no value>
-
 

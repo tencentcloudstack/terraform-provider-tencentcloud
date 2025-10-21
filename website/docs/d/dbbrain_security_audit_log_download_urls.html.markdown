@@ -45,8 +45,4 @@ In addition to all arguments above, the following attributes are exported:
 * `urls` - List of COS links to export results. When the result set is large, it may be divided into multiple urls for download.
 
 
-## Timeouts
-
-<no value>
-
 

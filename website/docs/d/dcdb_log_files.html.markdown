@@ -43,8 +43,4 @@ In addition to all arguments above, the following attributes are exported:
 * `vpc_prefix` - For an instance in a VPC, this prefix plus URI can be used as the download address.
 
 
-## Timeouts
-
-<no value>
-
 

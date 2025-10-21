@@ -32,8 +32,4 @@ In addition to all arguments above, the following attributes are exported:
   * `attribute_values` - Attribute values.
 
 
-## Timeouts
-
-<no value>
-
 

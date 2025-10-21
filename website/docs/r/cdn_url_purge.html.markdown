@@ -56,8 +56,4 @@ In addition to all arguments above, the following attributes are exported:
 * `task_id` - Task id of last operation.
 
 
-## Timeouts
-
-<no value>
-
 

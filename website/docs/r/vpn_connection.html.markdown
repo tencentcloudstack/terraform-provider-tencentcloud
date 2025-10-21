@@ -133,10 +133,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vpn_proto` - Vpn proto of the VPN connection.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

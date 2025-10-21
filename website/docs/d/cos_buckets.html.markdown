@@ -77,8 +77,4 @@ In addition to all arguments above, the following attributes are exported:
     * `index_document` - COS returns this index document when requests are made to the root domain or any of the subfolders.
 
 
-## Timeouts
-
-<no value>
-
 

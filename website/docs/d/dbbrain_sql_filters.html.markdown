@@ -59,8 +59,4 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - task status, optional value is RUNNING, FINISHED, TERMINATED.
 
 
-## Timeouts
-
-<no value>
-
 

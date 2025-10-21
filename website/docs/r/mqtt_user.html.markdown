@@ -40,10 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 * `modified_time` - Modify time, millisecond timestamp.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

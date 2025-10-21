@@ -75,8 +75,4 @@ In addition to all arguments above, the following attributes are exported:
   * `value` - Statistical value.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -39,8 +39,4 @@ In addition to all arguments above, the following attributes are exported:
   * `qps_extend_max` - Maximum qps of extend package.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -83,10 +83,6 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_at` - Update time Note: this field may return null, indicating that a valid value cannot be obtained.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

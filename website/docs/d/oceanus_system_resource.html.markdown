@@ -53,8 +53,4 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_type` - Resource type. 1 indicates JAR package, which is currently the only supported value.
 
 
-## Timeouts
-
-<no value>
-
 

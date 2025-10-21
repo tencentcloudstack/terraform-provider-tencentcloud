@@ -83,8 +83,4 @@ In addition to all arguments above, the following attributes are exported:
   * `not_support_modify_message` - Package change reason information is not supported. When the package status is changed to `AVAILABLE`, the information is empty.
 
 
-## Timeouts
-
-<no value>
-
 

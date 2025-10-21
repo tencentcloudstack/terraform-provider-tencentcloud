@@ -44,8 +44,4 @@ In addition to all arguments above, the following attributes are exported:
   * `plugin_type` - Plugin type.
 
 
-## Timeouts
-
-<no value>
-
 

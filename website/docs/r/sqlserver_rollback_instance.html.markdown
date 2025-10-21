@@ -47,10 +47,6 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - encryption, `enable` encrypted, `disable` unencrypted.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

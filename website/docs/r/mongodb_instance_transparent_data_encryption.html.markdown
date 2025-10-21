@@ -45,10 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 - open: It has been opened.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -58,10 +58,6 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_time` - Modification time.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

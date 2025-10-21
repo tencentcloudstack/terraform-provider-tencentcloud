@@ -32,8 +32,4 @@ In addition to all arguments above, the following attributes are exported:
 * `service_enabled` - True means the service has been activated, false means the service has not been activated yet.
 
 
-## Timeouts
-
-<no value>
-
 

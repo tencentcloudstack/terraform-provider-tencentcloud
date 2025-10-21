@@ -58,8 +58,4 @@ In addition to all arguments above, the following attributes are exported:
   * `working_directory` - Command execution path.
 
 
-## Timeouts
-
-<no value>
-
 

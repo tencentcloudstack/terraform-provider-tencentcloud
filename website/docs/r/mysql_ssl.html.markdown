@@ -47,10 +47,6 @@ In addition to all arguments above, the following attributes are exported:
 * `url` - The certificate download link. Example value: http://testdownload.url.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

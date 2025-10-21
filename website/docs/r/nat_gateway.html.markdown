@@ -133,10 +133,6 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Create time of the NAT gateway.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

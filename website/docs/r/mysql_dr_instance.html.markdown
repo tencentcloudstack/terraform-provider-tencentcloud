@@ -113,10 +113,6 @@ In addition to all arguments above, the following attributes are exported:
 * `intranet_ip` - instance intranet IP.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

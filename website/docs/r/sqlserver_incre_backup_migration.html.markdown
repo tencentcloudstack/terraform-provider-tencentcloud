@@ -39,10 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `incremental_migration_id` - Incremental import task ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

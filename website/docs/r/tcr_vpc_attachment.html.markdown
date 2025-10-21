@@ -68,10 +68,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the internal access.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -37,8 +37,4 @@ In addition to all arguments above, the following attributes are exported:
   * `relation_id` - Relationship Id.
 
 
-## Timeouts
-
-<no value>
-
 

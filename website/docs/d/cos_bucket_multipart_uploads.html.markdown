@@ -46,8 +46,4 @@ In addition to all arguments above, the following attributes are exported:
   * `upload_id` - Mark the ID of this multipart upload.
 
 
-## Timeouts
-
-<no value>
-
 

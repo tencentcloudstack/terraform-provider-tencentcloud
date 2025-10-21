@@ -47,8 +47,4 @@ In addition to all arguments above, the following attributes are exported:
   * `private_ip_address` - Origin `IP`.
 
 
-## Timeouts
-
-<no value>
-
 

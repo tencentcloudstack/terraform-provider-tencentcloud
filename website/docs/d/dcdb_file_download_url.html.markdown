@@ -37,8 +37,4 @@ In addition to all arguments above, the following attributes are exported:
 * `pre_signed_url` - Signed download URL.
 
 
-## Timeouts
-
-<no value>
-
 

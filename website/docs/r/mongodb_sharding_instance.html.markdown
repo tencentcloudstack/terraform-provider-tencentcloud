@@ -79,10 +79,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vport` - IP port of the Mongodb instance.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

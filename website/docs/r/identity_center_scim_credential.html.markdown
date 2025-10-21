@@ -38,10 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - SCIM key status, Enabled-On, Disabled-Closed.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -43,8 +43,4 @@ In addition to all arguments above, the following attributes are exported:
   * `pod_count` - Number of pods.
 
 
-## Timeouts
-
-<no value>
-
 

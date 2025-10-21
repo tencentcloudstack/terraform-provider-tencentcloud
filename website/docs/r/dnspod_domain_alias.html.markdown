@@ -35,10 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 * `domain_alias_id` - Domain alias ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

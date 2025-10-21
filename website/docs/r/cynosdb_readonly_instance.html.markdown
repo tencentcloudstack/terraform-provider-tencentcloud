@@ -59,10 +59,6 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

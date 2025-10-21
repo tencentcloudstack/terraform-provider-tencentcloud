@@ -57,8 +57,4 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Trigger type.
 
 
-## Timeouts
-
-<no value>
-
 

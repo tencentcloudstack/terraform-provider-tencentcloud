@@ -70,8 +70,4 @@ In addition to all arguments above, the following attributes are exported:
   * `support_regions` - Support regions of this policy view.
 
 
-## Timeouts
-
-<no value>
-
 

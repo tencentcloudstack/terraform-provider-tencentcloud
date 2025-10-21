@@ -36,8 +36,4 @@ In addition to all arguments above, the following attributes are exported:
   * `ip` - client connection ip.
 
 
-## Timeouts
-
-<no value>
-
 

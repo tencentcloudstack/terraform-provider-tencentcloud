@@ -321,10 +321,6 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - CVM instance ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

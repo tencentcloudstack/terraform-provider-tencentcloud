@@ -35,10 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 * `bandwidth` - Bandwidth of flow monitor.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -44,10 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 * `subnet_ids` - ID list of the subnets associated with this route table.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

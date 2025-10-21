@@ -49,8 +49,4 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - start Time.
 
 
-## Timeouts
-
-<no value>
-
 

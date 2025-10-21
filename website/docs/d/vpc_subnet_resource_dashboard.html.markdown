@@ -40,8 +40,4 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC instance ID, such as vpc-f1xjkw1b.
 
 
-## Timeouts
-
-<no value>
-
 

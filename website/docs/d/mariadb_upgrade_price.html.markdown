@@ -42,8 +42,4 @@ In addition to all arguments above, the following attributes are exported:
 * `price` - The actual price may be different from the original price due to discounts. * Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. * Currency: CNY (Chinese site), USD (international site).
 
 
-## Timeouts
-
-<no value>
-
 

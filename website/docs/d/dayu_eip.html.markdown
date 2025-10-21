@@ -36,8 +36,4 @@ In addition to all arguments above, the following attributes are exported:
 * `list` - A list of layer 4 rules. Each element contains the following attributes:
 
 
-## Timeouts
-
-<no value>
-
 

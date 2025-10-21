@@ -35,8 +35,4 @@ In addition to all arguments above, the following attributes are exported:
   * `switch_type` - Switch type, possible return values: TRANSFER - data migration; MASTER2SLAVE - master-standby switch; RECOVERY - master-slave recovery.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -116,10 +116,6 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - ID of the Function Rule.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

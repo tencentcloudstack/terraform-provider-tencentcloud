@@ -55,10 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 * `role_policy_type` - Role policy type.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

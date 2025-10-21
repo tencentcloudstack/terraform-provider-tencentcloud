@@ -61,8 +61,4 @@ In addition to all arguments above, the following attributes are exported:
   * `start_date` - Start time of the current statistical period.
 
 
-## Timeouts
-
-<no value>
-
 

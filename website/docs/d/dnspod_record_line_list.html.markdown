@@ -44,8 +44,4 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Line name.
 
 
-## Timeouts
-
-<no value>
-
 

@@ -50,8 +50,4 @@ In addition to all arguments above, the following attributes are exported:
   * `public_key` - public key of the key pair.
 
 
-## Timeouts
-
-<no value>
-
 

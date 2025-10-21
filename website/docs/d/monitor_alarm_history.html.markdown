@@ -98,8 +98,4 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc` - VPC of alarm object for basic product alarm.
 
 
-## Timeouts
-
-<no value>
-
 

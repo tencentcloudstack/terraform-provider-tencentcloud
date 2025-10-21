@@ -94,10 +94,6 @@ In addition to all arguments above, the following attributes are exported:
 * `key_state` - State of CMK.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

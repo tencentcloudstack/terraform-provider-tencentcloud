@@ -31,8 +31,4 @@ In addition to all arguments above, the following attributes are exported:
 * `image_num_quota` - The image quota of an account.
 
 
-## Timeouts
-
-<no value>
-
 

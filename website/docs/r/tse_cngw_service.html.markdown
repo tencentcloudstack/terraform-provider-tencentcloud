@@ -127,10 +127,6 @@ In addition to all arguments above, the following attributes are exported:
 * `service_id` - service id.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

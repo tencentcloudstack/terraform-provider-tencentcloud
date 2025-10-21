@@ -47,8 +47,4 @@ In addition to all arguments above, the following attributes are exported:
   * `parent_id` - Parent Id.
 
 
-## Timeouts
-
-<no value>
-
 

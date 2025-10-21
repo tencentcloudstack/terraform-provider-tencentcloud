@@ -98,10 +98,6 @@ In addition to all arguments above, the following attributes are exported:
 * `page_id` - Page ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

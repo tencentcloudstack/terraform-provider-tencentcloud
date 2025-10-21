@@ -150,8 +150,4 @@ In addition to all arguments above, the following attributes are exported:
 * `scan_from` - Request origin.
 
 
-## Timeouts
-
-<no value>
-
 

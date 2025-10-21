@@ -62,10 +62,6 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - event rule id.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

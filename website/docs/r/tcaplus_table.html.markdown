@@ -121,8 +121,4 @@ In addition to all arguments above, the following attributes are exported:
 * `table_size` - Size of the TcaplusDB table.
 
 
-## Timeouts
-
-<no value>
-
 

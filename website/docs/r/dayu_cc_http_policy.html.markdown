@@ -103,8 +103,4 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_id` - Id of the CC self-define http policy.
 
 
-## Timeouts
-
-<no value>
-
 

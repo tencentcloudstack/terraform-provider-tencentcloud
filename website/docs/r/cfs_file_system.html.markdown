@@ -99,10 +99,6 @@ In addition to all arguments above, the following attributes are exported:
 * `fs_id` - Mount root-directory.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

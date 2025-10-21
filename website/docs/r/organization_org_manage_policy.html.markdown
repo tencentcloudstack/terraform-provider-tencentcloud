@@ -43,10 +43,6 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_id` - Policy Id.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

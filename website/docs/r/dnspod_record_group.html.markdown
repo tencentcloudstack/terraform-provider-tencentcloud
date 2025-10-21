@@ -35,10 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 * `group_id` - Group ID.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

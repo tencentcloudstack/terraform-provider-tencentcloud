@@ -46,10 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - resource id.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

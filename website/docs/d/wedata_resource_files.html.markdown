@@ -41,8 +41,4 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - Retrieve the resource file list.
 
 
-## Timeouts
-
-<no value>
-
 

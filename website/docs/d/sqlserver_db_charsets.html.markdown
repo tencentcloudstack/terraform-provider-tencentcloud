@@ -33,8 +33,4 @@ In addition to all arguments above, the following attributes are exported:
 * `database_charsets` - Database character set list.
 
 
-## Timeouts
-
-<no value>
-
 

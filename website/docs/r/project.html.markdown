@@ -39,10 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `creator_uin` - Uin of creator.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

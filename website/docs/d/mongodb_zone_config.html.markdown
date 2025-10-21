@@ -44,8 +44,4 @@ In addition to all arguments above, the following attributes are exported:
   * `min_storage` - Minimum sie of the disk.
 
 
-## Timeouts
-
-<no value>
-
 

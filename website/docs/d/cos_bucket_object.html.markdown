@@ -42,8 +42,4 @@ In addition to all arguments above, the following attributes are exported:
 * `storage_class` - Object storage type such as STANDARD.
 
 
-## Timeouts
-
-<no value>
-
 

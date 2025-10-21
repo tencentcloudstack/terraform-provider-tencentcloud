@@ -43,8 +43,4 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Status of the reserved instance.
 
 
-## Timeouts
-
-<no value>
-
 

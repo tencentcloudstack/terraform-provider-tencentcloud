@@ -34,8 +34,4 @@ In addition to all arguments above, the following attributes are exported:
 * `is_upgrade` - Whether it can be updated.
 
 
-## Timeouts
-
-<no value>
-
 

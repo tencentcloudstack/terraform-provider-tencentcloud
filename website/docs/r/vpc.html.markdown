@@ -65,10 +65,6 @@ In addition to all arguments above, the following attributes are exported:
 * `is_default` - Indicates whether it is the default VPC for this region.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

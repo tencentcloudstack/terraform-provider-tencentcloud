@@ -242,10 +242,6 @@ In addition to all arguments above, the following attributes are exported:
 * `private_access_port` - Port for private access.
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

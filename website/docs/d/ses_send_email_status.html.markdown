@@ -49,8 +49,4 @@ In addition to all arguments above, the following attributes are exported:
   * `user_unsubscribed` - Whether the recipient has unsubscribed from the email sent by the sender.
 
 
-## Timeouts
-
-<no value>
-
 

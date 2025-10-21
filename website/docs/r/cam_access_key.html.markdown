@@ -64,10 +64,6 @@ In addition to all arguments above, the following attributes are exported:
 * `secret_access_key` - Access key (key is only visible when created, please keep it properly).
 
 
-## Timeouts
-
-<no value>
-
 
 ## Import
 

@@ -45,8 +45,4 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - ENABLE: routing is enabled, DISABLE: routing is disabled.
 
 
-## Timeouts
-
-<no value>
-
 
