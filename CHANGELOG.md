@@ -1,3 +1,19 @@
+## 1.82.31(October 21 , 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vpc_private_nat_gateway_translation_nat_rule` ([#3565](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3565))
+
+ENHANCEMENTS:
+
+* provider: optmize resources doc and support to show `timeouts` content ([#3563](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3563))
+* resource/tencentcloud_cynosdb_cluster: optmize code logic ([#3561](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3561))
+* resource/tencentcloud_gaap_layer7_listener: fix certificate_id was not updated successfully ([#3564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3564))
+* resource/tencentcloud_instance: support `stop_type` ([#3562](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3562))
+* resource/tencentcloud_kubernetes_health_check_policy: update params property ([#3559](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3559))
+* resource/tencentcloud_mysql_readonly_instance: optmize code logic ([#3560](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3560))
+* resource/tencentcloud_vpc_flow_log: update doc ([#3566](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3566))
+
 ## 1.82.30(October 17 , 2025)
 
 FEATURES:
