@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `user_ids` - Collection of IDs of users to be bound to working groups.
 
 
+
 ## Import
 
 DLC work group can be imported using the id, e.g.

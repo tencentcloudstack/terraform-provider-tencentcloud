@@ -55,6 +55,7 @@ In addition to all arguments above, the following attributes are exported:
 * `support_protocols` - Supported protocols of the GAAP proxy.
 
 
+
 ## Import
 
 GAAP proxy can be imported using the id, e.g.

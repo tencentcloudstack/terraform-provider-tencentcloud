@@ -38,6 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 vpc elastic_public_ipv6_attachment can be imported using the id, e.g.

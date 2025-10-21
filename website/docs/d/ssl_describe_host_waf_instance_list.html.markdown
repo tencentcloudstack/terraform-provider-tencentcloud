@@ -46,3 +46,4 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - -1: Unrelated certificate of domain name.1: The domain name HTTPS has been opened.0: The domain name HTTPS has been closed.
 
 
+

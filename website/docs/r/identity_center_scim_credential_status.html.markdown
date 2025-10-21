@@ -37,6 +37,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 organization identity_center_scim_credential_status can be imported using the id, e.g.

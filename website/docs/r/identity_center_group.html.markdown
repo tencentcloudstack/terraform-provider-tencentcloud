@@ -41,6 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Modification time for the user group.
 
 
+
 ## Import
 
 tencentcloud_identity_center_group can be imported using the id, e.g.

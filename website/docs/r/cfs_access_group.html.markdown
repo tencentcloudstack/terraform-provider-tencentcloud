@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the access group.
 
 
+
 ## Import
 
 CFS access group can be imported using the id, e.g.

@@ -53,6 +53,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 Ckafka Acl can be imported using the instance_id#permission_type#principal#host#operation_type#resource_type#resource_name, e.g.

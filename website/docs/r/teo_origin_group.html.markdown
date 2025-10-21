@@ -90,6 +90,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Origin site group update time.
 
 
+
 ## Import
 
 teo origin_group can be imported using the zone_id#originGroup_id, e.g.

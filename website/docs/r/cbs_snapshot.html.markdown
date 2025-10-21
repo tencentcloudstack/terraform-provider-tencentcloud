@@ -45,6 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 * `storage_size` - Volume of storage which this snapshot created from.
 
 
+
 ## Import
 
 CBS snapshot can be imported using the id, e.g.

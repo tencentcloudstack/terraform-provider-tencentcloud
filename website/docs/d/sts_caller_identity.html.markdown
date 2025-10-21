@@ -35,3 +35,4 @@ In addition to all arguments above, the following attributes are exported:
 * `user_id` - Identity:- When the caller is a cloud account, the current account `Uin` is returned.- When the caller is a role, it returns `roleId:roleSessionName`- When the caller is a federated identity, it returns `uin:federatedUserName`.
 
 
+

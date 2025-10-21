@@ -79,6 +79,7 @@ In addition to all arguments above, the following attributes are exported:
 * `subject_names` - ALL domains included in the SSL certificate. Including the primary domain name.
 
 
+
 ## Import
 
 ssl certificate can be imported using the id, e.g.

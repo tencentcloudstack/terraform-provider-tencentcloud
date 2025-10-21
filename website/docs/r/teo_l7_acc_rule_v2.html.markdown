@@ -491,6 +491,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_priority` - Rule priority. only used as an output parameter.
 
 
+
 ## Import
 
 TEO l7 acc rule v2 can be imported using the {zone_id}#{rule_id}, e.g.

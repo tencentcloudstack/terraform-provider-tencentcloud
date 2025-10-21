@@ -89,6 +89,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 apigateway api_app_attachment can be imported using the id, e.g.

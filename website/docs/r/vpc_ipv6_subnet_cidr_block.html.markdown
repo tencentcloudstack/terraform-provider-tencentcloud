@@ -62,6 +62,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 vpc ipv6_subnet_cidr_block can be imported using the id, e.g.

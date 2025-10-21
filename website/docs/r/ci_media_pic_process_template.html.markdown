@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 ci media_pic_process_template can be imported using the bucket#templateId, e.g.

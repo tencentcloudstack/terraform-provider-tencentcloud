@@ -37,3 +37,10 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `3m`) Used when creating the resource.
+
+

@@ -47,6 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 gaap custom_header can be imported using the id, e.g.

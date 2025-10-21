@@ -55,6 +55,7 @@ In addition to all arguments above, the following attributes are exported:
 * `modified_time` - Api app modified time.
 
 
+
 ## Import
 
 apigateway api_app can be imported using the id, e.g.

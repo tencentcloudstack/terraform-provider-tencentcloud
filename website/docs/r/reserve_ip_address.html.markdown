@@ -49,6 +49,7 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - Binding status.
 
 
+
 ## Import
 
 vpc reserve_ip_addresses can be imported using the id, e.g.

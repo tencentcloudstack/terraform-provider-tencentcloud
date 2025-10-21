@@ -90,6 +90,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status 0- Off 1- On.
 
 
+
 ## Import
 
 WAF log post ckafka flow can be imported using the id, e.g.

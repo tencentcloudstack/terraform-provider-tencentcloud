@@ -32,3 +32,4 @@ In addition to all arguments above, the following attributes are exported:
   * `subnet_num` - Number of Internet public network addresses.
 
 
+

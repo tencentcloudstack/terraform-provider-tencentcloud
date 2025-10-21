@@ -63,6 +63,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 SSM secret version can be imported using the secretName#versionId, e.g.

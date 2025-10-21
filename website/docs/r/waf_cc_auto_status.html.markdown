@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - cc auto status, 1(open), 0(close).
 
 
+
 ## Import
 
 waf cc_auto_status can be imported using the id, e.g.

@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time.
 
 
+
 ## Import
 
 VPN gateway route can be imported using the id, the id format must be '{vpn_gateway_id}#{route_id}', e.g.

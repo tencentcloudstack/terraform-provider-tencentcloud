@@ -59,6 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 
 
+
 ## Import
 
 CynosDB readonly instance can be imported using the id, e.g.

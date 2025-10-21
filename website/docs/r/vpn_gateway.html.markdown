@@ -139,6 +139,7 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the VPN gateway. Valid value: `PENDING`, `DELETING`, `AVAILABLE`.
 
 
+
 ## Import
 
 VPN gateway can be imported using the id, e.g.

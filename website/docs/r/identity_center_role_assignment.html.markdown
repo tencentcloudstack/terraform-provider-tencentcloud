@@ -53,6 +53,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time.
 
 
+
 ## Import
 
 organization identity_center_role_assignment can be imported using the id, e.g.

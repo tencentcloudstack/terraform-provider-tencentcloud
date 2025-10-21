@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `used_amount` - Used amount.
 
 
+
 ## Import
 
 vpc traffic_package can be imported using the id, e.g.

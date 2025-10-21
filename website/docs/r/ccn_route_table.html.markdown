@@ -74,6 +74,7 @@ In addition to all arguments above, the following attributes are exported:
 * `is_default_table` - True: default routing table False: non default routing table.
 
 
+
 ## Import
 
 Ccn instance can be imported, e.g.

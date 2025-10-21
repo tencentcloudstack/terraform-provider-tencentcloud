@@ -59,6 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 * `host_state` - State of the CDH instance.
 
 
+
 ## Import
 
 CDH instance can be imported using the id, e.g.

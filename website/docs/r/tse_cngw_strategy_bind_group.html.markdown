@@ -39,6 +39,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Binding status.
 
 
+
 ## Import
 
 tse cngw_strategy_bind_group can be imported using the id, e.g.

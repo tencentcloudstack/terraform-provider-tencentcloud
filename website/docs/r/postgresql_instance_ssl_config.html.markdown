@@ -50,6 +50,7 @@ In addition to all arguments above, the following attributes are exported:
 * `ca_url` - Cloud root certificate download link.
 
 
+
 ## Import
 
 postgres instance ssl config can be imported using the id, e.g.

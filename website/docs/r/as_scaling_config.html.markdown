@@ -305,6 +305,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Current statues of a launch configuration.
 
 
+
 ## Import
 
 AutoScaling Configuration can be imported using the id, e.g.

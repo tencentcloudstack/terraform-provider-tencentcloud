@@ -85,6 +85,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Last updated time of the SQL Server account.
 
 
+
 ## Import
 
 SQL Server account can be imported using the id, e.g.

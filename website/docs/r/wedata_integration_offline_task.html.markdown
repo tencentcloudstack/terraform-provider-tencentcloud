@@ -186,6 +186,7 @@ In addition to all arguments above, the following attributes are exported:
 * `task_id` - Task ID.
 
 
+
 ## Import
 
 wedata integration_offline_task can be imported using the id, e.g.

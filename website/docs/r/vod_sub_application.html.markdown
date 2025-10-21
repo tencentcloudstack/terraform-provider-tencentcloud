@@ -37,6 +37,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - The time when the sub application was created.
 
 
+
 ## Import
 
 VOD super player config can be imported using the name+, e.g.

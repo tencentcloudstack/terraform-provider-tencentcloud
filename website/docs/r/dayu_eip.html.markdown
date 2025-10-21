@@ -49,3 +49,4 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_region` - Region of the resource instance.
 
 
+

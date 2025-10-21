@@ -105,6 +105,7 @@ In addition to all arguments above, the following attributes are exported:
 * `tgw_wan_vport` - External port number.
 
 
+
 ## Import
 
 sqlserver general_cloud_instance can be imported using the id, e.g.

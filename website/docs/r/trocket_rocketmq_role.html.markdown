@@ -65,6 +65,7 @@ In addition to all arguments above, the following attributes are exported:
 * `secret_key` - Secret key.
 
 
+
 ## Import
 
 trocket rocketmq_role can be imported using the id, e.g.

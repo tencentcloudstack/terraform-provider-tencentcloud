@@ -38,3 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_type` - Resource type, where:Proxy represents the proxy,ProxyGroup represents a proxy group,RealServer represents the real server.
 
 
+

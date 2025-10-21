@@ -40,6 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 * `key` - Private key of certificate.
 
 
+
 ## Import
 
 tse cngw_certificate can be imported using the id, e.g.

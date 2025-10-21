@@ -146,6 +146,7 @@ In addition to all arguments above, the following attributes are exported:
 * `snat_id` - SNAT rule ID.
 
 
+
 ## Import
 
 VPN gateway route can be imported using the id, the id format must be '{nat_gateway_id}#{resource_id}', resource_id range `subnet_id`, `instance_id`, e.g.

@@ -47,6 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 API gateway attach access key can be imported using the id, e.g.

@@ -522,6 +522,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Acceleration service status.
 
 
+
 ## Import
 
 CDN domain can be imported using the id, e.g.

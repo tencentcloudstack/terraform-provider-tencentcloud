@@ -242,6 +242,7 @@ In addition to all arguments above, the following attributes are exported:
 * `private_access_port` - Port for private access.
 
 
+
 ## Import
 
 postgresql readonly instance can be imported using the id, e.g.

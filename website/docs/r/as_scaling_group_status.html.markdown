@@ -85,6 +85,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 as scaling_group_status can be imported using the id, e.g.

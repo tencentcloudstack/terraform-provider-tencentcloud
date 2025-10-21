@@ -113,6 +113,7 @@ In addition to all arguments above, the following attributes are exported:
 * `intranet_ip` - instance intranet IP.
 
 
+
 ## Import
 
 CDB dr(disaster recovery) instancecan be imported using the id, e.g.

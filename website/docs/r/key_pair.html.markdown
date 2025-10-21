@@ -50,6 +50,7 @@ In addition to all arguments above, the following attributes are exported:
 * `private_key` - Content of private key in a key pair. Tencent Cloud do not keep private keys. Please keep it properly.
 
 
+
 ## Import
 
 Key pair can be imported using the id, e.g.

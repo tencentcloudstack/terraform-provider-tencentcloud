@@ -173,3 +173,4 @@ In addition to all arguments above, the following attributes are exported:
 * `secret_type` - `0`: user-defined secret. `1`: Tencent Cloud services secret. `2`: SSH key secret. `3`: Tencent Cloud API key secret. Note: this field may return `null`, indicating that no valid values can be obtained.
 
 
+

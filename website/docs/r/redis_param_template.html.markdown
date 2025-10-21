@@ -77,6 +77,7 @@ In addition to all arguments above, the following attributes are exported:
   * `param_type` - Parameter type.
 
 
+
 ## Import
 
 redis param_template can be imported using the id, e.g.

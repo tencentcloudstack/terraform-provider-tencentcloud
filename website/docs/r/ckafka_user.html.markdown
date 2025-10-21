@@ -40,6 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - The last update time of the account.
 
 
+
 ## Import
 
 Ckafka user can be imported using the instance_id#account_name, e.g.

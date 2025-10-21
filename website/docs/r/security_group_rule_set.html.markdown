@@ -144,6 +144,7 @@ In addition to all arguments above, the following attributes are exported:
 * `version` - Security policies version, auto increment for every update.
 
 
+
 ## Import
 
 Resource tencentcloud_security_group_rule_set can be imported by passing security grou id:

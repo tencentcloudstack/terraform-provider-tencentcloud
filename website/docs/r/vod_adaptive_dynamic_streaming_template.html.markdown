@@ -120,6 +120,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Last modified time of template in ISO date format.
 
 
+
 ## Import
 
 VOD adaptive dynamic streaming template can be imported using the id($subAppId#$templateId), e.g.

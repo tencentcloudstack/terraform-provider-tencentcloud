@@ -59,6 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 * `active_scheduler` - Resource dispatchers currently in effect.
 
 
+
 ## Import
 
 emr emr_yarn can be imported using the id, e.g.
