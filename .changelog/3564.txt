@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_gaap_layer7_listener: fix certificate_id was not updated successfully
+```
