@@ -1,6 +1,6 @@
 Provides a resource to create a VPC private nat gateway translation nat rule
 
-~> **NOTE:** 
+~> **NOTE:** This resource must exclusive in one share unit, do not declare additional translation nat rules resources of this nat gateway elsewhere.
 
 Example Usage
 

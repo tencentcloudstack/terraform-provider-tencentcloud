@@ -11,7 +11,7 @@ description: |-
 
 Provides a resource to create a Organization share unit member
 
-~> **NOTE:** ~> **NOTE:** This resource must exclusive in one share unit, do not declare additional members resources of this share unit elsewhere.
+~> **NOTE:** This resource must exclusive in one share unit, do not declare additional members resources of this share unit elsewhere.
 
 ## Example Usage
 
