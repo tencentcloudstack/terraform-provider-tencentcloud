@@ -453,6 +453,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"db_mode": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.",
 		},
 		"min_cpu": {
