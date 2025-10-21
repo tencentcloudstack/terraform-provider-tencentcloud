@@ -119,7 +119,7 @@ The following arguments are supported:
 
 * `flow_log_name` - (Required, String) Specify flow log name.
 * `resource_id` - (Required, String) Specify resource unique Id of `resource_type` configured.
-* `resource_type` - (Required, String) Specify resource type. NOTE: Only support `NETWORKINTERFACE` for now. Values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, `DCG`.
+* `resource_type` - (Required, String) The type of resource associated with the flow log. Valid values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, and `DCG`.
 * `traffic_type` - (Required, String) Specify log traffic type, values: `ACCEPT`, `REJECT`, `ALL`.
 * `cloud_log_id` - (Optional, String) Specify flow log storage id, just set cls topic id.
 * `cloud_log_region` - (Optional, String) Specify flow log storage region, default using current.

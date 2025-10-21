@@ -35,7 +35,7 @@ func ResourceTencentCloudVpcFlowLog() *schema.Resource {
 			"resource_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Specify resource type. NOTE: Only support `NETWORKINTERFACE` for now. Values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, `DCG`.",
+				Description: "The type of resource associated with the flow log. Valid values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, and `DCG`.",
 			},
 			"resource_id": {
 				Required:    true,
