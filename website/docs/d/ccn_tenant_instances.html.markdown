@@ -30,4 +30,3 @@ The following arguments are supported:
 * `user_account_id` - (Optional, Set: [`String`]) filter by ccn ids, like: ['12345678'].
 
 
-

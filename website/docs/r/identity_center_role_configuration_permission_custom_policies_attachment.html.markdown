@@ -80,7 +80,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 organization tencentcloud_identity_center_role_configuration_permission_custom_policies_attachment can be imported using the id, e.g.

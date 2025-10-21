@@ -43,7 +43,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 mariadb account can be imported using the instance_id#user_name#host, e.g.

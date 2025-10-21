@@ -75,7 +75,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - update time.
 
 
-
 ## Import
 
 ci media_snapshot_template can be imported using the bucket#templateId, e.g.

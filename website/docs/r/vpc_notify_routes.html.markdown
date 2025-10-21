@@ -45,7 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 * `published_to_vbc` - If published to vbc.
 
 
-
 ## Import
 
 vpc notify_routes can be imported using the id, e.g.

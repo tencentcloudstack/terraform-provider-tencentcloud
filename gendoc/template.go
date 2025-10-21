@@ -30,11 +30,6 @@ In addition to all arguments above, the following attributes are exported:
 
 {{.attributes}}
 {{end}}
-{{if and .timeouts (ne .timeouts "")}}
-## Timeouts
-
-{{.timeouts}}
-{{end}}
 {{if ne .import ""}}
 ## Import
 

@@ -42,4 +42,3 @@ In addition to all arguments above, the following attributes are exported:
 * `reason` - Reason of addon failed.
 
 
-

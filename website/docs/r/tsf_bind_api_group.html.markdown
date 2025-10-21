@@ -35,7 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 tsf bind_api_group can be imported using the id, e.g.

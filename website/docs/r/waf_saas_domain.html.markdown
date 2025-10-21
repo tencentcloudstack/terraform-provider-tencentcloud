@@ -229,7 +229,6 @@ In addition to all arguments above, the following attributes are exported:
 * `domain_id` - Domain id.
 
 
-
 ## Import
 
 waf saas_domain can be imported using the id, e.g.

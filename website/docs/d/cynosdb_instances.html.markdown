@@ -45,4 +45,3 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_type` - Instance type. `ro` for readonly instance, `rw` for read and write instance.
 
 
-

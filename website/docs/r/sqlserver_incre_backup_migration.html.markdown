@@ -39,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `incremental_migration_id` - Incremental import task ID.
 
 
-
 ## Import
 
 sqlserver incre_backup_migration can be imported using the id, e.g.

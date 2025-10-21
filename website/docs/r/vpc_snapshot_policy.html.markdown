@@ -69,7 +69,6 @@ In addition to all arguments above, the following attributes are exported:
 * `snapshot_policy_id` - Snapshot policy Id.
 
 
-
 ## Import
 
 vpc snapshot_policy can be imported using the id, e.g.

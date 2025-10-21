@@ -60,4 +60,3 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Resource package status creating - creating; Using - In use; Expired - has expired; Normal_ Finish - used up; Apply_ Refund - Applying for a refund; Refund - The fee has been refunded. Note: This field may return null, indicating that a valid value cannot be obtained.
 
 
-

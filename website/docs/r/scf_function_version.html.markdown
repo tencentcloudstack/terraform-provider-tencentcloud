@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 * `function_version` - Version of the released function.
 
 
-
 ## Import
 
 scf function_version can be imported using the id, e.g.

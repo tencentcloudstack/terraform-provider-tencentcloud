@@ -145,7 +145,6 @@ In addition to all arguments above, the following attributes are exported:
 * `public_addresses` - Public addresses.
 
 
-
 ## Import
 
 lighthouse instance can be imported using the id, e.g.

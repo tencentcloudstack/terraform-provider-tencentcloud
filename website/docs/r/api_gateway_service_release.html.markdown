@@ -80,7 +80,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 API gateway service release can be imported using the id, e.g.

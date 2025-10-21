@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 mariadb backup_time can be imported using the id, e.g.

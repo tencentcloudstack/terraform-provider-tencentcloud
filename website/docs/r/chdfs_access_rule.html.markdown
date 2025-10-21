@@ -46,7 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 chdfs access_rule can be imported using the id, e.g.

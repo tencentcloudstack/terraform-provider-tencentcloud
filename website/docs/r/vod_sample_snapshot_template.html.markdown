@@ -57,7 +57,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 vod snapshot template can be imported using the id($subAppId#$templateId), e.g.

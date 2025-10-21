@@ -79,7 +79,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 tdmq rabbitmq_user can be imported using the id, e.g.

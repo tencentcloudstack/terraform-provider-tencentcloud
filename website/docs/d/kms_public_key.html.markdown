@@ -42,4 +42,3 @@ In addition to all arguments above, the following attributes are exported:
 * `public_key` - Base64-encoded public key content.
 
 
-

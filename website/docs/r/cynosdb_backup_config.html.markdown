@@ -76,7 +76,6 @@ In addition to all arguments above, the following attributes are exported:
 * `backup_type` - Backup mode. logic: logic backup; snapshot: snapshot backup. This parameter cannot be modified currently and doesn't need to be entered.
 
 
-
 ## Import
 
 cynosdb backup_config can be imported using the id, e.g.

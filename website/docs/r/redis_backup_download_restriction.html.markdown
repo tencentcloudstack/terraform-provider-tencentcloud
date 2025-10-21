@@ -51,7 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 redis backup download restriction can be imported using the region, e.g.

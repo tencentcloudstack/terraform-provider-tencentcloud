@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 * `download_url` - Certificate download address.
 
 
-
 ## Import
 
 cynosdb ssl can be imported using the id, e.g.

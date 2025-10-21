@@ -43,4 +43,3 @@ In addition to all arguments above, the following attributes are exported:
   * `task_status` - Task status, including the following status: initial, running, wait_complete, success, failed.
 
 
-

@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - SCIM key status, Enabled-On, Disabled-Closed.
 
 
-
 ## Import
 
 organization identity_center_scim_credential can be imported using the id, e.g.

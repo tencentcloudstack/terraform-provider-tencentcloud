@@ -39,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 antiddos ip_alarm_threshold_config can be imported using the id, e.g.

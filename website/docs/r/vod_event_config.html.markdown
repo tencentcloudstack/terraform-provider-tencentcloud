@@ -49,7 +49,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 VOD event config can be imported using the subAppId, e.g.

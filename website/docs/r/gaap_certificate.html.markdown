@@ -42,7 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 * `subject_cn` - Subject name of the certificate.
 
 
-
 ## Import
 
 GAAP certificate can be imported using the id, e.g.

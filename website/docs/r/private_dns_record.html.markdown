@@ -72,7 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 Private Dns Record can be imported, e.g.

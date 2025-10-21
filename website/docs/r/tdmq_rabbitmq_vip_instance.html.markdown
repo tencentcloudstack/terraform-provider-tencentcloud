@@ -94,7 +94,6 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC ID.
 
 
-
 ## Import
 
 TDMQ rabbitmq vip instance can be imported using the id, e.g.

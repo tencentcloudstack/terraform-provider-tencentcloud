@@ -59,7 +59,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 tem application_service can be imported using the environmentId#applicationId#serviceName, e.g.

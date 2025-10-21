@@ -40,4 +40,3 @@ In addition to all arguments above, the following attributes are exported:
 * `start_time` - The timestamp of the moment when the temporary access credential was obtained (in seconds).
 
 
-

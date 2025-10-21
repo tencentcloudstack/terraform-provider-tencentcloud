@@ -55,4 +55,3 @@ In addition to all arguments above, the following attributes are exported:
   * `is_waf_domain` - Whether access to waf or not.
 
 
-

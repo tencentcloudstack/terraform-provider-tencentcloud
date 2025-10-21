@@ -53,7 +53,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 cynosdb cluster_databases can be imported using the id, e.g.

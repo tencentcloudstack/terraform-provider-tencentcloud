@@ -57,7 +57,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 CAM role permission boundary attachment can be imported using the id, e.g.

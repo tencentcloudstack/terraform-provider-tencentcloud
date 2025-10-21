@@ -43,4 +43,3 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - he availability zone ID of the node, such as ap-guangzhou-1.
 
 
-

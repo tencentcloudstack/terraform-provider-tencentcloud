@@ -55,4 +55,3 @@ In addition to all arguments above, the following attributes are exported:
   * `total_size` - the total size of log.
 
 
-

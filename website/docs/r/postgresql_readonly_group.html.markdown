@@ -107,7 +107,6 @@ In addition to all arguments above, the following attributes are exported:
   * `port` - Port of the net info.
 
 
-
 ## Import
 
 postgresql readonly group can be imported, e.g.

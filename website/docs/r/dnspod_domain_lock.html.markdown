@@ -35,4 +35,3 @@ In addition to all arguments above, the following attributes are exported:
 * `lock_code` - Domain unlock code, can be obtained through the ModifyDomainLock interface.
 
 
-

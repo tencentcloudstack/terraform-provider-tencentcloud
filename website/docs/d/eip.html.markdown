@@ -48,4 +48,3 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The status of the EIP, there are several status like `BIND`, `UNBIND`, and `BIND_ENI`.
 
 
-

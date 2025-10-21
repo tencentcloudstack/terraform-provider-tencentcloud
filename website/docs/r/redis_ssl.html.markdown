@@ -86,7 +86,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 redis ssl can be imported using the instanceId, e.g.

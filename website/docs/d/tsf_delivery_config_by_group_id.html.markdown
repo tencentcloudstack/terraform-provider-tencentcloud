@@ -35,4 +35,3 @@ In addition to all arguments above, the following attributes are exported:
   * `config_name` - Config Name. Note: This field may return null, which means that no valid value was obtained.
 
 
-

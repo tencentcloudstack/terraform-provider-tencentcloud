@@ -35,7 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 mariadb log_file_retention_period can be imported using the id, e.g.

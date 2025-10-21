@@ -73,4 +73,3 @@ In addition to all arguments above, the following attributes are exported:
   * `sql_text` - SQL with parameters (random).
 
 
-

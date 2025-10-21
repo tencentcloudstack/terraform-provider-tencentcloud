@@ -40,4 +40,3 @@ In addition to all arguments above, the following attributes are exported:
     * `suit_info` - recommended usage scenarios.
 
 
-

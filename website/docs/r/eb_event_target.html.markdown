@@ -157,7 +157,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 eb event_target can be imported using the id, e.g.

@@ -45,7 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 clickhouse xml_config can be imported using the id, e.g.

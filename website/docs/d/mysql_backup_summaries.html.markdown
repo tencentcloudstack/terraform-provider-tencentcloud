@@ -47,4 +47,3 @@ In addition to all arguments above, the following attributes are exported:
   * `manual_backup_volume` - The capacity of manual data backup for this instance.
 
 
-

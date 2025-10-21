@@ -249,7 +249,6 @@ In addition to all arguments above, the following attributes are exported:
 * `listener_id` - ID of this CLB listener.
 
 
-
 ## Import
 
 CLB listener can be imported using the id (version >= 1.47.0), e.g.

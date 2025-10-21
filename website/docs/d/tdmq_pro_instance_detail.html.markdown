@@ -58,4 +58,3 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - The id of the vpc, the supporting network and the access point of the public network, this field is emptyNote: This field may return null, indicating that no valid value can be obtained.
 
 
-

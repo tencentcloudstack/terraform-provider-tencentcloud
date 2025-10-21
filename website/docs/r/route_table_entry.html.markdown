@@ -75,7 +75,6 @@ In addition to all arguments above, the following attributes are exported:
 * `route_item_id` - ID of route table entry.
 
 
-
 ## Import
 
 Route table entry can be imported using the id, e.g.

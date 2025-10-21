@@ -34,4 +34,3 @@ In addition to all arguments above, the following attributes are exported:
 * `used` - The used cluster spec.
 
 
-

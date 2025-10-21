@@ -35,7 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 HA VIP EIP attachment can be imported using the id, e.g.

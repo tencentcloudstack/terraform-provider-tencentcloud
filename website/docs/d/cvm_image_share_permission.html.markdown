@@ -35,4 +35,3 @@ In addition to all arguments above, the following attributes are exported:
   * `created_time` - Time when an image was shared.
 
 
-

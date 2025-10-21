@@ -111,7 +111,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 sqlserver config_instance_ro_group can be imported using the id, e.g.

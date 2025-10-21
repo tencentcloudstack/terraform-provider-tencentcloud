@@ -271,7 +271,6 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_at` - Scene modification time.
 
 
-
 ## Import
 
 pts scenario can be imported using the id, e.g.

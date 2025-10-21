@@ -34,4 +34,3 @@ In addition to all arguments above, the following attributes are exported:
 * `health_check_remote_ip` - remote ip for health check.
 
 
-

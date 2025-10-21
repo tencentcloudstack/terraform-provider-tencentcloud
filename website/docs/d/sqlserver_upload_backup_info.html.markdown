@@ -42,4 +42,3 @@ In addition to all arguments above, the following attributes are exported:
 * `x_cos_security_token` - Temporary key (Token).
 
 
-

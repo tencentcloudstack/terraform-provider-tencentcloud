@@ -35,7 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 antiddos scheduling_domain_user_name can be imported using the id, e.g.

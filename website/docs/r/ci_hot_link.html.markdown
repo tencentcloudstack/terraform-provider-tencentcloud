@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 ci hot_link can be imported using the bucket, e.g.

@@ -238,7 +238,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 vpc net_detect can be imported using the id, e.g.

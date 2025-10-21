@@ -67,7 +67,6 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_type` - Type of the policy strategy. `User` means customer strategy and `QCS` means preset strategy.
 
 
-
 ## Import
 
 CAM user policy attachment can be imported using the id, e.g.

@@ -101,4 +101,3 @@ In addition to all arguments above, the following attributes are exported:
 * `strategy` - Backup strategy, 0-instance backup; 1-multi-database backup; when the instance status is 0-creating, this field is the default value 0, meaningless.
 
 
-

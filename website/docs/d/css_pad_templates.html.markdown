@@ -40,4 +40,3 @@ In addition to all arguments above, the following attributes are exported:
   * `wait_duration` - Stream interruption waiting time.Value range: 0-30000.Unit: milliseconds.
 
 
-

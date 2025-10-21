@@ -56,4 +56,3 @@ In addition to all arguments above, the following attributes are exported:
 * `retention_size` - Consumed message storage strategy, unit G, 0 Delete immediately after consumption.
 
 
-

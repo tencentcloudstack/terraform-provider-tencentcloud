@@ -45,7 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 antiddos ddos_geo_ip_block_config can be imported using the id, e.g.

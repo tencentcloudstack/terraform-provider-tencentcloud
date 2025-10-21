@@ -53,4 +53,3 @@ In addition to all arguments above, the following attributes are exported:
   * `unclean_leader_election_enable` - Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.
 
 
-

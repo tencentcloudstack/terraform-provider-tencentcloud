@@ -47,7 +47,6 @@ In addition to all arguments above, the following attributes are exported:
 * `group_resource_type` - Deployment Group Resource Type.
 
 
-
 ## Import
 
 tsf group can be imported using the id, e.g.

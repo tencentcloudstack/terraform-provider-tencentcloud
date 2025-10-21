@@ -54,4 +54,3 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC ID of the TcaplusDB cluster.
 
 
-

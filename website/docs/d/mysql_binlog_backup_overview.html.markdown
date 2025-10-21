@@ -40,4 +40,3 @@ In addition to all arguments above, the following attributes are exported:
 * `remote_binlog_volume` - Remote log backup capacity (in bytes).
 
 
-

@@ -45,4 +45,3 @@ In addition to all arguments above, the following attributes are exported:
     * `traffic_used` - Traffic has been used during the effective period of the traffic packet, in bytes.
 
 
-

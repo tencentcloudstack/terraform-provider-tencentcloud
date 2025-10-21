@@ -46,7 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - resource id.
 
 
-
 ## Import
 
 cwp license_order can be imported using the id, e.g.

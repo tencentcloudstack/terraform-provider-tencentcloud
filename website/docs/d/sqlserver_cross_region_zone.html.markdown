@@ -34,4 +34,3 @@ In addition to all arguments above, the following attributes are exported:
 * `zone` - The string ID of the availability zone where the standby machine is located, such as: ap-guangzhou-1.
 
 
-

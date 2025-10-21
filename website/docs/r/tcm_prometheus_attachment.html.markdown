@@ -68,7 +68,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 tcm prometheus_attachment can be imported using the mesh_id, e.g.

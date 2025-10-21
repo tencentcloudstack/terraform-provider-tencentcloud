@@ -64,7 +64,6 @@ In addition to all arguments above, the following attributes are exported:
 * `script_id` - Script ID.
 
 
-
 ## Import
 
 WeData sql script can be imported using the projectId#scriptId, e.g.

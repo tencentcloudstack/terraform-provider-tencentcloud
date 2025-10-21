@@ -127,7 +127,6 @@ In addition to all arguments above, the following attributes are exported:
 * `service_id` - service id.
 
 
-
 ## Import
 
 tse cngw_service can be imported using the id, e.g.

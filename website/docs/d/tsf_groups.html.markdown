@@ -69,4 +69,3 @@ In addition to all arguments above, the following attributes are exported:
   * `total_count` - Total count virtual machine deployment group. Note: This field may return null, indicating that no valid value was found.
 
 
-

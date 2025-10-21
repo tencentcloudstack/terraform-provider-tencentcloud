@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 vpc ha_vip_instance_attachment can be imported using the id(${haVipId}#${instanceType}#${instanceId}), e.g.

@@ -56,7 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 waf anti_info_leak can be imported using the id, e.g.

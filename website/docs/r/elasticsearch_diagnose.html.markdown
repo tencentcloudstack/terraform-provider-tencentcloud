@@ -39,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `max_count` - The maximum number of manual triggers per day for intelligent operation and maintenance staff.
 
 
-
 ## Import
 
 es diagnose can be imported using the id, e.g.

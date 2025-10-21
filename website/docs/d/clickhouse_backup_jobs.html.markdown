@@ -42,4 +42,3 @@ In addition to all arguments above, the following attributes are exported:
   * `snapshot` - Back up job name.
 
 
-

@@ -59,4 +59,3 @@ In addition to all arguments above, the following attributes are exported:
   * `user_id` - ID of CAM user. Its value equals to `name` argument.
 
 
-

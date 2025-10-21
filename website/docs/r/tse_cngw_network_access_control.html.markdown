@@ -48,7 +48,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 tse cngw_route_rate_limit can be imported using the id, e.g.

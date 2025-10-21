@@ -48,4 +48,3 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Event record status. Valid values: 1 (succeeded), 2 (failed).
 
 
-

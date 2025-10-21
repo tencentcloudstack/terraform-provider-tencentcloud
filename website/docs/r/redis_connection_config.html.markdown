@@ -71,7 +71,6 @@ In addition to all arguments above, the following attributes are exported:
 * `total_bandwidth` - Total bandwidth of the instance = additional bandwidth * number of shards + standard bandwidth * number of shards * (number of primary nodes + number of read-only replica nodes), the number of shards of the standard architecture = 1, in Mb/s.
 
 
-
 ## Import
 
 redis connection config can be imported, e.g.

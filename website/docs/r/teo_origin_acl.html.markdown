@@ -55,15 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Timeouts
-
-The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
-
-* `create` - (Defaults to `30m`) Used when creating the resource.
-* `update` - (Defaults to `30m`) Used when updating the resource.
-* `delete` - (Defaults to `30m`) Used when deleting the resource.
-
-
 ## Import
 
 TEO origin acl can be imported using the zone_id, e.g.

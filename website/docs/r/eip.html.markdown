@@ -81,7 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The EIP current status.
 
 
-
 ## Import
 
 EIP can be imported using the id, e.g.

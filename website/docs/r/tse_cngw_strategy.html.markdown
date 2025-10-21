@@ -170,7 +170,6 @@ In addition to all arguments above, the following attributes are exported:
 Note: This field may return null, indicating that a valid value is not available.
 
 
-
 ## Import
 
 tse cngw_strategy can be imported using the id, e.g.

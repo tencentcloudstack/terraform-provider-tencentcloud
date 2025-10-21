@@ -55,7 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 * `role_policy_type` - Role policy type.
 
 
-
 ## Import
 
 organization identity_center_role_configuration_permission_custom_policy_attachment can be imported using the id, e.g.

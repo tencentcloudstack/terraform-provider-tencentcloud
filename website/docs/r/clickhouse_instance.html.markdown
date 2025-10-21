@@ -176,7 +176,6 @@ In addition to all arguments above, the following attributes are exported:
 * `expire_time` - Expire time.
 
 
-
 ## Import
 
 Clickhouse instance can be imported using the id, e.g.

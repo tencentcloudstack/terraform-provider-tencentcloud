@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 organization identity_center_user_group_attachment can be imported using the id, e.g.

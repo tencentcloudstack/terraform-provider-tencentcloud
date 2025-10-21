@@ -42,7 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the RI at the time of purchase.
 
 
-
 ## Import
 
 Reserved instance can be imported using the id, e.g.

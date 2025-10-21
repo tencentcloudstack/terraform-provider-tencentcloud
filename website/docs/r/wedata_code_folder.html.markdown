@@ -40,7 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Type. folder, script.
 
 
-
 ## Import
 
 WeData code folder can be imported using the projectId#folderId, e.g.

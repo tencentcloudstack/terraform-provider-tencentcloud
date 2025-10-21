@@ -48,4 +48,3 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Type, divided into two categories: live and vod.Note: This field may return null, indicating that no valid value is available.
 
 
-

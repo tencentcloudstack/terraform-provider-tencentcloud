@@ -35,7 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 dcdb security_group_attachment can be imported using the id, e.g.

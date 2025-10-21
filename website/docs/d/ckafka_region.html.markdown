@@ -39,4 +39,3 @@ In addition to all arguments above, the following attributes are exported:
   * `support` - NONE: The default value does not support any special models CVM: Supports CVM types.
 
 
-

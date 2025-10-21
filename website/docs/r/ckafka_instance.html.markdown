@@ -187,7 +187,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vport` - Type of instance.
 
 
-
 ## Import
 
 CKafka instance can be imported using the instanceId, e.g.

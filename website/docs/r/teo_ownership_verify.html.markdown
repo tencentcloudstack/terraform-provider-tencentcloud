@@ -34,4 +34,3 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Ownership verification results. `success`: verification successful; `fail`: verification failed.
 
 
-

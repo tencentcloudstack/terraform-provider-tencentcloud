@@ -135,4 +135,3 @@ In addition to all arguments above, the following attributes are exported:
     * `value` - The value of the note.
 
 
-

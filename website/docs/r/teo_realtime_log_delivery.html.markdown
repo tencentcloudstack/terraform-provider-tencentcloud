@@ -143,7 +143,6 @@ In addition to all arguments above, the following attributes are exported:
 * `task_id` - Real-time log delivery task ID.
 
 
-
 ## Import
 
 teo teo_realtime_log_delivery can be imported using the id, e.g.

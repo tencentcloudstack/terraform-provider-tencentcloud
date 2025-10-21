@@ -142,7 +142,6 @@ In addition to all arguments above, the following attributes are exported:
 * `cdc_id` - ID of the dedicated cluster.
 
 
-
 ## Import
 
 Eip association can be imported using the id, e.g.

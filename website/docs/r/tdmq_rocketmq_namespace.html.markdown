@@ -45,7 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vpc_endpoint` - VPC access point address.
 
 
-
 ## Import
 
 tdmqRocketmq namespace can be imported using the id, e.g.

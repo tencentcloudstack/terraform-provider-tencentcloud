@@ -84,7 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vport` - Port for private access.
 
 
-
 ## Import
 
 SQL Server instance can be imported using the id, e.g.

@@ -48,7 +48,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 cynosdb cluster_password_complexity can be imported using the id, e.g.

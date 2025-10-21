@@ -62,7 +62,6 @@ In addition to all arguments above, the following attributes are exported:
 * `segment_bytes` - Number of bytes rolled by shard.
 
 
-
 ## Import
 
 ckafka topic can be imported using the instance_id#topic_name, e.g.

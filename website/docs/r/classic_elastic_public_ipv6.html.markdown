@@ -41,7 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 vpc classic_elastic_public_ipv6 can be imported using the id, e.g.

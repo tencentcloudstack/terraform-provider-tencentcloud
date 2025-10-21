@@ -296,7 +296,6 @@ In addition to all arguments above, the following attributes are exported:
 * `storage_used` - Used storage of CynosDB cluster, unit in MB.
 
 
-
 ## Import
 
 CynosDB cluster can be imported using the id, e.g.

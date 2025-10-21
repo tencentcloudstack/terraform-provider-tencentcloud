@@ -45,7 +45,6 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - Vpc ID.
 
 
-
 ## Import
 
 tdmqRocketmq cluster can be imported using the id, e.g.

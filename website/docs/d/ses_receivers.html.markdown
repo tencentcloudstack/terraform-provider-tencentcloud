@@ -41,4 +41,3 @@ In addition to all arguments above, the following attributes are exported:
   * `receivers_status` - Group status (`1`: to be uploaded; `2` uploading; `3` uploaded)Note: This field may return `null`, indicating that no valid value can be found.
 
 
-
