@@ -56,7 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 * `uuid` - The unique id corresponding to the rule.
 
 
-
 ## Import
 
 cfw vpc_policy can be imported using the id, e.g.

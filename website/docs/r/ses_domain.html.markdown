@@ -36,7 +36,6 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Record Type CNAME | A | TXT | MX.
 
 
-
 ## Import
 
 ses domain can be imported using the id, e.g.

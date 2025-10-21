@@ -75,7 +75,6 @@ In addition to all arguments above, the following attributes are exported:
 * `is_default` - Indicates whether it is the default VPC for this region.
 
 
-
 ## Import
 
 Vpc subnet instance can be imported, e.g.

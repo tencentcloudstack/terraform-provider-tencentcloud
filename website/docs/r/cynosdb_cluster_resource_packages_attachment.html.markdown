@@ -35,7 +35,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 cynosdb cluster_resource_packages_attachment can be imported using the id, e.g.

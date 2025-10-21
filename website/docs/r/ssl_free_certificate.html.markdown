@@ -72,7 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vulnerability_status` - Vulnerability status.
 
 
-
 ## Import
 
 FreeCertificate instance can be imported, e.g.

@@ -37,4 +37,3 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - The state of the region, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.
 
 
-

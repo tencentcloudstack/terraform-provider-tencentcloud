@@ -111,4 +111,3 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - Zone where the node is located.
 
 
-

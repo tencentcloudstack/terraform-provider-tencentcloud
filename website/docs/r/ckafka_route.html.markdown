@@ -55,7 +55,6 @@ In addition to all arguments above, the following attributes are exported:
   * `vport` - Virtual port.
 
 
-
 ## Import
 
 ckafka route can be imported using the id, e.g.

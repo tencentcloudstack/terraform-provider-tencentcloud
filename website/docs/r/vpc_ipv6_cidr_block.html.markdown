@@ -52,7 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 * `ipv6_cidr_block` - Ipv6 cidr block.
 
 
-
 ## Import
 
 vpc ipv6_cidr_block can be imported using the id, e.g.

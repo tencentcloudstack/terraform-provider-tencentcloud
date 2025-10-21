@@ -45,4 +45,3 @@ In addition to all arguments above, the following attributes are exported:
 * `total` - Number of values in the curve graph.
 
 
-

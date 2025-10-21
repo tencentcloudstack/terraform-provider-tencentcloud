@@ -87,7 +87,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 redis read_only can be imported using the instanceId, e.g.

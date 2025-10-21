@@ -92,4 +92,3 @@ In addition to all arguments above, the following attributes are exported:
   * `vip_start_at` - Paid package activation time.
 
 
-

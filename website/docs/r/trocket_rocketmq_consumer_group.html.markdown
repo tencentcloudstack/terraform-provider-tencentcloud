@@ -81,7 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 TROCKET rocketmq consumer group can be imported using the id, e.g.

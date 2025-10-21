@@ -108,7 +108,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 gwlb gwlb_target_group_register_instances can be imported using the id, e.g.

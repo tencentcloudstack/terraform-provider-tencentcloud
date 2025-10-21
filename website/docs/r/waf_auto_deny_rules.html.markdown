@@ -39,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 waf auto_deny_rules can be imported using the id, e.g.

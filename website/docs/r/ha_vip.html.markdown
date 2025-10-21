@@ -44,7 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the HA VIP. Valid value: `AVAILABLE`, `UNBIND`.
 
 
-
 ## Import
 
 HA VIP can be imported using the id, e.g.

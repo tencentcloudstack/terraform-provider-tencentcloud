@@ -66,7 +66,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 redis maintenance window can be imported using the id, e.g.

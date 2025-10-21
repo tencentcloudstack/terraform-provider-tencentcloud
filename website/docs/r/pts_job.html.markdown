@@ -67,7 +67,6 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Scene Type.
 
 
-
 ## Import
 
 pts job can be imported using the projectId#scenarioId#jobId, e.g.

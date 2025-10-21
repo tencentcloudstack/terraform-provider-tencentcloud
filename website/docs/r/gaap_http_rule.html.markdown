@@ -103,7 +103,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 GAAP http rule can be imported using the id, e.g.

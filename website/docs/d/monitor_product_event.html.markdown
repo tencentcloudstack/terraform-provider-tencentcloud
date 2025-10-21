@@ -78,4 +78,3 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - The update timestamp of this event.
 
 
-

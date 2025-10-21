@@ -133,7 +133,6 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Create time of the NAT gateway.
 
 
-
 ## Import
 
 NAT gateway can be imported using the id, e.g.

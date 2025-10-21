@@ -43,7 +43,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time.
 
 
-
 ## Import
 
 organization policy_sub_account_attachment can be imported using the id, e.g.

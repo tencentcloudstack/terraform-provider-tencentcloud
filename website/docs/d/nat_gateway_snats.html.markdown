@@ -43,4 +43,3 @@ In addition to all arguments above, the following attributes are exported:
   * `snat_id` - SNAT rule ID.
 
 
-

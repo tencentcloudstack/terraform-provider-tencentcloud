@@ -67,7 +67,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 waf ip_access_control can be imported using the id, e.g.

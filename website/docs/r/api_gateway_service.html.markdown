@@ -104,7 +104,6 @@ In addition to all arguments above, the following attributes are exported:
   * `usage_plan_name` - Name of the usage plan.
 
 
-
 ## Import
 
 API gateway service can be imported using the id, e.g.

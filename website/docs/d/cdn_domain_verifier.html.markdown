@@ -52,4 +52,3 @@ In addition to all arguments above, the following attributes are exported:
 * `verify_result` - Verify result.
 
 
-

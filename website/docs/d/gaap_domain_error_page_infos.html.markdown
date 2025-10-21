@@ -44,4 +44,3 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Rule status, 0 indicates successNote: This field may return null, indicating that a valid value cannot be obtained.
 
 
-

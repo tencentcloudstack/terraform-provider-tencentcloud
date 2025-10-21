@@ -58,7 +58,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 image instance can be imported using the id, e.g.

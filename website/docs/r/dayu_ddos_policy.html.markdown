@@ -158,4 +158,3 @@ In addition to all arguments above, the following attributes are exported:
   * `open_switch` - Indicate whether to auto-remove the watermark or not.
 
 
-

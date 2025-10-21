@@ -42,4 +42,3 @@ In addition to all arguments above, the following attributes are exported:
   * `use_tke_default` - Use TKE default issuer and jwksuri. Note: This field may return `null`, indicating that no valid values can be obtained.
 
 
-

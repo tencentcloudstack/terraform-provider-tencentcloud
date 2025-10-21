@@ -72,7 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 monitor tmp_grafana_config can be imported using the id, e.g.

@@ -35,4 +35,3 @@ In addition to all arguments above, the following attributes are exported:
   * `time_in_seconds` - expected restart time.
 
 
-

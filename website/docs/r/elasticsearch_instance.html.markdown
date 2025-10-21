@@ -231,7 +231,6 @@ In addition to all arguments above, the following attributes are exported:
 * `kibana_url` - Kibana access URL.
 
 
-
 ## Import
 
 Elasticsearch instance can be imported using the id, e.g.

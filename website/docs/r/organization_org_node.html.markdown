@@ -39,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Node update time.
 
 
-
 ## Import
 
 organization org_node can be imported using the id, e.g.

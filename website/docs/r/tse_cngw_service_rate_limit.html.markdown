@@ -152,7 +152,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 tse cngw_service_rate_limit can be imported using the id, e.g.

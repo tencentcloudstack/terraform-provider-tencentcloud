@@ -56,7 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Site status. Valid values: `active`: NS is switched; `pending`: NS is not switched; `moved`: NS is moved; `deactivated`: this site is blocked.
 
 
-
 ## Import
 
 teo zone can be imported using the id, e.g.

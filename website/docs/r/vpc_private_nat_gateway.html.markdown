@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 vpc private_nat_gateway can be imported using the id, e.g.

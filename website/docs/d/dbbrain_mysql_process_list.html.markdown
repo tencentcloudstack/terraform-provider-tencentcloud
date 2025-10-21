@@ -51,4 +51,3 @@ In addition to all arguments above, the following attributes are exported:
   * `user` - The operating account name of the thread.
 
 
-

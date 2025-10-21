@@ -46,4 +46,3 @@ In addition to all arguments above, the following attributes are exported:
   * `usage_price` - UsagePrice of the reserved instance.
 
 
-

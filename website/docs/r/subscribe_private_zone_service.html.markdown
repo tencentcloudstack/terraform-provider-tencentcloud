@@ -31,4 +31,3 @@ In addition to all arguments above, the following attributes are exported:
 * `service_status` - Private domain resolution service activation status.
 
 
-

@@ -100,7 +100,6 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the ENI.
 
 
-
 ## Import
 
 ENI can be imported using the id, e.g.

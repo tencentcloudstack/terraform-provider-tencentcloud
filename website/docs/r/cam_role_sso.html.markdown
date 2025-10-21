@@ -41,7 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 CAM-ROLE-SSO can be imported using the `name`, e.g.

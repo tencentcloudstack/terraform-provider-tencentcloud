@@ -202,7 +202,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - SCF function vip.
 
 
-
 ## Import
 
 SCF function can be imported, e.g.

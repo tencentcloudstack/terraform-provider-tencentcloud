@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 * `owner` - APPID.
 
 
-
 ## Import
 
 vpc end_point_service_white_list can be imported using the id, e.g.

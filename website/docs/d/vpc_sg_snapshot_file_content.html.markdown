@@ -71,4 +71,3 @@ In addition to all arguments above, the following attributes are exported:
     * `service_id` - Protocol port ID, such as `ppm-f5n1f8da`.
 
 
-

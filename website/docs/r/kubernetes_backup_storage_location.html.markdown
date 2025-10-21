@@ -41,7 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the backup storage location.
 
 
-
 ## Import
 
 tke backup storage location can be imported, e.g.

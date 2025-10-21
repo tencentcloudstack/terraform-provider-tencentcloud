@@ -76,7 +76,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 sqlserver general_communication can be imported using the id, e.g.

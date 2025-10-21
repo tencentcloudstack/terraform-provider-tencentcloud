@@ -56,7 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The current status of layer.
 
 
-
 ## Import
 
 Scf layer can be imported, e.g.

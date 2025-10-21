@@ -39,4 +39,3 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Name of the availability zone, e.g. ap-beijing-1. For more information, see regions and availability zones in the Overview document.
 
 
-

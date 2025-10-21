@@ -39,4 +39,3 @@ In addition to all arguments above, the following attributes are exported:
     * `network_type` - A list of network types supported by the access area, with normal indicating support for regular BGP, cn2 indicating premium BGP, triple indicating three networks, and secure_ EIP represents a custom secure EIP.
 
 
-

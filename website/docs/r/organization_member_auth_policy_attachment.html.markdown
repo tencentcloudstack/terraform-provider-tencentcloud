@@ -43,7 +43,6 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_name` - Policy name.
 
 
-
 ## Import
 
 Organization member auth policy attachment can be imported using the id, e.g.

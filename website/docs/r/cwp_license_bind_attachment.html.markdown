@@ -68,7 +68,6 @@ In addition to all arguments above, the following attributes are exported:
 * `uuid` - uuid.
 
 
-
 ## Import
 
 cwp license_bind_attachment can be imported using the id, e.g.

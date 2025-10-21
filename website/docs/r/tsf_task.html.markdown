@@ -84,7 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 * `trigger_type` - trigger type.
 
 
-
 ## Import
 
 tsf task can be imported using the id, e.g.

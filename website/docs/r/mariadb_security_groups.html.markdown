@@ -39,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 mariadb security_groups can be imported using the id, e.g.

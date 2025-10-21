@@ -49,7 +49,6 @@ In addition to all arguments above, the following attributes are exported:
 * `root_node_id` - Organize the root node ID.Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
 
-
 ## Import
 
 organization organization can be imported using the id, e.g.

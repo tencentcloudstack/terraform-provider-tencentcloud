@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Tag type, 0 normal tag, 1 account tag.
 
 
-
 ## Import
 
 Billing allocation tag can be imported using the id, e.g.

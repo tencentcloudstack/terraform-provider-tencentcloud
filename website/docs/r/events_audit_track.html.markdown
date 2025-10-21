@@ -84,7 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 * `track_id` - Whether the log list has come to an end. `true`: Yes. Pagination is not required.
 
 
-
 ## Import
 
 events audit track can be imported using the id, e.g.

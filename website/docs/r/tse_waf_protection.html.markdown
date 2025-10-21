@@ -39,4 +39,3 @@ In addition to all arguments above, the following attributes are exported:
 * `global_status` - Global protection status.
 
 
-

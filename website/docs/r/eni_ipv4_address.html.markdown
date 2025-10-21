@@ -102,7 +102,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 vpc eni ipv4 address can be imported using the id, e.g.

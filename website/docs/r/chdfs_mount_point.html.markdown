@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 chdfs mount_point can be imported using the id, e.g.

@@ -47,7 +47,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 tat invocation can be imported using the invocation_id#instance_id, e.g.

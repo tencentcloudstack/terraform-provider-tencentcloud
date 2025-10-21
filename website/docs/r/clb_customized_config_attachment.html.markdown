@@ -89,7 +89,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 CLB customized config attachment can be imported using the id, e.g.

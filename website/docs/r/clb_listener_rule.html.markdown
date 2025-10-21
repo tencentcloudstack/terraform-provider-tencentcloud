@@ -120,7 +120,6 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - ID of this CLB listener rule.
 
 
-
 ## Import
 
 CLB listener rule can be imported using the id (version >= 1.47.0), e.g.

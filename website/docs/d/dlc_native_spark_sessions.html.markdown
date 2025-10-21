@@ -35,4 +35,3 @@ In addition to all arguments above, the following attributes are exported:
 * `spark_sessions_list` - Spark sessions list.
 
 
-

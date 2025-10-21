@@ -130,6 +130,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		"example":           "",
 		"description":       "",
 		"description_short": "",
+		"timeouts":          "",
 		"import":            "",
 	}
 
@@ -215,9 +216,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		}
 
 		if len(timeoutMethods) > 0 {
-			timeoutsText := strings.Join(timeoutMethods, "\n")
-			timeoutsText = strings.TrimRight(timeoutsText, "\n")
-			data["timeouts"] = fmt.Sprintf("The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:\n\n%s", timeoutsText)
+			data["timeouts"] = strings.TrimSpace(fmt.Sprintf("The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:\n\n%s", strings.Join(timeoutMethods, "\n")))
 		}
 	}
 

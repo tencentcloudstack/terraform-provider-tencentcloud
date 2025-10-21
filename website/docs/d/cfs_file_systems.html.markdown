@@ -51,4 +51,3 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_type` - Storage type of the file system.
 
 
-

@@ -40,7 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 cynosdb security_group can be imported using the id, e.g.

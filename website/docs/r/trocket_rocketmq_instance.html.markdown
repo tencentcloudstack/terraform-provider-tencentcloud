@@ -126,7 +126,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vpc_end_point` - VPC access address.
 
 
-
 ## Import
 
 Trocket rocketmq instance can be imported using the id, e.g.

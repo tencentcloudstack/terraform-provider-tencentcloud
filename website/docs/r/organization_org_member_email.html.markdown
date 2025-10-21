@@ -44,7 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 * `phone_bind` - Safe mobile phone binding state is not bound: 0, has been binded: 1Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
 
-
 ## Import
 
 organization member email can be imported using the id, e.g.

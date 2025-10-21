@@ -43,4 +43,3 @@ In addition to all arguments above, the following attributes are exported:
   * `package_version` - Resource package version base basic version, common general version, enterprise enterprise version Note: This field may return null, indicating that a valid value cannot be obtained.
 
 
-

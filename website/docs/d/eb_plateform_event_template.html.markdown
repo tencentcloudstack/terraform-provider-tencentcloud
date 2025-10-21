@@ -33,4 +33,3 @@ In addition to all arguments above, the following attributes are exported:
 * `event_template` - Platform product event template.
 
 
-

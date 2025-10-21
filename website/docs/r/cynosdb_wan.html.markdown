@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 * `wan_status` - Internet status.
 
 
-
 ## Import
 
 cynosdb wan can be imported using the id, e.g.

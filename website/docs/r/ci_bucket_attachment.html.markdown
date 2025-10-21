@@ -33,7 +33,6 @@ In addition to all arguments above, the following attributes are exported:
 * `ci_status` - Binding object storage state, `on`: bound, `off`: unbound, `unbinding`: unbinding.
 
 
-
 ## Import
 
 ci bucket can be imported using the id, e.g.

@@ -81,7 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status.
 
 
-
 ## Import
 
 mysql restart_db_instances_operation can be imported using the id, e.g.

@@ -33,7 +33,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 ssl check_certificate_chain can be imported using the id, e.g.

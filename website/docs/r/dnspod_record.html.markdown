@@ -48,7 +48,6 @@ In addition to all arguments above, the following attributes are exported:
 * `monitor_status` - The monitoring status of the record.
 
 
-
 ## Import
 
 DnsPod Domain record can be imported using the Domain#RecordId, e.g.

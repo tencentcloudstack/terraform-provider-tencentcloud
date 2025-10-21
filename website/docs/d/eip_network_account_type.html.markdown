@@ -30,4 +30,3 @@ In addition to all arguments above, the following attributes are exported:
 * `network_account_type` - The network type of the user account, STANDARD is a standard user, LEGACY is a traditional user.
 
 
-

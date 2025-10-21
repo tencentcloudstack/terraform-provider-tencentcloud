@@ -39,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `end_point_vip_set` - Vip list of endpoint.
 
 
-
 ## Import
 
 Private Dns end point can be imported using the id, e.g.

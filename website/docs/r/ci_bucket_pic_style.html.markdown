@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 ci bucket_pic_style can be imported using the bucket#styleName, e.g.

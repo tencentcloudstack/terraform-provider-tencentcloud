@@ -60,4 +60,3 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Availability zone where the instance resides.
 
 
-

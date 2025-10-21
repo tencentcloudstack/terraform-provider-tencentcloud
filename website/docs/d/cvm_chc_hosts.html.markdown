@@ -84,4 +84,3 @@ In addition to all arguments above, the following attributes are exported:
   * `tenant_type` - Management typeHOSTING: HostingTENANT: LeasingNote: This field may return null, indicating that no valid values can be obtained.
 
 
-

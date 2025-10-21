@@ -123,7 +123,6 @@ In addition to all arguments above, the following attributes are exported:
 * `cname` - CNAME address.
 
 
-
 ## Import
 
 TEO acceleration domain can be imported using the id, e.g.

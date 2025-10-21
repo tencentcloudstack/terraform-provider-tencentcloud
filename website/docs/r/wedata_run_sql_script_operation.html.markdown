@@ -47,4 +47,3 @@ In addition to all arguments above, the following attributes are exported:
 * `job_id` - Job ID of the SQL script operation.
 
 
-

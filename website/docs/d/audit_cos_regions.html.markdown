@@ -33,4 +33,3 @@ In addition to all arguments above, the following attributes are exported:
   * `cos_region` - Cos region.
 
 
-

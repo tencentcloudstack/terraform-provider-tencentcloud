@@ -37,7 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 * `unit_id` - Shared unit region. The regions that support sharing can be obtained through the DescribeShareAreas interface.
 
 
-
 ## Import
 
 organization org_share_unit can be imported using the id, e.g.

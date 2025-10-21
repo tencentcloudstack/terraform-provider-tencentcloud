@@ -89,7 +89,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 sqlserver tencentcloud_sqlserver_config_database_ct can be imported using the id, e.g.

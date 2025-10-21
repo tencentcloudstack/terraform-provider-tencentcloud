@@ -40,4 +40,3 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Available area NameNote: This field may return null, indicating that a valid value is not available.
 
 
-

@@ -36,7 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - SCF namespace type.
 
 
-
 ## Import
 
 SCF namespace can be imported, e.g.

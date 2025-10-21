@@ -736,7 +736,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 TEO l7 acc rule can be imported using the zone_id, e.g.

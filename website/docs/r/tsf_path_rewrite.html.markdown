@@ -41,7 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 * `path_rewrite_id` - path rewrite rule ID.
 
 
-
 ## Import
 
 tsf path_rewrite can be imported using the id, e.g.

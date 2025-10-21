@@ -72,4 +72,3 @@ In addition to all arguments above, the following attributes are exported:
   * `status_message` - Description of the scaling activity status.
 
 
-

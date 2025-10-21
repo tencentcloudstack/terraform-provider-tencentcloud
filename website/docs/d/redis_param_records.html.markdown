@@ -38,4 +38,3 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Parameter status:1: parameter configuration modification.2: The parameter configuration is modified successfully.3: Parameter configuration modification failed.
 
 
-

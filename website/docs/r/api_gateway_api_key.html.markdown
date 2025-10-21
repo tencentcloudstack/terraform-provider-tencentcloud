@@ -53,7 +53,6 @@ In addition to all arguments above, the following attributes are exported:
 * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 
 
-
 ## Import
 
 API gateway access key can be imported using the id, e.g.

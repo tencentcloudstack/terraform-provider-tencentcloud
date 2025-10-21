@@ -62,7 +62,6 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - update time.
 
 
-
 ## Import
 
 css live_transcode_rule_attachment can be imported using the id, e.g.

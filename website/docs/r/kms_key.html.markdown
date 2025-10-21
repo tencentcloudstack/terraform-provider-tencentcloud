@@ -94,7 +94,6 @@ In addition to all arguments above, the following attributes are exported:
 * `key_state` - State of CMK.
 
 
-
 ## Import
 
 KMS keys can be imported using the id, e.g.

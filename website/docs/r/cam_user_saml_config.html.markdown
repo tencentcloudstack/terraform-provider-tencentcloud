@@ -48,7 +48,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status: `0`: not set, `11`: enabled, `2`: disabled.
 
 
-
 ## Import
 
 CAM user saml config can be imported using the id, e.g.

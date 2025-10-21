@@ -87,4 +87,3 @@ In addition to all arguments above, the following attributes are exported:
   * `zones` - The AZ of private CLB instance. This is only available for beta users.Note: This field may return `null`, indicating that no valid values can be obtained.
 
 
-

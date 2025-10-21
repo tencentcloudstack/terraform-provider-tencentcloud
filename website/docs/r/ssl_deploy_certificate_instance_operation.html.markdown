@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 ssl deploy_certificate_instance can be imported using the id, e.g.

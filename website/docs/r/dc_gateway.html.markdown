@@ -74,7 +74,6 @@ In addition to all arguments above, the following attributes are exported:
 * `enable_bgp` - Indicates whether the BGP is enabled.
 
 
-
 ## Import
 
 Direct connect gateway instance can be imported, e.g.

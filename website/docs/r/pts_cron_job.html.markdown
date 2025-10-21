@@ -58,7 +58,6 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_at` - Update time; type: Timestamp ISO8601.
 
 
-
 ## Import
 
 pts cron_job can be imported using the projectId#cronJobId, e.g.

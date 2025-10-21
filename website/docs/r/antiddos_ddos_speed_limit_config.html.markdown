@@ -65,7 +65,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 antiddos ddos_speed_limit_config can be imported using the id, e.g.

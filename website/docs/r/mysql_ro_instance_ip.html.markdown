@@ -55,4 +55,3 @@ In addition to all arguments above, the following attributes are exported:
 * `ro_vport` - Intranet port number of the read-only instance.
 
 
-

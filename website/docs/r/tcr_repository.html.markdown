@@ -64,7 +64,6 @@ In addition to all arguments above, the following attributes are exported:
 * `url` - URL of the repository.
 
 
-
 ## Import
 
 tcr repository can be imported using the id, e.g.

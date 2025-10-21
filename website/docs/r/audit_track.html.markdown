@@ -86,7 +86,6 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Track create time.
 
 
-
 ## Import
 
 audit track can be imported using the id, e.g.

@@ -83,7 +83,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 mysql security_groups_attachment can be imported using the id, e.g.

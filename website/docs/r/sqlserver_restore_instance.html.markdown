@@ -47,7 +47,6 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - encryption, `enable` encrypted, `disable` unencrypted.
 
 
-
 ## Import
 
 sqlserver restore_instance can be imported using the id, e.g.

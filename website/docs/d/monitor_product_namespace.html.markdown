@@ -36,4 +36,3 @@ In addition to all arguments above, the following attributes are exported:
   * `product_name` - English name of this product.
 
 
-

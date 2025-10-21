@@ -44,7 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 * `work_space_id` - Workspace ID.
 
 
-
 ## Import
 
 oceanus work_space can be imported using the id, e.g.

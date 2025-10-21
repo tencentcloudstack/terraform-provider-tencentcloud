@@ -42,7 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-
 ## Import
 
 dasb device can be imported using the id, e.g.

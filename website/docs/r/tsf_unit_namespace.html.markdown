@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_time` - Update time. Note: This field may return null, indicating that no valid value was found.
 
 
-
 ## Import
 
 tsf unit_namespace can be imported using the id, e.g.

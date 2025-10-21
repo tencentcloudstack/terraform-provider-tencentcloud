@@ -41,7 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 * `owner` - owner.
 
 
-
 ## Import
 
 kms cloud_resource_attachment can be imported using the id, e.g.
