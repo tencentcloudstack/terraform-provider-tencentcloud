@@ -355,7 +355,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 
 	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		message("[FAIL!]open file %s failed: %s", filename)
+		message("[FAIL!]open file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
 
@@ -363,7 +363,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	t := template.Must(template.New("t").Parse(docTPL))
 	err = t.Execute(fd, data)
 	if err != nil {
-		message("[FAIL!]write file %s failed: %s", filename)
+		message("[FAIL!]write file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
 
