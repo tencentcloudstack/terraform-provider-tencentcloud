@@ -130,6 +130,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		"example":           "",
 		"description":       "",
 		"description_short": "",
+		"timeouts":          "",
 		"import":            "",
 	}
 
@@ -162,6 +163,61 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	if importPos != -1 {
 		data["import"] = strings.TrimSpace(description[importPos+8:])
 		description = strings.TrimSpace(description[:importPos])
+	}
+
+	if resource.Timeouts != nil {
+		var timeoutMethods []string
+		if resource.Timeouts.Create != nil {
+			timeoutStr := resource.Timeouts.Create.String()
+			if strings.Contains(timeoutStr, "m") {
+				parts := strings.Split(timeoutStr, "m")
+				if len(parts) > 0 {
+					timeoutStr = parts[0] + "m"
+				}
+			}
+
+			timeoutMethods = append(timeoutMethods, fmt.Sprintf("* `create` - (Defaults to `%s`) Used when creating the resource.", timeoutStr))
+		}
+
+		if resource.Timeouts.Read != nil {
+			timeoutStr := resource.Timeouts.Read.String()
+			if strings.Contains(timeoutStr, "m") {
+				parts := strings.Split(timeoutStr, "m")
+				if len(parts) > 0 {
+					timeoutStr = parts[0] + "m"
+				}
+			}
+
+			timeoutMethods = append(timeoutMethods, fmt.Sprintf("* `read` - (Defaults to `%s`) Used when reading the resource.", timeoutStr))
+		}
+
+		if resource.Timeouts.Update != nil {
+			timeoutStr := resource.Timeouts.Update.String()
+			if strings.Contains(timeoutStr, "m") {
+				parts := strings.Split(timeoutStr, "m")
+				if len(parts) > 0 {
+					timeoutStr = parts[0] + "m"
+				}
+			}
+
+			timeoutMethods = append(timeoutMethods, fmt.Sprintf("* `update` - (Defaults to `%s`) Used when updating the resource.", timeoutStr))
+		}
+
+		if resource.Timeouts.Delete != nil {
+			timeoutStr := resource.Timeouts.Delete.String()
+			if strings.Contains(timeoutStr, "m") {
+				parts := strings.Split(timeoutStr, "m")
+				if len(parts) > 0 {
+					timeoutStr = parts[0] + "m"
+				}
+			}
+
+			timeoutMethods = append(timeoutMethods, fmt.Sprintf("* `delete` - (Defaults to `%s`) Used when deleting the resource.", timeoutStr))
+		}
+
+		if len(timeoutMethods) > 0 {
+			data["timeouts"] = strings.TrimSpace(fmt.Sprintf("The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:\n\n%s", strings.Join(timeoutMethods, "\n")))
+		}
 	}
 
 	pos := strings.Index(description, "\nExample Usage\n")
