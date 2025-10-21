@@ -182,6 +182,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"cluster_topology": {
 			Type:        schema.TypeList,
 			Optional:    true,
+			Computed:    true,
 			MaxItems:    1,
 			Description: "Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.",
 			Elem: &schema.Resource{
@@ -325,7 +326,7 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Optional:     true,
 			ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 			Default:      0,
-			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
+			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones. Readonly instance settings are not supported.",
 		},
 		"first_slave_zone": {
 			Type:        schema.TypeString,

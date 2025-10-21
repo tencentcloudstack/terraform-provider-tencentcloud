@@ -64,8 +64,9 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 
 		Importer: &schema.ResourceImporter{
 			State: helper.ImportWithDefaultValue(map[string]interface{}{
-				"prepaid_period": 1,
-				"force_delete":   false,
+				"prepaid_period":    1,
+				"force_delete":      false,
+				"slave_deploy_mode": 0,
 			}),
 		},
 		Schema: readonlyInstanceInfo,
@@ -409,6 +410,9 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	if roGroup != nil && roGroup.RoGroupId != nil {
 		_ = d.Set("ro_group_id", *roGroup.RoGroupId)
 	}
+
+	// set no used fields to default value to fix diff
+	_ = d.Set("slave_deploy_mode", 0)
 
 	return nil
 }
