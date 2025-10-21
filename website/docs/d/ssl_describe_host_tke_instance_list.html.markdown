@@ -59,4 +59,8 @@ In addition to all arguments above, the following attributes are exported:
       * `no_match_domains` - List of domain names that are not matched with the new certificateNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
 
+## Timeouts
+
+<no value>
+
 

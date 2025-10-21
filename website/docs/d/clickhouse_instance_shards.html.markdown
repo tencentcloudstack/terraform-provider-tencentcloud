@@ -33,4 +33,8 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_shards_list` - Instance shard information.
 
 
+## Timeouts
+
+<no value>
+
 

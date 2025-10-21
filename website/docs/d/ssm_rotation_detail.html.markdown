@@ -36,4 +36,8 @@ In addition to all arguments above, the following attributes are exported:
 * `next_rotate_begin_time` - The time to start the next rotation.
 
 
+## Timeouts
+
+<no value>
+
 

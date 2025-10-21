@@ -39,4 +39,8 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Parameter modification status. Valid values: 1 (initializing and waiting for modification), 2 (modification succeed), 3 (modification failed), 4 (modifying).
 
 
+## Timeouts
+
+<no value>
+
 

@@ -118,4 +118,8 @@ In addition to all arguments above, the following attributes are exported:
   * `unschedulable` - Whether the node is not schedulable by default.
 
 
+## Timeouts
+
+<no value>
+
 

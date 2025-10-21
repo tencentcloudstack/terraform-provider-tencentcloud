@@ -36,4 +36,8 @@ In addition to all arguments above, the following attributes are exported:
 * `role_configurations` - Permission configuration list.
 
 
+## Timeouts
+
+<no value>
+
 

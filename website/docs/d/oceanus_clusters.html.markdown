@@ -130,4 +130,8 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - The availability zone.
 
 
+## Timeouts
+
+<no value>
+
 

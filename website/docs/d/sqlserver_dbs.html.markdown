@@ -89,4 +89,8 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Database status. Valid values are `creating`, `running`, `modifying`, `dropping`.
 
 
+## Timeouts
+
+<no value>
+
 

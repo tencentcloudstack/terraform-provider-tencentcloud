@@ -57,4 +57,8 @@ In addition to all arguments above, the following attributes are exported:
   * `template_name` - The name of template.
 
 
+## Timeouts
+
+<no value>
+
 

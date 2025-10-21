@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
   * `unique_id` - Object unique ID.
 
 
+## Timeouts
+
+<no value>
+
 

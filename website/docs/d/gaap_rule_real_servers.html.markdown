@@ -46,4 +46,8 @@ In addition to all arguments above, the following attributes are exported:
   * `real_server_name` - Real Server Name.
 
 
+## Timeouts
+
+<no value>
+
 

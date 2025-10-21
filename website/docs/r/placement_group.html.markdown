@@ -43,6 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 * `cvm_quota_total` - Maximum number of hosts in the placement group.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

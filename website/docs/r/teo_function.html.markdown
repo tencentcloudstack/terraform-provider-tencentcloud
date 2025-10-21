@@ -47,6 +47,10 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Modification time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -122,6 +122,10 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_by` - Last Modified By.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

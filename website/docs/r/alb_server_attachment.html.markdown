@@ -61,4 +61,8 @@ In addition to all arguments above, the following attributes are exported:
 * `protocol_type` - The protocol type, http or tcp.
 
 
+## Timeouts
+
+<no value>
+
 

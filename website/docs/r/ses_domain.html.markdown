@@ -36,6 +36,10 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Record Type CNAME | A | TXT | MX.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

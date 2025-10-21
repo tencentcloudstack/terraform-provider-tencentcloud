@@ -74,6 +74,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - usage status: enabled/disabled.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

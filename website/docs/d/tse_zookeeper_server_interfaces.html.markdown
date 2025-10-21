@@ -34,4 +34,8 @@ In addition to all arguments above, the following attributes are exported:
   * `interface` - interface nameNote: This field may return null, indicating that a valid value is not available.
 
 
+## Timeouts
+
+<no value>
+
 

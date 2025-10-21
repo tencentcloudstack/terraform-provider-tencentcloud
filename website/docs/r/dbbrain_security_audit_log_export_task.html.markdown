@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
 * `async_request_id` - request of async id.
 
 
+## Timeouts
+
+<no value>
+
 

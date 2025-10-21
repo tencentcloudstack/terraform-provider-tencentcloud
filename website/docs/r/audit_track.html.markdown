@@ -86,6 +86,10 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Track create time.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

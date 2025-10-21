@@ -65,6 +65,10 @@ In addition to all arguments above, the following attributes are exported:
 * `project_status` - Project status (`1`: Creating; `2`: Running; `3`: Abnormal; `4`: Restarting; `5`: Stopping; `6`: Stopped; `7`: Terminating; `8`: Terminated).
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

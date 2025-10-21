@@ -150,6 +150,10 @@ In addition to all arguments above, the following attributes are exported:
 * `domain_id` - Domain id.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -48,6 +48,10 @@ In addition to all arguments above, the following attributes are exported:
 * `monitor_status` - The monitoring status of the record.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

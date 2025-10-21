@@ -40,4 +40,8 @@ In addition to all arguments above, the following attributes are exported:
 * `total_num` - The total number of user groups the sub-user has joined.
 
 
+## Timeouts
+
+<no value>
+
 

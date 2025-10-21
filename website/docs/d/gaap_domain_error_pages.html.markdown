@@ -77,4 +77,8 @@ In addition to all arguments above, the following attributes are exported:
   * `set_headers` - Response headers to be set.
 
 
+## Timeouts
+
+<no value>
+
 

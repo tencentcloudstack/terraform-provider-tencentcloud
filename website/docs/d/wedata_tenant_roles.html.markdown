@@ -37,4 +37,8 @@ In addition to all arguments above, the following attributes are exported:
   * `role_name` - Role name.
 
 
+## Timeouts
+
+<no value>
+
 

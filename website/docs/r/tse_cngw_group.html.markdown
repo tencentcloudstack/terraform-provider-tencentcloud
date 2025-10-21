@@ -106,4 +106,8 @@ In addition to all arguments above, the following attributes are exported:
 * `group_id` - gateway group id.
 
 
+## Timeouts
+
+<no value>
+
 

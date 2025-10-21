@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
 * `serial_id` - Unique identifier of the metadata table.
 
 
+## Timeouts
+
+<no value>
+
 

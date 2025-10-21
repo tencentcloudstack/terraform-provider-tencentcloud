@@ -196,6 +196,10 @@ In addition to all arguments above, the following attributes are exported:
 * `tke_default_jwks_uri` - The default jwks_uri of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

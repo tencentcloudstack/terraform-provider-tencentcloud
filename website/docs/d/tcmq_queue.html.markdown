@@ -84,4 +84,8 @@ In addition to all arguments above, the following attributes are exported:
   * `visibility_timeout` - Message visibility timeout period. Value range: 1-43200 seconds (i.e., 12 hours). Default value: 30.
 
 
+## Timeouts
+
+<no value>
+
 

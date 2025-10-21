@@ -50,4 +50,8 @@ In addition to all arguments above, the following attributes are exported:
   * `load_balancer_name` - CLB instance name. Note: This field may return null, indicating that no valid values can be obtained.
 
 
+## Timeouts
+
+<no value>
+
 

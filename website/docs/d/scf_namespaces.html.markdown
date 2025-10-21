@@ -43,4 +43,8 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Type of the SCF namespace.
 
 
+## Timeouts
+
+<no value>
+
 

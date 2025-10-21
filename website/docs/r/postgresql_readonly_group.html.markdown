@@ -107,6 +107,10 @@ In addition to all arguments above, the following attributes are exported:
   * `port` - Port of the net info.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

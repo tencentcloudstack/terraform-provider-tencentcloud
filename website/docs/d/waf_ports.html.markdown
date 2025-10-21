@@ -51,4 +51,8 @@ In addition to all arguments above, the following attributes are exported:
 * `https_ports` - Https port list for instance.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -123,6 +123,10 @@ In addition to all arguments above, the following attributes are exported:
 * `cname` - CNAME address.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

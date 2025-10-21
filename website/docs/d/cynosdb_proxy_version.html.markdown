@@ -36,4 +36,8 @@ In addition to all arguments above, the following attributes are exported:
 * `support_proxy_versions` - Supported Database Agent Version Collection Note: This field may return null, indicating that a valid value cannot be obtained.
 
 
+## Timeouts
+
+<no value>
+
 

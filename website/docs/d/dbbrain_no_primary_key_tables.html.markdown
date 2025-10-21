@@ -44,4 +44,8 @@ In addition to all arguments above, the following attributes are exported:
 * `timestamp` - Collection timestamp (seconds).
 
 
+## Timeouts
+
+<no value>
+
 

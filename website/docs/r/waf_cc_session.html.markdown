@@ -49,6 +49,10 @@ In addition to all arguments above, the following attributes are exported:
 * `session_id` - Session ID.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

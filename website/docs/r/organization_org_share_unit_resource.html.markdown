@@ -43,6 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 * `shared_member_use_num` - Number of shared unit members in use.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

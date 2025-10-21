@@ -103,4 +103,8 @@ In addition to all arguments above, the following attributes are exported:
 * `storage_status` - Status of CBS. Valid values: UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.
 
 
+## Timeouts
+
+<no value>
+
 

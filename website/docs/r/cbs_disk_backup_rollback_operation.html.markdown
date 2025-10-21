@@ -35,4 +35,8 @@ In addition to all arguments above, the following attributes are exported:
 * `is_rollback_completed` - Whether the rollback is completed. `true` meaing rollback completed, `false` meaning still rollbacking.
 
 
+## Timeouts
+
+<no value>
+
 

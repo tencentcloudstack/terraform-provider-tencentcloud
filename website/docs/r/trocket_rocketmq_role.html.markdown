@@ -65,6 +65,10 @@ In addition to all arguments above, the following attributes are exported:
 * `secret_key` - Secret key.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

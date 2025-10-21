@@ -35,4 +35,8 @@ In addition to all arguments above, the following attributes are exported:
 * `cos_url` - Snapshot download url.
 
 
+## Timeouts
+
+<no value>
+
 

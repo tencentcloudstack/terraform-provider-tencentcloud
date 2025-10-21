@@ -126,4 +126,8 @@ In addition to all arguments above, the following attributes are exported:
 * `device_certificate_provision_type` - Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
 
 
+## Timeouts
+
+<no value>
+
 

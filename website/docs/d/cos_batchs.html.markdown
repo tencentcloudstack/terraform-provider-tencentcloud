@@ -49,4 +49,8 @@ In addition to all arguments above, the following attributes are exported:
   * `termination_date` - The end time of the batch processing job.
 
 
+## Timeouts
+
+<no value>
+
 

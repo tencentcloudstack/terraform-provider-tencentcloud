@@ -68,4 +68,8 @@ In addition to all arguments above, the following attributes are exported:
   * `realserver_certificate_ids` - CA certificate ID list of the realserver.
 
 
+## Timeouts
+
+<no value>
+
 

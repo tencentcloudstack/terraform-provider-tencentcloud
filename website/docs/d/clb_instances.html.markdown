@@ -66,4 +66,8 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Available zone unique id(string representation), This field maybe null, means cannot get a valid value.
 
 
+## Timeouts
+
+<no value>
+
 

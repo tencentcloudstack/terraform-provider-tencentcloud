@@ -78,4 +78,8 @@ In addition to all arguments above, the following attributes are exported:
 * `scene_id` - ID of the DDoS policy case.
 
 
+## Timeouts
+
+<no value>
+
 

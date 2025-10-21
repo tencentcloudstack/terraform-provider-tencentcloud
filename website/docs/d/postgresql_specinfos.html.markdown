@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_min` - The minimum volume size(in GB).
 
 
+## Timeouts
+
+<no value>
+
 

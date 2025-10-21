@@ -69,6 +69,10 @@ In addition to all arguments above, the following attributes are exported:
 * `snapshot_policy_id` - Snapshot policy Id.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

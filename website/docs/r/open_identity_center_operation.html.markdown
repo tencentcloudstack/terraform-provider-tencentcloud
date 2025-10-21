@@ -33,4 +33,8 @@ In addition to all arguments above, the following attributes are exported:
 * `zone_id` - Space ID. z-Prefix starts with 12 random numbers/lowercase letters followed by.
 
 
+## Timeouts
+
+<no value>
+
 

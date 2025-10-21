@@ -37,4 +37,8 @@ In addition to all arguments above, the following attributes are exported:
   * `template_ids` - ID set of the address template.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -36,4 +36,8 @@ In addition to all arguments above, the following attributes are exported:
   * `user_names` - ID set of the CAM group members.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -52,4 +52,8 @@ In addition to all arguments above, the following attributes are exported:
     * `frequency` - Frequency of the inventory job. Enumerated values: Daily, Weekly.
 
 
+## Timeouts
+
+<no value>
+
 

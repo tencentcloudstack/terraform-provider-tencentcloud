@@ -43,4 +43,8 @@ In addition to all arguments above, the following attributes are exported:
   * `stream_name` - Stream name.
 
 
+## Timeouts
+
+<no value>
+
 

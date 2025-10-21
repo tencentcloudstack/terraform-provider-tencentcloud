@@ -67,4 +67,8 @@ In addition to all arguments above, the following attributes are exported:
 * `tgw_wan_vport` - External port number.
 
 
+## Timeouts
+
+<no value>
+
 

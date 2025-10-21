@@ -78,4 +78,8 @@ In addition to all arguments above, the following attributes are exported:
   * `index_type` - Index type.
 
 
+## Timeouts
+
+<no value>
+
 

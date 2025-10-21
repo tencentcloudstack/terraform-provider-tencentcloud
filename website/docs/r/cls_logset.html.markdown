@@ -39,6 +39,10 @@ In addition to all arguments above, the following attributes are exported:
 * `topic_count` - Number of log topics in logset.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

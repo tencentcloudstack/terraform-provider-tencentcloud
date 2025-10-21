@@ -37,4 +37,8 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of address template.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -35,6 +35,10 @@ In addition to all arguments above, the following attributes are exported:
 * `used_amount` - Used amount.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

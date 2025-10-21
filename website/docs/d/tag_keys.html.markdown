@@ -45,4 +45,8 @@ In addition to all arguments above, the following attributes are exported:
 * `tags` - Tag list.
 
 
+## Timeouts
+
+<no value>
+
 

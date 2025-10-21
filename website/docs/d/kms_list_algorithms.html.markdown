@@ -38,4 +38,8 @@ In addition to all arguments above, the following attributes are exported:
   * `key_usage` - Key usage.
 
 
+## Timeouts
+
+<no value>
+
 

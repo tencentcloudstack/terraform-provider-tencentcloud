@@ -38,4 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 * `url` - Cos address of the function.
 
 
+## Timeouts
+
+<no value>
+
 

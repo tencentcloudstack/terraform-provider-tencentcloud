@@ -34,4 +34,8 @@ In addition to all arguments above, the following attributes are exported:
 * `ipv6_prefix_len` - The minimum prefix length allowed on the IPv6 Internet public network.
 
 
+## Timeouts
+
+<no value>
+
 

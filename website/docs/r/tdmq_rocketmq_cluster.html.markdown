@@ -45,6 +45,10 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - Vpc ID.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

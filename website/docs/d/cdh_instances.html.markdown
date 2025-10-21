@@ -61,4 +61,8 @@ In addition to all arguments above, the following attributes are exported:
   * `project_id` - The project CDH belongs to.
 
 
+## Timeouts
+
+<no value>
+
 

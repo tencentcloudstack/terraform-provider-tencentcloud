@@ -48,6 +48,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status: `0`: not set, `11`: enabled, `2`: disabled.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

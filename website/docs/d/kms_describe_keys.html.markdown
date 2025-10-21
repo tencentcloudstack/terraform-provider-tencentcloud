@@ -49,4 +49,8 @@ In addition to all arguments above, the following attributes are exported:
   * `valid_to` - Valid when origin is `EXTERNAL`, it means the effective date of the key material.
 
 
+## Timeouts
+
+<no value>
+
 

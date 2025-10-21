@@ -102,4 +102,8 @@ In addition to all arguments above, the following attributes are exported:
   * `wan_status` - Public status.
 
 
+## Timeouts
+
+<no value>
+
 

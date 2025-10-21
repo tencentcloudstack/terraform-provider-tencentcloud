@@ -40,4 +40,8 @@ In addition to all arguments above, the following attributes are exported:
 * `manifest` - Manifest information of the image.
 
 
+## Timeouts
+
+<no value>
+
 

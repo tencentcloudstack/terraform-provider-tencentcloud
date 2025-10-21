@@ -42,4 +42,8 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Last update time.
 
 
+## Timeouts
+
+<no value>
+
 

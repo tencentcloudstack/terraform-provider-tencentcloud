@@ -31,4 +31,8 @@ In addition to all arguments above, the following attributes are exported:
 * `cfs_service_status` - Current status of the CFS service for this user. Valid values: creating (activating); created (activated).
 
 
+## Timeouts
+
+<no value>
+
 

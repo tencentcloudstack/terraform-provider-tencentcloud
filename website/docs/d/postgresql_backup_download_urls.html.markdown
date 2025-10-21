@@ -67,4 +67,8 @@ In addition to all arguments above, the following attributes are exported:
 * `backup_download_url` - Backup download URL.
 
 
+## Timeouts
+
+<no value>
+
 

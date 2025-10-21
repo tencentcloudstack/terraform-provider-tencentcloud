@@ -33,4 +33,8 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status. 0: not ready; 1: ready.
 
 
+## Timeouts
+
+<no value>
+
 

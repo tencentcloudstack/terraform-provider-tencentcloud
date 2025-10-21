@@ -467,4 +467,8 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - The last updated time in [ISO date format](https://intl.cloud.tencent.com/document/product/862/37710?from_cn_redirect=1#52).Note: This field may return null, indicating that no valid values can be obtained.
 
 
+## Timeouts
+
+<no value>
+
 

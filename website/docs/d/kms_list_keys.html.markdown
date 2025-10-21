@@ -35,4 +35,8 @@ In addition to all arguments above, the following attributes are exported:
   * `key_id` - ID of CMK.
 
 
+## Timeouts
+
+<no value>
+
 

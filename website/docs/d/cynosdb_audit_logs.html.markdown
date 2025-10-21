@@ -79,4 +79,8 @@ In addition to all arguments above, the following attributes are exported:
   * `user` - User name.
 
 
+## Timeouts
+
+<no value>
+
 

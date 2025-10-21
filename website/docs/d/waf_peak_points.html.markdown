@@ -68,4 +68,8 @@ In addition to all arguments above, the following attributes are exported:
   * `upstream_server_error` - Trend chart of the number of status codes returned to WAF by the origin site.
 
 
+## Timeouts
+
+<no value>
+
 

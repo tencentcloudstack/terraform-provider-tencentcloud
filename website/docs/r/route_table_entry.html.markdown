@@ -75,6 +75,10 @@ In addition to all arguments above, the following attributes are exported:
 * `route_item_id` - ID of route table entry.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

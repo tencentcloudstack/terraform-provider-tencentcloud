@@ -43,6 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - status. 0: not used, 1: used.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

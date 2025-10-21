@@ -38,4 +38,8 @@ In addition to all arguments above, the following attributes are exported:
   * `time` - connect time.
 
 
+## Timeouts
+
+<no value>
+
 

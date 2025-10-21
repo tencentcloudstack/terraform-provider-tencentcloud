@@ -50,4 +50,8 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Node Type;1 = IDC,2 = LastMile,3 = Mobile.
 
 
+## Timeouts
+
+<no value>
+
 

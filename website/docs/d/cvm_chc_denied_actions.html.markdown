@@ -36,4 +36,8 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - CHC instance status.
 
 
+## Timeouts
+
+<no value>
+
 

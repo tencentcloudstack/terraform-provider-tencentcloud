@@ -37,6 +37,10 @@ In addition to all arguments above, the following attributes are exported:
 * `download_url` - Certificate download address.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

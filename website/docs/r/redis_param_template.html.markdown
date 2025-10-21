@@ -77,6 +77,10 @@ In addition to all arguments above, the following attributes are exported:
   * `param_type` - Parameter type.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

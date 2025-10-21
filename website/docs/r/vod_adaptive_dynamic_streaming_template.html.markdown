@@ -120,6 +120,10 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Last modified time of template in ISO date format.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

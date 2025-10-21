@@ -55,6 +55,10 @@ In addition to all arguments above, the following attributes are exported:
   * `vport` - Virtual port.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

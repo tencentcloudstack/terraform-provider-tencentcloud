@@ -317,6 +317,10 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_priority` - Rule priority, the larger the value, the higher the priority, the minimum is 1.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

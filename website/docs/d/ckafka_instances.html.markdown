@@ -78,4 +78,8 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_ids` - Across Availability Zones. Note: This field may return null, indicating that a valid value could not be retrieved.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -67,6 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 * `password_status` - Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`. which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

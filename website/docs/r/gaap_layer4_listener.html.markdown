@@ -93,6 +93,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the layer4 listener.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

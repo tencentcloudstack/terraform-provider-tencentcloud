@@ -37,6 +37,10 @@ In addition to all arguments above, the following attributes are exported:
 * `function_version` - Version of the released function.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

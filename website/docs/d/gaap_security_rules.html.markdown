@@ -68,4 +68,8 @@ In addition to all arguments above, the following attributes are exported:
   * `protocol` - Protocol of the security policy rule.
 
 
+## Timeouts
+
+<no value>
+
 

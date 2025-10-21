@@ -35,6 +35,10 @@ In addition to all arguments above, the following attributes are exported:
 * `private_key` - Key to private key.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

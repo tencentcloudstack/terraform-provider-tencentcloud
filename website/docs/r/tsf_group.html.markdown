@@ -47,6 +47,10 @@ In addition to all arguments above, the following attributes are exported:
 * `group_resource_type` - Deployment Group Resource Type.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -64,4 +64,8 @@ In addition to all arguments above, the following attributes are exported:
   * `zones` - A list of available zones.
 
 
+## Timeouts
+
+<no value>
+
 

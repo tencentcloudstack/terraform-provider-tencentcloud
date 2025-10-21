@@ -79,4 +79,8 @@ In addition to all arguments above, the following attributes are exported:
   * `tag_name` - image tag name.Note: This field may return null, which means no valid value was found.
 
 
+## Timeouts
+
+<no value>
+
 

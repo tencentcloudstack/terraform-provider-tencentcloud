@@ -65,4 +65,8 @@ In addition to all arguments above, the following attributes are exported:
 * `version` - Resource Version.
 
 
+## Timeouts
+
+<no value>
+
 

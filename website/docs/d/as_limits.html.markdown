@@ -33,4 +33,8 @@ In addition to all arguments above, the following attributes are exported:
 * `number_of_launch_configurations` - Current number of launch configurations under the user account.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -54,4 +54,8 @@ In addition to all arguments above, the following attributes are exported:
   * `strategy_type` - Strategy Type, 1 for Load scaling, 2 for Time scaling.
 
 
+## Timeouts
+
+<no value>
+
 

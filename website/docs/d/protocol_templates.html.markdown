@@ -37,4 +37,8 @@ In addition to all arguments above, the following attributes are exported:
   * `protocols` - Set of the protocols.
 
 
+## Timeouts
+
+<no value>
+
 

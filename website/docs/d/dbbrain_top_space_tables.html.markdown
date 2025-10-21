@@ -61,4 +61,8 @@ In addition to all arguments above, the following attributes are exported:
   * `total_length` - Total space used (MB).
 
 
+## Timeouts
+
+<no value>
+
 

@@ -104,6 +104,10 @@ In addition to all arguments above, the following attributes are exported:
   * `usage_plan_name` - Name of the usage plan.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

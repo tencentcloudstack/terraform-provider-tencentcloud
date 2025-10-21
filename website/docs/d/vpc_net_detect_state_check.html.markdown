@@ -49,4 +49,8 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - The detection result.0: successful;-1: no packet loss occurred during routing;-2: packet loss occurred when outbound traffic is blocked by the ACL;-3: packet loss occurred when inbound traffic is blocked by the ACL;-4: other errors.
 
 
+## Timeouts
+
+<no value>
+
 

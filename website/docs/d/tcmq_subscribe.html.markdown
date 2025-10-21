@@ -49,4 +49,8 @@ In addition to all arguments above, the following attributes are exported:
   * `topic_owner` - Subscription owner APPID.
 
 
+## Timeouts
+
+<no value>
+
 

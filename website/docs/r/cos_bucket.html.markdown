@@ -588,6 +588,10 @@ In addition to all arguments above, the following attributes are exported:
 * `cos_bucket_url` - The URL of this cos bucket.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -60,4 +60,8 @@ In addition to all arguments above, the following attributes are exported:
   * `threshold` - Threshold of the rule.
 
 
+## Timeouts
+
+<no value>
+
 

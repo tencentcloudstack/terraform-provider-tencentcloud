@@ -48,6 +48,10 @@ In addition to all arguments above, the following attributes are exported:
 * `strategy_id` - IP policy ID.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

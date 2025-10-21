@@ -66,4 +66,8 @@ In addition to all arguments above, the following attributes are exported:
   * `non_resettable_message` - The information cannot be reset. when the mirror can be reset ''.
 
 
+## Timeouts
+
+<no value>
+
 

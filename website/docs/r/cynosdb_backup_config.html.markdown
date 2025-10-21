@@ -76,6 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 * `backup_type` - Backup mode. logic: logic backup; snapshot: snapshot backup. This parameter cannot be modified currently and doesn't need to be entered.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

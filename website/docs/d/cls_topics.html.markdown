@@ -72,4 +72,8 @@ In addition to all arguments above, the following attributes are exported:
 * `topics` - Log topic list.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -183,4 +183,8 @@ In addition to all arguments above, the following attributes are exported:
 * `proxy_group_id` - Proxy Group ID.
 
 
+## Timeouts
+
+<no value>
+
 

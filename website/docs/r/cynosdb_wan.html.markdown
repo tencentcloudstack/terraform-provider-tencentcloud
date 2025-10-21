@@ -38,6 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 * `wan_status` - Internet status.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

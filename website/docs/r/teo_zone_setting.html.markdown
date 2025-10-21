@@ -306,6 +306,10 @@ In addition to all arguments above, the following attributes are exported:
 * `area` - Acceleration area of the zone. Valid values: `mainland`, `overseas`.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

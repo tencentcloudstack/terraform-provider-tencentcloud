@@ -35,4 +35,8 @@ In addition to all arguments above, the following attributes are exported:
   * `key_id` - Key ID.
 
 
+## Timeouts
+
+<no value>
+
 

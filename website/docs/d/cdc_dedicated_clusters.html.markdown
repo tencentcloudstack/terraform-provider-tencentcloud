@@ -73,4 +73,8 @@ In addition to all arguments above, the following attributes are exported:
 * `dedicated_cluster_set` - List of CDCs that meet the conditions.
 
 
+## Timeouts
+
+<no value>
+
 

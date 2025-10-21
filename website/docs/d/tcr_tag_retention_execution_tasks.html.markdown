@@ -45,4 +45,8 @@ In addition to all arguments above, the following attributes are exported:
   * `total` - Total number of tags.
 
 
+## Timeouts
+
+<no value>
+
 

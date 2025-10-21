@@ -108,4 +108,8 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Sell status of the instance.
 
 
+## Timeouts
+
+<no value>
+
 

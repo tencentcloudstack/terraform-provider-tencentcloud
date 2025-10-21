@@ -64,4 +64,8 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - event bus type.
 
 
+## Timeouts
+
+<no value>
+
 

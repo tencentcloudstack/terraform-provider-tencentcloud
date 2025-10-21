@@ -43,4 +43,8 @@ In addition to all arguments above, the following attributes are exported:
   * `timestamp` - The time the error occurred.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -35,6 +35,10 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_status` - Instance status (`1`=creating, `2`=running, `3`=abnormal, `4`=restarting, `5`=stopping, `6`=stopped, `7`=deleted).
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -187,6 +187,10 @@ In addition to all arguments above, the following attributes are exported:
 * `vport` - Type of instance.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

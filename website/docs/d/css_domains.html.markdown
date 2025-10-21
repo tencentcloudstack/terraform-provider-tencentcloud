@@ -51,4 +51,8 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Domain Type: 0: push stream. 1: Play.
 
 
+## Timeouts
+
+<no value>
+
 

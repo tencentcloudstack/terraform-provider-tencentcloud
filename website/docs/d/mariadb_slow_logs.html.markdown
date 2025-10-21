@@ -65,4 +65,8 @@ In addition to all arguments above, the following attributes are exported:
 * `query_time_sum` - Total statement query time.
 
 
+## Timeouts
+
+<no value>
+
 

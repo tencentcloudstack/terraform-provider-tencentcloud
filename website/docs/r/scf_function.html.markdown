@@ -202,6 +202,10 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - SCF function vip.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

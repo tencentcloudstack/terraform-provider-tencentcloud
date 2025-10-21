@@ -35,4 +35,8 @@ In addition to all arguments above, the following attributes are exported:
   * `value` - English description for region.
 
 
+## Timeouts
+
+<no value>
+
 

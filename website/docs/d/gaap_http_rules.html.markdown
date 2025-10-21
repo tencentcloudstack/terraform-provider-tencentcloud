@@ -93,4 +93,8 @@ In addition to all arguments above, the following attributes are exported:
   * `sni` - ServerNameIndication (SNI).
 
 
+## Timeouts
+
+<no value>
+
 

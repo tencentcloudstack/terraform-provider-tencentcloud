@@ -130,7 +130,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		"example":           "",
 		"description":       "",
 		"description_short": "",
-		"timeouts":          "",
 		"import":            "",
 	}
 

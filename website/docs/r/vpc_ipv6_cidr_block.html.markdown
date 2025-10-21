@@ -52,6 +52,10 @@ In addition to all arguments above, the following attributes are exported:
 * `ipv6_cidr_block` - Ipv6 cidr block.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

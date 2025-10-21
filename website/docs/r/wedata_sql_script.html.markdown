@@ -64,6 +64,10 @@ In addition to all arguments above, the following attributes are exported:
 * `script_id` - Script ID.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

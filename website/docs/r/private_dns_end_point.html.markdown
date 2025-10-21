@@ -39,6 +39,10 @@ In addition to all arguments above, the following attributes are exported:
 * `end_point_vip_set` - Vip list of endpoint.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

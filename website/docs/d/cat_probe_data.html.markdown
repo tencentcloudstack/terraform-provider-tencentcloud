@@ -63,4 +63,8 @@ In addition to all arguments above, the following attributes are exported:
   * `probe_time` - Probe time.
 
 
+## Timeouts
+
+<no value>
+
 

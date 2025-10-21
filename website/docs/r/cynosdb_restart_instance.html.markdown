@@ -33,4 +33,8 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - instance state.
 
 
+## Timeouts
+
+<no value>
+
 

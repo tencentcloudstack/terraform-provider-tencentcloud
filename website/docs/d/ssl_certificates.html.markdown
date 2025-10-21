@@ -71,4 +71,8 @@ In addition to all arguments above, the following attributes are exported:
   * `validity_period` - Validity period: unit (month).Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
 
+## Timeouts
+
+<no value>
+
 

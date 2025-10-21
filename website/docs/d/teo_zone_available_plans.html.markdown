@@ -44,4 +44,8 @@ In addition to all arguments above, the following attributes are exported:
   * `site_number` - The number of zones this zone plan can bind.
 
 
+## Timeouts
+
+<no value>
+
 

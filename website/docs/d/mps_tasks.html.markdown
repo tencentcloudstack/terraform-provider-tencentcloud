@@ -42,4 +42,8 @@ In addition to all arguments above, the following attributes are exported:
   * `task_type` - Task type, including:WorkflowTask, EditMediaTask, LiveProcessTask.
 
 
+## Timeouts
+
+<no value>
+
 

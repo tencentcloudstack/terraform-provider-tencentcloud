@@ -52,6 +52,10 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time of Customized Config.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

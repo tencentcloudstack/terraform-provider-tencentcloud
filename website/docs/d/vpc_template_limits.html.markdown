@@ -34,4 +34,8 @@ In addition to all arguments above, the following attributes are exported:
   * `service_template_member_limit` - service template member limit.
 
 
+## Timeouts
+
+<no value>
+
 

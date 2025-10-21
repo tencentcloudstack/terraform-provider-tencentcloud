@@ -42,4 +42,8 @@ In addition to all arguments above, the following attributes are exported:
   * `view` - The name of view.
 
 
+## Timeouts
+
+<no value>
+
 

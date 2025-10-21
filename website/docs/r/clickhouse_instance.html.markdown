@@ -176,6 +176,10 @@ In addition to all arguments above, the following attributes are exported:
 * `expire_time` - Expire time.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -95,4 +95,8 @@ In addition to all arguments above, the following attributes are exported:
   * `throughput_performance` - Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
 
 
+## Timeouts
+
+<no value>
+
 

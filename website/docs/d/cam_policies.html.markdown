@@ -52,4 +52,8 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Type of the policy strategy. `1` means customer strategy and `2` means preset strategy.
 
 
+## Timeouts
+
+<no value>
+
 

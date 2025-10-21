@@ -33,4 +33,8 @@ In addition to all arguments above, the following attributes are exported:
   * `version` - Grafana plugin version.
 
 
+## Timeouts
+
+<no value>
+
 

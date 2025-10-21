@@ -40,4 +40,8 @@ In addition to all arguments above, the following attributes are exported:
   * `wid` - Auto-Increment allowlist ID.
 
 
+## Timeouts
+
+<no value>
+
 

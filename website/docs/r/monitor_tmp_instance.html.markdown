@@ -64,6 +64,10 @@ In addition to all arguments above, the following attributes are exported:
 * `remote_write` - Prometheus remote write address.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

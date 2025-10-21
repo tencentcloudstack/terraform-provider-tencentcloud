@@ -61,4 +61,8 @@ In addition to all arguments above, the following attributes are exported:
   * `trace` - Message trace. true: enabled; false: not enabled.
 
 
+## Timeouts
+
+<no value>
+
 

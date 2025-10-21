@@ -39,4 +39,8 @@ In addition to all arguments above, the following attributes are exported:
   * `level` - Scaling group warning level. Valid values: NORMAL, WARNING, CRITICAL.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -43,4 +43,8 @@ In addition to all arguments above, the following attributes are exported:
   * `vport` - Virtual port of the readonly group.
 
 
+## Timeouts
+
+<no value>
+
 

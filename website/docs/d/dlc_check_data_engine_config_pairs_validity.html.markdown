@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
 * `unavailable_config` - Invalid parameter set.
 
 
+## Timeouts
+
+<no value>
+
 

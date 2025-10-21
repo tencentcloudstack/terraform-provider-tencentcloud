@@ -46,4 +46,8 @@ In addition to all arguments above, the following attributes are exported:
     * `weight` - Forwarding weight of the backend service, the range of [0, 100], defaults to `10`.
 
 
+## Timeouts
+
+<no value>
+
 

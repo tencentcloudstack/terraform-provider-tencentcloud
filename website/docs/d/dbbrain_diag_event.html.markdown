@@ -53,4 +53,8 @@ In addition to all arguments above, the following attributes are exported:
 * `suggestions` - A diagnostic suggestion, or empty if there is no suggestion.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -34,4 +34,8 @@ In addition to all arguments above, the following attributes are exported:
   * `bandwidth_usage` - Current billing amount in Mbps.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
 * `slow_logs` - details of slow logs.
 
 
+## Timeouts
+
+<no value>
+
 

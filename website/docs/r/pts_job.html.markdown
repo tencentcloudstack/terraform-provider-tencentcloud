@@ -67,6 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Scene Type.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

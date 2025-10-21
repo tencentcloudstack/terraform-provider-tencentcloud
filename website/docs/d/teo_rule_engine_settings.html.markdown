@@ -56,4 +56,8 @@ In addition to all arguments above, the following attributes are exported:
     * `type` - Property value type. Valid values:- `CHOICE`: enum type, must select one of the value in `ChoicesValue`.- `TOGGLE`: switch type, must select one of the value in `ChoicesValue`.- `OBJECT`: object type, the `ChoiceProperties` list all properties of the object.- `CUSTOM_NUM`: integer type.- `CUSTOM_STRING`: string type.
 
 
+## Timeouts
+
+<no value>
+
 

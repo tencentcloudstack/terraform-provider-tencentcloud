@@ -37,6 +37,10 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - The time when the sub application was created.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

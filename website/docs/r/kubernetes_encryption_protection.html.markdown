@@ -79,4 +79,8 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - kms encryption status.
 
 
+## Timeouts
+
+<no value>
+
 

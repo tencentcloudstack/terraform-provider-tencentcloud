@@ -56,4 +56,8 @@ In addition to all arguments above, the following attributes are exported:
     * `topic_traffic` - TopicTraffic.
 
 
+## Timeouts
+
+<no value>
+
 

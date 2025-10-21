@@ -228,6 +228,10 @@ In addition to all arguments above, the following attributes are exported:
 * `life_state` - Node pool status.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

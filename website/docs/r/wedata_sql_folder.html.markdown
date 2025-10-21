@@ -40,6 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 * `path` - Node path.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

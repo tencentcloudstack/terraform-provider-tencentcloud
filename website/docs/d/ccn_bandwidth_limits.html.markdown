@@ -52,4 +52,8 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - Limitation of region.
 
 
+## Timeouts
+
+<no value>
+
 

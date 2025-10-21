@@ -81,6 +81,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The EIP current status.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

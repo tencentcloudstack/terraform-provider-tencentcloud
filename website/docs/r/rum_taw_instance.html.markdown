@@ -50,6 +50,10 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_at` - Update time.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -34,4 +34,8 @@ In addition to all arguments above, the following attributes are exported:
 * `recovery_end_time` - The latest restoration time (UTC+8).
 
 
+## Timeouts
+
+<no value>
+
 

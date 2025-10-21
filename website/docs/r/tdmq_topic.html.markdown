@@ -63,4 +63,8 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of resource.
 
 
+## Timeouts
+
+<no value>
+
 

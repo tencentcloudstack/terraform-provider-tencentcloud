@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Project status. Valid values: `0` (normal), `-1` (disabled), `3` (default project).
 
 
+## Timeouts
+
+<no value>
+
 

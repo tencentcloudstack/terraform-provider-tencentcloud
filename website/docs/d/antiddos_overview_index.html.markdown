@@ -44,4 +44,8 @@ In addition to all arguments above, the following attributes are exported:
 * `new_attack_type` - The type in the most recent attack.
 
 
+## Timeouts
+
+<no value>
+
 

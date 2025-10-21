@@ -51,4 +51,8 @@ In addition to all arguments above, the following attributes are exported:
   * `table_name` - Table Name.
 
 
+## Timeouts
+
+<no value>
+
 

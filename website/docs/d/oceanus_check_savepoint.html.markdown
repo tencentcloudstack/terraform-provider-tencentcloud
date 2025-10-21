@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
 * `savepoint_status` - 1=available, 2=unavailable.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -48,4 +48,8 @@ In addition to all arguments above, the following attributes are exported:
   * `threshold` - Alarm threshold.
 
 
+## Timeouts
+
+<no value>
+
 

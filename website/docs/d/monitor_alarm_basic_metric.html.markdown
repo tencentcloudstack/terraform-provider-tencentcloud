@@ -52,4 +52,8 @@ In addition to all arguments above, the following attributes are exported:
   * `unit` - Units used for indicators.
 
 
+## Timeouts
+
+<no value>
+
 

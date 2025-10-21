@@ -53,4 +53,8 @@ In addition to all arguments above, the following attributes are exported:
 * `as_path` - As path list of the BGP.
 
 
+## Timeouts
+
+<no value>
+
 

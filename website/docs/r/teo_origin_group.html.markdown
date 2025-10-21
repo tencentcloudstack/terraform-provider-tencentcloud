@@ -90,6 +90,10 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Origin site group update time.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

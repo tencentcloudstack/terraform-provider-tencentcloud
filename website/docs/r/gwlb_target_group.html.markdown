@@ -73,6 +73,10 @@ In addition to all arguments above, the following attributes are exported:
   * `weight` - Weight of target group instance. Only 0 or 16 is supported, and non-0 is uniformly treated as 16.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

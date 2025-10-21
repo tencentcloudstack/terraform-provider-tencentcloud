@@ -58,4 +58,8 @@ In addition to all arguments above, the following attributes are exported:
 * `request_id` - Unique request id, provide this when encounter a problem.
 
 
+## Timeouts
+
+<no value>
+
 

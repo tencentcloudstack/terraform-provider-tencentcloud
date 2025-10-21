@@ -38,4 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 * `max_reputation_level` - Maximum credit rating.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -51,4 +51,8 @@ In addition to all arguments above, the following attributes are exported:
   * `user_name` - Name of CAM user as unique key.
 
 
+## Timeouts
+
+<no value>
+
 

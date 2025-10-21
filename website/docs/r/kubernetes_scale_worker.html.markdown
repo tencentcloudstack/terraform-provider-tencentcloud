@@ -259,6 +259,10 @@ In addition to all arguments above, the following attributes are exported:
   * `lan_ip` - LAN IP of the cvm.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

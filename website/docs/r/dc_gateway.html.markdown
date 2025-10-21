@@ -74,6 +74,10 @@ In addition to all arguments above, the following attributes are exported:
 * `enable_bgp` - Indicates whether the BGP is enabled.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

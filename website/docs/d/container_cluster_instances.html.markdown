@@ -45,4 +45,8 @@ In addition to all arguments above, the following attributes are exported:
 * `total_count` - Number of instances.
 
 
+## Timeouts
+
+<no value>
+
 

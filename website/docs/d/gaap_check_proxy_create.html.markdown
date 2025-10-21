@@ -47,4 +47,8 @@ In addition to all arguments above, the following attributes are exported:
 * `check_flag` - Query whether the proxy with the given configuration can be created, 1 can be created, 0 cannot be created.
 
 
+## Timeouts
+
+<no value>
+
 

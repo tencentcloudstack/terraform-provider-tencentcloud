@@ -38,6 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Tag type, 0 normal tag, 1 account tag.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

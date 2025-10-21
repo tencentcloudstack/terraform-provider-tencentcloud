@@ -46,4 +46,8 @@ In addition to all arguments above, the following attributes are exported:
   * `total_count` - Total Repository.
 
 
+## Timeouts
+
+<no value>
+
 

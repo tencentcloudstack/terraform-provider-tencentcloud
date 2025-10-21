@@ -70,6 +70,10 @@ In addition to all arguments above, the following attributes are exported:
 * `root_url` - Grafana external url which could be accessed by user.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

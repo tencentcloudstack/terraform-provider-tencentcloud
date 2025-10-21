@@ -56,6 +56,10 @@ In addition to all arguments above, the following attributes are exported:
 * `uuid` - The unique id corresponding to the rule.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

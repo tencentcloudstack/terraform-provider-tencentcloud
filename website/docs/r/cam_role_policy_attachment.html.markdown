@@ -54,6 +54,10 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_type` - Type of the policy strategy. `User` means customer strategy and `QCS` means preset strategy.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

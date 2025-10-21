@@ -91,4 +91,8 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Datasource type.
 
 
+## Timeouts
+
+<no value>
+
 

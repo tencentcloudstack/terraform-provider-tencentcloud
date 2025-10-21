@@ -59,6 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 * `active_scheduler` - Resource dispatchers currently in effect.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

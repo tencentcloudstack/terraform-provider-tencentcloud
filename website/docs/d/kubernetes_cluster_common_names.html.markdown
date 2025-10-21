@@ -50,4 +50,8 @@ In addition to all arguments above, the following attributes are exported:
   * `subaccount_uin` - User UIN.
 
 
+## Timeouts
+
+<no value>
+
 

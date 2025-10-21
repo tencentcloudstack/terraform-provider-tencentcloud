@@ -365,6 +365,10 @@ In addition to all arguments above, the following attributes are exported:
 * `uid` - Uid of the postgresql instance.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

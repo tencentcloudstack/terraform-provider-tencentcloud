@@ -144,6 +144,10 @@ In addition to all arguments above, the following attributes are exported:
 * `version` - Security policies version, auto increment for every update.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

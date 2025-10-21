@@ -147,4 +147,8 @@ In addition to all arguments above, the following attributes are exported:
   * `subscribe_instance_name` - Name of the SQL Server instance which subscribe.
 
 
+## Timeouts
+
+<no value>
+
 

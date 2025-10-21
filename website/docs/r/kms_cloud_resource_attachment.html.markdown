@@ -41,6 +41,10 @@ In addition to all arguments above, the following attributes are exported:
 * `owner` - owner.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

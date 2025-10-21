@@ -53,4 +53,8 @@ In addition to all arguments above, the following attributes are exported:
   * `static_num` - The number of static resource on page.
 
 
+## Timeouts
+
+<no value>
+
 

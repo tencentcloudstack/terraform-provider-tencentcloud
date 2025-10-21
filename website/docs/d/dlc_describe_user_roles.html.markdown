@@ -49,4 +49,8 @@ In addition to all arguments above, the following attributes are exported:
   * `uin` - The user ID.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -175,6 +175,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Current status of a scaling group.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

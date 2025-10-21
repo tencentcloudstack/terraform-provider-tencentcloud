@@ -41,6 +41,10 @@ In addition to all arguments above, the following attributes are exported:
 * `path_rewrite_id` - path rewrite rule ID.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

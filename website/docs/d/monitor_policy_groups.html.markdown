@@ -84,4 +84,8 @@ In addition to all arguments above, the following attributes are exported:
   * `use_sum` - Number of instances of policy group bindings.
 
 
+## Timeouts
+
+<no value>
+
 

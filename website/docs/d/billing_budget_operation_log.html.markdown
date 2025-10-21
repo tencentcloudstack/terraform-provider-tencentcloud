@@ -47,4 +47,8 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Update time.
 
 
+## Timeouts
+
+<no value>
+
 

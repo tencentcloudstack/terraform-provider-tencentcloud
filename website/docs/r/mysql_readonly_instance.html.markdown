@@ -144,6 +144,10 @@ In addition to all arguments above, the following attributes are exported:
 * `task_status` - Indicates which kind of operations is being executed.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

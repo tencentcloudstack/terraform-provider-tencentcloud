@@ -45,4 +45,8 @@ In addition to all arguments above, the following attributes are exported:
   * `metric_name` - Metric Name.
 
 
+## Timeouts
+
+<no value>
+
 

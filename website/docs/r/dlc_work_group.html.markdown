@@ -35,6 +35,10 @@ In addition to all arguments above, the following attributes are exported:
 * `user_ids` - Collection of IDs of users to be bound to working groups.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

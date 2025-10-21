@@ -41,4 +41,8 @@ In addition to all arguments above, the following attributes are exported:
   * `vip` - CLB instance VIP.
 
 
+## Timeouts
+
+<no value>
+
 

@@ -33,4 +33,8 @@ In addition to all arguments above, the following attributes are exported:
 * `type_list` - Record type list.
 
 
+## Timeouts
+
+<no value>
+
 

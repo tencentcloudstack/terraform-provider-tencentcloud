@@ -52,4 +52,8 @@ In addition to all arguments above, the following attributes are exported:
 * `total_count` - Total number of attacks.
 
 
+## Timeouts
+
+<no value>
+
 

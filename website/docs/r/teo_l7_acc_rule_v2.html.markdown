@@ -491,6 +491,10 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_priority` - Rule priority. only used as an output parameter.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

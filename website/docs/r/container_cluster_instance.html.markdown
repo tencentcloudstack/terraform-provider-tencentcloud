@@ -78,4 +78,8 @@ In addition to all arguments above, the following attributes are exported:
 * `wan_ip` - Describe the wan ip of the node.
 
 
+## Timeouts
+
+<no value>
+
 

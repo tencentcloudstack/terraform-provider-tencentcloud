@@ -40,6 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Type. folder, script.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

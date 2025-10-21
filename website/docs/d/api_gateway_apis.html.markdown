@@ -105,4 +105,8 @@ In addition to all arguments above, the following attributes are exported:
   * `service_id` - Which service this API belongs. Refer to resource `tencentcloud_api_gateway_service`.
 
 
+## Timeouts
+
+<no value>
+
 

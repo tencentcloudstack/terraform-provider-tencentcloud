@@ -39,4 +39,8 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Log specific type, possible values: slowlog - slow log.
 
 
+## Timeouts
+
+<no value>
+
 

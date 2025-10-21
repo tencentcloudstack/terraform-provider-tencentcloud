@@ -73,4 +73,8 @@ In addition to all arguments above, the following attributes are exported:
 * `image_name` - Name of this image.
 
 
+## Timeouts
+
+<no value>
+
 

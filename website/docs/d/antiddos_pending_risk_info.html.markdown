@@ -35,4 +35,8 @@ In addition to all arguments above, the following attributes are exported:
 * `total` - Total number of all pending risk events.
 
 
+## Timeouts
+
+<no value>
+
 

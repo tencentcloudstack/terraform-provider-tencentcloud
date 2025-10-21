@@ -65,4 +65,8 @@ In addition to all arguments above, the following attributes are exported:
   * `subdomain` - The subdomain currently being analyzed.
 
 
+## Timeouts
+
+<no value>
+
 

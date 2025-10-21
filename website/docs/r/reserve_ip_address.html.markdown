@@ -49,6 +49,10 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - Binding status.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

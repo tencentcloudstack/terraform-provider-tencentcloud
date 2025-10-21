@@ -50,4 +50,8 @@ In addition to all arguments above, the following attributes are exported:
       * `weight` - Version weight.
 
 
+## Timeouts
+
+<no value>
+
 

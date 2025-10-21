@@ -34,4 +34,8 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - Region ID in the format of ap-guangzhou.
 
 
+## Timeouts
+
+<no value>
+
 

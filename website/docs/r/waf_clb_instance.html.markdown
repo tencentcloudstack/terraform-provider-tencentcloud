@@ -81,4 +81,8 @@ In addition to all arguments above, the following attributes are exported:
 * `valid_time` - waf instance valid time.
 
 
+## Timeouts
+
+<no value>
+
 

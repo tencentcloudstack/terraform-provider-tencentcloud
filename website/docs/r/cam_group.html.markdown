@@ -35,6 +35,10 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the CAM group.
 
 
+## Timeouts
+
+<no value>
+
 
 ## Import
 

@@ -35,4 +35,8 @@ In addition to all arguments above, the following attributes are exported:
   * `security_group_id` - Security group instance ID.
 
 
+## Timeouts
+
+<no value>
+
 
