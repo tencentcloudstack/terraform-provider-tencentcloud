@@ -166,8 +166,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	}
 
 	if resource.Timeouts != nil {
-		data["timeouts"] = strings.TrimSpace("The timeouts block allows you to specify timeouts for certain actions:")
-
 		var timeoutMethods []string
 		if resource.Timeouts.Create != nil {
 			timeoutStr := resource.Timeouts.Create.String()
