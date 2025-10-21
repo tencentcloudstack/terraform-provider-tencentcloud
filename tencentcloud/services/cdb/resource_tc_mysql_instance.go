@@ -326,7 +326,7 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Optional:     true,
 			ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 			Default:      0,
-			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
+			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones. Not support readonly instance setting.",
 		},
 		"first_slave_zone": {
 			Type:        schema.TypeString,
