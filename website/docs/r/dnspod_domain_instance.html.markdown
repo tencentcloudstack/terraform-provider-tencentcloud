@@ -40,6 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 * `slave_dns` - Is secondary DNS enabled.
 
 
+
 ## Import
 
 DnsPod Domain instance can be imported, e.g.

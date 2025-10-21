@@ -142,6 +142,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 vpc flow_log can be imported using the flow log Id combine vpc Id, e.g.

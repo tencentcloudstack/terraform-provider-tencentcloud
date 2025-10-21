@@ -109,6 +109,7 @@ In addition to all arguments above, the following attributes are exported:
 * `group_id` - Alarm group id.
 
 
+
 ## Import
 
 monitor tmp_alert_group can be imported using the id, e.g.

@@ -83,6 +83,7 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_at` - Update time Note: this field may return null, indicating that a valid value cannot be obtained.
 
 
+
 ## Import
 
 pts alert_channel can be imported using the project_id#notice_id, e.g.

@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `bandwidth` - Bandwidth of flow monitor.
 
 
+
 ## Import
 
 NAT gateway flow monitor can be imported using the id, e.g.

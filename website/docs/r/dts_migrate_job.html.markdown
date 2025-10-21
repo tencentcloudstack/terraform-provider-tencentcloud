@@ -288,6 +288,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Task status. Valid values: created(Created), checking (Checking), checkPass (Check passed), checkNotPass (Check not passed), readyRun (Ready for running), running (Running), readyComplete (Preparation completed), success (Successful), failed (Failed), stopping (Stopping), completing (Completing), pausing (Pausing), manualPaused (Paused).
 
 
+
 ## Import
 
 DTS migrate job can be imported using the id, e.g.

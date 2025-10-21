@@ -152,6 +152,7 @@ In addition to all arguments above, the following attributes are exported:
 * `protocol_type` - Type of protocol within the listener.
 
 
+
 ## Import
 
 CLB attachment can be imported using the id, e.g.

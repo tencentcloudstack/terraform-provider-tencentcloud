@@ -65,6 +65,7 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_time` - Group update time such as: 2019-06-20 15:51:28.
 
 
+
 ## Import
 
 tsf api_group can be imported using the id, e.g.

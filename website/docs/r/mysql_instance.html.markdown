@@ -271,6 +271,14 @@ In addition to all arguments above, the following attributes are exported:
 * `task_status` - Indicates which kind of operations is being executed.
 
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `20m`) Used when creating the resource.
+* `delete` - (Defaults to `20m`) Used when deleting the resource.
+
+
 ## Import
 
 MySQL instance can be imported using the id, e.g.

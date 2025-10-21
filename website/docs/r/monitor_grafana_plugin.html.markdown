@@ -65,6 +65,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 monitor grafanaPlugin can be imported using the instance_id#plugin_id, e.g.

@@ -47,6 +47,7 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - encryption, `enable` encrypted, `disable` unencrypted.
 
 
+
 ## Import
 
 sqlserver rollback_instance can be imported using the id, e.g.

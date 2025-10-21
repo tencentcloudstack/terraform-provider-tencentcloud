@@ -41,6 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - Resource ID.
 
 
+
 ## Import
 
 wedata script can be imported using the id, e.g.

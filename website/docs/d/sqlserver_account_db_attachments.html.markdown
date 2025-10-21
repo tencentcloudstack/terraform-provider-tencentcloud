@@ -100,3 +100,4 @@ In addition to all arguments above, the following attributes are exported:
   * `privilege` - Privilege of the account on DB. Valid value are `ReadOnly`, `ReadWrite`.
 
 
+

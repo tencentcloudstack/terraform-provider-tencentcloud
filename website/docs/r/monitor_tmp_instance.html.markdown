@@ -64,6 +64,7 @@ In addition to all arguments above, the following attributes are exported:
 * `remote_write` - Prometheus remote write address.
 
 
+
 ## Import
 
 monitor tmpInstance can be imported using the id, e.g.

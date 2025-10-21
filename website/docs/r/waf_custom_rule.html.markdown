@@ -209,6 +209,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - rule ID.
 
 
+
 ## Import
 
 waf custom rule can be imported using the id, e.g.

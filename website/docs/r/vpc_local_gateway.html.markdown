@@ -42,6 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 vpc local_gateway can be imported using the id, e.g.

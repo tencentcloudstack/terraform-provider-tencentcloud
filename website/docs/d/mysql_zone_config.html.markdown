@@ -54,3 +54,4 @@ In addition to all arguments above, the following attributes are exported:
   * `support_slave_sync_modes` - Data replication mode. `0` - Async replication; `1` - Semisync replication; `2` - Strongsync replication.
 
 
+

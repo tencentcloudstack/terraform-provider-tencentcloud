@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 vpc vpn_gateway_ssl_client_cert can be imported using the id, e.g.

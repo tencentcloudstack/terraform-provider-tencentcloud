@@ -62,6 +62,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - event rule id.
 
 
+
 ## Import
 
 eb event_rule can be imported using the id, e.g.

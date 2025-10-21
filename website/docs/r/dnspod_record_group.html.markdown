@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `group_id` - Group ID.
 
 
+
 ## Import
 
 dnspod record_group can be imported using the domain#groupId, e.g.

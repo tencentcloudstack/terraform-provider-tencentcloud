@@ -59,6 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 * `user_provisioning_id` - User provisioning id.
 
 
+
 ## Import
 
 organization identity_center_user_sync_provisioning can be imported using the id, e.g.

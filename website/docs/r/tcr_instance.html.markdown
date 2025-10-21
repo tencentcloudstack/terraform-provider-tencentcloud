@@ -118,6 +118,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the TCR instance.
 
 
+
 ## Import
 
 tcr instance can be imported using the id, e.g.

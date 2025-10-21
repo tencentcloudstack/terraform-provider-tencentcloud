@@ -42,6 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 * `wid` - Auto-Increment allowlist ID.
 
 
+
 ## Import
 
 rum whitelist can be imported using the id, e.g.

@@ -55,6 +55,7 @@ In addition to all arguments above, the following attributes are exported:
 * `uuid` - The unique id corresponding to the rule, no need to fill in when creating the rule.
 
 
+
 ## Import
 
 CFW nat policy can be imported using the id, e.g.

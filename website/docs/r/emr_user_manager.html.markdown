@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 * `user_type` - User type.
 
 
+
 ## Import
 
 emr user_manager can be imported using the id, e.g.

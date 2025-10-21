@@ -51,6 +51,7 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - state of end point.
 
 
+
 ## Import
 
 VPC end point can be imported using the id, e.g.

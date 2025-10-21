@@ -306,6 +306,7 @@ In addition to all arguments above, the following attributes are exported:
 * `area` - Acceleration area of the zone. Valid values: `mainland`, `overseas`.
 
 
+
 ## Import
 
 teo zone_setting can be imported using the zone_id, e.g.

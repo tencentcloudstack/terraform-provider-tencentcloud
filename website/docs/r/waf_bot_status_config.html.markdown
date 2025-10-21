@@ -44,6 +44,7 @@ In addition to all arguments above, the following attributes are exported:
 * `valid_scene_count` - Number of effective scenarios.
 
 
+
 ## Import
 
 WAF bot status config can be imported using the id, e.g.

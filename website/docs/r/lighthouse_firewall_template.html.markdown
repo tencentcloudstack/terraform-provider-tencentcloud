@@ -56,6 +56,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 lighthouse firewall_template can be imported using the id, e.g.

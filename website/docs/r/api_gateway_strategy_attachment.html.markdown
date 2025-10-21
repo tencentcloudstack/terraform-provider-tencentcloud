@@ -94,6 +94,7 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+
 ## Import
 
 IP strategy attachment of API gateway can be imported using the id, e.g.

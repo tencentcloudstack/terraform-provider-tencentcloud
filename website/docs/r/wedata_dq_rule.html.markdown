@@ -117,6 +117,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - Rule ID.
 
 
+
 ## Import
 
 wedata dq_rule can be imported using the id, e.g.

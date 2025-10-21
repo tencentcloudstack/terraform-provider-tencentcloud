@@ -80,3 +80,4 @@ In addition to all arguments above, the following attributes are exported:
   * `target_uin` - When the credential type is a cloud API key pair credential, this field is valid and is used to represent the user UIN to which the cloud API key pair belongs.
 
 
+

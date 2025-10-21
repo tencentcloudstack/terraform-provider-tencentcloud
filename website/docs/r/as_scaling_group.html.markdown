@@ -175,6 +175,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Current status of a scaling group.
 
 
+
 ## Import
 
 AutoScaling Groups can be imported using the id, e.g.

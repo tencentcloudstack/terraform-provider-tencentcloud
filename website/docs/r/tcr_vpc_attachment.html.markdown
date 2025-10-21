@@ -68,6 +68,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the internal access.
 
 
+
 ## Import
 
 tcr vpc attachment can be imported using the id, e.g.

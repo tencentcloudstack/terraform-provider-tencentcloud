@@ -561,6 +561,7 @@ In addition to all arguments above, the following attributes are exported:
 * `ipv6_mode` - This field is meaningful when the IP address version is ipv6, `IPv6Nat64` | `IPv6FullChain`.
 
 
+
 ## Import
 
 CLB instance can be imported using the id, e.g.

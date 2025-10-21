@@ -36,6 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The status of log topic.
 
 
+
 ## Import
 
 CLB log topic can be imported using the id, e.g.

@@ -141,6 +141,7 @@ In addition to all arguments above, the following attributes are exported:
 * `life_state` - life state of serverless node pool.
 
 
+
 ## Import
 
 serverless node pool can be imported, e.g.

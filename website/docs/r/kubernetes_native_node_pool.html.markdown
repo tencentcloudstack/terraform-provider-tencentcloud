@@ -228,6 +228,7 @@ In addition to all arguments above, the following attributes are exported:
 * `life_state` - Node pool status.
 
 
+
 ## Import
 
 TKE kubernetes native node pool can be imported using the id, e.g.

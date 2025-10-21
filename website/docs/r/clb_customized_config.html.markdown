@@ -52,6 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time of Customized Config.
 
 
+
 ## Import
 
 CLB customized config can be imported using the id, e.g.

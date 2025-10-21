@@ -40,6 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the customer gateway.
 
 
+
 ## Import
 
 VPN customer gateway can be imported using the id, e.g.

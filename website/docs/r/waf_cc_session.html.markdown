@@ -49,6 +49,7 @@ In addition to all arguments above, the following attributes are exported:
 * `session_id` - Session ID.
 
 
+
 ## Import
 
 waf cc_session can be imported using the id, e.g.

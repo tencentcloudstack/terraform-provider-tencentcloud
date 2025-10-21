@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 * `release_time` - release time.
 
 
+
 ## Import
 
 tsf application_release_config can be imported using the configId#groupId#configReleaseId, e.g.

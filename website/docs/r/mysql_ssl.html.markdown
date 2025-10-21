@@ -47,6 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 * `url` - The certificate download link. Example value: http://testdownload.url.
 
 
+
 ## Import
 
 MySQL SSL can be imported using the id, e.g.

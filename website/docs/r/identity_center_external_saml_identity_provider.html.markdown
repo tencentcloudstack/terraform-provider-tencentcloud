@@ -42,6 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time.
 
 
+
 ## Import
 
 organization identity_center_external_saml_identity_provider can be imported using the id, e.g.

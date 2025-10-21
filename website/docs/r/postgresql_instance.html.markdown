@@ -365,6 +365,7 @@ In addition to all arguments above, the following attributes are exported:
 * `uid` - Uid of the postgresql instance.
 
 
+
 ## Import
 
 postgresql instance can be imported using the id, e.g.

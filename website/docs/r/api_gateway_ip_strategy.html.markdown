@@ -48,6 +48,7 @@ In addition to all arguments above, the following attributes are exported:
 * `strategy_id` - IP policy ID.
 
 
+
 ## Import
 
 IP strategy of API gateway can be imported using the id, e.g.

@@ -57,6 +57,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - Rule ID.
 
 
+
 ## Import
 
 teo application_proxy_rule can be imported using the zoneId#proxyId#ruleId, e.g.

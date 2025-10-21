@@ -255,6 +255,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - Rule ID.
 
 
+
 ## Import
 
 WAF bot scene ucb rule can be imported using the id, e.g.

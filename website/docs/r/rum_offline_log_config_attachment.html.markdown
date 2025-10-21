@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `msg` - Interface call information.
 
 
+
 ## Import
 
 rum offline_log_config_attachment can be imported using the id, e.g.

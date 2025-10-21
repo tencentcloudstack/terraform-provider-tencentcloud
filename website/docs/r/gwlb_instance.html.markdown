@@ -73,6 +73,7 @@ In addition to all arguments above, the following attributes are exported:
 * `vips` - Gateway Load Balancer provides virtual IP services.
 
 
+
 ## Import
 
 gwlb gwlb_instance can be imported using the id, e.g.

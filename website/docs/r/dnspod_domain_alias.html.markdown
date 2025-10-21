@@ -35,6 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `domain_alias_id` - Domain alias ID.
 
 
+
 ## Import
 
 dnspod domain_alias can be imported using the id, e.g.
