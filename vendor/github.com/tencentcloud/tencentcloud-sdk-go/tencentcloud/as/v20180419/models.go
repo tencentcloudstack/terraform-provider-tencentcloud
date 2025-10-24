@@ -1128,10 +1128,15 @@ type CreateLaunchConfigurationRequestParams struct {
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 云服务器主机名（HostName）的相关设置。
+	// 不支持windows实例设置主机名。 
+	// 新增该属性时，必须传递云服务器的主机名，其它未传递字段会设置为默认值。
+	// 会校验主机名(如果存在后缀则加上后缀)是否超过最大位数46。
 	HostNameSettings *HostNameSettings `json:"HostNameSettings,omitnil,omitempty" name:"HostNameSettings"`
 
 	// 云服务器实例名（InstanceName）的相关设置。
 	// 如果用户在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 参照此字段进行设置，并传递给 CVM；如果用户未在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置，并传递给 CVM。
+	// 新增该属性时，必须传递云服务器的实例名称，其它未传递字段会设置为默认值。
+	// 会校验实例名称(如果存在后缀则加上后缀)是否超过最大位数108。
 	InstanceNameSettings *InstanceNameSettings `json:"InstanceNameSettings,omitnil,omitempty" name:"InstanceNameSettings"`
 
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
@@ -1232,10 +1237,15 @@ type CreateLaunchConfigurationRequest struct {
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 云服务器主机名（HostName）的相关设置。
+	// 不支持windows实例设置主机名。 
+	// 新增该属性时，必须传递云服务器的主机名，其它未传递字段会设置为默认值。
+	// 会校验主机名(如果存在后缀则加上后缀)是否超过最大位数46。
 	HostNameSettings *HostNameSettings `json:"HostNameSettings,omitnil,omitempty" name:"HostNameSettings"`
 
 	// 云服务器实例名（InstanceName）的相关设置。
 	// 如果用户在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 参照此字段进行设置，并传递给 CVM；如果用户未在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置，并传递给 CVM。
+	// 新增该属性时，必须传递云服务器的实例名称，其它未传递字段会设置为默认值。
+	// 会校验实例名称(如果存在后缀则加上后缀)是否超过最大位数108。
 	InstanceNameSettings *InstanceNameSettings `json:"InstanceNameSettings,omitnil,omitempty" name:"InstanceNameSettings"`
 
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
@@ -2315,7 +2325,7 @@ type DescribeAutoScalingActivitiesRequestParams struct {
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 伸缩活动最早的开始时间，如果指定了ActivityIds，此参数将被忽略。取值为`UTC`时间，按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ssZ`。
+	// 伸缩活动最早的开始时间，如果指定了ActivityIds，此参数将被忽略。取值为`UTC`时间，按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ssZ`。注意：当前仅保存近两年的伸缩活动。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// 伸缩活动最晚的结束时间，如果指定了ActivityIds，此参数将被忽略。取值为`UTC`时间，按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ssZ`。
@@ -2340,7 +2350,7 @@ type DescribeAutoScalingActivitiesRequest struct {
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 伸缩活动最早的开始时间，如果指定了ActivityIds，此参数将被忽略。取值为`UTC`时间，按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ssZ`。
+	// 伸缩活动最早的开始时间，如果指定了ActivityIds，此参数将被忽略。取值为`UTC`时间，按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ssZ`。注意：当前仅保存近两年的伸缩活动。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// 伸缩活动最晚的结束时间，如果指定了ActivityIds，此参数将被忽略。取值为`UTC`时间，按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ssZ`。
@@ -3799,7 +3809,7 @@ type HostNameSettings struct {
 	// 云服务器的主机名。
 	// <li> 点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li> 
 	// <li> 不支持 Windows 实例。</li> 
-	// <li> 其他类型（Linux 等）实例：字符长度为[2, 40]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。不允许为纯数字。</li> 
+	// <li> 其他类型（Linux 等）实例：字符长度为[2, 42]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。不允许为纯数字。</li> 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
@@ -3810,9 +3820,10 @@ type HostNameSettings struct {
 	HostNameStyle *string `json:"HostNameStyle,omitnil,omitempty" name:"HostNameStyle"`
 
 	// 云服务器的主机名后缀。
+	// HostNameSettings的该入参非必选，未选时不设置主机名后缀。
 	// <li> 点号（.）和短横线（-）不能作为 HostNameSuffix 的首尾字符，不能连续使用。</li> 
 	// <li> 不支持 Windows 实例。</li> 
-	// <li>其他类型（Linux 等）实例：字符长度为[1, 37]，且与 HostName 的长度和不能超过 39，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li> 
+	// <li>其他类型（Linux 等）实例：字符长度为[1, 39]，且与 HostName 的长度和不能超过 41，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li> 
 	// 假设后缀名称为 suffix，原主机名为 test.0，最终主机名为 test.0.suffix。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostNameSuffix *string `json:"HostNameSuffix,omitnil,omitempty" name:"HostNameSuffix"`
@@ -3924,11 +3935,19 @@ type InstanceMarketOptionsRequest struct {
 }
 
 type InstanceNameIndexSettings struct {
-	// 是否开启实例创建序号，默认不开启。取值范围：<li>TRUE：表示开启实例创建序号<li>FALSE：表示不开启实例创建序号
+	// 是否开启实例创建序号，默认不开启。取值范围：
+	// 
+	// **TRUE**：表示开启实例创建序号; **FALSE**：表示不开启实例创建序号
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
-	// 初始序号，取值范围为 [0, 99999999]。当序号递增后超出取值范围时，扩容活动会失败。<li>首次开启实例名称序号：默认值为 0。<li>非首次开启实例名称序号：若不指定该参数，沿用历史序号。下调初始序号可能会造成伸缩组内实例名称序号重复。
+	// 初始序号。取值范围为 [0, 99999999]。
+	// 
+	// 当序号递增后超出取值范围时，扩容活动会失败。
+	// 
+	// 首次开启实例名称序号：默认值为 0。
+	// 非首次开启实例名称序号：若不指定该参数，沿用历史序号。
+	// 下调初始序号可能会造成伸缩组内实例名称序号重复。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BeginIndex *int64 `json:"BeginIndex,omitnil,omitempty" name:"BeginIndex"`
 }
@@ -4691,11 +4710,13 @@ type ModifyLaunchConfigurationAttributesRequestParams struct {
 	// 云服务器主机名（HostName）的相关设置。
 	// 不支持windows实例设置主机名。
 	// 新增该属性时，必须传递云服务器的主机名，其它未传递字段会设置为默认值。
+	// 会校验主机名(如果存在后缀则加上后缀)是否超过最大位数46。
 	HostNameSettings *HostNameSettings `json:"HostNameSettings,omitnil,omitempty" name:"HostNameSettings"`
 
 	// 云服务器（InstanceName）实例名的相关设置。 
 	// 如果用户在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 参照此字段进行设置，并传递给 CVM；如果用户未在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置，并传递给 CVM。
 	// 新增该属性时，必须传递云服务器的实例名称，其它未传递字段会设置为默认值。
+	// 会校验实例名(如果存在后缀则加上后缀)是否超过最大位数108。
 	InstanceNameSettings *InstanceNameSettings `json:"InstanceNameSettings,omitnil,omitempty" name:"InstanceNameSettings"`
 
 	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。
@@ -4800,11 +4821,13 @@ type ModifyLaunchConfigurationAttributesRequest struct {
 	// 云服务器主机名（HostName）的相关设置。
 	// 不支持windows实例设置主机名。
 	// 新增该属性时，必须传递云服务器的主机名，其它未传递字段会设置为默认值。
+	// 会校验主机名(如果存在后缀则加上后缀)是否超过最大位数46。
 	HostNameSettings *HostNameSettings `json:"HostNameSettings,omitnil,omitempty" name:"HostNameSettings"`
 
 	// 云服务器（InstanceName）实例名的相关设置。 
 	// 如果用户在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 参照此字段进行设置，并传递给 CVM；如果用户未在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置，并传递给 CVM。
 	// 新增该属性时，必须传递云服务器的实例名称，其它未传递字段会设置为默认值。
+	// 会校验实例名(如果存在后缀则加上后缀)是否超过最大位数108。
 	InstanceNameSettings *InstanceNameSettings `json:"InstanceNameSettings,omitnil,omitempty" name:"InstanceNameSettings"`
 
 	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。
@@ -5956,20 +5979,24 @@ func (r *ScaleInInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ScaleOutInstancesRequestParams struct {
-	// 伸缩组ID。
+	// 伸缩组ID。可以通过如下方式获取可用的伸缩组ID:
+	// <li>通过登录 [控制台](https://console.cloud.tencent.com/autoscaling/group) 查询伸缩组ID。</li>
+	// <li>通过调用接口 [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) ，取返回信息中的 AutoScalingGroupId 获取伸缩组ID。</li>
 	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitnil,omitempty" name:"AutoScalingGroupId"`
 
-	// 希望扩容的实例数量。
+	// 希望扩容的实例数量。该参数的静态取值范围是 [1,2000]，同时该参数不得大于期望数与最大值的差值。例如伸缩组期望数为 20，最大值为 100，此时可取值范围为 [1,80]。
 	ScaleOutNumber *uint64 `json:"ScaleOutNumber,omitnil,omitempty" name:"ScaleOutNumber"`
 }
 
 type ScaleOutInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 伸缩组ID。
+	// 伸缩组ID。可以通过如下方式获取可用的伸缩组ID:
+	// <li>通过登录 [控制台](https://console.cloud.tencent.com/autoscaling/group) 查询伸缩组ID。</li>
+	// <li>通过调用接口 [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) ，取返回信息中的 AutoScalingGroupId 获取伸缩组ID。</li>
 	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitnil,omitempty" name:"AutoScalingGroupId"`
 
-	// 希望扩容的实例数量。
+	// 希望扩容的实例数量。该参数的静态取值范围是 [1,2000]，同时该参数不得大于期望数与最大值的差值。例如伸缩组期望数为 20，最大值为 100，此时可取值范围为 [1,80]。
 	ScaleOutNumber *uint64 `json:"ScaleOutNumber,omitnil,omitempty" name:"ScaleOutNumber"`
 }
 
@@ -6317,7 +6344,7 @@ func (r *StartAutoScalingInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type StartInstanceRefreshRequestParams struct {
-	// 伸缩组ID。
+	// 伸缩组ID。可通过登录 [控制台](https://console.cloud.tencent.com/autoscaling/group) 或调用接口 [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) ，取返回信息中的 AutoScalingGroupId 获取伸缩组ID。
 	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitnil,omitempty" name:"AutoScalingGroupId"`
 
 	// 刷新设置。
@@ -6332,7 +6359,7 @@ type StartInstanceRefreshRequestParams struct {
 type StartInstanceRefreshRequest struct {
 	*tchttp.BaseRequest
 	
-	// 伸缩组ID。
+	// 伸缩组ID。可通过登录 [控制台](https://console.cloud.tencent.com/autoscaling/group) 或调用接口 [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) ，取返回信息中的 AutoScalingGroupId 获取伸缩组ID。
 	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitnil,omitempty" name:"AutoScalingGroupId"`
 
 	// 刷新设置。

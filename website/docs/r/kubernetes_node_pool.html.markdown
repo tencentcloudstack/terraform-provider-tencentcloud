@@ -395,6 +395,7 @@ The `auto_scaling_config` object supports the following:
 * `instance_name` - (Optional, String) Instance name, no more than 60 characters. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.
 * `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
+* `ipv4_address_type` - (Optional, String) Type of public IP address. WanIP: Ordinary public IP address; HighQualityEIP: High Quality EIP is supported only in Singapore and Hong Kong; AntiDDoSEIP: Anti-DDoS IP is supported only in specific regions. For details, see EIP Product Overview. Specify the type of public IPv4 address to assign a public IPv4 address to the resource. HighQualityEIP and AntiDDoSEIP features are gradually released in select regions. For usage, submit a ticket for consultation.
 * `key_ids` - (Optional, List, ForceNew) ID list of keys.
 * `orderly_security_group_ids` - (Optional, List) Ordered security groups to which a CVM instance belongs.
 * `password` - (Optional, String, ForceNew) Password to access.

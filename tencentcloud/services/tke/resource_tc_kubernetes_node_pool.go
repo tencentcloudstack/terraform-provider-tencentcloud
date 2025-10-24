@@ -416,6 +416,12 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Optional:    true,
 							Description: "Specify whether to assign an Internet IP address.",
 						},
+						"ipv4_address_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Type of public IP address. WanIP: Ordinary public IP address; HighQualityEIP: High Quality EIP is supported only in Singapore and Hong Kong; AntiDDoSEIP: Anti-DDoS IP is supported only in specific regions. For details, see EIP Product Overview. Specify the type of public IPv4 address to assign a public IPv4 address to the resource. HighQualityEIP and AntiDDoSEIP features are gradually released in select regions. For usage, submit a ticket for consultation.",
+						},
 						"password": {
 							Type:          schema.TypeString,
 							Optional:      true,
