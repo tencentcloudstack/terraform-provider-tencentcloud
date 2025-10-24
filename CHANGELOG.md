@@ -1,3 +1,13 @@
+## 1.82.32(October 24, 2025)
+
+ENHANCEMENTS:
+
+* resource/identity_center_role_configuration_permission_custom_policies_attachment: read add retry ([#3571](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3571))
+* resource/identity_center_role_configuration_permission_custom_policy_attachment: read add retry ([#3571](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3571))
+* resource/identity_center_role_configuration_permission_policy_attachment: read add retry ([#3571](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3571))
+* resource/tencentcloud_cos_object_download_operation: support custom timeouts ([#3568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3568))
+* resource/tencentcloud_kubernetes_node_pool: support `ipv4_address_type` ([#3569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3569))
+
 ## 1.82.31(October 21 , 2025)
 
 FEATURES:
