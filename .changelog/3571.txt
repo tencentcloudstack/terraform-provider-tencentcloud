@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/identity_center_role_configuration_permission_policy_attachment: read add retry
+```
+
+```release-note:enhancement
+resource/identity_center_role_configuration_permission_custom_policy_attachment: read add retry
+```
+
+```release-note:enhancement
+resource/identity_center_role_configuration_permission_custom_policies_attachment: read add retry
+```
