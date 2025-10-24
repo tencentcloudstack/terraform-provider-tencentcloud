@@ -349,12 +349,17 @@ func (me *TencentCloudClient) UseTencentCosClientNew(bucket string, cdcId ...str
 }
 
 // UseTencentCosClient tencent cloud own client for service instead of aws
-func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
+func (me *TencentCloudClient) UseTencentCosClient(bucket string, clientTimeout ...time.Duration) *cos.Client {
 	cosUrl := fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region)
 	if me.CosDomain != "" {
 		parsedURL, _ := url.Parse(me.CosDomain)
 		parsedURL.Host = bucket + "." + parsedURL.Host
 		cosUrl = parsedURL.String()
+	}
+
+	tmpTimeout := 100 * time.Second
+	if len(clientTimeout) > 0 {
+		tmpTimeout = clientTimeout[0]
 	}
 
 	u, _ := url.Parse(cosUrl)
@@ -368,7 +373,7 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 	}
 
 	me.tencentCosConn = cos.NewClient(baseUrl, &http.Client{
-		Timeout: 100 * time.Second,
+		Timeout: tmpTimeout,
 		Transport: &cos.AuthorizationTransport{
 			SecretID:     me.Credential.SecretId,
 			SecretKey:    me.Credential.SecretKey,
