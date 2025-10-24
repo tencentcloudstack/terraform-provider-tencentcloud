@@ -151,7 +151,16 @@ func resourceTencentCloudIdentityCenterRoleConfigurationPermissionCustomPolicyAt
 
 	_ = d.Set("role_policy_name", rolePolicyName)
 
-	respData, err := service.DescribeIdentityCenterRoleConfigurationPermissionPolicyAttachmentById(ctx, zoneId, roleConfigurationId, "Custom")
+	var respData *organization.ListPermissionPoliciesInRoleConfigurationResponseParams
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeIdentityCenterRoleConfigurationPermissionPolicyAttachmentById(ctx, zoneId, roleConfigurationId, "Custom")
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		respData = result
+		return nil
+	})
 	if err != nil {
 		return err
 	}
