@@ -2295,6 +2295,8 @@ tencentcloud_wedata_run_sql_script_operation
 tencentcloud_wedata_stop_sql_script_run_operation
 tencentcloud_wedata_project
 tencentcloud_wedata_project_member
+tencentcloud_wedata_add_calc_engines_to_project_operation
+tencentcloud_wedata_data_backfill_plan_operation
 
 Cloud Firewall(CFW)
 Data Source
