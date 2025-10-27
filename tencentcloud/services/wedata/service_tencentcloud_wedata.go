@@ -3193,3 +3193,467 @@ func (me *WedataService) DescribeWedataTaskById(ctx context.Context, projectId, 
 	ret = response.Response
 	return
 }
+
+func (me *WedataService) DescribeWedataListLineageByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.LineageNodeInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListLineageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ResourceUniqueId" {
+			request.ResourceUniqueId = v.(*string)
+		}
+		if k == "ResourceType" {
+			request.ResourceType = v.(*string)
+		}
+		if k == "Direction" {
+			request.Direction = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+	}
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseWedataV20250806Client().ListLineage(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataListColumnLineageByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.LineageNodeInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListColumnLineageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TableUniqueId" {
+			request.TableUniqueId = v.(*string)
+		}
+		if k == "Direction" {
+			request.Direction = v.(*string)
+		}
+		if k == "ColumnName" {
+			request.ColumnName = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+	}
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseWedataV20250806Client().ListColumnLineage(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataListProcessLineageByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.LineagePair, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListProcessLineageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProcessId" {
+			request.ProcessId = v.(*string)
+		}
+		if k == "ProcessType" {
+			request.ProcessType = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+	}
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseWedataV20250806Client().ListProcessLineage(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataListCatalogByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.CatalogInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListCatalogRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ParentCatalogId" {
+			request.ParentCatalogId = v.(*string)
+		}
+	}
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseWedataV20250806Client().ListCatalog(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataListDatabaseByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.DatabaseInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListDatabaseRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CatalogName" {
+			request.CatalogName = v.(*string)
+		}
+		if k == "DatasourceId" {
+			request.DatasourceId = v.(*int64)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+	}
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseWedataV20250806Client().ListDatabase(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataListSchemaByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.SchemaInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListSchemaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CatalogName" {
+			request.CatalogName = v.(*string)
+		}
+		if k == "DatasourceId" {
+			request.DatasourceId = v.(*int64)
+		}
+		if k == "DatabaseName" {
+			request.DatabaseName = v.(*string)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+	}
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 200
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseWedataV20250806Client().ListSchema(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataListTableByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.TableInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListTableRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CatalogName" {
+			request.CatalogName = v.(*string)
+		}
+		if k == "DatasourceId" {
+			request.DatasourceId = v.(*int64)
+		}
+		if k == "DatabaseName" {
+			request.DatabaseName = v.(*string)
+		}
+		if k == "SchemaName" {
+			request.SchemaName = v.(*string)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+	}
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 500
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseWedataV20250806Client().ListTable(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataGetTableByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.TableInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTableRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TableGuid" {
+			request.TableGuid = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseWedataV20250806Client().GetTable(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataGetTableColumnsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.ColumnInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTableColumnsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TableGuid" {
+			request.TableGuid = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseWedataV20250806Client().GetTableColumns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
