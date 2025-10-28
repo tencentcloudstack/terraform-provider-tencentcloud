@@ -38,9 +38,6 @@ resource "tencentcloud_dlc_datasource_house_attachment" "example" {
   datasource_connection_type = "Mysql"
   datasource_connection_config {
     mysql {
-      jdbc_url = ""
-      user     = ""
-      password = ""
       location {
         vpc_id            = "vpc-khkyabcd"
         vpc_cidr_block    = "192.168.0.0/16"
@@ -61,9 +58,6 @@ resource "tencentcloud_dlc_datasource_house_attachment" "example" {
   datasource_connection_type = "Mysql"
   datasource_connection_config {
     mysql {
-      jdbc_url = ""
-      user     = ""
-      password = ""
       location {
         vpc_id            = "vpc-khkyabcd"
         vpc_cidr_block    = "192.168.0.0/16"
