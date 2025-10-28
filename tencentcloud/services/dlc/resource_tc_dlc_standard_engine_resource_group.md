@@ -4,6 +4,8 @@ Provides a resource to create a DLC standard engine resource group
 
 ~> **NOTE:** Field `auto_pause_time` is meaningful only when the values ​​of fields `auto_launch` and `auto_pause` are 0.
 
+~> **NOTE:** If you need to set the `static_config_pairs` or `dynamic_config_pairs`, it is recommended to use resource `tencentcloud_dlc_standard_engine_resource_group_config_info`.
+
 Example Usage
 
 Only SQL analysis resource group 
@@ -28,6 +30,7 @@ resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
   resource_group_scene = "SparkSQL"
   spark_spec_mode      = "fast"
   spark_size           = 16
+  running_state        = true
 }
 ```
 
@@ -47,5 +50,6 @@ resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
   image_type                 = "built-in"
   image_version              = "97319759-0b80-48b4-a7a7-436d9ef3b666"
   image_name                 = "pytorch-v2.5.1"
+  running_state              = false
 }
 ```

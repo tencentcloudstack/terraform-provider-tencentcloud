@@ -2293,6 +2293,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_standard_engine_resource_group":                                       dlc.ResourceTencentCloudDlcStandardEngineResourceGroup(),
 			"tencentcloud_dlc_data_mask_strategy":                                                   dlc.ResourceTencentCloudDlcDataMaskStrategy(),
 			"tencentcloud_dlc_attach_data_mask_policy":                                              dlc.ResourceTencentCloudDlcAttachDataMaskPolicy(),
+			"tencentcloud_dlc_standard_engine_resource_group_config_info":                           dlc.ResourceTencentCloudDlcStandardEngineResourceGroupConfigInfo(),
+			"tencentcloud_dlc_datasource_house_attachment":                                          dlc.ResourceTencentCloudDlcDatasourceHouseAttachment(),
 			"tencentcloud_waf_custom_rule":                                                          waf.ResourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                                                    waf.ResourceTencentCloudWafCustomWhiteRule(),
 			"tencentcloud_waf_clb_domain":                                                           waf.ResourceTencentCloudWafClbDomain(),
