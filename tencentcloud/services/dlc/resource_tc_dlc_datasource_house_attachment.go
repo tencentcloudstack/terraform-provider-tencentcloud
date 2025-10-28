@@ -50,24 +50,24 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 							Description: "Properties of MySQL data source connection.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"jdbc_url": {
-										Type:        schema.TypeString,
-										Required:    true,
-										ForceNew:    true,
-										Description: "JDBC URL for connecting to MySQL.",
-									},
-									"user": {
-										Type:        schema.TypeString,
-										Required:    true,
-										ForceNew:    true,
-										Description: "Username.",
-									},
-									"password": {
-										Type:        schema.TypeString,
-										Required:    true,
-										ForceNew:    true,
-										Description: "MySQL password.",
-									},
+									// "jdbc_url": {
+									// 	Type:        schema.TypeString,
+									// 	Required:    true,
+									// 	ForceNew:    true,
+									// 	Description: "JDBC URL for connecting to MySQL.",
+									// },
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Required:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Username.",
+									// },
+									// "password": {
+									// 	Type:        schema.TypeString,
+									// 	Required:    true,
+									// 	ForceNew:    true,
+									// 	Description: "MySQL password.",
+									// },
 									"location": {
 										Type:        schema.TypeList,
 										Required:    true,
@@ -179,12 +179,12 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 											},
 										},
 									},
-									"user": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "If the type is HDFS, a username is required.",
-									},
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "If the type is HDFS, a username is required.",
+									// },
 									"high_availability": {
 										Type:        schema.TypeBool,
 										Optional:    true,
@@ -211,24 +211,24 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 										Description: "Metadata database information for Hive.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"jdbc_url": {
-													Type:        schema.TypeString,
-													Required:    true,
-													ForceNew:    true,
-													Description: "JDBC URL for connecting to MySQL.",
-												},
-												"user": {
-													Type:        schema.TypeString,
-													Required:    true,
-													ForceNew:    true,
-													Description: "Username.",
-												},
-												"password": {
-													Type:        schema.TypeString,
-													Required:    true,
-													ForceNew:    true,
-													Description: "MySQL password.",
-												},
+												// "jdbc_url": {
+												// 	Type:        schema.TypeString,
+												// 	Required:    true,
+												// 	ForceNew:    true,
+												// 	Description: "JDBC URL for connecting to MySQL.",
+												// },
+												// "user": {
+												// 	Type:        schema.TypeString,
+												// 	Required:    true,
+												// 	ForceNew:    true,
+												// 	Description: "Username.",
+												// },
+												// "password": {
+												// 	Type:        schema.TypeString,
+												// 	Required:    true,
+												// 	ForceNew:    true,
+												// 	Description: "MySQL password.",
+												// },
 												"location": {
 													Type:        schema.TypeList,
 													Required:    true,
@@ -459,24 +459,24 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 										ForceNew:    true,
 										Description: "Name of the data source.",
 									},
-									"jdbc_url": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "JDBC access link for the data source.",
-									},
-									"user": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Username for accessing the data source.",
-									},
-									"password": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Data source access password, requires base64 encoding.",
-									},
+									// "jdbc_url": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "JDBC access link for the data source.",
+									// },
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Username for accessing the data source.",
+									// },
+									// "password": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Data source access password, requires base64 encoding.",
+									// },
 									"location": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -541,24 +541,24 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 										ForceNew:    true,
 										Description: "Name of the data source.",
 									},
-									"jdbc_url": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "JDBC access link for the data source.",
-									},
-									"user": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Username for accessing the data source.",
-									},
-									"password": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Data source access password, requires base64 encoding.",
-									},
+									// "jdbc_url": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "JDBC access link for the data source.",
+									// },
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Username for accessing the data source.",
+									// },
+									// "password": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Data source access password, requires base64 encoding.",
+									// },
 									"location": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -623,24 +623,24 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 										ForceNew:    true,
 										Description: "Name of the data source.",
 									},
-									"jdbc_url": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "JDBC access link for the data source.",
-									},
-									"user": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Username for accessing the data source.",
-									},
-									"password": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Data source access password, requires base64 encoding.",
-									},
+									// "jdbc_url": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "JDBC access link for the data source.",
+									// },
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Username for accessing the data source.",
+									// },
+									// "password": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Data source access password, requires base64 encoding.",
+									// },
 									"location": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -705,18 +705,18 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 										ForceNew:    true,
 										Description: "Data source name.",
 									},
-									"user": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Username.",
-									},
-									"password": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Password, requires base64 encoding.",
-									},
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Username.",
+									// },
+									// "password": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Password, requires base64 encoding.",
+									// },
 									"location": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -803,24 +803,24 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 										ForceNew:    true,
 										Description: "Name of the data source.",
 									},
-									"jdbc_url": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "JDBC access link for the data source.",
-									},
-									"user": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Username for accessing the data source.",
-									},
-									"password": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Data source access password, requires base64 encoding.",
-									},
+									// "jdbc_url": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "JDBC access link for the data source.",
+									// },
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Username for accessing the data source.",
+									// },
+									// "password": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Data source access password, requires base64 encoding.",
+									// },
 									"location": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -885,24 +885,24 @@ func ResourceTencentCloudDlcDatasourceHouseAttachment() *schema.Resource {
 										ForceNew:    true,
 										Description: "Data source name.",
 									},
-									"jdbc_url": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "JDBC of the data source.",
-									},
-									"user": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "User for accessing the data source.",
-									},
-									"password": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										ForceNew:    true,
-										Description: "Data source access password, requires base64 encoding.",
-									},
+									// "jdbc_url": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "JDBC of the data source.",
+									// },
+									// "user": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "User for accessing the data source.",
+									// },
+									// "password": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	ForceNew:    true,
+									// 	Description: "Data source access password, requires base64 encoding.",
+									// },
 									"location": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -1102,17 +1102,9 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 		datasourceConnectionConfig := dlcv20210125.DatasourceConnectionConfig{}
 		if mysqlMap, ok := helper.ConvertInterfacesHeadToMap(datasourceConnectionConfigMap["mysql"]); ok {
 			mysqlInfo := dlcv20210125.MysqlInfo{}
-			if v, ok := mysqlMap["jdbc_url"].(string); ok {
-				mysqlInfo.JdbcUrl = helper.String(v)
-			}
-
-			if v, ok := mysqlMap["user"].(string); ok {
-				mysqlInfo.User = helper.String(v)
-			}
-
-			if v, ok := mysqlMap["password"].(string); ok {
-				mysqlInfo.Password = helper.String(v)
-			}
+			mysqlInfo.JdbcUrl = helper.String("")
+			mysqlInfo.User = helper.String("")
+			mysqlInfo.Password = helper.String("")
 
 			if locationMap, ok := helper.ConvertInterfacesHeadToMap(mysqlMap["location"]); ok {
 				datasourceConnectionLocation := dlcv20210125.DatasourceConnectionLocation{}
@@ -1181,9 +1173,7 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 				hiveInfo.Location = &datasourceConnectionLocation2
 			}
 
-			if v, ok := hiveMap["user"].(string); ok {
-				hiveInfo.User = helper.String(v)
-			}
+			hiveInfo.User = helper.String("")
 
 			if v, ok := hiveMap["high_availability"].(bool); ok {
 				hiveInfo.HighAvailability = helper.Bool(v)
@@ -1199,17 +1189,9 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 
 			if mysqlMap, ok := helper.ConvertInterfacesHeadToMap(hiveMap["mysql"]); ok {
 				mysqlInfo2 := dlcv20210125.MysqlInfo{}
-				if v, ok := mysqlMap["jdbc_url"].(string); ok {
-					mysqlInfo2.JdbcUrl = helper.String(v)
-				}
-
-				if v, ok := mysqlMap["user"].(string); ok {
-					mysqlInfo2.User = helper.String(v)
-				}
-
-				if v, ok := mysqlMap["password"].(string); ok {
-					mysqlInfo2.Password = helper.String(v)
-				}
+				mysqlInfo2.JdbcUrl = helper.String("")
+				mysqlInfo2.User = helper.String("")
+				mysqlInfo2.Password = helper.String("")
 
 				if locationMap, ok := helper.ConvertInterfacesHeadToMap(mysqlMap["location"]); ok {
 					datasourceConnectionLocation3 := dlcv20210125.DatasourceConnectionLocation{}
@@ -1349,17 +1331,9 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 				dataSourceInfo.InstanceName = helper.String(v)
 			}
 
-			if v, ok := postgreSqlMap["jdbc_url"].(string); ok {
-				dataSourceInfo.JdbcUrl = helper.String(v)
-			}
-
-			if v, ok := postgreSqlMap["user"].(string); ok {
-				dataSourceInfo.User = helper.String(v)
-			}
-
-			if v, ok := postgreSqlMap["password"].(string); ok {
-				dataSourceInfo.Password = helper.String(v)
-			}
+			dataSourceInfo.JdbcUrl = helper.String("")
+			dataSourceInfo.User = helper.String("")
+			dataSourceInfo.Password = helper.String("")
 
 			if locationMap, ok := helper.ConvertInterfacesHeadToMap(postgreSqlMap["location"]); ok {
 				datasourceConnectionLocation6 := dlcv20210125.DatasourceConnectionLocation{}
@@ -1399,17 +1373,9 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 				dataSourceInfo2.InstanceName = helper.String(v)
 			}
 
-			if v, ok := sqlServerMap["jdbc_url"].(string); ok {
-				dataSourceInfo2.JdbcUrl = helper.String(v)
-			}
-
-			if v, ok := sqlServerMap["user"].(string); ok {
-				dataSourceInfo2.User = helper.String(v)
-			}
-
-			if v, ok := sqlServerMap["password"].(string); ok {
-				dataSourceInfo2.Password = helper.String(v)
-			}
+			dataSourceInfo2.JdbcUrl = helper.String("")
+			dataSourceInfo2.User = helper.String("")
+			dataSourceInfo2.Password = helper.String("")
 
 			if locationMap, ok := helper.ConvertInterfacesHeadToMap(sqlServerMap["location"]); ok {
 				datasourceConnectionLocation7 := dlcv20210125.DatasourceConnectionLocation{}
@@ -1449,17 +1415,9 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 				dataSourceInfo3.InstanceName = helper.String(v)
 			}
 
-			if v, ok := clickHouseMap["jdbc_url"].(string); ok {
-				dataSourceInfo3.JdbcUrl = helper.String(v)
-			}
-
-			if v, ok := clickHouseMap["user"].(string); ok {
-				dataSourceInfo3.User = helper.String(v)
-			}
-
-			if v, ok := clickHouseMap["password"].(string); ok {
-				dataSourceInfo3.Password = helper.String(v)
-			}
+			dataSourceInfo3.JdbcUrl = helper.String("")
+			dataSourceInfo3.User = helper.String("")
+			dataSourceInfo3.Password = helper.String("")
 
 			if locationMap, ok := helper.ConvertInterfacesHeadToMap(clickHouseMap["location"]); ok {
 				datasourceConnectionLocation8 := dlcv20210125.DatasourceConnectionLocation{}
@@ -1499,13 +1457,8 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 				elasticsearchInfo.InstanceName = helper.String(v)
 			}
 
-			if v, ok := elasticsearchMap["user"].(string); ok {
-				elasticsearchInfo.User = helper.String(v)
-			}
-
-			if v, ok := elasticsearchMap["password"].(string); ok {
-				elasticsearchInfo.Password = helper.String(v)
-			}
+			elasticsearchInfo.User = helper.String("")
+			elasticsearchInfo.Password = helper.String("")
 
 			if locationMap, ok := helper.ConvertInterfacesHeadToMap(elasticsearchMap["location"]); ok {
 				datasourceConnectionLocation9 := dlcv20210125.DatasourceConnectionLocation{}
@@ -1561,17 +1514,9 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 				dataSourceInfo4.InstanceName = helper.String(v)
 			}
 
-			if v, ok := tDSQLPostgreSqlMap["jdbc_url"].(string); ok {
-				dataSourceInfo4.JdbcUrl = helper.String(v)
-			}
-
-			if v, ok := tDSQLPostgreSqlMap["user"].(string); ok {
-				dataSourceInfo4.User = helper.String(v)
-			}
-
-			if v, ok := tDSQLPostgreSqlMap["password"].(string); ok {
-				dataSourceInfo4.Password = helper.String(v)
-			}
+			dataSourceInfo4.JdbcUrl = helper.String("")
+			dataSourceInfo4.User = helper.String("")
+			dataSourceInfo4.Password = helper.String("")
 
 			if locationMap, ok := helper.ConvertInterfacesHeadToMap(tDSQLPostgreSqlMap["location"]); ok {
 				datasourceConnectionLocation10 := dlcv20210125.DatasourceConnectionLocation{}
@@ -1611,17 +1556,9 @@ func resourceTencentCloudDlcDatasourceHouseAttachmentCreate(d *schema.ResourceDa
 				tCHouseD.InstanceName = helper.String(v)
 			}
 
-			if v, ok := tCHouseDMap["jdbc_url"].(string); ok {
-				tCHouseD.JdbcUrl = helper.String(v)
-			}
-
-			if v, ok := tCHouseDMap["user"].(string); ok {
-				tCHouseD.User = helper.String(v)
-			}
-
-			if v, ok := tCHouseDMap["password"].(string); ok {
-				tCHouseD.Password = helper.String(v)
-			}
+			tCHouseD.JdbcUrl = helper.String("")
+			tCHouseD.User = helper.String("")
+			tCHouseD.Password = helper.String("")
 
 			if locationMap, ok := helper.ConvertInterfacesHeadToMap(tCHouseDMap["location"]); ok {
 				datasourceConnectionLocation11 := dlcv20210125.DatasourceConnectionLocation{}

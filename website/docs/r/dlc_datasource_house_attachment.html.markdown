@@ -19,9 +19,6 @@ resource "tencentcloud_dlc_datasource_house_attachment" "example" {
   datasource_connection_type = "Mysql"
   datasource_connection_config {
     mysql {
-      jdbc_url = ""
-      user     = ""
-      password = ""
       location {
         vpc_id            = "vpc-khkyabcd"
         vpc_cidr_block    = "192.168.0.0/16"
@@ -53,10 +50,7 @@ The `click_house` object of `datasource_connection_config` supports the followin
 * `db_name` - (Optional, String, ForceNew) Default database name.
 * `instance_id` - (Optional, String, ForceNew) Unique ID of the data source instance.
 * `instance_name` - (Optional, String, ForceNew) Name of the data source.
-* `jdbc_url` - (Optional, String, ForceNew) JDBC access link for the data source.
 * `location` - (Optional, List, ForceNew) VPC and subnet information for the data source.
-* `password` - (Optional, String, ForceNew) Data source access password, requires base64 encoding.
-* `user` - (Optional, String, ForceNew) Username for accessing the data source.
 
 The `datasource_connection_config` object supports the following:
 
@@ -78,9 +72,7 @@ The `elasticsearch` object of `datasource_connection_config` supports the follow
 * `instance_id` - (Optional, String, ForceNew) Data source ID.
 * `instance_name` - (Optional, String, ForceNew) Data source name.
 * `location` - (Optional, List, ForceNew) VPC and subnet information for the data source.
-* `password` - (Optional, String, ForceNew) Password, requires base64 encoding.
 * `service_info` - (Optional, List, ForceNew) IP and port information for accessing Elasticsearch.
-* `user` - (Optional, String, ForceNew) Username.
 
 The `hive` object of `datasource_connection_config` supports the following:
 
@@ -96,7 +88,6 @@ The `hive` object of `datasource_connection_config` supports the following:
 * `kerberos_enable` - (Optional, Bool, ForceNew) Whether to enable Kerberos.
 * `kerberos_info` - (Optional, List, ForceNew) Kerberos details.
 * `mysql` - (Optional, List, ForceNew) Metadata database information for Hive.
-* `user` - (Optional, String, ForceNew) If the type is HDFS, a username is required.
 
 The `kafka` object of `datasource_connection_config` supports the following:
 
@@ -181,20 +172,14 @@ The `location` object of `tdsql_postgre_sql` supports the following:
 
 The `mysql` object of `datasource_connection_config` supports the following:
 
-* `jdbc_url` - (Required, String, ForceNew) JDBC URL for connecting to MySQL.
 * `location` - (Required, List, ForceNew) Network information for MySQL data source.
-* `password` - (Required, String, ForceNew) MySQL password.
-* `user` - (Required, String, ForceNew) Username.
 * `db_name` - (Optional, String, ForceNew) Database name.
 * `instance_id` - (Optional, String, ForceNew) Database instance ID, consistent with the database side.
 * `instance_name` - (Optional, String, ForceNew) Database instance name, consistent with the database side.
 
 The `mysql` object of `hive` supports the following:
 
-* `jdbc_url` - (Required, String, ForceNew) JDBC URL for connecting to MySQL.
 * `location` - (Required, List, ForceNew) Network information for MySQL data source.
-* `password` - (Required, String, ForceNew) MySQL password.
-* `user` - (Required, String, ForceNew) Username.
 * `db_name` - (Optional, String, ForceNew) Database name.
 * `instance_id` - (Optional, String, ForceNew) Database instance ID, consistent with the database side.
 * `instance_name` - (Optional, String, ForceNew) Database instance name, consistent with the database side.
@@ -208,10 +193,7 @@ The `postgre_sql` object of `datasource_connection_config` supports the followin
 * `db_name` - (Optional, String, ForceNew) Default database name.
 * `instance_id` - (Optional, String, ForceNew) Unique ID of the data source instance.
 * `instance_name` - (Optional, String, ForceNew) Name of the data source.
-* `jdbc_url` - (Optional, String, ForceNew) JDBC access link for the data source.
 * `location` - (Optional, List, ForceNew) VPC and subnet information for the data source.
-* `password` - (Optional, String, ForceNew) Data source access password, requires base64 encoding.
-* `user` - (Optional, String, ForceNew) Username for accessing the data source.
 
 The `service_info` object of `elasticsearch` supports the following:
 
@@ -223,10 +205,7 @@ The `sql_server` object of `datasource_connection_config` supports the following
 * `db_name` - (Optional, String, ForceNew) Default database name.
 * `instance_id` - (Optional, String, ForceNew) Unique ID of the data source instance.
 * `instance_name` - (Optional, String, ForceNew) Name of the data source.
-* `jdbc_url` - (Optional, String, ForceNew) JDBC access link for the data source.
 * `location` - (Optional, List, ForceNew) VPC and subnet information for the data source.
-* `password` - (Optional, String, ForceNew) Data source access password, requires base64 encoding.
-* `user` - (Optional, String, ForceNew) Username for accessing the data source.
 
 The `tc_house_d` object of `datasource_connection_config` supports the following:
 
@@ -234,10 +213,7 @@ The `tc_house_d` object of `datasource_connection_config` supports the following
 * `db_name` - (Optional, String, ForceNew) Default database name.
 * `instance_id` - (Optional, String, ForceNew) Unique ID of the data source instance.
 * `instance_name` - (Optional, String, ForceNew) Data source name.
-* `jdbc_url` - (Optional, String, ForceNew) JDBC of the data source.
 * `location` - (Optional, List, ForceNew) VPC and subnet information for the data source.
-* `password` - (Optional, String, ForceNew) Data source access password, requires base64 encoding.
-* `user` - (Optional, String, ForceNew) User for accessing the data source.
 
 The `tcc_connection` object of `tcc_hive` supports the following:
 
@@ -263,10 +239,7 @@ The `tdsql_postgre_sql` object of `datasource_connection_config` supports the fo
 * `db_name` - (Optional, String, ForceNew) Default database name.
 * `instance_id` - (Optional, String, ForceNew) Unique ID of the data source instance.
 * `instance_name` - (Optional, String, ForceNew) Name of the data source.
-* `jdbc_url` - (Optional, String, ForceNew) JDBC access link for the data source.
 * `location` - (Optional, List, ForceNew) VPC and subnet information for the data source.
-* `password` - (Optional, String, ForceNew) Data source access password, requires base64 encoding.
-* `user` - (Optional, String, ForceNew) Username for accessing the data source.
 
 ## Attributes Reference
 
