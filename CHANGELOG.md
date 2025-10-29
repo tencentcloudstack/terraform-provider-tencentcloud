@@ -1,3 +1,29 @@
+## 1.82.33(October 29, 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_wedata_get_table` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_get_table_columns` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_list_catalog` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_list_column_lineage` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_list_database` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_list_lineage` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_list_process_lineage` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_list_schema` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Data Source:** `tencentcloud_wedata_list_table` ([#3570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3570))
+* **New Resource:** `tencentcloud_dlc_datasource_house_attachment` ([#3573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3573))
+* **New Resource:** `tencentcloud_dlc_standard_engine_resource_group_config_info` ([#3573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3573))
+* **New Resource:** `tencentcloud_wedata_add_calc_engines_to_project_operation` ([#3572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3572))
+* **New Resource:** `tencentcloud_wedata_data_backfill_plan_operation` ([#3572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3572))
+* **New Resource:** `tencentcloud_wedata_lineage_attachment` ([#3575](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3575))
+* **New Resource:** `tencentcloud_wedata_resource_group` ([#3574](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3574))
+* **New Resource:** `tencentcloud_wedata_resource_group_to_project_attachment` ([#3574](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3574))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dlc_standard_engine_resource_group: support `running_state` ([#3573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3573))
+* resource/tencentcloud_kubernetes_cluster: support `disable_addons` ([#3576](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3576))
+
 ## 1.82.32(October 24, 2025)
 
 ENHANCEMENTS:
