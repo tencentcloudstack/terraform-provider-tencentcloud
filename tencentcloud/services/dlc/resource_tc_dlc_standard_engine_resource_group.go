@@ -83,6 +83,7 @@ func ResourceTencentCloudDlcStandardEngineResourceGroup() *schema.Resource {
 			"static_config_pairs": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Static parameters of the resource group, which require restarting the resource group to take effect.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -103,6 +104,7 @@ func ResourceTencentCloudDlcStandardEngineResourceGroup() *schema.Resource {
 			"dynamic_config_pairs": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Dynamic parameters of the resource group, effective in the next task.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -205,6 +207,13 @@ func ResourceTencentCloudDlcStandardEngineResourceGroup() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Only the SQL resource group resource limit, only used for the express module.",
+			},
+
+			"running_state": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "The state of the resource group. true: launch standard engine resource group; false: pause standard engine resource group. Default is true.",
 			},
 
 			// computed
@@ -426,6 +435,78 @@ func resourceTencentCloudDlcStandardEngineResourceGroupCreate(d *schema.Resource
 		return waitErr
 	}
 
+	if v, ok := d.GetOkExists("running_state"); ok {
+		// pause resource group
+		if !v.(bool) {
+			request := dlcv20210125.NewPauseStandardEngineResourceGroupsRequest()
+			request.EngineResourceGroupNames = helper.Strings([]string{engineResourceGroupName})
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().PauseStandardEngineResourceGroupsWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Pause dlc standard engine resource group failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s pause dlc standard engine resource group failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+
+			// wait
+			waitErr := resource.Retry(tccommon.WriteRetryTimeout*4, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DescribeStandardEngineResourceGroupsWithContext(ctx, &dlcv20210125.DescribeStandardEngineResourceGroupsRequest{
+					Filters: []*dlcv20210125.Filter{
+						{
+							Name:   helper.String("engine-resource-group-name-unique"),
+							Values: helper.Strings([]string{engineResourceGroupName}),
+						},
+					},
+				})
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Describe dlc standard engine resource groups failed, Response is nil."))
+				}
+
+				if result.Response.UserEngineResourceGroupInfos == nil || len(result.Response.UserEngineResourceGroupInfos) == 0 {
+					return resource.NonRetryableError(fmt.Errorf("UserEngineResourceGroupInfos is nil."))
+				}
+
+				if len(result.Response.UserEngineResourceGroupInfos) != 1 {
+					return resource.NonRetryableError(fmt.Errorf("UserEngineResourceGroupInfos is not 1."))
+				}
+
+				state := result.Response.UserEngineResourceGroupInfos[0].ResourceGroupState
+				if state != nil {
+					if *state == 3 {
+						return nil
+					}
+				} else {
+					return resource.NonRetryableError(fmt.Errorf("ResourceGroupState is nil."))
+				}
+
+				return resource.RetryableError(fmt.Errorf("UserEngineResourceGroupInfos is not ready, state:%d", *state))
+			})
+
+			if waitErr != nil {
+				log.Printf("[CRITAL]%s wait for dlc standard engine resource group failed, reason:%+v", logId, waitErr)
+				return waitErr
+			}
+		}
+	}
+
 	return resourceTencentCloudDlcStandardEngineResourceGroupRead(d, meta)
 }
 
@@ -545,6 +626,14 @@ func resourceTencentCloudDlcStandardEngineResourceGroupRead(d *schema.ResourceDa
 
 	if respData.EngineResourceGroupId != nil {
 		_ = d.Set("engine_resource_group_id", respData.EngineResourceGroupId)
+	}
+
+	if respData.ResourceGroupState != nil {
+		if *respData.ResourceGroupState == 2 {
+			_ = d.Set("running_state", true)
+		} else if *respData.ResourceGroupState == 3 {
+			_ = d.Set("running_state", false)
+		}
 	}
 
 	return nil
@@ -867,6 +956,146 @@ func resourceTencentCloudDlcStandardEngineResourceGroupUpdate(d *schema.Resource
 		if waitErr != nil {
 			log.Printf("[CRITAL]%s wait for dlc standard engine resource group failed, reason:%+v", logId, waitErr)
 			return waitErr
+		}
+	}
+
+	if d.HasChange("running_state") {
+		if v, ok := d.GetOkExists("running_state"); ok {
+			if v.(bool) {
+				request := dlcv20210125.NewLaunchStandardEngineResourceGroupsRequest()
+				request.EngineResourceGroupNames = helper.Strings([]string{engineResourceGroupName})
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().LaunchStandardEngineResourceGroupsWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Launch dlc standard engine resource group failed, Response is nil."))
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s launch dlc standard engine resource group failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitErr := resource.Retry(tccommon.WriteRetryTimeout*4, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DescribeStandardEngineResourceGroupsWithContext(ctx, &dlcv20210125.DescribeStandardEngineResourceGroupsRequest{
+						Filters: []*dlcv20210125.Filter{
+							{
+								Name:   helper.String("engine-resource-group-name-unique"),
+								Values: helper.Strings([]string{engineResourceGroupName}),
+							},
+						},
+					})
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Describe dlc standard engine resource groups failed, Response is nil."))
+					}
+
+					if result.Response.UserEngineResourceGroupInfos == nil || len(result.Response.UserEngineResourceGroupInfos) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("UserEngineResourceGroupInfos is nil."))
+					}
+
+					if len(result.Response.UserEngineResourceGroupInfos) != 1 {
+						return resource.NonRetryableError(fmt.Errorf("UserEngineResourceGroupInfos is not 1."))
+					}
+
+					state := result.Response.UserEngineResourceGroupInfos[0].ResourceGroupState
+					if state != nil {
+						if *state == 2 {
+							return nil
+						}
+					} else {
+						return resource.NonRetryableError(fmt.Errorf("ResourceGroupState is nil."))
+					}
+
+					return resource.RetryableError(fmt.Errorf("UserEngineResourceGroupInfos is not ready, state:%d", *state))
+				})
+
+				if waitErr != nil {
+					log.Printf("[CRITAL]%s wait for dlc standard engine resource group failed, reason:%+v", logId, waitErr)
+					return waitErr
+				}
+			} else {
+				request := dlcv20210125.NewPauseStandardEngineResourceGroupsRequest()
+				request.EngineResourceGroupNames = helper.Strings([]string{engineResourceGroupName})
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().PauseStandardEngineResourceGroupsWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Pause dlc standard engine resource group failed, Response is nil."))
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s pause dlc standard engine resource group failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitErr := resource.Retry(tccommon.WriteRetryTimeout*4, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DescribeStandardEngineResourceGroupsWithContext(ctx, &dlcv20210125.DescribeStandardEngineResourceGroupsRequest{
+						Filters: []*dlcv20210125.Filter{
+							{
+								Name:   helper.String("engine-resource-group-name-unique"),
+								Values: helper.Strings([]string{engineResourceGroupName}),
+							},
+						},
+					})
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Describe dlc standard engine resource groups failed, Response is nil."))
+					}
+
+					if result.Response.UserEngineResourceGroupInfos == nil || len(result.Response.UserEngineResourceGroupInfos) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("UserEngineResourceGroupInfos is nil."))
+					}
+
+					if len(result.Response.UserEngineResourceGroupInfos) != 1 {
+						return resource.NonRetryableError(fmt.Errorf("UserEngineResourceGroupInfos is not 1."))
+					}
+
+					state := result.Response.UserEngineResourceGroupInfos[0].ResourceGroupState
+					if state != nil {
+						if *state == 3 {
+							return nil
+						}
+					} else {
+						return resource.NonRetryableError(fmt.Errorf("ResourceGroupState is nil."))
+					}
+
+					return resource.RetryableError(fmt.Errorf("UserEngineResourceGroupInfos is not ready, state:%d", *state))
+				})
+
+				if waitErr != nil {
+					log.Printf("[CRITAL]%s wait for dlc standard engine resource group failed, reason:%+v", logId, waitErr)
+					return waitErr
+				}
+			}
 		}
 	}
 

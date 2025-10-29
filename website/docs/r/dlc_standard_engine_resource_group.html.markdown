@@ -15,6 +15,8 @@ Provides a resource to create a DLC standard engine resource group
 
 ~> **NOTE:** Field `auto_pause_time` is meaningful only when the values ​​of fields `auto_launch` and `auto_pause` are 0.
 
+~> **NOTE:** If you need to set the `static_config_pairs` or `dynamic_config_pairs`, it is recommended to use resource `tencentcloud_dlc_standard_engine_resource_group_config_info`.
+
 ## Example Usage
 
 ### Only SQL analysis resource group
@@ -39,6 +41,7 @@ resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
   resource_group_scene = "SparkSQL"
   spark_spec_mode      = "fast"
   spark_size           = 16
+  running_state        = true
 }
 ```
 
@@ -58,6 +61,7 @@ resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
   image_type                 = "built-in"
   image_version              = "97319759-0b80-48b4-a7a7-436d9ef3b666"
   image_name                 = "pytorch-v2.5.1"
+  running_state              = false
 }
 ```
 
@@ -87,6 +91,7 @@ Example value: image-xxx. If using a built-in image (ImageType is built-in), the
 * `region_name` - (Optional, String) Custom image location.
 * `registry_id` - (Optional, String) Custom image instance ID.
 * `resource_group_scene` - (Optional, String) Resource group scenario.
+* `running_state` - (Optional, Bool) The state of the resource group. true: launch standard engine resource group; false: pause standard engine resource group. Default is true.
 * `size` - (Optional, Int) The AI resource group is valid, and the upper limit of available resources in the resource group must be less than the upper limit of engine resources.
 * `spark_size` - (Optional, Int) Only the SQL resource group resource limit, only used for the express module.
 * `spark_spec_mode` - (Optional, String) Only SQL resource group resource configuration mode, fast: fast mode, custom: custom mode.
