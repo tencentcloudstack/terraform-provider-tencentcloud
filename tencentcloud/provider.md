@@ -2298,6 +2298,7 @@ tencentcloud_wedata_stop_sql_script_run_operation
 tencentcloud_wedata_project
 tencentcloud_wedata_project_member
 tencentcloud_wedata_resource_group_to_project_attachment
+tencentcloud_wedata_lineage_attachment
 
 Cloud Firewall(CFW)
 Data Source

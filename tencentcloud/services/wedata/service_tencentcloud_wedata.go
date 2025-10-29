@@ -3657,3 +3657,85 @@ func (me *WedataService) DescribeWedataGetTableColumnsByFilter(ctx context.Conte
 	ret = response.Response.Data
 	return
 }
+
+func (me *WedataService) DescribeWedataLineageAttachmentById(ctx context.Context, sourceResourceUniqueId, sourceResourceType, sourcePlatform, targetResourceUniqueId, targetResourceType, targetPlatform, processId, processType, processPlatform string) (has bool, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListLineageRequest()
+	response := wedatav20250806.NewListLineageResponse()
+	request.ResourceUniqueId = &sourceResourceUniqueId
+	request.ResourceType = &sourceResourceType
+	request.Platform = &sourcePlatform
+	request.Direction = helper.String("OUTPUT")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 100
+		items          = []*wedatav20250806.LineageNodeInfo{}
+	)
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWedataV20250806Client().ListLineage(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe list lineage failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		items = append(items, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	for _, item := range items {
+		if item.Resource != nil {
+			if item.Resource.ResourceUniqueId != nil && *item.Resource.ResourceUniqueId == targetResourceUniqueId &&
+				(item.Resource.ResourceType != nil && *item.Resource.ResourceType == targetResourceType) ||
+				(item.Resource.ResourceType == nil && targetResourceType == "WEDATA") {
+				if item.Relation != nil {
+					if item.Relation.Processes != nil && len(item.Relation.Processes) > 0 {
+						for _, process := range item.Relation.Processes {
+							if process.ProcessId != nil && *process.ProcessId == processId &&
+								process.ProcessType != nil && *process.ProcessType == processType &&
+								process.Platform != nil && *process.Platform == processPlatform {
+								has = true
+								return
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return
+}

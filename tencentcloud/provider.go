@@ -2354,6 +2354,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_stop_sql_script_run_operation":                                     wedata.ResourceTencentCloudWedataStopSqlScriptRunOperation(),
 			"tencentcloud_wedata_add_calc_engines_to_project_operation":                             wedata.ResourceTencentCloudWedataAddCalcEnginesToProjectOperation(),
 			"tencentcloud_wedata_data_backfill_plan_operation":                                      wedata.ResourceTencentCloudWedataDataBackfillPlanOperation(),
+			"tencentcloud_wedata_lineage_attachment":                                                wedata.ResourceTencentCloudWedataLineageAttachment(),
 			"tencentcloud_cfw_address_template":                                                     cfw.ResourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                                         cfw.ResourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                                          cfw.ResourceTencentCloudCfwEdgePolicy(),
