@@ -1561,6 +1561,15 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				Description: "The strategy for deleting cluster instances: terminate (destroy instances, only support pay as you go cloud host instances) retain (remove only, keep instances), Default is terminate.",
 			},
+
+			"disable_addons": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "To prevent the installation of a specific Addon component, enter the corresponding AddonName.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -1728,6 +1737,14 @@ func resourceTencentCloudKubernetesClusterCreate(d *schema.ResourceData, meta in
 				extensionAddon.AddonParam = helper.String(v.(string))
 			}
 			request.ExtensionAddons = append(request.ExtensionAddons, &extensionAddon)
+		}
+	}
+
+	if v, ok := d.GetOk("disable_addons"); ok {
+		for _, item := range v.([]interface{}) {
+			if disableAddon, ok := item.(string); ok {
+				request.DisableAddons = append(request.DisableAddons, &disableAddon)
+			}
 		}
 	}
 
@@ -1975,7 +1992,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"cdc_id", "extension_addon"}
+	immutableArgs := []string{"cdc_id", "extension_addon", "disable_addons"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

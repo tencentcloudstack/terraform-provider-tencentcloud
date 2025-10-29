@@ -751,6 +751,28 @@ resource "tencentcloud_kubernetes_cluster" "example" {
 }
 ```
 
+Using disable addons
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                           = "vpc-i5yyodl9"
+  cluster_max_pod_num              = 32
+  cluster_name                     = "tf-example"
+  cluster_desc                     = "cluster desc."
+  cluster_max_service_num          = 256
+  cluster_version                  = "1.30.0"
+  cluster_deploy_type              = "MANAGED_CLUSTER"
+  container_runtime                = "containerd"
+  runtime_version                  = "1.6.9"
+  instance_delete_mode             = "terminate"
+  upgrade_instances_follow_cluster = true
+  network_type                     = "VPC-CNI"
+  eni_subnet_ids                   = ["subnet-hhi88a58"]
+  service_cidr                     = "10.1.0.0/24"
+  disable_addons                   = ["ip-masq-agent"]
+}
+```
+
 Import
 
 tke cluster can be imported, e.g.
