@@ -33,6 +33,7 @@ func ResourceTencentCloudDlcStandardEngineResourceGroupConfigInfo() *schema.Reso
 			"static_conf_context": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Static config context.",
 				Elem: &schema.Resource{
@@ -63,6 +64,7 @@ func ResourceTencentCloudDlcStandardEngineResourceGroupConfigInfo() *schema.Reso
 			"dynamic_conf_context": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Dynamic config context.",
 				Elem: &schema.Resource{
@@ -312,7 +314,7 @@ func resourceTencentCloudDlcStandardEngineResourceGroupConfigInfoUpdate(d *schem
 	)
 
 	if d.HasChange("static_conf_context") {
-		oldInterface, newInterface := d.GetChange("static_conf_context")
+		oldInterface, newInterface := d.GetChange("static_conf_context.0.params")
 		olds := oldInterface.(*schema.Set)
 		news := newInterface.(*schema.Set)
 		remove := olds.Difference(news).List()
@@ -496,7 +498,7 @@ func resourceTencentCloudDlcStandardEngineResourceGroupConfigInfoUpdate(d *schem
 	}
 
 	if d.HasChange("dynamic_conf_context") {
-		oldInterface, newInterface := d.GetChange("dynamic_conf_context")
+		oldInterface, newInterface := d.GetChange("dynamic_conf_context.0.params")
 		olds := oldInterface.(*schema.Set)
 		news := newInterface.(*schema.Set)
 		remove := olds.Difference(news).List()
