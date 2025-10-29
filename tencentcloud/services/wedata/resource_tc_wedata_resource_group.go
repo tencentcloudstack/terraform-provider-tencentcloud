@@ -374,13 +374,13 @@ func resourceTencentCloudWedataResourceGroupRead(d *schema.ResourceData, meta in
 			_ = d.Set("subnet", items.SubNet)
 		}
 
-		if items.Region != nil {
-			_ = d.Set("resource_region", items.Region)
-		}
+		// if items.Region != nil {
+		// 	_ = d.Set("resource_region", items.Region)
+		// }
 
-		if items.Description != nil {
-			_ = d.Set("description", items.Description)
-		}
+		// if items.Description != nil {
+		// 	_ = d.Set("description", items.Description)
+		// }
 
 		if items.Id != nil {
 			_ = d.Set("resource_group_id", items.Id)
