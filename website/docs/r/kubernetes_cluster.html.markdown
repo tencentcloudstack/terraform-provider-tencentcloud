@@ -762,6 +762,26 @@ resource "tencentcloud_kubernetes_cluster" "example" {
 }
 ```
 
+### Using disable addons
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                           = "vpc-i5yyodl9"
+  cluster_cidr                     = "172.20.0.0/16"
+  cluster_max_pod_num              = 32
+  cluster_name                     = "tf-example"
+  cluster_desc                     = "cluster desc."
+  cluster_max_service_num          = 64
+  cluster_version                  = "1.30.0"
+  cluster_deploy_type              = "MANAGED_CLUSTER"
+  container_runtime                = "containerd"
+  runtime_version                  = "1.6.9"
+  instance_delete_mode             = "terminate"
+  upgrade_instances_follow_cluster = true
+  disable_addons                   = ["ip-masq-agent"]
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -796,6 +816,7 @@ The following arguments are supported:
 * `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher. The default value is `docker` for versions below v1.24 and `containerd` for versions above v1.24.
 * `data_plane_v2` - (Optional, Bool, ForceNew) Whether to enable DataPlaneV2 (replace kube-proxy with cilium). `data_plane_v2` and `cluster_ipvs` should not be set at the same time.
 * `deletion_protection` - (Optional, Bool) Indicates whether cluster deletion protection is enabled. Default is false.
+* `disable_addons` - (Optional, List: [`String`]) To prevent the installation of a specific Addon component, enter the corresponding AddonName.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `enable_customized_pod_cidr` - (Optional, Bool) Whether to enable the custom mode of node podCIDR size. Default is false.
 * `eni_subnet_ids` - (Optional, List: [`String`]) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
