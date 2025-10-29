@@ -584,7 +584,7 @@ func resourceTencentCloudWedataLineageAttachmentDelete(d *schema.ResourceData, m
 	processPlatform := processObjSplit[2]
 
 	request.Relations = []*wedatav20250806.LineagePair{
-		&wedatav20250806.LineagePair{
+		{
 			Source: &wedatav20250806.LineageResouce{
 				ResourceUniqueId: &sourceResourceUniqueId,
 				ResourceType:     &sourceResourceType,
@@ -596,7 +596,7 @@ func resourceTencentCloudWedataLineageAttachmentDelete(d *schema.ResourceData, m
 				Platform:         &targetPlatform,
 			},
 			Processes: []*wedatav20250806.LineageProcess{
-				&wedatav20250806.LineageProcess{
+				{
 					ProcessId:   &processId,
 					ProcessType: &processType,
 					Platform:    &processPlatform,

@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a WeData lineage attachment
 
+~> **NOTE:** Do not use the same relation parameters for lineage binding, as this will cause overwriting.
+
 ## Example Usage
 
 ```hcl
