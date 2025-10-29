@@ -1992,7 +1992,7 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"cdc_id", "extension_addon"}
+	immutableArgs := []string{"cdc_id", "extension_addon", "disable_addons"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
