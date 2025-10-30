@@ -70,10 +70,9 @@ func ResourceTencentCloudCfwVpcInstance() *schema.Resource {
 										Description: "Firewall Deployment Region.",
 									},
 									"width": {
-										Type:         schema.TypeInt,
-										Required:     true,
-										ValidateFunc: tccommon.ValidateIntegerMin(1024),
-										Description:  "Bandwidth, unit: Mbps.",
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Bandwidth, unit: Mbps.",
 									},
 									"cross_a_zone": {
 										Type:         schema.TypeInt,
