@@ -1,4 +1,4 @@
-Provides a resource to create a dts sync_config
+Provides a resource to create a DTS sync config
 
 Example Usage
 

@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dts_sync_config"
 sidebar_current: "docs-tencentcloud-resource-dts_sync_config"
 description: |-
-  Provides a resource to create a dts sync_config
+  Provides a resource to create a DTS sync config
 ---
 
 # tencentcloud_dts_sync_config
 
-Provides a resource to create a dts sync_config
+Provides a resource to create a DTS sync config
 
 ## Example Usage
 
@@ -296,6 +296,23 @@ The `options` object supports the following:
 * `deal_of_exist_same_table` - (Optional, String) The processing of the table with the same name, ReportErrorAfterCheck (pre-check and report error, default), InitializeAfterDelete (delete and re-initialize), ExecuteAfterIgnore (ignore and continue to execute). Note: This field may return null, indicating that no valid value can be obtained.
 * `init_type` - (Optional, String) Synchronous initialization options, Data (full data initialization), Structure (structure initialization), Full (full data and structure initialization, default), None (incremental only). Note: This field may return null, indicating that no valid value can be obtained.
 * `op_types` - (Optional, Set) DML and DDL options to be synchronized, Insert (insert operation), Update (update operation), Delete (delete operation), DDL (structure synchronization), leave blank (not selected), PartialDDL (custom, work with DdlOptions). Note: This field may return null, indicating that no valid value can be obtained.
+* `rate_limit_option` - (Optional, List) Task speed limit information
+Note: This field may return null, indicating that no valid values can be obtained.
+
+The `rate_limit_option` object of `options` supports the following:
+
+* `current_dump_rps` - (Required, Int) The full export Rps currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 50,000,000.Note: This field may return null, indicating that no valid values can be obtained.
+* `current_dump_thread` - (Required, Int) The number of full export threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 16.Note: This field may return null, indicating that no valid values can be obtained.
+* `current_load_rps` - (Required, Int) The full import Rps currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 50,000,000.Note: This field may return null, indicating that no valid values can be obtained.
+* `current_load_thread` - (Required, Int) The number of full import threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 16.Note: This field may return null, indicating that no valid values can be obtained.
+* `current_sinker_thread` - (Required, Int) The number of incremental import threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 128.Note: This field may return null, indicating that no valid values can be obtained.
+* `default_dump_rps` - (Required, Int) The default full export Rps. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.
+* `default_dump_thread` - (Required, Int) The default number of full export threads. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.
+* `default_load_rps` - (Required, Int) The default full import Rps. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.
+* `default_load_thread` - (Required, Int) The default number of full import threads. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.
+* `default_sinker_thread` - (Required, Int) The default number of incremental import threads. This field is only meaningful in the output parameter.
+Note: This field may return null, indicating that no valid values can be obtained.
+* `has_user_set_rate_limit` - (Required, String) enum:"no"/"yes", no: the user has not set a speed limit; yes: a speed limit has been set. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.
 
 The `src_info` object supports the following:
 
