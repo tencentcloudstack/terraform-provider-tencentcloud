@@ -232,6 +232,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 						"instance_types": {
 							Type:        schema.TypeList,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Model list.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,

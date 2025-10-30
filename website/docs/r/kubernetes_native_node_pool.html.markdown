@@ -172,7 +172,7 @@ The `management` object of `native` supports the following:
 The `native` object supports the following:
 
 * `instance_charge_type` - (Required, String, ForceNew) Node billing type. `PREPAID` is a yearly and monthly subscription, `POSTPAID_BY_HOUR` is a pay-as-you-go plan. The default is `POSTPAID_BY_HOUR`.
-* `instance_types` - (Required, List) Model list.
+* `instance_types` - (Required, List, ForceNew) Model list.
 * `security_group_ids` - (Required, List) Security group list.
 * `subnet_ids` - (Required, List) Subnet list.
 * `system_disk` - (Required, List, ForceNew) System disk configuration.
