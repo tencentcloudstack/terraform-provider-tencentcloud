@@ -3827,6 +3827,13 @@ type HostNameSettings struct {
 	// 假设后缀名称为 suffix，原主机名为 test.0，最终主机名为 test.0.suffix。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostNameSuffix *string `json:"HostNameSuffix,omitnil,omitempty" name:"HostNameSuffix"`
+
+	// 云服务器的主机名分隔符。
+	// 默认的分隔符是点号（.），可选短横线（-）。仅有点号（.）和短横线（-）能作为主机名的分隔符。如果不设置，则默认采用点号（.）分隔符。
+	// 通过分割符连接多段。
+	// 
+	// 假设原主机名为“product-as-host”，分隔符HostNameDelimiter为“-”，设置主机名后缀"suffix"，那么最终主机名为“product-as-host-suffix”。
+	HostNameDelimiter *string `json:"HostNameDelimiter,omitnil,omitempty" name:"HostNameDelimiter"`
 }
 
 type IPv6InternetAccessible struct {
@@ -3968,6 +3975,11 @@ type InstanceNameSettings struct {
 	// 假设后缀名称为 suffix，原实例名为 test.0，最终实例名为 test.0.suffix。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceNameSuffix *string `json:"InstanceNameSuffix,omitnil,omitempty" name:"InstanceNameSuffix"`
+
+	// 云服务器实例名分隔符。 默认的分隔符是点号（.），可选短横线（-）。仅有点号（.）和短横线（-）能作为实例名的分隔符。如果不设置，则默认采用点号（.）分隔符。 通过分割符连接多段。
+	// 
+	// 假设原实例名为“product-as-instance”，分隔符InstanceNameDelimiter为“-”，设置实例名后缀"suffix"，那么最终实例名为“product-as-instance-suffix”。
+	InstanceNameDelimiter *string `json:"InstanceNameDelimiter,omitnil,omitempty" name:"InstanceNameDelimiter"`
 }
 
 type InstanceTag struct {
@@ -4011,7 +4023,7 @@ type InternetAccessible struct {
 	// <li> WanIP：普通公网IP。</li>
 	// <li> HighQualityEIP：精品 IP。仅新加坡和中国香港支持精品IP。</li>
 	// <li> AntiDDoSEIP：高防 IP。仅部分地域支持高防IP，详情可见[弹性公网IP产品概述](https://cloud.tencent.com/document/product/1199/41646) 。  </li> 
-	// 如需为资源分配公网IPv4地址，请指定公网IPv4地址类型。
+	// 如需为资源分配弹性公网IPv4地址，请指定弹性公网IPv4地址类型。如只使用WanIP，不需要设置此字段。
 	// 
 	// 精品IP 高防IP功能仅部分地区灰度开放，如需使用[请提交工单咨询](https://console.cloud.tencent.com/workorder/category)
 	IPv4AddressType *string `json:"IPv4AddressType,omitnil,omitempty" name:"IPv4AddressType"`
