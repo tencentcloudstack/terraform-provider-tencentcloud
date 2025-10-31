@@ -129,6 +129,72 @@ func ResourceTencentCloudDtsSyncConfig() *schema.Resource {
 								},
 							},
 						},
+						"rate_limit_option": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Task speed limit information\nNote: This field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"current_dump_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The number of full export threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 16.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_dump_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default number of full export threads. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_dump_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The full export Rps currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 50,000,000.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_dump_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default full export Rps. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_load_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The number of full import threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 16.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_load_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default number of full import threads. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_load_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The full import Rps currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 50,000,000.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_load_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default full import Rps. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_sinker_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The number of incremental import threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 128.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_sinker_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default number of incremental import threads. This field is only meaningful in the output parameter.\nNote: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"has_user_set_rate_limit": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "enum:\"no\"/\"yes\", no: the user has not set a speed limit; yes: a speed limit has been set. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -747,6 +813,55 @@ func resourceTencentCloudDtsSyncConfigRead(d *schema.ResourceData, meta interfac
 			optionsMap["ddl_options"] = ddlOptionsList
 		}
 
+		if syncConfig.Options.RateLimitOption != nil {
+			rateLimitOptionMap := map[string]interface{}{}
+			if syncConfig.Options.RateLimitOption.CurrentDumpThread != nil {
+				rateLimitOptionMap["current_dump_thread"] = syncConfig.Options.RateLimitOption.CurrentDumpThread
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultDumpThread != nil {
+				rateLimitOptionMap["default_dump_thread"] = syncConfig.Options.RateLimitOption.DefaultDumpThread
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentDumpRps != nil {
+				rateLimitOptionMap["current_dump_rps"] = syncConfig.Options.RateLimitOption.CurrentDumpRps
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultDumpRps != nil {
+				rateLimitOptionMap["default_dump_rps"] = syncConfig.Options.RateLimitOption.DefaultDumpRps
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentLoadThread != nil {
+				rateLimitOptionMap["current_load_thread"] = syncConfig.Options.RateLimitOption.CurrentLoadThread
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultLoadThread != nil {
+				rateLimitOptionMap["default_load_thread"] = syncConfig.Options.RateLimitOption.DefaultLoadThread
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentLoadRps != nil {
+				rateLimitOptionMap["current_load_rps"] = syncConfig.Options.RateLimitOption.CurrentLoadRps
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultLoadRps != nil {
+				rateLimitOptionMap["default_load_rps"] = syncConfig.Options.RateLimitOption.DefaultLoadRps
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentSinkerThread != nil {
+				rateLimitOptionMap["current_sinker_thread"] = syncConfig.Options.RateLimitOption.CurrentSinkerThread
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultSinkerThread != nil {
+				rateLimitOptionMap["default_sinker_thread"] = syncConfig.Options.RateLimitOption.DefaultSinkerThread
+			}
+
+			if syncConfig.Options.RateLimitOption.HasUserSetRateLimit != nil {
+				rateLimitOptionMap["has_user_set_rate_limit"] = syncConfig.Options.RateLimitOption.HasUserSetRateLimit
+			}
+
+			optionsMap["rate_limit_option"] = []interface{}{rateLimitOptionMap}
+		}
+
 		_ = d.Set("options", []interface{}{optionsMap})
 	}
 
@@ -1215,6 +1330,55 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 				options.DdlOptions = append(options.DdlOptions, &ddlOption)
 			}
 		}
+		if rateLimitOptionMap, ok := helper.InterfaceToMap(dMap, "rate_limit_option"); ok {
+			rateLimitOption := dts.RateLimitOption{}
+			if v, ok := rateLimitOptionMap["current_dump_thread"].(int); ok {
+				rateLimitOption.CurrentDumpThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_dump_thread"].(int); ok {
+				rateLimitOption.DefaultDumpThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_dump_rps"].(int); ok {
+				rateLimitOption.CurrentDumpRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_dump_rps"].(int); ok {
+				rateLimitOption.DefaultDumpRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_load_thread"].(int); ok {
+				rateLimitOption.CurrentLoadThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_load_thread"].(int); ok {
+				rateLimitOption.DefaultLoadThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_load_rps"].(int); ok {
+				rateLimitOption.CurrentLoadRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_load_rps"].(int); ok {
+				rateLimitOption.DefaultLoadRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_sinker_thread"].(int); ok {
+				rateLimitOption.CurrentSinkerThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_sinker_thread"].(int); ok {
+				rateLimitOption.DefaultSinkerThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["has_user_set_rate_limit"].(string); ok && v != "" {
+				rateLimitOption.HasUserSetRateLimit = helper.String(v)
+			}
+
+			options.RateLimitOption = &rateLimitOption
+		}
+
 		request.Options = &options
 	}
 
