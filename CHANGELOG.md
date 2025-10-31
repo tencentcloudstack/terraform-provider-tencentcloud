@@ -1,3 +1,13 @@
+## 1.82.34(October 31, 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfw_vpc_instance: remove bandwidth 1024 limit ([#3577](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3577))
+* resource/tencentcloud_dts_sync_config: support `rate_limit_option` ([#3578](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3578))
+* resource/tencentcloud_kubernetes_cluster: update code logic ([#3580](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3580))
+* resource/tencentcloud_kubernetes_native_node_pool: update params `instance_types` ([#3579](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3579))
+* resource/tencentcloud_vpc_acl: update `ingress` and `egress` params ([#3581](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3581))
+
 ## 1.82.33(October 29, 2025)
 
 FEATURES:
