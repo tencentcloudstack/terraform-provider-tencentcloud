@@ -163,10 +163,11 @@ var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
 type VpcACLRule struct {
-	action   string
-	cidrIp   string
-	port     string
-	protocol string
+	action      string
+	cidrIp      string
+	port        string
+	protocol    string
+	description string
 }
 
 type VpcEniIP struct {
@@ -3798,12 +3799,16 @@ func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 // deal acl
 func parseACLRule(str string) (liteRule VpcACLRule, err error) {
 	split := strings.Split(str, "#")
-	if len(split) != 4 {
+	if !(len(split) == 4 || len(split) == 5) {
 		err = fmt.Errorf("invalid acl rule %s", str)
 		return
 	}
 
-	liteRule.action, liteRule.cidrIp, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+	if len(split) == 4 {
+		liteRule.action, liteRule.cidrIp, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+	} else {
+		liteRule.action, liteRule.cidrIp, liteRule.port, liteRule.protocol, liteRule.description = split[0], split[1], split[2], split[3], split[4]
+	}
 
 	switch liteRule.action {
 	default:
@@ -3908,9 +3913,10 @@ func (me *VpcService) ModifyNetWorkAclRules(ctx context.Context, aclID string, i
 
 	for i := range ingressParm {
 		policy := &vpc.NetworkAclEntry{
-			Protocol:  &ingressParm[i].protocol,
-			CidrBlock: &ingressParm[i].cidrIp,
-			Action:    &ingressParm[i].action,
+			Protocol:    &ingressParm[i].protocol,
+			CidrBlock:   &ingressParm[i].cidrIp,
+			Action:      &ingressParm[i].action,
+			Description: &ingressParm[i].description,
 		}
 
 		if ingressParm[i].port != "" {
@@ -3922,9 +3928,10 @@ func (me *VpcService) ModifyNetWorkAclRules(ctx context.Context, aclID string, i
 
 	for i := range egressParm {
 		policy := &vpc.NetworkAclEntry{
-			Protocol:  &egressParm[i].protocol,
-			CidrBlock: &egressParm[i].cidrIp,
-			Action:    &egressParm[i].action,
+			Protocol:    &egressParm[i].protocol,
+			CidrBlock:   &egressParm[i].cidrIp,
+			Action:      &egressParm[i].action,
+			Description: &egressParm[i].description,
 		}
 
 		if egressParm[i].port != "" {
