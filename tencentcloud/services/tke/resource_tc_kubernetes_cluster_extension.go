@@ -476,7 +476,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		}
 	}
 
-	//Modify node pool global config
+	//Modify node pool global config(sync)
 	if _, ok := d.GetOk("node_pool_global_config"); ok {
 		request := tkeGetNodePoolGlobalConfig(d)
 		request.ClusterId = &id
@@ -492,6 +492,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		}
 	}
 
+	// sync
 	if v, ok := d.GetOk("acquire_cluster_admin_role"); ok && v.(bool) {
 		err := service.AcquireClusterAdminRole(ctx, id)
 		if err != nil {
@@ -499,13 +500,37 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		}
 	}
 
+	// async
 	if _, ok := d.GetOk("auth_options"); ok {
 		request := tkeGetAuthOptions(d, id)
 		if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
 			return err
 		}
+
+		// wait
+		err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			resp, inErr := service.DescribeKubernetesAuthAttachmentById(ctx, id)
+			if inErr != nil {
+				return tccommon.RetryError(inErr)
+			}
+
+			if resp == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe cluster aauthentication options failed, Response is nil."))
+			}
+
+			if resp.LatestOperationState != nil || *resp.LatestOperationState == "Success" {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("Modify auth options running..."))
+		})
+
+		if err != nil {
+			return err
+		}
 	}
 
+	// async
 	if v, ok := helper.InterfacesHeadMap(d, "log_agent"); ok {
 		enabled := v["enabled"].(bool)
 		rootDir := v["kubelet_root_dir"].(string)
@@ -515,15 +540,62 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 			if err != nil {
 				return err
 			}
+
+			// wait
+			err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				resp, inErr := service.DescribeLogSwitches(ctx, id)
+				if inErr != nil {
+					return tccommon.RetryError(inErr)
+				}
+
+				if resp == nil || len(resp) < 1 {
+					return resource.NonRetryableError(fmt.Errorf("Describe log switches failed, Response is nil."))
+				}
+
+				ret := resp[0]
+				if ret.Log != nil && ret.Log.Status != nil && *ret.Log.Status == "opened" {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("Modify log agent running..."))
+			})
+
+			if err != nil {
+				return err
+			}
 		}
 	}
 
+	// async
 	if v, ok := helper.InterfacesHeadMap(d, "event_persistence"); ok {
 		enabled := v["enabled"].(bool)
 		logSetId := v["log_set_id"].(string)
 		topicId := v["topic_id"].(string)
 		if enabled {
 			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, false)
+			if err != nil {
+				return err
+			}
+
+			// wait
+			err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				resp, inErr := service.DescribeLogSwitches(ctx, id)
+				if inErr != nil {
+					return tccommon.RetryError(inErr)
+				}
+
+				if resp == nil || len(resp) < 1 {
+					return resource.NonRetryableError(fmt.Errorf("Describe event persistence failed, Response is nil."))
+				}
+
+				ret := resp[0]
+				if ret.Event != nil && ret.Event.Status != nil && *ret.Event.Status == "opened" {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("Modify event persistence running..."))
+			})
+
 			if err != nil {
 				return err
 			}
@@ -536,6 +608,29 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		topicId := v["topic_id"].(string)
 		if enabled {
 			err := service.SwitchClusterAudit(ctx, id, logSetId, topicId, enabled, false)
+			if err != nil {
+				return err
+			}
+
+			// wait
+			err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				resp, inErr := service.DescribeLogSwitches(ctx, id)
+				if inErr != nil {
+					return tccommon.RetryError(inErr)
+				}
+
+				if resp == nil || len(resp) < 1 {
+					return resource.NonRetryableError(fmt.Errorf("Describe cluster audit failed, Response is nil."))
+				}
+
+				ret := resp[0]
+				if ret.Audit != nil && ret.Audit.Status != nil && *ret.Audit.Status == "opened" {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("Modify cluster audit running..."))
+			})
+
 			if err != nil {
 				return err
 			}
