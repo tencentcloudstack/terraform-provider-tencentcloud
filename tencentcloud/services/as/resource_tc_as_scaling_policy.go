@@ -89,8 +89,36 @@ func ResourceTencentCloudAsScalingPolicy() *schema.Resource {
 			"notification_user_group_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "An ID group of users to be notified when an alarm is triggered.",
+			},
+			"policy_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Alarm triggering policy type, the default type is SIMPLE. Value range: SIMPLE: Simple policy; TARGET_TRACKING: Target tracking policy.",
+			},
+			"predefined_metric_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Predefined monitoring items, applicable only to target tracking policies, and required in target tracking policy scenarios. Value range: ASG_AVG_CPU_UTILIZATION: Average CPU utilization; ASG_AVG_LAN_TRAFFIC_OUT: Average intranet outbound bandwidth; ASG_AVG_LAN_TRAFFIC_IN: Average intranet inbound bandwidth; ASG_AVG_WAN_TRAFFIC_OUT: Average internet outbound bandwidth; ASG_AVG_WAN_TRAFFIC_IN: Average internet inbound bandwidth.",
+			},
+			"target_value": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Target value, applicable only to target tracking strategies, and required in target tracking strategy scenarios. ASG_AVG_CPU_UTILIZATION: [1, 100), Unit: %; ASG_AVG_LAN_TRAFFIC_OUT: >0, Unit: Mbps; ASG_AVG_LAN_TRAFFIC_IN: >0, Unit: Mbps; ASG_AVG_WAN_TRAFFIC_OUT: >0, Unit: Mbps; ASG_AVG_WAN_TRAFFIC_IN: >0, Unit: Mbps.",
+			},
+			"estimated_instance_warmup": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Instance warm-up time, in seconds, applicable only to target tracking strategies. Value range is 0-3600, with a default warm-up time of 300 seconds.",
+			},
+			"disable_scale_in": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to disable scaling down applies only to the target tracking strategy; the default value is false. Value range: true: The target tracking strategy only triggers scaling up; false: The target tracking strategy triggers both scaling up and scaling down.",
 			},
 		},
 	}
@@ -126,6 +154,26 @@ func resourceTencentCloudAsScalingPolicyCreate(d *schema.ResourceData, meta inte
 		for _, value := range notificationUserGroupIds {
 			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, helper.String(value.(string)))
 		}
+	}
+
+	if v, ok := d.GetOk("policy_type"); ok {
+		request.ScalingPolicyType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("predefined_metric_type"); ok {
+		request.PredefinedMetricType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("target_value"); ok {
+		request.TargetValue = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("estimated_instance_warmup"); ok {
+		request.EstimatedInstanceWarmup = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("disable_scale_in"); ok {
+		request.DisableScaleIn = helper.Bool(v.(bool))
 	}
 
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateScalingPolicy(request)
@@ -204,6 +252,21 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 		if scalingPolicy.NotificationUserGroupIds != nil {
 			_ = d.Set("notification_user_group_ids", helper.StringsInterfaces(scalingPolicy.NotificationUserGroupIds))
 		}
+		if scalingPolicy.ScalingPolicyType != nil {
+			_ = d.Set("policy_type", *scalingPolicy.ScalingPolicyType)
+		}
+		if scalingPolicy.PredefinedMetricType != nil {
+			_ = d.Set("predefined_metric_type", *scalingPolicy.PredefinedMetricType)
+		}
+		if scalingPolicy.TargetValue != nil {
+			_ = d.Set("target_value", *scalingPolicy.TargetValue)
+		}
+		if scalingPolicy.EstimatedInstanceWarmup != nil {
+			_ = d.Set("estimated_instance_warmup", *scalingPolicy.EstimatedInstanceWarmup)
+		}
+		if scalingPolicy.DisableScaleIn != nil {
+			_ = d.Set("disable_scale_in", *scalingPolicy.DisableScaleIn)
+		}
 		return nil
 	})
 	if err != nil {
@@ -248,6 +311,22 @@ func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta inte
 		for _, value := range notificationUserGroupIds {
 			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, helper.String(value.(string)))
 		}
+	}
+
+	if v, ok := d.GetOk("predefined_metric_type"); ok {
+		request.PredefinedMetricType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("target_value"); ok {
+		request.TargetValue = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("estimated_instance_warmup"); ok {
+		request.EstimatedInstanceWarmup = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("disable_scale_in"); ok {
+		request.DisableScaleIn = helper.Bool(v.(bool))
 	}
 
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyScalingPolicy(request)
