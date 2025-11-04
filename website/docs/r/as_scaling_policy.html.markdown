@@ -82,8 +82,13 @@ The following arguments are supported:
 * `scaling_group_id` - (Required, String, ForceNew) ID of a scaling group.
 * `threshold` - (Required, Int) Alarm threshold.
 * `cooldown` - (Optional, Int) Cooldwon time in second. Default is `30`0.
+* `disable_scale_in` - (Optional, Bool) Whether to disable scaling down applies only to the target tracking strategy; the default value is false. Value range: true: The target tracking strategy only triggers scaling up; false: The target tracking strategy triggers both scaling up and scaling down.
+* `estimated_instance_warmup` - (Optional, Int) Instance warm-up time, in seconds, applicable only to target tracking strategies. Value range is 0-3600, with a default warm-up time of 300 seconds.
 * `notification_user_group_ids` - (Optional, List: [`String`]) An ID group of users to be notified when an alarm is triggered.
+* `policy_type` - (Optional, String, ForceNew) Alarm triggering policy type, the default type is SIMPLE. Value range: SIMPLE: Simple policy; TARGET_TRACKING: Target tracking policy.
+* `predefined_metric_type` - (Optional, String) Predefined monitoring items, applicable only to target tracking policies, and required in target tracking policy scenarios. Value range: ASG_AVG_CPU_UTILIZATION: Average CPU utilization; ASG_AVG_LAN_TRAFFIC_OUT: Average intranet outbound bandwidth; ASG_AVG_LAN_TRAFFIC_IN: Average intranet inbound bandwidth; ASG_AVG_WAN_TRAFFIC_OUT: Average internet outbound bandwidth; ASG_AVG_WAN_TRAFFIC_IN: Average internet inbound bandwidth.
 * `statistic` - (Optional, String) Statistic types. Valid values: `AVERAGE`, `MAXIMUM` and `MINIMUM`. Default is `AVERAGE`.
+* `target_value` - (Optional, Int) Target value, applicable only to target tracking strategies, and required in target tracking strategy scenarios. ASG_AVG_CPU_UTILIZATION: [1, 100), Unit: %; ASG_AVG_LAN_TRAFFIC_OUT: >0, Unit: Mbps; ASG_AVG_LAN_TRAFFIC_IN: >0, Unit: Mbps; ASG_AVG_WAN_TRAFFIC_OUT: >0, Unit: Mbps; ASG_AVG_WAN_TRAFFIC_IN: >0, Unit: Mbps.
 
 ## Attributes Reference
 
