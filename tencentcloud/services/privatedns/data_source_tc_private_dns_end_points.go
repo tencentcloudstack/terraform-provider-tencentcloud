@@ -5,7 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	privatednsv20201028 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+	privatednsIntlv20201028 "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -117,10 +117,10 @@ func dataSourceTencentCloudPrivateDnsEndPointsRead(d *schema.ResourceData, meta 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("filters"); ok {
 		filtersSet := v.([]interface{})
-		tmpSet := make([]*privatednsv20201028.Filter, 0, len(filtersSet))
+		tmpSet := make([]*privatednsIntlv20201028.Filter, 0, len(filtersSet))
 		for _, item := range filtersSet {
 			filtersMap := item.(map[string]interface{})
-			filter := privatednsv20201028.Filter{}
+			filter := privatednsIntlv20201028.Filter{}
 			if v, ok := filtersMap["name"]; ok {
 				filter.Name = helper.String(v.(string))
 			}
@@ -139,7 +139,7 @@ func dataSourceTencentCloudPrivateDnsEndPointsRead(d *schema.ResourceData, meta 
 		paramMap["Filters"] = tmpSet
 	}
 
-	var respData []*privatednsv20201028.EndPointInfo
+	var respData []*privatednsIntlv20201028.EndPointInfo
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribePrivateDnsEndPointsByFilter(ctx, paramMap)
 		if e != nil {
