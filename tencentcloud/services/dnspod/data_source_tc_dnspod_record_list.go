@@ -169,6 +169,13 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 				Description: "Project ID.",
 			},
 
+			"filter_at_ns": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Filter @ type NS records. Default is false.",
+				Default:     false,
+			},
+
 			"record_count_info": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -484,7 +491,10 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 	if v, ok := d.GetOkExists("project_id"); ok {
 		paramMap["ProjectId"] = helper.IntInt64(v.(int))
 	}
-
+	var filterAtNS bool
+	if v, ok := d.GetOkExists("filter_at_ns"); ok {
+		filterAtNS = v.(bool)
+	}
 	service := DnspodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var recordList []*dnspod.RecordListItem
@@ -536,6 +546,9 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 	instanceList := make([]map[string]interface{}, 0, len(recordList))
 	if recordList != nil {
 		for _, recordListItem := range recordList {
+			if filterAtNS && recordListItem.Name != nil && *recordListItem.Name == DNSPOD_RECORD_NAME_AT && recordListItem.Type != nil && *recordListItem.Type == DNSPOD_RECORD_TYPE_NS {
+				continue
+			}
 			recordListItemMap := map[string]interface{}{}
 			instanceListItemMap := map[string]interface{}{}
 			instanceListItemMap["domain"] = domain

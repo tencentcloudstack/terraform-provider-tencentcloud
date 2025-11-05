@@ -93,6 +93,33 @@
                                     },
                                     "required": true,
                                     "description": ""
+                                },
+                                "filter_at_ns": {
+                                    "type": "bool",
+                                    "metadata": {
+                                        "filter": {
+                                            "enable": true
+                                        },
+                                        "values": [
+                                            {
+                                                "value": true,
+                                                "display_name": "是"
+                                            }
+                                        ],
+                                        "widget": "select",
+                                        "val_source": {
+                                            "values": {}
+                                        },
+                                        "description": "是否过滤主机记录为 @ 的 NS 记录",
+                                        "display_name": "是否过滤主机记录为 @ 的 NS 记录",
+                                        "default_value": {
+                                            "value": true,
+                                            "display_name": "是"
+                                        },
+                                        "is_not_edited": true
+                                    },
+                                    "required": true,
+                                    "description": ""
                                 }
                             }
                         },
