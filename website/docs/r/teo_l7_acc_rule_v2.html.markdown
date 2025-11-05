@@ -468,6 +468,7 @@ The `upstream_request_parameters` object of `actions` supports the following:
 The `upstream_url_rewrite_parameters` object of `actions` supports the following:
 
 * `action` - (Optional, String) Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+* `regex` - (Optional, String) Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
 * `type` - (Optional, String) Origin-Pull url rewriting type, only path is supported.
 * `value` - (Optional, String) Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
 
