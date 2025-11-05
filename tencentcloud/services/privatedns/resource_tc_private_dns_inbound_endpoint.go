@@ -160,11 +160,11 @@ func resourceTencentCloudPrivateDnsInboundEndpointRead(d *schema.ResourceData, m
 	}
 
 	if respData.EndPointName != nil {
-		d.Set("endpoint_name", respData.EndPointName)
+		_ = d.Set("endpoint_name", respData.EndPointName)
 	}
 
 	if respData.UniqVpcId != nil {
-		d.Set("endpoint_vpc", respData.UniqVpcId)
+		_ = d.Set("endpoint_vpc", respData.UniqVpcId)
 	}
 
 	if respData.EndPointService != nil {
@@ -182,7 +182,7 @@ func resourceTencentCloudPrivateDnsInboundEndpointRead(d *schema.ResourceData, m
 			tmpList = append(tmpList, dMap)
 		}
 
-		d.Set("subnet_ip", tmpList)
+		_ = d.Set("subnet_ip", tmpList)
 	}
 
 	return nil
