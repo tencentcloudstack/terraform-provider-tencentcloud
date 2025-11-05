@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_teo_l7_acc_rule: upstream_url_rewrite_parameters support regex field.
+```
+
+```release-note:enhancement
+resource/tencentcloud_teo_l7_acc_rule_v2: upstream_url_rewrite_parameters support regex field.
+```
