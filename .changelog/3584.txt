@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_clb_cls_log_attachment
+```
+
+```release-note:enhancement
+resource/tencentcloud_clb_log_topic: support `status`
+```
