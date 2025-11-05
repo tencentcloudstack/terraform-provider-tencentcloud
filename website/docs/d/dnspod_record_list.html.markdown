@@ -46,6 +46,7 @@ The following arguments are supported:
 
 * `domain` - (Required, String) The domain to which the resolution record belongs.
 * `domain_id` - (Optional, Int) The domain ID to which the resolution record belongs. If DomainId is provided, the system will ignore the Domain parameter. You can find all Domain and DomainId through the DescribeDomainList interface.
+* `filter_at_ns` - (Optional, Bool) Filter @ type NS records. Default is false.
 * `group_id` - (Optional, Set: [`Int`]) When retrieving resolution records under certain groups, pass this group ID. You can obtain the GroupId field through the DescribeRecordGroupList interface.
 * `is_exact_sub_domain` - (Optional, Bool) Whether to perform an exact search based on the SubDomain parameter.
 * `keyword` - (Optional, String) Search for resolution records by keyword, currently supporting searching host headers and record values.
