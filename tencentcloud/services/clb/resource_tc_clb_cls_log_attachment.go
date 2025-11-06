@@ -19,6 +19,9 @@ func ResourceTencentCloudClbClsLogAttachment() *schema.Resource {
 		Create: resourceTencentCloudClbClsLogAttachmentCreate,
 		Read:   resourceTencentCloudClbClsLogAttachmentRead,
 		Delete: resourceTencentCloudClbClsLogAttachmentDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"load_balancer_id": {
 				Type:        schema.TypeString,
@@ -41,13 +44,13 @@ func ResourceTencentCloudClbClsLogAttachment() *schema.Resource {
 				Description: "Log topic ID of the CLS.<li>When adding or updating a log topic, call the [DescribeTopics](https://intl.cloud.tencent.com/document/product/614/56454?from_cn_redirect=1) API to obtain the log topic ID.</li><li>When deleting a log topic, set this parameter to null.</li>.",
 			},
 
-			"log_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Computed:    true,
-				Description: "Log type:\n<li>`ACCESS`: access logs</li>\n<li>`HEALTH`: health check logs</li>\nDefault: `ACCESS`.",
-			},
+			// "log_type": {
+			// 	Type:        schema.TypeString,
+			// 	Optional:    true,
+			// 	ForceNew:    true,
+			// 	Computed:    true,
+			// 	Description: "Log type:\n<li>`ACCESS`: access logs</li>\n<li>`HEALTH`: health check logs</li>\nDefault: `ACCESS`.",
+			// },
 		},
 	}
 }
@@ -80,9 +83,9 @@ func resourceTencentCloudClbClsLogAttachmentCreate(d *schema.ResourceData, meta 
 		logTopicId = v.(string)
 	}
 
-	if v, ok := d.GetOk("log_type"); ok {
-		request.LogType = helper.String(v.(string))
-	}
+	// if v, ok := d.GetOk("log_type"); ok {
+	// 	request.LogType = helper.String(v.(string))
+	// }
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().SetLoadBalancerClsLogWithContext(ctx, request)
@@ -139,16 +142,20 @@ func resourceTencentCloudClbClsLogAttachmentRead(d *schema.ResourceData, meta in
 	}
 
 	if respData.LogSetId != nil && respData.LogTopicId != nil {
-		_ = d.Set("log_set_id", respData.LogSetId)
-		_ = d.Set("log_topic_id", respData.LogTopicId)
-		_ = d.Set("log_type", "ACCESS")
+		if *respData.LogSetId == logSetId && *respData.LogTopicId == logTopicId {
+			_ = d.Set("log_set_id", respData.LogSetId)
+			_ = d.Set("log_topic_id", respData.LogTopicId)
+			// _ = d.Set("log_type", "ACCESS")
+		}
 	}
 
-	if respData.HealthLogSetId != nil && respData.HealthLogTopicId != nil {
-		_ = d.Set("log_set_id", respData.HealthLogSetId)
-		_ = d.Set("log_topic_id", respData.HealthLogTopicId)
-		_ = d.Set("log_type", "HEALTH")
-	}
+	// if respData.HealthLogSetId != nil && respData.HealthLogTopicId != nil {
+	// 	if *respData.HealthLogSetId == logSetId && *respData.HealthLogTopicId == logTopicId {
+	// 		_ = d.Set("log_set_id", respData.HealthLogSetId)
+	// 		_ = d.Set("log_topic_id", respData.HealthLogTopicId)
+	// 		_ = d.Set("log_type", "HEALTH")
+	// 	}
+	// }
 
 	return nil
 }
