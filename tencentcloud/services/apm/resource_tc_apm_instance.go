@@ -55,6 +55,18 @@ func ResourceTencentCloudApmInstance() *schema.Resource {
 				Description: "Modify the billing mode: `1` means prepaid, `0` means pay-as-you-go, the default value is `0`.",
 			},
 
+			"token": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Business system authentication token.",
+			},
+
+			"public_collector_url": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "External Network Reporting Address.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -178,6 +190,25 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 
 	if instance.PayMode != nil {
 		_ = d.Set("pay_mode", instance.PayMode)
+	}
+
+	if instance.Token != nil {
+		_ = d.Set("token", instance.Token)
+	}
+
+	apmAgent := &apm.ApmAgentInfo{}
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, err := service.DescribeApmAgentById(ctx, instanceId)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		apmAgent = result
+		return nil
+	})
+	if err == nil {
+		if apmAgent.PublicCollectorURL != nil {
+			_ = d.Set("public_collector_url", apmAgent.PublicCollectorURL)
+		}
 	}
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()

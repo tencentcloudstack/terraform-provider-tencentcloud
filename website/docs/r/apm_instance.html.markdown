@@ -43,7 +43,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `public_collector_url` - External Network Reporting Address.
+* `token` - Business system authentication token.
 
 
 ## Import
