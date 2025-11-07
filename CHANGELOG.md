@@ -1,3 +1,20 @@
+## 1.82.35(November 7, 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_clb_cls_log_attachment` ([#3584](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3584))
+* **New Resource:** `tencentcloud_private_dns_inbound_endpoint` ([#3583](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3583))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dnspod_record_list: support `filter_at_ns` ([#3585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3585))
+* resource/tencentcloud_apm_instance: Support `token` and `public_collector_url` fields. ([#3588](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3588))
+* resource/tencentcloud_as_scaling_policy: add new params ([#3582](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3582))
+* resource/tencentcloud_clb_log_topic: support `status` ([#3584](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3584))
+* resource/tencentcloud_mysql_readonly_instance: tag support retry. ([#3587](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3587))
+* resource/tencentcloud_teo_l7_acc_rule: upstream_url_rewrite_parameters support regex field. ([#3586](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3586))
+* resource/tencentcloud_teo_l7_acc_rule_v2: upstream_url_rewrite_parameters support regex field. ([#3586](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3586))
+
 ## 1.82.34(October 31, 2025)
 
 ENHANCEMENTS:
