@@ -418,6 +418,7 @@ tencentcloud_clb_instance_sla_config
 tencentcloud_clb_instance_mix_ip_target_config
 tencentcloud_clb_replace_cert_for_lbs
 tencentcloud_clb_security_group_attachment
+tencentcloud_clb_cls_log_attachment
 
 Cloud Object Storage(COS)
 Data Source
