@@ -1268,7 +1268,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.1156
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.1038
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.1.42
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762

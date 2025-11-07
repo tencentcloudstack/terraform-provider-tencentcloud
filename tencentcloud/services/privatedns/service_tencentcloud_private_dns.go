@@ -445,10 +445,10 @@ func (me *PrivatednsService) DescribePrivateDnsForwardRulesByFilter(ctx context.
 	return
 }
 
-func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Context, param map[string]interface{}) (ret []*privatedns.EndPointInfo, errRet error) {
+func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Context, param map[string]interface{}) (ret []*privatednsIntlv20201028.EndPointInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
-		request = privatedns.NewDescribeEndPointListRequest()
+		request = privatednsIntlv20201028.NewDescribeEndPointListRequest()
 	)
 
 	defer func() {
@@ -459,7 +459,7 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Con
 
 	for k, v := range param {
 		if k == "Filters" {
-			request.Filters = v.([]*privatedns.Filter)
+			request.Filters = v.([]*privatednsIntlv20201028.Filter)
 		}
 	}
 
@@ -472,7 +472,7 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Con
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UsePrivatednsV20201028Client().DescribeEndPointList(request)
+		response, err := me.client.UsePrivatednsIntlV20201028Client().DescribeEndPointList(request)
 		if err != nil {
 			errRet = err
 			return
@@ -539,5 +539,49 @@ func (me *PrivateDnsService) DescribePrivateDnsRecordById(ctx context.Context, z
 	}
 
 	recordInfo = response.Response.RecordInfo
+	return
+}
+
+func (me *PrivatednsService) DescribePrivateDnsInboundEndpointById(ctx context.Context, endpointId string) (ret *privatedns.InboundEndpointSet, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatedns.NewDescribeInboundEndpointListRequest()
+	response := privatedns.NewDescribeInboundEndpointListResponse()
+	request.Filters = []*privatedns.Filter{
+		{
+			Name:   common.StringPtr("EndPointId"),
+			Values: common.StringPtrs([]string{endpointId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivatednsV20201028Client().DescribeInboundEndpointList(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.InboundEndpointSet == nil || len(result.Response.InboundEndpointSet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe inbound endpoint list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.InboundEndpointSet[0]
 	return
 }

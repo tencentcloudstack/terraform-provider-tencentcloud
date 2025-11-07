@@ -1895,6 +1895,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_private_dns_forward_rule":                                                 privatedns.ResourceTencentCloudPrivateDnsForwardRule(),
 			"tencentcloud_private_dns_end_point":                                                    privatedns.ResourceTencentCloudPrivateDnsEndPoint(),
 			"tencentcloud_private_dns_extend_end_point":                                             privatedns.ResourceTencentCloudPrivateDnsExtendEndPoint(),
+			"tencentcloud_private_dns_inbound_endpoint":                                             privatedns.ResourceTencentCloudPrivateDnsInboundEndpoint(),
 			"tencentcloud_cls_logset":                                                               cls.ResourceTencentCloudClsLogset(),
 			"tencentcloud_cls_topic":                                                                cls.ResourceTencentCloudClsTopic(),
 			"tencentcloud_cls_config":                                                               cls.ResourceTencentCloudClsConfig(),

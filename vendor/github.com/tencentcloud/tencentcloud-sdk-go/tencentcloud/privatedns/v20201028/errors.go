@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,17 +59,11 @@ const (
 	// 解析域删除失败。
 	FAILEDOPERATION_DELETEZONEFAILED = "FailedOperation.DeleteZoneFailed"
 
-	// 终端节点服务创建失败
-	FAILEDOPERATION_ENDPOINTSERVICECREATEFAILED = "FailedOperation.EndPointServiceCreateFailed"
-
-	// 终端节点服务删除失败
-	FAILEDOPERATION_ENDPOINTSERVICEDELETEFAILED = "FailedOperation.EndPointServiceDeleteFailed"
-
-	// 终端节点服务白名单操作失败。
-	FAILEDOPERATION_ENDPOINTSERVICEWHITELISTFAILED = "FailedOperation.EndPointServiceWhiteListFailed"
-
 	// 获取临时凭证失败
 	FAILEDOPERATION_GETTMPCREDFAILED = "FailedOperation.GetTmpCredFailed"
+
+	// 您的账号在同一区域内创建终端节点数量已达上限。
+	FAILEDOPERATION_INBOUNDOVERLIMIT = "FailedOperation.InboundOverLimit"
 
 	// 记录修改失败。
 	FAILEDOPERATION_MODIFYRECORDFAILED = "FailedOperation.ModifyRecordFailed"
@@ -161,8 +155,8 @@ const (
 	// 记录不存在。
 	INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
 
-	// 记录负载均衡数量超过限制。
-	INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+	// 记录负载均衡数量超过限制
+	INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 
 	// TXT记录负载均衡数量超过10。
 	INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"

@@ -1401,6 +1401,7 @@ tencentcloud_subscribe_private_zone_service
 tencentcloud_private_dns_forward_rule
 tencentcloud_private_dns_end_point
 tencentcloud_private_dns_extend_end_point
+tencentcloud_private_dns_inbound_endpoint
 
 Data Source
 tencentcloud_private_dns_records
