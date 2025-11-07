@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -13,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -1659,8 +1661,20 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		tagService := svctag.NewTagService(tcClient)
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("cdb", "instanceId", region, d.Id())
-		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+				if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkErr.Code == "FailedOperation" && strings.Contains(sdkErr.Message, "repeat commit: lock:resourceTag") {
+						return resource.RetryableError(err)
+					}
+					return resource.NonRetryableError(err)
+				}
+				return resource.NonRetryableError(err)
+			}
+			return nil
+		})
 		if err != nil {
+			log.Printf("[CRITAL]%s create mysql  tag fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
 		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
