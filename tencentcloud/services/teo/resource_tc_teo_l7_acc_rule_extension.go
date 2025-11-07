@@ -334,6 +334,11 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Optional:    true,
 									Description: "Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.",
 								},
+								"regex": {
+									Type:        schema.TypeString,
+									Optional:    true,
+									Description: "Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.",
+								},
 							},
 						},
 					},
@@ -1292,6 +1297,9 @@ func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{})
 						if v, ok := upstreamURLRewriteParametersMap["value"].(string); ok && v != "" {
 							upstreamURLRewriteParameters.Value = helper.String(v)
 						}
+						if v, ok := upstreamURLRewriteParametersMap["regex"].(string); ok && v != "" {
+							upstreamURLRewriteParameters.Regex = helper.String(v)
+						}
 						ruleEngineAction.UpstreamURLRewriteParameters = &upstreamURLRewriteParameters
 					}
 					if qUICParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["quic_parameters"]); ok {
@@ -1941,6 +1949,11 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 
 						if actions.UpstreamURLRewriteParameters.Value != nil {
 							upstreamURLRewriteParametersMap["value"] = actions.UpstreamURLRewriteParameters.Value
+						}
+
+						if actions.UpstreamURLRewriteParameters.Regex != nil {
+							upstreamURLRewriteParametersMap["regex"] = actions.UpstreamURLRewriteParameters.Regex
+
 						}
 
 						actionsMap["upstream_url_rewrite_parameters"] = []interface{}{upstreamURLRewriteParametersMap}
