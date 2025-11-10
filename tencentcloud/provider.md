@@ -2431,3 +2431,8 @@ tencentcloud_billing_budget_operation_log
 Resource
 tencentcloud_billing_allocation_tag
 tencentcloud_billing_budget
+
+Tencent Container Security Service(TCSS)
+Resource
+tencentcloud_tcss_cluster_access
+tencentcloud_tcss_refresh_task_operation
