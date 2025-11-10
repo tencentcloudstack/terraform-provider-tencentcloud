@@ -2448,6 +2448,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr_auto_scale_strategy":                                                  emr.ResourceTencentCloudEmrAutoScaleStrategy(),
 			"tencentcloud_kubernetes_log_config":                                                    tke.ResourceTencentCloudKubernetesLogConfig(),
 			"tencentcloud_tcss_image_registry":                                                      tcss.ResourceTencentCloudTcssImageRegistry(),
+			"tencentcloud_tcss_cluster_access":                                                      tcss.ResourceTencentCloudTcssClusterAccess(),
+			"tencentcloud_tcss_refresh_task_operation":                                              tcss.ResourceTencentCloudTcssRefreshTaskOperation(),
 			"tencentcloud_mqtt_instance":                                                            mqtt.ResourceTencentCloudMqttInstance(),
 			"tencentcloud_mqtt_instance_public_endpoint":                                            mqtt.ResourceTencentCloudMqttInstancePublicEndpoint(),
 			"tencentcloud_mqtt_topic":                                                               mqtt.ResourceTencentCloudMqttTopic(),
