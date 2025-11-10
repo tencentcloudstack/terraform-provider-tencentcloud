@@ -1530,7 +1530,7 @@ type CreateOrganizationMemberRequestParams struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -1567,7 +1567,7 @@ type CreateOrganizationMemberRequest struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -2123,6 +2123,9 @@ type CreateUserRequestParams struct {
 
 	// 用户类型  Manual：手动创建，Synchronized：外部导入
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+
+	// 是否需要重置密码： true: 需要重置  false: 不需要重置密码。 默认false
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 type CreateUserRequest struct {
@@ -2154,6 +2157,9 @@ type CreateUserRequest struct {
 
 	// 用户类型  Manual：手动创建，Synchronized：外部导入
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+
+	// 是否需要重置密码： true: 需要重置  false: 不需要重置密码。 默认false
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 func (r *CreateUserRequest) ToJsonString() string {
@@ -2177,6 +2183,7 @@ func (r *CreateUserRequest) FromJsonString(s string) error {
 	delete(f, "Email")
 	delete(f, "UserStatus")
 	delete(f, "UserType")
+	delete(f, "NeedResetPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserRequest has unknown keys!", "")
 	}
@@ -6116,7 +6123,7 @@ type InviteOrganizationMemberRequestParams struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -6153,7 +6160,7 @@ type InviteOrganizationMemberRequest struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -9517,6 +9524,9 @@ func (r *SetExternalSAMLIdentityProviderRequest) FromJsonString(s string) error 
 
 // Predefined struct for user
 type SetExternalSAMLIdentityProviderResponseParams struct {
+	// 证书ID。
+	CertificateIds []*string `json:"CertificateIds,omitnil,omitempty" name:"CertificateIds"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -10014,7 +10024,7 @@ type UpdateOrganizationMemberRequestParams struct {
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
 	// 成员财务权限ID列表。PermissionIds不为空，PolicyType不能为空。
-	// 取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析，如果有值，1、2 默认必须
+	// 取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 是否允许成员退出组织。取值：Allow-允许、Denied-不允许
@@ -10043,7 +10053,7 @@ type UpdateOrganizationMemberRequest struct {
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
 	// 成员财务权限ID列表。PermissionIds不为空，PolicyType不能为空。
-	// 取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析，如果有值，1、2 默认必须
+	// 取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 是否允许成员退出组织。取值：Allow-允许、Denied-不允许
@@ -10640,6 +10650,9 @@ type UpdateUserRequestParams struct {
 
 	// 用户的电子邮箱。
 	NewEmail *string `json:"NewEmail,omitnil,omitempty" name:"NewEmail"`
+
+	// 是否需要重置密码
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 type UpdateUserRequest struct {
@@ -10665,6 +10678,9 @@ type UpdateUserRequest struct {
 
 	// 用户的电子邮箱。
 	NewEmail *string `json:"NewEmail,omitnil,omitempty" name:"NewEmail"`
+
+	// 是否需要重置密码
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 func (r *UpdateUserRequest) ToJsonString() string {
@@ -10686,6 +10702,7 @@ func (r *UpdateUserRequest) FromJsonString(s string) error {
 	delete(f, "NewDisplayName")
 	delete(f, "NewDescription")
 	delete(f, "NewEmail")
+	delete(f, "NeedResetPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateUserRequest has unknown keys!", "")
 	}
@@ -10967,6 +10984,9 @@ type UserInfo struct {
 
 	// 用户密码
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 下次登录是否需要重置密码， true: 需要重置密码， false：不需要重置密码
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 type UserProvisioning struct {

@@ -2,10 +2,12 @@ package tco
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	organizationv20210331 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -16,6 +18,7 @@ func ResourceTencentCloudOrganizationExternalSamlIdentityProvider() *schema.Reso
 	return &schema.Resource{
 		Create: resourceTencentCloudOrganizationExternalSamlIdentityProviderCreate,
 		Read:   resourceTencentCloudOrganizationExternalSamlIdentityProviderRead,
+		Update: resourceTencentCloudOrganizationExternalSamlIdentityProviderUpdate,
 		Delete: resourceTencentCloudOrganizationExternalSamlIdentityProviderDelete,
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
@@ -26,16 +29,17 @@ func ResourceTencentCloudOrganizationExternalSamlIdentityProvider() *schema.Reso
 			},
 
 			"encoded_metadata_document": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "IdP metadata document (Base64 encoded). Provided by an IdP that supports the SAML 2.0 protocol.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"x509_certificate"},
+				Description:   "IdP metadata document (Base64 encoded). Provided by an IdP that supports the SAML 2.0 protocol.",
 			},
 
 			"sso_status": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "SSO enabling status. Valid values: Enabled, Disabled (default).",
 			},
 
@@ -43,6 +47,7 @@ func ResourceTencentCloudOrganizationExternalSamlIdentityProvider() *schema.Reso
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "IdP identifier.",
 			},
 
@@ -50,17 +55,36 @@ func ResourceTencentCloudOrganizationExternalSamlIdentityProvider() *schema.Reso
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "IdP login URL.",
 			},
 
 			"x509_certificate": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"encoded_metadata_document"},
+				Description:   "X509 certificate in PEM format. If this parameter is specified, all existing certificates will be replaced.",
+			},
+
+			"another_x509_certificate": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
-				Description: "X509 certificate in PEM format. If this parameter is specified, all existing certificates will be replaced.",
+				Description: "Another X509 certificate in PEM format. If this parameter is specified, all existing certificates will be replaced.",
 			},
 
 			// computed
+			"certificate_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Certificate ID.",
+			},
+
+			"another_certificate_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Another certificate ID.",
+			},
+
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -81,10 +105,11 @@ func resourceTencentCloudOrganizationExternalSamlIdentityProviderCreate(d *schem
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request = organizationv20210331.NewSetExternalSAMLIdentityProviderRequest()
-		zoneId  string
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request  = organizationv20210331.NewSetExternalSAMLIdentityProviderRequest()
+		response = organizationv20210331.NewSetExternalSAMLIdentityProviderResponse()
+		zoneId   string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -120,6 +145,11 @@ func resourceTencentCloudOrganizationExternalSamlIdentityProviderCreate(d *schem
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil || result.Response.CertificateIds == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create organization external saml identity provider failed, Response is nil."))
+		}
+
+		response = result
 		return nil
 	})
 
@@ -128,7 +158,49 @@ func resourceTencentCloudOrganizationExternalSamlIdentityProviderCreate(d *schem
 		return reqErr
 	}
 
+	if len(response.Response.CertificateIds) == 0 {
+		return fmt.Errorf("CertificateIds is nil.")
+	}
+
+	// set main certificate id
+	_ = d.Set("certificate_id", response.Response.CertificateIds[0])
 	d.SetId(zoneId)
+
+	// another certificate
+	if v, ok := d.GetOk("another_certificate_id"); ok {
+		request := organization.NewAddExternalSAMLIdPCertificateRequest()
+		response := organization.NewAddExternalSAMLIdPCertificateResponse()
+		request.ZoneId = &zoneId
+		request.X509Certificate = helper.String(v.(string))
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().AddExternalSAMLIdPCertificateWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Create another organization external saml identity provider failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s create another organization external saml IdP certificate failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		if response.Response.CertificateId == nil {
+			return fmt.Errorf("Another certificateId is nil.")
+		}
+
+		// set another certificate id
+		_ = d.Set("another_certificate_id", response.Response.CertificateId)
+	}
+
 	return resourceTencentCloudOrganizationExternalSamlIdentityProviderRead(d, meta)
 }
 
@@ -173,7 +245,21 @@ func resourceTencentCloudOrganizationExternalSamlIdentityProviderRead(d *schema.
 	}
 
 	if respData.CertificateIds != nil {
-		_ = d.Set("certificate_ids", respData.CertificateIds)
+		tmpCertificateId := d.Get("certificate_id").(string)
+		tmpAnotherCertificateId := d.Get("another_certificate_id").(string)
+		if tmpCertificateId != "" || tmpAnotherCertificateId != "" {
+			for _, item := range respData.CertificateIds {
+				if item != nil {
+					if *item == tmpCertificateId {
+						_ = d.Set("certificate_id", item)
+					}
+
+					if *item == tmpAnotherCertificateId {
+						_ = d.Set("another_certificate_id", item)
+					}
+				}
+			}
+		}
 	}
 
 	if respData.CreateTime != nil {
@@ -185,6 +271,177 @@ func resourceTencentCloudOrganizationExternalSamlIdentityProviderRead(d *schema.
 	}
 
 	return nil
+}
+
+func resourceTencentCloudOrganizationExternalSamlIdentityProviderUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_organization_external_saml_identity_provider.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId  = tccommon.GetLogId(tccommon.ContextNil)
+		ctx    = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		zoneId = d.Id()
+	)
+
+	if d.HasChange("encoded_metadata_document") || d.HasChange("x509_certificate") || d.HasChange("another_x509_certificate") {
+		if d.Get("encoded_metadata_document").(string) == "" && d.Get("x509_certificate").(string) == "" && d.Get("another_x509_certificate").(string) == "" {
+			return fmt.Errorf("At least one certificate must be retained.")
+		}
+
+		if d.HasChange("encoded_metadata_document") || d.HasChange("x509_certificate") {
+			oldEmdInterface, newEmdInterface := d.GetChange("encoded_metadata_document")
+			oldEmd := oldEmdInterface.(string)
+			newEmd := newEmdInterface.(string)
+			if newEmd != "" {
+				return fmt.Errorf("Currently, `encoded_metadata_document` does not support adding new value.")
+			}
+
+			oldX509CertInterface, newX509CertInterface := d.GetChange("x509_certificate")
+			oldX509Cert := oldX509CertInterface.(string)
+			newX509Cert := newX509CertInterface.(string)
+
+			// delete first
+			if oldEmd != "" || oldX509Cert != "" {
+				request := organization.NewRemoveExternalSAMLIdPCertificateRequest()
+				tmpCertificateId := d.Get("certificate_id").(string)
+
+				request.ZoneId = &zoneId
+				request.CertificateId = helper.String(tmpCertificateId)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().RemoveExternalSAMLIdPCertificateWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Remove organization external saml identity provider failed, Response is nil."))
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s remove organization external saml identity provider failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// Clear certificate_id
+				_ = d.Set("certificate_id", "")
+			}
+
+			// add new
+			if newX509Cert != "" {
+				request := organization.NewAddExternalSAMLIdPCertificateRequest()
+				response := organization.NewAddExternalSAMLIdPCertificateResponse()
+				tmpX509Certificate := d.Get("x509_certificate").(string)
+
+				request.ZoneId = &zoneId
+				request.X509Certificate = helper.String(tmpX509Certificate)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().AddExternalSAMLIdPCertificateWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Add organization external saml identity provider failed, Response is nil."))
+					}
+
+					response = result
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s add organization external saml identity provider failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				if response.Response.CertificateId == nil {
+					return fmt.Errorf("CertificateId is nil.")
+				}
+
+				_ = d.Set("certificate_id", response.Response.CertificateId)
+			}
+		}
+
+		if d.HasChange("another_x509_certificate") {
+			oldAnotherX509CertInterface, newAnotherX509CertInterface := d.GetChange("another_x509_certificate")
+			oldAnotherX509Cert := oldAnotherX509CertInterface.(string)
+			newAnotherX509Cert := newAnotherX509CertInterface.(string)
+
+			// delete first
+			if oldAnotherX509Cert != "" {
+				request := organization.NewRemoveExternalSAMLIdPCertificateRequest()
+				tmpCertificateId := d.Get("another_certificate_id").(string)
+
+				request.ZoneId = &zoneId
+				request.CertificateId = helper.String(tmpCertificateId)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().RemoveExternalSAMLIdPCertificateWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Remove another organization external saml identity provider failed, Response is nil."))
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s remove another organization external saml identity provider failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// Clear certificate_id
+				_ = d.Set("another_certificate_id", "")
+			}
+
+			// add new
+			if newAnotherX509Cert != "" {
+				request := organization.NewAddExternalSAMLIdPCertificateRequest()
+				response := organization.NewAddExternalSAMLIdPCertificateResponse()
+
+				request.ZoneId = &zoneId
+				request.X509Certificate = helper.String(newAnotherX509Cert)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().AddExternalSAMLIdPCertificateWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Add another organization external saml identity provider failed, Response is nil."))
+					}
+
+					response = result
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s add another organization external saml identity provider failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				if response.Response.CertificateId == nil {
+					return fmt.Errorf("CertificateId is nil.")
+				}
+
+				_ = d.Set("another_certificate_id", response.Response.CertificateId)
+			}
+		}
+	}
+
+	return resourceTencentCloudOrganizationExternalSamlIdentityProviderRead(d, meta)
 }
 
 func resourceTencentCloudOrganizationExternalSamlIdentityProviderDelete(d *schema.ResourceData, meta interface{}) error {
