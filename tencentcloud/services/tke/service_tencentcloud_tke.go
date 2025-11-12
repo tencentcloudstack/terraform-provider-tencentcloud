@@ -3782,3 +3782,114 @@ func (me *TkeService) DescribeKubernetesClusterMasterAttachmentByIds(ctx context
 	ret = response.Response
 	return
 }
+
+func (me *TkeService) DescribeKubernetesClusterPendingReleaseById(ctx context.Context, clusterId, clusterReleaseId string) (ret *tke.PendingRelease, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterPendingReleasesRequest()
+	response := tke.NewDescribeClusterPendingReleasesResponse()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset    int64 = 0
+		limit     int64 = 100
+		instances []*tke.PendingRelease
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeV20180525Client().DescribeClusterPendingReleases(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes pending releases failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.ReleaseSet) < 1 {
+			break
+		}
+
+		instances = append(instances, response.Response.ReleaseSet...)
+		if len(response.Response.ReleaseSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	for _, item := range instances {
+		if item.ID != nil && *item.ID == clusterReleaseId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterReleaseById(ctx context.Context, clusterId, namespace, name string) (ret *tke.ReleaseDetails, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterReleaseDetailsRequest()
+	response := tke.NewDescribeClusterReleaseDetailsResponse()
+	request.ClusterId = &clusterId
+	request.Namespace = &namespace
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeClusterReleaseDetails(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Release == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes releases failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Release
+	return
+}

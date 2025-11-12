@@ -705,6 +705,7 @@ tencentcloud_kubernetes_native_node_pool
 tencentcloud_kubernetes_health_check_policy
 tencentcloud_kubernetes_log_config
 tencentcloud_kubernetes_cluster_master_attachment
+tencentcloud_kubernetes_cluster_release
 
 TDMQ for Pulsar(tpulsar)
 Data Source
