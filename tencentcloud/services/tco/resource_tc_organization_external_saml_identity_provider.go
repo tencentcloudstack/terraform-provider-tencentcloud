@@ -167,7 +167,7 @@ func resourceTencentCloudOrganizationExternalSamlIdentityProviderCreate(d *schem
 	d.SetId(zoneId)
 
 	// another certificate
-	if v, ok := d.GetOk("another_certificate_id"); ok {
+	if v, ok := d.GetOk("another_x509_certificate"); ok {
 		request := organization.NewAddExternalSAMLIdPCertificateRequest()
 		response := organization.NewAddExternalSAMLIdPCertificateResponse()
 		request.ZoneId = &zoneId
@@ -242,24 +242,6 @@ func resourceTencentCloudOrganizationExternalSamlIdentityProviderRead(d *schema.
 
 	if respData.LoginUrl != nil {
 		_ = d.Set("login_url", respData.LoginUrl)
-	}
-
-	if respData.CertificateIds != nil {
-		tmpCertificateId := d.Get("certificate_id").(string)
-		tmpAnotherCertificateId := d.Get("another_certificate_id").(string)
-		if tmpCertificateId != "" || tmpAnotherCertificateId != "" {
-			for _, item := range respData.CertificateIds {
-				if item != nil {
-					if *item == tmpCertificateId {
-						_ = d.Set("certificate_id", item)
-					}
-
-					if *item == tmpAnotherCertificateId {
-						_ = d.Set("another_certificate_id", item)
-					}
-				}
-			}
-		}
 	}
 
 	if respData.CreateTime != nil {
