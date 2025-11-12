@@ -2581,3 +2581,85 @@ func (me *OrganizationService) DescribeOrganizationMembersAuthPolicyAttachmentBy
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationExternalSamlIdpCertificateById(ctx context.Context, zoneId, certificateId string) (ret *organization.SAMLIdPCertificate, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewListExternalSAMLIdPCertificatesRequest()
+	response := organization.NewListExternalSAMLIdPCertificatesResponse()
+	request.ZoneId = &zoneId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseOrganizationClient().ListExternalSAMLIdPCertificates(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.SAMLIdPCertificates == nil || len(result.Response.SAMLIdPCertificates) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("List external saml idp certificate failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	for _, item := range response.Response.SAMLIdPCertificates {
+		if item.CertificateId != nil && *item.CertificateId == certificateId {
+			ret = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationExternalSamlIdentityProviderById(ctx context.Context, zoneId string) (ret *organization.SAMLIdentityProviderConfiguration, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetExternalSAMLIdentityProviderRequest()
+	response := organization.NewGetExternalSAMLIdentityProviderResponse()
+	request.ZoneId = &zoneId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseOrganizationClient().GetExternalSAMLIdentityProvider(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Get external saml identity provider failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	ret = response.Response.SAMLIdentityProviderConfiguration
+	return
+}

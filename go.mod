@@ -69,7 +69,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.1096
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.853
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.1.14
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.1.49
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.1156
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.1.42
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
