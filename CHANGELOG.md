@@ -1,3 +1,12 @@
+## 1.82.36(November 12, 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_kubernetes_cluster_release` ([#3593](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3593))
+* **New Resource:** `tencentcloud_organization_external_saml_identity_provider` ([#3517](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3517))
+* **New Resource:** `tencentcloud_tcss_cluster_access` ([#3589](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3589))
+* **New Resource:** `tencentcloud_tcss_refresh_task_operation` ([#3589](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3589))
+
 ## 1.82.35(November 7, 2025)
 
 FEATURES:
