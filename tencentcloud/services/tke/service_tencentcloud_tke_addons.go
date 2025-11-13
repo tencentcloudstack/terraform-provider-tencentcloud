@@ -113,10 +113,13 @@ func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTk
 	return
 }
 
-func (me *TkeService) DescribeAddonList(ctx context.Context, clusterId string) (ret []*tke.Addon, errRet error) {
+func (me *TkeService) DescribeAddonList(ctx context.Context, clusterId, addonName string) (ret []*tke.Addon, errRet error) {
 	request := tke.NewDescribeAddonRequest()
 	response := tke.NewDescribeAddonResponse()
 	request.ClusterId = &clusterId
+	if addonName != "" {
+		request.AddonName = &addonName
+	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := me.client.UseTkeClient().DescribeAddon(request)

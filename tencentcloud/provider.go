@@ -573,6 +573,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eks_cluster_credential":                                tke.DataSourceTencentCloudEksClusterCredential(),
 			"tencentcloud_container_clusters":                                    tke.DataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances":                           tke.DataSourceTencentCloudContainerClusterInstances(),
+			"tencentcloud_kubernetes_addon":                                      tke.DataSourceTencentCloudKubernetesAddon(),
 			"tencentcloud_mysql_backup_list":                                     cdb.DataSourceTencentCloudMysqlBackupList(),
 			"tencentcloud_mysql_zone_config":                                     cdb.DataSourceTencentCloudMysqlZoneConfig(),
 			"tencentcloud_mysql_parameter_list":                                  cdb.DataSourceTencentCloudMysqlParameterList(),
