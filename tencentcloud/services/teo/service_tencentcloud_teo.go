@@ -2227,3 +2227,133 @@ func (me *TeoService) DescribeTeoOriginAclByFilter(ctx context.Context, param ma
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoWebSecurityTemplatesByFilter(ctx context.Context, param map[string]interface{}) (ret []*teo.SecurityPolicyTemplateInfo, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = teo.NewDescribeWebSecurityTemplatesRequest()
+		response = teo.NewDescribeWebSecurityTemplatesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneIds" {
+			request.ZoneIds = v.([]*string)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplates(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe web security templates failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.SecurityPolicyTemplates
+	return
+}
+
+func (me *TeoService) DescribeTeoWebSecurityTemplateById(ctx context.Context, zoneId, templateId string) (ret *teo.SecurityPolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeWebSecurityTemplateRequest()
+	response := teo.NewDescribeWebSecurityTemplateResponse()
+	request.ZoneId = &zoneId
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.SecurityPolicy == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe web security templates failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.SecurityPolicy
+	return
+}
+
+func (me *TeoService) DescribeTeoWebSecurityTemplatesById(ctx context.Context, zoneId, templateId string) (ret *teo.SecurityPolicyTemplateInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeWebSecurityTemplatesRequest()
+	response := teo.NewDescribeWebSecurityTemplatesResponse()
+	request.ZoneIds = helper.Strings([]string{zoneId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplates(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.SecurityPolicyTemplates == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe web security templates failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range response.Response.SecurityPolicyTemplates {
+		if item != nil && item.TemplateId != nil && *item.TemplateId == templateId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}

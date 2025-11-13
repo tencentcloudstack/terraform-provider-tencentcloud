@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_teo_web_security_templates
+```
+
+```release-note:new-resource
+tencentcloud_teo_web_security_template
+```
