@@ -18,6 +18,48 @@ resource "tencentcloud_teo_web_security_template" "example" {
   zone_id       = "zone-3fkff38fyw8s"
   template_name = "example"
   security_policy {
+    exception_rules {
+      rules {
+        name                               = "test"
+        condition                          = "$${http.request.host} in ['1.1.1.1']"
+        skip_scope                         = "WebSecurityModules"
+        skip_option                        = "SkipOnAllRequestFields"
+        web_security_modules_for_exception = ["websec-mod-managed-rules"]
+        enabled                            = "on"
+      }
+    }
+
+    custom_rules {
+      rules {
+        name      = "test"
+        condition = "$${http.request.ip} in ['1.1.1.1']"
+        enabled   = "on"
+        rule_type = "BasicAccessRule"
+        action {
+          name = "Deny"
+        }
+      }
+    }
+
+    rate_limiting_rules {
+      rules {
+        name                  = "单 IP 请求速率限制"
+        condition             = "$${http.request.uri.path} contain ['/checkout/submit']"
+        count_by              = ["http.request.ip"]
+        max_request_threshold = 300
+        counting_period       = "60s"
+        action_duration       = "30m"
+        priority              = 50
+        enabled               = "on"
+        action {
+          name = "Challenge"
+          challenge_action_parameters {
+            challenge_option = "JSChallenge"
+          }
+        }
+      }
+    }
+
     bot_management {
       enabled = "off"
       basic_bot_settings {
@@ -1963,6 +2005,7 @@ The `rules` object of `custom_rules` supports the following:
 * `name` - (Required, String) The custom rule name.
 * `id` - (Optional, String) Custom rule ID. <br>Different rule configuration operations are supported by rule ID: <br> Add a new rule: ID is empty or the ID parameter is not specified; <br> Modify an existing rule: specify the rule ID that needs to be updated/modified; <br> Delete an existing rule: existing rules not included in the Rules parameter will be deleted.
 * `priority` - (Optional, Int) Customize the priority of custom rule. Range: 0-100, the default value is 0, this parameter only supports PreciseMatchRule.
+* `rule_type` - (Optional, String) Type of custom rule. Values: <li>`BasicAccessRule`: basic access control;</li> <li>`PreciseMatchRule`: exact custom rule, default;</li> <li>`ManagedAccessRule`: expert customized rule, output parameter only.</li>The default value is PreciseMatchRule.
 
 The `rules` object of `exception_rules` supports the following:
 

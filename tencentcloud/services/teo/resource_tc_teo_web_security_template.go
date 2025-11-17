@@ -48,7 +48,6 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"custom_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Computed:    true,
 							MaxItems:    1,
 							Description: "Custom rules. If the parameter is null or not filled, the configuration last set will be used by default.\nNote: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
@@ -56,7 +55,6 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Computed:    true,
 										Description: "The custom rule. <br>when modifying the Web protection configuration using ModifySecurityPolicy: <br> - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations. <br> - if the Rules parameter is not specified: keep the existing custom rule configuration without modification.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -233,10 +231,12 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Custom rule ID. <br>Different rule configuration operations are supported by rule ID: <br> Add a new rule: ID is empty or the ID parameter is not specified; <br> Modify an existing rule: specify the rule ID that needs to be updated/modified; <br> Delete an existing rule: existing rules not included in the Rules parameter will be deleted.",
 												},
 												"rule_type": {
 													Type:        schema.TypeString,
+													Optional:    true,
 													Computed:    true,
 													Description: "Type of custom rule. Values: <li>`BasicAccessRule`: basic access control;</li> <li>`PreciseMatchRule`: exact custom rule, default;</li> <li>`ManagedAccessRule`: expert customized rule, output parameter only.</li>The default value is PreciseMatchRule.",
 												},
@@ -1652,7 +1652,6 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"rate_limiting_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Computed:    true,
 							MaxItems:    1,
 							Description: "Configures the rate limiting rule.",
 							Elem: &schema.Resource{
@@ -1660,13 +1659,13 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Computed:    true,
 										Description: "Definition list of precise rate limiting. when using ModifySecurityPolicy to modify the Web protection configuration: <br> <li> if the Rules parameter is not specified or its length is zero: clear all precision rate limiting configurations.</li> <li> if the RateLimitingRules parameter value is unspecified in the SecurityPolicy parameter: retain the existing custom rule configuration without modification.</li>.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "The ID of precise rate limiting. rule ID supports different rule configuration operations: <li><b>add</b> a new rule: leave the ID empty or do not specify the ID parameter.</li> <li><b>modify</b> an existing rule: specify the rule ID that needs to be updated/modified.</li> <li><b>delete</b> an existing rule: existing Rules not included in the Rules list under the RateLimitingRules parameter will be deleted.</li>.",
 												},
 												"name": {
@@ -1878,7 +1877,6 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"exception_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Computed:    true,
 							MaxItems:    1,
 							Description: "Exception rule configuration.",
 							Elem: &schema.Resource{
@@ -1886,13 +1884,13 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Computed:    true,
 										Description: "Definition list of exception Rules. when using ModifySecurityPolicy to modify Web protection configuration: <li>if the Rules parameter is not specified or the parameter length is zero: clear all exception rule configurations.</li><li>if the ExceptionRules parameter value is not specified in SecurityPolicy: keep existing exception rule configurations without modification.</li>.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "The ID of the exception rule. different rule configuration operations are supported by rule ID: <li> <b>add</b> a new rule: leave the ID empty or do not specify the ID parameter.</li> <li> <b>modify</b> an existing rule: specify the rule ID that needs to be updated/modified.</li> <li> <b>delete</b> an existing rule: existing Rules not included in the Rules list under the ExceptionRules parameter will be deleted.</li>.",
 												},
 												"name": {
@@ -2006,6 +2004,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"id": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Computed:    true,
 																Description: "The ID of a Bot custom rule. different rule configuration operations are supported by rule ID: <li><b>add</b> a new rule: leave the ID empty or do not specify the ID parameter.</li> <li><b>modify</b> an existing rule: specify the rule ID that needs to be updated/modified.</li> <li><b>delete</b> an existing rule: existing Rules not included in the Rules list under the BotManagementCustomRules parameter will be deleted.</li>.",
 															},
 															"name": {
@@ -4279,6 +4278,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"id": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Computed:    true,
 																Description: "Client authentication rule ID. supported rule configuration operations by rule ID: <li> <b>add</b> a new rule: leave the ID empty or do not specify the ID parameter.</li> <li> <b>modify</b> an existing rule: specify the rule ID that needs to be updated/modified.</li> <li> <b>delete</b> an existing rule: existing rules not included in the ClientAttestationRule list under BotManagement parameters will be deleted.</li>.",
 															},
 															"name": {
@@ -4826,6 +4826,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"id": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Computed:    true,
 																Description: "Browser spoofing identification rule ID. rule ID supports different rule configuration operations: <li> <b>add</b> a new rule: ID is empty or without specifying the ID parameter;</li> <li> <b>modify</b> an existing rule: specify the rule ID that needs to be updated/modified;</li> <li> <b>delete</b> an existing rule: existing Rules not included in the Rules list of the BrowserImpersonationDetection parameter will be deleted.</li>.",
 															},
 															"name": {
@@ -6360,6 +6361,10 @@ func resourceTencentCloudTeoWebSecurityTemplateCreate(d *schema.ResourceData, me
 
 					if v, ok := rulesMap["id"].(string); ok && v != "" {
 						customRule.Id = helper.String(v)
+					}
+
+					if v, ok := rulesMap["rule_type"].(string); ok && v != "" {
+						customRule.RuleType = helper.String(v)
 					}
 
 					if v, ok := rulesMap["priority"].(int); ok {
@@ -10221,7 +10226,7 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 	if respData.CustomRules != nil {
 		customRulesMap := map[string]interface{}{}
 		rulesList := make([]map[string]interface{}, 0, len(respData.CustomRules.Rules))
-		if respData.CustomRules.Rules != nil {
+		if respData.CustomRules.Rules != nil && len(respData.CustomRules.Rules) > 0 {
 			for _, rules := range respData.CustomRules.Rules {
 				rulesMap := map[string]interface{}{}
 
@@ -10359,9 +10364,8 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 			}
 
 			customRulesMap["rules"] = rulesList
+			tmpMap["custom_rules"] = []interface{}{customRulesMap}
 		}
-
-		tmpMap["custom_rules"] = []interface{}{customRulesMap}
 	}
 
 	if respData.ManagedRules != nil {
@@ -11323,7 +11327,7 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 	if respData.RateLimitingRules != nil {
 		rateLimitingRulesMap := map[string]interface{}{}
 		rulesList := make([]map[string]interface{}, 0, len(respData.RateLimitingRules.Rules))
-		if respData.RateLimitingRules.Rules != nil {
+		if respData.RateLimitingRules.Rules != nil && len(respData.RateLimitingRules.Rules) > 0 {
 			for _, rules := range respData.RateLimitingRules.Rules {
 				rulesMap := map[string]interface{}{}
 
@@ -11473,15 +11477,14 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 			}
 
 			rateLimitingRulesMap["rules"] = rulesList
+			tmpMap["rate_limiting_rules"] = []interface{}{rateLimitingRulesMap}
 		}
-
-		tmpMap["rate_limiting_rules"] = []interface{}{rateLimitingRulesMap}
 	}
 
 	if respData.ExceptionRules != nil {
 		exceptionRulesMap := map[string]interface{}{}
 		rulesList := make([]map[string]interface{}, 0, len(respData.ExceptionRules.Rules))
-		if respData.ExceptionRules.Rules != nil {
+		if respData.ExceptionRules.Rules != nil && len(respData.ExceptionRules.Rules) > 0 {
 			for _, rules := range respData.ExceptionRules.Rules {
 				rulesMap := map[string]interface{}{}
 
@@ -11547,9 +11550,8 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 			}
 
 			exceptionRulesMap["rules"] = rulesList
+			tmpMap["exception_rules"] = []interface{}{exceptionRulesMap}
 		}
-
-		tmpMap["exception_rules"] = []interface{}{exceptionRulesMap}
 	}
 
 	if respData.BotManagement != nil {
@@ -11562,7 +11564,7 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 
 		if respData.BotManagement.CustomRules != nil {
 			rulesList := make([]map[string]interface{}, 0, len(respData.BotManagement.CustomRules.Rules))
-			if respData.BotManagement.CustomRules.Rules != nil {
+			if respData.BotManagement.CustomRules.Rules != nil && len(respData.CustomRules.Rules) > 0 {
 				for _, rules := range respData.BotManagement.CustomRules.Rules {
 					rulesMap := map[string]interface{}{}
 
@@ -11710,8 +11712,8 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 				}
 
 				customRulesMap["rules"] = rulesList
+				botManagementMap["custom_rules"] = []interface{}{customRulesMap}
 			}
-			botManagementMap["custom_rules"] = []interface{}{customRulesMap}
 		}
 
 		basicBotSettingsMap := map[string]interface{}{}
@@ -13102,7 +13104,7 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 
 		if respData.BotManagement.ClientAttestationRules != nil {
 			rulesList := make([]map[string]interface{}, 0, len(respData.BotManagement.ClientAttestationRules.Rules))
-			if respData.BotManagement.ClientAttestationRules.Rules != nil {
+			if respData.BotManagement.ClientAttestationRules.Rules != nil && len(respData.BotManagement.ClientAttestationRules.Rules) > 0 {
 				for _, rules := range respData.BotManagement.ClientAttestationRules.Rules {
 					rulesMap := map[string]interface{}{}
 
@@ -13474,15 +13476,15 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 				}
 
 				clientAttestationRulesMap["rules"] = rulesList
+				botManagementMap["client_attestation_rules"] = []interface{}{clientAttestationRulesMap}
 			}
-			botManagementMap["client_attestation_rules"] = []interface{}{clientAttestationRulesMap}
 		}
 
 		browserImpersonationDetectionMap := map[string]interface{}{}
 
 		if respData.BotManagement.BrowserImpersonationDetection != nil {
 			rulesList := make([]map[string]interface{}, 0, len(respData.BotManagement.BrowserImpersonationDetection.Rules))
-			if respData.BotManagement.BrowserImpersonationDetection.Rules != nil {
+			if respData.BotManagement.BrowserImpersonationDetection.Rules != nil && len(respData.BotManagement.BrowserImpersonationDetection.Rules) > 0 {
 				for _, rules := range respData.BotManagement.BrowserImpersonationDetection.Rules {
 					rulesMap := map[string]interface{}{}
 
@@ -14416,8 +14418,8 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 				}
 
 				browserImpersonationDetectionMap["rules"] = rulesList
+				botManagementMap["browser_impersonation_detection"] = []interface{}{browserImpersonationDetectionMap}
 			}
-			botManagementMap["browser_impersonation_detection"] = []interface{}{browserImpersonationDetectionMap}
 		}
 
 		tmpMap["bot_management"] = []interface{}{botManagementMap}
@@ -14583,6 +14585,10 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 							customRule.Id = helper.String(v)
 						}
 
+						if v, ok := rulesMap["rule_type"].(string); ok && v != "" {
+							customRule.RuleType = helper.String(v)
+						}
+
 						if v, ok := rulesMap["priority"].(int); ok {
 							customRule.Priority = helper.IntInt64(v)
 						}
@@ -14592,6 +14598,8 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 				}
 
 				securityPolicy.CustomRules = &customRules
+			} else {
+				securityPolicy.CustomRules = &teov20220901.CustomRules{}
 			}
 
 			if managedRulesMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["managed_rules"]); ok {
@@ -15591,6 +15599,8 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 				}
 
 				securityPolicy.RateLimitingRules = &rateLimitingRules
+			} else {
+				securityPolicy.RateLimitingRules = &teov20220901.RateLimitingRules{}
 			}
 
 			if exceptionRulesMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["exception_rules"]); ok {
@@ -15672,6 +15682,8 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 				}
 
 				securityPolicy.ExceptionRules = &exceptionRules
+			} else {
+				securityPolicy.ExceptionRules = &teov20220901.ExceptionRules{}
 			}
 
 			if botManagementMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["bot_management"]); ok {
@@ -15822,6 +15834,8 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 					}
 
 					botManagement.CustomRules = &botManagementCustomRules
+				} else {
+					botManagement.CustomRules = &teov20220901.BotManagementCustomRules{}
 				}
 
 				if basicBotSettingsMap, ok := helper.ConvertInterfacesHeadToMap(botManagementMap["basic_bot_settings"]); ok {
@@ -17122,6 +17136,8 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 					}
 
 					botManagement.BasicBotSettings = &basicBotSettings
+				} else {
+					botManagement.BasicBotSettings = &teov20220901.BasicBotSettings{}
 				}
 
 				if clientAttestationRulesMap, ok := helper.ConvertInterfacesHeadToMap(botManagementMap["client_attestation_rules"]); ok {
@@ -17476,6 +17492,8 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 					}
 
 					botManagement.ClientAttestationRules = &clientAttestationRules
+				} else {
+					botManagement.ClientAttestationRules = &teov20220901.ClientAttestationRules{}
 				}
 
 				if browserImpersonationDetectionMap, ok := helper.ConvertInterfacesHeadToMap(botManagementMap["browser_impersonation_detection"]); ok {
@@ -18353,6 +18371,8 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 					}
 
 					botManagement.BrowserImpersonationDetection = &browserImpersonationDetection
+				} else {
+					botManagement.BrowserImpersonationDetection = &teov20220901.BrowserImpersonationDetection{}
 				}
 
 				securityPolicy.BotManagement = &botManagement
