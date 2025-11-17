@@ -2006,3 +2006,308 @@ func (me *WafService) DescribeWafAttackWhiteRuleById(ctx context.Context, domain
 
 	return
 }
+
+func (me *WafService) DescribeWafOwaspRuleTypeConfigById(ctx context.Context, domain, typeId string) (ret *waf.OwaspRuleType, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeOwaspRuleTypesRequest()
+	response := waf.NewDescribeOwaspRuleTypesResponse()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+		orList []*waf.OwaspRuleType
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWafV20180125Client().DescribeOwaspRuleTypes(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.List == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe owasp rule types failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+
+		orList = append(orList, response.Response.List...)
+		if len(response.Response.List) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	for _, item := range orList {
+		if item != nil && item.TypeId != nil {
+			respTypeId := helper.UInt64ToStr(*item.TypeId)
+			if respTypeId == typeId {
+				ret = item
+				return
+			}
+		}
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafOwaspRuleTypesByFilter(ctx context.Context, param map[string]interface{}) (ret []*waf.OwaspRuleType, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = waf.NewDescribeOwaspRuleTypesRequest()
+		response = waf.NewDescribeOwaspRuleTypesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*waf.FiltersItemNew)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWafV20180125Client().DescribeOwaspRuleTypes(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.List == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe owasp rule types failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.List...)
+		if len(response.Response.List) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafOwaspRuleStatusConfigById(ctx context.Context, domain, ruleId string) (ret *waf.OwaspRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeOwaspRulesRequest()
+	response := waf.NewDescribeOwaspRulesResponse()
+	request.Domain = &domain
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("RuleId"),
+			Values:     common.StringPtrs([]string{ruleId}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribeOwaspRules(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.List == nil || len(result.Response.List) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("Describe owasp rules failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.List[0]
+	return
+}
+
+func (me *WafService) DescribeWafOwaspRulesByFilter(ctx context.Context, param map[string]interface{}) (ret []*waf.OwaspRule, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = waf.NewDescribeOwaspRulesRequest()
+		response = waf.NewDescribeOwaspRulesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+
+		if k == "By" {
+			request.By = v.(*string)
+		}
+
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*waf.FiltersItemNew)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWafV20180125Client().DescribeOwaspRules(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.List == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe owasp rules failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.List...)
+		if len(response.Response.List) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafOwaspWhiteRuleById(ctx context.Context, domain, ruleId string) (ret *waf.OwaspWhiteRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeOwaspWhiteRulesRequest()
+	response := waf.NewDescribeOwaspWhiteRulesResponse()
+	request.Domain = &domain
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("RuleId"),
+			Values:     common.StringPtrs([]string{ruleId}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribeOwaspWhiteRules(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.List == nil || len(result.Response.List) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("Describe owasp white rules failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.List[0]
+	return
+}

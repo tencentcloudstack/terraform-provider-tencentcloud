@@ -2197,6 +2197,8 @@ tencentcloud_waf_attack_total_count
 tencentcloud_waf_peak_points
 tencentcloud_waf_instance_qps_limit
 tencentcloud_waf_user_clb_regions
+tencentcloud_waf_owasp_rule_types
+tencentcloud_waf_owasp_rules
 
 Resource
 tencentcloud_waf_custom_rule
@@ -2224,6 +2226,9 @@ tencentcloud_waf_bot_scene_status_config
 tencentcloud_waf_bot_status_config
 tencentcloud_waf_bot_scene_ucb_rule
 tencentcloud_waf_attack_white_rule
+tencentcloud_waf_owasp_rule_type_config
+tencentcloud_waf_owasp_rule_status_config
+tencentcloud_waf_owasp_white_rule
 
 Wedata
 Data Source
