@@ -1495,6 +1495,7 @@ tencentcloud_teo_rule_engine_settings
 tencentcloud_teo_zones
 tencentcloud_teo_plans
 tencentcloud_teo_origin_acl
+tencentcloud_teo_web_security_templates
 
 Resource
 tencentcloud_teo_zone
@@ -1524,6 +1525,7 @@ tencentcloud_teo_content_identifier
 tencentcloud_teo_customize_error_page
 tencentcloud_teo_origin_acl
 tencentcloud_teo_ddos_protection_config
+tencentcloud_teo_web_security_template
 
 TencentCloud ServiceMesh(TCM)
 Data Source
