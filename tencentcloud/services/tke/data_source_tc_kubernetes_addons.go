@@ -36,27 +36,27 @@ func DataSourceTencentCloudKubernetesAddons() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"addon_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Add-on name.",
 						},
 						"addon_version": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Add-on version.",
 						},
 						"raw_values": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Add-on parameters, which are base64-encoded strings in JSON/\nNote: This field may return `null`, indicating that no valid values can be obtained.",
 						},
 						"phase": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Add-on status\nNote: This field may return `null`, indicating that no valid values can be obtained.",
 						},
 						"reason": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Reason for add-on failure\nNote: This field may return `null`, indicating that no valid values can be obtained.",
 						},
 					},

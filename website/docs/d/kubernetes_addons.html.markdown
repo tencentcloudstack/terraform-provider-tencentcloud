@@ -32,5 +32,13 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `addons` - List of add-ons.
+  * `addon_name` - Add-on name.
+  * `addon_version` - Add-on version.
+  * `phase` - Add-on status
+Note: This field may return `null`, indicating that no valid values can be obtained.
+  * `raw_values` - Add-on parameters, which are base64-encoded strings in JSON/
+Note: This field may return `null`, indicating that no valid values can be obtained.
+  * `reason` - Reason for add-on failure
+Note: This field may return `null`, indicating that no valid values can be obtained.
 
 
