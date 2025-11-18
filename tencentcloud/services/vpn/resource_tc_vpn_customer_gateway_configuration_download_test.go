@@ -27,7 +27,7 @@ func TestAccTencentCloudVpnCustomerGatewayConfigurationDownloadResource_basic(t 
 const testAccVpcVpnCustomerGatewayConfigurationDownload = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test_download"
-  public_ip_address = "1.3.3.3"
+  public_ip_address = "10.3.1.18"
 
 }
 

@@ -28,7 +28,7 @@ func TestAccTencentCloudVpnConnectionResetResource_basic(t *testing.T) {
 const testAccVpnConnectionReset = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test_reset"
-  public_ip_address = "1.3.3.3"
+  public_ip_address = "10.3.3.13"
 
 }
 
