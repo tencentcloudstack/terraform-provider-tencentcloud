@@ -12,9 +12,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func DataSourceTencentCloudKubernetesAddon() *schema.Resource {
+func DataSourceTencentCloudKubernetesAddons() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudKubernetesAddonRead,
+		Read: dataSourceTencentCloudKubernetesAddonsRead,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -72,8 +72,8 @@ func DataSourceTencentCloudKubernetesAddon() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudKubernetesAddonRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("data_source.tencentcloud_kubernetes_addon.read")()
+func dataSourceTencentCloudKubernetesAddonsRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_kubernetes_addons.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(nil)
