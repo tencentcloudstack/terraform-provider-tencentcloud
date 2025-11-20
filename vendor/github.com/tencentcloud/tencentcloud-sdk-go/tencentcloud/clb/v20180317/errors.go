@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,14 +29,26 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// 删除实例频次校验被判定为高风险，请检查业务或稍后重试。
+	FAILEDOPERATION_FREQUENCYCHECKRISK = "FailedOperation.FrequencyCheckRisk"
+
 	// LB状态异常。
 	FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 
 	// 没有监听器的实例不允许停止。
 	FAILEDOPERATION_NOLISTENERINLB = "FailedOperation.NoListenerInLB"
 
+	// 指定的资源正在克隆中，请稍后重试。
+	FAILEDOPERATION_RESOURCEINCLONING = "FailedOperation.ResourceInCloning"
+
 	// 正在操作指定的资源，请稍后重试。
 	FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
+
+	// 删除实例规则数校验被判定为高风险，如需强行删除请传强制校验参数ForceDelete为true。
+	FAILEDOPERATION_TARGETNUMCHECKRISK = "FailedOperation.TargetNumCheckRisk"
+
+	// 删除实例流量校验被判定为高风险，如需强行删除请传强制校验参数ForceDelete为true。
+	FAILEDOPERATION_TRAFFICCHECKRISK = "FailedOperation.TrafficCheckRisk"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
