@@ -136,7 +136,12 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
 				return nil
 			}
+
+			if e.GetCode() == "FailedOperation.ResourceInOperating" {
+				return err
+			}
 		}
+
 		return errors.WithStack(err)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
