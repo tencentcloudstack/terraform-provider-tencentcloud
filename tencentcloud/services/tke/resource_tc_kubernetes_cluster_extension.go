@@ -63,9 +63,8 @@ func resourceTencentCloudKubernetesClusterCreatePostFillRequest0(ctx context.Con
 	}
 
 	_, workerConfigOk := d.GetOk("worker_config")
-	if !workerConfigOk && (clusterInternet || clusterIntranet) {
-		return fmt.Errorf("when creating a cluster, if `cluster_internet` or `cluster_intranet` is true, " +
-			"you need to configure the `worker_config` field to ensure that there are available nodes in the cluster")
+	if !workerConfigOk && clusterInternet {
+		return fmt.Errorf("when creating a cluster, if `cluster_internet` is true, you need to configure the `worker_config` field to ensure that there are available nodes in the cluster.")
 	}
 
 	vpcId := d.Get("vpc_id").(string)
