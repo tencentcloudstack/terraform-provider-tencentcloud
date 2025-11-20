@@ -43,10 +43,10 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.1073
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.1107
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.1.55
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.50
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.55
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1206
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.1161
