@@ -252,6 +252,7 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 			"rebalance_time": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.82.37.",
 				Description: "Modification of the rebalancing time after upgrade.",
 			},
 			"public_network": {
