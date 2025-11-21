@@ -24,8 +24,8 @@ data "tencentcloud_igtm_address_pool_list" "example" {}
 ```hcl
 data "tencentcloud_igtm_address_pool_list" "example" {
   filters {
-    name  = "instanceId"
-    value = ["gtm-dsdd123xdo"]
+    name  = "PoolName"
+    value = ["tf-example"]
     fuzzy = true
   }
 }
