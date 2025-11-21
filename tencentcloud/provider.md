@@ -2444,3 +2444,9 @@ Tencent Container Security Service(TCSS)
 Resource
 tencentcloud_tcss_cluster_access
 tencentcloud_tcss_refresh_task_operation
+
+Intelligent Global Traffic Manager(IGTM)
+Data Source
+tencentcloud_igtm_address_pool_list
+Resource
+tencentcloud_igtm_address_pool

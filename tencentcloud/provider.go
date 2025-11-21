@@ -73,6 +73,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/igtm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mariadb"
@@ -1299,6 +1300,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_instance_detail":                                  mqtt.DataSourceTencentCloudMqttInstanceDetail(),
 			"tencentcloud_mqtt_topics":                                           mqtt.DataSourceTencentCloudMqttTopics(),
 			"tencentcloud_billing_budget_operation_log":                          billing.DataSourceTencentCloudBillingBudgetOperationLog(),
+			"tencentcloud_igtm_address_pool_list":                                igtm.DataSourceTencentCloudIgtmAddressPoolList(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2470,6 +2472,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_http_authenticator":                                                  mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
 			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
 			"tencentcloud_billing_budget":                                                           billing.ResourceTencentCloudBillingBudget(),
+			"tencentcloud_igtm_address_pool":                                                        igtm.ResourceTencentCloudIgtmAddressPool(),
 		},
 
 		ConfigureFunc: providerConfigure,
