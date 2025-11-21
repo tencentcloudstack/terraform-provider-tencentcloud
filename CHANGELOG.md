@@ -1,3 +1,21 @@
+## 1.82.37(November 21, 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_waf_owasp_rule_types` ([#3596](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3596))
+* **New Data Source:** `tencentcloud_waf_owasp_rules` ([#3596](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3596))
+* **New Resource:** `tencentcloud_igtm_address_pool` ([#3607](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3607))
+* **New Resource:** `tencentcloud_waf_owasp_rule_status_config` ([#3596](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3596))
+* **New Resource:** `tencentcloud_waf_owasp_rule_type_config` ([#3596](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3596))
+* **New Resource:** `tencentcloud_waf_owasp_white_rule` ([#3596](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3596))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: obsolete `rebalance_time` field ([#3600](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3600))
+* resource/tencentcloud_clb_instance: optimiz delete code logic. ([#3597](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3597))
+* resource/tencentcloud_kubernetes_cluster: optimiz create code logic. ([#3598](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3598))
+* resource/tencentcloud_tcr_service_account: optimiz custom password. ([#3604](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3604))
+
 ## 1.82.36(November 12, 2025)
 
 FEATURES:
