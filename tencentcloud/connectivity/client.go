@@ -63,6 +63,7 @@ import (
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
+	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -241,6 +242,7 @@ type TencentCloudClient struct {
 	cdwpgv20201230Conn          *cdwpg.Client
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
+	igtmv20231024Conn           *igtmv20231024.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2115,4 +2117,17 @@ func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
 	me.billingv20180709Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.billingv20180709Conn
+}
+
+// UseIgtmV20231024Client return IGTM client for service
+func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
+	if me.igtmv20231024Conn != nil {
+		return me.igtmv20231024Conn
+	}
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.igtmv20231024Conn, _ = igtmv20231024.NewClient(me.Credential, me.Region, cpf)
+	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.igtmv20231024Conn
 }
