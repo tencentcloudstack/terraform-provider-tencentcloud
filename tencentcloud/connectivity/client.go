@@ -196,6 +196,7 @@ type TencentCloudClient struct {
 	chdfsConn           *chdfs.Client
 	mdlConn             *mdl.Client
 	apmConn             *apm.Client
+	apmv20210622Conn    *apm.Client
 	ciamConn            *ciam.Client
 	tseConn             *tse.Client
 	cdwchConn           *cdwch.Client
@@ -1549,6 +1550,19 @@ func (me *TencentCloudClient) UseApmClient() *apm.Client {
 	me.apmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.apmConn
+}
+
+// UseApmClient returns apm client for service
+func (me *TencentCloudClient) UseApmV20210622Client() *apm.Client {
+	if me.apmv20210622Conn != nil {
+		return me.apmv20210622Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.apmv20210622Conn, _ = apm.NewClient(me.Credential, me.Region, cpf)
+	me.apmv20210622Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.apmv20210622Conn
 }
 
 // UseCiamClient returns ciam client for service
