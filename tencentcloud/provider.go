@@ -2234,6 +2234,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mdl_stream_live_input":                                                    mdl.ResourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                                                     lighthouse.ResourceTencentCloudLighthouseBlueprint(),
 			"tencentcloud_apm_instance":                                                             apm.ResourceTencentCloudApmInstance(),
+			"tencentcloud_apm_sample_config":                                                        apm.ResourceTencentCloudApmSampleConfig(),
 			"tencentcloud_lighthouse_firewall_rule":                                                 lighthouse.ResourceTencentCloudLighthouseFirewallRule(),
 			"tencentcloud_lighthouse_disk_backup":                                                   lighthouse.ResourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":                                             lighthouse.ResourceTencentCloudLighthouseApplyDiskBackup(),

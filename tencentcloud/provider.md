@@ -2058,6 +2058,7 @@ tencentcloud_mdl_stream_live_input
 Application Performance Management(APM)
 Resource
 tencentcloud_apm_instance
+tencentcloud_apm_sample_config
 
 Tencent Cloud Service Engine(TSE)
 Data Source
