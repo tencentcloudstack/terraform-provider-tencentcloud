@@ -2,8 +2,10 @@ package apm
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
@@ -95,5 +97,43 @@ func (me *ApmService) DeleteApmInstanceById(ctx context.Context, instanceId stri
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *ApmService) DescribeApmSampleConfigById(ctx context.Context, instanceId, sampleName string) (ret *apm.ApmSampleConfig, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := apm.NewDescribeApmSampleConfigRequest()
+	response := apm.NewDescribeApmSampleConfigResponse()
+	request.InstanceId = &instanceId
+	request.SampleName = &sampleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseApmV20210622Client().DescribeApmSampleConfig(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.ApmSampleConfigs == nil || len(result.Response.ApmSampleConfigs) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("Describe apm sample config failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.ApmSampleConfigs[0]
 	return
 }
