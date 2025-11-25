@@ -1170,7 +1170,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.50
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.3
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1235,7 +1235,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.1.27
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.3
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.1145

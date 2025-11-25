@@ -15,6 +15,34 @@ func DataSourceTencentCloudIgtmMonitors() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudIgtmMonitorsRead,
 		Schema: map[string]*schema.Schema{
+			"filters": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Query filter conditions.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Filter field name, supported MonitorName: monitor name; MonitorId: monitor ID.",
+						},
+						"value": {
+							Type:        schema.TypeSet,
+							Required:    true,
+							Description: "Filter field values.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"fuzzy": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to enable fuzzy query, only supports filter field name as domain.\nWhen fuzzy query is enabled, Value maximum length is 1, otherwise Value maximum length is 5. (Reserved field, currently unused).",
+						},
+					},
+				},
+			},
+
 			"is_detect_num": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -164,6 +192,34 @@ func dataSourceTencentCloudIgtmMonitorsRead(d *schema.ResourceData, meta interfa
 	)
 
 	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("filters"); ok {
+		filtersSet := v.([]interface{})
+		tmpSet := make([]*igtmv20231024.ResourceFilter, 0, len(filtersSet))
+		for _, item := range filtersSet {
+			filtersMap := item.(map[string]interface{})
+			resourceFilter := igtmv20231024.ResourceFilter{}
+			if v, ok := filtersMap["name"].(string); ok && v != "" {
+				resourceFilter.Name = helper.String(v)
+			}
+
+			if v, ok := filtersMap["value"]; ok {
+				valueSet := v.(*schema.Set).List()
+				for i := range valueSet {
+					value := valueSet[i].(string)
+					resourceFilter.Value = append(resourceFilter.Value, helper.String(value))
+				}
+			}
+
+			if v, ok := filtersMap["fuzzy"].(bool); ok {
+				resourceFilter.Fuzzy = helper.Bool(v)
+			}
+
+			tmpSet = append(tmpSet, &resourceFilter)
+		}
+
+		paramMap["Filters"] = tmpSet
+	}
+
 	if v, ok := d.GetOkExists("is_detect_num"); ok {
 		paramMap["IsDetectNum"] = helper.IntUint64(v.(int))
 	}

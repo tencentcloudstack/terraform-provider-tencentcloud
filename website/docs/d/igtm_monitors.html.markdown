@@ -14,15 +14,29 @@ Use this data source to query detailed information of IGTM monitors
 ## Example Usage
 
 ```hcl
-data "tencentcloud_igtm_monitors" "example" {}
+data "tencentcloud_igtm_monitors" "example" {
+  filters {
+    name  = "MonitorId"
+    value = ["12383"]
+    fuzzy = true
+  }
+}
 ```
 
 ## Argument Reference
 
 The following arguments are supported:
 
+* `filters` - (Optional, List) Query filter conditions.
 * `is_detect_num` - (Optional, Int) Whether to query detection count, 0 for no, 1 for yes.
 * `result_output_file` - (Optional, String) Used to save results.
+
+The `filters` object supports the following:
+
+* `name` - (Required, String) Filter field name, supported MonitorName: monitor name; MonitorId: monitor ID.
+* `value` - (Required, Set) Filter field values.
+* `fuzzy` - (Optional, Bool) Whether to enable fuzzy query, only supports filter field name as domain.
+When fuzzy query is enabled, Value maximum length is 1, otherwise Value maximum length is 5. (Reserved field, currently unused).
 
 ## Attributes Reference
 

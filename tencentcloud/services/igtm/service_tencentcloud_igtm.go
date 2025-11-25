@@ -169,6 +169,10 @@ func (me *IgtmService) DescribeIgtmMonitorsByFilter(ctx context.Context, param m
 	}()
 
 	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*igtmv20231024.ResourceFilter)
+		}
+
 		if k == "IsDetectNum" {
 			request.IsDetectNum = v.(*uint64)
 		}
