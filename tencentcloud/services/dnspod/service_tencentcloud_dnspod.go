@@ -25,7 +25,6 @@ type DnspodService struct {
 	client *connectivity.TencentCloudClient
 }
 
-// ////////api
 func (me *DnspodService) ModifyDnsPodDomainStatus(ctx context.Context, domain string, status string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := dnspod.NewModifyDomainStatusRequest()
