@@ -238,6 +238,7 @@ func (me *CfwService) DescribeCfwNatInstanceById(ctx context.Context, natinsId s
 	logId := tccommon.GetLogId(ctx)
 
 	request := cfw.NewDescribeNatFwInstancesInfoRequest()
+	response := cfw.NewDescribeNatFwInstancesInfoResponse()
 	request.Offset = common.Int64Ptr(0)
 	request.Limit = common.Int64Ptr(10)
 	request.Filter = []*cfw.NatFwFilter{
@@ -253,16 +254,27 @@ func (me *CfwService) DescribeCfwNatInstanceById(ctx context.Context, natinsId s
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = natinsId
-	response, err := me.client.UseCfwClient(iacExtInfo).DescribeNatFwInstancesInfo(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient(iacExtInfo).DescribeNatFwInstancesInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.NatinsLst == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe nat fw instances info failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.NatinsLst) < 1 {
 		return
@@ -276,6 +288,7 @@ func (me *CfwService) DescribeCfwEipsById(ctx context.Context, instanceId string
 	logId := tccommon.GetLogId(ctx)
 
 	request := cfw.NewDescribeCfwEipsRequest()
+	response := cfw.NewDescribeCfwEipsResponse()
 	request.Mode = common.Uint64Ptr(1)
 	request.NatGatewayId = common.StringPtr("ALL")
 	request.CfwInstance = common.StringPtr(instanceId)
@@ -286,22 +299,34 @@ func (me *CfwService) DescribeCfwEipsById(ctx context.Context, instanceId string
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeCfwEips(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseCfwClient().DescribeCfwEips(request)
+		if result == nil || result.Response == nil || result.Response.NatFwEipList == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cfw eips failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.NatFwEipList) < 1 {
 		return
 	}
 
 	for _, item := range response.Response.NatFwEipList {
-		gwList = append(gwList, *item.NatGatewayId)
+		if item.NatGatewayId != nil {
+			gwList = append(gwList, *item.NatGatewayId)
+		}
 	}
 
 	return
@@ -319,15 +344,24 @@ func (me *CfwService) DeleteCfwNatInstanceById(ctx context.Context, instanceId s
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DeleteNatFwInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseCfwClient().DeleteNatFwInstance(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete nat fw instance failed, Response is nil."))
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -336,6 +370,7 @@ func (me *CfwService) DescribeNatFwVpcDnsLstById(ctx context.Context, instanceId
 	logId := tccommon.GetLogId(ctx)
 
 	request := cfw.NewDescribeNatFwVpcDnsLstRequest()
+	response := cfw.NewDescribeNatFwVpcDnsLstResponse()
 	request.NatFwInsId = &instanceId
 	request.Offset = common.Int64Ptr(0)
 	request.Limit = common.Int64Ptr(10)
@@ -346,22 +381,34 @@ func (me *CfwService) DescribeNatFwVpcDnsLstById(ctx context.Context, instanceId
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeNatFwVpcDnsLst(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseCfwClient().DescribeNatFwVpcDnsLst(request)
+		if result == nil || result.Response == nil || result.Response.VpcDnsSwitchLst == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe nat fw vpc dns list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.VpcDnsSwitchLst) < 1 {
 		return
 	}
 
 	for _, item := range response.Response.VpcDnsSwitchLst {
-		vpcList = append(vpcList, *item.VpcId)
+		if item.VpcId != nil {
+			vpcList = append(vpcList, *item.VpcId)
+		}
 	}
 
 	return
