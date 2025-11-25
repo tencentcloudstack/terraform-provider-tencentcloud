@@ -579,9 +579,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_instance.create")()
 
 	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		cvmService = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cvmService         = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceChargeType string
 	)
 
 	request := cvm.NewRunInstancesRequest()
@@ -625,7 +626,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	if v, ok := d.GetOk("instance_charge_type"); ok {
-		instanceChargeType := v.(string)
+		instanceChargeType = v.(string)
 		request.InstanceChargeType = &instanceChargeType
 		if instanceChargeType == CVM_CHARGE_TYPE_PREPAID || instanceChargeType == CVM_CHARGE_TYPE_UNDERWRITE {
 			request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
@@ -827,6 +828,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
 				deleteWithInstanceBool := deleteWithInstance.(bool)
+				if (instanceChargeType != CVM_CHARGE_TYPE_POSTPAID) && deleteWithInstanceBool {
+					return fmt.Errorf("param `delete_with_instance` only can be true when `instance_charge_type` is %s", CVM_CHARGE_TYPE_POSTPAID)
+				}
+
 				dataDisk.DeleteWithInstance = &deleteWithInstanceBool
 			}
 
