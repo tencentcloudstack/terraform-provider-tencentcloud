@@ -582,7 +582,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		logId              = tccommon.GetLogId(tccommon.ContextNil)
 		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		cvmService         = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		instanceChargeType string
+		instanceChargeType = CVM_CHARGE_TYPE_POSTPAID
 	)
 
 	request := cvm.NewRunInstancesRequest()
