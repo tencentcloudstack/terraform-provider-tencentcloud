@@ -24,7 +24,13 @@ func DataSourceTencentCloudCfwNatFwSwitches() *schema.Resource {
 			"status": {
 				Optional:    true,
 				Type:        schema.TypeInt,
+				Deprecated:  "It has been deprecated from version 1.82.37. Please use `enable` instead.",
 				Description: "Switch status, 1 open; 0 close.",
+			},
+			"enable": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Switch enable status, 1 open; 0 close.",
 			},
 			"data": {
 				Computed:    true,
@@ -134,21 +140,23 @@ func dataSourceTencentCloudCfwNatFwSwitchesRead(d *schema.ResourceData, meta int
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service  = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		data     []*cfw.NatSwitchListData
-		natInsId string
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		data    []*cfw.NatSwitchListData
 	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("nat_ins_id"); ok {
-		paramMap["NatInsId"] = helper.String(v.(string))
-		natInsId = v.(string)
+		paramMap["NatInsId"] = v.(string)
 	}
 
-	if v, _ := d.GetOkExists("status"); v != nil {
-		paramMap["Status"] = helper.IntInt64(v.(int))
+	if v, ok := d.GetOkExists("status"); ok {
+		paramMap["Status"] = v.(int)
+	}
+
+	if v, ok := d.GetOkExists("enable"); ok {
+		paramMap["Enable"] = v.(int)
 	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -166,11 +174,9 @@ func dataSourceTencentCloudCfwNatFwSwitchesRead(d *schema.ResourceData, meta int
 	}
 
 	tmpList := make([]map[string]interface{}, 0, len(data))
-
 	if data != nil {
 		for _, natSwitchListData := range data {
 			natSwitchListDataMap := map[string]interface{}{}
-
 			if natSwitchListData.Id != nil {
 				natSwitchListDataMap["id"] = natSwitchListData.Id
 			}
@@ -245,7 +251,7 @@ func dataSourceTencentCloudCfwNatFwSwitchesRead(d *schema.ResourceData, meta int
 		_ = d.Set("data", tmpList)
 	}
 
-	d.SetId(natInsId)
+	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {

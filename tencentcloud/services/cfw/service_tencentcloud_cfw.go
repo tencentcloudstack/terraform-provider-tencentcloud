@@ -598,15 +598,25 @@ func (me *CfwService) DeleteCfwVpcPolicyById(ctx context.Context, uuid string) (
 	return
 }
 
-func (me *CfwService) DescribeCfwNatFirewallSwitchById(ctx context.Context, natInsId, subnetId string) (natFirewallSwitch *cfw.NatSwitchListData, errRet error) {
+func (me *CfwService) DescribeCfwNatFirewallFwSwitchById(ctx context.Context, natInsId, subnetId string) (natFirewallSwitch *cfw.NatSwitchListData, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := cfw.NewDescribeNatSwitchListRequest()
+	request := cfw.NewDescribeNatFwSwitchRequest()
+	response := cfw.NewDescribeNatFwSwitchResponse()
 	request.Offset = common.Int64Ptr(0)
 	request.Limit = common.Int64Ptr(20)
-	request.NatInsId = &natInsId
-	searchParam := fmt.Sprintf(`{"SubnetId":"%s"}`, subnetId)
-	request.SearchValue = &searchParam
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("NatInsId"),
+			OperatorType: common.Int64Ptr(1),
+			Values:       common.StringPtrs([]string{natInsId}),
+		},
+		{
+			Name:         common.StringPtr("SubnetId"),
+			OperatorType: common.Int64Ptr(1),
+			Values:       common.StringPtrs([]string{subnetId}),
+		},
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -614,15 +624,27 @@ func (me *CfwService) DescribeCfwNatFirewallSwitchById(ctx context.Context, natI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeNatFwSwitch(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseCfwClient().DescribeNatSwitchList(request)
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe nat firewall switch failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Data) < 1 {
 		return
@@ -634,8 +656,10 @@ func (me *CfwService) DescribeCfwNatFirewallSwitchById(ctx context.Context, natI
 
 func (me *CfwService) DescribeCfwNatFwSwitchesByFilter(ctx context.Context, param map[string]interface{}) (natFwSwitches []*cfw.NatSwitchListData, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = cfw.NewDescribeNatSwitchListRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = cfw.NewDescribeNatFwSwitchRequest()
+		response = cfw.NewDescribeNatFwSwitchResponse()
+		filters  []*cfw.CommonFilter
 	)
 
 	defer func() {
@@ -645,33 +669,66 @@ func (me *CfwService) DescribeCfwNatFwSwitchesByFilter(ctx context.Context, para
 	}()
 
 	for k, v := range param {
-		if k == "Status" {
-			request.Status = v.(*int64)
+		if k == "NatInsId" {
+			filters = append(filters, &cfw.CommonFilter{
+				Name:         common.StringPtr("NatInsId"),
+				OperatorType: common.Int64Ptr(1),
+				Values:       common.StringPtrs([]string{v.(string)}),
+			})
 		}
 
-		if k == "NatInsId" {
-			request.NatInsId = v.(*string)
+		if k == "Status" {
+			filters = append(filters, &cfw.CommonFilter{
+				Name:         common.StringPtr("Status"),
+				OperatorType: common.Int64Ptr(1),
+				Values:       common.StringPtrs([]string{helper.IntToStr(v.(int))}),
+			})
+		}
+
+		if k == "Enable" {
+			filters = append(filters, &cfw.CommonFilter{
+				Name:         common.StringPtr("Enable"),
+				OperatorType: common.Int64Ptr(1),
+				Values:       common.StringPtrs([]string{helper.IntToStr(v.(int))}),
+			})
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
+	if len(filters) > 0 {
+		request.Filters = filters
+	}
 
 	var (
 		offset int64 = 0
 		limit  int64 = 20
 	)
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseCfwClient().DescribeNatSwitchList(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCfwClient().DescribeNatFwSwitch(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Data == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe nat firewall switch failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.Data) < 1 {
+		if len(response.Response.Data) < 1 {
 			break
 		}
 
