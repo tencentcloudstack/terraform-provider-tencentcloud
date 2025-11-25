@@ -1,3 +1,17 @@
+## 1.82.38(November 25, 2025)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_cfw_nat_fw_switches: deprecated `status`, use `enable` instead ([#3612](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3612))
+* datasource/tencentcloud_instances: modify the length of the instance name to 128 ([#3613](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3613))
+* resource/tencentcloud_as_scaling_policy: support target tracking policy. ([#3615](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3615))
+* resource/tencentcloud_cfw_nat_firewall_switch: optimiz read function code logic ([#3612](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3612))
+* resource/tencentcloud_cfw_nat_instance: optimiz read function code logic ([#3616](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3616))
+* resource/tencentcloud_dnspod_domain_instance: fix error while setting `group_id` ([#3611](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3611))
+* resource/tencentcloud_instance: optimiz create function code logic ([#3614](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3614))
+* resource/tencentcloud_mongodb_instance_backup_rule: optimiz code and doc ([#3610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3610))
+* resource/tencentcloud_tcr_service_account: optimiz read function code logic. ([#3609](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3609))
+
 ## 1.82.37(November 21, 2025)
 
 FEATURES:
