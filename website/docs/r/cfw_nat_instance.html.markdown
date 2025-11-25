@@ -40,13 +40,14 @@ resource "tencentcloud_cfw_nat_instance" "example" {
 
 ```hcl
 resource "tencentcloud_cfw_nat_instance" "example" {
-  name  = "tf_example"
-  width = 20
-  mode  = 1
+  name         = "tf_example"
+  cross_a_zone = 1
+  width        = 20
+  mode         = 1
   nat_gw_list = [
     "nat-9wwkz1kr"
   ]
-  cross_a_zone = 1
+
   zone_set = [
     "ap-guangzhou-6",
     "ap-guangzhou-7"
