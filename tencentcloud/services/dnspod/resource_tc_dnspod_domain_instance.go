@@ -90,7 +90,7 @@ func resourceTencentCloudDnspodDomainInstanceCreate(d *schema.ResourceData, meta
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
 	}
-	if v, ok := d.GetOk("group_id"); ok {
+	if v, ok := d.GetOkExists("group_id"); ok {
 		groupId = *helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOk("is_mark"); ok {
