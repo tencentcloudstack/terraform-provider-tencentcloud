@@ -119,7 +119,7 @@ func ResourceTencentCloudCynosdbAuditServiceCreate(d *schema.ResourceData, meta 
 	waitReq.Offset = helper.Uint64(0)
 	waitReq.Limit = helper.Uint64(1)
 	waitReq.Filters = []*cynosdbv20190107.AuditInstanceFilters{
-		&cynosdbv20190107.AuditInstanceFilters{
+		{
 			Name:       helper.String("InstanceId"),
 			ExactMatch: helper.Bool(true),
 			Values:     helper.Strings([]string{instanceId}),
@@ -298,7 +298,7 @@ func ResourceTencentCloudCynosdbAuditServiceDelete(d *schema.ResourceData, meta 
 	waitReq.Offset = helper.Uint64(0)
 	waitReq.Limit = helper.Uint64(1)
 	waitReq.Filters = []*cynosdbv20190107.AuditInstanceFilters{
-		&cynosdbv20190107.AuditInstanceFilters{
+		{
 			Name:       helper.String("InstanceId"),
 			ExactMatch: helper.Bool(true),
 			Values:     helper.Strings([]string{instanceId}),
