@@ -35,56 +35,56 @@ func ResourceTencentCloudAsScalingPolicy() *schema.Resource {
 			},
 			"adjustment_type": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(SCALING_GROUP_ADJUSTMENT_TYPE),
 				Description:  "Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values: `CHANGE_IN_CAPACITY`, `EXACT_CAPACITY` and `PERCENT_CHANGE_IN_CAPACITY`.",
 			},
 			"adjustment_value": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				Description: "Define the number of instances by which to scale.For `CHANGE_IN_CAPACITY` type or PERCENT_CHANGE_IN_CAPACITY, a positive increment adds to the current capacity and a negative value removes from the current capacity. For `EXACT_CAPACITY` type, it defines an absolute number of the existing Auto Scaling group size.",
 			},
 			"comparison_operator": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(SCALING_GROUP_COMPARISON_OPERATOR),
 				Description:  "Comparison operator. Valid values: `GREATER_THAN`, `GREATER_THAN_OR_EQUAL_TO`, `LESS_THAN`, `LESS_THAN_OR_EQUAL_TO`, `EQUAL_TO` and `NOT_EQUAL_TO`.",
 			},
 			"metric_name": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(SCALING_GROUP_METRIC_NAME),
 				Description:  "Name of an indicator. Valid values: `CPU_UTILIZATION`, `MEM_UTILIZATION`, `LAN_TRAFFIC_OUT`, `LAN_TRAFFIC_IN`, `WAN_TRAFFIC_OUT` and `WAN_TRAFFIC_IN`.",
 			},
 			"threshold": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				Description: "Alarm threshold.",
 			},
 			"period": {
 				Type:         schema.TypeInt,
-				Required:     true,
+				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{60, 300}),
 				Description:  "Time period in second. Valid values: `60` and `300`.",
 			},
 			"continuous_time": {
 				Type:         schema.TypeInt,
-				Required:     true,
+				Optional:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
 				Description:  "Retry times. Valid value ranges: (1~10).",
 			},
 			"statistic": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      SCALING_GROUP_STATISTIC_AVERAGE,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(SCALING_GROUP_STATISTIC),
 				Description:  "Statistic types. Valid values: `AVERAGE`, `MAXIMUM` and `MINIMUM`. Default is `AVERAGE`.",
 			},
 			"cooldown": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     300,
-				Description: "Cooldwon time in second. Default is `30`0.",
+				Computed:    true,
+				Description: "Cooldwon time in second. Default is `300`.",
 			},
 			"notification_user_group_ids": {
 				Type:        schema.TypeList,
@@ -113,6 +113,7 @@ func ResourceTencentCloudAsScalingPolicy() *schema.Resource {
 			"estimated_instance_warmup": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Instance warm-up time, in seconds, applicable only to target tracking strategies. Value range is 0-3600, with a default warm-up time of 300 seconds.",
 			},
 			"disable_scale_in": {
@@ -132,18 +133,40 @@ func resourceTencentCloudAsScalingPolicyCreate(d *schema.ResourceData, meta inte
 	request := as.NewCreateScalingPolicyRequest()
 	request.AutoScalingGroupId = helper.String(d.Get("scaling_group_id").(string))
 	request.ScalingPolicyName = helper.String(d.Get("policy_name").(string))
-	request.AdjustmentType = helper.String(d.Get("adjustment_type").(string))
-	adjustMentValue := int64(d.Get("adjustment_value").(int))
-	request.AdjustmentValue = &adjustMentValue
-	request.MetricAlarm = &as.MetricAlarm{}
-	request.MetricAlarm.ComparisonOperator = helper.String(d.Get("comparison_operator").(string))
-	request.MetricAlarm.MetricName = helper.String(d.Get("metric_name").(string))
-	request.MetricAlarm.Threshold = helper.IntUint64(d.Get("threshold").(int))
-	request.MetricAlarm.Period = helper.IntUint64(d.Get("period").(int))
-	request.MetricAlarm.ContinuousTime = helper.IntUint64(d.Get("continuous_time").(int))
-
+	if v, ok := d.GetOk("adjustment_type"); ok {
+		request.AdjustmentType = helper.String(v.(string))
+	}
+	if v, ok := d.GetOkExists("adjustment_value"); ok {
+		request.AdjustmentValue = helper.IntInt64(v.(int))
+	}
+	metricAlarm := &as.MetricAlarm{}
+	var hasMetricAlarm bool
+	if v, ok := d.GetOk("comparison_operator"); ok {
+		metricAlarm.ComparisonOperator = helper.String(v.(string))
+		hasMetricAlarm = true
+	}
+	if v, ok := d.GetOk("metric_name"); ok {
+		metricAlarm.MetricName = helper.String(v.(string))
+		hasMetricAlarm = true
+	}
+	if v, ok := d.GetOkExists("threshold"); ok {
+		metricAlarm.Threshold = helper.IntUint64(v.(int))
+		hasMetricAlarm = true
+	}
+	if v, ok := d.GetOkExists("period"); ok {
+		metricAlarm.Period = helper.IntUint64(v.(int))
+		hasMetricAlarm = true
+	}
+	if v, ok := d.GetOkExists("continuous_time"); ok {
+		metricAlarm.ContinuousTime = helper.IntUint64(v.(int))
+		hasMetricAlarm = true
+	}
 	if v, ok := d.GetOk("statistic"); ok {
-		request.MetricAlarm.Statistic = helper.String(v.(string))
+		metricAlarm.Statistic = helper.String(v.(string))
+		hasMetricAlarm = true
+	}
+	if hasMetricAlarm {
+		request.MetricAlarm = metricAlarm
 	}
 	if v, ok := d.GetOk("cooldown"); ok {
 		request.Cooldown = helper.IntUint64(v.(int))
@@ -286,21 +309,43 @@ func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta inte
 		request.ScalingPolicyName = helper.String(d.Get("policy_name").(string))
 	}
 	if d.HasChange("adjustment_type") {
-		request.AdjustmentType = helper.String(d.Get("adjustment_type").(string))
+		if v, ok := d.GetOk("adjustment_type"); ok {
+			request.AdjustmentType = helper.String(v.(string))
+		}
 	}
 	if d.HasChange("adjustment_value") {
-		adjustmentValue := int64(d.Get("adjustment_value").(int))
-		request.AdjustmentValue = &adjustmentValue
+		if v, ok := d.GetOkExists("adjustment_value"); ok {
+			request.AdjustmentValue = helper.IntInt64(v.(int))
+		}
 	}
-	request.MetricAlarm = &as.MetricAlarm{}
 
-	//these two parameter must pass together
-	request.MetricAlarm.ComparisonOperator = helper.String(d.Get("comparison_operator").(string))
-	request.MetricAlarm.Threshold = helper.IntUint64(d.Get("threshold").(int))
-	request.MetricAlarm.MetricName = helper.String(d.Get("metric_name").(string))
-	request.MetricAlarm.Period = helper.IntUint64(d.Get("period").(int))
-	request.MetricAlarm.ContinuousTime = helper.IntUint64(d.Get("continuous_time").(int))
-	request.MetricAlarm.Statistic = helper.String(d.Get("statistic").(string))
+	if d.HasChange("comparison_operator") || d.HasChange("threshold") || d.HasChange("metric_name") || d.HasChange("period") || d.HasChange("continuous_time") || d.HasChange("statistic") {
+		request.MetricAlarm = &as.MetricAlarm{}
+
+		if v, ok := d.GetOk("comparison_operator"); ok {
+			request.MetricAlarm.ComparisonOperator = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("threshold"); ok {
+			request.MetricAlarm.Threshold = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("metric_name"); ok {
+			request.MetricAlarm.MetricName = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("period"); ok {
+			request.MetricAlarm.Period = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("continuous_time"); ok {
+			request.MetricAlarm.ContinuousTime = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("statistic"); ok {
+			request.MetricAlarm.Statistic = helper.String(v.(string))
+		}
+	}
 
 	if d.HasChange("cooldown") {
 		request.Cooldown = helper.IntUint64(d.Get("cooldown").(int))

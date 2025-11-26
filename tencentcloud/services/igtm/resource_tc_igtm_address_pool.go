@@ -133,16 +133,8 @@ func resourceTencentCloudIgtmAddressPoolCreate(d *schema.ResourceData, meta inte
 				address.IsEnable = helper.String(v)
 			}
 
-			if v, ok := addressSetMap["address_id"].(int); ok {
-				address.AddressId = helper.IntUint64(v)
-			}
-
 			if v, ok := addressSetMap["location"].(string); ok && v != "" {
 				address.Location = helper.String(v)
-			}
-
-			if v, ok := addressSetMap["status"].(string); ok && v != "" {
-				address.Status = helper.String(v)
 			}
 
 			if v, ok := addressSetMap["weight"].(int); ok {
@@ -323,10 +315,6 @@ func resourceTencentCloudIgtmAddressPoolUpdate(d *schema.ResourceData, meta inte
 
 				if v, ok := addressSetMap["location"].(string); ok && v != "" {
 					address.Location = helper.String(v)
-				}
-
-				if v, ok := addressSetMap["status"].(string); ok && v != "" {
-					address.Status = helper.String(v)
 				}
 
 				if v, ok := addressSetMap["weight"].(int); ok {

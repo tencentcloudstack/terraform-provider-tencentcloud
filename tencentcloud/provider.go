@@ -1300,7 +1300,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_instance_detail":                                  mqtt.DataSourceTencentCloudMqttInstanceDetail(),
 			"tencentcloud_mqtt_topics":                                           mqtt.DataSourceTencentCloudMqttTopics(),
 			"tencentcloud_billing_budget_operation_log":                          billing.DataSourceTencentCloudBillingBudgetOperationLog(),
+			"tencentcloud_igtm_instance_list":                                    igtm.DataSourceTencentCloudIgtmInstanceList(),
 			"tencentcloud_igtm_address_pool_list":                                igtm.DataSourceTencentCloudIgtmAddressPoolList(),
+			"tencentcloud_igtm_monitors":                                         igtm.DataSourceTencentCloudIgtmMonitors(),
+			"tencentcloud_igtm_detectors":                                        igtm.DataSourceTencentCloudIgtmDetectors(),
+			"tencentcloud_igtm_strategy_list":                                    igtm.DataSourceTencentCloudIgtmStrategyList(),
+			"tencentcloud_igtm_instance_package_list":                            igtm.DataSourceTencentCloudIgtmInstancePackageList(),
+			"tencentcloud_igtm_detect_task_package_list":                         igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2473,7 +2479,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_http_authenticator":                                                  mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
 			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
 			"tencentcloud_billing_budget":                                                           billing.ResourceTencentCloudBillingBudget(),
+			"tencentcloud_igtm_instance":                                                            igtm.ResourceTencentCloudIgtmInstance(),
 			"tencentcloud_igtm_address_pool":                                                        igtm.ResourceTencentCloudIgtmAddressPool(),
+			"tencentcloud_igtm_monitor":                                                             igtm.ResourceTencentCloudIgtmMonitor(),
+			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
 		},
 
 		ConfigureFunc: providerConfigure,

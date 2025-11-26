@@ -1,4 +1,4 @@
-Provides a resource to create a cfw nat_instance
+Provides a resource to create a CFW nat instance
 
 Example Usage
 
@@ -6,19 +6,20 @@ If mode is 0
 
 ```hcl
 resource "tencentcloud_cfw_nat_instance" "example" {
-  name  = "tf_example"
-  width = 20
-  mode  = 0
+  name         = "tf_example"
+  cross_a_zone = 1
+  width        = 20
+  mode         = 0
   new_mode_items {
     vpc_list = [
-      "vpc-5063ta4i"
+      "vpc-40hif9or"
     ]
     eips = [
-      "152.136.168.192"
+      "119.29.107.37"
     ]
   }
-  cross_a_zone = 0
-  zone_set     = [
+  zone_set = [
+    "ap-guangzhou-6",
     "ap-guangzhou-7"
   ]
 }
@@ -28,15 +29,15 @@ If mode is 1
 
 ```hcl
 resource "tencentcloud_cfw_nat_instance" "example" {
-  name        = "tf_example"
-  width       = 20
-  mode        = 1
+  name         = "tf_example"
+  cross_a_zone = 1
+  width        = 20
+  mode         = 1
   nat_gw_list = [
     "nat-9wwkz1kr"
   ]
-  cross_a_zone = 1
-  cross_a_zone = 0
-  zone_set     = [
+
+  zone_set = [
     "ap-guangzhou-6",
     "ap-guangzhou-7"
   ]
@@ -45,7 +46,7 @@ resource "tencentcloud_cfw_nat_instance" "example" {
 
 Import
 
-cfw nat_instance can be imported using the id, e.g.
+CFW nat instance can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_cfw_nat_instance.example cfwnat-54a21421

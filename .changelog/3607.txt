@@ -1,4 +1,4 @@
-```release-note:new-datasource
+```release-note:new-data-source
 tencentcloud_igtm_address_pool_list
 ```
 
