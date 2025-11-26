@@ -1807,6 +1807,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_upgrade_proxy_version":                                            cynosdb.ResourceTencentCloudCynosdbUpgradeProxyVersion(),
 			"tencentcloud_cynosdb_backup_config":                                                    cynosdb.ResourceTencentCloudCynosdbBackupConfig(),
 			"tencentcloud_cynosdb_ssl":                                                              cynosdb.ResourceTencentCloudCynosdbSsl(),
+			"tencentcloud_cynosdb_cluster_transparent_encrypt":                                      cynosdb.ResourceTencentCloudCynosdbClusterTransparentEncrypt(),
 			"tencentcloud_cynosdb_audit_log_file":                                                   cynosdb.ResourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                                                   cynosdb.ResourceTencentCloudCynosdbSecurityGroup(),
 			"tencentcloud_cynosdb_audit_service":                                                    cynosdb.ResourceTencentCloudCynosdbAuditService(),
