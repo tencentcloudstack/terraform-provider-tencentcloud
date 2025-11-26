@@ -418,6 +418,7 @@ func (me *CfwService) DescribeCfwNatPolicyById(ctx context.Context, uuid string)
 	logId := tccommon.GetLogId(ctx)
 
 	request := cfw.NewDescribeNatAcRuleRequest()
+	response := cfw.NewDescribeNatAcRuleResponse()
 	request.Limit = common.Uint64Ptr(20)
 	request.Offset = common.Uint64Ptr(0)
 	request.Filters = []*cfw.CommonFilter{
@@ -434,15 +435,27 @@ func (me *CfwService) DescribeCfwNatPolicyById(ctx context.Context, uuid string)
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeNatAcRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
 
-	response, err := me.client.UseCfwClient().DescribeNatAcRule(request)
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe nat ac rule failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Data) < 1 {
 		return
@@ -465,15 +478,22 @@ func (me *CfwService) DeleteCfwNatPolicyById(ctx context.Context, uuid string) (
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().RemoveNatAcRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseCfwClient().RemoveNatAcRule(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
