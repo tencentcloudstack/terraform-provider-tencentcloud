@@ -2447,11 +2447,13 @@ tencentcloud_tcss_refresh_task_operation
 
 Intelligent Global Traffic Manager(IGTM)
 Data Source
+tencentcloud_igtm_instance_list
 tencentcloud_igtm_address_pool_list
 tencentcloud_igtm_monitors
 tencentcloud_igtm_detectors
 tencentcloud_igtm_strategy_list
 Resource
+tencentcloud_igtm_instance
 tencentcloud_igtm_address_pool
 tencentcloud_igtm_monitor
 tencentcloud_igtm_strategy

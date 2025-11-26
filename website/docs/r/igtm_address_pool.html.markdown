@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a IGTM address pool
 
+~> **NOTE:** Resource `tencentcloud_igtm_instance` needs to be created before using this resource.
+
 ## Example Usage
 
 ```hcl

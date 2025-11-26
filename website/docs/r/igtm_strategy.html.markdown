@@ -14,6 +14,18 @@ Provides a resource to create a IGTM strategy
 ## Example Usage
 
 ```hcl
+resource "tencentcloud_igtm_instance" "example" {
+  domain            = "domain.com"
+  access_type       = "CUSTOM"
+  global_ttl        = 60
+  package_type      = "STANDARD"
+  instance_name     = "tf-example"
+  access_domain     = "domain.com"
+  access_sub_domain = "subDomain.com"
+  remark            = "remark."
+  resource_id       = "ins-lnpnnwvwqmr"
+}
+
 resource "tencentcloud_igtm_address_pool" "example1" {
   pool_name        = "tf-example1"
   traffic_strategy = "WEIGHT"
@@ -63,7 +75,7 @@ resource "tencentcloud_igtm_address_pool" "example3" {
 }
 
 resource "tencentcloud_igtm_strategy" "example" {
-  instance_id   = "gtm-uukztqtoaru"
+  instance_id   = tencentcloud_igtm_instance.example.id
   strategy_name = "tf-example"
   source {
     dns_line_id = 1
