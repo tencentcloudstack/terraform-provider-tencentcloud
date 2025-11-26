@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
+	cynosdbv20190107 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -3008,4 +3009,48 @@ func (me *CynosdbService) taskStateRefreshFunc(taskId string, failStates []strin
 
 		return object, *object.Response.TaskList[0].Status, nil
 	}
+}
+
+func (me *CynosdbService) DescribeCynosdbAuditServiceById(ctx context.Context, instanceId string) (ret *cynosdb.InstanceAuditStatus, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewDescribeAuditInstanceListRequest()
+	response := cynosdb.NewDescribeAuditInstanceListResponse()
+	request.Offset = helper.Uint64(0)
+	request.Limit = helper.Uint64(1)
+	request.Filters = []*cynosdbv20190107.AuditInstanceFilters{
+		{
+			Name:       helper.String("InstanceId"),
+			ExactMatch: helper.Bool(true),
+			Values:     helper.Strings([]string{instanceId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DescribeAuditInstanceList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Items == nil || len(result.Response.Items) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe audit instance list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Items[0]
+	return
 }
