@@ -86,7 +86,7 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30` and `3.11.8`.",
+				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.",
 			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
@@ -199,6 +199,10 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create tdmq rabbitmqVipInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -208,7 +212,12 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 		return err
 	}
 
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
+	}
+
 	instanceId = *response.Response.InstanceId
+	d.SetId(instanceId)
 
 	// wait
 	paramMap := make(map[string]interface{})
@@ -246,8 +255,6 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 		return err
 	}
 
-	d.SetId(instanceId)
-
 	return resourceTencentCloudTdmqRabbitmqVipInstanceRead(d, meta)
 }
 
@@ -268,8 +275,8 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 	}
 
 	if rabbitmqVipInstance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_tdmq_rabbitmq_vip_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TdmqRabbitmqVipInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -356,8 +363,8 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `TdmqRabbitmqVipInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
 
@@ -386,28 +393,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	request.InstanceId = &instanceId
-
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		request.InstanceId = &instanceId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
+			return err
 		}
-
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudTdmqRabbitmqVipInstanceRead(d, meta)
