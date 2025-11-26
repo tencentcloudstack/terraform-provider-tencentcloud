@@ -36,7 +36,8 @@ The following arguments are supported:
 
 Note: After unbinding, the domain name will use an independent policy and rule quota will be calculated separately. Please make sure there is sufficient rule quota before unbinding.
 * `zone_id` - (Required, String, ForceNew) Site ID of the policy template to be bound to or unbound from.
-* `operate` - (Optional, String) Unbind operation option. valid values: `unbind-keep-policy`: unbind a domain name from the policy template while retaining the current policy. `unbind-use-default`: unbind a domain name from the policy template and use the default blank policy. default value: `unbind-keep-policy`.
+* `operate` - (Optional, String, ForceNew) Unbind operation option. valid values: `unbind-keep-policy`: unbind a domain name from the policy template while retaining the current policy. `unbind-use-default`: unbind a domain name from the policy template and use the default blank policy. default value: `unbind-keep-policy`.
+* `over_write` - (Optional, Bool, ForceNew) If the passed-in domain is already bound to a policy template (including site-level protection policies), setting this parameter indicates whether to replace that template. The default value is true. Supported values are: `true`: Replace the currently bound template for the domain. `false`: Do not replace the currently bound template for the domain. Note: When set to false, if the passed-in domain is already bound to a policy template, the API will return an error; site-level protection policies are also a type of policy template.
 
 ## Attributes Reference
 

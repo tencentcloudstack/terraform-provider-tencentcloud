@@ -43,7 +43,8 @@ resource "tencentcloud_teo_bind_security_template" "teo_bind_security_template" 
   operate     = "unbind-use-default"
   template_id = "temp-7dr7dm78"
   zone_id     = "zone-39quuimqg8r6"
-  entity = "aaa.makn.cn"
+  entity 	  = "aaa.makn.cn"
+  over_write  = false
 }
 
 `
