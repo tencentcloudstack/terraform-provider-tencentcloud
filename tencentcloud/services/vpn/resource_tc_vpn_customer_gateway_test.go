@@ -93,7 +93,7 @@ func TestAccTencentCloudVpnCustomerGateway_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpnCustomerGatewayExists("tencentcloud_vpn_customer_gateway.my_cgw"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_customer_gateway.my_cgw", "name", "terraform_test"),
-					resource.TestCheckResourceAttr("tencentcloud_vpn_customer_gateway.my_cgw", "public_ip_address", "1.1.1.2"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_customer_gateway.my_cgw", "public_ip_address", "1.15.15.15"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_customer_gateway.my_cgw", "tags.test", "tf"),
 				),
 			},
@@ -102,7 +102,7 @@ func TestAccTencentCloudVpnCustomerGateway_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpnCustomerGatewayExists("tencentcloud_vpn_customer_gateway.my_cgw"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_customer_gateway.my_cgw", "name", "terraform_update"),
-					resource.TestCheckResourceAttr("tencentcloud_vpn_customer_gateway.my_cgw", "public_ip_address", "1.1.1.2"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_customer_gateway.my_cgw", "public_ip_address", "1.15.15.15"),
 				),
 			},
 		},
