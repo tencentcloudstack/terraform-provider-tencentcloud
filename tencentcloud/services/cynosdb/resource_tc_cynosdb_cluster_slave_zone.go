@@ -127,7 +127,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneRead(d *schema.ResourceData, met
 	clusterId := idSplit[0]
 	slaveZone := idSplit[1]
 
-	clusterSlaveZone, err := service.DescribeCynosdbClusterSlaveZoneById(ctx, clusterId)
+	clusterSlaveZone, err := service.DescribeCynosdbClusterById(ctx, clusterId)
 	if err != nil {
 		return err
 	}

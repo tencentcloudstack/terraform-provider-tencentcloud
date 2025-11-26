@@ -2668,7 +2668,7 @@ func (me *CynosdbService) DeleteCynosdbResourcePackageById(ctx context.Context, 
 	return
 }
 
-func (me *CynosdbService) DescribeCynosdbClusterSlaveZoneById(ctx context.Context, clusterId string) (clusterSlaveZone *cynosdb.CynosdbClusterDetail, errRet error) {
+func (me *CynosdbService) DescribeCynosdbClusterById(ctx context.Context, clusterId string) (cluster *cynosdb.CynosdbClusterDetail, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cynosdb.NewDescribeClusterDetailRequest()
@@ -2689,7 +2689,7 @@ func (me *CynosdbService) DescribeCynosdbClusterSlaveZoneById(ctx context.Contex
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	clusterSlaveZone = response.Response.Detail
+	cluster = response.Response.Detail
 	return
 }
 
@@ -3008,4 +3008,29 @@ func (me *CynosdbService) taskStateRefreshFunc(taskId string, failStates []strin
 
 		return object, *object.Response.TaskList[0].Status, nil
 	}
+}
+
+func (me *CynosdbService) DescribeCynosdbClusterTransparentEncryptById(ctx context.Context, clusterId string) (ret *cynosdb.DescribeClusterTransparentEncryptInfoResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cynosdb.NewDescribeClusterTransparentEncryptInfoRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeClusterTransparentEncryptInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
 }
