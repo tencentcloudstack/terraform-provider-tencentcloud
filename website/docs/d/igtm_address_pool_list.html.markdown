@@ -35,14 +35,14 @@ data "tencentcloud_igtm_address_pool_list" "example" {
 
 The following arguments are supported:
 
-* `filters` - (Optional, List) Alert filter conditions: PoolName: Address pool name; MonitorId: Monitor ID.
+* `filters` - (Optional, List) Alert filter conditions.
 * `result_output_file` - (Optional, String) Used to save results.
 
 The `filters` object supports the following:
 
 * `name` - (Required, String) Filter field name, supported list as follows:
-- type: Main resource type, CDN.
-- instanceId: IGTM instance ID. This is a required parameter, failure to provide will cause interface query failure.
+- PoolName: Address pool name.
+- MonitorId: Monitor ID. This is a required parameter, failure to provide will cause interface query failure.
 * `value` - (Required, Set) Filter field value.
 * `fuzzy` - (Optional, Bool) Whether to enable fuzzy query, only supports filter field name as domain.
 When fuzzy query is enabled, maximum Value length is 1, otherwise maximum Value length is 5. (Reserved field, currently not used).
