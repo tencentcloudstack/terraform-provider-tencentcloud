@@ -18,13 +18,13 @@ func DataSourceTencentCloudIgtmAddressPoolList() *schema.Resource {
 			"filters": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Alert filter conditions: PoolName: Address pool name; MonitorId: Monitor ID.",
+				Description: "Alert filter conditions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Filter field name, supported list as follows:\n- type: Main resource type, CDN.\n- instanceId: IGTM instance ID. This is a required parameter, failure to provide will cause interface query failure.",
+							Description: "Filter field name, supported list as follows:\n- PoolName: Address pool name.\n- MonitorId: Monitor ID. This is a required parameter, failure to provide will cause interface query failure.",
 						},
 						"value": {
 							Type:        schema.TypeSet,

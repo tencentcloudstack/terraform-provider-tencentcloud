@@ -1305,6 +1305,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_monitors":                                         igtm.DataSourceTencentCloudIgtmMonitors(),
 			"tencentcloud_igtm_detectors":                                        igtm.DataSourceTencentCloudIgtmDetectors(),
 			"tencentcloud_igtm_strategy_list":                                    igtm.DataSourceTencentCloudIgtmStrategyList(),
+			"tencentcloud_igtm_instance_package_list":                            igtm.DataSourceTencentCloudIgtmInstancePackageList(),
+			"tencentcloud_igtm_detect_task_package_list":                         igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
