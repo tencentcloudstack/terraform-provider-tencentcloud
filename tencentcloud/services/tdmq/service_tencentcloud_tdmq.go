@@ -1672,6 +1672,7 @@ func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := tdmq.NewDescribeRabbitMQVipInstanceRequest()
+	response := tdmq.NewDescribeRabbitMQVipInstanceResponse()
 	request.ClusterId = &instanceId
 
 	defer func() {
@@ -1680,16 +1681,29 @@ func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = instanceId
-	response, err := me.client.UseTdmqClient(iacExtInfo).DescribeRabbitMQVipInstance(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmqClient(iacExtInfo).DescribeRabbitMQVipInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe rabbitmq vip instance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	rabbitmqVipInstance = response.Response
 	return
@@ -1709,15 +1723,22 @@ func (me *TdmqService) DeleteTdmqRabbitmqVipInstanceById(ctx context.Context, in
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmqClient().DeleteRabbitMQVipInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTdmqClient().DeleteRabbitMQVipInstance(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

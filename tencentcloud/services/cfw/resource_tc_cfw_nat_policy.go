@@ -165,13 +165,16 @@ func resourceTencentCloudCfwNatPolicyCreate(d *schema.ResourceData, meta interfa
 	}
 
 	request.Rules = append(request.Rules, &createNatRuleItem)
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().AddNatAcRule(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || response.Response.RuleUuid == nil || len(result.Response.RuleUuid) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Create cfw natPolicy failed, Response is nil."))
 		}
 
 		response = result
@@ -207,8 +210,8 @@ func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface
 	}
 
 	if natPolicy == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_nat_policy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CfwNatPolicy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -282,8 +285,7 @@ func resourceTencentCloudCfwNatPolicyUpdate(d *schema.ResourceData, meta interfa
 		uuid           = d.Id()
 	)
 
-	immutableArgs := []string{"uuid", "direction"}
-
+	immutableArgs := []string{"direction"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -321,7 +323,7 @@ func resourceTencentCloudCfwNatPolicyUpdate(d *schema.ResourceData, meta interfa
 		modifyRuleItem.Port = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("direction"); ok {
+	if v, ok := d.GetOkExists("direction"); ok {
 		modifyRuleItem.Direction = helper.IntUint64(v.(int))
 	}
 
@@ -342,7 +344,6 @@ func resourceTencentCloudCfwNatPolicyUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	request.Rules = append(request.Rules, &modifyRuleItem)
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyNatAcRule(request)
 		if e != nil {

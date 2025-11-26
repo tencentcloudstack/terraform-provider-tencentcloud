@@ -547,6 +547,7 @@ tencentcloud_cynosdb_upgrade_proxy_version
 tencentcloud_cynosdb_backup_config
 tencentcloud_cynosdb_ssl
 tencentcloud_cynosdb_cluster_transparent_encrypt
+tencentcloud_cynosdb_audit_service
 
 Direct Connect(DC)
 Data Source
