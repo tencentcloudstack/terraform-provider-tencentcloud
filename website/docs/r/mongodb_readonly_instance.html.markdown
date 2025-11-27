@@ -62,7 +62,13 @@ The following arguments are supported:
 
 * `available_zone` - (Required, String, ForceNew) The available zone of the Mongodb.
 * `cluster_type` - (Required, String, ForceNew) Instance schema type.	- REPLSET: Replset cluster;	- SHARD: Shard cluster.
-* `engine_version` - (Required, String, ForceNew) Version of the Mongodb, and available values include `MONGO_36_WT` (MongoDB 3.6 WiredTiger Edition), `MONGO_40_WT` (MongoDB 4.0 WiredTiger Edition) and `MONGO_42_WT`  (MongoDB 4.2 WiredTiger Edition). NOTE: `MONGO_3_WT` (MongoDB 3.2 WiredTiger Edition) and `MONGO_3_ROCKS` (MongoDB 3.2 RocksDB Edition) will deprecated.
+* `engine_version` - (Required, String, ForceNew) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
+- MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.
+- MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.
+- MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.
+- MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.
+- MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.
+- MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.
 * `father_instance_id` - (Required, String, ForceNew) Indicates the main instance ID of readonly instances.
 * `father_instance_region` - (Required, String, ForceNew) Indicates the region of main instance.
 * `instance_name` - (Required, String) Name of the Mongodb instance.
