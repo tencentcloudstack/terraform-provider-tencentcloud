@@ -1864,6 +1864,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_role":                                                                tpulsar.ResourceTencentCloudTdmqRole(),
 			"tencentcloud_tdmq_namespace_role_attachment":                                           tpulsar.ResourceTencentCloudTdmqNamespaceRoleAttachment(),
 			"tencentcloud_tdmq_rabbitmq_user":                                                       trabbit.ResourceTencentCloudTdmqRabbitmqUser(),
+			"tencentcloud_tdmq_rabbitmq_user_permission":                                            trabbit.ResourceTencentCloudTdmqRabbitmqUserPermission(),
 			"tencentcloud_tdmq_rabbitmq_virtual_host":                                               trabbit.ResourceTencentCloudTdmqRabbitmqVirtualHost(),
 			"tencentcloud_tdmq_rabbitmq_vip_instance":                                               trabbit.ResourceTencentCloudTdmqRabbitmqVipInstance(),
 			"tencentcloud_tdmq_send_rocketmq_message":                                               trocket.ResourceTencentCloudTdmqSendRocketmqMessage(),
