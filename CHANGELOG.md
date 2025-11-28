@@ -1,3 +1,26 @@
+## 1.82.39(November 28, 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_igtm_detect_task_package_list` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Data Source:** `tencentcloud_igtm_detectors` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Data Source:** `tencentcloud_igtm_instance_list` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Data Source:** `tencentcloud_igtm_instance_package_list` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Data Source:** `tencentcloud_igtm_monitors` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Data Source:** `tencentcloud_igtm_strategy_list` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Resource:** `tencentcloud_cynosdb_audit_service` ([#3618](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3618))
+* **New Resource:** `tencentcloud_cynosdb_cluster_transparent_encrypt` ([#3617](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3617))
+* **New Resource:** `tencentcloud_igtm_instance` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Resource:** `tencentcloud_igtm_monitor` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Resource:** `tencentcloud_igtm_strategy` ([#3608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3608))
+* **New Resource:** `tencentcloud_tdmq_rabbitmq_user_permission` ([#3624](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3624))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfw_nat_policy: optimiz update function code logic ([#3621](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3621))
+* resource/tencentcloud_mongodb_instance: update doc ([#3623](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3623))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: update doc ([#3619](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3619))
+
 ## 1.82.38(November 25, 2025)
 
 ENHANCEMENTS:
