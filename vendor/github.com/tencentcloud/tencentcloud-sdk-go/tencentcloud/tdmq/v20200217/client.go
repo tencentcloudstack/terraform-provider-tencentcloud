@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -100,6 +100,7 @@ func (c *Client) AcknowledgeMessageWithContext(ctx context.Context, request *Ack
     if request == nil {
         request = NewAcknowledgeMessageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "AcknowledgeMessage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AcknowledgeMessage require credential")
@@ -153,6 +154,7 @@ func (c *Client) ClearCmqQueueWithContext(ctx context.Context, request *ClearCmq
     if request == nil {
         request = NewClearCmqQueueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ClearCmqQueue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ClearCmqQueue require credential")
@@ -202,6 +204,7 @@ func (c *Client) ClearCmqSubscriptionFilterTagsWithContext(ctx context.Context, 
     if request == nil {
         request = NewClearCmqSubscriptionFilterTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ClearCmqSubscriptionFilterTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ClearCmqSubscriptionFilterTags require credential")
@@ -269,6 +272,7 @@ func (c *Client) CreateClusterWithContext(ctx context.Context, request *CreateCl
     if request == nil {
         request = NewCreateClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCluster require credential")
@@ -342,6 +346,7 @@ func (c *Client) CreateCmqQueueWithContext(ctx context.Context, request *CreateC
     if request == nil {
         request = NewCreateCmqQueueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateCmqQueue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCmqQueue require credential")
@@ -403,6 +408,7 @@ func (c *Client) CreateCmqSubscribeWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateCmqSubscribeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateCmqSubscribe")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCmqSubscribe require credential")
@@ -476,6 +482,7 @@ func (c *Client) CreateCmqTopicWithContext(ctx context.Context, request *CreateC
     if request == nil {
         request = NewCreateCmqTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateCmqTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCmqTopic require credential")
@@ -513,8 +520,12 @@ func NewCreateEnvironmentResponse() (response *CreateEnvironmentResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATEENVIRONMENT = "FailedOperation.CreateEnvironment"
 //  FAILEDOPERATION_CREATENAMESPACE = "FailedOperation.CreateNamespace"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_REPLICATIONDESTCHECKFAILEDERROR = "FailedOperation.ReplicationDestCheckFailedError"
+//  FAILEDOPERATION_REPLICATIONSOURCECHECKFAILEDERROR = "FailedOperation.ReplicationSourceCheckFailedError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  INVALIDPARAMETERVALUE_TTL = "InvalidParameterValue.TTL"
@@ -537,8 +548,12 @@ func (c *Client) CreateEnvironment(request *CreateEnvironmentRequest) (response 
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATEENVIRONMENT = "FailedOperation.CreateEnvironment"
 //  FAILEDOPERATION_CREATENAMESPACE = "FailedOperation.CreateNamespace"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_REPLICATIONDESTCHECKFAILEDERROR = "FailedOperation.ReplicationDestCheckFailedError"
+//  FAILEDOPERATION_REPLICATIONSOURCECHECKFAILEDERROR = "FailedOperation.ReplicationSourceCheckFailedError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  INVALIDPARAMETERVALUE_TTL = "InvalidParameterValue.TTL"
@@ -555,6 +570,7 @@ func (c *Client) CreateEnvironmentWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateEnvironmentRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateEnvironment")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEnvironment require credential")
@@ -592,7 +608,9 @@ func NewCreateEnvironmentRoleResponse() (response *CreateEnvironmentRoleResponse
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATEENVIRONMENTROLE = "FailedOperation.CreateEnvironmentRole"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
@@ -611,7 +629,9 @@ func (c *Client) CreateEnvironmentRole(request *CreateEnvironmentRoleRequest) (r
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATEENVIRONMENTROLE = "FailedOperation.CreateEnvironmentRole"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
@@ -624,6 +644,7 @@ func (c *Client) CreateEnvironmentRoleWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateEnvironmentRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateEnvironmentRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEnvironmentRole require credential")
@@ -659,17 +680,12 @@ func NewCreateProClusterResponse() (response *CreateProClusterResponse) {
 // 创建专业集群——预付费，仅通过api调用
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CREATEENVIRONMENTROLE = "FailedOperation.CreateEnvironmentRole"
-//  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
-//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINUSE_ENVIRONMENTROLE = "ResourceInUse.EnvironmentRole"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
-//  RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_GENERATEDEALSANDPAYERROR = "FailedOperation.GenerateDealsAndPayError"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_PRODUCTNOTEXIST = "FailedOperation.ProductNotExist"
+//  INVALIDPARAMETER_VPC = "InvalidParameter.Vpc"
+//  MISSINGPARAMETER_TAG = "MissingParameter.Tag"
 func (c *Client) CreateProCluster(request *CreateProClusterRequest) (response *CreateProClusterResponse, err error) {
     return c.CreateProClusterWithContext(context.Background(), request)
 }
@@ -678,21 +694,17 @@ func (c *Client) CreateProCluster(request *CreateProClusterRequest) (response *C
 // 创建专业集群——预付费，仅通过api调用
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CREATEENVIRONMENTROLE = "FailedOperation.CreateEnvironmentRole"
-//  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
-//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINUSE_ENVIRONMENTROLE = "ResourceInUse.EnvironmentRole"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
-//  RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_GENERATEDEALSANDPAYERROR = "FailedOperation.GenerateDealsAndPayError"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_PRODUCTNOTEXIST = "FailedOperation.ProductNotExist"
+//  INVALIDPARAMETER_VPC = "InvalidParameter.Vpc"
+//  MISSINGPARAMETER_TAG = "MissingParameter.Tag"
 func (c *Client) CreateProClusterWithContext(ctx context.Context, request *CreateProClusterRequest) (response *CreateProClusterResponse, err error) {
     if request == nil {
         request = NewCreateProClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateProCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateProCluster require credential")
@@ -701,6 +713,60 @@ func (c *Client) CreateProClusterWithContext(ctx context.Context, request *Creat
     request.SetContext(ctx)
     
     response = NewCreateProClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRabbitMQBindingRequest() (request *CreateRabbitMQBindingRequest) {
+    request = &CreateRabbitMQBindingRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "CreateRabbitMQBinding")
+    
+    
+    return
+}
+
+func NewCreateRabbitMQBindingResponse() (response *CreateRabbitMQBindingResponse) {
+    response = &CreateRabbitMQBindingResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRabbitMQBinding
+// 创建RabbitMQ路由关系
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQBinding(request *CreateRabbitMQBindingRequest) (response *CreateRabbitMQBindingResponse, err error) {
+    return c.CreateRabbitMQBindingWithContext(context.Background(), request)
+}
+
+// CreateRabbitMQBinding
+// 创建RabbitMQ路由关系
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQBindingWithContext(ctx context.Context, request *CreateRabbitMQBindingRequest) (response *CreateRabbitMQBindingResponse, err error) {
+    if request == nil {
+        request = NewCreateRabbitMQBindingRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRabbitMQBinding")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRabbitMQBinding require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRabbitMQBindingResponse()
     err = c.Send(request, response)
     return
 }
@@ -746,6 +812,7 @@ func (c *Client) CreateRabbitMQUserWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateRabbitMQUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRabbitMQUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRabbitMQUser require credential")
@@ -778,7 +845,7 @@ func NewCreateRabbitMQVipInstanceResponse() (response *CreateRabbitMQVipInstance
 }
 
 // CreateRabbitMQVipInstance
-// 创建RabbitMQ专享版实例
+// 创建 RabbitMQ 托管版实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -789,7 +856,7 @@ func (c *Client) CreateRabbitMQVipInstance(request *CreateRabbitMQVipInstanceReq
 }
 
 // CreateRabbitMQVipInstance
-// 创建RabbitMQ专享版实例
+// 创建 RabbitMQ 托管版实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -799,6 +866,7 @@ func (c *Client) CreateRabbitMQVipInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateRabbitMQVipInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRabbitMQVipInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRabbitMQVipInstance require credential")
@@ -852,6 +920,7 @@ func (c *Client) CreateRabbitMQVirtualHostWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateRabbitMQVirtualHostRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRabbitMQVirtualHost")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRabbitMQVirtualHost require credential")
@@ -923,6 +992,7 @@ func (c *Client) CreateRocketMQClusterWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateRocketMQClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRocketMQCluster require credential")
@@ -992,6 +1062,7 @@ func (c *Client) CreateRocketMQEnvironmentRoleWithContext(ctx context.Context, r
     if request == nil {
         request = NewCreateRocketMQEnvironmentRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQEnvironmentRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRocketMQEnvironmentRole require credential")
@@ -1053,6 +1124,7 @@ func (c *Client) CreateRocketMQGroupWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateRocketMQGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRocketMQGroup require credential")
@@ -1124,6 +1196,7 @@ func (c *Client) CreateRocketMQNamespaceWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateRocketMQNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRocketMQNamespace require credential")
@@ -1195,6 +1268,7 @@ func (c *Client) CreateRocketMQRoleWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateRocketMQRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRocketMQRole require credential")
@@ -1266,6 +1340,7 @@ func (c *Client) CreateRocketMQTopicWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateRocketMQTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRocketMQTopic require credential")
@@ -1315,6 +1390,7 @@ func (c *Client) CreateRocketMQVipInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateRocketMQVipInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQVipInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRocketMQVipInstance require credential")
@@ -1388,6 +1464,7 @@ func (c *Client) CreateRoleWithContext(ctx context.Context, request *CreateRoleR
     if request == nil {
         request = NewCreateRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRole require credential")
@@ -1425,8 +1502,12 @@ func NewCreateSubscriptionResponse() (response *CreateSubscriptionResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATESUBSCRIPTION = "FailedOperation.CreateSubscription"
 //  FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_REPLICATIONDESTCHECKFAILEDERROR = "FailedOperation.ReplicationDestCheckFailedError"
+//  FAILEDOPERATION_REPLICATIONSOURCECHECKFAILEDERROR = "FailedOperation.ReplicationSourceCheckFailedError"
 //  INTERNALERROR_RETRY = "InternalError.Retry"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
@@ -1447,8 +1528,12 @@ func (c *Client) CreateSubscription(request *CreateSubscriptionRequest) (respons
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATESUBSCRIPTION = "FailedOperation.CreateSubscription"
 //  FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_REPLICATIONDESTCHECKFAILEDERROR = "FailedOperation.ReplicationDestCheckFailedError"
+//  FAILEDOPERATION_REPLICATIONSOURCECHECKFAILEDERROR = "FailedOperation.ReplicationSourceCheckFailedError"
 //  INTERNALERROR_RETRY = "InternalError.Retry"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
@@ -1463,6 +1548,7 @@ func (c *Client) CreateSubscriptionWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateSubscriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateSubscription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSubscription require credential")
@@ -1500,9 +1586,15 @@ func NewCreateTopicResponse() (response *CreateTopicResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATETOPIC = "FailedOperation.CreateTopic"
+//  FAILEDOPERATION_ISOLATECONSUMERENABLE = "FailedOperation.IsolateConsumerEnable"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_REPLICATIONDESTCHECKFAILEDERROR = "FailedOperation.ReplicationDestCheckFailedError"
+//  FAILEDOPERATION_REPLICATIONSOURCECHECKFAILEDERROR = "FailedOperation.ReplicationSourceCheckFailedError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACKTIME = "InvalidParameterValue.AckTime"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  LIMITEXCEEDED_TOPICS = "LimitExceeded.Topics"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
@@ -1512,6 +1604,8 @@ func NewCreateTopicResponse() (response *CreateTopicResponse) {
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
+//  UNKNOWNPARAMETER_POLICY = "UnknownParameter.Policy"
+//  UNSUPPORTEDOPERATION_TOPICUNACK = "UnsupportedOperation.TopicUnack"
 func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopicResponse, err error) {
     return c.CreateTopicWithContext(context.Background(), request)
 }
@@ -1522,9 +1616,15 @@ func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopic
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_CREATETOPIC = "FailedOperation.CreateTopic"
+//  FAILEDOPERATION_ISOLATECONSUMERENABLE = "FailedOperation.IsolateConsumerEnable"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_REPLICATIONDESTCHECKFAILEDERROR = "FailedOperation.ReplicationDestCheckFailedError"
+//  FAILEDOPERATION_REPLICATIONSOURCECHECKFAILEDERROR = "FailedOperation.ReplicationSourceCheckFailedError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACKTIME = "InvalidParameterValue.AckTime"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  LIMITEXCEEDED_TOPICS = "LimitExceeded.Topics"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
@@ -1534,10 +1634,13 @@ func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopic
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
+//  UNKNOWNPARAMETER_POLICY = "UnknownParameter.Policy"
+//  UNSUPPORTEDOPERATION_TOPICUNACK = "UnsupportedOperation.TopicUnack"
 func (c *Client) CreateTopicWithContext(ctx context.Context, request *CreateTopicRequest) (response *CreateTopicResponse, err error) {
     if request == nil {
         request = NewCreateTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTopic require credential")
@@ -1574,8 +1677,10 @@ func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_DELETECLUSTER = "FailedOperation.DeleteCluster"
 //  FAILEDOPERATION_NAMESPACEINUSE = "FailedOperation.NamespaceInUse"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_ROLEINUSE = "FailedOperation.RoleInUse"
 //  FAILEDOPERATION_VPCINUSE = "FailedOperation.VpcInUse"
 //  OPERATIONDENIED_DEFAULTENVIRONMENT = "OperationDenied.DefaultEnvironment"
@@ -1589,8 +1694,10 @@ func (c *Client) DeleteCluster(request *DeleteClusterRequest) (response *DeleteC
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_DELETECLUSTER = "FailedOperation.DeleteCluster"
 //  FAILEDOPERATION_NAMESPACEINUSE = "FailedOperation.NamespaceInUse"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_ROLEINUSE = "FailedOperation.RoleInUse"
 //  FAILEDOPERATION_VPCINUSE = "FailedOperation.VpcInUse"
 //  OPERATIONDENIED_DEFAULTENVIRONMENT = "OperationDenied.DefaultEnvironment"
@@ -1599,6 +1706,7 @@ func (c *Client) DeleteClusterWithContext(ctx context.Context, request *DeleteCl
     if request == nil {
         request = NewDeleteClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCluster require credential")
@@ -1656,6 +1764,7 @@ func (c *Client) DeleteCmqQueueWithContext(ctx context.Context, request *DeleteC
     if request == nil {
         request = NewDeleteCmqQueueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteCmqQueue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCmqQueue require credential")
@@ -1715,6 +1824,7 @@ func (c *Client) DeleteCmqSubscribeWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteCmqSubscribeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteCmqSubscribe")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCmqSubscribe require credential")
@@ -1770,6 +1880,7 @@ func (c *Client) DeleteCmqTopicWithContext(ctx context.Context, request *DeleteC
     if request == nil {
         request = NewDeleteCmqTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteCmqTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCmqTopic require credential")
@@ -1831,6 +1942,7 @@ func (c *Client) DeleteEnvironmentRolesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteEnvironmentRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteEnvironmentRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteEnvironmentRoles require credential")
@@ -1867,8 +1979,10 @@ func NewDeleteEnvironmentsResponse() (response *DeleteEnvironmentsResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_DELETEENVIRONMENTS = "FailedOperation.DeleteEnvironments"
 //  FAILEDOPERATION_DELETENAMESPACE = "FailedOperation.DeleteNamespace"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_ROLEINUSE = "FailedOperation.RoleInUse"
 //  FAILEDOPERATION_TOPICINUSE = "FailedOperation.TopicInUse"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1887,8 +2001,10 @@ func (c *Client) DeleteEnvironments(request *DeleteEnvironmentsRequest) (respons
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_DELETEENVIRONMENTS = "FailedOperation.DeleteEnvironments"
 //  FAILEDOPERATION_DELETENAMESPACE = "FailedOperation.DeleteNamespace"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_ROLEINUSE = "FailedOperation.RoleInUse"
 //  FAILEDOPERATION_TOPICINUSE = "FailedOperation.TopicInUse"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1902,6 +2018,7 @@ func (c *Client) DeleteEnvironmentsWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteEnvironmentsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteEnvironments")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteEnvironments require credential")
@@ -1937,18 +2054,10 @@ func NewDeleteProClusterResponse() (response *DeleteProClusterResponse) {
 // 删除专业集群——预付费，仅通过API 调用
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION_DELETEENVIRONMENTS = "FailedOperation.DeleteEnvironments"
-//  FAILEDOPERATION_DELETENAMESPACE = "FailedOperation.DeleteNamespace"
-//  FAILEDOPERATION_ROLEINUSE = "FailedOperation.RoleInUse"
-//  FAILEDOPERATION_TOPICINUSE = "FailedOperation.TopicInUse"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
-//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
-//  OPERATIONDENIED_DEFAULTENVIRONMENT = "OperationDenied.DefaultEnvironment"
+//  FAILEDOPERATION_DELETECLUSTERPROTECTION = "FailedOperation.DeleteClusterProtection"
+//  FAILEDOPERATION_INSTANCECANNOTDELETE = "FailedOperation.InstanceCanNotDelete"
+//  FAILEDOPERATION_ONLINEREFUNDRESOURCENOTEXIT = "FailedOperation.OnlineRefundResourceNotExit"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 func (c *Client) DeleteProCluster(request *DeleteProClusterRequest) (response *DeleteProClusterResponse, err error) {
     return c.DeleteProClusterWithContext(context.Background(), request)
 }
@@ -1957,22 +2066,15 @@ func (c *Client) DeleteProCluster(request *DeleteProClusterRequest) (response *D
 // 删除专业集群——预付费，仅通过API 调用
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION_DELETEENVIRONMENTS = "FailedOperation.DeleteEnvironments"
-//  FAILEDOPERATION_DELETENAMESPACE = "FailedOperation.DeleteNamespace"
-//  FAILEDOPERATION_ROLEINUSE = "FailedOperation.RoleInUse"
-//  FAILEDOPERATION_TOPICINUSE = "FailedOperation.TopicInUse"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
-//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
-//  OPERATIONDENIED_DEFAULTENVIRONMENT = "OperationDenied.DefaultEnvironment"
+//  FAILEDOPERATION_DELETECLUSTERPROTECTION = "FailedOperation.DeleteClusterProtection"
+//  FAILEDOPERATION_INSTANCECANNOTDELETE = "FailedOperation.InstanceCanNotDelete"
+//  FAILEDOPERATION_ONLINEREFUNDRESOURCENOTEXIT = "FailedOperation.OnlineRefundResourceNotExit"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 func (c *Client) DeleteProClusterWithContext(ctx context.Context, request *DeleteProClusterRequest) (response *DeleteProClusterResponse, err error) {
     if request == nil {
         request = NewDeleteProClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteProCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteProCluster require credential")
@@ -1981,6 +2083,112 @@ func (c *Client) DeleteProClusterWithContext(ctx context.Context, request *Delet
     request.SetContext(ctx)
     
     response = NewDeleteProClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRabbitMQBindingRequest() (request *DeleteRabbitMQBindingRequest) {
+    request = &DeleteRabbitMQBindingRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DeleteRabbitMQBinding")
+    
+    
+    return
+}
+
+func NewDeleteRabbitMQBindingResponse() (response *DeleteRabbitMQBindingResponse) {
+    response = &DeleteRabbitMQBindingResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRabbitMQBinding
+// 解绑RabbitMQ路由关系
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteRabbitMQBinding(request *DeleteRabbitMQBindingRequest) (response *DeleteRabbitMQBindingResponse, err error) {
+    return c.DeleteRabbitMQBindingWithContext(context.Background(), request)
+}
+
+// DeleteRabbitMQBinding
+// 解绑RabbitMQ路由关系
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteRabbitMQBindingWithContext(ctx context.Context, request *DeleteRabbitMQBindingRequest) (response *DeleteRabbitMQBindingResponse, err error) {
+    if request == nil {
+        request = NewDeleteRabbitMQBindingRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRabbitMQBinding")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRabbitMQBinding require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRabbitMQBindingResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRabbitMQPermissionRequest() (request *DeleteRabbitMQPermissionRequest) {
+    request = &DeleteRabbitMQPermissionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DeleteRabbitMQPermission")
+    
+    
+    return
+}
+
+func NewDeleteRabbitMQPermissionResponse() (response *DeleteRabbitMQPermissionResponse) {
+    response = &DeleteRabbitMQPermissionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRabbitMQPermission
+// 删除RabbitMQ的权限
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteRabbitMQPermission(request *DeleteRabbitMQPermissionRequest) (response *DeleteRabbitMQPermissionResponse, err error) {
+    return c.DeleteRabbitMQPermissionWithContext(context.Background(), request)
+}
+
+// DeleteRabbitMQPermission
+// 删除RabbitMQ的权限
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteRabbitMQPermissionWithContext(ctx context.Context, request *DeleteRabbitMQPermissionRequest) (response *DeleteRabbitMQPermissionResponse, err error) {
+    if request == nil {
+        request = NewDeleteRabbitMQPermissionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRabbitMQPermission")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRabbitMQPermission require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRabbitMQPermissionResponse()
     err = c.Send(request, response)
     return
 }
@@ -2026,6 +2234,7 @@ func (c *Client) DeleteRabbitMQUserWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteRabbitMQUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRabbitMQUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRabbitMQUser require credential")
@@ -2058,27 +2267,30 @@ func NewDeleteRabbitMQVipInstanceResponse() (response *DeleteRabbitMQVipInstance
 }
 
 // DeleteRabbitMQVipInstance
-// 删除RabbitMQ专享版实例
+// 删除 RabbitMQ 托管版实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteRabbitMQVipInstance(request *DeleteRabbitMQVipInstanceRequest) (response *DeleteRabbitMQVipInstanceResponse, err error) {
     return c.DeleteRabbitMQVipInstanceWithContext(context.Background(), request)
 }
 
 // DeleteRabbitMQVipInstance
-// 删除RabbitMQ专享版实例
+// 删除 RabbitMQ 托管版实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteRabbitMQVipInstanceWithContext(ctx context.Context, request *DeleteRabbitMQVipInstanceRequest) (response *DeleteRabbitMQVipInstanceResponse, err error) {
     if request == nil {
         request = NewDeleteRabbitMQVipInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRabbitMQVipInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRabbitMQVipInstance require credential")
@@ -2132,6 +2344,7 @@ func (c *Client) DeleteRabbitMQVirtualHostWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteRabbitMQVirtualHostRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRabbitMQVirtualHost")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRabbitMQVirtualHost require credential")
@@ -2191,6 +2404,7 @@ func (c *Client) DeleteRocketMQClusterWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteRocketMQClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRocketMQCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRocketMQCluster require credential")
@@ -2252,6 +2466,7 @@ func (c *Client) DeleteRocketMQEnvironmentRolesWithContext(ctx context.Context, 
     if request == nil {
         request = NewDeleteRocketMQEnvironmentRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRocketMQEnvironmentRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRocketMQEnvironmentRoles require credential")
@@ -2313,6 +2528,7 @@ func (c *Client) DeleteRocketMQGroupWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteRocketMQGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRocketMQGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRocketMQGroup require credential")
@@ -2370,6 +2586,7 @@ func (c *Client) DeleteRocketMQNamespaceWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteRocketMQNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRocketMQNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRocketMQNamespace require credential")
@@ -2433,6 +2650,7 @@ func (c *Client) DeleteRocketMQRolesWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteRocketMQRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRocketMQRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRocketMQRoles require credential")
@@ -2490,6 +2708,7 @@ func (c *Client) DeleteRocketMQTopicWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteRocketMQTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRocketMQTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRocketMQTopic require credential")
@@ -2541,6 +2760,7 @@ func (c *Client) DeleteRocketMQVipInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteRocketMQVipInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRocketMQVipInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRocketMQVipInstance require credential")
@@ -2604,6 +2824,7 @@ func (c *Client) DeleteRolesWithContext(ctx context.Context, request *DeleteRole
     if request == nil {
         request = NewDeleteRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRoles require credential")
@@ -2677,6 +2898,7 @@ func (c *Client) DeleteSubscriptionsWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteSubscriptionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteSubscriptions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSubscriptions require credential")
@@ -2714,7 +2936,9 @@ func NewDeleteTopicsResponse() (response *DeleteTopicsResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_DELETETOPICS = "FailedOperation.DeleteTopics"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
@@ -2732,7 +2956,9 @@ func (c *Client) DeleteTopics(request *DeleteTopicsRequest) (response *DeleteTop
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_DELETETOPICS = "FailedOperation.DeleteTopics"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
@@ -2744,6 +2970,7 @@ func (c *Client) DeleteTopicsWithContext(ctx context.Context, request *DeleteTop
     if request == nil {
         request = NewDeleteTopicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DeleteTopics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTopics require credential")
@@ -2776,6 +3003,10 @@ func NewDescribeAMQPClustersResponse() (response *DescribeAMQPClustersResponse) 
 }
 
 // DescribeAMQPClusters
+// 历史原因，该接口位于tdmq-manager，目前rabbitmq产品没有使用该接口，当前使用的是DescribeRabbitMQVipInstances。不过从调用链上看，线网还有请求流程，所以走预下线流程。
+//
+// 
+//
 // 获取amqp集群列表
 //
 // 可能返回的错误码:
@@ -2789,6 +3020,10 @@ func (c *Client) DescribeAMQPClusters(request *DescribeAMQPClustersRequest) (res
 }
 
 // DescribeAMQPClusters
+// 历史原因，该接口位于tdmq-manager，目前rabbitmq产品没有使用该接口，当前使用的是DescribeRabbitMQVipInstances。不过从调用链上看，线网还有请求流程，所以走预下线流程。
+//
+// 
+//
 // 获取amqp集群列表
 //
 // 可能返回的错误码:
@@ -2801,6 +3036,7 @@ func (c *Client) DescribeAMQPClustersWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAMQPClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeAMQPClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAMQPClusters require credential")
@@ -2858,6 +3094,7 @@ func (c *Client) DescribeAllTenantsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeAllTenantsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeAllTenants")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAllTenants require credential")
@@ -2919,6 +3156,7 @@ func (c *Client) DescribeBindClustersWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBindClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeBindClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBindClusters require credential")
@@ -2980,6 +3218,7 @@ func (c *Client) DescribeBindVpcsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeBindVpcsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeBindVpcs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBindVpcs require credential")
@@ -3029,6 +3268,7 @@ func (c *Client) DescribeClusterDetailWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeClusterDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeClusterDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterDetail require credential")
@@ -3064,6 +3304,8 @@ func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
 // 获取集群列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 func (c *Client) DescribeClusters(request *DescribeClustersRequest) (response *DescribeClustersResponse, err error) {
     return c.DescribeClustersWithContext(context.Background(), request)
@@ -3073,11 +3315,14 @@ func (c *Client) DescribeClusters(request *DescribeClustersRequest) (response *D
 // 获取集群列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 func (c *Client) DescribeClustersWithContext(ctx context.Context, request *DescribeClustersRequest) (response *DescribeClustersResponse, err error) {
     if request == nil {
         request = NewDescribeClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusters require credential")
@@ -3086,63 +3331,6 @@ func (c *Client) DescribeClustersWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeClustersResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeCmqDeadLetterSourceQueuesRequest() (request *DescribeCmqDeadLetterSourceQueuesRequest) {
-    request = &DescribeCmqDeadLetterSourceQueuesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeCmqDeadLetterSourceQueues")
-    
-    
-    return
-}
-
-func NewDescribeCmqDeadLetterSourceQueuesResponse() (response *DescribeCmqDeadLetterSourceQueuesResponse) {
-    response = &DescribeCmqDeadLetterSourceQueuesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeCmqDeadLetterSourceQueues
-// 接口很久之前已删除，需下线
-//
-// 
-//
-// 枚举cmq死信队列源队列
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-func (c *Client) DescribeCmqDeadLetterSourceQueues(request *DescribeCmqDeadLetterSourceQueuesRequest) (response *DescribeCmqDeadLetterSourceQueuesResponse, err error) {
-    return c.DescribeCmqDeadLetterSourceQueuesWithContext(context.Background(), request)
-}
-
-// DescribeCmqDeadLetterSourceQueues
-// 接口很久之前已删除，需下线
-//
-// 
-//
-// 枚举cmq死信队列源队列
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-func (c *Client) DescribeCmqDeadLetterSourceQueuesWithContext(ctx context.Context, request *DescribeCmqDeadLetterSourceQueuesRequest) (response *DescribeCmqDeadLetterSourceQueuesResponse, err error) {
-    if request == nil {
-        request = NewDescribeCmqDeadLetterSourceQueuesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCmqDeadLetterSourceQueues require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeCmqDeadLetterSourceQueuesResponse()
     err = c.Send(request, response)
     return
 }
@@ -3186,6 +3374,7 @@ func (c *Client) DescribeCmqQueueDetailWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeCmqQueueDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeCmqQueueDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCmqQueueDetail require credential")
@@ -3237,6 +3426,7 @@ func (c *Client) DescribeCmqQueuesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeCmqQueuesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeCmqQueues")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCmqQueues require credential")
@@ -3288,6 +3478,7 @@ func (c *Client) DescribeCmqSubscriptionDetailWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeCmqSubscriptionDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeCmqSubscriptionDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCmqSubscriptionDetail require credential")
@@ -3345,6 +3536,7 @@ func (c *Client) DescribeCmqTopicDetailWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeCmqTopicDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeCmqTopicDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCmqTopicDetail require credential")
@@ -3396,6 +3588,7 @@ func (c *Client) DescribeCmqTopicsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeCmqTopicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeCmqTopics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCmqTopics require credential")
@@ -3461,6 +3654,7 @@ func (c *Client) DescribeEnvironmentAttributesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeEnvironmentAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeEnvironmentAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEnvironmentAttributes require credential")
@@ -3522,6 +3716,7 @@ func (c *Client) DescribeEnvironmentRolesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeEnvironmentRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeEnvironmentRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEnvironmentRoles require credential")
@@ -3579,6 +3774,7 @@ func (c *Client) DescribeEnvironmentsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeEnvironmentsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeEnvironments")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEnvironments require credential")
@@ -3630,6 +3826,7 @@ func (c *Client) DescribeMqMsgTraceWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeMqMsgTraceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeMqMsgTrace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMqMsgTrace require credential")
@@ -3693,6 +3890,7 @@ func (c *Client) DescribeMsgWithContext(ctx context.Context, request *DescribeMs
     if request == nil {
         request = NewDescribeMsgRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeMsg")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMsg require credential")
@@ -3752,6 +3950,7 @@ func (c *Client) DescribeMsgTraceWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeMsgTraceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeMsgTrace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMsgTrace require credential")
@@ -3803,6 +4002,7 @@ func (c *Client) DescribeNamespaceBundlesOptWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeNamespaceBundlesOptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeNamespaceBundlesOpt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNamespaceBundlesOpt require credential")
@@ -3852,6 +4052,7 @@ func (c *Client) DescribeNodeHealthOptWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeNodeHealthOptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeNodeHealthOpt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNodeHealthOpt require credential")
@@ -3887,6 +4088,8 @@ func NewDescribePublisherSummaryResponse() (response *DescribePublisherSummaryRe
 // 获取消息生产概览信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) DescribePublisherSummary(request *DescribePublisherSummaryRequest) (response *DescribePublisherSummaryResponse, err error) {
     return c.DescribePublisherSummaryWithContext(context.Background(), request)
@@ -3896,11 +4099,14 @@ func (c *Client) DescribePublisherSummary(request *DescribePublisherSummaryReque
 // 获取消息生产概览信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) DescribePublisherSummaryWithContext(ctx context.Context, request *DescribePublisherSummaryRequest) (response *DescribePublisherSummaryResponse, err error) {
     if request == nil {
         request = NewDescribePublisherSummaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribePublisherSummary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePublisherSummary require credential")
@@ -3936,6 +4142,8 @@ func NewDescribePublishersResponse() (response *DescribePublishersResponse) {
 // 获取生产者信息列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) DescribePublishers(request *DescribePublishersRequest) (response *DescribePublishersResponse, err error) {
     return c.DescribePublishersWithContext(context.Background(), request)
@@ -3945,11 +4153,14 @@ func (c *Client) DescribePublishers(request *DescribePublishersRequest) (respons
 // 获取生产者信息列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) DescribePublishersWithContext(ctx context.Context, request *DescribePublishersRequest) (response *DescribePublishersResponse, err error) {
     if request == nil {
         request = NewDescribePublishersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribePublishers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePublishers require credential")
@@ -3986,6 +4197,8 @@ func NewDescribePulsarProInstanceDetailResponse() (response *DescribePulsarProIn
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -3999,6 +4212,8 @@ func (c *Client) DescribePulsarProInstanceDetail(request *DescribePulsarProInsta
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -4007,6 +4222,7 @@ func (c *Client) DescribePulsarProInstanceDetailWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribePulsarProInstanceDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribePulsarProInstanceDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePulsarProInstanceDetail require credential")
@@ -4043,6 +4259,8 @@ func NewDescribePulsarProInstancesResponse() (response *DescribePulsarProInstanc
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 func (c *Client) DescribePulsarProInstances(request *DescribePulsarProInstancesRequest) (response *DescribePulsarProInstancesResponse, err error) {
     return c.DescribePulsarProInstancesWithContext(context.Background(), request)
 }
@@ -4052,10 +4270,13 @@ func (c *Client) DescribePulsarProInstances(request *DescribePulsarProInstancesR
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 func (c *Client) DescribePulsarProInstancesWithContext(ctx context.Context, request *DescribePulsarProInstancesRequest) (response *DescribePulsarProInstancesResponse, err error) {
     if request == nil {
         request = NewDescribePulsarProInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribePulsarProInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePulsarProInstances require credential")
@@ -4064,6 +4285,60 @@ func (c *Client) DescribePulsarProInstancesWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribePulsarProInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRabbitMQBindingsRequest() (request *DescribeRabbitMQBindingsRequest) {
+    request = &DescribeRabbitMQBindingsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRabbitMQBindings")
+    
+    
+    return
+}
+
+func NewDescribeRabbitMQBindingsResponse() (response *DescribeRabbitMQBindingsResponse) {
+    response = &DescribeRabbitMQBindingsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRabbitMQBindings
+// 查询RabbitMQ路由关系列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeRabbitMQBindings(request *DescribeRabbitMQBindingsRequest) (response *DescribeRabbitMQBindingsResponse, err error) {
+    return c.DescribeRabbitMQBindingsWithContext(context.Background(), request)
+}
+
+// DescribeRabbitMQBindings
+// 查询RabbitMQ路由关系列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeRabbitMQBindingsWithContext(ctx context.Context, request *DescribeRabbitMQBindingsRequest) (response *DescribeRabbitMQBindingsResponse, err error) {
+    if request == nil {
+        request = NewDescribeRabbitMQBindingsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQBindings")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRabbitMQBindings require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRabbitMQBindingsResponse()
     err = c.Send(request, response)
     return
 }
@@ -4109,6 +4384,7 @@ func (c *Client) DescribeRabbitMQExchangesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRabbitMQExchangesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQExchanges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQExchanges require credential")
@@ -4141,7 +4417,7 @@ func NewDescribeRabbitMQNodeListResponse() (response *DescribeRabbitMQNodeListRe
 }
 
 // DescribeRabbitMQNodeList
-// RabbitMQ专享版查询节点列表
+// 查询 RabbitMQ 托管版节点列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4151,7 +4427,7 @@ func (c *Client) DescribeRabbitMQNodeList(request *DescribeRabbitMQNodeListReque
 }
 
 // DescribeRabbitMQNodeList
-// RabbitMQ专享版查询节点列表
+// 查询 RabbitMQ 托管版节点列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4160,6 +4436,7 @@ func (c *Client) DescribeRabbitMQNodeListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeRabbitMQNodeListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQNodeList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQNodeList require credential")
@@ -4168,6 +4445,60 @@ func (c *Client) DescribeRabbitMQNodeListWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeRabbitMQNodeListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRabbitMQPermissionRequest() (request *DescribeRabbitMQPermissionRequest) {
+    request = &DescribeRabbitMQPermissionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRabbitMQPermission")
+    
+    
+    return
+}
+
+func NewDescribeRabbitMQPermissionResponse() (response *DescribeRabbitMQPermissionResponse) {
+    response = &DescribeRabbitMQPermissionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRabbitMQPermission
+// 查询RabbitMQ权限列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeRabbitMQPermission(request *DescribeRabbitMQPermissionRequest) (response *DescribeRabbitMQPermissionResponse, err error) {
+    return c.DescribeRabbitMQPermissionWithContext(context.Background(), request)
+}
+
+// DescribeRabbitMQPermission
+// 查询RabbitMQ权限列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeRabbitMQPermissionWithContext(ctx context.Context, request *DescribeRabbitMQPermissionRequest) (response *DescribeRabbitMQPermissionResponse, err error) {
+    if request == nil {
+        request = NewDescribeRabbitMQPermissionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQPermission")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRabbitMQPermission require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRabbitMQPermissionResponse()
     err = c.Send(request, response)
     return
 }
@@ -4213,6 +4544,7 @@ func (c *Client) DescribeRabbitMQQueueDetailWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeRabbitMQQueueDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQQueueDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQQueueDetail require credential")
@@ -4251,6 +4583,7 @@ func NewDescribeRabbitMQQueuesResponse() (response *DescribeRabbitMQQueuesRespon
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeRabbitMQQueues(request *DescribeRabbitMQQueuesRequest) (response *DescribeRabbitMQQueuesResponse, err error) {
     return c.DescribeRabbitMQQueuesWithContext(context.Background(), request)
 }
@@ -4262,10 +4595,12 @@ func (c *Client) DescribeRabbitMQQueues(request *DescribeRabbitMQQueuesRequest) 
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeRabbitMQQueuesWithContext(ctx context.Context, request *DescribeRabbitMQQueuesRequest) (response *DescribeRabbitMQQueuesResponse, err error) {
     if request == nil {
         request = NewDescribeRabbitMQQueuesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQQueues")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQQueues require credential")
@@ -4321,6 +4656,7 @@ func (c *Client) DescribeRabbitMQUserWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeRabbitMQUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQUser require credential")
@@ -4353,7 +4689,7 @@ func NewDescribeRabbitMQVipInstanceResponse() (response *DescribeRabbitMQVipInst
 }
 
 // DescribeRabbitMQVipInstance
-// 获取单个RabbitMQ专享实例信息
+// 获取单个 RabbitMQ 托管版实例信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4366,7 +4702,7 @@ func (c *Client) DescribeRabbitMQVipInstance(request *DescribeRabbitMQVipInstanc
 }
 
 // DescribeRabbitMQVipInstance
-// 获取单个RabbitMQ专享实例信息
+// 获取单个 RabbitMQ 托管版实例信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4378,6 +4714,7 @@ func (c *Client) DescribeRabbitMQVipInstanceWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeRabbitMQVipInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQVipInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQVipInstance require credential")
@@ -4410,7 +4747,7 @@ func NewDescribeRabbitMQVipInstancesResponse() (response *DescribeRabbitMQVipIns
 }
 
 // DescribeRabbitMQVipInstances
-// 查询用户已购的RabbitMQ专享实例列表
+// 查询用户已购的 RabbitMQ 托管版实例列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4423,7 +4760,7 @@ func (c *Client) DescribeRabbitMQVipInstances(request *DescribeRabbitMQVipInstan
 }
 
 // DescribeRabbitMQVipInstances
-// 查询用户已购的RabbitMQ专享实例列表
+// 查询用户已购的 RabbitMQ 托管版实例列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4435,6 +4772,7 @@ func (c *Client) DescribeRabbitMQVipInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeRabbitMQVipInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQVipInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQVipInstances require credential")
@@ -4490,6 +4828,7 @@ func (c *Client) DescribeRabbitMQVirtualHostWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeRabbitMQVirtualHostRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRabbitMQVirtualHost")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRabbitMQVirtualHost require credential")
@@ -4498,55 +4837,6 @@ func (c *Client) DescribeRabbitMQVirtualHostWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDescribeRabbitMQVirtualHostResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeRabbitMQVirtualHostListRequest() (request *DescribeRabbitMQVirtualHostListRequest) {
-    request = &DescribeRabbitMQVirtualHostListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRabbitMQVirtualHostList")
-    
-    
-    return
-}
-
-func NewDescribeRabbitMQVirtualHostListResponse() (response *DescribeRabbitMQVirtualHostListResponse) {
-    response = &DescribeRabbitMQVirtualHostListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeRabbitMQVirtualHostList
-// RabbitMQ专享版查询虚拟主机列表
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-func (c *Client) DescribeRabbitMQVirtualHostList(request *DescribeRabbitMQVirtualHostListRequest) (response *DescribeRabbitMQVirtualHostListResponse, err error) {
-    return c.DescribeRabbitMQVirtualHostListWithContext(context.Background(), request)
-}
-
-// DescribeRabbitMQVirtualHostList
-// RabbitMQ专享版查询虚拟主机列表
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-func (c *Client) DescribeRabbitMQVirtualHostListWithContext(ctx context.Context, request *DescribeRabbitMQVirtualHostListRequest) (response *DescribeRabbitMQVirtualHostListResponse, err error) {
-    if request == nil {
-        request = NewDescribeRabbitMQVirtualHostListRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeRabbitMQVirtualHostList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeRabbitMQVirtualHostListResponse()
     err = c.Send(request, response)
     return
 }
@@ -4596,6 +4886,7 @@ func (c *Client) DescribeRocketMQClusterWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeRocketMQClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQCluster require credential")
@@ -4651,6 +4942,7 @@ func (c *Client) DescribeRocketMQClustersWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeRocketMQClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQClusters require credential")
@@ -4706,6 +4998,7 @@ func (c *Client) DescribeRocketMQConsumeStatsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeRocketMQConsumeStatsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQConsumeStats")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQConsumeStats require credential")
@@ -4761,6 +5054,7 @@ func (c *Client) DescribeRocketMQConsumerConnectionDetailWithContext(ctx context
     if request == nil {
         request = NewDescribeRocketMQConsumerConnectionDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQConsumerConnectionDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQConsumerConnectionDetail require credential")
@@ -4820,6 +5114,7 @@ func (c *Client) DescribeRocketMQConsumerConnectionsWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeRocketMQConsumerConnectionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQConsumerConnections")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQConsumerConnections require credential")
@@ -4881,6 +5176,7 @@ func (c *Client) DescribeRocketMQEnvironmentRolesWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeRocketMQEnvironmentRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQEnvironmentRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQEnvironmentRoles require credential")
@@ -4942,6 +5238,7 @@ func (c *Client) DescribeRocketMQGroupsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeRocketMQGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQGroups require credential")
@@ -5003,6 +5300,7 @@ func (c *Client) DescribeRocketMQMigratingTopicListWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeRocketMQMigratingTopicListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQMigratingTopicList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQMigratingTopicList require credential")
@@ -5054,6 +5352,7 @@ func (c *Client) DescribeRocketMQMsgWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeRocketMQMsgRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQMsg")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQMsg require credential")
@@ -5105,6 +5404,7 @@ func (c *Client) DescribeRocketMQMsgTraceWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeRocketMQMsgTraceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQMsgTrace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQMsgTrace require credential")
@@ -5166,6 +5466,7 @@ func (c *Client) DescribeRocketMQNamespacesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeRocketMQNamespacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQNamespaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQNamespaces require credential")
@@ -5174,6 +5475,58 @@ func (c *Client) DescribeRocketMQNamespacesWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeRocketMQNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRocketMQProducersRequest() (request *DescribeRocketMQProducersRequest) {
+    request = &DescribeRocketMQProducersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRocketMQProducers")
+    
+    
+    return
+}
+
+func NewDescribeRocketMQProducersResponse() (response *DescribeRocketMQProducersResponse) {
+    response = &DescribeRocketMQProducersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRocketMQProducers
+// 查询 RocketMQ 指定主题下的生产者客户端列表。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  RESOURCENOTFOUND_NAMSPACE = "ResourceNotFound.Namspace"
+func (c *Client) DescribeRocketMQProducers(request *DescribeRocketMQProducersRequest) (response *DescribeRocketMQProducersResponse, err error) {
+    return c.DescribeRocketMQProducersWithContext(context.Background(), request)
+}
+
+// DescribeRocketMQProducers
+// 查询 RocketMQ 指定主题下的生产者客户端列表。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  RESOURCENOTFOUND_NAMSPACE = "ResourceNotFound.Namspace"
+func (c *Client) DescribeRocketMQProducersWithContext(ctx context.Context, request *DescribeRocketMQProducersRequest) (response *DescribeRocketMQProducersResponse, err error) {
+    if request == nil {
+        request = NewDescribeRocketMQProducersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQProducers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRocketMQProducers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRocketMQProducersResponse()
     err = c.Send(request, response)
     return
 }
@@ -5201,13 +5554,8 @@ func NewDescribeRocketMQPublicAccessMonitorDataResponse() (response *DescribeRoc
 // 从腾讯云可观测平台拉取公网指标监控数据，目前仅支持客户端到 LB 的入带宽和出宽带指标。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  RESOURCENOTFOUND_NAMSPACE = "ResourceNotFound.Namspace"
 func (c *Client) DescribeRocketMQPublicAccessMonitorData(request *DescribeRocketMQPublicAccessMonitorDataRequest) (response *DescribeRocketMQPublicAccessMonitorDataResponse, err error) {
     return c.DescribeRocketMQPublicAccessMonitorDataWithContext(context.Background(), request)
 }
@@ -5216,17 +5564,13 @@ func (c *Client) DescribeRocketMQPublicAccessMonitorData(request *DescribeRocket
 // 从腾讯云可观测平台拉取公网指标监控数据，目前仅支持客户端到 LB 的入带宽和出宽带指标。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  RESOURCENOTFOUND_NAMSPACE = "ResourceNotFound.Namspace"
 func (c *Client) DescribeRocketMQPublicAccessMonitorDataWithContext(ctx context.Context, request *DescribeRocketMQPublicAccessMonitorDataRequest) (response *DescribeRocketMQPublicAccessMonitorDataResponse, err error) {
     if request == nil {
         request = NewDescribeRocketMQPublicAccessMonitorDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQPublicAccessMonitorData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQPublicAccessMonitorData require credential")
@@ -5262,13 +5606,8 @@ func NewDescribeRocketMQPublicAccessPointResponse() (response *DescribeRocketMQP
 // 接口用于查询RocketMQ实例的公网接入信息
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  RESOURCENOTFOUND_NAMSPACE = "ResourceNotFound.Namspace"
 func (c *Client) DescribeRocketMQPublicAccessPoint(request *DescribeRocketMQPublicAccessPointRequest) (response *DescribeRocketMQPublicAccessPointResponse, err error) {
     return c.DescribeRocketMQPublicAccessPointWithContext(context.Background(), request)
 }
@@ -5277,17 +5616,13 @@ func (c *Client) DescribeRocketMQPublicAccessPoint(request *DescribeRocketMQPubl
 // 接口用于查询RocketMQ实例的公网接入信息
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  RESOURCENOTFOUND_NAMSPACE = "ResourceNotFound.Namspace"
 func (c *Client) DescribeRocketMQPublicAccessPointWithContext(ctx context.Context, request *DescribeRocketMQPublicAccessPointRequest) (response *DescribeRocketMQPublicAccessPointResponse, err error) {
     if request == nil {
         request = NewDescribeRocketMQPublicAccessPointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQPublicAccessPoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQPublicAccessPoint require credential")
@@ -5347,6 +5682,7 @@ func (c *Client) DescribeRocketMQRolesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeRocketMQRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQRoles require credential")
@@ -5396,6 +5732,7 @@ func (c *Client) DescribeRocketMQSmoothMigrationTaskWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeRocketMQSmoothMigrationTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQSmoothMigrationTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQSmoothMigrationTask require credential")
@@ -5428,6 +5765,10 @@ func NewDescribeRocketMQSmoothMigrationTaskListResponse() (response *DescribeRoc
 }
 
 // DescribeRocketMQSmoothMigrationTaskList
+// 平滑迁移相关接口已迁移至trocket产品下，该接口已废弃
+//
+// 
+//
 // 用于查询RocketMQ平滑迁移任务列表
 //
 // 可能返回的错误码:
@@ -5437,6 +5778,10 @@ func (c *Client) DescribeRocketMQSmoothMigrationTaskList(request *DescribeRocket
 }
 
 // DescribeRocketMQSmoothMigrationTaskList
+// 平滑迁移相关接口已迁移至trocket产品下，该接口已废弃
+//
+// 
+//
 // 用于查询RocketMQ平滑迁移任务列表
 //
 // 可能返回的错误码:
@@ -5445,6 +5790,7 @@ func (c *Client) DescribeRocketMQSmoothMigrationTaskListWithContext(ctx context.
     if request == nil {
         request = NewDescribeRocketMQSmoothMigrationTaskListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQSmoothMigrationTaskList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQSmoothMigrationTaskList require credential")
@@ -5477,6 +5823,10 @@ func NewDescribeRocketMQSourceClusterGroupListResponse() (response *DescribeRock
 }
 
 // DescribeRocketMQSourceClusterGroupList
+// 平滑迁移相关接口已迁移至trocket产品下，该接口已废弃
+//
+// 
+//
 // 平滑迁移过程获取源集群group列表接口
 //
 // 可能返回的错误码:
@@ -5486,6 +5836,10 @@ func (c *Client) DescribeRocketMQSourceClusterGroupList(request *DescribeRocketM
 }
 
 // DescribeRocketMQSourceClusterGroupList
+// 平滑迁移相关接口已迁移至trocket产品下，该接口已废弃
+//
+// 
+//
 // 平滑迁移过程获取源集群group列表接口
 //
 // 可能返回的错误码:
@@ -5494,6 +5848,7 @@ func (c *Client) DescribeRocketMQSourceClusterGroupListWithContext(ctx context.C
     if request == nil {
         request = NewDescribeRocketMQSourceClusterGroupListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQSourceClusterGroupList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQSourceClusterGroupList require credential")
@@ -5526,6 +5881,10 @@ func NewDescribeRocketMQSourceClusterTopicListResponse() (response *DescribeRock
 }
 
 // DescribeRocketMQSourceClusterTopicList
+// 平滑迁移相关接口已迁移至trocket产品下，该接口已废弃
+//
+// 
+//
 // 平滑迁移过程获取源集群topic列表接口
 //
 // 可能返回的错误码:
@@ -5535,6 +5894,10 @@ func (c *Client) DescribeRocketMQSourceClusterTopicList(request *DescribeRocketM
 }
 
 // DescribeRocketMQSourceClusterTopicList
+// 平滑迁移相关接口已迁移至trocket产品下，该接口已废弃
+//
+// 
+//
 // 平滑迁移过程获取源集群topic列表接口
 //
 // 可能返回的错误码:
@@ -5543,6 +5906,7 @@ func (c *Client) DescribeRocketMQSourceClusterTopicListWithContext(ctx context.C
     if request == nil {
         request = NewDescribeRocketMQSourceClusterTopicListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQSourceClusterTopicList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQSourceClusterTopicList require credential")
@@ -5596,6 +5960,7 @@ func (c *Client) DescribeRocketMQSubscriptionsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeRocketMQSubscriptionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQSubscriptions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQSubscriptions require credential")
@@ -5604,6 +5969,56 @@ func (c *Client) DescribeRocketMQSubscriptionsWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDescribeRocketMQSubscriptionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRocketMQTopUsagesRequest() (request *DescribeRocketMQTopUsagesRequest) {
+    request = &DescribeRocketMQTopUsagesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRocketMQTopUsages")
+    
+    
+    return
+}
+
+func NewDescribeRocketMQTopUsagesResponse() (response *DescribeRocketMQTopUsagesResponse) {
+    response = &DescribeRocketMQTopUsagesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRocketMQTopUsages
+// 用于获取RocketMQ指标排序列表，比如集群实例下占用存储空间最多的主题排序。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQTopUsages(request *DescribeRocketMQTopUsagesRequest) (response *DescribeRocketMQTopUsagesResponse, err error) {
+    return c.DescribeRocketMQTopUsagesWithContext(context.Background(), request)
+}
+
+// DescribeRocketMQTopUsages
+// 用于获取RocketMQ指标排序列表，比如集群实例下占用存储空间最多的主题排序。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQTopUsagesWithContext(ctx context.Context, request *DescribeRocketMQTopUsagesRequest) (response *DescribeRocketMQTopUsagesResponse, err error) {
+    if request == nil {
+        request = NewDescribeRocketMQTopUsagesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQTopUsages")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRocketMQTopUsages require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRocketMQTopUsagesResponse()
     err = c.Send(request, response)
     return
 }
@@ -5649,6 +6064,7 @@ func (c *Client) DescribeRocketMQTopicMsgsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRocketMQTopicMsgsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQTopicMsgs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQTopicMsgs require credential")
@@ -5657,6 +6073,60 @@ func (c *Client) DescribeRocketMQTopicMsgsWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeRocketMQTopicMsgsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRocketMQTopicStatsRequest() (request *DescribeRocketMQTopicStatsRequest) {
+    request = &DescribeRocketMQTopicStatsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRocketMQTopicStats")
+    
+    
+    return
+}
+
+func NewDescribeRocketMQTopicStatsResponse() (response *DescribeRocketMQTopicStatsResponse) {
+    response = &DescribeRocketMQTopicStatsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRocketMQTopicStats
+// 获取Topic生产详情列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQTopicStats(request *DescribeRocketMQTopicStatsRequest) (response *DescribeRocketMQTopicStatsResponse, err error) {
+    return c.DescribeRocketMQTopicStatsWithContext(context.Background(), request)
+}
+
+// DescribeRocketMQTopicStats
+// 获取Topic生产详情列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQTopicStatsWithContext(ctx context.Context, request *DescribeRocketMQTopicStatsRequest) (response *DescribeRocketMQTopicStatsResponse, err error) {
+    if request == nil {
+        request = NewDescribeRocketMQTopicStatsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQTopicStats")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRocketMQTopicStats require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRocketMQTopicStatsResponse()
     err = c.Send(request, response)
     return
 }
@@ -5712,6 +6182,7 @@ func (c *Client) DescribeRocketMQTopicsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeRocketMQTopicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQTopics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQTopics require credential")
@@ -5720,6 +6191,64 @@ func (c *Client) DescribeRocketMQTopicsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeRocketMQTopicsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRocketMQTopicsByGroupRequest() (request *DescribeRocketMQTopicsByGroupRequest) {
+    request = &DescribeRocketMQTopicsByGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRocketMQTopicsByGroup")
+    
+    
+    return
+}
+
+func NewDescribeRocketMQTopicsByGroupResponse() (response *DescribeRocketMQTopicsByGroupResponse) {
+    response = &DescribeRocketMQTopicsByGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRocketMQTopicsByGroup
+// 获取指定消费组下订阅的主题列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQTopicsByGroup(request *DescribeRocketMQTopicsByGroupRequest) (response *DescribeRocketMQTopicsByGroupResponse, err error) {
+    return c.DescribeRocketMQTopicsByGroupWithContext(context.Background(), request)
+}
+
+// DescribeRocketMQTopicsByGroup
+// 获取指定消费组下订阅的主题列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQTopicsByGroupWithContext(ctx context.Context, request *DescribeRocketMQTopicsByGroupRequest) (response *DescribeRocketMQTopicsByGroupResponse, err error) {
+    if request == nil {
+        request = NewDescribeRocketMQTopicsByGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQTopicsByGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRocketMQTopicsByGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRocketMQTopicsByGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -5773,6 +6302,7 @@ func (c *Client) DescribeRocketMQVipInstanceDetailWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeRocketMQVipInstanceDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQVipInstanceDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQVipInstanceDetail require credential")
@@ -5834,6 +6364,7 @@ func (c *Client) DescribeRocketMQVipInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeRocketMQVipInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRocketMQVipInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRocketMQVipInstances require credential")
@@ -5893,6 +6424,7 @@ func (c *Client) DescribeRolesWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeRolesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeRoles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRoles require credential")
@@ -5960,6 +6492,7 @@ func (c *Client) DescribeSubscriptionsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeSubscriptionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeSubscriptions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSubscriptions require credential")
@@ -5995,7 +6528,10 @@ func NewDescribeTopicMsgsResponse() (response *DescribeTopicMsgsResponse) {
 // 消息查询
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  LIMITEXCEEDED_MSGTIME = "LimitExceeded.MsgTime"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
@@ -6009,7 +6545,10 @@ func (c *Client) DescribeTopicMsgs(request *DescribeTopicMsgsRequest) (response 
 // 消息查询
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  LIMITEXCEEDED_MSGTIME = "LimitExceeded.MsgTime"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
@@ -6019,6 +6558,7 @@ func (c *Client) DescribeTopicMsgsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeTopicMsgsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeTopicMsgs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopicMsgs require credential")
@@ -6084,6 +6624,7 @@ func (c *Client) DescribeTopicsWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeTopicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "DescribeTopics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopics require credential")
@@ -6092,6 +6633,68 @@ func (c *Client) DescribeTopicsWithContext(ctx context.Context, request *Describ
     request.SetContext(ctx)
     
     response = NewDescribeTopicsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewExecuteDisasterRecoveryRequest() (request *ExecuteDisasterRecoveryRequest) {
+    request = &ExecuteDisasterRecoveryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "ExecuteDisasterRecovery")
+    
+    
+    return
+}
+
+func NewExecuteDisasterRecoveryResponse() (response *ExecuteDisasterRecoveryResponse) {
+    response = &ExecuteDisasterRecoveryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ExecuteDisasterRecovery
+// 执行域名异地访问切换，域名的访问指向将切换至备份集群。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_DISASTERREPLICATELINK = "ResourceNotFound.DisasterReplicateLink"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ExecuteDisasterRecovery(request *ExecuteDisasterRecoveryRequest) (response *ExecuteDisasterRecoveryResponse, err error) {
+    return c.ExecuteDisasterRecoveryWithContext(context.Background(), request)
+}
+
+// ExecuteDisasterRecovery
+// 执行域名异地访问切换，域名的访问指向将切换至备份集群。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_DISASTERREPLICATELINK = "ResourceNotFound.DisasterReplicateLink"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ExecuteDisasterRecoveryWithContext(ctx context.Context, request *ExecuteDisasterRecoveryRequest) (response *ExecuteDisasterRecoveryResponse, err error) {
+    if request == nil {
+        request = NewExecuteDisasterRecoveryRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ExecuteDisasterRecovery")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ExecuteDisasterRecovery require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewExecuteDisasterRecoveryResponse()
     err = c.Send(request, response)
     return
 }
@@ -6137,6 +6740,7 @@ func (c *Client) ExportRocketMQMessageDetailWithContext(ctx context.Context, req
     if request == nil {
         request = NewExportRocketMQMessageDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ExportRocketMQMessageDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRocketMQMessageDetail require credential")
@@ -6145,6 +6749,72 @@ func (c *Client) ExportRocketMQMessageDetailWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewExportRocketMQMessageDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetTopicListRequest() (request *GetTopicListRequest) {
+    request = &GetTopicListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "GetTopicList")
+    
+    
+    return
+}
+
+func NewGetTopicListResponse() (response *GetTopicListResponse) {
+    response = &GetTopicListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetTopicList
+// 获取环境下主题列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
+func (c *Client) GetTopicList(request *GetTopicListRequest) (response *GetTopicListResponse, err error) {
+    return c.GetTopicListWithContext(context.Background(), request)
+}
+
+// GetTopicList
+// 获取环境下主题列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
+func (c *Client) GetTopicListWithContext(ctx context.Context, request *GetTopicListRequest) (response *GetTopicListResponse, err error) {
+    if request == nil {
+        request = NewGetTopicListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "GetTopicList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetTopicList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetTopicListResponse()
     err = c.Send(request, response)
     return
 }
@@ -6172,9 +6842,15 @@ func NewImportRocketMQConsumerGroupsResponse() (response *ImportRocketMQConsumer
 // 输入迁移任务id和要导入的Group，导入后台
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR_FAILEDOPERATION = "InternalError.FailedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 func (c *Client) ImportRocketMQConsumerGroups(request *ImportRocketMQConsumerGroupsRequest) (response *ImportRocketMQConsumerGroupsResponse, err error) {
     return c.ImportRocketMQConsumerGroupsWithContext(context.Background(), request)
 }
@@ -6183,13 +6859,20 @@ func (c *Client) ImportRocketMQConsumerGroups(request *ImportRocketMQConsumerGro
 // 输入迁移任务id和要导入的Group，导入后台
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR_FAILEDOPERATION = "InternalError.FailedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 func (c *Client) ImportRocketMQConsumerGroupsWithContext(ctx context.Context, request *ImportRocketMQConsumerGroupsRequest) (response *ImportRocketMQConsumerGroupsResponse, err error) {
     if request == nil {
         request = NewImportRocketMQConsumerGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ImportRocketMQConsumerGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportRocketMQConsumerGroups require credential")
@@ -6225,9 +6908,15 @@ func NewImportRocketMQTopicsResponse() (response *ImportRocketMQTopicsResponse) 
 // 导入topic列表
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR_FAILEDOPERATION = "InternalError.FailedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 func (c *Client) ImportRocketMQTopics(request *ImportRocketMQTopicsRequest) (response *ImportRocketMQTopicsResponse, err error) {
     return c.ImportRocketMQTopicsWithContext(context.Background(), request)
 }
@@ -6236,13 +6925,20 @@ func (c *Client) ImportRocketMQTopics(request *ImportRocketMQTopicsRequest) (res
 // 导入topic列表
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR_FAILEDOPERATION = "InternalError.FailedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
+//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 func (c *Client) ImportRocketMQTopicsWithContext(ctx context.Context, request *ImportRocketMQTopicsRequest) (response *ImportRocketMQTopicsResponse, err error) {
     if request == nil {
         request = NewImportRocketMQTopicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ImportRocketMQTopics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportRocketMQTopics require credential")
@@ -6251,67 +6947,6 @@ func (c *Client) ImportRocketMQTopicsWithContext(ctx context.Context, request *I
     request.SetContext(ctx)
     
     response = NewImportRocketMQTopicsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewModifyAMQPClusterRequest() (request *ModifyAMQPClusterRequest) {
-    request = &ModifyAMQPClusterRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tdmq", APIVersion, "ModifyAMQPCluster")
-    
-    
-    return
-}
-
-func NewModifyAMQPClusterResponse() (response *ModifyAMQPClusterResponse) {
-    response = &ModifyAMQPClusterResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ModifyAMQPCluster
-// 更新Amqp集群信息
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) ModifyAMQPCluster(request *ModifyAMQPClusterRequest) (response *ModifyAMQPClusterResponse, err error) {
-    return c.ModifyAMQPClusterWithContext(context.Background(), request)
-}
-
-// ModifyAMQPCluster
-// 更新Amqp集群信息
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) ModifyAMQPClusterWithContext(ctx context.Context, request *ModifyAMQPClusterRequest) (response *ModifyAMQPClusterResponse, err error) {
-    if request == nil {
-        request = NewModifyAMQPClusterRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyAMQPCluster require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyAMQPClusterResponse()
     err = c.Send(request, response)
     return
 }
@@ -6340,6 +6975,9 @@ func NewModifyClusterResponse() (response *ModifyClusterResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_MODIFYCLUSTER = "FailedOperation.ModifyCluster"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INVALIDPARAMETERVALUE_CLUSTERNAMEDUPLICATION = "InvalidParameterValue.ClusterNameDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
@@ -6352,6 +6990,9 @@ func (c *Client) ModifyCluster(request *ModifyClusterRequest) (response *ModifyC
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_MODIFYCLUSTER = "FailedOperation.ModifyCluster"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  INVALIDPARAMETERVALUE_CLUSTERNAMEDUPLICATION = "InvalidParameterValue.ClusterNameDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
@@ -6359,6 +7000,7 @@ func (c *Client) ModifyClusterWithContext(ctx context.Context, request *ModifyCl
     if request == nil {
         request = NewModifyClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCluster require credential")
@@ -6420,6 +7062,7 @@ func (c *Client) ModifyCmqQueueAttributeWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyCmqQueueAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyCmqQueueAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCmqQueueAttribute require credential")
@@ -6469,6 +7112,7 @@ func (c *Client) ModifyCmqSubscriptionAttributeWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyCmqSubscriptionAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyCmqSubscriptionAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCmqSubscriptionAttribute require credential")
@@ -6520,6 +7164,7 @@ func (c *Client) ModifyCmqTopicAttributeWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyCmqTopicAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyCmqTopicAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCmqTopicAttribute require credential")
@@ -6601,6 +7246,7 @@ func (c *Client) ModifyEnvironmentAttributesWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyEnvironmentAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyEnvironmentAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyEnvironmentAttributes require credential")
@@ -6664,6 +7310,7 @@ func (c *Client) ModifyEnvironmentRoleWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyEnvironmentRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyEnvironmentRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyEnvironmentRole require credential")
@@ -6676,51 +7323,114 @@ func (c *Client) ModifyEnvironmentRoleWithContext(ctx context.Context, request *
     return
 }
 
-func NewModifyPublicNetworkAccessPointRequest() (request *ModifyPublicNetworkAccessPointRequest) {
-    request = &ModifyPublicNetworkAccessPointRequest{
+func NewModifyPublicNetworkSecurityPolicyRequest() (request *ModifyPublicNetworkSecurityPolicyRequest) {
+    request = &ModifyPublicNetworkSecurityPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("tdmq", APIVersion, "ModifyPublicNetworkAccessPoint")
+    request.Init().WithApiInfo("tdmq", APIVersion, "ModifyPublicNetworkSecurityPolicy")
     
     
     return
 }
 
-func NewModifyPublicNetworkAccessPointResponse() (response *ModifyPublicNetworkAccessPointResponse) {
-    response = &ModifyPublicNetworkAccessPointResponse{
+func NewModifyPublicNetworkSecurityPolicyResponse() (response *ModifyPublicNetworkSecurityPolicyResponse) {
+    response = &ModifyPublicNetworkSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// ModifyPublicNetworkAccessPoint
-// RabbitMQ专享版修改公网管控台，vpc15672开关
+// ModifyPublicNetworkSecurityPolicy
+// 修改pulsar专业版公网安全策略
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-func (c *Client) ModifyPublicNetworkAccessPoint(request *ModifyPublicNetworkAccessPointRequest) (response *ModifyPublicNetworkAccessPointResponse, err error) {
-    return c.ModifyPublicNetworkAccessPointWithContext(context.Background(), request)
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_INVALIDEXISTPUBLICACCESSPOINTERROR = "FailedOperation.InvalidExistPublicAccessPointError"
+//  FAILEDOPERATION_INVALIDWHITELISTERROR = "FailedOperation.InvalidWhiteListError"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  INTERNALERROR = "InternalError"
+func (c *Client) ModifyPublicNetworkSecurityPolicy(request *ModifyPublicNetworkSecurityPolicyRequest) (response *ModifyPublicNetworkSecurityPolicyResponse, err error) {
+    return c.ModifyPublicNetworkSecurityPolicyWithContext(context.Background(), request)
 }
 
-// ModifyPublicNetworkAccessPoint
-// RabbitMQ专享版修改公网管控台，vpc15672开关
+// ModifyPublicNetworkSecurityPolicy
+// 修改pulsar专业版公网安全策略
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
-func (c *Client) ModifyPublicNetworkAccessPointWithContext(ctx context.Context, request *ModifyPublicNetworkAccessPointRequest) (response *ModifyPublicNetworkAccessPointResponse, err error) {
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
+//  FAILEDOPERATION_INVALIDEXISTPUBLICACCESSPOINTERROR = "FailedOperation.InvalidExistPublicAccessPointError"
+//  FAILEDOPERATION_INVALIDWHITELISTERROR = "FailedOperation.InvalidWhiteListError"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  INTERNALERROR = "InternalError"
+func (c *Client) ModifyPublicNetworkSecurityPolicyWithContext(ctx context.Context, request *ModifyPublicNetworkSecurityPolicyRequest) (response *ModifyPublicNetworkSecurityPolicyResponse, err error) {
     if request == nil {
-        request = NewModifyPublicNetworkAccessPointRequest()
+        request = NewModifyPublicNetworkSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyPublicNetworkSecurityPolicy")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("ModifyPublicNetworkAccessPoint require credential")
+        return nil, errors.New("ModifyPublicNetworkSecurityPolicy require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewModifyPublicNetworkAccessPointResponse()
+    response = NewModifyPublicNetworkSecurityPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRabbitMQPermissionRequest() (request *ModifyRabbitMQPermissionRequest) {
+    request = &ModifyRabbitMQPermissionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "ModifyRabbitMQPermission")
+    
+    
+    return
+}
+
+func NewModifyRabbitMQPermissionResponse() (response *ModifyRabbitMQPermissionResponse) {
+    response = &ModifyRabbitMQPermissionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRabbitMQPermission
+// 修改RabbitMQ的权限
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyRabbitMQPermission(request *ModifyRabbitMQPermissionRequest) (response *ModifyRabbitMQPermissionResponse, err error) {
+    return c.ModifyRabbitMQPermissionWithContext(context.Background(), request)
+}
+
+// ModifyRabbitMQPermission
+// 修改RabbitMQ的权限
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyRabbitMQPermissionWithContext(ctx context.Context, request *ModifyRabbitMQPermissionRequest) (response *ModifyRabbitMQPermissionResponse, err error) {
+    if request == nil {
+        request = NewModifyRabbitMQPermissionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRabbitMQPermission")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRabbitMQPermission require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRabbitMQPermissionResponse()
     err = c.Send(request, response)
     return
 }
@@ -6766,6 +7476,7 @@ func (c *Client) ModifyRabbitMQUserWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyRabbitMQUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRabbitMQUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRabbitMQUser require credential")
@@ -6819,6 +7530,7 @@ func (c *Client) ModifyRabbitMQVipInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyRabbitMQVipInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRabbitMQVipInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRabbitMQVipInstance require credential")
@@ -6872,6 +7584,7 @@ func (c *Client) ModifyRabbitMQVirtualHostWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyRabbitMQVirtualHostRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRabbitMQVirtualHost")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRabbitMQVirtualHost require credential")
@@ -6937,6 +7650,7 @@ func (c *Client) ModifyRocketMQClusterWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyRocketMQClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRocketMQCluster require credential")
@@ -6998,6 +7712,7 @@ func (c *Client) ModifyRocketMQEnvironmentRoleWithContext(ctx context.Context, r
     if request == nil {
         request = NewModifyRocketMQEnvironmentRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQEnvironmentRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRocketMQEnvironmentRole require credential")
@@ -7055,6 +7770,7 @@ func (c *Client) ModifyRocketMQGroupWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyRocketMQGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRocketMQGroup require credential")
@@ -7063,6 +7779,56 @@ func (c *Client) ModifyRocketMQGroupWithContext(ctx context.Context, request *Mo
     request.SetContext(ctx)
     
     response = NewModifyRocketMQGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRocketMQInstanceRequest() (request *ModifyRocketMQInstanceRequest) {
+    request = &ModifyRocketMQInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "ModifyRocketMQInstance")
+    
+    
+    return
+}
+
+func NewModifyRocketMQInstanceResponse() (response *ModifyRocketMQInstanceResponse) {
+    response = &ModifyRocketMQInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRocketMQInstance
+// 修改RocketMQ专享实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyRocketMQInstance(request *ModifyRocketMQInstanceRequest) (response *ModifyRocketMQInstanceResponse, err error) {
+    return c.ModifyRocketMQInstanceWithContext(context.Background(), request)
+}
+
+// ModifyRocketMQInstance
+// 修改RocketMQ专享实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyRocketMQInstanceWithContext(ctx context.Context, request *ModifyRocketMQInstanceRequest) (response *ModifyRocketMQInstanceResponse, err error) {
+    if request == nil {
+        request = NewModifyRocketMQInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRocketMQInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRocketMQInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -7112,6 +7878,7 @@ func (c *Client) ModifyRocketMQInstanceSpecWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyRocketMQInstanceSpecRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQInstanceSpec")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRocketMQInstanceSpec require credential")
@@ -7179,6 +7946,7 @@ func (c *Client) ModifyRocketMQNamespaceWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyRocketMQNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRocketMQNamespace require credential")
@@ -7242,6 +8010,7 @@ func (c *Client) ModifyRocketMQRoleWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyRocketMQRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRocketMQRole require credential")
@@ -7301,6 +8070,7 @@ func (c *Client) ModifyRocketMQTopicWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyRocketMQTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRocketMQTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRocketMQTopic require credential")
@@ -7364,6 +8134,7 @@ func (c *Client) ModifyRoleWithContext(ctx context.Context, request *ModifyRoleR
     if request == nil {
         request = NewModifyRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRole require credential")
@@ -7401,7 +8172,9 @@ func NewModifyTopicResponse() (response *ModifyTopicResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_UPDATETOPIC = "FailedOperation.UpdateTopic"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
@@ -7418,7 +8191,9 @@ func (c *Client) ModifyTopic(request *ModifyTopicRequest) (response *ModifyTopic
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_UPDATETOPIC = "FailedOperation.UpdateTopic"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
@@ -7429,6 +8204,7 @@ func (c *Client) ModifyTopicWithContext(ctx context.Context, request *ModifyTopi
     if request == nil {
         request = NewModifyTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ModifyTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTopic require credential")
@@ -7480,6 +8256,7 @@ func (c *Client) PublishCmqMsgWithContext(ctx context.Context, request *PublishC
     if request == nil {
         request = NewPublishCmqMsgRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "PublishCmqMsg")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PublishCmqMsg require credential")
@@ -7625,6 +8402,7 @@ func (c *Client) ReceiveMessageWithContext(ctx context.Context, request *Receive
     if request == nil {
         request = NewReceiveMessageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ReceiveMessage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReceiveMessage require credential")
@@ -7694,6 +8472,7 @@ func (c *Client) ResetMsgSubOffsetByTimestampWithContext(ctx context.Context, re
     if request == nil {
         request = NewResetMsgSubOffsetByTimestampRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ResetMsgSubOffsetByTimestamp")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetMsgSubOffsetByTimestamp require credential")
@@ -7751,6 +8530,7 @@ func (c *Client) ResetRocketMQConsumerOffSetWithContext(ctx context.Context, req
     if request == nil {
         request = NewResetRocketMQConsumerOffSetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "ResetRocketMQConsumerOffSet")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetRocketMQConsumerOffSet require credential")
@@ -7759,6 +8539,58 @@ func (c *Client) ResetRocketMQConsumerOffSetWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewResetRocketMQConsumerOffSetResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRetryRocketMQDlqMessageRequest() (request *RetryRocketMQDlqMessageRequest) {
+    request = &RetryRocketMQDlqMessageRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "RetryRocketMQDlqMessage")
+    
+    
+    return
+}
+
+func NewRetryRocketMQDlqMessageResponse() (response *RetryRocketMQDlqMessageResponse) {
+    response = &RetryRocketMQDlqMessageResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RetryRocketMQDlqMessage
+// 重发RocketMQ死信消息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) RetryRocketMQDlqMessage(request *RetryRocketMQDlqMessageRequest) (response *RetryRocketMQDlqMessageResponse, err error) {
+    return c.RetryRocketMQDlqMessageWithContext(context.Background(), request)
+}
+
+// RetryRocketMQDlqMessage
+// 重发RocketMQ死信消息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) RetryRocketMQDlqMessageWithContext(ctx context.Context, request *RetryRocketMQDlqMessageRequest) (response *RetryRocketMQDlqMessageResponse, err error) {
+    if request == nil {
+        request = NewRetryRocketMQDlqMessageRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "RetryRocketMQDlqMessage")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RetryRocketMQDlqMessage require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRetryRocketMQDlqMessageResponse()
     err = c.Send(request, response)
     return
 }
@@ -7802,6 +8634,7 @@ func (c *Client) RewindCmqQueueWithContext(ctx context.Context, request *RewindC
     if request == nil {
         request = NewRewindCmqQueueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "RewindCmqQueue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RewindCmqQueue require credential")
@@ -7879,6 +8712,7 @@ func (c *Client) SendBatchMessagesWithContext(ctx context.Context, request *Send
     if request == nil {
         request = NewSendBatchMessagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "SendBatchMessages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SendBatchMessages require credential")
@@ -7932,6 +8766,7 @@ func (c *Client) SendCmqMsgWithContext(ctx context.Context, request *SendCmqMsgR
     if request == nil {
         request = NewSendCmqMsgRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "SendCmqMsg")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SendCmqMsg require credential")
@@ -8005,6 +8840,7 @@ func (c *Client) SendMessagesWithContext(ctx context.Context, request *SendMessa
     if request == nil {
         request = NewSendMessagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "SendMessages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SendMessages require credential")
@@ -8042,7 +8878,10 @@ func NewSendMsgResponse() (response *SendMsgResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_SENDMSG = "FailedOperation.SendMsg"
 //  FAILEDOPERATION_SENDMSGFAILED = "FailedOperation.SendMsgFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
@@ -8060,7 +8899,10 @@ func (c *Client) SendMsg(request *SendMsgRequest) (response *SendMsgResponse, er
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 //  FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
+//  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+//  FAILEDOPERATION_SENDMSG = "FailedOperation.SendMsg"
 //  FAILEDOPERATION_SENDMSGFAILED = "FailedOperation.SendMsgFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
@@ -8072,6 +8914,7 @@ func (c *Client) SendMsgWithContext(ctx context.Context, request *SendMsgRequest
     if request == nil {
         request = NewSendMsgRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "SendMsg")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SendMsg require credential")
@@ -8104,7 +8947,7 @@ func NewSendRocketMQMessageResponse() (response *SendRocketMQMessageResponse) {
 }
 
 // SendRocketMQMessage
-// 发送RocketMQ消息
+// 发送 RocketMQ 消息，该接口仅用于控制台发送少量测试消息，不保证SLA，且云 API 存在限流，在真实业务场景下，请使用 RocketMQ SDK 发送消息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -8116,7 +8959,7 @@ func (c *Client) SendRocketMQMessage(request *SendRocketMQMessageRequest) (respo
 }
 
 // SendRocketMQMessage
-// 发送RocketMQ消息
+// 发送 RocketMQ 消息，该接口仅用于控制台发送少量测试消息，不保证SLA，且云 API 存在限流，在真实业务场景下，请使用 RocketMQ SDK 发送消息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -8127,6 +8970,7 @@ func (c *Client) SendRocketMQMessageWithContext(ctx context.Context, request *Se
     if request == nil {
         request = NewSendRocketMQMessageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "SendRocketMQMessage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SendRocketMQMessage require credential")
@@ -8180,6 +9024,7 @@ func (c *Client) SetRocketMQPublicAccessPointWithContext(ctx context.Context, re
     if request == nil {
         request = NewSetRocketMQPublicAccessPointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "SetRocketMQPublicAccessPoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetRocketMQPublicAccessPoint require credential")
@@ -8229,6 +9074,7 @@ func (c *Client) UnbindCmqDeadLetterWithContext(ctx context.Context, request *Un
     if request == nil {
         request = NewUnbindCmqDeadLetterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "UnbindCmqDeadLetter")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UnbindCmqDeadLetter require credential")
@@ -8280,6 +9126,7 @@ func (c *Client) VerifyRocketMQConsumeWithContext(ctx context.Context, request *
     if request == nil {
         request = NewVerifyRocketMQConsumeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "VerifyRocketMQConsume")
     
     if c.GetCredential() == nil {
         return nil, errors.New("VerifyRocketMQConsume require credential")

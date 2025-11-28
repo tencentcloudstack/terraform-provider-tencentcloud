@@ -1907,6 +1907,7 @@ tencentcloud_trocket_rocketmq_role
 TDMQ for RabbitMQ(trabbit)
 Resource
 tencentcloud_tdmq_rabbitmq_user
+tencentcloud_tdmq_rabbitmq_user_permission
 tencentcloud_tdmq_rabbitmq_virtual_host
 tencentcloud_tdmq_rabbitmq_vip_instance
 
