@@ -2,8 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package analysisflags defines helpers for processing flags of
-// analysis driver tools.
+// Package analysisflags defines helpers for processing flags (-help,
+// -json, -fix, -diff, etc) common to unitchecker and
+// {single,multi}checker. It is not intended for broader use.
 package analysisflags
 
 import (
@@ -14,7 +15,6 @@ import (
 	"fmt"
 	"go/token"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -25,8 +25,10 @@ import (
 
 // flags common to all {single,multi,unit}checkers.
 var (
-	JSON    = false // -json
-	Context = -1    // -c=N: if N>0, display offending line plus N lines of context
+	JSON     = false // -json
+	Context  = -1    // -c=N: if N>0, display offending line plus N lines of context
+	Fix      bool    // -fix
+	diffFlag bool    // -diff (changes [ApplyFixes] behavior)
 )
 
 // Parse creates a flag for each of the analyzer's flags,
@@ -75,6 +77,8 @@ func Parse(analyzers []*analysis.Analyzer, multi bool) []*analysis.Analyzer {
 	// flags common to all checkers
 	flag.BoolVar(&JSON, "json", JSON, "emit JSON output")
 	flag.IntVar(&Context, "c", Context, `display offending line with this many lines of context`)
+	flag.BoolVar(&Fix, "fix", false, "apply all suggested fixes")
+	flag.BoolVar(&diffFlag, "diff", false, "with -fix, don't update the files, but print a unified diff")
 
 	// Add shims for legacy vet flags to enable existing
 	// scripts that run vet to continue to work.
@@ -202,7 +206,7 @@ func addVersionFlag() {
 type versionFlag struct{}
 
 func (versionFlag) IsBoolFlag() bool { return true }
-func (versionFlag) Get() interface{} { return nil }
+func (versionFlag) Get() any         { return nil }
 func (versionFlag) String() string   { return "" }
 func (versionFlag) Set(s string) error {
 	if s != "full" {
@@ -251,19 +255,10 @@ const (
 	setFalse
 )
 
-func triStateFlag(name string, value triState, usage string) *triState {
-	flag.Var(&value, name, usage)
-	return &value
-}
-
 // triState implements flag.Value, flag.Getter, and flag.boolFlag.
 // They work like boolean flags: we can say vet -printf as well as vet -printf=true
-func (ts *triState) Get() interface{} {
+func (ts *triState) Get() any {
 	return *ts == setTrue
-}
-
-func (ts triState) isTrue() bool {
-	return ts == setTrue
 }
 
 func (ts *triState) Set(value string) error {
@@ -317,33 +312,48 @@ var vetLegacyFlags = map[string]string{
 }
 
 // ---- output helpers common to all drivers ----
+//
+// These functions should not depend on global state (flags)!
+// Really they belong in a different package.
 
-// PrintPlain prints a diagnostic in plain text form,
-// with context specified by the -c flag.
-func PrintPlain(fset *token.FileSet, diag analysis.Diagnostic) {
-	posn := fset.Position(diag.Pos)
-	fmt.Fprintf(os.Stderr, "%s: %s\n", posn, diag.Message)
+// TODO(adonovan): don't accept an io.Writer if we don't report errors.
+// Either accept a bytes.Buffer (infallible), or return a []byte.
 
-	// -c=N: show offending line plus N lines of context.
-	if Context >= 0 {
-		posn := fset.Position(diag.Pos)
-		end := fset.Position(diag.End)
-		if !end.IsValid() {
-			end = posn
-		}
-		data, _ := ioutil.ReadFile(posn.Filename)
-		lines := strings.Split(string(data), "\n")
-		for i := posn.Line - Context; i <= end.Line+Context; i++ {
-			if 1 <= i && i <= len(lines) {
-				fmt.Fprintf(os.Stderr, "%d\t%s\n", i, lines[i-1])
+// PrintPlain prints a diagnostic in plain text form.
+// If contextLines is nonnegative, it also prints the
+// offending line plus this many lines of context.
+func PrintPlain(out io.Writer, fset *token.FileSet, contextLines int, diag analysis.Diagnostic) {
+	print := func(pos, end token.Pos, message string) {
+		posn := fset.Position(pos)
+		fmt.Fprintf(out, "%s: %s\n", posn, message)
+
+		// show offending line plus N lines of context.
+		if contextLines >= 0 {
+			end := fset.Position(end)
+			if !end.IsValid() {
+				end = posn
+			}
+			// TODO(adonovan): highlight the portion of the line indicated
+			// by pos...end using ASCII art, terminal colors, etc?
+			data, _ := os.ReadFile(posn.Filename)
+			lines := strings.Split(string(data), "\n")
+			for i := posn.Line - contextLines; i <= end.Line+contextLines; i++ {
+				if 1 <= i && i <= len(lines) {
+					fmt.Fprintf(out, "%d\t%s\n", i, lines[i-1])
+				}
 			}
 		}
+	}
+
+	print(diag.Pos, diag.End, diag.Message)
+	for _, rel := range diag.Related {
+		print(rel.Pos, rel.End, "\t"+rel.Message)
 	}
 }
 
 // A JSONTree is a mapping from package ID to analysis name to result.
 // Each result is either a jsonError or a list of JSONDiagnostic.
-type JSONTree map[string]map[string]interface{}
+type JSONTree map[string]map[string]any
 
 // A TextEdit describes the replacement of a portion of a file.
 // Start and End are zero-based half-open indices into the original byte
@@ -363,21 +373,30 @@ type JSONSuggestedFix struct {
 	Edits   []JSONTextEdit `json:"edits"`
 }
 
-// A JSONDiagnostic can be used to encode and decode analysis.Diagnostics to and
-// from JSON.
-// TODO(matloob): Should the JSON diagnostics contain ranges?
-// If so, how should they be formatted?
+// A JSONDiagnostic describes the JSON schema of an analysis.Diagnostic.
+//
+// TODO(matloob): include End position if present.
 type JSONDiagnostic struct {
-	Category       string             `json:"category,omitempty"`
-	Posn           string             `json:"posn"`
-	Message        string             `json:"message"`
-	SuggestedFixes []JSONSuggestedFix `json:"suggested_fixes,omitempty"`
+	Category       string                   `json:"category,omitempty"`
+	Posn           string                   `json:"posn"` // e.g. "file.go:line:column"
+	Message        string                   `json:"message"`
+	SuggestedFixes []JSONSuggestedFix       `json:"suggested_fixes,omitempty"`
+	Related        []JSONRelatedInformation `json:"related,omitempty"`
+}
+
+// A JSONRelated describes a secondary position and message related to
+// a primary diagnostic.
+//
+// TODO(adonovan): include End position if present.
+type JSONRelatedInformation struct {
+	Posn    string `json:"posn"` // e.g. "file.go:line:column"
+	Message string `json:"message"`
 }
 
 // Add adds the result of analysis 'name' on package 'id'.
 // The result is either a list of diagnostics or an error.
 func (tree JSONTree) Add(fset *token.FileSet, id, name string, diags []analysis.Diagnostic, err error) {
-	var v interface{}
+	var v any
 	if err != nil {
 		type jsonError struct {
 			Err string `json:"error"`
@@ -402,11 +421,19 @@ func (tree JSONTree) Add(fset *token.FileSet, id, name string, diags []analysis.
 					Edits:   edits,
 				})
 			}
+			var related []JSONRelatedInformation
+			for _, r := range f.Related {
+				related = append(related, JSONRelatedInformation{
+					Posn:    fset.Position(r.Pos).String(),
+					Message: r.Message,
+				})
+			}
 			jdiag := JSONDiagnostic{
 				Category:       f.Category,
 				Posn:           fset.Position(f.Pos).String(),
 				Message:        f.Message,
 				SuggestedFixes: fixes,
+				Related:        related,
 			}
 			diagnostics = append(diagnostics, jdiag)
 		}
@@ -415,17 +442,18 @@ func (tree JSONTree) Add(fset *token.FileSet, id, name string, diags []analysis.
 	if v != nil {
 		m, ok := tree[id]
 		if !ok {
-			m = make(map[string]interface{})
+			m = make(map[string]any)
 			tree[id] = m
 		}
 		m[name] = v
 	}
 }
 
-func (tree JSONTree) Print() {
+func (tree JSONTree) Print(out io.Writer) error {
 	data, err := json.MarshalIndent(tree, "", "\t")
 	if err != nil {
 		log.Panicf("internal error: JSON marshaling failed: %v", err)
 	}
-	fmt.Printf("%s\n", data)
+	_, err = fmt.Fprintf(out, "%s\n", data)
+	return err
 }
