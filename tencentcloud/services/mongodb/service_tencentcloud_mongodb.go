@@ -1049,3 +1049,70 @@ func (me *MongodbService) DescribeMongodbInstanceUrls(ctx context.Context, insta
 	ret = response.Response.Urls
 	return
 }
+
+func (me *MongodbService) DescribeMongodbInstanceSSLById(ctx context.Context, instanceId string) (sslStatus *mongodb.DescribeInstanceSSLResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewDescribeInstanceSSLRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *mongodb.DescribeInstanceSSLResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().DescribeInstanceSSL(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s read mongodb instance ssl failed, reason: %v", logId, err)
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	sslStatus = response
+	return
+}
+
+func (me *MongodbService) ModifyMongodbInstanceSSL(ctx context.Context, instanceId string, enable bool) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewInstanceEnableSSLRequest()
+	request.InstanceId = &instanceId
+	request.Enable = &enable
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().InstanceEnableSSL(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s modify mongodb instance ssl failed, reason: %v", logId, err)
+		errRet = err
+		return
+	}
+
+	return
+}
