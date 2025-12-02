@@ -1,3 +1,13 @@
+## 1.82.40(Decmber 2, 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mongodb_instance_ssl` ([#3625](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3625))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mongodb_instance: remove the validation of `password` ([#3625](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3625))
+
 ## 1.82.39(November 28, 2025)
 
 FEATURES:
