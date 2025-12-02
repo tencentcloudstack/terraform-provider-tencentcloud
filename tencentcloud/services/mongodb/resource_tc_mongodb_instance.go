@@ -183,10 +183,8 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		nodeNum = v.(int)
 	}
 
-	if v, ok := d.GetOk("password"); ok && v.(string) != "" {
+	if v, ok := d.GetOk("password"); ok {
 		password = v.(string)
-	} else {
-		return fmt.Errorf("`password` cannot be empty when creating")
 	}
 
 	getType := reflect.TypeOf(requestInter)
