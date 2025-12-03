@@ -102,7 +102,14 @@ func (c *Client) completeRequest(request tchttp.Request) {
 		if domain == "" {
 			domain = request.GetServiceDomain(request.GetService())
 		}
-		request.SetDomain(domain)
+		pathIdx := strings.IndexByte(domain, '/')
+		if pathIdx >= 0 {
+			request.SetDomain(domain[:pathIdx])
+			request.SetPath(domain[pathIdx:])
+		} else {
+			request.SetDomain(domain)
+			request.SetPath("/")
+		}
 	}
 
 	if request.GetHttpMethod() == "" {
@@ -170,8 +177,11 @@ func (c *Client) sendWithoutSignature(request tchttp.Request, response tchttp.Re
 	if c.region != "" {
 		headers["X-TC-Region"] = c.region
 	}
-	if c.credential != nil && c.credential.GetToken() != "" {
-		headers["X-TC-Token"] = c.credential.GetToken()
+	if c.credential != nil {
+		credToken := c.credential.GetToken()
+		if credToken != "" {
+			headers["X-TC-Token"] = credToken
+		}
 	}
 	if request.GetHttpMethod() == "GET" {
 		headers["Content-Type"] = "application/x-www-form-urlencoded"
@@ -191,16 +201,6 @@ func (c *Client) sendWithoutSignature(request tchttp.Request, response tchttp.Re
 				headers[k] = v
 			}
 			octetStreamBody = cr.GetOctetStreamBody()
-		}
-	}
-
-	for k, v := range request.GetHeader() {
-		switch k {
-		case "X-TC-Action", "X-TC-Version", "X-TC-Timestamp", "X-TC-RequestClient",
-			"X-TC-Language", "Content-Type", "X-TC-Region", "X-TC-Token":
-			c.logger.Printf("Skip header \"%s\": can not specify built-in header", k)
-		default:
-			headers[k] = v
 		}
 	}
 
@@ -266,7 +266,11 @@ func (c *Client) sendWithoutSignature(request tchttp.Request, response tchttp.Re
 	}
 	httpRequest = httpRequest.WithContext(request.GetContext())
 	for k, v := range headers {
-		httpRequest.Header[k] = []string{v}
+		if strings.EqualFold(k, "Host") {
+			httpRequest.Host = v
+		} else {
+			httpRequest.Header.Set(k, v)
+		}
 	}
 	httpResponse, err := c.sendWithRateLimitRetry(httpRequest, isRetryable(request))
 	if err != nil {
@@ -297,7 +301,11 @@ func (c *Client) sendWithSignatureV1(request tchttp.Request, response tchttp.Res
 	}
 
 	for k, v := range request.GetHeader() {
-		httpRequest.Header.Set(k, v)
+		if strings.EqualFold(k, "Host") {
+			httpRequest.Host = v
+		} else {
+			httpRequest.Header.Set(k, v)
+		}
 	}
 
 	httpResponse, err := c.sendWithRateLimitRetry(httpRequest, isRetryable(request))
@@ -355,18 +363,6 @@ func (c *Client) sendWithSignatureV3(request tchttp.Request, response tchttp.Res
 		}
 	}
 
-	// Merge any additional headers from the request, but skip built-in headers
-	// to prevent them from being overridden.
-	for k, v := range request.GetHeader() {
-		switch k {
-		case "X-TC-Action", "X-TC-Version", "X-TC-Timestamp", "X-TC-RequestClient",
-			"X-TC-Language", "X-TC-Region", "X-TC-Token":
-			c.logger.Printf("Skip header \"%s\": can not specify built-in header", k)
-		default:
-			headers[k] = v
-		}
-	}
-
 	// Handle the case where the request content type is explicitly set to octet-stream,
 	// but it's not already handled as an OctetStream CommonRequest.
 	if !isOctetStream && request.GetContentType() == octetStream {
@@ -382,6 +378,12 @@ func (c *Client) sendWithSignatureV3(request tchttp.Request, response tchttp.Res
 		headers["Content-Type"] = octetStream
 		octetStreamBody = request.GetBody()
 	}
+
+	// Merge any additional headers from the request
+	for k, v := range request.GetHeader() {
+		headers[k] = v
+	}
+
 	// --- Begin Signature Version 3 (TC3-HMAC-SHA256) Signing Process ---
 
 	// 1. Construct the Canonical Request
@@ -525,7 +527,11 @@ func (c *Client) sendWithSignatureV3(request tchttp.Request, response tchttp.Res
 
 	// Set all the headers on the request.
 	for k, v := range headers {
-		httpRequest.Header[k] = []string{v}
+		if strings.EqualFold(k, "Host") {
+			httpRequest.Host = v
+		} else {
+			httpRequest.Header.Set(k, v)
+		}
 	}
 
 	// Send the HTTP request with rate limit retry logic.
@@ -579,6 +585,7 @@ func (c *Client) GetRegion() string {
 }
 
 func (c *Client) Init(region string) *Client {
+	const defaultIdleConnTimeout = 30 * time.Second
 
 	if DefaultHttpClient == nil {
 		// try not to modify http.DefaultTransport if possible
@@ -587,7 +594,11 @@ func (c *Client) Init(region string) *Client {
 		if _, ok := transport.(*http.Transport); ok {
 			// http.Transport.Clone is only available after go1.12
 			if cloneMethod, hasClone := reflect.TypeOf(transport).MethodByName("Clone"); hasClone {
-				transport = cloneMethod.Func.Call([]reflect.Value{reflect.ValueOf(transport)})[0].Interface().(http.RoundTripper)
+				cloned := cloneMethod.Func.Call([]reflect.Value{reflect.ValueOf(transport)})[0].Interface().(http.RoundTripper)
+				if clonedTransport, ok := cloned.(*http.Transport); ok {
+					clonedTransport.IdleConnTimeout = defaultIdleConnTimeout
+					transport = clonedTransport
+				}
 			}
 		}
 
@@ -720,4 +731,18 @@ func NewClientWithProviders(region string, providers ...Provider) (client *Clien
 		pc = NewProviderChain(providers)
 	}
 	return client.WithProvider(pc)
+}
+
+func (c *Client) InitBaseRequest(req **tchttp.BaseRequest, mod, ver, act string) {
+	if *req == nil {
+		*req = &tchttp.BaseRequest{}
+	}
+
+	if (*req).GetParams() == nil {
+		(*req).Init()
+	}
+
+	if (*req).GetAction() == "" {
+		(*req).WithApiInfo(mod, ver, act)
+	}
 }

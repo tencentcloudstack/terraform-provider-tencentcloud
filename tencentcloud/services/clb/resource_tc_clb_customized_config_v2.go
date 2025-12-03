@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -70,8 +70,8 @@ func resourceTencentCloudClbCustomizedConfigV2Create(d *schema.ResourceData, met
 
 	var (
 		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		request  = clb.NewAddCustomizedConfigRequest()
-		response = clb.NewAddCustomizedConfigResponse()
+		request  = clbintl.NewAddCustomizedConfigRequest()
+		response = clbintl.NewAddCustomizedConfigResponse()
 	)
 
 	configType := d.Get("config_type").(string)
@@ -81,7 +81,7 @@ func resourceTencentCloudClbCustomizedConfigV2Create(d *schema.ResourceData, met
 	request.ConfigContent = helper.String(d.Get("config_content").(string))
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AddCustomizedConfig(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient().AddCustomizedConfig(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -135,9 +135,9 @@ func resourceTencentCloudClbCustomizedConfigV2Read(d *schema.ResourceData, meta 
 	configId := idSplit[0]
 	configType := idSplit[1]
 
-	var config *clb.ConfigListItem
+	var config *clbintl.ConfigListItem
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := clbService.DescribeLbCustomizedConfigById(ctx, configId, configType)
+		result, e := clbService.DescribeLbIntlCustomizedConfigById(ctx, configId, configType)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -183,7 +183,7 @@ func resourceTencentCloudClbCustomizedConfigV2Update(d *schema.ResourceData, met
 	d.Partial(true)
 
 	if d.HasChange("config_name") || d.HasChange("config_content") {
-		request := clb.NewModifyCustomizedConfigRequest()
+		request := clbintl.NewModifyCustomizedConfigRequest()
 		request.UconfigId = &configId
 		configName := d.Get("config_name").(string)
 		configContent := d.Get("config_content").(string)
@@ -191,7 +191,7 @@ func resourceTencentCloudClbCustomizedConfigV2Update(d *schema.ResourceData, met
 		request.ConfigContent = &configContent
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyCustomizedConfig(request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient().ModifyCustomizedConfig(request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -224,7 +224,7 @@ func resourceTencentCloudClbCustomizedConfigV2Delete(d *schema.ResourceData, met
 
 	var (
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = clb.NewDeleteCustomizedConfigRequest()
+		request = clbintl.NewDeleteCustomizedConfigRequest()
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
@@ -236,7 +236,7 @@ func resourceTencentCloudClbCustomizedConfigV2Delete(d *schema.ResourceData, met
 	request.UconfigIdList = []*string{&configId}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().DeleteCustomizedConfig(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient().DeleteCustomizedConfig(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
