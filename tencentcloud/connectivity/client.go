@@ -14,6 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
 	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
@@ -138,6 +139,7 @@ type TencentCloudClient struct {
 	cvmv20170312Conn    *cvmv20170312.Client
 	cvmIntlConn         *cvmintl.Client
 	clbConn             *clb.Client
+	clbIntlConn         *clbintl.Client
 	dayuConn            *dayu.Client
 	dcConn              *dc.Client
 	tagConn             *tag.Client
@@ -581,6 +583,25 @@ func (me *TencentCloudClient) UseClbClient(iacExtInfo ...IacExtInfo) *clb.Client
 	me.clbConn.WithHttpTransport(&logRoundTripper)
 
 	return me.clbConn
+}
+
+// UseClbClient returns clb Intl client for service
+func (me *TencentCloudClient) UseClbIntlClient(iacExtInfo ...IacExtInfo) *clbintl.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.clbIntlConn != nil {
+		me.clbIntlConn.WithHttpTransport(&logRoundTripper)
+		return me.clbIntlConn
+	}
+
+	cpf := me.NewClientIntlProfile(300)
+	me.clbIntlConn, _ = clbintl.NewClient(me.Credential, me.Region, cpf)
+	me.clbIntlConn.WithHttpTransport(&logRoundTripper)
+
+	return me.clbIntlConn
 }
 
 // UseCvmClient returns cvm client for service

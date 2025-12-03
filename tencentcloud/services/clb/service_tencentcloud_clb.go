@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
+	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -1161,6 +1162,24 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	return
 }
 
+func waitForTaskFinishIntl(requestId string, meta *clbintl.Client) (err error) {
+	taskQueryRequest := clbintl.NewDescribeTaskStatusRequest()
+	taskQueryRequest.TaskId = &requestId
+	err = resource.Retry(4*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		taskResponse, e := meta.DescribeTaskStatus(taskQueryRequest)
+		if e != nil {
+			return resource.NonRetryableError(errors.WithStack(e))
+		}
+		if *taskResponse.Response.Status == int64(CLB_TASK_EXPANDING) {
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(expanding), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		} else if *taskResponse.Response.Status == int64(CLB_TASK_FAIL) {
+			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(failed), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		}
+		return nil
+	})
+	return
+}
+
 func waitForTaskFinishGetID(requestId string, meta *clb.Client) (clbID string, err error) {
 	request := clb.NewDescribeTaskStatusRequest()
 	request.TaskId = &requestId
@@ -1782,6 +1801,27 @@ func (me *ClbService) DescribeLbCustomizedConfigById(ctx context.Context, config
 	request.ConfigType = helper.String(configType)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeCustomizedConfigList(request)
+	if err != nil {
+		errRet = errors.WithStack(err)
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ConfigList) < 1 {
+		return
+	}
+	customizedConfig = response.Response.ConfigList[0]
+	return
+}
+
+func (me *ClbService) DescribeLbIntlCustomizedConfigById(ctx context.Context, configId, configType string) (customizedConfig *clbintl.ConfigListItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := clbintl.NewDescribeCustomizedConfigListRequest()
+	request.UconfigIds = []*string{&configId}
+	request.ConfigType = helper.String(configType)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbIntlClient().DescribeCustomizedConfigList(request)
 	if err != nil {
 		errRet = errors.WithStack(err)
 		return
