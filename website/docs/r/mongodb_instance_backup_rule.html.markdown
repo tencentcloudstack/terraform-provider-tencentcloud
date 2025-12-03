@@ -19,6 +19,7 @@ resource "tencentcloud_mongodb_instance_backup_rule" "example" {
   backup_method           = 0
   backup_time             = 10
   backup_retention_period = 7
+  backup_version          = 1
 }
 ```
 
@@ -31,8 +32,19 @@ The following arguments are supported:
 - 1: Physical backup;
 - 3: Snapshot backup (supported only in cloud disk version).
 * `backup_time` - (Required, Int) Set the start time for automatic backup. The value range is: [0,23]. For example, setting this parameter to 2 means that backup starts at 02:00.
-* `instance_id` - (Required, String, ForceNew) Instance id.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
+* `active_weekdays` - (Optional, String) Which days of the week to backup, 0-6, comma separated. Only effective for advanced backup.
+* `alarm_water_level` - (Optional, Int) Alert threshold. Range: 50-300.
+* `backup_frequency` - (Optional, Int) Automatic backup frequency, for internal display, default value is 24h.
 * `backup_retention_period` - (Optional, Int) Specify the number of days to save backup data. The default is 7 days, and the support settings are 7, 30, 90, 180, 365.
+* `backup_version` - (Optional, Int) Backup version. Old version backup is 0, advanced backup is 1. Set this value to 1 when enabling advanced backup.
+* `long_term_active_days` - (Optional, String) Which days to retain long-term, week 0-6, month 1-31, comma separated.
+* `long_term_expired_days` - (Optional, Int) How many days to retain long-term backups.
+* `long_term_unit` - (Optional, String) Long-term retention cycle, weekly, monthly, empty means not enabled.
+* `notify` - (Optional, Bool) Set whether to send failure alerts when automatic backup errors occur.
+- true: Send.
+- false: Do not send.
+* `oplog_expired_days` - (Optional, Int) How many days to retain incremental backups.
 
 ## Attributes Reference
 
