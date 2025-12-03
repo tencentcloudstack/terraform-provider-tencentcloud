@@ -2064,7 +2064,7 @@ Resource
 tencentcloud_apm_instance
 tencentcloud_apm_sample_config
 tencentcloud_apm_application_config
-tencentcloud_apm_association
+tencentcloud_apm_association_config
 
 Tencent Cloud Service Engine(TSE)
 Data Source
