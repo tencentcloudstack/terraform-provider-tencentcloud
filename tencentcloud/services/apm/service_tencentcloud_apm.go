@@ -2,8 +2,10 @@ package apm
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
@@ -20,6 +22,7 @@ func (me *ApmService) DescribeApmInstanceById(ctx context.Context, instanceId st
 	logId := tccommon.GetLogId(ctx)
 
 	request := apm.NewDescribeApmInstancesRequest()
+	response := apm.NewDescribeApmInstancesResponse()
 	request.InstanceIds = []*string{&instanceId}
 
 	defer func() {
@@ -28,16 +31,25 @@ func (me *ApmService) DescribeApmInstanceById(ctx context.Context, instanceId st
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().DescribeApmInstances(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseApmClient().DescribeApmInstances(request)
+		if result == nil || result.Response == nil || result.Response.Instances == nil || len(result.Response.Instances) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("Describe apm instance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.Instances) < 1 {
 		return
 	}
 
@@ -49,6 +61,7 @@ func (me *ApmService) DescribeApmAgentById(ctx context.Context, instanceId strin
 	logId := tccommon.GetLogId(ctx)
 
 	request := apm.NewDescribeApmAgentRequest()
+	response := apm.NewDescribeApmAgentResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -57,16 +70,25 @@ func (me *ApmService) DescribeApmAgentById(ctx context.Context, instanceId strin
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().DescribeApmAgent(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseApmClient().DescribeApmAgent(request)
+		if result == nil || result.Response == nil || result.Response.ApmAgent == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe apm agent failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response.Response.ApmAgent == nil {
 		return
 	}
 
@@ -86,14 +108,141 @@ func (me *ApmService) DeleteApmInstanceById(ctx context.Context, instanceId stri
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().TerminateApmInstance(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseApmClient().TerminateApmInstance(request)
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return
+}
+
+func (me *ApmService) DescribeApmSampleConfigById(ctx context.Context, instanceId, sampleName string) (ret *apm.ApmSampleConfig, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := apm.NewDescribeApmSampleConfigRequest()
+	response := apm.NewDescribeApmSampleConfigResponse()
+	request.InstanceId = &instanceId
+	request.SampleName = &sampleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().DescribeApmSampleConfig(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ApmSampleConfigs == nil || len(result.Response.ApmSampleConfigs) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe apm sample config failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	ret = response.Response.ApmSampleConfigs[0]
+	return
+}
+
+func (me *ApmService) DescribeApmApplicationConfigById(ctx context.Context, instanceId, serviceName string) (ret *apm.ApmAppConfig, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := apm.NewDescribeApmApplicationConfigRequest()
+	response := apm.NewDescribeApmApplicationConfigResponse()
+	request.InstanceId = &instanceId
+	request.ServiceName = &serviceName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().DescribeApmApplicationConfig(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ApmAppConfig == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe apm application config failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.ApmAppConfig
+	return
+}
+
+func (me *ApmService) DescribeApmAssociationById(ctx context.Context, instanceId, productName string) (ret *apm.ApmAssociation, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := apm.NewDescribeApmAssociationRequest()
+	response := apm.NewDescribeApmAssociationResponse()
+	request.InstanceId = &instanceId
+	request.ProductName = &productName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().DescribeApmAssociation(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ApmAssociation == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe apm association failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.ApmAssociation
 	return
 }
