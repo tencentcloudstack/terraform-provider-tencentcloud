@@ -3963,6 +3963,15 @@ type CynosdbInstanceDetail struct {
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 实例状态
+	// creating：创建中
+	// running：运行中
+	// isolating：隔离中
+	// isolated：已隔离
+	// activating：解隔离中
+	// offlining：下线中
+	// offlined：已下线
+	// deleting：删除中
+	// deleted：已删除
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 实例状态中文描述
@@ -10170,7 +10179,7 @@ type GdnTaskInfo struct {
 	// 从集群ID
 	StandbyClusterId *string `json:"StandbyClusterId,omitnil,omitempty" name:"StandbyClusterId"`
 
-	// 从集群别名
+	// 从集群名称
 	StandbyClusterName *string `json:"StandbyClusterName,omitnil,omitempty" name:"StandbyClusterName"`
 }
 
@@ -12215,6 +12224,70 @@ func (r *ModifyClusterDatabaseResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyClusterDatabaseResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyClusterGlobalEncryptionRequestParams struct {
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 开启或关闭全局加密
+	IsOpenGlobalEncryption *bool `json:"IsOpenGlobalEncryption,omitnil,omitempty" name:"IsOpenGlobalEncryption"`
+}
+
+type ModifyClusterGlobalEncryptionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 开启或关闭全局加密
+	IsOpenGlobalEncryption *bool `json:"IsOpenGlobalEncryption,omitnil,omitempty" name:"IsOpenGlobalEncryption"`
+}
+
+func (r *ModifyClusterGlobalEncryptionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterGlobalEncryptionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "IsOpenGlobalEncryption")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterGlobalEncryptionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyClusterGlobalEncryptionResponseParams struct {
+	// 异步任务id
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyClusterGlobalEncryptionResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyClusterGlobalEncryptionResponseParams `json:"Response"`
+}
+
+func (r *ModifyClusterGlobalEncryptionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterGlobalEncryptionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -15287,6 +15360,8 @@ type QueryFilter struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 操作符
+	//
+	// Deprecated: Operator is deprecated.
 	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
 }
 
@@ -17475,6 +17550,15 @@ type TradePrice struct {
 
 	// 计费价格单位
 	ChargeUnit *string `json:"ChargeUnit,omitnil,omitempty" name:"ChargeUnit"`
+
+	// 高精度下不包含优惠价格
+	UnitPriceHighPrecision *string `json:"UnitPriceHighPrecision,omitnil,omitempty" name:"UnitPriceHighPrecision"`
+
+	// 高精度下优惠后价格
+	UnitPriceDiscountHighPrecision *string `json:"UnitPriceDiscountHighPrecision,omitnil,omitempty" name:"UnitPriceDiscountHighPrecision"`
+
+	// 货币单位
+	AmountUnit *string `json:"AmountUnit,omitnil,omitempty" name:"AmountUnit"`
 }
 
 // Predefined struct for user
@@ -17781,6 +17865,12 @@ type UpgradeProxyRequestParams struct {
 
 	// 数据库代理节点信息
 	ProxyZones []*ProxyZone `json:"ProxyZones,omitnil,omitempty" name:"ProxyZones"`
+
+	// 是否滚动升级
+	IsRollUpgrade *string `json:"IsRollUpgrade,omitnil,omitempty" name:"IsRollUpgrade"`
+
+	// 滚动升级等待时间，单位：秒
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 type UpgradeProxyRequest struct {
@@ -17809,6 +17899,12 @@ type UpgradeProxyRequest struct {
 
 	// 数据库代理节点信息
 	ProxyZones []*ProxyZone `json:"ProxyZones,omitnil,omitempty" name:"ProxyZones"`
+
+	// 是否滚动升级
+	IsRollUpgrade *string `json:"IsRollUpgrade,omitnil,omitempty" name:"IsRollUpgrade"`
+
+	// 滚动升级等待时间，单位：秒
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 func (r *UpgradeProxyRequest) ToJsonString() string {
@@ -17831,6 +17927,8 @@ func (r *UpgradeProxyRequest) FromJsonString(s string) error {
 	delete(f, "ReloadBalance")
 	delete(f, "IsInMaintainPeriod")
 	delete(f, "ProxyZones")
+	delete(f, "IsRollUpgrade")
+	delete(f, "RollUpgradeWaitingTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeProxyRequest has unknown keys!", "")
 	}
