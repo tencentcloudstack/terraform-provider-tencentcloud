@@ -1631,6 +1631,7 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
+	cpf.Language = "en-US"
 	me.wedataConn, _ = wedata.NewClient(me.Credential, me.Region, cpf)
 	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1643,7 +1644,7 @@ func (me *TencentCloudClient) UseWedataV20250806Client() *wedatav20250806.Client
 		return me.wedatav20250806Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
+	cpf.Language = "en-US"
 	me.wedatav20250806Conn, _ = wedatav20250806.NewClient(me.Credential, me.Region, cpf)
 	me.wedatav20250806Conn.WithHttpTransport(&LogRoundTripper{})
 
