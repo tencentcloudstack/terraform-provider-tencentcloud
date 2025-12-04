@@ -163,7 +163,7 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
-		resourceName := tccommon.BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cvm", "snapshot", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -238,7 +238,7 @@ func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{
 	}
 
 	tagService := svctag.NewTagService(tcClient)
-	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "volume", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "snapshot", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
@@ -279,7 +279,7 @@ func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interfac
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 		tagService := svctag.NewTagService(tcClient)
-		resourceName := tccommon.BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cvm", "snapshot", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
