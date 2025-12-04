@@ -26,7 +26,7 @@ func ResourceTencentCloudMongodbInstanceBackupRule() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Instance id.",
+				Description: "Instance ID.",
 			},
 
 			"backup_method": {
@@ -44,11 +44,65 @@ func ResourceTencentCloudMongodbInstanceBackupRule() *schema.Resource {
 				Description: "Set the start time for automatic backup. The value range is: [0,23]. For example, setting this parameter to 2 means that backup starts at 02:00.",
 			},
 
+			"backup_frequency": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Automatic backup frequency, for internal display, default value is 24h.",
+			},
+
+			"notify": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Set whether to send failure alerts when automatic backup errors occur.\n- true: Send.\n- false: Do not send.",
+			},
+
 			"backup_retention_period": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Specify the number of days to save backup data. The default is 7 days, and the support settings are 7, 30, 90, 180, 365.",
+			},
+
+			"active_weekdays": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Which days of the week to backup, 0-6, comma separated. Only effective for advanced backup.",
+			},
+
+			"long_term_unit": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Long-term retention cycle, weekly, monthly, empty means not enabled.",
+			},
+
+			"long_term_active_days": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Which days to retain long-term, week 0-6, month 1-31, comma separated.",
+			},
+
+			"long_term_expired_days": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "How many days to retain long-term backups.",
+			},
+
+			"oplog_expired_days": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "How many days to retain incremental backups.",
+			},
+
+			"backup_version": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Backup version. Old version backup is 0, advanced backup is 1. Set this value to 1 when enabling advanced backup.",
+			},
+
+			"alarm_water_level": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Alert threshold. Range: 50-300.",
 			},
 		},
 	}
@@ -139,8 +193,44 @@ func resourceTencentCloudMongodbInstanceBackupRuleUpdate(d *schema.ResourceData,
 		request.BackupTime = helper.IntUint64(v.(int))
 	}
 
+	if v, ok := d.GetOkExists("backup_frequency"); ok {
+		request.BackupFrequency = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("notify"); ok {
+		request.Notify = helper.Bool(v.(bool))
+	}
+
 	if v, ok := d.GetOkExists("backup_retention_period"); ok {
 		request.BackupRetentionPeriod = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("active_weekdays"); ok {
+		request.ActiveWeekdays = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("long_term_unit"); ok {
+		request.LongTermUnit = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("long_term_active_days"); ok {
+		request.LongTermActiveDays = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("long_term_expired_days"); ok {
+		request.LongTermExpiredDays = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("oplog_expired_days"); ok {
+		request.OplogExpiredDays = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("backup_version"); ok {
+		request.BackupVersion = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("alarm_water_level"); ok {
+		request.AlarmWaterLevel = helper.IntInt64(v.(int))
 	}
 
 	request.InstanceId = &instanceId
