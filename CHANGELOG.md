@@ -1,3 +1,18 @@
+## 1.82.41(Decmber 4, 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_apm_application_config` ([#3626](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3626))
+* **New Resource:** `tencentcloud_apm_association_config` ([#3626](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3626))
+* **New Resource:** `tencentcloud_apm_sample_config` ([#3626](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3626))
+* **New Resource:** `tencentcloud_wedata_add_calc_engines_to_project_operation` ([#3629](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3629))
+* **New Resource:** `tencentcloud_wedata_resource_group` ([#3629](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3629))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_snapshot: fix the issue that cannot setting tags ([#3630](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3630))
+* resource/tencentcloud_mongodb_instance_backup_rule: add new params ([#3627](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3627))
+
 ## 1.82.40(Decmber 2, 2025)
 
 FEATURES:
