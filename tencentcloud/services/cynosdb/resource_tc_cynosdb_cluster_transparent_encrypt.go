@@ -130,7 +130,7 @@ func resourceTencentCloudCynosdbClusterTransparentEncryptUpdate(d *schema.Resour
 	clusterId := d.Id()
 
 	needChange := false
-	mutableArgs := []string{"cluster_id", "key_type", "key_id", "key_region", "is_open_global_encryption"}
+	mutableArgs := []string{"cluster_id", "key_type", "key_id", "key_region"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -158,10 +158,6 @@ func resourceTencentCloudCynosdbClusterTransparentEncryptUpdate(d *schema.Resour
 			request.KeyRegion = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOkExists("is_open_global_encryption"); ok {
-			request.IsOpenGlobalEncryption = helper.Bool(v.(bool))
-		}
-
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().OpenClusterTransparentEncryptWithContext(ctx, request)
 			if e != nil {
@@ -174,6 +170,38 @@ func resourceTencentCloudCynosdbClusterTransparentEncryptUpdate(d *schema.Resour
 		})
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update cynosdb cluster transparent encrypt failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		taskId := *response.Response.TaskId
+		service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.taskStateRefreshFunc(strconv.FormatInt(taskId, 10), []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
+	if d.HasChange("is_open_global_encryption") && !d.IsNewResource() {
+		request := cynosdbv20190107.NewModifyClusterGlobalEncryptionRequest()
+		response := cynosdbv20190107.NewModifyClusterGlobalEncryptionResponse()
+		request.ClusterId = helper.String(clusterId)
+
+		if v, ok := d.GetOkExists("is_open_global_encryption"); ok {
+			request.IsOpenGlobalEncryption = helper.Bool(v.(bool))
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().ModifyClusterGlobalEncryptionWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			response = result
+			return nil
+		})
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update cynosdb cluster is_open_global_encryption failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 
