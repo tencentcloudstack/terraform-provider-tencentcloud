@@ -1631,7 +1631,6 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "en-US"
 	me.wedataConn, _ = wedata.NewClient(me.Credential, me.Region, cpf)
 	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1644,7 +1643,6 @@ func (me *TencentCloudClient) UseWedataV20250806Client() *wedatav20250806.Client
 		return me.wedatav20250806Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "en-US"
 	me.wedatav20250806Conn, _ = wedatav20250806.NewClient(me.Credential, me.Region, cpf)
 	me.wedatav20250806Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -2113,7 +2111,6 @@ func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
 		return me.billingv20180709Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.billingv20180709Conn, _ = billing.NewClient(me.Credential, me.Region, cpf)
 	me.billingv20180709Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -2126,7 +2123,6 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 		return me.igtmv20231024Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.igtmv20231024Conn, _ = igtmv20231024.NewClient(me.Credential, me.Region, cpf)
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
