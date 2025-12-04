@@ -2313,6 +2313,8 @@ tencentcloud_wedata_project
 tencentcloud_wedata_project_member
 tencentcloud_wedata_resource_group_to_project_attachment
 tencentcloud_wedata_lineage_attachment
+tencentcloud_wedata_resource_group
+tencentcloud_wedata_add_calc_engines_to_project_operation
 
 Cloud Firewall(CFW)
 Data Source
