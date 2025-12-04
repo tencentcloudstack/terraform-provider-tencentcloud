@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster_transparent_encrypt: Supports modification of is_open_global_encryption.
+```
