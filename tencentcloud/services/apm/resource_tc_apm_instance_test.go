@@ -24,7 +24,7 @@ func TestAccTencentCloudApmInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "name", "tf-example"),
 					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "description", "desc."),
 					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "trace_duration", "15"),
-					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "span_daily_counters", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "span_daily_counters", "0"),
 				),
 			},
 			{
@@ -34,7 +34,7 @@ func TestAccTencentCloudApmInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "name", "tf-example-update"),
 					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "description", "desc update."),
 					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "trace_duration", "15"),
-					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "span_daily_counters", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_apm_instance.example", "span_daily_counters", "0"),
 				),
 			},
 			{

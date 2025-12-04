@@ -39,6 +39,7 @@ func ResourceTencentCloudApmInstance() *schema.Resource {
 
 			"trace_duration": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Duration Of Trace Data.",
 			},
@@ -55,6 +56,13 @@ func ResourceTencentCloudApmInstance() *schema.Resource {
 				Description: "Modify the billing mode: `1` means prepaid, `0` means pay-as-you-go, the default value is `0`.",
 			},
 
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
+
+			// computed
 			"token": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -65,12 +73,6 @@ func ResourceTencentCloudApmInstance() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "External Network Reporting Address.",
-			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
 			},
 		},
 	}
@@ -115,6 +117,10 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create apm instance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -122,6 +128,10 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		log.Printf("[CRITAL]%s create apm instance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
 	}
 
 	instanceId = *response.Response.InstanceId
@@ -167,8 +177,8 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	if instance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_apm_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `ApmInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -233,8 +243,6 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 	)
 
 	needChange := false
-	request.InstanceId = &instanceId
-
 	mutableArgs := []string{"name", "description", "trace_duration", "span_daily_counters", "pay_mode"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -264,6 +272,7 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 			request.PayMode = helper.IntInt64(v.(int))
 		}
 
+		request.InstanceId = &instanceId
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmClient().ModifyApmInstance(request)
 			if e != nil {

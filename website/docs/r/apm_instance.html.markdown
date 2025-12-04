@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_apm_instance"
 sidebar_current: "docs-tencentcloud-resource-apm_instance"
 description: |-
-  Provides a resource to create a apm instance
+  Provides a resource to create a APM instance
 ---
 
 # tencentcloud_apm_instance
 
-Provides a resource to create a apm instance
+Provides a resource to create a APM instance
 
 ~> **NOTE:** To use the field `pay_mode`, you need to contact official customer service to join the whitelist.
 
@@ -19,10 +19,10 @@ Provides a resource to create a apm instance
 resource "tencentcloud_apm_instance" "example" {
   name                = "tf-example"
   description         = "desc."
-  trace_duration      = 15
+  trace_duration      = 7
   span_daily_counters = 0
   tags = {
-    createdBy = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```
@@ -49,7 +49,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-apm instance can be imported using the id, e.g.
+APM instance can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_apm_instance.example apm-IMVrxXl1K
