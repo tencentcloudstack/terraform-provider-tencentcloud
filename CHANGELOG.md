@@ -1,3 +1,9 @@
+## 1.82.42(Decmber 4, 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster_transparent_encrypt: Supports modification of is_open_global_encryption. ([#3631](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3631))
+
 ## 1.82.41(Decmber 4, 2025)
 
 FEATURES:
