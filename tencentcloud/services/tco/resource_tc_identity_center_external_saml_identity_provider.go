@@ -238,10 +238,6 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderUpdate(d *sch
 
 	if needChange {
 		request := organization.NewSetExternalSAMLIdentityProviderRequest()
-		if v, ok := d.GetOk("sso_status"); ok {
-			request.SSOStatus = helper.String(v.(string))
-		}
-
 		if v, ok := d.GetOk("entity_id"); ok {
 			request.EntityId = helper.String(v.(string))
 		}
