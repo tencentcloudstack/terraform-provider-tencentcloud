@@ -306,6 +306,13 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Computed:    true,
 				Description: "Generation of the engine. SuperSQL means the supersql engine while Native means the standard engine. It is SuperSQL by default.",
 			},
+
+			// computed
+			"data_engine_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Data engine ID.",
+			},
 		},
 	}
 }
@@ -781,6 +788,10 @@ func resourceTencentCloudDlcDataEngineRead(d *schema.ResourceData, meta interfac
 
 	if dataEngine.EngineGeneration != nil {
 		_ = d.Set("engine_generation", dataEngine.EngineGeneration)
+	}
+
+	if dataEngine.DataEngineId != nil {
+		_ = d.Set("data_engine_id", dataEngine.DataEngineId)
 	}
 
 	return nil

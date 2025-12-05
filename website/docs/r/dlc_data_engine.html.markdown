@@ -103,12 +103,12 @@ The `session_resource_template` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `data_engine_id` - Data engine ID.
 
 
 ## Import
 
-DLC data engine can be imported using the id, e.g.
+DLC data engine can be imported using the dataEngineName#dataEngineId, e.g.
 
 ```
 terraform import tencentcloud_dlc_data_engine.example tf-example#DataEngine-d3gk8r5h
