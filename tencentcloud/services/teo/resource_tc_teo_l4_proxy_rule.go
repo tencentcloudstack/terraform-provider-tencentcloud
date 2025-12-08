@@ -107,6 +107,31 @@ func ResourceTencentCloudTeoL4ProxyRule() *schema.Resource {
 							Computed:    true,
 							Description: "Rule status. Valid values:<li>online: Enabled;</li>\n<li>offline: Disabled;</li>\n<li>progress: Deploying;</li>\n<li>stopping: Disabling;</li>\n<li>fail: Failed to deploy or disable.</li>.",
 						},
+						"remote_auth": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Remote authentication information.\nNote: RemoteAuth cannot be used as an input parameter in CreateL4ProxyRules or ModifyL4ProxyRules. If this parameter is input, it will be ignored. If the returned data of DescribeL4ProxyRules is empty, it indicates that remote authentication is disabled.\nNote: This field may return null, which indicates a failure to obtain a valid value.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Whether to enable L4 remote authentication. Valid values: `on`: Enable; `off`: Disable.",
+									},
+									"address": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Remote authentication service address, in the format of domain/ip:port, such as example.auth.com:8888.",
+									},
+									"server_faulty_behavior": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Default origin-pull behavior based on L4 forwarding rules after the remote authentication service is disabled. Valid values: `reject`: Block and deny access; `allow`: Allow access.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -294,6 +319,24 @@ func resourceTencentCloudTeoL4ProxyRuleRead(d *schema.ResourceData, meta interfa
 
 		if l4ProxyRule.Status != nil {
 			l4ProxyRuleMap["status"] = l4ProxyRule.Status
+		}
+
+		remoteAuthMap := map[string]interface{}{}
+
+		if l4ProxyRule.RemoteAuth != nil {
+			if l4ProxyRule.RemoteAuth.Switch != nil {
+				remoteAuthMap["switch"] = l4ProxyRule.RemoteAuth.Switch
+			}
+
+			if l4ProxyRule.RemoteAuth.Address != nil {
+				remoteAuthMap["address"] = l4ProxyRule.RemoteAuth.Address
+			}
+
+			if l4ProxyRule.RemoteAuth.ServerFaultyBehavior != nil {
+				remoteAuthMap["server_faulty_behavior"] = l4ProxyRule.RemoteAuth.ServerFaultyBehavior
+			}
+
+			l4ProxyRuleMap["remote_auth"] = []interface{}{remoteAuthMap}
 		}
 
 		l4ProxyRuleList = append(l4ProxyRuleList, l4ProxyRuleMap)

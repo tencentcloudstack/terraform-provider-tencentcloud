@@ -87,6 +87,12 @@ Note: This parameter is optional when L4ProxyRule is used as an input parameter 
 <li>stopping: Disabling;</li>
 <li>fail: Failed to deploy or disable.</li>.
 
+The `remote_auth` object of `l4_proxy_rules` supports the following:
+
+* `address` - (Required, String) Remote authentication service address, in the format of domain/ip:port, such as example.auth.com:8888.
+* `server_faulty_behavior` - (Required, String) Default origin-pull behavior based on L4 forwarding rules after the remote authentication service is disabled. Valid values: `reject`: Block and deny access; `allow`: Allow access.
+* `switch` - (Required, String) Whether to enable L4 remote authentication. Valid values: `on`: Enable; `off`: Disable.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
