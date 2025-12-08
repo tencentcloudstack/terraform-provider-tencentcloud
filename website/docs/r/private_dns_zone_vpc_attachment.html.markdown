@@ -88,7 +88,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-PrivateDns zone vpc attachment can be imported using the id, e.g.
+PrivateDns zone vpc attachment can be imported using the zoneId#uniqVpcId, e.g.
 
 ```
 terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone-6t11lof0#vpc-jdx11z0t

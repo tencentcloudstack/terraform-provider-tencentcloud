@@ -96,6 +96,7 @@ func ResourceTencentCloudPrivateDnsZone() *schema.Resource {
 			"account_vpc_set": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "List of authorized accounts' VPCs to associate with the private domain.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -288,8 +289,8 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 	}
 
 	if response.Response.PrivateZone == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `tencentcloud_private_dns_zone` [%s] not found, please check if it has been deleted.\n", logId, zoneId)
+		d.SetId("")
 		return nil
 	}
 
@@ -298,25 +299,29 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 		_ = d.Set("domain", info.Domain)
 	}
 
-	tagSets := make([]map[string]interface{}, 0, len(info.Tags))
-	for _, item := range info.Tags {
-		tagSets = append(tagSets, map[string]interface{}{
-			"tag_key":   item.TagKey,
-			"tag_value": item.TagValue,
-		})
+	if info.Tags != nil {
+		tagSets := make([]map[string]interface{}, 0, len(info.Tags))
+		for _, item := range info.Tags {
+			tagSets = append(tagSets, map[string]interface{}{
+				"tag_key":   item.TagKey,
+				"tag_value": item.TagValue,
+			})
+		}
+
+		_ = d.Set("tag_set", tagSets)
 	}
 
-	_ = d.Set("tag_set", tagSets)
+	if info.VpcSet != nil {
+		vpcSet := make([]map[string]interface{}, 0, len(info.VpcSet))
+		for _, item := range info.VpcSet {
+			vpcSet = append(vpcSet, map[string]interface{}{
+				"uniq_vpc_id": item.UniqVpcId,
+				"region":      item.Region,
+			})
+		}
 
-	vpcSet := make([]map[string]interface{}, 0, len(info.VpcSet))
-	for _, item := range info.VpcSet {
-		vpcSet = append(vpcSet, map[string]interface{}{
-			"uniq_vpc_id": item.UniqVpcId,
-			"region":      item.Region,
-		})
+		_ = d.Set("vpc_set", vpcSet)
 	}
-
-	_ = d.Set("vpc_set", vpcSet)
 
 	if info.Remark != nil {
 		_ = d.Set("remark", info.Remark)
@@ -330,16 +335,18 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 		_ = d.Set("cname_speedup_status", info.CnameSpeedupStatus)
 	}
 
-	accountVpcSet := make([]map[string]interface{}, 0, len(info.AccountVpcSet))
-	for _, item := range info.AccountVpcSet {
-		accountVpcSet = append(accountVpcSet, map[string]interface{}{
-			"uin":         item.Uin,
-			"uniq_vpc_id": item.UniqVpcId,
-			"region":      item.Region,
-		})
-	}
+	if info.AccountVpcSet != nil {
+		accountVpcSet := make([]map[string]interface{}, 0, len(info.AccountVpcSet))
+		for _, item := range info.AccountVpcSet {
+			accountVpcSet = append(accountVpcSet, map[string]interface{}{
+				"uin":         item.Uin,
+				"uniq_vpc_id": item.UniqVpcId,
+				"region":      item.Region,
+			})
+		}
 
-	_ = d.Set("account_vpc_set", accountVpcSet)
+		_ = d.Set("account_vpc_set", accountVpcSet)
+	}
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(client)
