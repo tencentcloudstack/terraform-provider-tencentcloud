@@ -28,7 +28,7 @@ resource "tencentcloud_dlc_data_engine" "example" {
 
 Import
 
-DLC data engine can be imported using the id, e.g.
+DLC data engine can be imported using the dataEngineName#dataEngineId, e.g.
 
 ```
 terraform import tencentcloud_dlc_data_engine.example tf-example#DataEngine-d3gk8r5h
