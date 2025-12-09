@@ -1,3 +1,13 @@
+## 1.82.43(Decmber 9, 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cvm_sync_image: support  `encrypt` and `kms_key_id` ([#3639](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3639))
+* resource/tencentcloud_eip: add ResidentialEIP ([#3638](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3638))
+* resource/tencentcloud_identity_center_external_saml_identity_provider: optimiz code logic ([#3635](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3635))
+* resource/tencentcloud_kubernetes_cluster: update desc of `subnet_id` ([#3640](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3640))
+* resource/tencentcloud_private_dns_zone: update code logic ([#3637](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3637))
+
 ## 1.82.42(Decmber 4, 2025)
 
 ENHANCEMENTS:
