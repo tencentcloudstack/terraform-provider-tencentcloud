@@ -55,7 +55,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Subnet ID of the cluster, such as: subnet-b3p7d7q5.",
+				Description: "Control Plane Subnet Information. This field is required only in the following scenarios: When the container network plugin is CiliumOverlay, TKE will obtain 2 IPs from this subnet to create an internal load balancer; When creating a managed cluster that supports CDC with the VPC-CNI network plugin, at least 12 IPs must be reserved.",
 			},
 
 			"cluster_os_type": {

@@ -813,7 +813,7 @@ The following arguments are supported:
 * `cluster_name` - (Optional, String) Name of the cluster.
 * `cluster_os_type` - (Optional, String, ForceNew) Image type of the cluster os, the available values include: 'GENERAL'. Default is 'GENERAL'.
 * `cluster_os` - (Optional, String) Cluster operating system, supports setting public images (the field passes the corresponding image Name) and custom images (the field passes the corresponding image ID). For details, please refer to: https://cloud.tencent.com/document/product/457/68289.
-* `cluster_subnet_id` - (Optional, String, ForceNew) Subnet ID of the cluster, such as: subnet-b3p7d7q5.
+* `cluster_subnet_id` - (Optional, String, ForceNew) Control Plane Subnet Information. This field is required only in the following scenarios: When the container network plugin is CiliumOverlay, TKE will obtain 2 IPs from this subnet to create an internal load balancer; When creating a managed cluster that supports CDC with the VPC-CNI network plugin, at least 12 IPs must be reserved.
 * `cluster_version` - (Optional, String) Version of the cluster. Use `tencentcloud_kubernetes_available_cluster_versions` to get the upgradable cluster version.
 * `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher. The default value is `docker` for versions below v1.24 and `containerd` for versions above v1.24.
 * `data_plane_v2` - (Optional, Bool, ForceNew) Whether to enable DataPlaneV2 (replace kube-proxy with cilium). `data_plane_v2` and `cluster_ipvs` should not be set at the same time.
