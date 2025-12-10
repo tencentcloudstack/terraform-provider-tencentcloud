@@ -1,3 +1,17 @@
+## 1.82.44(Decmber 10, 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_controlcenter_account_factory_baseline_items` ([#3644](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3644))
+* **New Resource:** `tencentcloud_controlcenter_account_factory_baseline_config` ([#3644](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3644))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_cdwdoris_instances: update doc ([#3646](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3646))
+* resource/tencentcloud_cdwdoris_instance: update doc ([#3646](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3646))
+* resource/tencentcloud_cvm_sync_image: add computed `image_set` ([#3643](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3643))
+* resource/tencentcloud_cynosdb_cluster_transparent_encrypt: optimiz code logic ([#3647](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3647))
+
 ## 1.82.43(Decmber 9, 2025)
 
 ENHANCEMENTS:
