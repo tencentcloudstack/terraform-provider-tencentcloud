@@ -75,9 +75,20 @@ func ResourceTencentCloudCvmSyncImage() *schema.Resource {
 
 			"image_set": {
 				Computed: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				Type:     schema.TypeList,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"image_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Image ID.",
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Region of the image.",
+						},
+					},
 				},
 				Description: "ID of the image created in the destination region.",
 			},
@@ -145,7 +156,22 @@ func resourceTencentCloudCvmSyncImageCreate(d *schema.ResourceData, meta interfa
 
 	d.SetId(imageId)
 
-	_ = d.Set("image_set", response.Response.ImageSet)
+	imageSetList := []interface{}{}
+	for _, image := range response.Response.ImageSet {
+		imageMap := map[string]interface{}{}
+
+		if image.ImageId != nil {
+			imageMap["image_id"] = image.ImageId
+		}
+
+		if image.Region != nil {
+			imageMap["region"] = image.Region
+		}
+
+		imageSetList = append(imageSetList, imageMap)
+	}
+
+	_ = d.Set("image_set", imageSetList)
 
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
