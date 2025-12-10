@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cdwdoris_instance"
 sidebar_current: "docs-tencentcloud-resource-cdwdoris_instance"
 description: |-
-  Provides a resource to create a cdwdoris instance
+  Provides a resource to create a CDWDoris instance
 ---
 
 # tencentcloud_cdwdoris_instance
 
-Provides a resource to create a cdwdoris instance
+Provides a resource to create a CDWDoris instance
 
 ## Example Usage
 
@@ -54,7 +54,8 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   product_version       = "2.1"
   instance_name         = "tf-example"
   doris_user_pwd        = "Password@test"
-  ha_flag               = false
+  ha_flag               = true
+  ha_type               = 1
   case_sensitive        = 0
   enable_multi_zones    = false
   workload_group_status = "open"
@@ -86,7 +87,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
 }
 ```
 
-### Create a POSTPAID instance
+### Create a PREPAID instance
 
 ```hcl
 # availability zone
@@ -127,7 +128,8 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   product_version       = "2.1"
   instance_name         = "tf-example"
   doris_user_pwd        = "Password@test"
-  ha_flag               = false
+  ha_flag               = true
+  ha_type               = 1
   case_sensitive        = 0
   enable_multi_zones    = false
   workload_group_status = "close"

@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cdwdoris_workload_group"
 sidebar_current: "docs-tencentcloud-resource-cdwdoris_workload_group"
 description: |-
-  Provides a resource to create a cdwdoris workload group
+  Provides a resource to create a CDWDoris workload group
 ---
 
 # tencentcloud_cdwdoris_workload_group
 
-Provides a resource to create a cdwdoris workload group
+Provides a resource to create a CDWDoris workload group
 
 ~> **NOTE:** To use this resource, The `workload_group_status` field of `tencentcloud_cdwdoris_instance` needs to be set to true.
 
