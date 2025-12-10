@@ -142,6 +142,7 @@ func TestAccTencentCloudAsScalingGroup_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "scaling_mode", "WAKE_UP_STOPPED_SCALING"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "replace_monitor_unhealthy", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "replace_load_balancer_unhealthy", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "priority_scale_in_unhealthy", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.abc", "abc"),
 				),
@@ -277,6 +278,7 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   scaling_mode		   = "WAKE_UP_STOPPED_SCALING"
   replace_monitor_unhealthy       = true
   replace_load_balancer_unhealthy = true
+  priority_scale_in_unhealthy     = true
 
   tags = {
     "abc" = "abc"
