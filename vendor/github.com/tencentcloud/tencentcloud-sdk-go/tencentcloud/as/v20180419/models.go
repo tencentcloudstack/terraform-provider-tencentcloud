@@ -3957,6 +3957,12 @@ type InstanceNameIndexSettings struct {
 	// 下调初始序号可能会造成伸缩组内实例名称序号重复。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BeginIndex *int64 `json:"BeginIndex,omitnil,omitempty" name:"BeginIndex"`
+
+	// 实例名称递增序号位数，默认为0，表示不指定序号位数。不指定序号时，采用默认值0。 取值范围：0-8，最大为整数8。 采用取值1-8时，会检查序号是否超过此序号位数的最大数字。
+	// 
+	// 假设设置为3，那么序号形如：000、001、002 ... 010、011 ... 100 ... 999，序号上限为999; 
+	// 假设设置为0，对应的序号为0、1、2 ... 10、11 ... 100 ... 1000 ...10000 ... 99999999，序号上限为99999999。
+	IndexLength *uint64 `json:"IndexLength,omitnil,omitempty" name:"IndexLength"`
 }
 
 type InstanceNameSettings struct {
@@ -6171,6 +6177,9 @@ type ServiceSettings struct {
 	// <li>True: 修改最大值或最小值时，如与当前期望数存在冲突，则同步调整期望数。例如修改时传入最小值 2，当前期望数为 1，则同步调整期望数为 2。</li>
 	// <li>False: 修改最大值或最小值时，如与当前期望数存在冲突，报错提示不允许修改。</li>
 	DesiredCapacitySyncWithMaxMinSize *bool `json:"DesiredCapacitySyncWithMaxMinSize,omitnil,omitempty" name:"DesiredCapacitySyncWithMaxMinSize"`
+
+	// 优先缩容不健康实例。若开启，缩容时会优先选择不健康实例。默认值为 False。
+	PriorityScaleInUnhealthy *bool `json:"PriorityScaleInUnhealthy,omitnil,omitempty" name:"PriorityScaleInUnhealthy"`
 }
 
 // Predefined struct for user
