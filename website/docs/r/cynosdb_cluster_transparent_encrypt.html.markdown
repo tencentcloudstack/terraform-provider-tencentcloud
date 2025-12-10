@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cynosdb_cluster_transparent_encrypt"
 sidebar_current: "docs-tencentcloud-resource-cynosdb_cluster_transparent_encrypt"
 description: |-
-  Provides a resource to create a cynosdb cluster_transparent_encrypt
+  Provides a resource to create a Cynosdb cluster transparent encrypt
 ---
 
 # tencentcloud_cynosdb_cluster_transparent_encrypt
 
-Provides a resource to create a cynosdb cluster_transparent_encrypt
+Provides a resource to create a Cynosdb cluster transparent encrypt
 
 ~> **NOTE:** Once activated, it cannot be deactivated.
 
@@ -18,12 +18,12 @@ Provides a resource to create a cynosdb cluster_transparent_encrypt
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cynosdb_cluster_transparent_encrypt" "cynosdb_cluster_transparent_encrypt" {
+resource "tencentcloud_cynosdb_cluster_transparent_encrypt" "example" {
   cluster_id                = cynosdbmysql-bu6hlulf
-  is_open_global_encryption = false
   key_id                    = "f063c18b-xxxx-xxxx-xxxx-525400d3a886"
   key_region                = "ap-guangzhou"
   key_type                  = "custom"
+  is_open_global_encryption = false
 }
 ```
 
@@ -31,7 +31,7 @@ resource "tencentcloud_cynosdb_cluster_transparent_encrypt" "cynosdb_cluster_tra
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) Cluster ID.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
 * `key_type` - (Required, String) Key type (cloud, custom).
 * `is_open_global_encryption` - (Optional, Bool) Whether to enable global encryption.
 * `key_id` - (Optional, String) Key Id.
@@ -47,9 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cynosdb cluster_transparent_encrypt can be imported using the id, e.g.
+Cynosdb cluster transparent encrypt can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cynosdb_cluster_transparent_encrypt.cynosdb_cluster_transparent_encrypt cynosdbmysql-bu6hlulf
+terraform import tencentcloud_cynosdb_cluster_transparent_encrypt.example cynosdbmysql-bu6hlulf
 ```
 

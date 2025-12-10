@@ -1,4 +1,4 @@
-Provides a resource to create a cynosdb cluster_transparent_encrypt
+Provides a resource to create a Cynosdb cluster transparent encrypt
 
 ~> **NOTE:** Once activated, it cannot be deactivated.
 
@@ -7,19 +7,19 @@ Provides a resource to create a cynosdb cluster_transparent_encrypt
 Example Usage
 
 ```hcl
-resource "tencentcloud_cynosdb_cluster_transparent_encrypt" "cynosdb_cluster_transparent_encrypt" {
+resource "tencentcloud_cynosdb_cluster_transparent_encrypt" "example" {
   cluster_id                = cynosdbmysql-bu6hlulf
-  is_open_global_encryption = false
   key_id                    = "f063c18b-xxxx-xxxx-xxxx-525400d3a886"
   key_region                = "ap-guangzhou"
   key_type                  = "custom"
+  is_open_global_encryption = false
 }
 ```
 
 Import
 
-cynosdb cluster_transparent_encrypt can be imported using the id, e.g.
+Cynosdb cluster transparent encrypt can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cynosdb_cluster_transparent_encrypt.cynosdb_cluster_transparent_encrypt cynosdbmysql-bu6hlulf
+terraform import tencentcloud_cynosdb_cluster_transparent_encrypt.example cynosdbmysql-bu6hlulf
 ```
