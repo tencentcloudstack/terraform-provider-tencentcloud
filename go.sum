@@ -827,13 +827,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763 h1:
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763/go.mod h1:OlRreot089Ec7bEYMUovUBSuCD/x0D0ONPZ0g3YA5hg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.2.2 h1:/BlN5LD/rLm0WMM4Yyp2m4XQ8EVzlSV0uKt3SuT5+SE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.2.2/go.mod h1:XIggn8QQknIzb+1lnsOiKbTQ0fjRe1uV6P+1N0L2ccI=
-<<<<<<< HEAD
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.3.4 h1:hTOxj4qB+UX6MflqmIYT4cPbfEqtiJEfi9tR58DxkIw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.3.4/go.mod h1:q7fZk23gy6BkZGcNw9NXFSj26R44tiJZKGxLFfOrMo0=
-=======
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.1.48 h1:pBJSevHHm4vqF3gM7NcqSSPmzvgAlGRoHapUkbcJTzQ=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.1.48/go.mod h1:Qqv7rukVdZ8hZzIOQ02IxFgFbjOAWg+B7KNrYZG5MOA=
->>>>>>> 76dff8d0c (add)
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824 h1:DVKvZ6h+qd7tadUrCjVAkCCmE3TsbK2ZmwGd3AJcpWc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824/go.mod h1:DvBpDX/qdJG4KKLeULmRvhAjPYiw8za0HeTSu2y/lFw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.1.31 h1:teA14cAcXuGxas6+5YANQ5KCoPaQBKIb2Q8+sk08Mu0=
