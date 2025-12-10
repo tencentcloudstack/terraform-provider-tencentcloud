@@ -1,4 +1,4 @@
-Provides a resource to create a cdwdoris workload group
+Provides a resource to create a CDWDoris workload group
 
 ~> **NOTE:** To use this resource, The `workload_group_status` field of `tencentcloud_cdwdoris_instance` needs to be set to true.
 

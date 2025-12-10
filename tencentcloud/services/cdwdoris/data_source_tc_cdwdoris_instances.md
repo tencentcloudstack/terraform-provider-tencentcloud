@@ -1,4 +1,4 @@
-Use this data source to query detailed information of cdwdoris instances
+Use this data source to query detailed information of CDWDoris instances
 
 Example Usage
 
