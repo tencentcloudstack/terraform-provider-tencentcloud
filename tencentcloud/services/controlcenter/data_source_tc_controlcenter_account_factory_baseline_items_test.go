@@ -17,13 +17,12 @@ func TestAccTencentCloudControlcenterAccountFactoryBaselineItemsDataSource_basic
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{{
 			Config: testAccControlcenterAccountFactoryBaselineItemsDataSource,
-			Check:  resource.ComposeTestCheckFunc(resource.AccCheckTencentCloudDataSourceID("data.tencentcloud_controlcenter_account_factory_baseline_items.controlcenter_account_factory_baseline_items")),
+			Check: resource.ComposeTestCheckFunc(
+				tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_controlcenter_account_factory_baseline_items.example")),
 		}},
 	})
 }
 
 const testAccControlcenterAccountFactoryBaselineItemsDataSource = `
-
-data "tencentcloud_controlcenter_account_factory_baseline_items" "controlcenter_account_factory_baseline_items" {
-}
+data "tencentcloud_controlcenter_account_factory_baseline_items" "example" {}
 `
