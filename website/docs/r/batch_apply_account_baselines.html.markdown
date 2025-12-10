@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_batch_apply_account_baselines"
 sidebar_current: "docs-tencentcloud-resource-batch_apply_account_baselines"
 description: |-
-  Provides a resource to create a controlcenter batch apply account baselines
+  Provides a resource to create a Controlcenter batch apply account baselines
 ---
 
 # tencentcloud_batch_apply_account_baselines
 
-Provides a resource to create a controlcenter batch apply account baselines
+Provides a resource to create a Controlcenter batch apply account baselines
 
 ## Example Usage
 

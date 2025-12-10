@@ -2417,8 +2417,11 @@ tencentcloud_cdwdoris_instance
 tencentcloud_cdwdoris_workload_group
 
 ControlCenter
+Data Source
+tencentcloud_controlcenter_account_factory_baseline_items
 Resource
 tencentcloud_batch_apply_account_baselines
+tencentcloud_controlcenter_account_factory_baseline_config
 
 THPC
 Resource
