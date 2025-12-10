@@ -45,5 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `image_set` - ID of the image created in the destination region.
+  * `image_id` - Image ID.
+  * `region` - Region of the image.
 
 
