@@ -2065,6 +2065,7 @@ tencentcloud_apm_instance
 tencentcloud_apm_sample_config
 tencentcloud_apm_application_config
 tencentcloud_apm_association_config
+tencentcloud_apm_prometheus_rule
 
 Tencent Cloud Service Engine(TSE)
 Data Source

@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 
@@ -244,5 +245,50 @@ func (me *ApmService) DescribeApmAssociationById(ctx context.Context, instanceId
 	}
 
 	ret = response.Response.ApmAssociation
+	return
+}
+
+func (me *ApmService) DescribeApmPrometheusRuleById(ctx context.Context, instanceId, ruleId string) (ret *apm.ApmPrometheusRules, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := apm.NewDescribeApmPrometheusRuleRequest()
+	response := apm.NewDescribeApmPrometheusRuleResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().DescribeApmPrometheusRule(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ApmPrometheusRules == nil || len(result.Response.ApmPrometheusRules) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe apm prometheus rule failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range response.Response.ApmPrometheusRules {
+		if item != nil && item.Id != nil && helper.Int64ToStr(*item.Id) == ruleId {
+			ret = item
+			return
+		}
+	}
+
 	return
 }

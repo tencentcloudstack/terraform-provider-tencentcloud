@@ -2250,6 +2250,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_apm_sample_config":                                                        apm.ResourceTencentCloudApmSampleConfig(),
 			"tencentcloud_apm_application_config":                                                   apm.ResourceTencentCloudApmApplicationConfig(),
 			"tencentcloud_apm_association_config":                                                   apm.ResourceTencentCloudApmAssociationConfig(),
+			"tencentcloud_apm_prometheus_rule":                                                      apm.ResourceTencentCloudApmPrometheusRule(),
 			"tencentcloud_lighthouse_firewall_rule":                                                 lighthouse.ResourceTencentCloudLighthouseFirewallRule(),
 			"tencentcloud_lighthouse_disk_backup":                                                   lighthouse.ResourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":                                             lighthouse.ResourceTencentCloudLighthouseApplyDiskBackup(),
