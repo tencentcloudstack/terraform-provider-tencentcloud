@@ -20,6 +20,9 @@ func ResourceTencentCloudApmPrometheusRule() *schema.Resource {
 		Read:   resourceTencentCloudApmPrometheusRuleRead,
 		Update: resourceTencentCloudApmPrometheusRuleUpdate,
 		Delete: resourceTencentCloudApmPrometheusRuleDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -48,7 +51,23 @@ func ResourceTencentCloudApmPrometheusRule() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Business system ID.",
+			},
+
+			"status": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2}),
+				Description:  "Rule status. 1 - enabled, 2 - disabled. Default value: 1.",
+			},
+
+			// computed
+			"rule_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "ID of the indicator matching rule.",
 			},
 		},
 	}
@@ -109,13 +128,54 @@ func resourceTencentCloudApmPrometheusRuleCreate(d *schema.ResourceData, meta in
 		return reqErr
 	}
 
-	if response.Response.InanceId == nil {
-		return fmt.Errorf("InstanceId is nil.")
+	if response.Response.RuleId == nil {
+		return fmt.Errorf("RuleId is nil.")
 	}
 
-	instanceId = *response.Response.InstanceId
-
+	ruleId = helper.Int64ToStr(*response.Response.RuleId)
 	d.SetId(strings.Join([]string{instanceId, ruleId}, tccommon.FILED_SP))
+
+	// set status
+	if v, ok := d.GetOkExists("status"); ok {
+		if v.(int) == 2 {
+			request := apmv20210622.NewModifyApmPrometheusRuleRequest()
+			if v, ok := d.GetOk("name"); ok {
+				request.Name = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("service_name"); ok {
+				request.ServiceName = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOkExists("metric_match_type"); ok {
+				request.MetricMatchType = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := d.GetOk("metric_name_rule"); ok {
+				request.MetricNameRule = helper.String(v.(string))
+			}
+
+			request.InstanceId = &instanceId
+			request.Id = helper.StrToInt64Point(ruleId)
+			request.Status = helper.IntUint64(2)
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmClient().ModifyApmPrometheusRuleWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update apm prometheus rule failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+		}
+	}
+
 	return resourceTencentCloudApmPrometheusRuleRead(d, meta)
 }
 
@@ -123,66 +183,57 @@ func resourceTencentCloudApmPrometheusRuleRead(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_apm_prometheus_rule.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	service := ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	instanceId := idSplit[0]
 	ruleId := idSplit[1]
 
-	respData, err := service.DescribeApmPrometheusRuleById(ctx)
+	respData, err := service.DescribeApmPrometheusRuleById(ctx, instanceId, ruleId)
 	if err != nil {
 		return err
 	}
 
 	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_apm_prometheus_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `apm_prometheus_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	apmPrometheusRulesList := make([]map[string]interface{}, 0, len(respData.ApmPrometheusRules))
-	if respData.ApmPrometheusRules != nil {
-		for _, apmPrometheusRules := range respData.ApmPrometheusRules {
-			apmPrometheusRulesMap := map[string]interface{}{}
 
-			if apmPrometheusRules.Id != nil {
-				apmPrometheusRulesMap["id"] = apmPrometheusRules.Id
-			}
+	_ = d.Set("instance_id", instanceId)
 
-			if apmPrometheusRules.Name != nil {
-				apmPrometheusRulesMap["name"] = apmPrometheusRules.Name
-			}
-
-			if apmPrometheusRules.ServiceName != nil {
-				apmPrometheusRulesMap["service_name"] = apmPrometheusRules.ServiceName
-			}
-
-			if apmPrometheusRules.Status != nil {
-				apmPrometheusRulesMap["status"] = apmPrometheusRules.Status
-			}
-
-			if apmPrometheusRules.MetricNameRule != nil {
-				apmPrometheusRulesMap["metric_name_rule"] = apmPrometheusRules.MetricNameRule
-			}
-
-			if apmPrometheusRules.MetricMatchType != nil {
-				apmPrometheusRulesMap["metric_match_type"] = apmPrometheusRules.MetricMatchType
-			}
-
-			apmPrometheusRulesList = append(apmPrometheusRulesList, apmPrometheusRulesMap)
-		}
-
-		_ = d.Set("apm_prometheus_rules", apmPrometheusRulesList)
+	if respData.Name != nil {
+		_ = d.Set("name", *respData.Name)
 	}
 
-	_ = instanceId
-	_ = ruleId
+	if respData.ServiceName != nil {
+		_ = d.Set("service_name", *respData.ServiceName)
+	}
+
+	if respData.MetricMatchType != nil {
+		_ = d.Set("metric_match_type", *respData.MetricMatchType)
+	}
+
+	if respData.MetricNameRule != nil {
+		_ = d.Set("metric_name_rule", *respData.MetricNameRule)
+	}
+
+	if respData.Status != nil {
+		_ = d.Set("status", *respData.Status)
+	}
+
+	if respData.Id != nil {
+		_ = d.Set("rule_id", *respData.Id)
+	}
+
 	return nil
 }
 
@@ -190,19 +241,21 @@ func resourceTencentCloudApmPrometheusRuleUpdate(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("resource.tencentcloud_apm_prometheus_rule.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	instanceId := idSplit[0]
 	ruleId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"id", "instance_id", "name", "status", "service_name", "metric_match_type", "metric_name_rule"}
+	mutableArgs := []string{"name", "service_name", "metric_match_type", "metric_name_rule", "status"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -212,21 +265,8 @@ func resourceTencentCloudApmPrometheusRuleUpdate(d *schema.ResourceData, meta in
 
 	if needChange {
 		request := apmv20210622.NewModifyApmPrometheusRuleRequest()
-
-		if v, ok := d.GetOkExists("id"); ok {
-			request.Id = helper.IntInt64(v.(int))
-		}
-
-		if v, ok := d.GetOk("instance_id"); ok {
-			request.InstanceId = helper.String(v.(string))
-		}
-
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOkExists("status"); ok {
-			request.Status = helper.IntUint64(v.(int))
 		}
 
 		if v, ok := d.GetOk("service_name"); ok {
@@ -241,23 +281,29 @@ func resourceTencentCloudApmPrometheusRuleUpdate(d *schema.ResourceData, meta in
 			request.MetricNameRule = helper.String(v.(string))
 		}
 
+		if v, ok := d.GetOkExists("status"); ok {
+			request.Status = helper.IntUint64(v.(int))
+		}
+
+		request.InstanceId = &instanceId
+		request.Id = helper.StrToInt64Point(ruleId)
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmV20210622Client().ModifyApmPrometheusRuleWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmClient().ModifyApmPrometheusRuleWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update apm prometheus rule failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}
 
-	_ = instanceId
-	_ = ruleId
 	return resourceTencentCloudApmPrometheusRuleRead(d, meta)
 }
 
@@ -265,66 +311,38 @@ func resourceTencentCloudApmPrometheusRuleDelete(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("resource.tencentcloud_apm_prometheus_rule.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = apmv20210622.NewModifyApmPrometheusRuleRequest()
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	instanceId := idSplit[0]
 	ruleId := idSplit[1]
 
-	var (
-		request  = apmv20210622.NewModifyApmPrometheusRuleRequest()
-		response = apmv20210622.NewModifyApmPrometheusRuleResponse()
-	)
-
-	if v, ok := d.GetOkExists("id"); ok {
-		request.Id = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOkExists("status"); ok {
-		request.Status = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("service_name"); ok {
-		request.ServiceName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOkExists("metric_match_type"); ok {
-		request.MetricMatchType = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOk("metric_name_rule"); ok {
-		request.MetricNameRule = helper.String(v.(string))
-	}
-
+	request.InstanceId = &instanceId
+	request.Id = helper.StrToInt64Point(ruleId)
+	request.Status = helper.IntUint64(3)
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmV20210622Client().ModifyApmPrometheusRuleWithContext(ctx, request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmClient().ModifyApmPrometheusRuleWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+
 		return nil
 	})
+
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s delete apm prometheus rule failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
-	_ = response
-	_ = instanceId
-	_ = ruleId
 	return nil
 }
