@@ -130,3 +130,9 @@ If use domain & url
 ```
 $ terraform import tencentcloud_clb_attachment.example test.com,/path#lbl-hh141sn9#lb-7a0t6zqb
 ```
+
+Of if use layer-4 forwarding rule
+
+```
+$ terraform import tencentcloud_clb_attachment.example ""#lbl-hh141sn9#lb-7a0t6zqb
+```
