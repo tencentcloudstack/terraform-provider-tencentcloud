@@ -2602,9 +2602,10 @@ func waitTaskReady(ctx context.Context, client *clb.Client, reqeustId string) er
 	return nil
 }
 
-func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx context.Context, configId string) (bindList []*clb.BindDetailItem, errRet error) {
+func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx context.Context, configId string) (bindList []*clbintl.BindDetailItem, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	request := clb.NewDescribeCustomizedConfigAssociateListRequest()
+	request := clbintl.NewDescribeCustomizedConfigAssociateListRequest()
+	response := clbintl.NewDescribeCustomizedConfigAssociateListResponse()
 	request.UconfigId = helper.String(configId)
 
 	var (
@@ -2615,16 +2616,29 @@ func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx cont
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClbClient().DescribeCustomizedConfigAssociateList(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, err := me.client.UseClbIntlClient().DescribeCustomizedConfigAssociateList(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.BindList == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe customized config associate list failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.BindList) < 1 {
+		if len(response.Response.BindList) < 1 {
 			break
 		}
 

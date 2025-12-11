@@ -702,14 +702,6 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("idle_connect_timeout", instance.IdleConnectTimeout)
 	}
 
-	if instance.RescheduleInterval != nil {
-		_ = d.Set("reschedule_interval", instance.RescheduleInterval)
-	}
-
-	if instance.RescheduleStartTime != nil {
-		_ = d.Set("reschedule_start_time", instance.RescheduleStartTime)
-	}
-
 	_ = d.Set("reschedule_target_zero_weight", false)
 	_ = d.Set("reschedule_unhealthy", false)
 	_ = d.Set("reschedule_expand_target", false)
@@ -727,6 +719,14 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 				_ = d.Set("reschedule_expand_target", true)
 			}
 		}
+	}
+
+	if instance.RescheduleStartTime != nil {
+		_ = d.Set("reschedule_start_time", instance.RescheduleStartTime)
+	}
+
+	if instance.RescheduleInterval != nil {
+		_ = d.Set("reschedule_interval", instance.RescheduleInterval)
 	}
 
 	return nil

@@ -82,19 +82,19 @@ func resourceTencentCloudClbCustomizedConfigAttachmentCreate(d *schema.ResourceD
 		for _, item := range v.(*schema.Set).List() {
 			bindItem := clbintl.BindItem{}
 			dMap := item.(map[string]interface{})
-			if v, ok := dMap["load_balancer_id"]; ok {
+			if v, ok := dMap["load_balancer_id"]; ok && v.(string) != "" {
 				bindItem.LoadBalancerId = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["listener_id"]; ok {
+			if v, ok := dMap["listener_id"]; ok && v.(string) != "" {
 				bindItem.ListenerId = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["domain"]; ok {
+			if v, ok := dMap["domain"]; ok && v.(string) != "" {
 				bindItem.Domain = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["location_id"]; ok {
+			if v, ok := dMap["location_id"]; ok && v.(string) != "" {
 				bindItem.LocationId = helper.String(v.(string))
 			}
 
@@ -200,19 +200,19 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 			for _, item := range remove {
 				bindItem := clbintl.BindItem{}
 				dMap := item.(map[string]interface{})
-				if v, ok := dMap["load_balancer_id"]; ok {
+				if v, ok := dMap["load_balancer_id"]; ok && v.(string) != "" {
 					bindItem.LoadBalancerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["listener_id"]; ok {
+				if v, ok := dMap["listener_id"]; ok && v.(string) != "" {
 					bindItem.ListenerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["domain"]; ok {
+				if v, ok := dMap["domain"]; ok && v.(string) != "" {
 					bindItem.Domain = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["location_id"]; ok {
+				if v, ok := dMap["location_id"]; ok && v.(string) != "" {
 					bindItem.LocationId = helper.String(v.(string))
 				}
 
@@ -252,19 +252,19 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 			for _, item := range add {
 				bindItem := clbintl.BindItem{}
 				dMap := item.(map[string]interface{})
-				if v, ok := dMap["load_balancer_id"]; ok {
+				if v, ok := dMap["load_balancer_id"]; ok && v.(string) != "" {
 					bindItem.LoadBalancerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["listener_id"]; ok {
+				if v, ok := dMap["listener_id"]; ok && v.(string) != "" {
 					bindItem.ListenerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["domain"]; ok {
+				if v, ok := dMap["domain"]; ok && v.(string) != "" {
 					bindItem.Domain = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["location_id"]; ok {
+				if v, ok := dMap["location_id"]; ok && v.(string) != "" {
 					bindItem.LocationId = helper.String(v.(string))
 				}
 

@@ -1087,7 +1087,7 @@ github.com/t-yuki/gocover-cobertura
 # github.com/tdakkota/asciicheck v0.2.0
 ## explicit; go 1.18
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1315+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1320+incompatible
 ## explicit
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common
@@ -1162,7 +1162,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.1073
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.2.2
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.8
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
@@ -1171,24 +1171,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.1148
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-<<<<<<< HEAD
-<<<<<<< HEAD
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.7
-=======
-=======
->>>>>>> d34ccd44e (add)
-<<<<<<< HEAD
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.4
-=======
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.55
->>>>>>> 2e9465052 (add)
-<<<<<<< HEAD
->>>>>>> c3b2b2c38 (add)
-=======
-=======
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.2.2
->>>>>>> 45ea86ea7 (add)
->>>>>>> d34ccd44e (add)
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.8
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors

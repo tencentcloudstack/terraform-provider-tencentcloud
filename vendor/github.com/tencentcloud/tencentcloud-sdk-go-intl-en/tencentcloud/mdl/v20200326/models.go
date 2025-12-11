@@ -414,7 +414,7 @@ type CreateStreamLiveChannelRequestParams struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -463,7 +463,7 @@ type CreateStreamLiveChannelRequest struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -2781,7 +2781,7 @@ type ModifyStreamLiveChannelRequestParams struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -2833,7 +2833,7 @@ type ModifyStreamLiveChannelRequest struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -3803,10 +3803,10 @@ type SubtitleConf struct {
 	// Optional values: INPUT (source subtitle information), ANALYSIS (intelligent speech recognition to subtitles).
 	CaptionSource *string `json:"CaptionSource,omitnil,omitempty" name:"CaptionSource"`
 
-	// Optional values: 1 Source, 2 Source+Target, 3 Target (original language only, original language + translation language, translation language). Required when CaptionSource selects `ANALYSIS `.
+	// Optional values: 1 Source, 2 Source+Target, 3 Target (original language only, original language + translation language, translation language). Required when CaptionSource selects `ANALYSIS `. When outputting as WebVTT, a single template can only output one language.
 	ContentType *uint64 `json:"ContentType,omitnil,omitempty" name:"ContentType"`
 
-	// Output mode: 1 Burn in, 2 Embedded. Support `2` when CaptionSource selects `INPUT`. Support `1` when CaptionSource selects `ANALYSIS `.
+	// Output mode: 1 Burn in, 2 Embedded, 3 WebVTT. Support `2` when CaptionSource selects `INPUT`. Support `1` and `3` when CaptionSource selects `ANALYSIS `.
 	TargetType *uint64 `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
 	// Original phonetic language.
@@ -3820,11 +3820,23 @@ type SubtitleConf struct {
 	// Font style configuration. Required when CaptionSource selects `ANALYSIS `.
 	FontStyle *SubtitleFontConf `json:"FontStyle,omitnil,omitempty" name:"FontStyle"`
 
-	// There are two modes: STEADY and DYNAMIC, corresponding to steady state and unstable state respectively; the default is STEADY. Required when CaptionSource selects `ANALYSIS `.
+	// There are two modes: STEADY and DYNAMIC, corresponding to steady state and unstable state respectively; the default is STEADY. Required when CaptionSource selects `ANALYSIS `. When the output is WebVTT, only STEADY can be selected.
 	StateEffectMode *string `json:"StateEffectMode,omitnil,omitempty" name:"StateEffectMode"`
 
 	// Steady-state delay time, unit seconds; optional values: 10, 20, default 10. Required when CaptionSource selects `ANALYSIS `.
 	SteadyStateDelayedTime *uint64 `json:"SteadyStateDelayedTime,omitnil,omitempty" name:"SteadyStateDelayedTime"`
+
+	// Audio selector name, required for generating WebVTT subtitles using speech recognition, can be empty.
+	AudioSelectorName *string `json:"AudioSelectorName,omitnil,omitempty" name:"AudioSelectorName"`
+
+	// Format configuration for speech recognition output on WebVTT.
+	WebVTTFontStyle *WebVTTFontStyle `json:"WebVTTFontStyle,omitnil,omitempty" name:"WebVTTFontStyle"`
+
+	// Language code, length 2-20. ISO 639-2 three-digit code is recommend.
+	LanguageCode *string `json:"LanguageCode,omitnil,omitempty" name:"LanguageCode"`
+
+	// Language description, less than 100 characters in length.
+	LanguageDescription *string `json:"LanguageDescription,omitnil,omitempty" name:"LanguageDescription"`
 }
 
 type SubtitleFontConf struct {
@@ -4051,4 +4063,36 @@ type VideoTemplateInfo struct {
 
 	// Color space setting.
 	ColorSpaceSettings *ColorSpaceSetting `json:"ColorSpaceSettings,omitnil,omitempty" name:"ColorSpaceSettings"`
+}
+
+type WebVTTFontStyle struct {
+	// Text color, RGB hexadecimal representation, 6 hexadecimal characters (no # needed).
+	TextColor *string `json:"TextColor,omitnil,omitempty" name:"TextColor"`
+
+	// Background color, RGB hexadecimal representation, 6 hexadecimal characters (no # needed).
+	BackgroundColor *string `json:"BackgroundColor,omitnil,omitempty" name:"BackgroundColor"`
+
+	// Background opacity parameter, a number from 0 to 100, with 0 being the default for full transparency.
+	BackgroundAlpha *int64 `json:"BackgroundAlpha,omitnil,omitempty" name:"BackgroundAlpha"`
+
+	// Font size, in units of vh (1% of height), default value 0 means automatic.
+	FontSize *int64 `json:"FontSize,omitnil,omitempty" name:"FontSize"`
+
+	// The position of the text box, default value AUTO, can be empty; represents the percentage of video height, supports integers from 0 to 100.
+	Line *string `json:"Line,omitnil,omitempty" name:"Line"`
+
+	// The alignment of the text box on the Line. Optional values: START, CENTER, END. Which can be empty.
+	LineAlignment *string `json:"LineAlignment,omitnil,omitempty" name:"LineAlignment"`
+
+	// The text box is positioned in another direction as a percentage of the video's width. It defaults to AUTO and can be empty.
+	Position *string `json:"Position,omitnil,omitempty" name:"Position"`
+
+	// The alignment of the text box on the Position. Optional values are LINE_LEFT, LINE_RIGHT, CENTER, and AUTO. The default value is AUTO, and it can be empty.
+	PositionAlignment *string `json:"PositionAlignment,omitnil,omitempty" name:"PositionAlignment"`
+
+	// Text box size, a percentage of video width/height, with values (0, 100), default AUTO, can be empty.
+	CueSize *string `json:"CueSize,omitnil,omitempty" name:"CueSize"`
+
+	// Text alignment, with possible values  START, CENTER, END, LEFT, and RIGHT; the default value is CENTER, which can be empty.
+	TextAlignment *string `json:"TextAlignment,omitnil,omitempty" name:"TextAlignment"`
 }
