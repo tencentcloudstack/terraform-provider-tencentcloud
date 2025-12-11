@@ -5,9 +5,9 @@ Example Usage
 HTTP Listener
 
 ```hcl
-resource "tencentcloud_clb_listener" "HTTP_listener" {
-  clb_id        = "lb-0lh5au7v"
-  listener_name = "test_listener"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id        = "lb-qck8thny"
+  listener_name = "tf-example"
   port          = 80
   protocol      = "HTTP"
 }
@@ -16,9 +16,9 @@ resource "tencentcloud_clb_listener" "HTTP_listener" {
 TCP/UDP Listener
 
 ```hcl
-resource "tencentcloud_clb_listener" "TCP_listener" {
-  clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 80
   protocol                   = "TCP"
   health_check_switch        = true
@@ -30,6 +30,7 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
   scheduler                  = "WRR"
   health_check_port          = 200
   health_check_type          = "HTTP"
+  health_check_http_path     = "/"
   health_check_http_code     = 2
   health_check_http_version  = "HTTP/1.0"
   health_check_http_method   = "GET"
@@ -41,9 +42,9 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
 TCP/UDP Listener with tcp health check
 
 ```hcl
-resource "tencentcloud_clb_listener" "listener_tcp" {
-  clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -63,9 +64,9 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 TCP/UDP Listener with http health check
 
 ```hcl
-resource "tencentcloud_clb_listener" "listener_tcp" {
-  clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -89,9 +90,9 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 TCP/UDP Listener with customer health check
 
 ```hcl
-resource "tencentcloud_clb_listener" "listener_tcp"{
-  clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "example"{
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -112,9 +113,9 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
 HTTPS Listener with sigle certificate
 
 ```hcl
-resource "tencentcloud_clb_listener" "HTTPS_listener" {
+resource "tencentcloud_clb_listener" "example" {
   clb_id               = "lb-0lh5au7v"
-  listener_name        = "test_listener"
+  listener_name        = "tf-example"
   port                 = "80"
   protocol             = "HTTPS"
   certificate_ssl_mode = "MUTUAL"
@@ -127,9 +128,9 @@ resource "tencentcloud_clb_listener" "HTTPS_listener" {
 HTTPS Listener with multi certificates
 
 ```hcl
-resource "tencentcloud_clb_listener" "HTTPS_listener" {
+resource "tencentcloud_clb_listener" "example" {
   clb_id               = "lb-l6cp6jt4"
-  listener_name        = "test_listener"
+  listener_name        = "tf-example"
   port                 = "80"
   protocol             = "HTTPS"
   sni_switch           = true
@@ -147,9 +148,9 @@ resource "tencentcloud_clb_listener" "HTTPS_listener" {
 TCP SSL Listener
 
 ```hcl
-resource "tencentcloud_clb_listener" "TCPSSL_listener" {
+resource "tencentcloud_clb_listener" "example" {
   clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
+  listener_name              = "tf-example"
   port                       = "80"
   protocol                   = "TCP_SSL"
   certificate_ssl_mode       = "MUTUAL"
@@ -168,17 +169,17 @@ resource "tencentcloud_clb_listener" "TCPSSL_listener" {
 Port Range Listener
 
 ```hcl
-resource "tencentcloud_clb_instance" "clb_basic" {
-  network_type = "OPEN"
+resource "tencentcloud_clb_instance" "example" {
   clb_name     = "tf-listener-test"
+  network_type = "OPEN"
 }
 
-resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id              = tencentcloud_clb_instance.clb_basic.id
+resource "tencentcloud_clb_listener" "example" {
+  clb_id              = tencentcloud_clb_instance.example.id
+  listener_name       = "tf-example"
   port                = 1
   end_port            = 6
   protocol            = "TCP"
-  listener_name       = "listener_basic"
   session_expire_time = 30
   scheduler           = "WRR"
   target_type         = "NODE"
@@ -187,8 +188,8 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 
 Import
 
-CLB listener can be imported using the id (version >= 1.47.0), e.g.
+CLB listener can be imported using the clbId#listenerId (version >= 1.47.0), e.g.
 
 ```
-$ terraform import tencentcloud_clb_listener.foo lb-7a0t6zqb#lbl-hh141sn9
+$ terraform import tencentcloud_clb_listener.example lb-7a0t6zqb#lbl-hh141sn9
 ```

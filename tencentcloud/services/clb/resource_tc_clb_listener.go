@@ -293,6 +293,36 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Connection idle timeout period (in seconds). It's only available to TCP listeners. Value range: 300-900 for shared and dedicated instances; 300-2000 for LCU-supported CLB instances. It defaults to 900. To set a period longer than 2000 seconds (up to 3600 seconds). Please submit a work order for processing.",
 			},
+			"reschedule_target_zero_weight": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "The rescheduling function, with a weight of 0 as a switch, triggers rescheduling when the weight of the backend server is set to 0. Only supported by TCP/UDP listeners.",
+			},
+			"reschedule_unhealthy": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "Rescheduling function, health check exception switch. Enabling this switch triggers rescheduling when a backend server fails a health check. Supported only by TCP/UDP listeners.",
+			},
+			"reschedule_expand_target": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "The rescheduling function, a switch for scaling backend services, triggers rescheduling when backend servers are added or removed. Only supported by TCP/UDP listeners.",
+			},
+			"reschedule_start_time": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Optional:    true,
+				Description: "Reschedule the trigger start time, with a value ranging from 0 to 3600 seconds. Only supported by TCP/UDP listeners.",
+			},
+			"reschedule_interval": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Optional:    true,
+				Description: "Rescheduled trigger duration, ranging from 0 to 3600 seconds. Supported only by TCP/UDP listeners.",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -429,6 +459,26 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("idle_connect_timeout"); ok {
 		request.IdleConnectTimeout = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_target_zero_weight"); ok {
+		request.RescheduleTargetZeroWeight = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_unhealthy"); ok {
+		request.RescheduleUnhealthy = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_expand_target"); ok {
+		request.RescheduleExpandTarget = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_start_time"); ok {
+		request.RescheduleStartTime = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_interval"); ok {
+		request.RescheduleInterval = helper.IntInt64(v.(int))
 	}
 
 	var response *clb.CreateListenerResponse
@@ -652,6 +702,33 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("idle_connect_timeout", instance.IdleConnectTimeout)
 	}
 
+	_ = d.Set("reschedule_target_zero_weight", false)
+	_ = d.Set("reschedule_unhealthy", false)
+	_ = d.Set("reschedule_expand_target", false)
+	if instance.AttrFlags != nil {
+		for _, item := range instance.AttrFlags {
+			if item != nil && *item == "RescheduleTargetZeroWeight" {
+				_ = d.Set("reschedule_target_zero_weight", true)
+			}
+
+			if item != nil && *item == "RescheduleUnhealthy" {
+				_ = d.Set("reschedule_unhealthy", true)
+			}
+
+			if item != nil && *item == "RescheduleExpandTarget" {
+				_ = d.Set("reschedule_expand_target", true)
+			}
+		}
+	}
+
+	if instance.RescheduleStartTime != nil {
+		_ = d.Set("reschedule_start_time", instance.RescheduleStartTime)
+	}
+
+	if instance.RescheduleInterval != nil {
+		_ = d.Set("reschedule_interval", instance.RescheduleInterval)
+	}
+
 	return nil
 }
 
@@ -774,6 +851,41 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		if v, ok := d.GetOkExists("idle_connect_timeout"); ok {
 			request.IdleConnectTimeout = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("reschedule_target_zero_weight") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_target_zero_weight"); ok {
+			request.RescheduleTargetZeroWeight = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("reschedule_unhealthy") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_unhealthy"); ok {
+			request.RescheduleUnhealthy = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("reschedule_expand_target") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_expand_target"); ok {
+			request.RescheduleExpandTarget = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("reschedule_start_time") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_start_time"); ok {
+			request.RescheduleStartTime = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("reschedule_interval") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_interval"); ok {
+			request.RescheduleInterval = helper.IntInt64(v.(int))
 		}
 	}
 
