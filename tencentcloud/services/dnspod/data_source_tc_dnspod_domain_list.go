@@ -493,7 +493,7 @@ func dataSourceTencentCloudDnspodDomainListRead(d *schema.ResourceData, meta int
 					tagListList = append(tagListList, tagListMap)
 				}
 
-				domainListItemMap["tag_list"] = []interface{}{tagListList}
+				domainListItemMap["tag_list"] = tagListList
 			}
 
 			ids = append(ids, strconv.FormatUint(*domainListItem.DomainId, 10))

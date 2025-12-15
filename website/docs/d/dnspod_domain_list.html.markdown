@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dnspod_domain_list"
 sidebar_current: "docs-tencentcloud-datasource-dnspod_domain_list"
 description: |-
-  Use this data source to query detailed information of dnspod domain_list
+  Use this data source to query detailed information of DnsPod domain list
 ---
 
 # tencentcloud_dnspod_domain_list
 
-Use this data source to query detailed information of dnspod domain_list
+Use this data source to query detailed information of DnsPod domain list
 
 ## Example Usage
 
@@ -24,7 +24,7 @@ data "tencentcloud_dnspod_domain_list" "domain_list" {
   package            = [""]
   remark             = ""
   updated_at_begin   = "2021-05-01 03:00:00"
-  updated_at_end     = "2024-05-10 20:00:00"
+  updated_at_end     = "2025-05-10 20:00:00"
   record_count_begin = 0
   record_count_end   = 100
   project_id         = -1
