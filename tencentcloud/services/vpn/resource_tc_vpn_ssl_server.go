@@ -55,21 +55,25 @@ func ResourceTencentCloudVpnSslServer() *schema.Resource {
 			"ssl_vpn_protocol": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The protocol of ssl vpn. Default value: UDP.",
 			},
 			"ssl_vpn_port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "The port of ssl vpn. Currently only supports UDP. Default value: 1194.",
 			},
 			"integrity_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The integrity algorithm. Valid values: SHA1. Default value: SHA1.",
 			},
 			"encrypt_algorithm": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				Description: "The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC." +
 					"Default value: AES-128-CBC.",
 			},
