@@ -17,9 +17,9 @@ package v20180317
 import (
     "context"
     "errors"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+    "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
 )
 
 const APIVersion = "2018-03-17"
@@ -45,6 +45,130 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewAddCustomizedConfigRequest() (request *AddCustomizedConfigRequest) {
+    request = &AddCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "AddCustomizedConfig")
+    
+    
+    return
+}
+
+func NewAddCustomizedConfigResponse() (response *AddCustomizedConfigResponse) {
+    response = &AddCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCustomizedConfig
+// This API is used to add new personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AddCustomizedConfig(request *AddCustomizedConfigRequest) (response *AddCustomizedConfigResponse, err error) {
+    return c.AddCustomizedConfigWithContext(context.Background(), request)
+}
+
+// AddCustomizedConfig
+// This API is used to add new personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AddCustomizedConfigWithContext(ctx context.Context, request *AddCustomizedConfigRequest) (response *AddCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewAddCustomizedConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "AddCustomizedConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAssociateCustomizedConfigRequest() (request *AssociateCustomizedConfigRequest) {
+    request = &AssociateCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "AssociateCustomizedConfig")
+    
+    
+    return
+}
+
+func NewAssociateCustomizedConfigResponse() (response *AssociateCustomizedConfigResponse) {
+    response = &AssociateCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AssociateCustomizedConfig
+// This API is used to associate configurations with a server or location based on the configuration type. It is preparing for decommissioning, please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AssociateCustomizedConfig(request *AssociateCustomizedConfigRequest) (response *AssociateCustomizedConfigResponse, err error) {
+    return c.AssociateCustomizedConfigWithContext(context.Background(), request)
+}
+
+// AssociateCustomizedConfig
+// This API is used to associate configurations with a server or location based on the configuration type. It is preparing for decommissioning, please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AssociateCustomizedConfigWithContext(ctx context.Context, request *AssociateCustomizedConfigRequest) (response *AssociateCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewAssociateCustomizedConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "AssociateCustomizedConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAssociateCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAssociateTargetGroupsRequest() (request *AssociateTargetGroupsRequest) {
     request = &AssociateTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -65,19 +189,19 @@ func NewAssociateTargetGroupsResponse() (response *AssociateTargetGroupsResponse
 }
 
 // AssociateTargetGroups
-// 本接口(AssociateTargetGroups)用来将目标组绑定到负载均衡的监听器（四层协议）或转发规则（七层协议）上。
+// This API is used to bind target groups to Cloud Load Balancer listeners (Layer-4 protocol) or forwarding rules (L7 protocol).
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is asynchronous. After it returns a successful result, you need to call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as input parameter to check whether this task is successful.
 //
-// 限制说明：
+// This API is used to describe restrictions.
 //
-// - 四层监听器绑定旧版目标组需要监听器开启后端目标组。
+// -Binding a legacy version target group to a Layer-4 listener requires the listener to have backend target groups enabled.
 //
-// - 七层绑定目标组，数据结构 TargetGroupAssociation 中 LocationId 为必填项。
+// -Layer-7 bind target group. LocationId is a required item in the data structure TargetGroupAssociation.
 //
-// - 负载均衡的 VPC 需要和目标组的 VPC 一致。
+// -The VPC of the Cloud Load Balancer must match the VPC of the target group.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -90,19 +214,19 @@ func (c *Client) AssociateTargetGroups(request *AssociateTargetGroupsRequest) (r
 }
 
 // AssociateTargetGroups
-// 本接口(AssociateTargetGroups)用来将目标组绑定到负载均衡的监听器（四层协议）或转发规则（七层协议）上。
+// This API is used to bind target groups to Cloud Load Balancer listeners (Layer-4 protocol) or forwarding rules (L7 protocol).
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is asynchronous. After it returns a successful result, you need to call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as input parameter to check whether this task is successful.
 //
-// 限制说明：
+// This API is used to describe restrictions.
 //
-// - 四层监听器绑定旧版目标组需要监听器开启后端目标组。
+// -Binding a legacy version target group to a Layer-4 listener requires the listener to have backend target groups enabled.
 //
-// - 七层绑定目标组，数据结构 TargetGroupAssociation 中 LocationId 为必填项。
+// -Layer-7 bind target group. LocationId is a required item in the data structure TargetGroupAssociation.
 //
-// - 负载均衡的 VPC 需要和目标组的 VPC 一致。
+// -The VPC of the Cloud Load Balancer must match the VPC of the target group.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -147,11 +271,9 @@ func NewAutoRewriteResponse() (response *AutoRewriteResponse) {
 }
 
 // AutoRewrite
-// 用户需要先创建出一个HTTPS:443监听器，并在其下创建转发规则。通过调用本接口，系统会自动创建出一个HTTP:80监听器（如果之前不存在），并在其下创建转发规则，与HTTPS:443监听器下的Domains（在入参中指定）对应。创建成功后可以通过HTTP:80地址自动跳转为HTTPS:443地址进行访问。
+// An HTTPS:443 listener needs to be created first, along with a forwarding rule. When this API is called, an HTTP:80 listener will be created automatically if it did not exist and a forwarding rule corresponding to `Domains` (specified in the input parameter) under the HTTPS:443 listener will also be created. After successful creation, access requests to an HTTP:80 address will be redirected to an HTTPS:443 address automatically.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
-//
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 //  INTERNALERROR = "InternalError"
@@ -173,11 +295,9 @@ func (c *Client) AutoRewrite(request *AutoRewriteRequest) (response *AutoRewrite
 }
 
 // AutoRewrite
-// 用户需要先创建出一个HTTPS:443监听器，并在其下创建转发规则。通过调用本接口，系统会自动创建出一个HTTP:80监听器（如果之前不存在），并在其下创建转发规则，与HTTPS:443监听器下的Domains（在入参中指定）对应。创建成功后可以通过HTTP:80地址自动跳转为HTTPS:443地址进行访问。
+// An HTTPS:443 listener needs to be created first, along with a forwarding rule. When this API is called, an HTTP:80 listener will be created automatically if it did not exist and a forwarding rule corresponding to `Domains` (specified in the input parameter) under the HTTPS:443 listener will also be created. After successful creation, access requests to an HTTP:80 address will be redirected to an HTTPS:443 address automatically.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
-//
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 //  INTERNALERROR = "InternalError"
@@ -231,9 +351,9 @@ func NewBatchDeregisterTargetsResponse() (response *BatchDeregisterTargetsRespon
 }
 
 // BatchDeregisterTargets
-// 批量解绑四七层后端服务。批量解绑的资源数量上限为500。只支持VPC网络负载均衡。
+// This API is used to batch unbind real servers of the layer-4 and layer-7 VPC-based CLBs. Up to 500 real servers can be unbound in a batch.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -256,9 +376,9 @@ func (c *Client) BatchDeregisterTargets(request *BatchDeregisterTargetsRequest) 
 }
 
 // BatchDeregisterTargets
-// 批量解绑四七层后端服务。批量解绑的资源数量上限为500。只支持VPC网络负载均衡。
+// This API is used to batch unbind real servers of the layer-4 and layer-7 VPC-based CLBs. Up to 500 real servers can be unbound in a batch.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -313,9 +433,9 @@ func NewBatchModifyTargetTagResponse() (response *BatchModifyTargetTagResponse) 
 }
 
 // BatchModifyTargetTag
-// BatchModifyTargetTag 接口用于批量修改负载均衡监听器绑定的后端机器的标签。批量修改的资源数量上限为500。本接口为同步接口。<br/>负载均衡的4层和7层监听器支持此接口，传统型负载均衡不支持。
+// This API is used to modify the tags of real servers bound to CLB listeners in batches. The maximum number of resources that can be modified in a batch is 500. This is a synchronous API. <br/> It is supported for Layer-4 and Layer-7 listeners of CLB instances, but not for classic CLB instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -329,9 +449,9 @@ func (c *Client) BatchModifyTargetTag(request *BatchModifyTargetTagRequest) (res
 }
 
 // BatchModifyTargetTag
-// BatchModifyTargetTag 接口用于批量修改负载均衡监听器绑定的后端机器的标签。批量修改的资源数量上限为500。本接口为同步接口。<br/>负载均衡的4层和7层监听器支持此接口，传统型负载均衡不支持。
+// This API is used to modify the tags of real servers bound to CLB listeners in batches. The maximum number of resources that can be modified in a batch is 500. This is a synchronous API. <br/> It is supported for Layer-4 and Layer-7 listeners of CLB instances, but not for classic CLB instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -377,9 +497,9 @@ func NewBatchModifyTargetWeightResponse() (response *BatchModifyTargetWeightResp
 }
 
 // BatchModifyTargetWeight
-// BatchModifyTargetWeight 接口用于批量修改负载均衡监听器绑定的后端机器的转发权重。批量修改的资源数量上限为500。本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。<br/>负载均衡的4层和7层监听器支持此接口，传统型负载均衡不支持。
+// The BatchModifyTargetWeight API is used to batch modify the forwarding weight of backend machines bound to a CLB listener. The maximum resource quantity for batch modification is 500. This is an asynchronous API. After it returns a successful result, you need to call the DescribeTaskStatus API with the returned RequestID as input parameter to check whether this task is successful. This API supports both layer-4 and layer-7 CLB listeners but is unsupported for classic CLB.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -392,9 +512,9 @@ func (c *Client) BatchModifyTargetWeight(request *BatchModifyTargetWeightRequest
 }
 
 // BatchModifyTargetWeight
-// BatchModifyTargetWeight 接口用于批量修改负载均衡监听器绑定的后端机器的转发权重。批量修改的资源数量上限为500。本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。<br/>负载均衡的4层和7层监听器支持此接口，传统型负载均衡不支持。
+// The BatchModifyTargetWeight API is used to batch modify the forwarding weight of backend machines bound to a CLB listener. The maximum resource quantity for batch modification is 500. This is an asynchronous API. After it returns a successful result, you need to call the DescribeTaskStatus API with the returned RequestID as input parameter to check whether this task is successful. This API supports both layer-4 and layer-7 CLB listeners but is unsupported for classic CLB.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -439,9 +559,9 @@ func NewBatchRegisterTargetsResponse() (response *BatchRegisterTargetsResponse) 
 }
 
 // BatchRegisterTargets
-// 批量绑定虚拟主机或弹性网卡，支持跨域绑定，支持四层、七层（TCP、UDP、HTTP、HTTPS）协议绑定。批量绑定的资源数量上限为500。只支持VPC网络负载均衡。
+// This API is used to batch bind CVM instances or ENIs. Up to 500 servers can be bound in a batch. It supports cross-region binding, layer-4 and layer-7 (TCP/UDP/HTTP/HTTPS) protocols, and VPC-based CLBs only.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -463,9 +583,9 @@ func (c *Client) BatchRegisterTargets(request *BatchRegisterTargetsRequest) (res
 }
 
 // BatchRegisterTargets
-// 批量绑定虚拟主机或弹性网卡，支持跨域绑定，支持四层、七层（TCP、UDP、HTTP、HTTPS）协议绑定。批量绑定的资源数量上限为500。只支持VPC网络负载均衡。
+// This API is used to batch bind CVM instances or ENIs. Up to 500 servers can be bound in a batch. It supports cross-region binding, layer-4 and layer-7 (TCP/UDP/HTTP/HTTPS) protocols, and VPC-based CLBs only.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -519,49 +639,49 @@ func NewCloneLoadBalancerResponse() (response *CloneLoadBalancerResponse) {
 }
 
 // CloneLoadBalancer
-// 克隆负载均衡实例，根据指定的负载均衡实例，复制出相同规则和绑定关系的负载均衡实例。克隆接口为异步操作，克隆的数据以调用CloneLoadBalancer时为准，如果调用CloneLoadBalancer后克隆CLB发生变化，变化规则不会克隆。
+// This API is used to clone a load balancing instance with identical rules and binding relationships based on the designated Cloud Load Balancer. The cloning process is an asynchronous operation. The cloned data is based on the status when calling CloneLoadBalancer. If the source CLB changes after calling CloneLoadBalancer, the change rules will not be cloned.
 //
 // 
 //
-// 注：查询实例创建状态可以根据返回值中的requestId访问[DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)接口
+// Note: The instance creation status can be queried based on the returned requestId by accessing the DescribeTaskStatus API (https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1).
 //
 // 
 //
-// 限制说明
+// This API is used to describe restriction descriptions.
 //
-// 实例属性维度限制：
+// This API is used to set instance attribute restrictions.
 //
-// - 支持克隆实例计费模式为按量计费与包年包月的实例，包年包月实例克隆后的新实例网络计费模式会转换为按小时带宽计费，其带宽、规格与原实例设置保持一致。
+// -The cloning feature supports both pay-as-you-go and monthly subscription instances. For cloned monthly subscription instances, the new instance's network billing mode switches to billing by hourly bandwidth, with its bandwidth and specifications remaining consistent with the settings of the original instance.
 //
-// - 不支持克隆未关联实例计费项的 CLB（历史免费活动创建）。
+// -CLB instances not associated with billable items cannot be cloned (historic free activity creation).
 //
-// - 不支持克隆传统型负载均衡实例和高防 CLB。
+// -Classic CLB instances and Anti-DDoS CLBs cannot be cloned.
 //
-// - 不支持克隆基础网络类型的实例。
+// -Cloning of classic network-based instances is not supported.
 //
-// - 不支持克隆 Anycast 类型的实例。
+// -Anycast instances cannot be cloned.
 //
-// - 不支持克隆 IPv6 NAT64 版本的实例。
+// -IPv6 NAT64 edition instances cannot be cloned.
 //
-// - 不支持克隆被封禁或冻结的实例。
+// -Blocked or frozen instances cannot be cloned.
 //
-// - 执行克隆操作前，请确保实例上没有使用已过期证书，否则会导致克隆失败。
+// -Before performing the cloning operation, make sure that all certificates used on the instance have not expired, otherwise cloning will fail.
 //
-// 配额维度限制：
+// This API is used to set quota dimension restrictions.
 //
-// - 当实例的监听器个数超过 50 个时，不支持克隆。
+// -Cloning is not supported when the number of instance listeners exceeds 50.
 //
-// - 当共享型实例的公网带宽上限超过 2G 时，不支持克隆。
+// -Cloning is not supported when the public network bandwidth cap of a shared instance exceeds 2G.
 //
 // 
 //
-// 通过接口调用：
+// This API is used to call APIs.
 //
-// BGP带宽包必须传带宽包id
+// This API is used to specify the BGP bandwidth package ID.
 //
-// 独占集群克隆必须传对应的参数，否则按共享型创建
+// This API is used to perform exclusive cluster cloning with corresponding parameters, otherwise shared instance creation will be used.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
@@ -588,49 +708,49 @@ func (c *Client) CloneLoadBalancer(request *CloneLoadBalancerRequest) (response 
 }
 
 // CloneLoadBalancer
-// 克隆负载均衡实例，根据指定的负载均衡实例，复制出相同规则和绑定关系的负载均衡实例。克隆接口为异步操作，克隆的数据以调用CloneLoadBalancer时为准，如果调用CloneLoadBalancer后克隆CLB发生变化，变化规则不会克隆。
+// This API is used to clone a load balancing instance with identical rules and binding relationships based on the designated Cloud Load Balancer. The cloning process is an asynchronous operation. The cloned data is based on the status when calling CloneLoadBalancer. If the source CLB changes after calling CloneLoadBalancer, the change rules will not be cloned.
 //
 // 
 //
-// 注：查询实例创建状态可以根据返回值中的requestId访问[DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)接口
+// Note: The instance creation status can be queried based on the returned requestId by accessing the DescribeTaskStatus API (https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1).
 //
 // 
 //
-// 限制说明
+// This API is used to describe restriction descriptions.
 //
-// 实例属性维度限制：
+// This API is used to set instance attribute restrictions.
 //
-// - 支持克隆实例计费模式为按量计费与包年包月的实例，包年包月实例克隆后的新实例网络计费模式会转换为按小时带宽计费，其带宽、规格与原实例设置保持一致。
+// -The cloning feature supports both pay-as-you-go and monthly subscription instances. For cloned monthly subscription instances, the new instance's network billing mode switches to billing by hourly bandwidth, with its bandwidth and specifications remaining consistent with the settings of the original instance.
 //
-// - 不支持克隆未关联实例计费项的 CLB（历史免费活动创建）。
+// -CLB instances not associated with billable items cannot be cloned (historic free activity creation).
 //
-// - 不支持克隆传统型负载均衡实例和高防 CLB。
+// -Classic CLB instances and Anti-DDoS CLBs cannot be cloned.
 //
-// - 不支持克隆基础网络类型的实例。
+// -Cloning of classic network-based instances is not supported.
 //
-// - 不支持克隆 Anycast 类型的实例。
+// -Anycast instances cannot be cloned.
 //
-// - 不支持克隆 IPv6 NAT64 版本的实例。
+// -IPv6 NAT64 edition instances cannot be cloned.
 //
-// - 不支持克隆被封禁或冻结的实例。
+// -Blocked or frozen instances cannot be cloned.
 //
-// - 执行克隆操作前，请确保实例上没有使用已过期证书，否则会导致克隆失败。
+// -Before performing the cloning operation, make sure that all certificates used on the instance have not expired, otherwise cloning will fail.
 //
-// 配额维度限制：
+// This API is used to set quota dimension restrictions.
 //
-// - 当实例的监听器个数超过 50 个时，不支持克隆。
+// -Cloning is not supported when the number of instance listeners exceeds 50.
 //
-// - 当共享型实例的公网带宽上限超过 2G 时，不支持克隆。
+// -Cloning is not supported when the public network bandwidth cap of a shared instance exceeds 2G.
 //
 // 
 //
-// 通过接口调用：
+// This API is used to call APIs.
 //
-// BGP带宽包必须传带宽包id
+// This API is used to specify the BGP bandwidth package ID.
 //
-// 独占集群克隆必须传对应的参数，否则按共享型创建
+// This API is used to perform exclusive cluster cloning with corresponding parameters, otherwise shared instance creation will be used.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
@@ -689,9 +809,9 @@ func NewCreateClsLogSetResponse() (response *CreateClsLogSetResponse) {
 }
 
 // CreateClsLogSet
-// 创建CLB专有日志集，此日志集用于存储CLB的日志。
+// This API is used to create a CLB exclusive logset for storing CLB logs.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -706,9 +826,9 @@ func (c *Client) CreateClsLogSet(request *CreateClsLogSetRequest) (response *Cre
 }
 
 // CreateClsLogSet
-// 创建CLB专有日志集，此日志集用于存储CLB的日志。
+// This API is used to create a CLB exclusive logset for storing CLB logs.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -755,11 +875,11 @@ func NewCreateListenerResponse() (response *CreateListenerResponse) {
 }
 
 // CreateListener
-// 在一个负载均衡实例下创建监听器。
+// This API is used to create a listener for a CLB instance.
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://intl.cloud.tencent.com/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -777,11 +897,11 @@ func (c *Client) CreateListener(request *CreateListenerRequest) (response *Creat
 }
 
 // CreateListener
-// 在一个负载均衡实例下创建监听器。
+// This API is used to create a listener for a CLB instance.
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://intl.cloud.tencent.com/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -831,13 +951,13 @@ func NewCreateLoadBalancerResponse() (response *CreateLoadBalancerResponse) {
 }
 
 // CreateLoadBalancer
-// 本接口(CreateLoadBalancer)用来创建负载均衡实例。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
+// This API (CreateLoadBalancer) is used to create a CLB instance. To use the CLB service, you first need to purchase one or more instances. After this API is called successfully, a unique instance ID will be returned. There are two types of instances: public network and private network. For more information, see the product types in the product documentation.
 //
-// 注意：(1)可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域是否支持创建IPv6实例；(2)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
+// Note: (1) To apply for a CLB instance in the specified AZ and cross-AZ disaster recovery, please [submit a ticket](https://console.cloud.tencent.com/workorder/category); (2) Currently, IPv6 is supported only in Beijing, Shanghai, and Guangzhou regions.
 //
-// 本接口为异步接口，接口成功返回后，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// This is an async API. After it is returned successfully, you can call the DescribeLoadBalancers API to query the status of the instance (such as creating and normal) to check whether it is successfully created.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -856,13 +976,13 @@ func (c *Client) CreateLoadBalancer(request *CreateLoadBalancerRequest) (respons
 }
 
 // CreateLoadBalancer
-// 本接口(CreateLoadBalancer)用来创建负载均衡实例。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
+// This API (CreateLoadBalancer) is used to create a CLB instance. To use the CLB service, you first need to purchase one or more instances. After this API is called successfully, a unique instance ID will be returned. There are two types of instances: public network and private network. For more information, see the product types in the product documentation.
 //
-// 注意：(1)可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域是否支持创建IPv6实例；(2)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
+// Note: (1) To apply for a CLB instance in the specified AZ and cross-AZ disaster recovery, please [submit a ticket](https://console.cloud.tencent.com/workorder/category); (2) Currently, IPv6 is supported only in Beijing, Shanghai, and Guangzhou regions.
 //
-// 本接口为异步接口，接口成功返回后，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// This is an async API. After it is returned successfully, you can call the DescribeLoadBalancers API to query the status of the instance (such as creating and normal) to check whether it is successfully created.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -913,11 +1033,11 @@ func NewCreateLoadBalancerSnatIpsResponse() (response *CreateLoadBalancerSnatIps
 }
 
 // CreateLoadBalancerSnatIps
-// 针对SnatPro负载均衡，这个接口用于添加SnatIp，如果负载均衡没有开启SnatPro，添加SnatIp后会自动开启。
+// This API is used to add SnatIp for SnatPro Cloud Load Balancer. If SnatPro is not enabled, it will be auto on after adding SnatIp.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -933,11 +1053,11 @@ func (c *Client) CreateLoadBalancerSnatIps(request *CreateLoadBalancerSnatIpsReq
 }
 
 // CreateLoadBalancerSnatIps
-// 针对SnatPro负载均衡，这个接口用于添加SnatIp，如果负载均衡没有开启SnatPro，添加SnatIp后会自动开启。
+// This API is used to add SnatIp for SnatPro Cloud Load Balancer. If SnatPro is not enabled, it will be auto on after adding SnatIp.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -985,11 +1105,11 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 }
 
 // CreateRule
-// CreateRule 接口用于在一个已存在的负载均衡七层监听器下创建转发规则，七层监听器中，后端服务必须绑定到规则上而非监听器上。
+// This API is used to create forwarding rules under an existing layer-7 CLB listener. In layer-7 CLB listeners, backend services must be bound to rules instead of the listener.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1006,11 +1126,11 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 }
 
 // CreateRule
-// CreateRule 接口用于在一个已存在的负载均衡七层监听器下创建转发规则，七层监听器中，后端服务必须绑定到规则上而非监听器上。
+// This API is used to create forwarding rules under an existing layer-7 CLB listener. In layer-7 CLB listeners, backend services must be bound to rules instead of the listener.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1059,9 +1179,9 @@ func NewCreateTargetGroupResponse() (response *CreateTargetGroupResponse) {
 }
 
 // CreateTargetGroup
-// 创建目标组。该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
+// This API is used to create a target group. This feature is in beta test, if you want to try it out, please [submit a ticket](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1).
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1074,9 +1194,9 @@ func (c *Client) CreateTargetGroup(request *CreateTargetGroupRequest) (response 
 }
 
 // CreateTargetGroup
-// 创建目标组。该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
+// This API is used to create a target group. This feature is in beta test, if you want to try it out, please [submit a ticket](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1).
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1121,9 +1241,9 @@ func NewCreateTopicResponse() (response *CreateTopicResponse) {
 }
 
 // CreateTopic
-// 创建主题，默认开启全文索引和键值索引。如果不存在CLB专有日志集，则创建失败。
+// This API is used to create a topic with the full-text index and key-value index enabled by default. The creation will fail if there is no CLB exclusive logset.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1141,9 +1261,9 @@ func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopic
 }
 
 // CreateTopic
-// 创建主题，默认开启全文索引和键值索引。如果不存在CLB专有日志集，则创建失败。
+// This API is used to create a topic with the full-text index and key-value index enabled by default. The creation will fail if there is no CLB exclusive logset.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1173,6 +1293,76 @@ func (c *Client) CreateTopicWithContext(ctx context.Context, request *CreateTopi
     return
 }
 
+func NewDeleteCustomizedConfigRequest() (request *DeleteCustomizedConfigRequest) {
+    request = &DeleteCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DeleteCustomizedConfig")
+    
+    
+    return
+}
+
+func NewDeleteCustomizedConfigResponse() (response *DeleteCustomizedConfigResponse) {
+    response = &DeleteCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCustomizedConfig
+// This API is used to delete personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteCustomizedConfig(request *DeleteCustomizedConfigRequest) (response *DeleteCustomizedConfigResponse, err error) {
+    return c.DeleteCustomizedConfigWithContext(context.Background(), request)
+}
+
+// DeleteCustomizedConfig
+// This API is used to delete personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteCustomizedConfigWithContext(ctx context.Context, request *DeleteCustomizedConfigRequest) (response *DeleteCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewDeleteCustomizedConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteCustomizedConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteListenerRequest() (request *DeleteListenerRequest) {
     request = &DeleteListenerRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1193,11 +1383,11 @@ func NewDeleteListenerResponse() (response *DeleteListenerResponse) {
 }
 
 // DeleteListener
-// 本接口用来删除负载均衡实例下的监听器（四层和七层）。
+// This API is used to delete listeners (layer-4 and layer-7) under a Cloud Load Balancer instance.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1210,11 +1400,11 @@ func (c *Client) DeleteListener(request *DeleteListenerRequest) (response *Delet
 }
 
 // DeleteListener
-// 本接口用来删除负载均衡实例下的监听器（四层和七层）。
+// This API is used to delete listeners (layer-4 and layer-7) under a Cloud Load Balancer instance.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1259,13 +1449,12 @@ func NewDeleteLoadBalancerResponse() (response *DeleteLoadBalancerResponse) {
 }
 
 // DeleteLoadBalancer
-// DeleteLoadBalancer 接口用以删除指定的一个或多个负载均衡实例。成功删除后，会把负载均衡实例下的监听器、转发规则一起删除，并把后端服务解绑。
+// This API is used to delete one or more specified CLB instances. After successful deletion, the listeners and forwarding rules under the CLB instance will be deleted together, and the backend service will be unbound.
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This API is asynchronous. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.com/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_EIPTRAFFICCHECKRISK = "FailedOperation.EipTrafficCheckRisk"
 //  FAILEDOPERATION_FREQUENCYCHECKRISK = "FailedOperation.FrequencyCheckRisk"
 //  FAILEDOPERATION_TARGETNUMCHECKRISK = "FailedOperation.TargetNumCheckRisk"
 //  FAILEDOPERATION_TRAFFICCHECKRISK = "FailedOperation.TrafficCheckRisk"
@@ -1283,13 +1472,12 @@ func (c *Client) DeleteLoadBalancer(request *DeleteLoadBalancerRequest) (respons
 }
 
 // DeleteLoadBalancer
-// DeleteLoadBalancer 接口用以删除指定的一个或多个负载均衡实例。成功删除后，会把负载均衡实例下的监听器、转发规则一起删除，并把后端服务解绑。
+// This API is used to delete one or more specified CLB instances. After successful deletion, the listeners and forwarding rules under the CLB instance will be deleted together, and the backend service will be unbound.
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This API is asynchronous. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.com/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_EIPTRAFFICCHECKRISK = "FailedOperation.EipTrafficCheckRisk"
 //  FAILEDOPERATION_FREQUENCYCHECKRISK = "FailedOperation.FrequencyCheckRisk"
 //  FAILEDOPERATION_TARGETNUMCHECKRISK = "FailedOperation.TargetNumCheckRisk"
 //  FAILEDOPERATION_TRAFFICCHECKRISK = "FailedOperation.TrafficCheckRisk"
@@ -1339,11 +1527,11 @@ func NewDeleteLoadBalancerListenersResponse() (response *DeleteLoadBalancerListe
 }
 
 // DeleteLoadBalancerListeners
-// 该接口支持删除负载均衡的多个监听器。
+// This API is used to delete multiple listeners of Cloud Load Balancer.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1358,11 +1546,11 @@ func (c *Client) DeleteLoadBalancerListeners(request *DeleteLoadBalancerListener
 }
 
 // DeleteLoadBalancerListeners
-// 该接口支持删除负载均衡的多个监听器。
+// This API is used to delete multiple listeners of Cloud Load Balancer.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1409,11 +1597,11 @@ func NewDeleteLoadBalancerSnatIpsResponse() (response *DeleteLoadBalancerSnatIps
 }
 
 // DeleteLoadBalancerSnatIps
-// 这个接口用于删除SnatPro的负载均衡的SnatIp。
+// This API is used to delete the SnatIp of the SnatPro load balancing.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1427,11 +1615,11 @@ func (c *Client) DeleteLoadBalancerSnatIps(request *DeleteLoadBalancerSnatIpsReq
 }
 
 // DeleteLoadBalancerSnatIps
-// 这个接口用于删除SnatPro的负载均衡的SnatIp。
+// This API is used to delete the SnatIp of the SnatPro load balancing.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1477,11 +1665,9 @@ func NewDeleteRewriteResponse() (response *DeleteRewriteResponse) {
 }
 
 // DeleteRewrite
-// DeleteRewrite 接口支持删除指定转发规则之间的重定向关系。
+// This API (DeleteRewrite) is used to delete the redirection relationship between the specified forwarding rules.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
-//
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 //  INTERNALERROR = "InternalError"
@@ -1499,11 +1685,9 @@ func (c *Client) DeleteRewrite(request *DeleteRewriteRequest) (response *DeleteR
 }
 
 // DeleteRewrite
-// DeleteRewrite 接口支持删除指定转发规则之间的重定向关系。
+// This API (DeleteRewrite) is used to delete the redirection relationship between the specified forwarding rules.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
-//
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 //  INTERNALERROR = "InternalError"
@@ -1553,11 +1737,11 @@ func NewDeleteRuleResponse() (response *DeleteRuleResponse) {
 }
 
 // DeleteRule
-// DeleteRule 接口用来删除负载均衡实例七层监听器下的转发规则。
+// This API is used to delete forwarding rules under a layer-7 listener of a load balancing instance.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1571,11 +1755,11 @@ func (c *Client) DeleteRule(request *DeleteRuleRequest) (response *DeleteRuleRes
 }
 
 // DeleteRule
-// DeleteRule 接口用来删除负载均衡实例七层监听器下的转发规则。
+// This API is used to delete forwarding rules under a layer-7 listener of a load balancing instance.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1621,9 +1805,9 @@ func NewDeleteTargetGroupsResponse() (response *DeleteTargetGroupsResponse) {
 }
 
 // DeleteTargetGroups
-// 删除目标组，支持批量删除目标组，单次最多批量删除 20 个目标组。
+// This API is used to delete target groups in batches, with a maximum of 20 target groups at a time.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1634,9 +1818,9 @@ func (c *Client) DeleteTargetGroups(request *DeleteTargetGroupsRequest) (respons
 }
 
 // DeleteTargetGroups
-// 删除目标组，支持批量删除目标组，单次最多批量删除 20 个目标组。
+// This API is used to delete target groups in batches, with a maximum of 20 target groups at a time.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1679,31 +1863,31 @@ func NewDeregisterFunctionTargetsResponse() (response *DeregisterFunctionTargets
 }
 
 // DeregisterFunctionTargets
-// DeregisterFunctionTargets 接口用来将一个云函数从负载均衡的转发规则上解绑，对于七层监听器，还需通过 LocationId 或 Domain+Url 指定转发规则。
+// This API is used to unbind a cloud function from the forwarding rule of a Cloud Load Balancer. For a layer-7 (HTTP/HTTPS) listener, the forwarding rule must be specified by LocationId or Domain+Url.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// <br/>限制说明：
+// This API is used to describe restrictions.
 //
 // 
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
+// -SCF binding is supported only in Guangzhou, Shenzhen Finance, Shanghai, Shanghai Finance, Beijing, Chengdu, Hong Kong (China), Singapore, Tokyo, and Silicon Valley.
 //
-// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。
+// -Only the standard account type supports binding SCF. The classic account type is unsupported. We recommend upgrading to the standard account type. For more information, see [account type upgrade instructions](https://www.tencentcloud.comom/document/product/1199/49090?from_cn_redirect=1).
 //
-// - 传统型负载均衡不支持绑定 SCF。
+// -Classic CLB does not support binding SCF.
 //
-// - 基础网络类型不支持绑定 SCF。
+// -Basic Network Type does not support binding SCF.
 //
-// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+// -CLB supports binding ALL SCFs in the same region by default, supports cross-VPC binding, but cross-region selection is not supported.
 //
-// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+// -Currently, only IPv4 and IPv6 NAT64 versions of Cloud Load Balancer support binding SCF. IPv6 version is not currently supported.
 //
-// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+// -Only layer-7 (HTTP, HTTPS) listeners support binding SCF. Layer-4 (TCP, UDP, TCP SSL) listeners and layer-7 QUIC listeners are unsupported.
 //
-// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+// -CLB binding SCF only supports binding cloud functions of the "Event function" type.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1720,31 +1904,31 @@ func (c *Client) DeregisterFunctionTargets(request *DeregisterFunctionTargetsReq
 }
 
 // DeregisterFunctionTargets
-// DeregisterFunctionTargets 接口用来将一个云函数从负载均衡的转发规则上解绑，对于七层监听器，还需通过 LocationId 或 Domain+Url 指定转发规则。
+// This API is used to unbind a cloud function from the forwarding rule of a Cloud Load Balancer. For a layer-7 (HTTP/HTTPS) listener, the forwarding rule must be specified by LocationId or Domain+Url.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// <br/>限制说明：
+// This API is used to describe restrictions.
 //
 // 
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
+// -SCF binding is supported only in Guangzhou, Shenzhen Finance, Shanghai, Shanghai Finance, Beijing, Chengdu, Hong Kong (China), Singapore, Tokyo, and Silicon Valley.
 //
-// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。
+// -Only the standard account type supports binding SCF. The classic account type is unsupported. We recommend upgrading to the standard account type. For more information, see [account type upgrade instructions](https://www.tencentcloud.comom/document/product/1199/49090?from_cn_redirect=1).
 //
-// - 传统型负载均衡不支持绑定 SCF。
+// -Classic CLB does not support binding SCF.
 //
-// - 基础网络类型不支持绑定 SCF。
+// -Basic Network Type does not support binding SCF.
 //
-// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+// -CLB supports binding ALL SCFs in the same region by default, supports cross-VPC binding, but cross-region selection is not supported.
 //
-// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+// -Currently, only IPv4 and IPv6 NAT64 versions of Cloud Load Balancer support binding SCF. IPv6 version is not currently supported.
 //
-// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+// -Only layer-7 (HTTP, HTTPS) listeners support binding SCF. Layer-4 (TCP, UDP, TCP SSL) listeners and layer-7 QUIC listeners are unsupported.
 //
-// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+// -CLB binding SCF only supports binding cloud functions of the "Event function" type.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1793,11 +1977,11 @@ func NewDeregisterTargetGroupInstancesResponse() (response *DeregisterTargetGrou
 }
 
 // DeregisterTargetGroupInstances
-// 从目标组中解绑服务器。
+// This API is used to unbind a server from a target group.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1809,11 +1993,11 @@ func (c *Client) DeregisterTargetGroupInstances(request *DeregisterTargetGroupIn
 }
 
 // DeregisterTargetGroupInstances
-// 从目标组中解绑服务器。
+// This API is used to unbind a server from a target group.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -1857,11 +2041,11 @@ func NewDeregisterTargetsResponse() (response *DeregisterTargetsResponse) {
 }
 
 // DeregisterTargets
-// DeregisterTargets 接口用来将一台或多台后端服务从负载均衡的监听器或转发规则上解绑，对于四层监听器，只需指定监听器ID即可，对于七层监听器，还需通过LocationId或Domain+Url指定转发规则。
+// This API (DeregisterTargets) is used to unbind one or more real servers from a CLB listener or forwarding rule. For layer-4 listeners, only the listener ID needs to be specified. For layer-7 listeners, the forwarding rule also needs to be specified through LocationId or Domain+Url.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1876,11 +2060,11 @@ func (c *Client) DeregisterTargets(request *DeregisterTargetsRequest) (response 
 }
 
 // DeregisterTargets
-// DeregisterTargets 接口用来将一台或多台后端服务从负载均衡的监听器或转发规则上解绑，对于四层监听器，只需指定监听器ID即可，对于七层监听器，还需通过LocationId或Domain+Url指定转发规则。
+// This API (DeregisterTargets) is used to unbind one or more real servers from a CLB listener or forwarding rule. For layer-4 listeners, only the listener ID needs to be specified. For layer-7 listeners, the forwarding rule also needs to be specified through LocationId or Domain+Url.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1927,9 +2111,9 @@ func NewDeregisterTargetsFromClassicalLBResponse() (response *DeregisterTargetsF
 }
 
 // DeregisterTargetsFromClassicalLB
-// DeregisterTargetsFromClassicalLB 接口用于解绑负载均衡后端服务。本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This API is used to unbind a CLB real server. This is an async API. After it is returned successfully, you can call the API `DescribeTaskStatus` with the returned RequestId as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1944,9 +2128,9 @@ func (c *Client) DeregisterTargetsFromClassicalLB(request *DeregisterTargetsFrom
 }
 
 // DeregisterTargetsFromClassicalLB
-// DeregisterTargetsFromClassicalLB 接口用于解绑负载均衡后端服务。本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This API is used to unbind a CLB real server. This is an async API. After it is returned successfully, you can call the API `DescribeTaskStatus` with the returned RequestId as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1993,9 +2177,9 @@ func NewDescribeBlockIPListResponse() (response *DescribeBlockIPListResponse) {
 }
 
 // DescribeBlockIPList
-// 查询一个负载均衡所封禁的IP列表（黑名单）。（接口灰度中，如需使用请提工单）
+// This API is used to query the list of blocked IPs (blocklist) of a CLB instance. (This API is in beta test. To use it, please submit a ticket.)
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2008,9 +2192,9 @@ func (c *Client) DescribeBlockIPList(request *DescribeBlockIPListRequest) (respo
 }
 
 // DescribeBlockIPList
-// 查询一个负载均衡所封禁的IP列表（黑名单）。（接口灰度中，如需使用请提工单）
+// This API is used to query the list of blocked IPs (blocklist) of a CLB instance. (This API is in beta test. To use it, please submit a ticket.)
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2055,9 +2239,9 @@ func NewDescribeBlockIPTaskResponse() (response *DescribeBlockIPTaskResponse) {
 }
 
 // DescribeBlockIPTask
-// 根据 ModifyBlockIPList 接口返回的异步任务的ID，查询封禁IP（黑名单）异步任务的执行状态。（接口灰度中，如需使用请提工单）
+// This API is used to query the execution status of an async IP blocking (blocklisting) task by the async task ID returned by the `ModifyBlockIPList` API. (This API is in beta test. To use it, please submit a ticket.)
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2066,9 +2250,9 @@ func (c *Client) DescribeBlockIPTask(request *DescribeBlockIPTaskRequest) (respo
 }
 
 // DescribeBlockIPTask
-// 根据 ModifyBlockIPList 接口返回的异步任务的ID，查询封禁IP（黑名单）异步任务的执行状态。（接口灰度中，如需使用请提工单）
+// This API is used to query the execution status of an async IP blocking (blocklisting) task by the async task ID returned by the `ModifyBlockIPList` API. (This API is in beta test. To use it, please submit a ticket.)
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2109,9 +2293,9 @@ func NewDescribeClassicalLBByInstanceIdResponse() (response *DescribeClassicalLB
 }
 
 // DescribeClassicalLBByInstanceId
-// DescribeClassicalLBByInstanceId用于通过后端实例ID获取传统型负载均衡ID列表。
+// This API is used to get the list of classic CLB instance IDs through a real server ID.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2126,9 +2310,9 @@ func (c *Client) DescribeClassicalLBByInstanceId(request *DescribeClassicalLBByI
 }
 
 // DescribeClassicalLBByInstanceId
-// DescribeClassicalLBByInstanceId用于通过后端实例ID获取传统型负载均衡ID列表。
+// This API is used to get the list of classic CLB instance IDs through a real server ID.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2175,9 +2359,9 @@ func NewDescribeClassicalLBHealthStatusResponse() (response *DescribeClassicalLB
 }
 
 // DescribeClassicalLBHealthStatus
-// DescribeClassicalLBHealthStatus用于获取传统型负载均衡后端的健康状态
+// This API (DescribeClassicalLBHealthStatus) is used to get the real server health status of a classic CLB
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2192,9 +2376,9 @@ func (c *Client) DescribeClassicalLBHealthStatus(request *DescribeClassicalLBHea
 }
 
 // DescribeClassicalLBHealthStatus
-// DescribeClassicalLBHealthStatus用于获取传统型负载均衡后端的健康状态
+// This API (DescribeClassicalLBHealthStatus) is used to get the real server health status of a classic CLB
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2241,9 +2425,9 @@ func NewDescribeClassicalLBListenersResponse() (response *DescribeClassicalLBLis
 }
 
 // DescribeClassicalLBListeners
-// DescribeClassicalLBListeners 接口用于获取传统型负载均衡的监听器信息。
+// This API (DescribeClassicalLBListeners) is used to get the listener information of a classic CLB.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2259,9 +2443,9 @@ func (c *Client) DescribeClassicalLBListeners(request *DescribeClassicalLBListen
 }
 
 // DescribeClassicalLBListeners
-// DescribeClassicalLBListeners 接口用于获取传统型负载均衡的监听器信息。
+// This API (DescribeClassicalLBListeners) is used to get the listener information of a classic CLB.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2309,9 +2493,9 @@ func NewDescribeClassicalLBTargetsResponse() (response *DescribeClassicalLBTarge
 }
 
 // DescribeClassicalLBTargets
-// DescribeClassicalLBTargets用于获取传统型负载均衡绑定的后端服务。
+// This API is used to get the real servers bound to a classic CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2326,9 +2510,9 @@ func (c *Client) DescribeClassicalLBTargets(request *DescribeClassicalLBTargetsR
 }
 
 // DescribeClassicalLBTargets
-// DescribeClassicalLBTargets用于获取传统型负载均衡绑定的后端服务。
+// This API is used to get the real servers bound to a classic CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2375,9 +2559,9 @@ func NewDescribeClsLogSetResponse() (response *DescribeClsLogSetResponse) {
 }
 
 // DescribeClsLogSet
-// 获取用户的CLB专有日志集。
+// This API is used to get the CLB exclusive logset.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2387,9 +2571,9 @@ func (c *Client) DescribeClsLogSet(request *DescribeClsLogSetRequest) (response 
 }
 
 // DescribeClsLogSet
-// 获取用户的CLB专有日志集。
+// This API is used to get the CLB exclusive logset.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2407,72 +2591,6 @@ func (c *Client) DescribeClsLogSetWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeClsLogSetResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeClusterResourcesRequest() (request *DescribeClusterResourcesRequest) {
-    request = &DescribeClusterResourcesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("clb", APIVersion, "DescribeClusterResources")
-    
-    
-    return
-}
-
-func NewDescribeClusterResourcesResponse() (response *DescribeClusterResourcesResponse) {
-    response = &DescribeClusterResourcesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeClusterResources
-// 查询独占集群中的资源列表，支持按集群ID、VIP、负载均衡ID、是否闲置为过滤条件检索。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
-//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
-//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-func (c *Client) DescribeClusterResources(request *DescribeClusterResourcesRequest) (response *DescribeClusterResourcesResponse, err error) {
-    return c.DescribeClusterResourcesWithContext(context.Background(), request)
-}
-
-// DescribeClusterResources
-// 查询独占集群中的资源列表，支持按集群ID、VIP、负载均衡ID、是否闲置为过滤条件检索。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
-//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
-//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-func (c *Client) DescribeClusterResourcesWithContext(ctx context.Context, request *DescribeClusterResourcesRequest) (response *DescribeClusterResourcesResponse, err error) {
-    if request == nil {
-        request = NewDescribeClusterResourcesRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeClusterResources")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeClusterResources require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeClusterResourcesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2497,9 +2615,9 @@ func NewDescribeCrossTargetsResponse() (response *DescribeCrossTargetsResponse) 
 }
 
 // DescribeCrossTargets
-// 查询跨域2.0版本云联网后端子机和网卡信息。
+// Queries information of CVMs and ENIs that use cross-region binding 2.0
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2514,9 +2632,9 @@ func (c *Client) DescribeCrossTargets(request *DescribeCrossTargetsRequest) (res
 }
 
 // DescribeCrossTargets
-// 查询跨域2.0版本云联网后端子机和网卡信息。
+// Queries information of CVMs and ENIs that use cross-region binding 2.0
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2563,9 +2681,9 @@ func NewDescribeCustomizedConfigAssociateListResponse() (response *DescribeCusto
 }
 
 // DescribeCustomizedConfigAssociateList
-// 拉取配置绑定的 server 或 location，如果 domain 存在，结果将根据 domain 过滤。或拉取配置绑定的 loadbalancer。
+// This API is used to query the configured location, bound server or bound CLB instance. If there are domain names, the result will be filtered by domain name.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2579,9 +2697,9 @@ func (c *Client) DescribeCustomizedConfigAssociateList(request *DescribeCustomiz
 }
 
 // DescribeCustomizedConfigAssociateList
-// 拉取配置绑定的 server 或 location，如果 domain 存在，结果将根据 domain 过滤。或拉取配置绑定的 loadbalancer。
+// This API is used to query the configured location, bound server or bound CLB instance. If there are domain names, the result will be filtered by domain name.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2627,9 +2745,9 @@ func NewDescribeCustomizedConfigListResponse() (response *DescribeCustomizedConf
 }
 
 // DescribeCustomizedConfigList
-// 拉取个性化配置列表，返回用户 AppId 下指定类型的配置。
+// This API is used to pull custom configuration lists to return the user configuration of `AppId`.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2655,9 +2773,9 @@ func (c *Client) DescribeCustomizedConfigList(request *DescribeCustomizedConfigL
 }
 
 // DescribeCustomizedConfigList
-// 拉取个性化配置列表，返回用户 AppId 下指定类型的配置。
+// This API is used to pull custom configuration lists to return the user configuration of `AppId`.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2695,72 +2813,6 @@ func (c *Client) DescribeCustomizedConfigListWithContext(ctx context.Context, re
     return
 }
 
-func NewDescribeExclusiveClustersRequest() (request *DescribeExclusiveClustersRequest) {
-    request = &DescribeExclusiveClustersRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("clb", APIVersion, "DescribeExclusiveClusters")
-    
-    
-    return
-}
-
-func NewDescribeExclusiveClustersResponse() (response *DescribeExclusiveClustersResponse) {
-    response = &DescribeExclusiveClustersResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeExclusiveClusters
-// 查询集群信息列表，支持以集群类型、集群唯一ID、集群名字、集群标签、集群内vip、集群内负载均衡唯一id、集群网络类型、可用区等条件进行检索
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
-//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
-//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-func (c *Client) DescribeExclusiveClusters(request *DescribeExclusiveClustersRequest) (response *DescribeExclusiveClustersResponse, err error) {
-    return c.DescribeExclusiveClustersWithContext(context.Background(), request)
-}
-
-// DescribeExclusiveClusters
-// 查询集群信息列表，支持以集群类型、集群唯一ID、集群名字、集群标签、集群内vip、集群内负载均衡唯一id、集群网络类型、可用区等条件进行检索
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
-//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
-//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-func (c *Client) DescribeExclusiveClustersWithContext(ctx context.Context, request *DescribeExclusiveClustersRequest) (response *DescribeExclusiveClustersResponse, err error) {
-    if request == nil {
-        request = NewDescribeExclusiveClustersRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeExclusiveClusters")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeExclusiveClusters require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeExclusiveClustersResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeIdleLoadBalancersRequest() (request *DescribeIdleLoadBalancersRequest) {
     request = &DescribeIdleLoadBalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2781,9 +2833,9 @@ func NewDescribeIdleLoadBalancersResponse() (response *DescribeIdleLoadBalancers
 }
 
 // DescribeIdleLoadBalancers
-// 闲置实例是指创建超过7天后付费实例，且没有创建规则或创建规则没有绑定子机的负载均衡实例。
+// Idle CLB instances are pay-as-you-go load balancers that, within seven days after the creation, do not have rules configured or the configured rules are not associated with any servers. 
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
@@ -2802,9 +2854,9 @@ func (c *Client) DescribeIdleLoadBalancers(request *DescribeIdleLoadBalancersReq
 }
 
 // DescribeIdleLoadBalancers
-// 闲置实例是指创建超过7天后付费实例，且没有创建规则或创建规则没有绑定子机的负载均衡实例。
+// Idle CLB instances are pay-as-you-go load balancers that, within seven days after the creation, do not have rules configured or the configured rules are not associated with any servers. 
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
@@ -2855,9 +2907,9 @@ func NewDescribeLBListenersResponse() (response *DescribeLBListenersResponse) {
 }
 
 // DescribeLBListeners
-// 查询后端云主机或弹性网卡绑定的负载均衡，支持弹性网卡和cvm查询。
+// This API is used to query CLB instances bound to the CVM or ENI.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2873,9 +2925,9 @@ func (c *Client) DescribeLBListeners(request *DescribeLBListenersRequest) (respo
 }
 
 // DescribeLBListeners
-// 查询后端云主机或弹性网卡绑定的负载均衡，支持弹性网卡和cvm查询。
+// This API is used to query CLB instances bound to the CVM or ENI.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2923,9 +2975,9 @@ func NewDescribeLBOperateProtectResponse() (response *DescribeLBOperateProtectRe
 }
 
 // DescribeLBOperateProtect
-// 查询负载均衡的操作保护信息。
+// This API is used to query the operation protection info of Cloud Load Balancer.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2941,9 +2993,9 @@ func (c *Client) DescribeLBOperateProtect(request *DescribeLBOperateProtectReque
 }
 
 // DescribeLBOperateProtect
-// 查询负载均衡的操作保护信息。
+// This API is used to query the operation protection info of Cloud Load Balancer.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2991,9 +3043,9 @@ func NewDescribeListenersResponse() (response *DescribeListenersResponse) {
 }
 
 // DescribeListeners
-// DescribeListeners 接口可根据负载均衡器 ID、监听器的协议或端口作为过滤条件获取监听器列表。如果不指定任何过滤条件，则返回该负载均衡实例下的所有监听器。
+// This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3009,9 +3061,9 @@ func (c *Client) DescribeListeners(request *DescribeListenersRequest) (response 
 }
 
 // DescribeListeners
-// DescribeListeners 接口可根据负载均衡器 ID、监听器的协议或端口作为过滤条件获取监听器列表。如果不指定任何过滤条件，则返回该负载均衡实例下的所有监听器。
+// This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3059,9 +3111,9 @@ func NewDescribeLoadBalancerListByCertIdResponse() (response *DescribeLoadBalanc
 }
 
 // DescribeLoadBalancerListByCertId
-// 根据证书ID查询其在一个地域中所关联到负载均衡实例列表
+// This API is used to query the list of CLB instances associated with a certificate in a region by certificate ID.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3074,9 +3126,9 @@ func (c *Client) DescribeLoadBalancerListByCertId(request *DescribeLoadBalancerL
 }
 
 // DescribeLoadBalancerListByCertId
-// 根据证书ID查询其在一个地域中所关联到负载均衡实例列表
+// This API is used to query the list of CLB instances associated with a certificate in a region by certificate ID.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3121,9 +3173,9 @@ func NewDescribeLoadBalancerOverviewResponse() (response *DescribeLoadBalancerOv
 }
 
 // DescribeLoadBalancerOverview
-// 查询运行中、隔离中、即将到期和负载均衡总数。
+// Queries the total number of CLB instances and the number of CLB instances in different status (running, isolated and about to expire).
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
@@ -3135,9 +3187,9 @@ func (c *Client) DescribeLoadBalancerOverview(request *DescribeLoadBalancerOverv
 }
 
 // DescribeLoadBalancerOverview
-// 查询运行中、隔离中、即将到期和负载均衡总数。
+// Queries the total number of CLB instances and the number of CLB instances in different status (running, isolated and about to expire).
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
@@ -3181,9 +3233,9 @@ func NewDescribeLoadBalancerTrafficResponse() (response *DescribeLoadBalancerTra
 }
 
 // DescribeLoadBalancerTraffic
-// 查询账号下的高流量负载均衡，返回前10个负载均衡。如果是子账号登录，只返回子账号有权限的负载均衡。
+// This API is used to query CLB instances with high traffic under the current account, and return the top 10 results. For queries using a sub-account, only the CLB instances authorized to the sub-account will be returned.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
@@ -3194,9 +3246,9 @@ func (c *Client) DescribeLoadBalancerTraffic(request *DescribeLoadBalancerTraffi
 }
 
 // DescribeLoadBalancerTraffic
-// 查询账号下的高流量负载均衡，返回前10个负载均衡。如果是子账号登录，只返回子账号有权限的负载均衡。
+// This API is used to query CLB instances with high traffic under the current account, and return the top 10 results. For queries using a sub-account, only the CLB instances authorized to the sub-account will be returned.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
@@ -3239,9 +3291,9 @@ func NewDescribeLoadBalancersResponse() (response *DescribeLoadBalancersResponse
 }
 
 // DescribeLoadBalancers
-// 查询一个地域的负载均衡实例列表。
+// This API is used to query the list of CLB instances in a region.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3258,9 +3310,9 @@ func (c *Client) DescribeLoadBalancers(request *DescribeLoadBalancersRequest) (r
 }
 
 // DescribeLoadBalancers
-// 查询一个地域的负载均衡实例列表。
+// This API is used to query the list of CLB instances in a region.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3309,9 +3361,9 @@ func NewDescribeLoadBalancersDetailResponse() (response *DescribeLoadBalancersDe
 }
 
 // DescribeLoadBalancersDetail
-// 查询负载均衡的详细信息，包括监听器，规则及后端目标。
+// This API is used to query CLB instance details, including listener, rules, and target real servers.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3326,9 +3378,9 @@ func (c *Client) DescribeLoadBalancersDetail(request *DescribeLoadBalancersDetai
 }
 
 // DescribeLoadBalancersDetail
-// 查询负载均衡的详细信息，包括监听器，规则及后端目标。
+// This API is used to query CLB instance details, including listener, rules, and target real servers.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3375,9 +3427,9 @@ func NewDescribeQuotaResponse() (response *DescribeQuotaResponse) {
 }
 
 // DescribeQuota
-// 查询用户当前地域下的各项配额
+// This API is used to query various quotas in the current region.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3386,9 +3438,9 @@ func (c *Client) DescribeQuota(request *DescribeQuotaRequest) (response *Describ
 }
 
 // DescribeQuota
-// 查询用户当前地域下的各项配额
+// This API is used to query various quotas in the current region.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3429,9 +3481,9 @@ func NewDescribeResourcesResponse() (response *DescribeResourcesResponse) {
 }
 
 // DescribeResources
-// 查询用户在当前地域支持可用区列表和资源列表。
+// This API is used to query the list of AZs and resources supported for the user in the current region.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3446,9 +3498,9 @@ func (c *Client) DescribeResources(request *DescribeResourcesRequest) (response 
 }
 
 // DescribeResources
-// 查询用户在当前地域支持可用区列表和资源列表。
+// This API is used to query the list of AZs and resources supported for the user in the current region.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3495,9 +3547,9 @@ func NewDescribeRewriteResponse() (response *DescribeRewriteResponse) {
 }
 
 // DescribeRewrite
-// DescribeRewrite 接口可根据负载均衡实例ID，查询一个负载均衡实例下转发规则的重定向关系。如果不指定监听器ID或转发规则ID，则返回该负载均衡实例下的所有重定向关系。
+// This API (DescribeRewrite) is used to query the redirection relationship between the forwarding rules of a CLB instance by instance ID. If no listener ID or forwarding rule ID is specified, all redirection relationships in the instance will be returned.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3514,9 +3566,9 @@ func (c *Client) DescribeRewrite(request *DescribeRewriteRequest) (response *Des
 }
 
 // DescribeRewrite
-// DescribeRewrite 接口可根据负载均衡实例ID，查询一个负载均衡实例下转发规则的重定向关系。如果不指定监听器ID或转发规则ID，则返回该负载均衡实例下的所有重定向关系。
+// This API (DescribeRewrite) is used to query the redirection relationship between the forwarding rules of a CLB instance by instance ID. If no listener ID or forwarding rule ID is specified, all redirection relationships in the instance will be returned.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3565,9 +3617,9 @@ func NewDescribeTargetGroupInstancesResponse() (response *DescribeTargetGroupIns
 }
 
 // DescribeTargetGroupInstances
-// 获取目标组绑定的服务器信息
+// This API is used to get the information of servers bound to a target group.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3578,9 +3630,9 @@ func (c *Client) DescribeTargetGroupInstances(request *DescribeTargetGroupInstan
 }
 
 // DescribeTargetGroupInstances
-// 获取目标组绑定的服务器信息
+// This API is used to get the information of servers bound to a target group.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3623,9 +3675,9 @@ func NewDescribeTargetGroupListResponse() (response *DescribeTargetGroupListResp
 }
 
 // DescribeTargetGroupList
-// 获取目标组列表
+// This API is used to get the target group list.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -3636,9 +3688,9 @@ func (c *Client) DescribeTargetGroupList(request *DescribeTargetGroupListRequest
 }
 
 // DescribeTargetGroupList
-// 获取目标组列表
+// This API is used to get the target group list.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -3681,9 +3733,9 @@ func NewDescribeTargetGroupsResponse() (response *DescribeTargetGroupsResponse) 
 }
 
 // DescribeTargetGroups
-// 查询目标组信息
+// This API is used to query the target group information.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3694,9 +3746,9 @@ func (c *Client) DescribeTargetGroups(request *DescribeTargetGroupsRequest) (res
 }
 
 // DescribeTargetGroups
-// 查询目标组信息
+// This API is used to query the target group information.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3739,9 +3791,9 @@ func NewDescribeTargetHealthResponse() (response *DescribeTargetHealthResponse) 
 }
 
 // DescribeTargetHealth
-// DescribeTargetHealth 接口用来获取负载均衡后端服务的健康检查结果，不支持传统型负载均衡。
+// This API (DescribeTargetHealth) is used to query the health check result of a real server of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3756,9 +3808,9 @@ func (c *Client) DescribeTargetHealth(request *DescribeTargetHealthRequest) (res
 }
 
 // DescribeTargetHealth
-// DescribeTargetHealth 接口用来获取负载均衡后端服务的健康检查结果，不支持传统型负载均衡。
+// This API (DescribeTargetHealth) is used to query the health check result of a real server of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3805,9 +3857,9 @@ func NewDescribeTargetsResponse() (response *DescribeTargetsResponse) {
 }
 
 // DescribeTargets
-// DescribeTargets 接口用来查询负载均衡实例的某些监听器绑定的后端服务列表。
+// This API (DescribeTargets) is used to query the list of real servers bound to some listeners of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3822,9 +3874,9 @@ func (c *Client) DescribeTargets(request *DescribeTargetsRequest) (response *Des
 }
 
 // DescribeTargets
-// DescribeTargets 接口用来查询负载均衡实例的某些监听器绑定的后端服务列表。
+// This API (DescribeTargets) is used to query the list of real servers bound to some listeners of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3871,9 +3923,9 @@ func NewDescribeTaskStatusResponse() (response *DescribeTaskStatusResponse) {
 }
 
 // DescribeTaskStatus
-// 本接口用于查询异步任务的执行状态，对于非查询类的接口（创建/删除负载均衡实例、监听器、规则以及绑定或解绑后端服务等），在接口调用成功后，都需要使用本接口查询任务最终是否执行成功。
+// This API is used to query the execution status of an async task. After non-query APIs (used to create/delete CLB instances, listeners, or rules or to bind/unbind real servers) are called successfully, this API needs to be used to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3883,9 +3935,9 @@ func (c *Client) DescribeTaskStatus(request *DescribeTaskStatusRequest) (respons
 }
 
 // DescribeTaskStatus
-// 本接口用于查询异步任务的执行状态，对于非查询类的接口（创建/删除负载均衡实例、监听器、规则以及绑定或解绑后端服务等），在接口调用成功后，都需要使用本接口查询任务最终是否执行成功。
+// This API is used to query the execution status of an async task. After non-query APIs (used to create/delete CLB instances, listeners, or rules or to bind/unbind real servers) are called successfully, this API needs to be used to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3903,6 +3955,70 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeTaskStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDisassociateCustomizedConfigRequest() (request *DisassociateCustomizedConfigRequest) {
+    request = &DisassociateCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DisassociateCustomizedConfig")
+    
+    
+    return
+}
+
+func NewDisassociateCustomizedConfigResponse() (response *DisassociateCustomizedConfigResponse) {
+    response = &DisassociateCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisassociateCustomizedConfig
+// This API is used to disassociate personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DisassociateCustomizedConfig(request *DisassociateCustomizedConfigRequest) (response *DisassociateCustomizedConfigResponse, err error) {
+    return c.DisassociateCustomizedConfigWithContext(context.Background(), request)
+}
+
+// DisassociateCustomizedConfig
+// This API is used to disassociate personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DisassociateCustomizedConfigWithContext(ctx context.Context, request *DisassociateCustomizedConfigRequest) (response *DisassociateCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewDisassociateCustomizedConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DisassociateCustomizedConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisassociateCustomizedConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -3927,13 +4043,13 @@ func NewDisassociateTargetGroupsResponse() (response *DisassociateTargetGroupsRe
 }
 
 // DisassociateTargetGroups
-// 解除规则的目标组关联关系。
+// This API is used to disassociate a target group from a rule.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After the API return succeeds, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 当解绑七层转发规则时，LocationId 为必填项。
+// When unbinding a Layer 7 forwarding rule, LocationId is a required item.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -3945,13 +4061,13 @@ func (c *Client) DisassociateTargetGroups(request *DisassociateTargetGroupsReque
 }
 
 // DisassociateTargetGroups
-// 解除规则的目标组关联关系。
+// This API is used to disassociate a target group from a rule.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After the API return succeeds, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 当解绑七层转发规则时，LocationId 为必填项。
+// When unbinding a Layer 7 forwarding rule, LocationId is a required item.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -3995,9 +4111,9 @@ func NewInquiryPriceCreateLoadBalancerResponse() (response *InquiryPriceCreateLo
 }
 
 // InquiryPriceCreateLoadBalancer
-// InquiryPriceCreateLoadBalancer接口查询创建负载均衡的价格。
+// This API is used to query the price of creating a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4008,9 +4124,9 @@ func (c *Client) InquiryPriceCreateLoadBalancer(request *InquiryPriceCreateLoadB
 }
 
 // InquiryPriceCreateLoadBalancer
-// InquiryPriceCreateLoadBalancer接口查询创建负载均衡的价格。
+// This API is used to query the price of creating a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4053,9 +4169,9 @@ func NewInquiryPriceModifyLoadBalancerResponse() (response *InquiryPriceModifyLo
 }
 
 // InquiryPriceModifyLoadBalancer
-// InquiryPriceModifyLoadBalancer接口修改负载均衡配置询价。
+// This API is used to query the price of adjusting the specification of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4066,9 +4182,9 @@ func (c *Client) InquiryPriceModifyLoadBalancer(request *InquiryPriceModifyLoadB
 }
 
 // InquiryPriceModifyLoadBalancer
-// InquiryPriceModifyLoadBalancer接口修改负载均衡配置询价。
+// This API is used to query the price of adjusting the specification of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4111,9 +4227,9 @@ func NewInquiryPriceRefundLoadBalancerResponse() (response *InquiryPriceRefundLo
 }
 
 // InquiryPriceRefundLoadBalancer
-// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格，只支持预付费类型的负载均衡实例。
+// This API is used to query the refund price of Cloud Load Balancer and only supports prepaid load balancing instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4124,9 +4240,9 @@ func (c *Client) InquiryPriceRefundLoadBalancer(request *InquiryPriceRefundLoadB
 }
 
 // InquiryPriceRefundLoadBalancer
-// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格，只支持预付费类型的负载均衡实例。
+// This API is used to query the refund price of Cloud Load Balancer and only supports prepaid load balancing instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4169,9 +4285,9 @@ func NewInquiryPriceRenewLoadBalancerResponse() (response *InquiryPriceRenewLoad
 }
 
 // InquiryPriceRenewLoadBalancer
-// InquiryPriceRenewLoadBalancer接口查询对负载均衡续费的价格，只支持预付费负载均衡续费。
+// This API is used to query the price of renewing a CLB instance. It's only available to prepaid CLB instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4182,9 +4298,9 @@ func (c *Client) InquiryPriceRenewLoadBalancer(request *InquiryPriceRenewLoadBal
 }
 
 // InquiryPriceRenewLoadBalancer
-// InquiryPriceRenewLoadBalancer接口查询对负载均衡续费的价格，只支持预付费负载均衡续费。
+// This API is used to query the price of renewing a CLB instance. It's only available to prepaid CLB instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4227,11 +4343,9 @@ func NewManualRewriteResponse() (response *ManualRewriteResponse) {
 }
 
 // ManualRewrite
-// 用户手动配置原访问地址和重定向地址，系统自动将原访问地址的请求重定向至对应路径的目的地址。同一域名下可以配置多条路径作为重定向策略，实现http/https之间请求的自动跳转。设置重定向时，需满足如下约束条件：若A已经重定向至B，则A不能再重定向至C（除非先删除老的重定向关系，再建立新的重定向关系），B不能重定向至任何其它地址。
+// After the original access address and the address to be redirected are configured manually, the system will automatically redirect requests made to the original access address to the target address of the corresponding path. Multiple paths can be configured as a redirection policy under one domain name to achieve automatic redirection between HTTP and HTTPS. A redirection policy should meet the following rules: if A has already been redirected to B, then it cannot be redirected to C (unless the original redirection relationship is deleted and a new one is created), and B cannot be redirected to any other addresses.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
-//
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 //  INTERNALERROR = "InternalError"
@@ -4253,11 +4367,9 @@ func (c *Client) ManualRewrite(request *ManualRewriteRequest) (response *ManualR
 }
 
 // ManualRewrite
-// 用户手动配置原访问地址和重定向地址，系统自动将原访问地址的请求重定向至对应路径的目的地址。同一域名下可以配置多条路径作为重定向策略，实现http/https之间请求的自动跳转。设置重定向时，需满足如下约束条件：若A已经重定向至B，则A不能再重定向至C（除非先删除老的重定向关系，再建立新的重定向关系），B不能重定向至任何其它地址。
+// After the original access address and the address to be redirected are configured manually, the system will automatically redirect requests made to the original access address to the target address of the corresponding path. Multiple paths can be configured as a redirection policy under one domain name to achieve automatic redirection between HTTP and HTTPS. A redirection policy should meet the following rules: if A has already been redirected to B, then it cannot be redirected to C (unless the original redirection relationship is deleted and a new one is created), and B cannot be redirected to any other addresses.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
-//
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 //  INTERNALERROR = "InternalError"
@@ -4311,11 +4423,11 @@ func NewMigrateClassicalLoadBalancersResponse() (response *MigrateClassicalLoadB
 }
 
 // MigrateClassicalLoadBalancers
-// 本接口将传统型负载均衡迁移成(原应用型)负载均衡
+// This API is used to upgrade classic CLB instances to application CLB instances.
 //
-// 本接口为异步接口，接口成功返回后，可使用 DescribeLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// This is an async API. After it is returned successfully, you can check the action result by calling `DescribeLoadBalancers`. 
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4328,11 +4440,11 @@ func (c *Client) MigrateClassicalLoadBalancers(request *MigrateClassicalLoadBala
 }
 
 // MigrateClassicalLoadBalancers
-// 本接口将传统型负载均衡迁移成(原应用型)负载均衡
+// This API is used to upgrade classic CLB instances to application CLB instances.
 //
-// 本接口为异步接口，接口成功返回后，可使用 DescribeLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// This is an async API. After it is returned successfully, you can check the action result by calling `DescribeLoadBalancers`. 
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4377,11 +4489,11 @@ func NewModifyBlockIPListResponse() (response *ModifyBlockIPListResponse) {
 }
 
 // ModifyBlockIPList
-// 修改负载均衡的IP（client IP）封禁黑名单列表，一个转发规则最多支持封禁 2000000 个IP，及黑名单容量为 2000000。
+// This API is used to modify the client IP blocklist of a CLB instance. One forwarding rule supports blocking up to 2,000,000 IPs. One blocklist can contain up to 2,000,000 entries.
 //
-// （接口灰度中，如需使用请提工单）
+// (This API is in beta test. To use it, please submit a ticket.)
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4395,11 +4507,11 @@ func (c *Client) ModifyBlockIPList(request *ModifyBlockIPListRequest) (response 
 }
 
 // ModifyBlockIPList
-// 修改负载均衡的IP（client IP）封禁黑名单列表，一个转发规则最多支持封禁 2000000 个IP，及黑名单容量为 2000000。
+// This API is used to modify the client IP blocklist of a CLB instance. One forwarding rule supports blocking up to 2,000,000 IPs. One blocklist can contain up to 2,000,000 entries.
 //
-// （接口灰度中，如需使用请提工单）
+// (This API is in beta test. To use it, please submit a ticket.)
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4425,6 +4537,66 @@ func (c *Client) ModifyBlockIPListWithContext(ctx context.Context, request *Modi
     return
 }
 
+func NewModifyCustomizedConfigRequest() (request *ModifyCustomizedConfigRequest) {
+    request = &ModifyCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "ModifyCustomizedConfig")
+    
+    
+    return
+}
+
+func NewModifyCustomizedConfigResponse() (response *ModifyCustomizedConfigResponse) {
+    response = &ModifyCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCustomizedConfig
+// This API is used to modify personalized configuration. If the configuration is already bound to clb, server or location, update simultaneously. Prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyCustomizedConfig(request *ModifyCustomizedConfigRequest) (response *ModifyCustomizedConfigResponse, err error) {
+    return c.ModifyCustomizedConfigWithContext(context.Background(), request)
+}
+
+// ModifyCustomizedConfig
+// This API is used to modify personalized configuration. If the configuration is already bound to clb, server or location, update simultaneously. Prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+//
+// error code that may be returned:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyCustomizedConfigWithContext(ctx context.Context, request *ModifyCustomizedConfigRequest) (response *ModifyCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyCustomizedConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyCustomizedConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDomainRequest() (request *ModifyDomainRequest) {
     request = &ModifyDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4445,11 +4617,11 @@ func NewModifyDomainResponse() (response *ModifyDomainResponse) {
 }
 
 // ModifyDomain
-// ModifyDomain接口用来修改负载均衡七层监听器下的域名。
+// This API is used to modify the domain name under a layer-7 (HTTP/HTTPS) listener of Cloud Load Balancer.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4463,11 +4635,11 @@ func (c *Client) ModifyDomain(request *ModifyDomainRequest) (response *ModifyDom
 }
 
 // ModifyDomain
-// ModifyDomain接口用来修改负载均衡七层监听器下的域名。
+// This API is used to modify the domain name under a layer-7 (HTTP/HTTPS) listener of Cloud Load Balancer.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4513,11 +4685,11 @@ func NewModifyDomainAttributesResponse() (response *ModifyDomainAttributesRespon
 }
 
 // ModifyDomainAttributes
-// ModifyDomainAttributes接口用于修改负载均衡7层监听器转发规则的域名级别属性，如修改域名、修改DefaultServer、开启/关闭Http2、修改证书
+// This API is used to modify domain-level attributes of Cloud Load Balancer layer-7 listener forwarding rules, such as modifying domain name, changing DefaultServer, enabling/disabling Http/2, and modifying certificates.
 //
-// 本接口为异步接口，本接口返回成功后，需以返回的RequestId为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an async API. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4533,11 +4705,11 @@ func (c *Client) ModifyDomainAttributes(request *ModifyDomainAttributesRequest) 
 }
 
 // ModifyDomainAttributes
-// ModifyDomainAttributes接口用于修改负载均衡7层监听器转发规则的域名级别属性，如修改域名、修改DefaultServer、开启/关闭Http2、修改证书
+// This API is used to modify domain-level attributes of Cloud Load Balancer layer-7 listener forwarding rules, such as modifying domain name, changing DefaultServer, enabling/disabling Http/2, and modifying certificates.
 //
-// 本接口为异步接口，本接口返回成功后，需以返回的RequestId为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an async API. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4585,13 +4757,13 @@ func NewModifyFunctionTargetsResponse() (response *ModifyFunctionTargetsResponse
 }
 
 // ModifyFunctionTargets
-// 修改负载均衡转发规则上所绑定的云函数。
+// This API is used to modify the SCF bound to a Cloud Load Balancer forwarding rule.
 //
-// 限制说明：
+// This API is used to describe restrictions.
 //
-// - 仅支持绑定“Event 函数”类型的云函数。
+// -Only supports binding SCF of the "Event function" type.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -4607,13 +4779,13 @@ func (c *Client) ModifyFunctionTargets(request *ModifyFunctionTargetsRequest) (r
 }
 
 // ModifyFunctionTargets
-// 修改负载均衡转发规则上所绑定的云函数。
+// This API is used to modify the SCF bound to a Cloud Load Balancer forwarding rule.
 //
-// 限制说明：
+// This API is used to describe restrictions.
 //
-// - 仅支持绑定“Event 函数”类型的云函数。
+// -Only supports binding SCF of the "Event function" type.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -4661,11 +4833,11 @@ func NewModifyListenerResponse() (response *ModifyListenerResponse) {
 }
 
 // ModifyListener
-// ModifyListener接口用来修改负载均衡监听器的属性，包括监听器名称、健康检查参数、证书信息、转发策略等。本接口不支持传统型负载均衡。
+// This API is used to modify the attributes of a CLB instance listener, including the listener name, health check parameters, certificate information, and forwarding policy. This API does not support classic CLB instances.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://intl.cloud.tencent.com/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4680,11 +4852,11 @@ func (c *Client) ModifyListener(request *ModifyListenerRequest) (response *Modif
 }
 
 // ModifyListener
-// ModifyListener接口用来修改负载均衡监听器的属性，包括监听器名称、健康检查参数、证书信息、转发策略等。本接口不支持传统型负载均衡。
+// This API is used to modify the attributes of a CLB instance listener, including the listener name, health check parameters, certificate information, and forwarding policy. This API does not support classic CLB instances.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://intl.cloud.tencent.com/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4731,13 +4903,13 @@ func NewModifyLoadBalancerAttributesResponse() (response *ModifyLoadBalancerAttr
 }
 
 // ModifyLoadBalancerAttributes
-// 修改负载均衡实例的属性。支持修改负载均衡实例的名称、设置负载均衡的跨域属性。
+// This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
 //
-// 注意：非带宽上移用户的 CLB 实例必须加入带宽包才可以设置跨域属性。修改网络计费模式请到控制台操作。
+// Non-bandwidth-upshift users must add their CLB instance to a bandwidth package to configure cross-domain attributes. To modify the network billing mode, go to the console.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4757,13 +4929,13 @@ func (c *Client) ModifyLoadBalancerAttributes(request *ModifyLoadBalancerAttribu
 }
 
 // ModifyLoadBalancerAttributes
-// 修改负载均衡实例的属性。支持修改负载均衡实例的名称、设置负载均衡的跨域属性。
+// This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
 //
-// 注意：非带宽上移用户的 CLB 实例必须加入带宽包才可以设置跨域属性。修改网络计费模式请到控制台操作。
+// Non-bandwidth-upshift users must add their CLB instance to a bandwidth package to configure cross-domain attributes. To modify the network billing mode, go to the console.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4795,76 +4967,6 @@ func (c *Client) ModifyLoadBalancerAttributesWithContext(ctx context.Context, re
     return
 }
 
-func NewModifyLoadBalancerMixIpTargetRequest() (request *ModifyLoadBalancerMixIpTargetRequest) {
-    request = &ModifyLoadBalancerMixIpTargetRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("clb", APIVersion, "ModifyLoadBalancerMixIpTarget")
-    
-    
-    return
-}
-
-func NewModifyLoadBalancerMixIpTargetResponse() (response *ModifyLoadBalancerMixIpTargetResponse) {
-    response = &ModifyLoadBalancerMixIpTargetResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ModifyLoadBalancerMixIpTarget
-// 修改IPv6FullChain负载均衡7层监听器支持混绑IPv4/IPv6目标特性。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
-//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
-//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
-//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) ModifyLoadBalancerMixIpTarget(request *ModifyLoadBalancerMixIpTargetRequest) (response *ModifyLoadBalancerMixIpTargetResponse, err error) {
-    return c.ModifyLoadBalancerMixIpTargetWithContext(context.Background(), request)
-}
-
-// ModifyLoadBalancerMixIpTarget
-// 修改IPv6FullChain负载均衡7层监听器支持混绑IPv4/IPv6目标特性。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
-//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
-//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
-//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) ModifyLoadBalancerMixIpTargetWithContext(ctx context.Context, request *ModifyLoadBalancerMixIpTargetRequest) (response *ModifyLoadBalancerMixIpTargetResponse, err error) {
-    if request == nil {
-        request = NewModifyLoadBalancerMixIpTargetRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyLoadBalancerMixIpTarget")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyLoadBalancerMixIpTarget require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyLoadBalancerMixIpTargetResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewModifyLoadBalancerSlaRequest() (request *ModifyLoadBalancerSlaRequest) {
     request = &ModifyLoadBalancerSlaRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4885,17 +4987,17 @@ func NewModifyLoadBalancerSlaResponse() (response *ModifyLoadBalancerSlaResponse
 }
 
 // ModifyLoadBalancerSla
-// 本接口（ModifyLoadBalancerSla）用于调整按量计费模式实例的性能容量型规格，如共享型升级性能容量型，性能容量型实例规格调整。<br/>
+// This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example upgrading from shared type to performance capacity type or modifying the specification of LCU-supported instances.
 //
-// 限制条件：
+// This API is used to set use limits.
 //
-// - 本接口只支持调整按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行调整。
+// -This API only supports adjustments for pay-as-you-go CLB instances. For CLB instance upgrades with annual/monthly subscription, make adjustments through the console.
 //
-// - 共享型升级为性能容量型实例后，不支持再回退到共享型实例。
+// -After upgrading from a shared instance to a performance and capacity instance, reverting to a shared instance is not supported.
 //
-// - 传统型负载均衡实例不支持升级为性能容量型实例。
+// -A classic CLB instance does not support upgrading to a performance and capacity instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4909,17 +5011,17 @@ func (c *Client) ModifyLoadBalancerSla(request *ModifyLoadBalancerSlaRequest) (r
 }
 
 // ModifyLoadBalancerSla
-// 本接口（ModifyLoadBalancerSla）用于调整按量计费模式实例的性能容量型规格，如共享型升级性能容量型，性能容量型实例规格调整。<br/>
+// This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example upgrading from shared type to performance capacity type or modifying the specification of LCU-supported instances.
 //
-// 限制条件：
+// This API is used to set use limits.
 //
-// - 本接口只支持调整按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行调整。
+// -This API only supports adjustments for pay-as-you-go CLB instances. For CLB instance upgrades with annual/monthly subscription, make adjustments through the console.
 //
-// - 共享型升级为性能容量型实例后，不支持再回退到共享型实例。
+// -After upgrading from a shared instance to a performance and capacity instance, reverting to a shared instance is not supported.
 //
-// - 传统型负载均衡实例不支持升级为性能容量型实例。
+// -A classic CLB instance does not support upgrading to a performance and capacity instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4965,9 +5067,9 @@ func NewModifyLoadBalancersProjectResponse() (response *ModifyLoadBalancersProje
 }
 
 // ModifyLoadBalancersProject
-// 修改一个或多个负载均衡实例所属项目。
+// This API is used to modify the projects of CLB instances. 
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -4982,9 +5084,9 @@ func (c *Client) ModifyLoadBalancersProject(request *ModifyLoadBalancersProjectR
 }
 
 // ModifyLoadBalancersProject
-// 修改一个或多个负载均衡实例所属项目。
+// This API is used to modify the projects of CLB instances. 
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5031,11 +5133,11 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 }
 
 // ModifyRule
-// ModifyRule 接口用来修改负载均衡七层监听器下的转发规则的各项属性，包括转发路径、健康检查属性、转发策略等。
+// This API is used to modify the properties of forwarding rules under a layer-7 (HTTP/HTTPS) listener in Cloud Load Balancer, including forwarding path, health check attributes and forwarding policy.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5050,11 +5152,11 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 }
 
 // ModifyRule
-// ModifyRule 接口用来修改负载均衡七层监听器下的转发规则的各项属性，包括转发路径、健康检查属性、转发策略等。
+// This API is used to modify the properties of forwarding rules under a layer-7 (HTTP/HTTPS) listener in Cloud Load Balancer, including forwarding path, health check attributes and forwarding policy.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5101,9 +5203,9 @@ func NewModifyTargetGroupAttributeResponse() (response *ModifyTargetGroupAttribu
 }
 
 // ModifyTargetGroupAttribute
-// 修改目标组的名称或者默认端口属性
+// This API is used to rename a target group or modify its default port attribute.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5114,9 +5216,9 @@ func (c *Client) ModifyTargetGroupAttribute(request *ModifyTargetGroupAttributeR
 }
 
 // ModifyTargetGroupAttribute
-// 修改目标组的名称或者默认端口属性
+// This API is used to rename a target group or modify its default port attribute.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5159,11 +5261,11 @@ func NewModifyTargetGroupInstancesPortResponse() (response *ModifyTargetGroupIns
 }
 
 // ModifyTargetGroupInstancesPort
-// 批量修改目标组服务器端口。
+// This API is used to modify server ports of a target group in batches.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the `DescribeTaskStatus` API with the returned `RequestID` as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5176,11 +5278,11 @@ func (c *Client) ModifyTargetGroupInstancesPort(request *ModifyTargetGroupInstan
 }
 
 // ModifyTargetGroupInstancesPort
-// 批量修改目标组服务器端口。
+// This API is used to modify server ports of a target group in batches.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the `DescribeTaskStatus` API with the returned `RequestID` as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5225,11 +5327,11 @@ func NewModifyTargetGroupInstancesWeightResponse() (response *ModifyTargetGroupI
 }
 
 // ModifyTargetGroupInstancesWeight
-// 批量修改目标组的服务器权重。
+// This API is used to modify server weights of a target group in batches.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the `DescribeTaskStatus` API with the returned `RequestID` as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5241,11 +5343,11 @@ func (c *Client) ModifyTargetGroupInstancesWeight(request *ModifyTargetGroupInst
 }
 
 // ModifyTargetGroupInstancesWeight
-// 批量修改目标组的服务器权重。
+// This API is used to modify server weights of a target group in batches.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the `DescribeTaskStatus` API with the returned `RequestID` as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5289,11 +5391,11 @@ func NewModifyTargetPortResponse() (response *ModifyTargetPortResponse) {
 }
 
 // ModifyTargetPort
-// ModifyTargetPort接口用于修改监听器绑定的后端服务的端口。
+// This API (ModifyTargetPort) is used to modify the port of a real server bound to a listener.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5308,11 +5410,11 @@ func (c *Client) ModifyTargetPort(request *ModifyTargetPortRequest) (response *M
 }
 
 // ModifyTargetPort
-// ModifyTargetPort接口用于修改监听器绑定的后端服务的端口。
+// This API (ModifyTargetPort) is used to modify the port of a real server bound to a listener.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5359,11 +5461,11 @@ func NewModifyTargetWeightResponse() (response *ModifyTargetWeightResponse) {
 }
 
 // ModifyTargetWeight
-// ModifyTargetWeight 接口用于修改负载均衡绑定的后端服务的转发权重。
+// This API is used to modify the forwarding weight of backend service bound to Cloud Load Balancer.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5378,11 +5480,11 @@ func (c *Client) ModifyTargetWeight(request *ModifyTargetWeightRequest) (respons
 }
 
 // ModifyTargetWeight
-// ModifyTargetWeight 接口用于修改负载均衡绑定的后端服务的转发权重。
+// This API is used to modify the forwarding weight of backend service bound to Cloud Load Balancer.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+// This is an asynchronous API. After it returns the result successfully, you can call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestId as an input parameter to query whether the task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5429,31 +5531,31 @@ func NewRegisterFunctionTargetsResponse() (response *RegisterFunctionTargetsResp
 }
 
 // RegisterFunctionTargets
-// RegisterFunctionTargets 接口用来将一个云函数绑定到负载均衡的7层转发规则，在此之前您需要先行创建相关的7层监听器（HTTP、HTTPS）和转发规则。
+// This API is used to bind a cloud function to the forwarding rule of a Cloud Load Balancer. Before that, you need to create a related HTTP or HTTPS listener and forwarding rule.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。<br/>
+// This API is used to perform asynchronous operations. After returning a successful result, call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 限制说明：
+// This API is used to describe restrictions.
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
+// -SCF binding is supported only in Guangzhou, Shenzhen Finance, Shanghai, Shanghai Finance, Beijing, Chengdu, Hong Kong (China), Singapore, Tokyo, and Silicon Valley.
 //
-// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。 
+// -Only the standard account type supports binding SCF. The classic account type is unsupported. We recommend upgrading to the standard account type. For more information, see [account type upgrade instructions](https://www.tencentcloud.comom/document/product/1199/49090?from_cn_redirect=1). 
 //
-// - 传统型负载均衡不支持绑定 SCF。
+// -Classic CLB does not support binding SCF.
 //
-// - 基础网络类型不支持绑定 SCF。
+// -Basic Network Type does not support binding SCF.
 //
-// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+// -CLB supports binding ALL SCFs in the same region by default, supports cross-VPC binding, but cross-region selection is not supported.
 //
-// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+// -Currently, only IPv4 and IPv6 NAT64 versions of Cloud Load Balancer support binding SCF. IPv6 version is not currently supported.
 //
-// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+// -Only layer-7 (HTTP, HTTPS) listeners support binding SCF. Layer-4 (TCP, UDP, TCP SSL) listeners and layer-7 QUIC listeners are unsupported.
 //
-// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+// - CLB binding SCF only supports binding SCF of the "Event function" type.
 //
-// - 一个转发规则只支持绑定一个云函数。
+// -A forwarding rule supports binding only one SCF.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5475,31 +5577,31 @@ func (c *Client) RegisterFunctionTargets(request *RegisterFunctionTargetsRequest
 }
 
 // RegisterFunctionTargets
-// RegisterFunctionTargets 接口用来将一个云函数绑定到负载均衡的7层转发规则，在此之前您需要先行创建相关的7层监听器（HTTP、HTTPS）和转发规则。
+// This API is used to bind a cloud function to the forwarding rule of a Cloud Load Balancer. Before that, you need to create a related HTTP or HTTPS listener and forwarding rule.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。<br/>
+// This API is used to perform asynchronous operations. After returning a successful result, call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 限制说明：
+// This API is used to describe restrictions.
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
+// -SCF binding is supported only in Guangzhou, Shenzhen Finance, Shanghai, Shanghai Finance, Beijing, Chengdu, Hong Kong (China), Singapore, Tokyo, and Silicon Valley.
 //
-// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。 
+// -Only the standard account type supports binding SCF. The classic account type is unsupported. We recommend upgrading to the standard account type. For more information, see [account type upgrade instructions](https://www.tencentcloud.comom/document/product/1199/49090?from_cn_redirect=1). 
 //
-// - 传统型负载均衡不支持绑定 SCF。
+// -Classic CLB does not support binding SCF.
 //
-// - 基础网络类型不支持绑定 SCF。
+// -Basic Network Type does not support binding SCF.
 //
-// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+// -CLB supports binding ALL SCFs in the same region by default, supports cross-VPC binding, but cross-region selection is not supported.
 //
-// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+// -Currently, only IPv4 and IPv6 NAT64 versions of Cloud Load Balancer support binding SCF. IPv6 version is not currently supported.
 //
-// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+// -Only layer-7 (HTTP, HTTPS) listeners support binding SCF. Layer-4 (TCP, UDP, TCP SSL) listeners and layer-7 QUIC listeners are unsupported.
 //
-// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+// - CLB binding SCF only supports binding SCF of the "Event function" type.
 //
-// - 一个转发规则只支持绑定一个云函数。
+// -A forwarding rule supports binding only one SCF.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5553,11 +5655,11 @@ func NewRegisterTargetGroupInstancesResponse() (response *RegisterTargetGroupIns
 }
 
 // RegisterTargetGroupInstances
-// 注册服务器到目标组。
+// This API is used to register servers to a target group.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the `DescribeTaskStatus` API with the returned `RequestID` as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5570,11 +5672,11 @@ func (c *Client) RegisterTargetGroupInstances(request *RegisterTargetGroupInstan
 }
 
 // RegisterTargetGroupInstances
-// 注册服务器到目标组。
+// This API is used to register servers to a target group.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This is an async API. After it is returned successfully, you can call the `DescribeTaskStatus` API with the returned `RequestID` as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5619,11 +5721,11 @@ func NewRegisterTargetsResponse() (response *RegisterTargetsResponse) {
 }
 
 // RegisterTargets
-// RegisterTargets 接口用来将一台或多台后端服务绑定到负载均衡的监听器（或7层转发规则），在此之前您需要先行创建相关的4层监听器或7层转发规则。对于四层监听器（TCP、UDP），只需指定监听器ID即可，对于七层监听器（HTTP、HTTPS），还需通过LocationId或者Domain+Url指定转发规则。
+// This API is used to bind one or more backend services to a Cloud Load Balancer listener or layer-7 forwarding rule. Before that, you need to create a related CLB layer-4 listener or layer-7 forwarding rule. For Layer-4 listeners (TCP/UDP), only specify the listener ID. For layer-7 (HTTP/HTTPS) listeners, forwarding rules must be specified through LocationId or Domain+Url.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5641,11 +5743,11 @@ func (c *Client) RegisterTargets(request *RegisterTargetsRequest) (response *Reg
 }
 
 // RegisterTargets
-// RegisterTargets 接口用来将一台或多台后端服务绑定到负载均衡的监听器（或7层转发规则），在此之前您需要先行创建相关的4层监听器或7层转发规则。对于四层监听器（TCP、UDP），只需指定监听器ID即可，对于七层监听器（HTTP、HTTPS），还需通过LocationId或者Domain+Url指定转发规则。
+// This API is used to bind one or more backend services to a Cloud Load Balancer listener or layer-7 forwarding rule. Before that, you need to create a related CLB layer-4 listener or layer-7 forwarding rule. For Layer-4 listeners (TCP/UDP), only specify the listener ID. For layer-7 (HTTP/HTTPS) listeners, forwarding rules must be specified through LocationId or Domain+Url.
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After it returns a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5695,9 +5797,9 @@ func NewRegisterTargetsWithClassicalLBResponse() (response *RegisterTargetsWithC
 }
 
 // RegisterTargetsWithClassicalLB
-// RegisterTargetsWithClassicalLB 接口用于绑定后端服务到传统型负载均衡。本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This API is used to bind a real server with a classic CLB instance. This is an async API. After it is returned successfully, you can call the API `DescribeTaskStatus` with the returned RequestId as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5712,9 +5814,9 @@ func (c *Client) RegisterTargetsWithClassicalLB(request *RegisterTargetsWithClas
 }
 
 // RegisterTargetsWithClassicalLB
-// RegisterTargetsWithClassicalLB 接口用于绑定后端服务到传统型负载均衡。本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// This API is used to bind a real server with a classic CLB instance. This is an async API. After it is returned successfully, you can call the API `DescribeTaskStatus` with the returned RequestId as an input parameter to check whether this task is successful.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5761,15 +5863,15 @@ func NewReplaceCertForLoadBalancersResponse() (response *ReplaceCertForLoadBalan
 }
 
 // ReplaceCertForLoadBalancers
-// ReplaceCertForLoadBalancers 接口用以替换负载均衡实例所关联的证书，对于各个地域的负载均衡，如果指定的老的证书ID与其有关联关系，则会先解除关联，再建立新证书与该负载均衡的关联关系。
+// This API (ReplaceCertForLoadBalancers) is used to replace the certificate associated with a CLB instance. A new certificates can be associated with a CLB only after the original certificate is disassociated from it.
 //
-// 此接口支持替换服务端证书或客户端证书。
+// This API supports replacing server certificates and client certificates.
 //
-// 需要使用的新证书，可以通过传入证书ID来指定，如果不指定证书ID，则必须传入证书内容等相关信息，用以新建证书并绑定至负载均衡。
+// The new certificate to be used can be specified by passing in the certificate ID. If no certificate ID is specified, relevant information such as certificate content must be passed in to create a new certificate and bind it to the CLB.
 //
-// 注：本接口仅可从广州地域调用。
+// Note: This API can only be called in the Guangzhou region; for other regions, an error will occur due to domain name resolution problems.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5781,15 +5883,15 @@ func (c *Client) ReplaceCertForLoadBalancers(request *ReplaceCertForLoadBalancer
 }
 
 // ReplaceCertForLoadBalancers
-// ReplaceCertForLoadBalancers 接口用以替换负载均衡实例所关联的证书，对于各个地域的负载均衡，如果指定的老的证书ID与其有关联关系，则会先解除关联，再建立新证书与该负载均衡的关联关系。
+// This API (ReplaceCertForLoadBalancers) is used to replace the certificate associated with a CLB instance. A new certificates can be associated with a CLB only after the original certificate is disassociated from it.
 //
-// 此接口支持替换服务端证书或客户端证书。
+// This API supports replacing server certificates and client certificates.
 //
-// 需要使用的新证书，可以通过传入证书ID来指定，如果不指定证书ID，则必须传入证书内容等相关信息，用以新建证书并绑定至负载均衡。
+// The new certificate to be used can be specified by passing in the certificate ID. If no certificate ID is specified, relevant information such as certificate content must be passed in to create a new certificate and bind it to the CLB.
 //
-// 注：本接口仅可从广州地域调用。
+// Note: This API can only be called in the Guangzhou region; for other regions, an error will occur due to domain name resolution problems.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5833,9 +5935,9 @@ func NewSetCustomizedConfigForLoadBalancerResponse() (response *SetCustomizedCon
 }
 
 // SetCustomizedConfigForLoadBalancer
-// 负载均衡维度的个性化配置相关操作：创建、删除、修改、绑定、解绑
+// This API is used to create or manage a user-defined CLB configuration template.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINCLONING = "FailedOperation.ResourceInCloning"
 //  INTERNALERROR = "InternalError"
@@ -5852,9 +5954,9 @@ func (c *Client) SetCustomizedConfigForLoadBalancer(request *SetCustomizedConfig
 }
 
 // SetCustomizedConfigForLoadBalancer
-// 负载均衡维度的个性化配置相关操作：创建、删除、修改、绑定、解绑
+// This API is used to create or manage a user-defined CLB configuration template.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINCLONING = "FailedOperation.ResourceInCloning"
 //  INTERNALERROR = "InternalError"
@@ -5903,9 +6005,9 @@ func NewSetLoadBalancerClsLogResponse() (response *SetLoadBalancerClsLogResponse
 }
 
 // SetLoadBalancerClsLog
-// 增加、删除、更新负载均衡的日志服务(CLS)主题。
+// This API is used to add, delete, and update the CLS topic of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
@@ -5921,9 +6023,9 @@ func (c *Client) SetLoadBalancerClsLog(request *SetLoadBalancerClsLogRequest) (r
 }
 
 // SetLoadBalancerClsLog
-// 增加、删除、更新负载均衡的日志服务(CLS)主题。
+// This API is used to add, delete, and update the CLS topic of a CLB instance.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
@@ -5971,13 +6073,13 @@ func NewSetLoadBalancerSecurityGroupsResponse() (response *SetLoadBalancerSecuri
 }
 
 // SetLoadBalancerSecurityGroups
-// SetLoadBalancerSecurityGroups 接口支持对一个公网负载均衡实例执行设置（绑定、解绑）安全组操作。查询一个负载均衡实例目前已绑定的安全组，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口。本接口是set语义，
+// This API is used to bind or unbind security groups for a public network load balancing instance. To query currently bound security groups of a load balancing instance, use the DescribeLoadBalancers API (https://www.tencentcloud.comom/document/product/1108/48459?from_cn_redirect=1). This API follows set semantics.
 //
-// 绑定操作时，入参需要传入负载均衡实例要绑定的所有安全组（已绑定的+新增绑定的）。
+// This API is used to pass in all security groups that should be bound to the Cloud Load Balancer instance during the binding operation (bound + new binding).
 //
-// 解绑操作时，入参需要传入负载均衡实例执行解绑后所绑定的所有安全组；如果要解绑所有安全组，可不传此参数，或传入空数组。注意：内网 CLB 绑定 EIP 后，CLB 上的安全组对来自 EIP 的流量不生效，对来自内网 CLB 的流量生效。
+// For unbinding operations, the input parameters should specify all security groups bound to a CLB instance after unbinding. If you want to unbind all security groups, you can omit this parameter or input an empty array. Note: After a private network CLB is bound to an EIP, the security groups on the CLB do not take effect for the traffic from the EIP, but take effect for the traffic from the private network CLB.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -5992,13 +6094,13 @@ func (c *Client) SetLoadBalancerSecurityGroups(request *SetLoadBalancerSecurityG
 }
 
 // SetLoadBalancerSecurityGroups
-// SetLoadBalancerSecurityGroups 接口支持对一个公网负载均衡实例执行设置（绑定、解绑）安全组操作。查询一个负载均衡实例目前已绑定的安全组，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口。本接口是set语义，
+// This API is used to bind or unbind security groups for a public network load balancing instance. To query currently bound security groups of a load balancing instance, use the DescribeLoadBalancers API (https://www.tencentcloud.comom/document/product/1108/48459?from_cn_redirect=1). This API follows set semantics.
 //
-// 绑定操作时，入参需要传入负载均衡实例要绑定的所有安全组（已绑定的+新增绑定的）。
+// This API is used to pass in all security groups that should be bound to the Cloud Load Balancer instance during the binding operation (bound + new binding).
 //
-// 解绑操作时，入参需要传入负载均衡实例执行解绑后所绑定的所有安全组；如果要解绑所有安全组，可不传此参数，或传入空数组。注意：内网 CLB 绑定 EIP 后，CLB 上的安全组对来自 EIP 的流量不生效，对来自内网 CLB 的流量生效。
+// For unbinding operations, the input parameters should specify all security groups bound to a CLB instance after unbinding. If you want to unbind all security groups, you can omit this parameter or input an empty array. Note: After a private network CLB is bound to an EIP, the security groups on the CLB do not take effect for the traffic from the EIP, but take effect for the traffic from the private network CLB.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -6045,13 +6147,13 @@ func NewSetLoadBalancerStartStatusResponse() (response *SetLoadBalancerStartStat
 }
 
 // SetLoadBalancerStartStatus
-// 启停负载均衡实例或者监听器。
+// This API is used to start or stop a load balancing instance or listener.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
+// This feature is currently in beta test. To use it, submit a [ticket](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1) for application.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOLISTENERINLB = "FailedOperation.NoListenerInLB"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -6067,13 +6169,13 @@ func (c *Client) SetLoadBalancerStartStatus(request *SetLoadBalancerStartStatusR
 }
 
 // SetLoadBalancerStartStatus
-// 启停负载均衡实例或者监听器。
+// This API is used to start or stop a load balancing instance or listener.
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+// This API is used to perform asynchronous operations. After returning a successful result, call the [DescribeTaskStatus](https://www.tencentcloud.comom/document/product/214/30683?from_cn_redirect=1) API with the returned RequestID as an input parameter to check whether this task is successful.
 //
-// 该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
+// This feature is currently in beta test. To use it, submit a [ticket](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1) for application.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOLISTENERINLB = "FailedOperation.NoListenerInLB"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -6121,9 +6223,9 @@ func NewSetSecurityGroupForLoadbalancersResponse() (response *SetSecurityGroupFo
 }
 
 // SetSecurityGroupForLoadbalancers
-// 绑定或解绑一个安全组到多个公网负载均衡实例。
+// This API is used to bind or unbind a security group to or from multiple public network CLB instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
@@ -6138,9 +6240,9 @@ func (c *Client) SetSecurityGroupForLoadbalancers(request *SetSecurityGroupForLo
 }
 
 // SetSecurityGroupForLoadbalancers
-// 绑定或解绑一个安全组到多个公网负载均衡实例。
+// This API is used to bind or unbind a security group to or from multiple public network CLB instances.
 //
-// 可能返回的错误码:
+// error code that may be returned:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"

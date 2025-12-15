@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ const (
 	// The private domain is currently associated with a VPC. Please disassociate the VPC first before clearing its records.
 	FAILEDOPERATION_DELETELASTBINDVPCRECORDFAILED = "FailedOperation.DeleteLastBindVpcRecordFailed"
 
-	// 
+	// Record deletion failed.
 	FAILEDOPERATION_DELETERECORDFAILED = "FailedOperation.DeleteRecordFailed"
 
 	// Failed to delete the endpoint.
@@ -74,7 +74,7 @@ const (
 	// Failed to modify the private domain.
 	FAILEDOPERATION_MODIFYZONEFAILED = "FailedOperation.ModifyZoneFailed"
 
-	// 
+	// Record update failed.
 	FAILEDOPERATION_UPDATERECORDFAILED = "FailedOperation.UpdateRecordFailed"
 
 	// Internal error.
@@ -128,7 +128,7 @@ const (
 	// The MX value must be a multiple of 5 between 5 and 50.
 	INVALIDPARAMETER_INVALIDMX = "InvalidParameter.InvalidMX"
 
-	// 
+	// This record type does not support MX priority settings.
 	INVALIDPARAMETER_MXNOTSUPPORTED = "InvalidParameter.MXNotSupported"
 
 	// The number of round-robin DNS AAAA records exceeds 50.

@@ -15,125 +15,122 @@
 package v20180317
 
 const (
-	// 此产品的特有错误码
+	// error codes for specific actions
 
-	// CAM签名/鉴权错误。
+	// CAM signature/authentication error
 	AUTHFAILURE = "AuthFailure"
 
-	// token错误
+	// Token error.
 	AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
 
-	// DryRun 操作，代表请求将会是成功的，只是多传了 DryRun 参数。
+	// DryRun operation, which means the DryRun parameter is passed in yet the request will still be successful.
 	DRYRUNOPERATION = "DryRunOperation"
 
-	// 操作失败。
+	// Operation failed.
 	FAILEDOPERATION = "FailedOperation"
 
-	// 该实例绑定的EIP资源业务带宽超过防误操作检测阈值，执行操作可能存在风险，如仍想继续，请在EIP控制台关闭对应EIP的防误操作检测开关后重试。
-	FAILEDOPERATION_EIPTRAFFICCHECKRISK = "FailedOperation.EipTrafficCheckRisk"
-
-	// 删除实例频次校验被判定为高风险，请检查业务或稍后重试。
+	// Instance deletion is determined to be a high-risk operation through frequency verification. Please check the business or try again later.
 	FAILEDOPERATION_FREQUENCYCHECKRISK = "FailedOperation.FrequencyCheckRisk"
 
-	// LB状态异常。
+	// Exceptional CLB instance status
 	FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
 
-	// 没有监听器的实例不允许停止。
+	// Instances without listeners cannot be stopped.
 	FAILEDOPERATION_NOLISTENERINLB = "FailedOperation.NoListenerInLB"
 
-	// 指定的资源正在克隆中，请稍后重试。
+	// The specified resource is being cloned. please try again later.
 	FAILEDOPERATION_RESOURCEINCLONING = "FailedOperation.ResourceInCloning"
 
-	// 正在操作指定的资源，请稍后重试。
+	// The specified resource is currently being operated. Please try again later.
 	FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 
-	// 删除实例规则数校验被判定为高风险，如需强行删除请传强制校验参数ForceDelete为true。
+	// Instance deletion is determined to be a high-risk operation through rule quantity verification. To forcibly delete the instance, set the forced verification parameter ForceDelete to true.
 	FAILEDOPERATION_TARGETNUMCHECKRISK = "FailedOperation.TargetNumCheckRisk"
 
-	// 删除实例流量校验被判定为高风险，如需强行删除请传强制校验参数ForceDelete为true。
+	// Instance deletion is determined to be a high-risk operation through traffic verification. To forcibly delete the instance, set the forced verification parameter ForceDelete to true.
 	FAILEDOPERATION_TRAFFICCHECKRISK = "FailedOperation.TrafficCheckRisk"
 
-	// 内部错误。
+	// Internal error.
 	INTERNALERROR = "InternalError"
 
-	// 参数错误。
+	// Parameter error.
 	INVALIDPARAMETER = "InvalidParameter"
 
-	// 为确保资源不泄露，保证创建的资源ID幂等性。通过ClientToken创建资源，当订单流程已结束且发货失败，或订单流程长时间未更新时，提示当前ClientToken已经超时过期。
+	// To ensure no resource leakage and maintain the ID idempotence of created resources, ClientToken is used to create resources. If the order process has ended and shipment failed, or the order process has not been updated for a long time, a message will indicate that the current ClientToken has timed out.
 	INVALIDPARAMETER_CLIENTTOKENLIMITEXCEEDED = "InvalidParameter.ClientTokenLimitExceeded"
 
-	// 参数格式错误。
+	// Wrong parameter format.
 	INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 
-	// 查询参数错误。
+	// Failed to query the parameter
 	INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 
-	// 负载均衡实例ID错误。
+	// Wrong CLB instance ID.
 	INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
 
-	// 监听器ID错误。
+	// Wrong listener ID.
 	INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
 
-	// 查找不到符合条件的转发规则。
+	// Unable to find eligible forwarding rules.
 	INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
 
-	// 监听器端口检查失败，比如端口冲突。
+	// Listener port checks failed due to port conflicts or other reasons.
 	INVALIDPARAMETER_PORTCHECKFAILED = "InvalidParameter.PortCheckFailed"
 
-	// 监听器协议检查失败，比如相关协议不支持对应操作。
+	// Listener protocol checks failed because the protocol used is incompatible with the corresponding operation.
 	INVALIDPARAMETER_PROTOCOLCHECKFAILED = "InvalidParameter.ProtocolCheckFailed"
 
-	// 地域无效。
+	// Invalid region.
 	INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 
-	// 转发规则已绑定重定向关系。
+	// The forwarding rule has already been bound to a redirection relationship.
 	INVALIDPARAMETER_REWRITEALREADYEXIST = "InvalidParameter.RewriteAlreadyExist"
 
-	// 一些重定向规则不存在。
+	// Some redirection rules do not exist.
 	INVALIDPARAMETER_SOMEREWRITENOTFOUND = "InvalidParameter.SomeRewriteNotFound"
 
-	// 参数取值错误。
+	// Incorrect parameter value.
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
-	// 参数值有重复。
+	// Duplicate parameter value.
 	INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 
-	// Filter参数输入错误。
+	// Incorrect `Filter` parameter.
 	INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 
-	// 参数长度错误。
+	// Wrong parameter length.
 	INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 
-	// 参数取值范围错误。
+	// Wrong parameter value range.
 	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 
-	// 超过配额限制。
+	// Quota exceeded.
 	LIMITEXCEEDED = "LimitExceeded"
 
-	// 缺少参数错误。
+	// Missing parameter.
 	MISSINGPARAMETER = "MissingParameter"
 
-	// 操作被拒绝。
+	// Operation denied.
 	OPERATIONDENIED = "OperationDenied"
 
-	// 请求的次数超过了频率限制。
+	// The number of requests exceeds the frequency limit.
 	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
-	// 资源被占用。
+	// The resource is occupied.
 	RESOURCEINUSE = "ResourceInUse"
 
-	// 资源不足。
+	// Insufficient resources.
 	RESOURCEINSUFFICIENT = "ResourceInsufficient"
 
-	// 资源不存在。
+	// Resources do not exist.
 	RESOURCENOTFOUND = "ResourceNotFound"
 
-	// 资源售罄。
+	// The resources have been sold out.
 	RESOURCESSOLDOUT = "ResourcesSoldOut"
 
-	// 未授权操作。
+	// Unauthorized operation.
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
-	// 操作不支持。
+	// Unsupported operation.
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 )
