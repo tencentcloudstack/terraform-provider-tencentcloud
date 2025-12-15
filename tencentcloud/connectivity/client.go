@@ -24,6 +24,7 @@ import (
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bhv20230418 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh/v20230418"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
@@ -245,6 +246,7 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	bhv20230418Conn             *bhv20230418.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1728,6 +1730,19 @@ func (me *TencentCloudClient) UseDasbClient() *dasb.Client {
 	me.dasbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dasbConn
+}
+
+// UseBhV20230418Client return BH client for service
+func (me *TencentCloudClient) UseBhV20230418Client() *bhv20230418.Client {
+	if me.bhv20230418Conn != nil {
+		return me.bhv20230418Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.bhv20230418Conn, _ = bhv20230418.NewClient(me.Credential, me.Region, cpf)
+	me.bhv20230418Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.bhv20230418Conn
 }
 
 // UseTrocketClient returns trocket client for service
