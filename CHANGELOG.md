@@ -1,3 +1,15 @@
+## 1.82.45(Decmber 15, 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_apm_prometheus_rule` ([#3649](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3649))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_attachment: update doc ([#3650](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3650))
+* resource/tencentcloud_dnspod_domain_list: update doc ([#3655](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3655))
+* resource/tencentcloud_vpn_ssl_server: mark `ssl_vpn_protocol`, `integrity_algorithm`, `encrypt_algorithm`, `compress` as computed ([#3648](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3648))
+
 ## 1.82.44(Decmber 10, 2025)
 
 FEATURES:
