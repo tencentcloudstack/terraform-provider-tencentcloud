@@ -3878,7 +3878,7 @@ func (me *TkeService) DescribeKubernetesClusterReleaseById(ctx context.Context, 
 		}
 
 		if result == nil || result.Response == nil || result.Response.Release == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes releases failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes releases details failed, Response is nil."))
 		}
 
 		response = result
