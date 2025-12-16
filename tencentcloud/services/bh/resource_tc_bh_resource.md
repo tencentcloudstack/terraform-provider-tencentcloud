@@ -16,5 +16,7 @@ resource "tencentcloud_bh_resource" "example" {
   deploy_zone      = "ap-guangzhou-6"
   cidr_block       = "192.168.11.0/24"
   vpc_cidr_block   = "192.168.0.0/16"
+  intranet_access  = 1
+  external_access  = 1
 }
 ```

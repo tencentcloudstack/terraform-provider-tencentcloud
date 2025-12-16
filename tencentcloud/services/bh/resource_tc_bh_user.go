@@ -27,7 +27,7 @@ func ResourceTencentCloudBhUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Username, 3-20 characters, must start with an English letter and cannot contain characters other than letters, numbers, ., _, -.",
+				Description: "Username, 3-20 characters, must start with an English letter and cannot contain characters other than `letters`, `numbers`, `.`, `_`, `-`.",
 			},
 
 			"real_name": {

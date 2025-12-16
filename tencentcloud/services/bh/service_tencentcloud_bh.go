@@ -309,7 +309,7 @@ func (me *BhService) DescribeBhResourceById(ctx context.Context, resourceId stri
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.ResourceSet == nil {
+		if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
 			return resource.NonRetryableError(fmt.Errorf("Describe resource failed, Response is nil."))
 		}
 

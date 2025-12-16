@@ -544,6 +544,38 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 					log.Printf("[CRITAL]%s enable intranet access bh resource failed, reason:%+v", logId, reqErr)
 					return reqErr
 				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					intranetAccess := result.Response.ResourceSet[0].IntranetAccess
+					if intranetAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("IntranetAccess is nil."))
+					}
+
+					if *intranetAccess == 1 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Enable intranet access is still running...Intranet access is %d", *intranetAccess))
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s enable intranet access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
 			} else {
 				request := bhv20230418.NewDisableIntranetAccessRequest()
 				request.ResourceId = helper.String(resourceId)
@@ -556,6 +588,38 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 					}
 
 					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s disable intranet access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					intranetAccess := result.Response.ResourceSet[0].IntranetAccess
+					if intranetAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("IntranetAccess is nil."))
+					}
+
+					if *intranetAccess == 0 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Disable intranet access is still running...Intranet access is %d", *intranetAccess))
 				})
 
 				if reqErr != nil {
@@ -584,6 +648,38 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 				})
 
 				if reqErr != nil {
+					log.Printf("[CRITAL]%s disable external access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					externalAccess := result.Response.ResourceSet[0].ExternalAccess
+					if externalAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("ExternalAccess is nil."))
+					}
+
+					if *externalAccess == 1 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Enable external access is still running...External access is %d", *externalAccess))
+				})
+
+				if reqErr != nil {
 					log.Printf("[CRITAL]%s enable external access bh resource failed, reason:%+v", logId, reqErr)
 					return reqErr
 				}
@@ -599,6 +695,38 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 					}
 
 					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s disable external access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					externalAccess := result.Response.ResourceSet[0].ExternalAccess
+					if externalAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("ExternalAccess is nil."))
+					}
+
+					if *externalAccess == 0 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Disable external access is still running...External access is %d", *externalAccess))
 				})
 
 				if reqErr != nil {
