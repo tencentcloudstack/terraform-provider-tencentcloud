@@ -242,7 +242,9 @@ type AddInstancesRequestParams struct {
 	// 新增只读实例数，取值范围为(0,15]
 	ReadOnlyCount *int64 `json:"ReadOnlyCount,omitnil,omitempty" name:"ReadOnlyCount"`
 
-	// 实例机器类型
+	// 实例机器类型，支持值如下：
+	// - common：表示通用型
+	// - exclusive：表示独享型
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// 实例组ID，在已有RO组中新增实例时使用，不传则新增RO组。当前版本不建议传输该值。
@@ -303,7 +305,9 @@ type AddInstancesRequest struct {
 	// 新增只读实例数，取值范围为(0,15]
 	ReadOnlyCount *int64 `json:"ReadOnlyCount,omitnil,omitempty" name:"ReadOnlyCount"`
 
-	// 实例机器类型
+	// 实例机器类型，支持值如下：
+	// - common：表示通用型
+	// - exclusive：表示独享型
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// 实例组ID，在已有RO组中新增实例时使用，不传则新增RO组。当前版本不建议传输该值。
@@ -872,6 +876,9 @@ type BinlogItem struct {
 
 	// Binlog文件ID
 	BinlogId *int64 `json:"BinlogId,omitnil,omitempty" name:"BinlogId"`
+
+	// binlog所跨地域
+	CrossRegions []*string `json:"CrossRegions,omitnil,omitempty" name:"CrossRegions"`
 }
 
 type BizTaskInfo struct {
@@ -1485,12 +1492,14 @@ type ClusterInstanceDetail struct {
 	InstanceDeviceType *string `json:"InstanceDeviceType,omitnil,omitempty" name:"InstanceDeviceType"`
 
 	// 实例存储类型
+	// 说明：仅当要查询的资源为 LibraDB 时，此参数才会返回值。
 	InstanceStorageType *string `json:"InstanceStorageType,omitnil,omitempty" name:"InstanceStorageType"`
 
 	// 数据库类型
 	DbMode *string `json:"DbMode,omitnil,omitempty" name:"DbMode"`
 
 	// 节点列表
+	// 说明：仅当要查询的资源为 LibraDB 时，此参数才会返回值。
 	NodeList []*string `json:"NodeList,omitnil,omitempty" name:"NodeList"`
 }
 
@@ -3578,7 +3587,16 @@ type CynosdbClusterDetail struct {
 	// 物理可用区
 	PhysicalZone *string `json:"PhysicalZone,omitnil,omitempty" name:"PhysicalZone"`
 
-	// 状态
+	// 状态，支持的值如下：
+	// - creating：创建中
+	// - running：运行中
+	// - isolating：隔离中
+	// - isolated：已隔离
+	// - activating：从回收站重新恢复
+	// - offlining：下线中
+	// - offlined：已下线
+	// - deleting：删除中
+	// - deleted：已删除
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 状态描述
@@ -3967,11 +3985,9 @@ type CynosdbInstanceDetail struct {
 	// running：运行中
 	// isolating：隔离中
 	// isolated：已隔离
-	// activating：解隔离中
+	// activating：恢复中
 	// offlining：下线中
 	// offlined：已下线
-	// deleting：删除中
-	// deleted：已删除
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 实例状态中文描述
@@ -6063,7 +6079,7 @@ type DescribeBinlogsRequestParams struct {
 	// 偏移量
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 限制条数
+	// 限制条数，默认值为20
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -6082,7 +6098,7 @@ type DescribeBinlogsRequest struct {
 	// 偏移量
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 限制条数
+	// 限制条数，默认值为20
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -10327,7 +10343,9 @@ type InquirePriceCreateRequestParams struct {
 	// 存储购买类型，可选值为：PREPAID, POSTPAID
 	StoragePayMode *string `json:"StoragePayMode,omitnil,omitempty" name:"StoragePayMode"`
 
-	// 实例设备类型
+	// 实例设备类型，支持值如下：
+	// - common：表示通用型
+	// - exclusive：表示独享型
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// CPU核数，PREPAID与POSTPAID实例类型必传
@@ -10364,7 +10382,9 @@ type InquirePriceCreateRequest struct {
 	// 存储购买类型，可选值为：PREPAID, POSTPAID
 	StoragePayMode *string `json:"StoragePayMode,omitnil,omitempty" name:"StoragePayMode"`
 
-	// 实例设备类型
+	// 实例设备类型，支持值如下：
+	// - common：表示通用型
+	// - exclusive：表示独享型
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// CPU核数，PREPAID与POSTPAID实例类型必传
@@ -13354,7 +13374,6 @@ type ModifyProxyRwSplitRequestParams struct {
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
 	// 实例只读权重。
-	// 该参数必填。
 	InstanceWeights []*ProxyInstanceWeight `json:"InstanceWeights,omitnil,omitempty" name:"InstanceWeights"`
 
 	// 是否开启故障转移，代理出现故障后，连接地址将路由到主实例，取值："yes" , "no"
@@ -13418,7 +13437,6 @@ type ModifyProxyRwSplitRequest struct {
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
 	// 实例只读权重。
-	// 该参数必填。
 	InstanceWeights []*ProxyInstanceWeight `json:"InstanceWeights,omitnil,omitempty" name:"InstanceWeights"`
 
 	// 是否开启故障转移，代理出现故障后，连接地址将路由到主实例，取值："yes" , "no"
