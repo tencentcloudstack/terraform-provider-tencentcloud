@@ -548,6 +548,7 @@ tencentcloud_cynosdb_backup_config
 tencentcloud_cynosdb_ssl
 tencentcloud_cynosdb_cluster_transparent_encrypt
 tencentcloud_cynosdb_audit_service
+tencentcloud_cynosdb_cls_delivery
 
 Direct Connect(DC)
 Data Source

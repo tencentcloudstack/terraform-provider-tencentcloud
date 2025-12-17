@@ -184,7 +184,7 @@ func resourceTencentCloudCynosdbClsDeliveryCreate(d *schema.ResourceData, meta i
 	taskId := *response.Response.TaskId
 	waitReq := cynosdb.NewDescribeTasksRequest()
 	waitReq.Filters = []*cynosdb.QueryFilter{
-		&cynosdb.QueryFilter{
+		{
 			Values:     helper.Strings([]string{helper.Int64ToStr(taskId)}),
 			Names:      helper.Strings([]string{"TaskId"}),
 			ExactMatch: helper.Bool(true),
@@ -272,7 +272,7 @@ func resourceTencentCloudCynosdbClsDeliveryCreate(d *schema.ResourceData, meta i
 			taskId := *response.Response.TaskId
 			waitReq := cynosdb.NewDescribeTasksRequest()
 			waitReq.Filters = []*cynosdb.QueryFilter{
-				&cynosdb.QueryFilter{
+				{
 					Values:     helper.Strings([]string{helper.Int64ToStr(taskId)}),
 					Names:      helper.Strings([]string{"TaskId"}),
 					ExactMatch: helper.Bool(true),
@@ -431,7 +431,7 @@ func resourceTencentCloudCynosdbClsDeliveryUpdate(d *schema.ResourceData, meta i
 				taskId := *response.Response.TaskId
 				waitReq := cynosdb.NewDescribeTasksRequest()
 				waitReq.Filters = []*cynosdb.QueryFilter{
-					&cynosdb.QueryFilter{
+					{
 						Values:     helper.Strings([]string{helper.Int64ToStr(taskId)}),
 						Names:      helper.Strings([]string{"TaskId"}),
 						ExactMatch: helper.Bool(true),
@@ -495,7 +495,7 @@ func resourceTencentCloudCynosdbClsDeliveryUpdate(d *schema.ResourceData, meta i
 				taskId := *response.Response.TaskId
 				waitReq := cynosdb.NewDescribeTasksRequest()
 				waitReq.Filters = []*cynosdb.QueryFilter{
-					&cynosdb.QueryFilter{
+					{
 						Values:     helper.Strings([]string{helper.Int64ToStr(taskId)}),
 						Names:      helper.Strings([]string{"TaskId"}),
 						ExactMatch: helper.Bool(true),
@@ -602,7 +602,7 @@ func resourceTencentCloudCynosdbClsDeliveryDelete(d *schema.ResourceData, meta i
 		taskId := *stopResp.Response.TaskId
 		waitReq := cynosdb.NewDescribeTasksRequest()
 		waitReq.Filters = []*cynosdb.QueryFilter{
-			&cynosdb.QueryFilter{
+			{
 				Values:     helper.Strings([]string{helper.Int64ToStr(taskId)}),
 				Names:      helper.Strings([]string{"TaskId"}),
 				ExactMatch: helper.Bool(true),
@@ -667,7 +667,7 @@ func resourceTencentCloudCynosdbClsDeliveryDelete(d *schema.ResourceData, meta i
 	taskId := *response.Response.TaskId
 	waitReq := cynosdb.NewDescribeTasksRequest()
 	waitReq.Filters = []*cynosdb.QueryFilter{
-		&cynosdb.QueryFilter{
+		{
 			Values:     helper.Strings([]string{helper.Int64ToStr(taskId)}),
 			Names:      helper.Strings([]string{"TaskId"}),
 			ExactMatch: helper.Bool(true),
