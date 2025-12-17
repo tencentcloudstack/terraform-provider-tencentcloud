@@ -493,6 +493,10 @@ func formatUsageDesc(s string) string {
 	for _, v := range m {
 		title := strings.TrimSpace(v[1])
 		descp := strings.TrimSpace(v[2])
+		if descp == "" {
+			rr = append(rr, title)
+			continue
+		}
 
 		rr = append(rr, fmt.Sprintf("### %s\n\n%s", title, descp))
 	}
