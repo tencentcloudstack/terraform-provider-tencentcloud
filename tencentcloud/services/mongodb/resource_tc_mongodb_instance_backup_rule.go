@@ -47,7 +47,7 @@ func ResourceTencentCloudMongodbInstanceBackupRule() *schema.Resource {
 			"backup_frequency": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Automatic backup frequency, for internal display, default value is 24h.",
+				Description: "Specify the daily automatic backup frequency. 12: Back up twice a day, approximately 12 hours apart; 24: Back up once a day (default), approximately 24 hours apart.",
 			},
 
 			"notify": {
@@ -60,37 +60,37 @@ func ResourceTencentCloudMongodbInstanceBackupRule() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Specify the number of days to save backup data. The default is 7 days, and the support settings are 7, 30, 90, 180, 365.",
+				Description: "Specifies the retention period for backup data. Unit: days, default is 7 days. Value range: [7, 365].",
 			},
 
 			"active_weekdays": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Which days of the week to backup, 0-6, comma separated. Only effective for advanced backup.",
+				Description: "Specify the specific dates for automatic backups to be performed each week. Format: Enter a number between 0 and 6 to represent Sunday through Saturday (e.g., 1 represents Monday). Separate multiple dates with commas (,). Example: Entering 1,3,5 means the system will perform backups on Mondays, Wednesdays, and Fridays every week. Default: If not set, the default is a full cycle (0,1,2,3,4,5,6), meaning backups will be performed daily.",
 			},
 
 			"long_term_unit": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Long-term retention cycle, weekly, monthly, empty means not enabled.",
+				Description: "Long-term retention period. Supports selecting specific dates for backups on a weekly or monthly basis (e.g., backup data for the 1st and 15th of each month) to retain for a longer period. Disabled (default): Long-term retention is disabled. Weekly retention: Specify `weekly`. Monthly retention: Specify `monthly`.",
 			},
 
 			"long_term_active_days": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Which days to retain long-term, week 0-6, month 1-31, comma separated.",
+				Description: "Specify the specific backup dates to be retained long-term. This setting only takes effect when LongTermUnit is set to weekly or monthly. Weekly Retention: Enter a number between 0 and 6 to represent Sunday through Saturday. Separate multiple dates with commas. Monthly Retention: Enter a number between 1 and 31 to represent specific dates within the month. Separate multiple dates with commas.",
 			},
 
 			"long_term_expired_days": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "How many days to retain long-term backups.",
+				Description: "Long-term backup retention period. Value range [30, 1075].",
 			},
 
 			"oplog_expired_days": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "How many days to retain incremental backups.",
+				Description: "Incremental backup retention period. Unit: days. Default value: 7 days. Value range: [7,365].",
 			},
 
 			"backup_version": {
@@ -102,7 +102,7 @@ func ResourceTencentCloudMongodbInstanceBackupRule() *schema.Resource {
 			"alarm_water_level": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Alert threshold. Range: 50-300.",
+				Description: "Sets the alarm threshold for backup dataset storage space usage. Unit: %. Default value: 100. Value range: [50, 300].",
 			},
 		},
 	}
