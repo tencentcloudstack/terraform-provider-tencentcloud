@@ -2187,6 +2187,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_port_acl_config":                                                 dayuv2.ResourceTencentCloudAntiddosPortAclConfig(),
 			"tencentcloud_antiddos_cc_black_white_ip":                                               dayuv2.ResourceTencentCloudAntiddosCcBlackWhiteIp(),
 			"tencentcloud_antiddos_cc_precision_policy":                                             dayuv2.ResourceTencentCloudAntiddosCcPrecisionPolicy(),
+			"tencentcloud_antiddos_bgp_instance":                                                    antiddos.ResourceTencentCloudAntiddosBgpInstance(),
 			"tencentcloud_tsf_microservice":                                                         tsf.ResourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                                                   tsf.ResourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_tsf_cluster":                                                              tsf.ResourceTencentCloudTsfCluster(),

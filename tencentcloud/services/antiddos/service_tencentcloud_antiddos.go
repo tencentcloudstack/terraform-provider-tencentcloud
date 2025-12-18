@@ -2,6 +2,7 @@ package antiddos
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -2450,5 +2451,43 @@ func (me *AntiddosService) DeleteAntiddosCcPrecisionPolicyById(ctx context.Conte
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosBgpInstancesById(ctx context.Context, resourceId, region string) (ret *antiddos.BGPInstanceInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := antiddos.NewDescribeBgpInstancesRequest()
+	response := antiddos.NewDescribeBgpInstancesResponse()
+	request.FilterRegion = common.StringPtr(region)
+	request.FilterInstanceIdList = common.StringPtrs([]string{resourceId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseAntiddosClient().DescribeBgpInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.BGPInstanceList == nil || len(result.Response.BGPInstanceList) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe bpg instance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.BGPInstanceList[0]
 	return
 }
