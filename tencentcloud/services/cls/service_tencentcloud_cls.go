@@ -249,7 +249,7 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 			Values: []*string{&topicId},
 		},
 	}
-	ratelimit.Check(request.GetAction())
+
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = topicId
 	var (
