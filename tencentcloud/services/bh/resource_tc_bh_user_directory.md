@@ -23,7 +23,6 @@ resource "tencentcloud_bh_user_directory" "example" {
   }
   source      = 0
   source_name = "sourceName"
-  user_count  = 3
 }
 ```
 

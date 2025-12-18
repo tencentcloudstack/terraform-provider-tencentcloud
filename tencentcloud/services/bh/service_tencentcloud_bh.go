@@ -364,6 +364,44 @@ func (me *BhService) DescribeBhReconnectionSettingConfigById(ctx context.Context
 	return
 }
 
+func (me *BhService) DescribeBhDepartments(ctx context.Context) (ret *bhv20230418.Departments, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := bhv20230418.NewDescribeDepartmentsRequest()
+	response := bhv20230418.NewDescribeDepartmentsResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseBhV20230418Client().DescribeDepartments(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Departments == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe departments failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Departments
+	return
+}
+
 func (me *BhService) DescribeBhUserById(ctx context.Context, userId string) (ret *bhv20230418.User, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

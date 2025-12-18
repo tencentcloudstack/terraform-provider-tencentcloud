@@ -253,7 +253,18 @@ func resourceTencentCloudBhUserRead(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if respData.DepartmentId != nil {
-		_ = d.Set("department_id", respData.DepartmentId)
+		dResp, err := service.DescribeBhDepartments(ctx)
+		if err != nil {
+			return err
+		}
+
+		if dResp == nil {
+			return fmt.Errorf("Departments is nil")
+		}
+
+		if dResp.Enabled != nil && *dResp.Enabled {
+			_ = d.Set("department_id", respData.DepartmentId)
+		}
 	}
 
 	if respData.Id != nil {

@@ -86,18 +86,17 @@ func ResourceTencentCloudBhUserDirectory() *schema.Resource {
 				Description: "IOA associated user source name.",
 			},
 
-			"user_count": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Number of users included in the directory.",
-			},
-
 			// computed
 			"directory_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Directory ID.",
+			},
+
+			"user_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of users included in the directory.",
 			},
 		},
 	}
@@ -157,10 +156,6 @@ func resourceTencentCloudBhUserDirectoryCreate(d *schema.ResourceData, meta inte
 
 	if v, ok := d.GetOk("source_name"); ok {
 		request.SourceName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOkExists("user_count"); ok {
-		request.UserCount = helper.IntUint64(v.(int))
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

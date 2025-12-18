@@ -34,7 +34,6 @@ resource "tencentcloud_bh_user_directory" "example" {
   }
   source      = 0
   source_name = "sourceName"
-  user_count  = 3
 }
 ```
 
@@ -46,7 +45,6 @@ The following arguments are supported:
 * `dir_name` - (Required, String, ForceNew) Directory name.
 * `source_name` - (Required, String, ForceNew) IOA associated user source name.
 * `source` - (Required, Int, ForceNew) IOA associated user source type.
-* `user_count` - (Required, Int, ForceNew) Number of users included in the directory.
 * `user_org_set` - (Required, List) IOA group information.
 
 The `user_org_set` object supports the following:
@@ -63,6 +61,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `directory_id` - Directory ID.
+* `user_count` - Number of users included in the directory.
 
 
 ## Import
