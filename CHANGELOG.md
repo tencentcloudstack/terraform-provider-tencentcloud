@@ -1,3 +1,30 @@
+## 1.82.46(Decmber 18, 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_bh_account_groups` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Data Source:** `tencentcloud_bh_source_types` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_access_white_list_config` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_access_white_list_rule` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_asset_sync_flag_config` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_asset_sync_job_operation` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_device` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_reconnection_setting_config` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_resource` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_sync_devices_to_ioa_operation` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_user` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_user_directory` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_user_group` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_bh_user_sync_task_operation` ([#3654](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3654))
+* **New Resource:** `tencentcloud_cynosdb_cls_delivery` ([#3659](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3659))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfw_nat_policy: optimiz code logic ([#3663](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3663))
+* resource/tencentcloud_cls_topic: support `encryption` ([#3661](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3661))
+* resource/tencentcloud_kubernetes_cluster_release: optimiz code logic ([#3656](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3656))
+* resource/tencentcloud_mongodb_instance_backup_rule: update doc ([#3658](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3658))
+
 ## 1.82.45(Decmber 15, 2025)
 
 FEATURES:
