@@ -173,7 +173,7 @@ func resourceTencentCloudCfwNatPolicyCreate(d *schema.ResourceData, meta interfa
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || response.Response.RuleUuid == nil || len(result.Response.RuleUuid) == 0 {
+		if result == nil || result.Response == nil || result.Response.RuleUuid == nil || len(result.Response.RuleUuid) == 0 {
 			return resource.NonRetryableError(fmt.Errorf("Create cfw natPolicy failed, Response is nil."))
 		}
 
