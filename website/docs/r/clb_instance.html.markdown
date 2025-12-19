@@ -512,6 +512,21 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
+### Create instance with associate endpoint
+
+```hcl
+resource "tencentcloud_clb_instance" "example" {
+  network_type       = "OPEN"
+  clb_name           = "tf-example"
+  project_id         = 0
+  vpc_id             = "vpc-e51ilko8"
+  associate_endpoint = "vpce-du9ssd3z"
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
