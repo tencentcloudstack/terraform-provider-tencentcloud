@@ -80,6 +80,18 @@ func ResourceTencentCloudVpcInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of the VPC.",
 			},
+			"enable_route_vpc_publish": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Vpc association with CCN route publish policy. true: enables cidr route publishing. false: enables subnet route publishing. default is subnet route publishing when creating a vpc. to select cidr route publishing, submit a ticket for adding to allowlist.",
+			},
+			"enable_route_vpc_publish_ipv6": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Vpc association with CCN IPV6 route publish policy. true: enables cidr route publishing. false: enables subnet route publishing. default is subnet route publishing when creating a vpc. to select cidr route publishing, submit a ticket for adding to allowlist.",
+			},
 
 			// Computed values
 			"is_default": {
@@ -110,11 +122,13 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	vpcService := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
-		name        string
-		cidrBlock   string
-		dnsServers  = make([]string, 0, 4)
-		isMulticast bool
-		tags        map[string]string
+		name                      string
+		cidrBlock                 string
+		dnsServers                = make([]string, 0, 4)
+		isMulticast               bool
+		tags                      map[string]string
+		enableRouteVpcPublish     bool
+		enableRouteVpcPublishIpv6 bool
 	)
 	if temp, ok := d.GetOk("name"); ok {
 		name = temp.(string)
@@ -142,7 +156,16 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
 		tags = temp
 	}
-	vpcId, _, err := vpcService.CreateVpc(ctx, name, cidrBlock, isMulticast, dnsServers, tags)
+
+	if temp, ok := d.GetOkExists("enable_route_vpc_publish"); ok {
+		enableRouteVpcPublish = temp.(bool)
+	}
+
+	if temp, ok := d.GetOkExists("enable_route_vpc_publish_ipv6"); ok {
+		enableRouteVpcPublishIpv6 = temp.(bool)
+	}
+
+	vpcId, _, err := vpcService.CreateVpc(ctx, name, cidrBlock, isMulticast, dnsServers, tags, enableRouteVpcPublish, enableRouteVpcPublishIpv6)
 	if err != nil {
 		return err
 	}
@@ -236,6 +259,8 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("assistant_cidrs", info.assistantCidrs)
 		_ = d.Set("docker_assistant_cidrs", info.dockerAssistantCidrs)
 		_ = d.Set("tags", tags)
+		_ = d.Set("enable_route_vpc_publish", info.enableRouteVpcPublish)
+		_ = d.Set("enable_route_vpc_publish_ipv6", info.enableRouteVpcPublishIpv6)
 
 		return nil
 	})
@@ -258,10 +283,12 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 	d.Partial(true)
 
 	var (
-		name        string
-		dnsServers  = make([]string, 0, 4)
-		slice       []interface{}
-		isMulticast bool
+		name                      string
+		dnsServers                = make([]string, 0, 4)
+		slice                     []interface{}
+		isMulticast               bool
+		enableRouteVpcPublish     bool
+		enableRouteVpcPublishIpv6 bool
 	)
 
 	old, now := d.GetChange("name")
@@ -297,7 +324,15 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 		isMulticast = old.(bool)
 	}
 
-	if err := vpcService.ModifyVpcAttribute(ctx, id, name, isMulticast, dnsServers); err != nil {
+	if temp, ok := d.GetOkExists("enable_route_vpc_publish"); ok {
+		enableRouteVpcPublish = temp.(bool)
+	}
+
+	if temp, ok := d.GetOkExists("enable_route_vpc_publish_ipv6"); ok {
+		enableRouteVpcPublishIpv6 = temp.(bool)
+	}
+
+	if err := vpcService.ModifyVpcAttribute(ctx, id, name, isMulticast, dnsServers, enableRouteVpcPublish, enableRouteVpcPublishIpv6); err != nil {
 		return err
 	}
 

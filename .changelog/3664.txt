@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_vpc: support `enable_route_vpc_publish`
+```
