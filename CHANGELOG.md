@@ -1,3 +1,11 @@
+## 1.82.47(Decmber 19, 2025)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: support `associate_endpoint` ([#3665](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3665))
+* resource/tencentcloud_cwp_license_order: update doc and optimiz code logic ([#3666](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3666))
+* resource/tencentcloud_vpc: support `enable_route_vpc_publish` ([#3664](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3664))
+
 ## 1.82.46(Decmber 18, 2025)
 
 FEATURES:
