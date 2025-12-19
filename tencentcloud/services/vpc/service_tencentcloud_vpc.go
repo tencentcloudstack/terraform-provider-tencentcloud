@@ -31,16 +31,18 @@ var eipUnattachLocker = &sync.Mutex{}
 /* For Adun Sake please DO NOT Declare the redundant Type STRUCT!! */
 // VPC basic information
 type VpcBasicInfo struct {
-	vpcId                string
-	name                 string
-	cidr                 string
-	isMulticast          bool
-	isDefault            bool
-	dnsServers           []string
-	createTime           string
-	tags                 []*vpc.Tag
-	assistantCidrs       []string
-	dockerAssistantCidrs []string
+	vpcId                     string
+	name                      string
+	cidr                      string
+	isMulticast               bool
+	isDefault                 bool
+	dnsServers                []string
+	createTime                string
+	tags                      []*vpc.Tag
+	assistantCidrs            []string
+	dockerAssistantCidrs      []string
+	enableRouteVpcPublish     bool
+	enableRouteVpcPublishIpv6 bool
 }
 
 func (info VpcBasicInfo) VpcId() string {
@@ -274,7 +276,7 @@ func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*
 
 // ////////api
 func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
-	isMulticast bool, dnsServers []string, tags map[string]string) (vpcId string, isDefault bool, errRet error) {
+	isMulticast bool, dnsServers []string, tags map[string]string, enableRouteVpcPublish bool, enableRouteVpcPublishIpv6 bool) (vpcId string, isDefault bool, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewCreateVpcRequest()
@@ -307,6 +309,9 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 			request.Tags = append(request.Tags, &tag)
 		}
 	}
+
+	request.EnableRouteVpcPublish = &enableRouteVpcPublish
+	request.EnableRouteVpcPublishIpv6 = &enableRouteVpcPublishIpv6
 
 	var response *vpc.CreateVpcResponse
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -476,6 +481,14 @@ getMoreData:
 			basicInfo.tags = item.TagSet
 		}
 
+		if item.EnableRouteVpcPublish != nil {
+			basicInfo.enableRouteVpcPublish = *item.EnableRouteVpcPublish
+		}
+
+		if item.EnableRouteVpcPublishIpv6 != nil {
+			basicInfo.enableRouteVpcPublishIpv6 = *item.EnableRouteVpcPublishIpv6
+		}
+
 		infos = append(infos, basicInfo)
 	}
 	goto getMoreData
@@ -629,7 +642,7 @@ getMoreData:
 	goto getMoreData
 }
 
-func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string, isMulticast bool, dnsServers []string) (errRet error) {
+func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string, isMulticast bool, dnsServers []string, enableRouteVpcPublish bool, enableRouteVpcPublishIpv6 bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewModifyVpcAttributeRequest()
 	defer func() {
@@ -650,6 +663,9 @@ func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string
 	}
 	var enableMulticast = map[bool]string{true: "true", false: "false"}[isMulticast]
 	request.EnableMulticast = &enableMulticast
+
+	request.EnableRouteVpcPublish = &enableRouteVpcPublish
+	request.EnableRouteVpcPublishIpv6 = &enableRouteVpcPublishIpv6
 
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
