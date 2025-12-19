@@ -411,6 +411,70 @@ func resourceTencentCloudAntiddosBgpInstanceRead(d *schema.ResourceData, meta in
 		_ = d.Set("enterprise_package_config", []interface{}{epcMap})
 	}
 
+	if respData.StandardPackageConfig != nil {
+		spcMap := map[string]interface{}{}
+		if respData.StandardPackageConfig.Region != nil {
+			spcMap["region"] = *respData.StandardPackageConfig.Region
+		}
+
+		if respData.StandardPackageConfig.ProtectIpCount != nil {
+			spcMap["protect_ip_count"] = *respData.StandardPackageConfig.ProtectIpCount
+		}
+
+		if respData.StandardPackageConfig.Bandwidth != nil {
+			spcMap["bandwidth"] = *respData.StandardPackageConfig.Bandwidth
+		}
+
+		if respData.StandardPackageConfig.ElasticBandwidthFlag != nil {
+			spcMap["elastic_bandwidth_flag"] = *respData.StandardPackageConfig.ElasticBandwidthFlag
+		}
+
+		_ = d.Set("standard_package_config", []interface{}{spcMap})
+	}
+
+	if respData.StandardPlusPackageConfig != nil {
+		sppcMap := map[string]interface{}{}
+		if respData.StandardPlusPackageConfig.Region != nil {
+			sppcMap["region"] = *respData.StandardPlusPackageConfig.Region
+		}
+
+		if respData.StandardPlusPackageConfig.ProtectCount != nil {
+			sppcMap["protect_count"] = *respData.StandardPlusPackageConfig.ProtectCount
+		}
+
+		if respData.StandardPlusPackageConfig.ProtectIpCount != nil {
+			sppcMap["protect_ip_count"] = *respData.StandardPlusPackageConfig.ProtectIpCount
+		}
+
+		if respData.StandardPlusPackageConfig.Bandwidth != nil {
+			sppcMap["bandwidth"] = *respData.StandardPlusPackageConfig.Bandwidth
+		}
+
+		if respData.StandardPlusPackageConfig.ElasticBandwidthFlag != nil {
+			sppcMap["elastic_bandwidth_flag"] = *respData.StandardPlusPackageConfig.ElasticBandwidthFlag
+		}
+
+		_ = d.Set("standard_plus_package_config", []interface{}{sppcMap})
+	}
+
+	if respData.TagInfoList != nil {
+		tagInfoList := make([]map[string]interface{}, 0, len(respData.TagInfoList))
+		for _, tag := range respData.TagInfoList {
+			tagMap := map[string]interface{}{}
+			if tag.TagKey != nil {
+				tagMap["tag_key"] = *tag.TagKey
+			}
+
+			if tag.TagValue != nil {
+				tagMap["tag_value"] = *tag.TagValue
+			}
+
+			tagInfoList = append(tagInfoList, tagMap)
+		}
+
+		_ = d.Set("tag_info_list", tagInfoList)
+	}
+
 	return nil
 }
 

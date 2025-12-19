@@ -157,15 +157,15 @@ func (me *AntiddosService) DisassociateDDoSEipAddress(ctx context.Context, insta
 
 }
 
-func (me *AntiddosService) DescribeListProtectThresholdConfig(ctx context.Context, instanceId string) (result antiddos.ProtectThresholdRelation, err error) {
+func (me *AntiddosService) DescribeListProtectThresholdConfig(ctx context.Context, instanceId string) (result antiddos.ProtectThresholdRelationNew, err error) {
 	logId := tccommon.GetLogId(ctx)
-	request := antiddos.NewDescribeListProtectThresholdConfigRequest()
+	request := antiddos.NewDescribeListProtectThresholdConfigNewRequest()
 	request.FilterInstanceId = common.StringPtr(instanceId)
 	request.Limit = helper.IntUint64(1)
 	request.Offset = helper.Int64Uint64(0)
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		response, err := me.client.UseAntiddosClient().DescribeListProtectThresholdConfig(request)
+		response, err := me.client.UseAntiddosClient().DescribeListProtectThresholdConfigNew(request)
 		configList := response.Response.ConfigList
 		if len(configList) > 0 {
 			result = *configList[0]
