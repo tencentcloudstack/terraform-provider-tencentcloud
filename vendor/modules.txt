@@ -1099,7 +1099,7 @@ github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/regions
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.799
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.15
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
@@ -1174,7 +1174,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.14
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.14
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.15
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors

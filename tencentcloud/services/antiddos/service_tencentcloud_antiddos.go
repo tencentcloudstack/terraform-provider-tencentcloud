@@ -2,6 +2,7 @@ package antiddos
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -156,15 +157,15 @@ func (me *AntiddosService) DisassociateDDoSEipAddress(ctx context.Context, insta
 
 }
 
-func (me *AntiddosService) DescribeListProtectThresholdConfig(ctx context.Context, instanceId string) (result antiddos.ProtectThresholdRelation, err error) {
+func (me *AntiddosService) DescribeListProtectThresholdConfig(ctx context.Context, instanceId string) (result antiddos.ProtectThresholdRelationNew, err error) {
 	logId := tccommon.GetLogId(ctx)
-	request := antiddos.NewDescribeListProtectThresholdConfigRequest()
+	request := antiddos.NewDescribeListProtectThresholdConfigNewRequest()
 	request.FilterInstanceId = common.StringPtr(instanceId)
 	request.Limit = helper.IntUint64(1)
 	request.Offset = helper.Int64Uint64(0)
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		response, err := me.client.UseAntiddosClient().DescribeListProtectThresholdConfig(request)
+		response, err := me.client.UseAntiddosClient().DescribeListProtectThresholdConfigNew(request)
 		configList := response.Response.ConfigList
 		if len(configList) > 0 {
 			result = *configList[0]
@@ -2449,6 +2450,110 @@ func (me *AntiddosService) DeleteAntiddosCcPrecisionPolicyById(ctx context.Conte
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosBgpInstancesById(ctx context.Context, resourceId, region string) (ret *antiddos.BGPInstanceInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := antiddos.NewDescribeBgpInstancesRequest()
+	response := antiddos.NewDescribeBgpInstancesResponse()
+	request.FilterRegion = common.StringPtr(region)
+	request.FilterInstanceIdList = common.StringPtrs([]string{resourceId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseAntiddosClient().DescribeBgpInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.BGPInstanceList == nil || len(result.Response.BGPInstanceList) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe bpg instance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.BGPInstanceList[0]
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosBgpInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*antiddos.BGPInstanceInfo, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = antiddos.NewDescribeBgpInstancesRequest()
+		response = antiddos.NewDescribeBgpInstancesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FilterRegion" {
+			request.FilterRegion = v.(*string)
+		}
+		if k == "FilterInstanceIdList" {
+			request.FilterInstanceIdList = v.([]*string)
+		}
+		if k == "FilterTag" {
+			request.FilterTag = v.([]*antiddos.TagInfo)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseAntiddosClient().DescribeBgpInstances(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.BGPInstanceList == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe bgp instances failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		ret = append(ret, response.Response.BGPInstanceList...)
+		if len(response.Response.BGPInstanceList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
 
 	return
 }
