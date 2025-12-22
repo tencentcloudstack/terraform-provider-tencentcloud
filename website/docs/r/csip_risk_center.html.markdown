@@ -13,7 +13,7 @@ Provides a resource to create a csip risk_center
 
 ## Example Usage
 
-### If task_mode is 0
+If task_mode is 0
 
 ```hcl
 resource "tencentcloud_csip_risk_center" "example" {
@@ -34,7 +34,7 @@ resource "tencentcloud_csip_risk_center" "example" {
 }
 ```
 
-### If task_mode is 1
+If task_mode is 1
 
 ```hcl
 resource "tencentcloud_csip_risk_center" "example" {
@@ -46,7 +46,7 @@ resource "tencentcloud_csip_risk_center" "example" {
 }
 ```
 
-### If task_mode is 2
+If task_mode is 2
 
 ```hcl
 resource "tencentcloud_csip_risk_center" "example" {

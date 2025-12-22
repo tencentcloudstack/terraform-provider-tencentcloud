@@ -13,7 +13,7 @@ Provides a resource to create a redis clear instance operation
 
 ## Example Usage
 
-### Clear the instance data of the Redis instance
+Clear the instance data of the Redis instance
 
 ```hcl
 variable "password" {

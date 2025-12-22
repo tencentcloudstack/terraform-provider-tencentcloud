@@ -13,7 +13,7 @@ Provides a resource to create a CLS web callback
 
 ## Example Usage
 
-### If type is WeCom
+If type is WeCom
 
 ```hcl
 resource "tencentcloud_cls_web_callback" "example" {
@@ -23,7 +23,7 @@ resource "tencentcloud_cls_web_callback" "example" {
 }
 ```
 
-### If type is Http
+If type is Http
 
 ```hcl
 resource "tencentcloud_cls_web_callback" "example" {

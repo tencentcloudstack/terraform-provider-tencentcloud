@@ -15,7 +15,7 @@ Provides a resource to create a CynosDB cls delivery
 
 ## Example Usage
 
-### Use topic_name and group_name
+Use topic_name and group_name
 
 ```hcl
 resource "tencentcloud_cynosdb_cls_delivery" "example" {
@@ -30,7 +30,7 @@ resource "tencentcloud_cynosdb_cls_delivery" "example" {
 }
 ```
 
-### Use topic_id and group_id
+Use topic_id and group_id
 
 ```hcl
 resource "tencentcloud_cynosdb_cls_delivery" "example" {

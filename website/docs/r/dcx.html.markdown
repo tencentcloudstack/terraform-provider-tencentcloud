@@ -15,7 +15,7 @@ Provides a resource to creating dedicated tunnels instances.
 
 ## Example Usage
 
-### If network_type is VPC
+If network_type is VPC
 
 ```hcl
 resource "tencentcloud_dcx" "example" {
@@ -35,7 +35,7 @@ resource "tencentcloud_dcx" "example" {
 }
 ```
 
-### If network_type is CCN
+If network_type is CCN
 
 ```hcl
 resource "tencentcloud_dcx" "example" {

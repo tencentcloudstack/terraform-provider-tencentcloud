@@ -17,7 +17,7 @@ Use this data source to query detailed information of waf ports
 data "tencentcloud_waf_ports" "example" {}
 ```
 
-### Or
+Or
 
 ```hcl
 data "tencentcloud_waf_ports" "example" {
@@ -26,7 +26,7 @@ data "tencentcloud_waf_ports" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 data "tencentcloud_waf_ports" "example" {

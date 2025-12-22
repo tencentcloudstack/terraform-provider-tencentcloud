@@ -17,7 +17,7 @@ Provides a resource to create a NAT gateway.
 
 ## Example Usage
 
-### Create a traditional NAT gateway.
+Create a traditional NAT gateway.
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -49,7 +49,7 @@ resource "tencentcloud_nat_gateway" "example" {
 }
 ```
 
-### Create a standard NAT gateway.
+Create a standard NAT gateway.
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -79,7 +79,7 @@ resource "tencentcloud_nat_gateway" "example" {
 }
 ```
 
-### Or set stock public ip addresses bandwidth out
+Or set stock public ip addresses bandwidth out
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {

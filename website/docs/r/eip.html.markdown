@@ -13,7 +13,7 @@ Provides an EIP resource.
 
 ## Example Usage
 
-### Paid by the bandwidth package
+Paid by the bandwidth package
 
 ```hcl
 resource "tencentcloud_eip" "foo" {
@@ -24,7 +24,7 @@ resource "tencentcloud_eip" "foo" {
 }
 ```
 
-### AntiDDos Eip
+AntiDDos Eip
 
 ```hcl
 resource "tencentcloud_eip" "foo" {
@@ -40,7 +40,7 @@ resource "tencentcloud_eip" "foo" {
 }
 ```
 
-### Eip With Network Egress
+Eip With Network Egress
 
 ```hcl
 resource "tencentcloud_eip" "foo" {

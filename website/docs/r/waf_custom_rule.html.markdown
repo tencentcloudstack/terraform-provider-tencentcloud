@@ -15,7 +15,7 @@ Provides a resource to create a waf custom rule
 
 ## Example Usage
 
-### Create a standard custom rule
+Create a standard custom rule
 
 ```hcl
 resource "tencentcloud_waf_custom_rule" "example" {
@@ -44,7 +44,7 @@ resource "tencentcloud_waf_custom_rule" "example" {
 }
 ```
 
-### Create a timed resource for execution
+Create a timed resource for execution
 
 ```hcl
 resource "tencentcloud_waf_custom_rule" "example" {
@@ -82,7 +82,7 @@ resource "tencentcloud_waf_custom_rule" "example" {
 }
 ```
 
-### Create a cron resource for execution
+Create a cron resource for execution
 
 ```hcl
 resource "tencentcloud_waf_custom_rule" "example" {

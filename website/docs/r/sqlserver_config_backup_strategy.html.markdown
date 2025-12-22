@@ -13,7 +13,7 @@ Provides a resource to create a sqlserver config_backup_strategy
 
 ## Example Usage
 
-### Daily backup
+Daily backup
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -74,7 +74,7 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "example" {
 }
 ```
 
-### Weekly backup
+Weekly backup
 
 ```hcl
 resource "tencentcloud_sqlserver_config_backup_strategy" "example" {
@@ -91,7 +91,7 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "example" {
 }
 ```
 
-### Regular backup
+Regular backup
 
 ```hcl
 resource "tencentcloud_sqlserver_config_backup_strategy" "example" {

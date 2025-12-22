@@ -13,7 +13,7 @@ Provide a resource to create a VPC.
 
 ## Example Usage
 
-### Create a basic VPC
+Create a basic VPC
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -28,7 +28,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 ```
 
-### Using Assistant CIDR
+Using Assistant CIDR
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -43,7 +43,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 ```
 
-### Enable route vpc publish
+Enable route vpc publish
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {

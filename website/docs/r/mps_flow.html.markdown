@@ -13,7 +13,7 @@ Provides a resource to create a mps flow
 
 ## Example Usage
 
-### Create a mps RTP flow
+Create a mps RTP flow
 
 ```hcl
 resource "tencentcloud_mps_event" "event" {
@@ -42,7 +42,7 @@ resource "tencentcloud_mps_flow" "flow" {
 }
 ```
 
-### Create a mps RTP flow
+Create a mps RTP flow
 
 ```hcl
 resource "tencentcloud_mps_event" "event_rtp" {

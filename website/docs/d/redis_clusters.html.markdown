@@ -13,13 +13,13 @@ Use this data source to query detailed information of redis clusters
 
 ## Example Usage
 
-### Query all instance
+Query all instance
 
 ```hcl
 data "tencentcloud_redis_clusters" "clusters" {}
 ```
 
-### Also Support the following query conditions
+Also Support the following query conditions
 
 ```hcl
 data "tencentcloud_redis_clusters" "clusters" {

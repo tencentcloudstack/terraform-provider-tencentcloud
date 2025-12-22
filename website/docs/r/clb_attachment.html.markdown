@@ -15,7 +15,7 @@ Provides a resource to create a CLB attachment.
 
 ## Example Usage
 
-### Bind a Cvm instance by using rule_id
+Bind a Cvm instance by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -31,7 +31,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-### Bind a Cvm instance by using domian and url
+Bind a Cvm instance by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -48,7 +48,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-### Bind multiple Cvm instances by using rule_id
+Bind multiple Cvm instances by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -70,7 +70,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-### Bind multiple Cvm instances by using domian and url
+Bind multiple Cvm instances by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -93,7 +93,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-### Bind backend target is ENI by using rule_id
+Bind backend target is ENI by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -109,7 +109,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-### Bind backend target is ENI by using domian and url
+Bind backend target is ENI by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {

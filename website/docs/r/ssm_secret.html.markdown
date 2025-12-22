@@ -13,7 +13,7 @@ Provide a resource to create a SSM secret.
 
 ## Example Usage
 
-### Create user defined secret
+Create user defined secret
 
 ```hcl
 resource "tencentcloud_ssm_secret" "example" {
@@ -28,7 +28,7 @@ resource "tencentcloud_ssm_secret" "example" {
 }
 ```
 
-### Create redis secret
+Create redis secret
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {

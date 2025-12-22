@@ -13,7 +13,7 @@ Provides a resource to create a WAF cc
 
 ## Example Usage
 
-### If advance is 0(IP model)
+If advance is 0(IP model)
 
 ```hcl
 resource "tencentcloud_waf_cc" "example" {
@@ -86,7 +86,7 @@ resource "tencentcloud_waf_cc" "example" {
 }
 ```
 
-### If advance is 1(SESSION model)
+If advance is 1(SESSION model)
 
 ```hcl
 resource "tencentcloud_waf_cc" "example" {

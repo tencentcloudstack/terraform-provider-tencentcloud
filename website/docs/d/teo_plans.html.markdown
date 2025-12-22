@@ -13,13 +13,13 @@ Use this data source to query detailed information of TEO plans
 
 ## Example Usage
 
-### Query all plans
+Query all plans
 
 ```hcl
 data "tencentcloud_teo_plans" "example" {}
 ```
 
-### Query plans by filters
+Query plans by filters
 
 ```hcl
 data "tencentcloud_teo_plans" "example" {

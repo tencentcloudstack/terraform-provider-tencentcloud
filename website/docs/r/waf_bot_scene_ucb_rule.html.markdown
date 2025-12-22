@@ -13,7 +13,7 @@ Provides a resource to create a WAF bot scene ucb rule
 
 ## Example Usage
 
-### The rules are permanently effective
+The rules are permanently effective
 
 ```hcl
 resource "tencentcloud_waf_bot_scene_ucb_rule" "example" {
@@ -65,7 +65,7 @@ resource "tencentcloud_waf_bot_scene_ucb_rule" "example" {
 }
 ```
 
-### The rules take effect on a scheduled basis
+The rules take effect on a scheduled basis
 
 ```hcl
 resource "tencentcloud_waf_bot_scene_ucb_rule" "example" {
@@ -121,7 +121,7 @@ resource "tencentcloud_waf_bot_scene_ucb_rule" "example" {
 }
 ```
 
-### The rules take effect on a weekly basis
+The rules take effect on a weekly basis
 
 ```hcl
 resource "tencentcloud_waf_bot_scene_ucb_rule" "example" {

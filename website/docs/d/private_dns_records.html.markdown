@@ -19,7 +19,7 @@ data "tencentcloud_private_dns_records" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 data "tencentcloud_private_dns_records" "example" {

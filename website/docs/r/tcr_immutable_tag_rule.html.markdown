@@ -13,7 +13,7 @@ Provides a resource to create a tcr immutable tag rule.
 
 ## Example Usage
 
-### Create a immutable tag rule with specified tags and exclude specified repositories
+Create a immutable tag rule with specified tags and exclude specified repositories
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
@@ -50,7 +50,7 @@ resource "tencentcloud_tcr_immutable_tag_rule" "example" {
 }
 ```
 
-### With specified repositories and exclude specified version tag
+With specified repositories and exclude specified version tag
 
 ```hcl
 resource "tencentcloud_tcr_immutable_tag_rule" "example" {
@@ -69,7 +69,7 @@ resource "tencentcloud_tcr_immutable_tag_rule" "example" {
 }
 ```
 
-### Disabled the specified rule
+Disabled the specified rule
 
 ```hcl
 resource "tencentcloud_tcr_immutable_tag_rule" "example_rule_A" {

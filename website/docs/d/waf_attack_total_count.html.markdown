@@ -13,7 +13,7 @@ Use this data source to query detailed information of waf attack_total_count
 
 ## Example Usage
 
-### Obtain the specified domain name attack log
+Obtain the specified domain name attack log
 
 ```hcl
 data "tencentcloud_waf_attack_total_count" "example" {
@@ -24,7 +24,7 @@ data "tencentcloud_waf_attack_total_count" "example" {
 }
 ```
 
-### Obtain all domain name attack log
+Obtain all domain name attack log
 
 ```hcl
 data "tencentcloud_waf_attack_total_count" "example" {

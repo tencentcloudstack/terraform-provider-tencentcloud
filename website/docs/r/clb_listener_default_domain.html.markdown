@@ -13,7 +13,7 @@ Provides a resource to set clb listener default domain
 
 ## Example Usage
 
-### Set default domain
+Set default domain
 
 ```hcl
 resource "tencentcloud_clb_listener_default_domain" "example" {

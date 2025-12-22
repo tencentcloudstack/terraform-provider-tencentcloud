@@ -13,7 +13,7 @@ Provides a resource to create a apigateway upstream
 
 ## Example Usage
 
-### Create a basic VPC channel
+Create a basic VPC channel
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -94,7 +94,7 @@ resource "tencentcloud_api_gateway_upstream" "example" {
 }
 ```
 
-### Create a complete VPC channel
+Create a complete VPC channel
 
 ```hcl
 resource "tencentcloud_api_gateway_upstream" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a MQTT instance
 
 ## Example Usage
 
-### Create a POSTPAID instance
+Create a POSTPAID instance
 
 ```hcl
 variable "availability_zone" {
@@ -52,7 +52,7 @@ resource "tencentcloud_mqtt_instance" "example" {
 }
 ```
 
-### Create a PREPAID instance
+Create a PREPAID instance
 
 ```hcl
 variable "availability_zone" {

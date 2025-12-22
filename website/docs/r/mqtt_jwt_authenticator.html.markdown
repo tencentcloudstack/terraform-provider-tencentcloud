@@ -13,7 +13,7 @@ Provides a resource to create a MQTT jwt authenticator
 
 ## Example Usage
 
-### If algorithm is hmac-based
+If algorithm is hmac-based
 
 ```hcl
 resource "tencentcloud_mqtt_jwt_authenticator" "example" {
@@ -25,7 +25,7 @@ resource "tencentcloud_mqtt_jwt_authenticator" "example" {
 }
 ```
 
-### If algorithm is public-key
+If algorithm is public-key
 
 ```hcl
 resource "tencentcloud_mqtt_jwt_authenticator" "example" {

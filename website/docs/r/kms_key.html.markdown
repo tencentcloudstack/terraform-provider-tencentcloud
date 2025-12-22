@@ -13,7 +13,7 @@ Provide a resource to create a KMS key.
 
 ## Example Usage
 
-### Create and enable a instance.
+Create and enable a instance.
 
 ```hcl
 resource "tencentcloud_kms_key" "example" {
@@ -29,7 +29,7 @@ resource "tencentcloud_kms_key" "example" {
 }
 ```
 
-### Create kms instance with HSM
+Create kms instance with HSM
 
 ```hcl
 resource "tencentcloud_kms_key" "example" {
@@ -46,7 +46,7 @@ resource "tencentcloud_kms_key" "example" {
 }
 ```
 
-### Specify the Key Usage as an asymmetry method.
+Specify the Key Usage as an asymmetry method.
 
 ```hcl
 resource "tencentcloud_kms_key" "example" {
@@ -57,7 +57,7 @@ resource "tencentcloud_kms_key" "example" {
 }
 ```
 
-### Disable the kms key instance.
+Disable the kms key instance.
 
 ```hcl
 resource "tencentcloud_kms_key" "example" {

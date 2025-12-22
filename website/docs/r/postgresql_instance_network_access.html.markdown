@@ -13,7 +13,7 @@ Provides a resource to create a postgres instance network access
 
 ## Example Usage
 
-### Create by custom vip
+Create by custom vip
 
 ```hcl
 resource "tencentcloud_postgresql_instance_network_access" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_postgresql_instance_network_access" "example" {
 }
 ```
 
-### Create by automatic allocation vip
+Create by automatic allocation vip
 
 ```hcl
 resource "tencentcloud_postgresql_instance_network_access" "example" {

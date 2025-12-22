@@ -13,7 +13,7 @@ Use this data source to query detailed information of waf attack_log_histogram
 
 ## Example Usage
 
-### Obtain the specified domain name log information
+Obtain the specified domain name log information
 
 ```hcl
 data "tencentcloud_waf_attack_log_histogram" "example" {
@@ -24,7 +24,7 @@ data "tencentcloud_waf_attack_log_histogram" "example" {
 }
 ```
 
-### Obtain all domain name log information
+Obtain all domain name log information
 
 ```hcl
 data "tencentcloud_waf_attack_log_histogram" "example" {

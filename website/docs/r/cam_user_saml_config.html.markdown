@@ -13,7 +13,7 @@ Provides a resource to create a CAM user saml config
 
 ## Example Usage
 
-### Create saml config by metadata string
+Create saml config by metadata string
 
 ```hcl
 resource "tencentcloud_cam_user_saml_config" "example" {
@@ -24,7 +24,7 @@ EOT
 }
 ```
 
-### Create saml config by metadata file path
+Create saml config by metadata file path
 
 ```hcl
 resource "tencentcloud_cam_user_saml_config" "example" {

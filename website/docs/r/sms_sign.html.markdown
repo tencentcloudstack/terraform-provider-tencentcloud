@@ -13,7 +13,7 @@ Provides a resource to create a sms sign
 
 ## Example Usage
 
-### Create a sms sign instance
+Create a sms sign instance
 
 ```hcl
 resource "tencentcloud_sms_sign" "example" {

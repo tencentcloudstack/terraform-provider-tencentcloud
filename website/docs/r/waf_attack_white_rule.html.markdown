@@ -13,7 +13,7 @@ Provides a resource to create a WAF attack white rule
 
 ## Example Usage
 
-### Using type_ids
+Using type_ids
 
 ```hcl
 resource "tencentcloud_waf_attack_white_rule" "example" {
@@ -65,7 +65,7 @@ resource "tencentcloud_waf_attack_white_rule" "example" {
 }
 ```
 
-### Using signature_ids
+Using signature_ids
 
 ```hcl
 resource "tencentcloud_waf_attack_white_rule" "example" {

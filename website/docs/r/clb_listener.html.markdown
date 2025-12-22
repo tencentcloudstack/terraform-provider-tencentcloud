@@ -13,7 +13,7 @@ Provides a resource to create a CLB listener.
 
 ## Example Usage
 
-### HTTP Listener
+HTTP Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### TCP/UDP Listener
+TCP/UDP Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -50,7 +50,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### TCP/UDP Listener with tcp health check
+TCP/UDP Listener with tcp health check
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -72,7 +72,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### TCP/UDP Listener with http health check
+TCP/UDP Listener with http health check
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -98,7 +98,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### TCP/UDP Listener with customer health check
+TCP/UDP Listener with customer health check
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -121,7 +121,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### HTTPS Listener with sigle certificate
+HTTPS Listener with sigle certificate
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -136,7 +136,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### HTTPS Listener with multi certificates
+HTTPS Listener with multi certificates
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -156,7 +156,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### TCP SSL Listener
+TCP SSL Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -177,7 +177,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### Port Range Listener
+Port Range Listener
 
 ```hcl
 resource "tencentcloud_clb_instance" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a redis account
 
 ## Example Usage
 
-### Create an account with read and write permissions
+Create an account with read and write permissions
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {
@@ -55,7 +55,7 @@ resource "tencentcloud_redis_account" "account" {
 }
 ```
 
-### Create an account with read-only permissions
+Create an account with read-only permissions
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {

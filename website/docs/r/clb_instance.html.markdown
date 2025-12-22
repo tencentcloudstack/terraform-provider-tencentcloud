@@ -13,7 +13,7 @@ Provides a resource to create a CLB instance.
 
 ## Example Usage
 
-### Create INTERNAL CLB
+Create INTERNAL CLB
 
 ```hcl
 variable "availability_zone" {
@@ -49,7 +49,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Create CLB with eip_address_id, Only support INTERNAL CLB
+Create CLB with eip_address_id, Only support INTERNAL CLB
 
 ```hcl
 variable "availability_zone" {
@@ -86,7 +86,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Create dedicated cluster clb
+Create dedicated cluster clb
 
 ```hcl
 variable "availability_zone" {
@@ -124,7 +124,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Create LCU-supported CLB
+Create LCU-supported CLB
 
 ```hcl
 variable "availability_zone" {
@@ -161,7 +161,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Create OPEN CLB
+Create OPEN CLB
 
 ```hcl
 variable "availability_zone" {
@@ -199,7 +199,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Support CORS
+Support CORS
 
 ```hcl
 variable "zone" {
@@ -243,7 +243,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Open CLB with VipIsp
+Open CLB with VipIsp
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -280,7 +280,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Dynamic Vip Instance
+Dynamic Vip Instance
 
 ```hcl
 variable "zone" {
@@ -338,7 +338,7 @@ output "domain" {
 }
 ```
 
-### Specified Vip Instance
+Specified Vip Instance
 
 ```hcl
 variable "availability_zone" {
@@ -381,7 +381,7 @@ output "domain" {
 }
 ```
 
-### Default enable
+Default enable
 
 ```hcl
 variable "zone" {
@@ -435,7 +435,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Create multiple instance
+Create multiple instance
 
 ```hcl
 variable "availability_zone" {
@@ -449,7 +449,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Create instance with log
+Create instance with log
 
 ```hcl
 // create vpc
@@ -512,7 +512,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### Create instance with associate endpoint
+Create instance with associate endpoint
 
 ```hcl
 resource "tencentcloud_clb_instance" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a CDWDoris instance
 
 ## Example Usage
 
-### Create a POSTPAID instance
+Create a POSTPAID instance
 
 ```hcl
 # availability zone
@@ -87,7 +87,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
 }
 ```
 
-### Create a PREPAID instance
+Create a PREPAID instance
 
 ```hcl
 # availability zone

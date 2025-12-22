@@ -15,7 +15,7 @@ Provides a resource to create a THPC workspaces
 
 ## Example Usage
 
-### Create a PREPAID THPC workspaces
+Create a PREPAID THPC workspaces
 
 ```hcl
 variable "availability_zone" {
@@ -114,7 +114,7 @@ resource "tencentcloud_thpc_workspaces" "example" {
 }
 ```
 
-### Create a UNDERWRITE THPC workspaces
+Create a UNDERWRITE THPC workspaces
 
 ```hcl
 variable "availability_zone" {

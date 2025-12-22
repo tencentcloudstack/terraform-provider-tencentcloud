@@ -13,7 +13,7 @@ Provides a resource for an AS (Auto scaling) lifecycle hook.
 
 ## Example Usage
 
-### Create a basic LifecycleHook
+Create a basic LifecycleHook
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -67,7 +67,7 @@ resource "tencentcloud_as_lifecycle_hook" "example" {
 }
 ```
 
-### If notification_target_type is CMQ_QUEUE
+If notification_target_type is CMQ_QUEUE
 
 ```hcl
 resource "tencentcloud_as_lifecycle_hook" "example" {
@@ -82,7 +82,7 @@ resource "tencentcloud_as_lifecycle_hook" "example" {
 }
 ```
 
-### Or notification_target_type is CMQ_TOPIC
+Or notification_target_type is CMQ_TOPIC
 
 ```hcl
 resource "tencentcloud_as_lifecycle_hook" "example" {
@@ -97,7 +97,7 @@ resource "tencentcloud_as_lifecycle_hook" "example" {
 }
 ```
 
-### Use TAT Command
+Use TAT Command
 
 ```hcl
 resource "tencentcloud_as_lifecycle_hook" "example" {

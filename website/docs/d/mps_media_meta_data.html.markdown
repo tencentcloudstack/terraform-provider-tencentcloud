@@ -13,7 +13,7 @@ Use this data source to query detailed information of mps media_meta_data
 
 ## Example Usage
 
-### Query the mps media meta data through COS
+Query the mps media meta data through COS
 
 ```hcl
 data "tencentcloud_cos_bucket_object" "object" {

@@ -13,7 +13,7 @@ Provides a resource to create a mps withdraws_watermark_operation
 
 ## Example Usage
 
-### Withdraw the watermark from COS
+Withdraw the watermark from COS
 
 ```hcl
 resource "tencentcloud_cos_bucket" "example" {

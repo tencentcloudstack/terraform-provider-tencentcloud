@@ -13,7 +13,7 @@ Use this resource to create tcr repository.
 
 ## Example Usage
 
-### Create a tcr repository instance
+Create a tcr repository instance
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

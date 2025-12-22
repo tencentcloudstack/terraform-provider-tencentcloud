@@ -13,7 +13,7 @@ Provides a resource to create a CAM tag role
 
 ## Example Usage
 
-### Create by role_id
+Create by role_id
 
 ```hcl
 resource "tencentcloud_cam_tag_role_attachment" "example" {
@@ -26,7 +26,7 @@ resource "tencentcloud_cam_tag_role_attachment" "example" {
 }
 ```
 
-### Create by role_name
+Create by role_name
 
 ```hcl
 resource "tencentcloud_cam_tag_role_attachment" "example" {

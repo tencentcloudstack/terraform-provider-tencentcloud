@@ -13,7 +13,7 @@ Provides a resource to create a monitor grafanaIntegration
 
 ## Example Usage
 
-### Create a grafan instance and integrate the configuration
+Create a grafan instance and integrate the configuration
 
 ```hcl
 variable "availability_zone" {

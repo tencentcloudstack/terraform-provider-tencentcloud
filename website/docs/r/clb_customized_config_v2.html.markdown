@@ -13,7 +13,7 @@ Provides a resource to create a CLB customized config which type is `SERVER` or 
 
 ## Example Usage
 
-### If config_type is SERVER
+If config_type is SERVER
 
 ```hcl
 resource "tencentcloud_clb_customized_config_v2" "example" {
@@ -27,7 +27,7 @@ output "configId" {
 }
 ```
 
-### If config_type is LOCATION
+If config_type is LOCATION
 
 ```hcl
 resource "tencentcloud_clb_customized_config_v2" "example" {

@@ -13,13 +13,13 @@ Use this data source to query eip instances.
 
 ## Example Usage
 
-### Query all eip instances
+Query all eip instances
 
 ```hcl
 data "tencentcloud_eips" "example" {}
 ```
 
-### Query eip instances by eip ID
+Query eip instances by eip ID
 
 ```hcl
 data "tencentcloud_eips" "example" {
@@ -27,7 +27,7 @@ data "tencentcloud_eips" "example" {
 }
 ```
 
-### Query eip instances by eip name
+Query eip instances by eip name
 
 ```hcl
 data "tencentcloud_eips" "example" {
@@ -35,7 +35,7 @@ data "tencentcloud_eips" "example" {
 }
 ```
 
-### Query eip instances by public ip
+Query eip instances by public ip
 
 ```hcl
 data "tencentcloud_eips" "example" {
@@ -43,7 +43,7 @@ data "tencentcloud_eips" "example" {
 }
 ```
 
-### Query eip instances by tags
+Query eip instances by tags
 
 ```hcl
 data "tencentcloud_eips" "example" {

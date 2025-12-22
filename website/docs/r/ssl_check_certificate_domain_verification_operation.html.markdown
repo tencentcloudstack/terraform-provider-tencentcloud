@@ -15,7 +15,7 @@ Provides a resource to create a ssl Check Certificate Domain Verification
 
 ## Example Usage
 
-### Check certificate domain
+Check certificate domain
 
 ```hcl
 resource "tencentcloud_ssl_check_certificate_domain_verification_operation" "example" {
@@ -23,7 +23,7 @@ resource "tencentcloud_ssl_check_certificate_domain_verification_operation" "exa
 }
 ```
 
-### Check certificate domain and set the maximum timeout period
+Check certificate domain and set the maximum timeout period
 
 ```hcl
 resource "tencentcloud_ssl_check_certificate_domain_verification_operation" "example" {

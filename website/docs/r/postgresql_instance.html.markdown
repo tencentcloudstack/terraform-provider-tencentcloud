@@ -21,7 +21,7 @@ Use this resource to create postgresql instance.
 
 ## Example Usage
 
-### Create a postgresql instance
+Create a postgresql instance
 
 ```hcl
 variable "availability_zone" {
@@ -66,7 +66,7 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### Create a postgresql instance with delete protection
+Create a postgresql instance with delete protection
 
 ```hcl
 variable "availability_zone" {
@@ -112,7 +112,7 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### Create a multi available zone postgresql instance
+Create a multi available zone postgresql instance
 
 ```hcl
 variable "availability_zone" {
@@ -169,7 +169,7 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### Create a multi available zone postgresql instance of CDC
+Create a multi available zone postgresql instance of CDC
 
 ```hcl
 variable "availability_zone" {
@@ -224,7 +224,7 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### Create pgsql with kms key
+Create pgsql with kms key
 
 ```hcl
 variable "availability_zone" {
@@ -262,7 +262,7 @@ resource "tencentcloud_postgresql_instance" "example" {
 }
 ```
 
-### Upgrade kernel version
+Upgrade kernel version
 
 ```hcl
 variable "availability_zone" {

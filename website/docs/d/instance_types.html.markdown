@@ -21,7 +21,7 @@ data "tencentcloud_instance_types" "example" {
 }
 ```
 
-### Complete Example
+Complete Example
 
 ```hcl
 data "tencentcloud_instance_types" "example" {

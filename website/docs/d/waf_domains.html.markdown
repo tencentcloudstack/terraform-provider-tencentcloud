@@ -13,13 +13,13 @@ Use this data source to query detailed information of waf domains
 
 ## Example Usage
 
-### Find all domains
+Find all domains
 
 ```hcl
 data "tencentcloud_waf_domains" "example" {}
 ```
 
-### Find domains by filter
+Find domains by filter
 
 ```hcl
 data "tencentcloud_waf_domains" "example" {

@@ -13,13 +13,13 @@ Use this data source to query detailed information of HA VIPs.
 
 ## Example Usage
 
-### Query all HA vips
+Query all HA vips
 
 ```hcl
 data "tencentcloud_ha_vips" "ha_vips" {}
 ```
 
-### Query HA vips by filters
+Query HA vips by filters
 
 ```hcl
 data "tencentcloud_ha_vips" "ha_vips" {

@@ -15,7 +15,7 @@ Provide a resource to create a SSM secret version.
 
 ## Example Usage
 
-### Text type credential information plaintext
+Text type credential information plaintext
 
 ```hcl
 resource "tencentcloud_ssm_secret" "example" {
@@ -36,7 +36,7 @@ resource "tencentcloud_ssm_secret_version" "v1" {
 }
 ```
 
-### Binary credential information, encoded using base64
+Binary credential information, encoded using base64
 
 ```hcl
 resource "tencentcloud_ssm_secret_version" "v2" {

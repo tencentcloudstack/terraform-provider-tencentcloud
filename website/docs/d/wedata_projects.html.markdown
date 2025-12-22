@@ -13,13 +13,13 @@ Use this data source to query detailed information of WeData projects
 
 ## Example Usage
 
-### Query all projects
+Query all projects
 
 ```hcl
 data "tencentcloud_wedata_projects" "example" {}
 ```
 
-### Query projects by filter
+Query projects by filter
 
 ```hcl
 data "tencentcloud_wedata_projects" "example" {

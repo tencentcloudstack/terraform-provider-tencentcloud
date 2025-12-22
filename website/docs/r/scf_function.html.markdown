@@ -25,7 +25,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
-### Using Zip file
+Using Zip file
 
 ```hcl
 resource "tencentcloud_scf_function" "foo" {
@@ -48,7 +48,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
-### Using CFS config
+Using CFS config
 
 ```hcl
 resource "tencentcloud_scf_function" "foo" {
@@ -67,7 +67,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
-### Using triggers
+Using triggers
 
 ```hcl
 resource "tencentcloud_scf_function" "foo" {

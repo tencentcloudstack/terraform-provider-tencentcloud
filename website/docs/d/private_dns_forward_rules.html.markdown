@@ -13,13 +13,13 @@ Use this data source to query detailed information of Private Dns forward rules
 
 ## Example Usage
 
-### Query all private dns forward rules
+Query all private dns forward rules
 
 ```hcl
 data "tencentcloud_private_dns_forward_rules" "example" {}
 ```
 
-### Query all private dns forward rules by filters
+Query all private dns forward rules by filters
 
 ```hcl
 data "tencentcloud_private_dns_forward_rules" "example" {

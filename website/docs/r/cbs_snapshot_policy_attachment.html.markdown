@@ -15,7 +15,7 @@ Provides a CBS snapshot policy attachment resource.
 
 ## Example Usage
 
-### Attachment CBS snapshot policy by storage_id
+Attachment CBS snapshot policy by storage_id
 
 ```hcl
 resource "tencentcloud_cbs_storage" "example" {
@@ -44,7 +44,7 @@ resource "tencentcloud_cbs_snapshot_policy_attachment" "example" {
 }
 ```
 
-### Attachment CBS snapshot policy by storage_ids
+Attachment CBS snapshot policy by storage_ids
 
 ```hcl
 resource "tencentcloud_cbs_storage" "example1" {

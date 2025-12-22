@@ -15,7 +15,7 @@ Provides a resource to create a cfw block_ignore
 
 ## Example Usage
 
-### If create ip rule
+If create ip rule
 
 ```hcl
 resource "tencentcloud_cfw_block_ignore" "example" {
@@ -28,7 +28,7 @@ resource "tencentcloud_cfw_block_ignore" "example" {
 }
 ```
 
-### If create domain rule
+If create domain rule
 
 ```hcl
 resource "tencentcloud_cfw_block_ignore" "example" {

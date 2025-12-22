@@ -15,7 +15,7 @@ Use this resource to attach API gateway usage plan to service.
 
 ## Example Usage
 
-### Normal creation
+Normal creation
 
 ```hcl
 resource "tencentcloud_api_gateway_usage_plan" "example" {
@@ -76,7 +76,7 @@ resource "tencentcloud_api_gateway_usage_plan_attachment" "example" {
 }
 ```
 
-### Bind the key to a usage plan
+Bind the key to a usage plan
 
 ```hcl
 resource "tencentcloud_api_gateway_api_key" "example" {

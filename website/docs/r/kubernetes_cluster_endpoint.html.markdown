@@ -17,7 +17,7 @@ Provide a resource to create a kubernetes cluster endpoint. This resource allows
 
 ## Example Usage
 
-### Open intranet access for kubernetes cluster
+Open intranet access for kubernetes cluster
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
@@ -28,7 +28,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
 }
 ```
 
-### Open internet access for kubernetes cluster
+Open internet access for kubernetes cluster
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster_endpoint" "example" {

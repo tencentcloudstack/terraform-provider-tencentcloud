@@ -13,13 +13,13 @@ Use this data source to query detailed information of wedata data_source_list
 
 ## Example Usage
 
-### Query All
+Query All
 
 ```hcl
 data "tencentcloud_wedata_data_source_list" "example" {}
 ```
 
-### Query By filter
+Query By filter
 
 ```hcl
 data "tencentcloud_wedata_data_source_list" "example" {

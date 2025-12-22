@@ -15,7 +15,7 @@ Provides a resource to create a cls topic.
 
 ## Example Usage
 
-### Create a standard cls topic
+Create a standard cls topic
 
 ```hcl
 resource "tencentcloud_cls_logset" "example" {
@@ -41,7 +41,7 @@ resource "tencentcloud_cls_topic" "example" {
 }
 ```
 
-### Create a cls topic with web tracking
+Create a cls topic with web tracking
 
 ```hcl
 resource "tencentcloud_cls_logset" "example" {

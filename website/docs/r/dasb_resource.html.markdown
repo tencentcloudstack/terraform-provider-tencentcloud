@@ -13,7 +13,7 @@ Provides a resource to create a dasb resource
 
 ## Example Usage
 
-### Create a standard version instance
+Create a standard version instance
 
 ```hcl
 resource "tencentcloud_dasb_resource" "example" {
@@ -32,7 +32,7 @@ resource "tencentcloud_dasb_resource" "example" {
 }
 ```
 
-### Create a professional instance
+Create a professional instance
 
 ```hcl
 resource "tencentcloud_dasb_resource" "example" {

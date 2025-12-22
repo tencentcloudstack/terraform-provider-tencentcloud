@@ -13,7 +13,7 @@ Provides a resource to create a CLB customized config which type is `CLB`.
 
 ## Example Usage
 
-### Create clb customized config without CLB instance
+Create clb customized config without CLB instance
 
 ```hcl
 resource "tencentcloud_clb_customized_config" "example" {
@@ -22,7 +22,7 @@ resource "tencentcloud_clb_customized_config" "example" {
 }
 ```
 
-### Create clb customized config with CLB instances
+Create clb customized config with CLB instances
 
 ```hcl
 resource "tencentcloud_clb_customized_config" "example" {

@@ -13,7 +13,7 @@ Provides a alarm policy resource for monitor.
 
 ## Example Usage
 
-### cvm_device alarm policy
+cvm_device alarm policy
 
 ```hcl
 resource "tencentcloud_monitor_alarm_notice" "foo" {
@@ -79,7 +79,7 @@ resource "tencentcloud_monitor_alarm_policy" "foo" {
 }
 ```
 
-### k8s_cluster alarm policy
+k8s_cluster alarm policy
 
 ```hcl
 resource "tencentcloud_monitor_alarm_policy" "policy" {
@@ -171,7 +171,7 @@ resource "tencentcloud_monitor_alarm_policy" "policy" {
 }
 ```
 
-### cvm_device alarm policy binding cvm by tag
+cvm_device alarm policy binding cvm by tag
 
 ```hcl
 resource "tencentcloud_monitor_alarm_policy" "policy" {

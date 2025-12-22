@@ -13,7 +13,7 @@ Use this data source to query detailed information of waf peak_points
 
 ## Example Usage
 
-### Basic Query
+Basic Query
 
 ```hcl
 data "tencentcloud_waf_peak_points" "example" {
@@ -22,7 +22,7 @@ data "tencentcloud_waf_peak_points" "example" {
 }
 ```
 
-### Query by filter
+Query by filter
 
 ```hcl
 data "tencentcloud_waf_peak_points" "example" {

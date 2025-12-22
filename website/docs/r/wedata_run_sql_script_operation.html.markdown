@@ -20,7 +20,7 @@ resource "tencentcloud_wedata_run_sql_script_operation" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_wedata_run_sql_script_operation" "example" {

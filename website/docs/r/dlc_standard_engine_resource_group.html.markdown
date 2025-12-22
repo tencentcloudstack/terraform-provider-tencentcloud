@@ -19,7 +19,7 @@ Provides a resource to create a DLC standard engine resource group
 
 ## Example Usage
 
-### Only SQL analysis resource group
+Only SQL analysis resource group
 
 ```hcl
 resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
@@ -45,7 +45,7 @@ resource "tencentcloud_dlc_standard_engine_resource_group" "example" {
 }
 ```
 
-### Machine learning resource group
+Machine learning resource group
 
 ```hcl
 resource "tencentcloud_dlc_standard_engine_resource_group" "example" {

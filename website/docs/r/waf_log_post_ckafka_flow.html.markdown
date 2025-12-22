@@ -13,7 +13,7 @@ Provides a resource to create a WAF log post ckafka flow
 
 ## Example Usage
 
-### If vip_type is 1
+If vip_type is 1
 
 ```hcl
 resource "tencentcloud_waf_log_post_ckafka_flow" "example" {
@@ -37,7 +37,7 @@ resource "tencentcloud_waf_log_post_ckafka_flow" "example" {
 }
 ```
 
-### If vip_type is 2
+If vip_type is 2
 
 ```hcl
 resource "tencentcloud_waf_log_post_ckafka_flow" "example" {

@@ -13,13 +13,13 @@ Use this data source to query detailed information of CDC dedicated clusters
 
 ## Example Usage
 
-### Query all dedicated clusters
+Query all dedicated clusters
 
 ```hcl
 data "tencentcloud_cdc_dedicated_clusters" "example" {}
 ```
 
-### Query dedicated clusters by filters
+Query dedicated clusters by filters
 
 ```hcl
 data "tencentcloud_cdc_dedicated_clusters" "example" {

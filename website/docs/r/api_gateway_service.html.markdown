@@ -15,7 +15,7 @@ Use this resource to create API gateway service.
 
 ## Example Usage
 
-### Shared Service
+Shared Service
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -41,7 +41,7 @@ resource "tencentcloud_api_gateway_service" "example" {
 }
 ```
 
-### Exclusive Service
+Exclusive Service
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "example" {

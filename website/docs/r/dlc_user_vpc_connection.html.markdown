@@ -22,7 +22,7 @@ resource "tencentcloud_dlc_user_vpc_connection" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_dlc_user_vpc_connection" "example" {

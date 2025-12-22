@@ -15,7 +15,7 @@ Use this resource to create TcaplusDB cluster.
 
 ## Example Usage
 
-### Create a new tcaplus cluster instance
+Create a new tcaplus cluster instance
 
 ```hcl
 locals {

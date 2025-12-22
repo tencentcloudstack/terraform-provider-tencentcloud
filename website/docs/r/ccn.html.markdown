@@ -15,7 +15,7 @@ Provides a resource to create a CCN instance.
 
 ## Example Usage
 
-### Create a PREPAID CCN
+Create a PREPAID CCN
 
 ```hcl
 resource "tencentcloud_ccn" "example" {
@@ -32,7 +32,7 @@ resource "tencentcloud_ccn" "example" {
 }
 ```
 
-### Create a POSTPAID regional export speed limit type CCN
+Create a POSTPAID regional export speed limit type CCN
 
 ```hcl
 resource "tencentcloud_ccn" "example" {
@@ -49,7 +49,7 @@ resource "tencentcloud_ccn" "example" {
 }
 ```
 
-### Create a POSTPAID inter-regional rate limit type CNN
+Create a POSTPAID inter-regional rate limit type CNN
 
 ```hcl
 resource "tencentcloud_ccn" "example" {

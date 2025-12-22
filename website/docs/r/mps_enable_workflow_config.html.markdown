@@ -13,7 +13,7 @@ Provides a resource to create a mps enable_workflow_config
 
 ## Example Usage
 
-### Enable the mps workflow
+Enable the mps workflow
 
 ```hcl
 resource "tencentcloud_mps_workflow" "example" {
@@ -111,7 +111,7 @@ resource "tencentcloud_mps_enable_workflow_config" "config" {
 }
 ```
 
-### Disable the mps workflow
+Disable the mps workflow
 
 ```hcl
 resource "tencentcloud_mps_enable_workflow_config" "config" {

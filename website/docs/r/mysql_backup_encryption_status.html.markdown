@@ -13,7 +13,7 @@ Provides a resource to create a mysql backup_encryption_status
 
 ## Example Usage
 
-### Enable encryption
+Enable encryption
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -70,7 +70,7 @@ resource "tencentcloud_mysql_backup_encryption_status" "example" {
 }
 ```
 
-### Disable encryption
+Disable encryption
 
 ```hcl
 resource "tencentcloud_mysql_backup_encryption_status" "example" {

@@ -13,7 +13,7 @@ Use this data source to query SQL Server instances
 
 ## Example Usage
 
-### Filter instance by Id
+Filter instance by Id
 
 ```hcl
 data "tencentcloud_sqlserver_instances" "example_id" {
@@ -21,7 +21,7 @@ data "tencentcloud_sqlserver_instances" "example_id" {
 }
 ```
 
-### Filter instance by project Id
+Filter instance by project Id
 
 ```hcl
 data "tencentcloud_sqlserver_instances" "example_project" {
@@ -29,7 +29,7 @@ data "tencentcloud_sqlserver_instances" "example_project" {
 }
 ```
 
-### Filter instance by VPC/Subnet
+Filter instance by VPC/Subnet
 
 ```hcl
 data "tencentcloud_sqlserver_instances" "example_vpc" {

@@ -80,7 +80,7 @@ resource "tencentcloud_kubernetes_auth_attachment" "example" {
 }
 ```
 
-### Use the TKE default issuer and jwks_uri
+Use the TKE default issuer and jwks_uri
 
 ```hcl
 variable "availability_zone" {
@@ -147,7 +147,7 @@ resource "tencentcloud_kubernetes_auth_attachment" "example" {
 }
 ```
 
-### Use OIDC Config
+Use OIDC Config
 
 ```hcl
 resource "tencentcloud_kubernetes_auth_attachment" "example" {

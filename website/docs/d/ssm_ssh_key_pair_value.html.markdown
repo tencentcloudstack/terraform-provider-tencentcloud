@@ -22,7 +22,7 @@ data "tencentcloud_ssm_ssh_key_pair_value" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 data "tencentcloud_ssm_ssh_key_pair_value" "example" {
@@ -30,7 +30,7 @@ data "tencentcloud_ssm_ssh_key_pair_value" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 data "tencentcloud_ssm_ssh_key_pair_value" "example" {

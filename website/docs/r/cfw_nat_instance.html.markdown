@@ -13,7 +13,7 @@ Provides a resource to create a CFW nat instance
 
 ## Example Usage
 
-### If mode is 0
+If mode is 0
 
 ```hcl
 resource "tencentcloud_cfw_nat_instance" "example" {
@@ -36,7 +36,7 @@ resource "tencentcloud_cfw_nat_instance" "example" {
 }
 ```
 
-### If mode is 1
+If mode is 1
 
 ```hcl
 resource "tencentcloud_cfw_nat_instance" "example" {

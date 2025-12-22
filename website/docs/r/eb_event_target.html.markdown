@@ -13,7 +13,7 @@ Provides a resource to create a eb event_target
 
 ## Example Usage
 
-### Create an event target of type scf
+Create an event target of type scf
 
 ```hcl
 variable "zone" {
@@ -78,7 +78,7 @@ resource "tencentcloud_eb_event_target" "scf_target" {
 }
 ```
 
-### Create an event target of type ckafka
+Create an event target of type ckafka
 
 ```hcl
 variable "ckafka" {

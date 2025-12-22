@@ -13,7 +13,7 @@ Provides a resource to create a redis backup operation
 
 ## Example Usage
 
-### Manually back up the Redis instance, and the backup data is kept for 7 days
+Manually back up the Redis instance, and the backup data is kept for 7 days
 
 ```hcl
 data "tencentcloud_mysql_instance" "example" {}

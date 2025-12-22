@@ -13,7 +13,7 @@ Provides a resource to create a vpc net_detect
 
 ## Example Usage
 
-### Create a basic Net Detect
+Create a basic Net Detect
 
 ```hcl
 data "tencentcloud_availability_zones" "zones" {}

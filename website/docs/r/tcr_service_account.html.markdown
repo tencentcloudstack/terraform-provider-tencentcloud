@@ -13,7 +13,7 @@ Provides a resource to create a TCR service account.
 
 ## Example Usage
 
-### Create custom account with specified duration days
+Create custom account with specified duration days
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
@@ -51,7 +51,7 @@ resource "tencentcloud_tcr_service_account" "example" {
 }
 ```
 
-### With specified expiration time
+With specified expiration time
 
 ```hcl
 resource "tencentcloud_tcr_service_account" "example" {

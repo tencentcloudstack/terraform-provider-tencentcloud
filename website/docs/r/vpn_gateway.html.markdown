@@ -15,7 +15,7 @@ Provides a resource to create a VPN gateway.
 
 ## Example Usage
 
-### VPC SSL VPN gateway
+VPC SSL VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "example" {
@@ -31,7 +31,7 @@ resource "tencentcloud_vpn_gateway" "example" {
 }
 ```
 
-### CCN IPSEC VPN gateway
+CCN IPSEC VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "example" {
@@ -46,7 +46,7 @@ resource "tencentcloud_vpn_gateway" "example" {
 }
 ```
 
-### CCN SSL VPN gateway
+CCN SSL VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "example" {
@@ -61,7 +61,7 @@ resource "tencentcloud_vpn_gateway" "example" {
 }
 ```
 
-### CCN VPN gateway
+CCN VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "example" {
@@ -76,7 +76,7 @@ resource "tencentcloud_vpn_gateway" "example" {
 }
 ```
 
-### POSTPAID_BY_HOUR VPN gateway
+POSTPAID_BY_HOUR VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "example" {
@@ -91,7 +91,7 @@ resource "tencentcloud_vpn_gateway" "example" {
 }
 ```
 
-### PREPAID VPN gateway
+PREPAID VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "example" {

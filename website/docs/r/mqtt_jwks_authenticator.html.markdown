@@ -23,7 +23,7 @@ resource "tencentcloud_mqtt_jwks_authenticator" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_mqtt_jwks_authenticator" "example" {

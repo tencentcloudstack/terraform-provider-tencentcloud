@@ -24,7 +24,7 @@ It's more flexible than managing worker config directly with `tencentcloud_kuber
 
 ## Example Usage
 
-### Create a basic cluster with two worker nodes
+Create a basic cluster with two worker nodes
 
 ```hcl
 variable "default_instance_type" {
@@ -364,7 +364,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
 }
 ```
 
-### Use Kubelet
+Use Kubelet
 
 ```hcl
 # Create a baisc kubernetes cluster with two nodes.
@@ -449,7 +449,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
 }
 ```
 
-### Use extension addons
+Use extension addons
 
 ```hcl
 variable "availability_zone_first" {
@@ -521,7 +521,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
 }
 ```
 
-### Use node pool global config
+Use node pool global config
 
 ```hcl
 variable "availability_zone" {
@@ -592,7 +592,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
 }
 ```
 
-### Using VPC-CNI network type
+Using VPC-CNI network type
 
 ```hcl
 variable "availability_zone" {
@@ -627,7 +627,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-### Using ops options
+Using ops options
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
@@ -652,7 +652,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-### Create a CDC scenario cluster
+Create a CDC scenario cluster
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
@@ -707,7 +707,7 @@ resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
 }
 ```
 
-### TKE cluster cloud subnet and CDC subnet are interconnected
+TKE cluster cloud subnet and CDC subnet are interconnected
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "example" {
@@ -732,7 +732,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
 }
 ```
 
-### Use delete options to delete CBS when deleting the Cluster
+Use delete options to delete CBS when deleting the Cluster
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "example" {
@@ -762,7 +762,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
 }
 ```
 
-### Using disable addons
+Using disable addons
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "example" {

@@ -13,13 +13,13 @@ Use this data source to query detailed information of BH account groups
 
 ## Example Usage
 
-### Query all bh account groups
+Query all bh account groups
 
 ```hcl
 data "tencentcloud_bh_account_groups" "example" {}
 ```
 
-### Query bh account groups by filter
+Query bh account groups by filter
 
 ```hcl
 data "tencentcloud_bh_account_groups" "example" {

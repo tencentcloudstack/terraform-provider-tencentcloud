@@ -13,7 +13,7 @@ Provides a resource to create a redis read only
 
 ## Example Usage
 
-### Set instance input mode
+Set instance input mode
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {

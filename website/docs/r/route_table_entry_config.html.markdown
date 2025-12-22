@@ -15,7 +15,7 @@ Provides a resource to create a vpc route table entry config
 
 ## Example Usage
 
-### Enable route item
+Enable route item
 
 ```hcl
 resource "tencentcloud_route_table_entry_config" "example" {
@@ -25,7 +25,7 @@ resource "tencentcloud_route_table_entry_config" "example" {
 }
 ```
 
-### Disable route item
+Disable route item
 
 ```hcl
 resource "tencentcloud_route_table_entry_config" "example" {

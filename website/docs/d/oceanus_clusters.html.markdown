@@ -13,13 +13,13 @@ Use this data source to query detailed information of oceanus clusters
 
 ## Example Usage
 
-### Query all clusters
+Query all clusters
 
 ```hcl
 data "tencentcloud_oceanus_clusters" "example" {}
 ```
 
-### Query the specified cluster
+Query the specified cluster
 
 ```hcl
 data "tencentcloud_oceanus_clusters" "example" {

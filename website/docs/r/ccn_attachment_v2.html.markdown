@@ -13,7 +13,7 @@ Provides a CCN attaching instance resource.
 
 ## Example Usage
 
-### Only Attachment instance
+Only Attachment instance
 
 ```hcl
 variable "region" {
@@ -61,7 +61,7 @@ resource "tencentcloud_ccn_attachment_v2" "example" {
 }
 ```
 
-### Attachment instance & route table
+Attachment instance & route table
 
 ```hcl
 variable "region" {

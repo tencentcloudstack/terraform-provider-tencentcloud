@@ -13,13 +13,13 @@ Use this data source to query detailed information of VPN customer gateways.
 
 ## Example Usage
 
-### Query all customer gateways
+Query all customer gateways
 
 ```hcl
 data "tencentcloud_vpn_customer_gateways" "example" {}
 ```
 
-### Query customer gateways by filters
+Query customer gateways by filters
 
 ```hcl
 data "tencentcloud_vpn_customer_gateways" "example" {

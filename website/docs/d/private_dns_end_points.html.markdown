@@ -13,13 +13,13 @@ Use this data source to query detailed information of Private Dns end points
 
 ## Example Usage
 
-### Query all private dns end points
+Query all private dns end points
 
 ```hcl
 data "tencentcloud_private_dns_end_points" "example" {}
 ```
 
-### Query all private dns end points by filters
+Query all private dns end points by filters
 
 ```hcl
 data "tencentcloud_private_dns_end_points" "example" {

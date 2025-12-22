@@ -13,13 +13,13 @@ Use this data source to query detailed information of CLS topics
 
 ## Example Usage
 
-### Query all topics
+Query all topics
 
 ```hcl
 data "tencentcloud_cls_topics" "example" {}
 ```
 
-### Query topics by filters
+Query topics by filters
 
 ```hcl
 data "tencentcloud_cls_topics" "example" {

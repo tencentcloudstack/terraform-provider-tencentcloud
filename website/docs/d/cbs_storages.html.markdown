@@ -13,13 +13,13 @@ Use this data source to query detailed information of CBS storages.
 
 ## Example Usage
 
-### Query all CBS storages
+Query all CBS storages
 
 ```hcl
 data "tencentcloud_cbs_storages" "example" {}
 ```
 
-### Query CBS by storage id
+Query CBS by storage id
 
 ```hcl
 data "tencentcloud_cbs_storages" "example" {
@@ -28,7 +28,7 @@ data "tencentcloud_cbs_storages" "example" {
 }
 ```
 
-### Query CBS by dedicated cluster id
+Query CBS by dedicated cluster id
 
 ```hcl
 data "tencentcloud_cbs_storages" "example" {
@@ -36,7 +36,7 @@ data "tencentcloud_cbs_storages" "example" {
 }
 ```
 
-### The following snippet shows the new supported query params
+The following snippet shows the new supported query params
 
 ```hcl
 data "tencentcloud_cbs_storages" "example" {

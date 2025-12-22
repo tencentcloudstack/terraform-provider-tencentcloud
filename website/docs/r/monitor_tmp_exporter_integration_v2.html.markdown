@@ -15,7 +15,7 @@ Provides a resource to create a monitor Exporter Integration
 
 ## Example Usage
 
-### Use qcloud-exporter
+Use qcloud-exporter
 
 ```hcl
 resource "tencentcloud_monitor_tmp_exporter_integration_v2" "example" {
@@ -25,7 +25,7 @@ resource "tencentcloud_monitor_tmp_exporter_integration_v2" "example" {
 }
 ```
 
-### Use es-exporter
+Use es-exporter
 
 ```hcl
 resource "tencentcloud_monitor_tmp_exporter_integration_v2" "example" {
@@ -56,7 +56,7 @@ resource "tencentcloud_monitor_tmp_exporter_integration_v2" "example" {
 }
 ```
 
-### Integration Center: CVM Scrape Job
+Integration Center: CVM Scrape Job
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {

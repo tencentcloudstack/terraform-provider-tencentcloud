@@ -13,7 +13,7 @@ Provides a resource to create a mps input
 
 ## Example Usage
 
-### Create mps input group with SRT
+Create mps input group with SRT
 
 ```hcl
 resource "tencentcloud_mps_input" "input" {

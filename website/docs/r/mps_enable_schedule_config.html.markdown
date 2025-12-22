@@ -13,7 +13,7 @@ Provides a resource to create a mps enable_schedule_config
 
 ## Example Usage
 
-### Enable the mps schedule
+Enable the mps schedule
 
 ```hcl
 data "tencentcloud_cos_bucket_object" "object" {
@@ -156,7 +156,7 @@ resource "tencentcloud_mps_enable_schedule_config" "config" {
 }
 ```
 
-### Disable the mps schedule
+Disable the mps schedule
 
 ```hcl
 resource "tencentcloud_mps_enable_schedule_config" "config" {

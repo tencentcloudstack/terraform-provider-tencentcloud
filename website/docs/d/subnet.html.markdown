@@ -17,7 +17,7 @@ This resource can prove useful when a module accepts a subnet id as an input var
 
 ## Example Usage
 
-### Query method 1
+Query method 1
 
 ```hcl
 data "tencentcloud_subnet" "subnet" {
@@ -26,7 +26,7 @@ data "tencentcloud_subnet" "subnet" {
 }
 ```
 
-### Query method 2
+Query method 2
 
 ```hcl
 data "tencentcloud_subnet" "subnet" {

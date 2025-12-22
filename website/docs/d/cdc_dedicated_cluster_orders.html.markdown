@@ -13,13 +13,13 @@ Use this data source to query detailed information of CDC dedicated cluster orde
 
 ## Example Usage
 
-### Query all orders
+Query all orders
 
 ```hcl
 data "tencentcloud_cdc_dedicated_cluster_orders" "orders" {}
 ```
 
-### Query orders by filter
+Query orders by filter
 
 ```hcl
 data "tencentcloud_cdc_dedicated_cluster_orders" "orders1" {

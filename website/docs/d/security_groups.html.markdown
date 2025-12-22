@@ -13,13 +13,13 @@ Use this data source to query detailed information of security groups.
 
 ## Example Usage
 
-### Query all security groups
+Query all security groups
 
 ```hcl
 data "tencentcloud_security_groups" "example" {}
 ```
 
-### Query security groups by filter
+Query security groups by filter
 
 ```hcl
 data "tencentcloud_security_groups" "example" {

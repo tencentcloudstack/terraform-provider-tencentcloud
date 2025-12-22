@@ -13,7 +13,7 @@ Provides a resource to delete the specified tcr image.
 
 ## Example Usage
 
-### To delete the specified image
+To delete the specified image
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

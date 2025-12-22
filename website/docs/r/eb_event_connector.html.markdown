@@ -15,7 +15,7 @@ Provides a resource to create a eb event_connector
 
 ## Example Usage
 
-### Create ckafka event connector
+Create ckafka event connector
 
 ```hcl
 data "tencentcloud_user_info" "foo" {}
@@ -76,7 +76,7 @@ resource "tencentcloud_eb_event_connector" "event_connector" {
 }
 ```
 
-### Create api_gateway event connector
+Create api_gateway event connector
 
 ```hcl
 data "tencentcloud_user_info" "foo" {}

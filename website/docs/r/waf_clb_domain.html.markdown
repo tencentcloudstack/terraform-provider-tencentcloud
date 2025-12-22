@@ -13,7 +13,7 @@ Provides a resource to create a waf clb_domain
 
 ## Example Usage
 
-### Create a basic waf clb domain
+Create a basic waf clb domain
 
 ```hcl
 resource "tencentcloud_waf_clb_domain" "example" {
@@ -39,7 +39,7 @@ resource "tencentcloud_waf_clb_domain" "example" {
 }
 ```
 
-### Create a complete waf clb domain
+Create a complete waf clb domain
 
 ```hcl
 resource "tencentcloud_waf_clb_domain" "example" {
@@ -76,7 +76,7 @@ resource "tencentcloud_waf_clb_domain" "example" {
 }
 ```
 
-### Create a complete waf tsegw domain
+Create a complete waf tsegw domain
 
 ```hcl
 resource "tencentcloud_waf_clb_domain" "example" {
@@ -93,7 +93,7 @@ resource "tencentcloud_waf_clb_domain" "example" {
 }
 ```
 
-### Create a complete waf apisix domain
+Create a complete waf apisix domain
 
 ```hcl
 resource "tencentcloud_waf_clb_domain" "example" {

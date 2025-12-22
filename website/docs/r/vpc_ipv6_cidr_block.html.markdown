@@ -24,7 +24,7 @@ resource "tencentcloud_vpc_ipv6_cidr_block" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_vpc_ipv6_cidr_block" "example" {

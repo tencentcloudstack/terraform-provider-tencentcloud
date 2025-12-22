@@ -21,7 +21,7 @@ resource "tencentcloud_identity_center_external_saml_identity_provider" "example
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_identity_center_external_saml_identity_provider" "example" {

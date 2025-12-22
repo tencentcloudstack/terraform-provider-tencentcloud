@@ -15,7 +15,7 @@ Provides a resource to create a TEO ddos protection config
 
 ## Example Usage
 
-### Protect all domains
+Protect all domains
 
 ```hcl
 resource "tencentcloud_teo_ddos_protection_config" "example" {
@@ -26,7 +26,7 @@ resource "tencentcloud_teo_ddos_protection_config" "example" {
 }
 ```
 
-### Protect designated domains
+Protect designated domains
 
 ```hcl
 resource "tencentcloud_teo_ddos_protection_config" "example" {

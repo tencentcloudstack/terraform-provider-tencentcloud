@@ -17,7 +17,7 @@ Provides a resource to create a Redis instance and set its attributes.
 
 ## Example Usage
 
-### Create a base version of redis
+Create a base version of redis
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {
@@ -50,7 +50,7 @@ resource "tencentcloud_redis_instance" "example" {
 }
 ```
 
-### Using multi replica zone set
+Using multi replica zone set
 
 ```hcl
 variable "redis_replicas_num" {
@@ -118,7 +118,7 @@ resource "tencentcloud_redis_instance" "example" {
 }
 ```
 
-### Buy a month of prepaid instances
+Buy a month of prepaid instances
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {
@@ -174,7 +174,7 @@ resource "tencentcloud_redis_instance" "example" {
 }
 ```
 
-### Create a multi-AZ instance
+Create a multi-AZ instance
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {
@@ -234,7 +234,7 @@ resource "tencentcloud_redis_instance" "example" {
 }
 ```
 
-### Create a memcached instance
+Create a memcached instance
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {
@@ -314,7 +314,7 @@ resource "tencentcloud_redis_instance" "example" {
 }
 ```
 
-### Create a CDC scenario instance
+Create a CDC scenario instance
 
 ```hcl
 variable "cdc_id" {

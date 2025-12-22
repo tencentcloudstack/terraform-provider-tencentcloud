@@ -33,7 +33,7 @@ resource "tencentcloud_audit_track" "example" {
 }
 ```
 
-### Specify storage user
+Specify storage user
 
 ```hcl
 resource "tencentcloud_audit_track" "example" {

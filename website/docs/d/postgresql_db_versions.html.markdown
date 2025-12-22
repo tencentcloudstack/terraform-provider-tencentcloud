@@ -13,13 +13,13 @@ Use this data source to query detailed information of postgres db_versions
 
 ## Example Usage
 
-### Query all DB versions
+Query all DB versions
 
 ```hcl
 data "tencentcloud_postgresql_db_versions" "example" {}
 ```
 
-### Query DB versions by filters
+Query DB versions by filters
 
 ```hcl
 data "tencentcloud_postgresql_db_versions" "example" {

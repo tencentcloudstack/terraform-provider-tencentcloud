@@ -13,7 +13,7 @@ Use this resource to create postgresql readonly instance.
 
 ## Example Usage
 
-### Create postgresql readonly instance
+Create postgresql readonly instance
 
 ```hcl
 variable "availability_zone" {
@@ -103,7 +103,7 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
 }
 ```
 
-### Create postgresql readonly instance of CDC
+Create postgresql readonly instance of CDC
 
 ```hcl
 variable "availability_zone" {

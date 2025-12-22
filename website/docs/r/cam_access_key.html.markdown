@@ -13,7 +13,7 @@ Provides a resource to create a CAM access key
 
 ## Example Usage
 
-### Create access key
+Create access key
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -23,7 +23,7 @@ resource "tencentcloud_cam_access_key" "example" {
 }
 ```
 
-### Update access key
+Update access key
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -34,7 +34,7 @@ resource "tencentcloud_cam_access_key" "example" {
 }
 ```
 
-### Encrypted access key
+Encrypted access key
 
 ```hcl
 data "tencentcloud_user_info" "info" {}

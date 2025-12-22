@@ -13,13 +13,13 @@ Use this data source to query detailed information of VPN connections.
 
 ## Example Usage
 
-### Query all vpn connections
+Query all vpn connections
 
 ```hcl
 data "tencentcloud_vpn_connections" "example" {}
 ```
 
-### Query vpn connections by filters
+Query vpn connections by filters
 
 ```hcl
 data "tencentcloud_vpn_connections" "example" {

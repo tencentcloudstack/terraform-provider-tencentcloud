@@ -15,7 +15,7 @@ Provide a resource to create a Private Dns Zone.
 
 ## Example Usage
 
-### Create a basic Private Dns Zone
+Create a basic Private Dns Zone
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -41,7 +41,7 @@ resource "tencentcloud_private_dns_zone" "example" {
 }
 ```
 
-### Create a Private Dns Zone domain and bind associated accounts'VPC
+Create a Private Dns Zone domain and bind associated accounts'VPC
 
 ```hcl
 resource "tencentcloud_private_dns_zone" "example" {

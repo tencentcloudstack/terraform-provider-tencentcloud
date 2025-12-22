@@ -13,13 +13,13 @@ Use this data source to query images.
 
 ## Example Usage
 
-### Query all images
+Query all images
 
 ```hcl
 data "tencentcloud_images" "example" {}
 ```
 
-### Query images by image ID
+Query images by image ID
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -27,7 +27,7 @@ data "tencentcloud_images" "example" {
 }
 ```
 
-### Query images by os name
+Query images by os name
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -35,7 +35,7 @@ data "tencentcloud_images" "example" {
 }
 ```
 
-### Query images by image name regex
+Query images by image name regex
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -43,7 +43,7 @@ data "tencentcloud_images" "example" {
 }
 ```
 
-### Query images by image type
+Query images by image type
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -51,7 +51,7 @@ data "tencentcloud_images" "example" {
 }
 ```
 
-### Query images by instance type
+Query images by instance type
 
 ```hcl
 data "tencentcloud_images" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a CAM role permission boundary attachment
 
 ## Example Usage
 
-### Use role_name
+Use role_name
 
 ```hcl
 resource "tencentcloud_cam_role_permission_boundary_attachment" "example" {
@@ -22,7 +22,7 @@ resource "tencentcloud_cam_role_permission_boundary_attachment" "example" {
 }
 ```
 
-### Use role_id
+Use role_id
 
 ```hcl
 resource "tencentcloud_cam_role_permission_boundary_attachment" "example" {
@@ -31,7 +31,7 @@ resource "tencentcloud_cam_role_permission_boundary_attachment" "example" {
 }
 ```
 
-### Use all
+Use all
 
 ```hcl
 resource "tencentcloud_cam_role_permission_boundary_attachment" "example" {

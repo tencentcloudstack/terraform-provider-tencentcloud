@@ -13,7 +13,7 @@ Provides a resource to create a ssm product_secret
 
 ## Example Usage
 
-### Ssm secret for mysql
+Ssm secret for mysql
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -98,7 +98,7 @@ resource "tencentcloud_ssm_product_secret" "example" {
 }
 ```
 
-### Ssm secret for tdsql-c-mysql
+Ssm secret for tdsql-c-mysql
 
 ```hcl
 resource "tencentcloud_ssm_product_secret" "example" {

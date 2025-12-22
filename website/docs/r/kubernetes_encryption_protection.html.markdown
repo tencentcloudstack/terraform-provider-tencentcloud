@@ -13,7 +13,7 @@ Provides a resource to create a tke encryption_protection
 
 ## Example Usage
 
-### Enable tke encryption protection
+Enable tke encryption protection
 
 ```hcl
 variable "example_region" {

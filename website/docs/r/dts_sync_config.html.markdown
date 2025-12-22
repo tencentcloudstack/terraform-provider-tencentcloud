@@ -13,7 +13,7 @@ Provides a resource to create a DTS sync config
 
 ## Example Usage
 
-### Sync mysql database to cynosdb through cdb access type
+Sync mysql database to cynosdb through cdb access type
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster" "example" {
@@ -116,7 +116,7 @@ resource "tencentcloud_dts_sync_config" "example" {
 }
 ```
 
-### Sync mysql database using CCN to route from ap-shanghai to ap-guangzhou
+Sync mysql database using CCN to route from ap-shanghai to ap-guangzhou
 
 ```hcl
 locals {

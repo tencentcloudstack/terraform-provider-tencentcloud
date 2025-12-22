@@ -13,13 +13,13 @@ Use this data source to query detailed information of CBS snapshots.
 
 ## Example Usage
 
-### Query all snapshots
+Query all snapshots
 
 ```hcl
 data "tencentcloud_cbs_snapshots" "snapshots" {}
 ```
 
-### Query snapshots by filters
+Query snapshots by filters
 
 ```hcl
 data "tencentcloud_cbs_snapshots" "snapshots" {

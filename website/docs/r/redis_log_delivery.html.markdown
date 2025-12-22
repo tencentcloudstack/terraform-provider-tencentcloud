@@ -16,7 +16,7 @@ as `period`, `create_index`, `log_region`, etc.
 
 ## Example Usage
 
-### Use cls logset and topic which existed
+Use cls logset and topic which existed
 
 ```hcl
 resource "tencentcloud_redis_log_delivery" "example" {
@@ -26,7 +26,7 @@ resource "tencentcloud_redis_log_delivery" "example" {
 }
 ```
 
-### Use exist cls logset and create new topic
+Use exist cls logset and create new topic
 
 ```hcl
 resource "tencentcloud_redis_log_delivery" "example" {
@@ -38,7 +38,7 @@ resource "tencentcloud_redis_log_delivery" "example" {
 }
 ```
 
-### Create new cls logset and topic
+Create new cls logset and topic
 
 ```hcl
 resource "tencentcloud_redis_log_delivery" "example" {

@@ -13,13 +13,13 @@ Use this data source to query cvm instances.
 
 ## Example Usage
 
-### Query all cvm instances
+Query all cvm instances
 
 ```hcl
 data "tencentcloud_instances" "example" {}
 ```
 
-### Query cvm instances by filters
+Query cvm instances by filters
 
 ```hcl
 data "tencentcloud_instances" "example" {
@@ -36,7 +36,7 @@ data "tencentcloud_instances" "example" {
 }
 ```
 
-### Or by instance set id list
+Or by instance set id list
 
 ```hcl
 data "tencentcloud_instances" "example" {

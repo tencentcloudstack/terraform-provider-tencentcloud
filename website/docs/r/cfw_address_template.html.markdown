@@ -13,7 +13,7 @@ Provides a resource to create a cfw address_template
 
 ## Example Usage
 
-### If type is 1
+If type is 1
 
 ```hcl
 resource "tencentcloud_cfw_address_template" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_cfw_address_template" "example" {
 }
 ```
 
-### If type is 5
+If type is 5
 
 ```hcl
 resource "tencentcloud_cfw_address_template" "example" {

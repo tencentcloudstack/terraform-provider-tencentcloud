@@ -21,7 +21,7 @@ resource "tencentcloud_teo_certificate_config" "certificate" {
 }
 ```
 
-### Configure SSL certificate
+Configure SSL certificate
 
 ```hcl
 resource "tencentcloud_teo_certificate_config" "certificate" {

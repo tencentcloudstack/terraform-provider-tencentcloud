@@ -17,7 +17,7 @@ Provides a MySQL instance resource to create master database instances.
 
 ## Example Usage
 
-### Create a single node instance
+Create a single node instance
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -75,7 +75,7 @@ resource "tencentcloud_mysql_instance" "example" {
 }
 ```
 
-### Create a double node instance
+Create a double node instance
 
 ```hcl
 resource "tencentcloud_mysql_instance" "example" {
@@ -111,7 +111,7 @@ resource "tencentcloud_mysql_instance" "example" {
 }
 ```
 
-### Create a three node instance
+Create a three node instance
 
 ```hcl
 resource "tencentcloud_mysql_instance" "example" {
@@ -148,7 +148,7 @@ resource "tencentcloud_mysql_instance" "example" {
 }
 ```
 
-### Create instance by custom cluster_topology
+Create instance by custom cluster_topology
 
 ```hcl
 resource "tencentcloud_mysql_instance" "example" {

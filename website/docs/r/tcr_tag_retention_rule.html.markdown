@@ -13,7 +13,7 @@ Provides a resource to create a tcr tag retention rule.
 
 ## Example Usage
 
-### Create and enable a tcr tag retention rule instance
+Create and enable a tcr tag retention rule instance
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

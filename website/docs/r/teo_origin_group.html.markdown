@@ -15,7 +15,7 @@ Provides a resource to create a teo origin_group
 
 ## Example Usage
 
-### Self origin group
+Self origin group
 
 ```hcl
 resource "tencentcloud_teo_origin_group" "basic" {

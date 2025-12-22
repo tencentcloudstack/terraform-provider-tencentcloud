@@ -13,7 +13,7 @@ Provides a resource to create a MySQL SSL
 
 ## Example Usage
 
-### For mysql instance SSL
+For mysql instance SSL
 
 ```hcl
 resource "tencentcloud_mysql_ssl" "example" {
@@ -22,7 +22,7 @@ resource "tencentcloud_mysql_ssl" "example" {
 }
 ```
 
-### For mysql RO group SSL
+For mysql RO group SSL
 
 ```hcl
 resource "tencentcloud_mysql_ssl" "example" {

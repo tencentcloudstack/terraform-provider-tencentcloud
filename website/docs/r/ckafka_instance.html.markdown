@@ -13,7 +13,7 @@ Use this resource to create CKafka instance.
 
 ## Example Usage
 
-### Create basic instance(prepaid)
+Create basic instance(prepaid)
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "gz" {
@@ -65,7 +65,7 @@ resource "tencentcloud_ckafka_instance" "example" {
 }
 ```
 
-### Create multi zone instance(postpaid)
+Create multi zone instance(postpaid)
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "gz6" {

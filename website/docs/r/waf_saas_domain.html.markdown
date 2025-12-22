@@ -34,7 +34,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 }
 ```
 
-### Create a load balancing strategy is weighted polling saas domain
+Create a load balancing strategy is weighted polling saas domain
 
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
@@ -59,7 +59,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 }
 ```
 
-### If upstream_type is 1
+If upstream_type is 1
 
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
@@ -77,7 +77,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 }
 ```
 
-### Create a waf saas domain with set Http&Https
+Create a waf saas domain with set Http&Https
 
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
@@ -120,7 +120,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 }
 ```
 
-### Create a complete waf saas domain
+Create a complete waf saas domain
 
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a sqlserver general_cloud_ro_instance
 
 ## Example Usage
 
-### If read_only_group_type value is 1 - Ship according to one instance and one read-only group:
+If read_only_group_type value is 1 - Ship according to one instance and one read-only group:
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -83,7 +83,7 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "example" {
 }
 ```
 
-### If read_only_group_type value is 2 - Ship after creating a read-only group, all instances are under this read-only group:
+If read_only_group_type value is 2 - Ship after creating a read-only group, all instances are under this read-only group:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "example" {
@@ -111,7 +111,7 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "example" {
 }
 ```
 
-### If read_only_group_type value is 3 - All instances shipped are in the existing Some read-only groups below:
+If read_only_group_type value is 3 - All instances shipped are in the existing Some read-only groups below:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "example" {

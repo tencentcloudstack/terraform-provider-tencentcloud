@@ -13,7 +13,7 @@ Use this data source to query the list of SQL Server accounts.
 
 ## Example Usage
 
-### Pull instance account list
+Pull instance account list
 
 ```hcl
 data "tencentcloud_sqlserver_accounts" "example" {
@@ -21,7 +21,7 @@ data "tencentcloud_sqlserver_accounts" "example" {
 }
 ```
 
-### Pull instance account list Filter by name
+Pull instance account list Filter by name
 
 ```hcl
 data "tencentcloud_sqlserver_accounts" "example" {

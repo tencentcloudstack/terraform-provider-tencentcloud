@@ -13,7 +13,7 @@ Provides a resource to create a clb replace_cert_for_lbs
 
 ## Example Usage
 
-### Replace Server Cert By Cert ID
+Replace Server Cert By Cert ID
 
 ```hcl
 resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
@@ -24,7 +24,7 @@ resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
 }
 ```
 
-### Replace Server Cert By Cert Content
+Replace Server Cert By Cert Content
 
 ```hcl
 data "tencentcloud_ssl_certificates" "foo" {
@@ -49,7 +49,7 @@ EOT
 }
 ```
 
-### Replace Client Cert By Cert Content
+Replace Client Cert By Cert Content
 
 ```hcl
 resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {

@@ -31,7 +31,7 @@ resource "tencentcloud_mqtt_authorization_policy" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_mqtt_authorization_policy" "example" {

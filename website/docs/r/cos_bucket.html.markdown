@@ -17,7 +17,7 @@ Provides a COS resource to create a COS bucket and set its attributes.
 
 ## Example Usage
 
-### Private Bucket
+Private Bucket
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -32,7 +32,7 @@ resource "tencentcloud_cos_bucket" "private_bucket" {
 }
 ```
 
-### Private Bucket with CDC cluster
+Private Bucket with CDC cluster
 
 ```hcl
 provider "tencentcloud" {
@@ -59,7 +59,7 @@ resource "tencentcloud_cos_bucket" "private_bucket" {
 }
 ```
 
-### Enable SSE-KMS encryption
+Enable SSE-KMS encryption
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -90,7 +90,7 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
 }
 ```
 
-### Creation of multiple available zone bucket
+Creation of multiple available zone bucket
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -108,7 +108,7 @@ resource "tencentcloud_cos_bucket" "multi_zone_bucket" {
 }
 ```
 
-### Using verbose acl
+Using verbose acl
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -185,7 +185,7 @@ EOF
 }
 ```
 
-### Using verbose acl with CDC cluster
+Using verbose acl with CDC cluster
 
 ```hcl
 provider "tencentcloud" {
@@ -234,7 +234,7 @@ EOF
 }
 ```
 
-### Static Website
+Static Website
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -271,7 +271,7 @@ output "endpoint_test" {
 }
 ```
 
-### Using CORS
+Using CORS
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -294,7 +294,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
 }
 ```
 
-### Using Origin pull
+Using Origin pull
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -319,7 +319,7 @@ resource "tencentcloud_cos_bucket" "example" {
 }
 ```
 
-### Using CORS with CDC
+Using CORS with CDC
 
 ```hcl
 provider "tencentcloud" {
@@ -351,7 +351,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
 }
 ```
 
-### Using object lifecycle
+Using object lifecycle
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -379,7 +379,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
 }
 ```
 
-### Using object lifecycle with CDC
+Using object lifecycle with CDC
 
 ```hcl
 provider "tencentcloud" {
@@ -412,7 +412,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
 }
 ```
 
-### Using replication
+Using replication
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -444,7 +444,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_replication" {
 }
 ```
 
-### Using OFS
+Using OFS
 
 ```hcl
 data "tencentcloud_user_info" "info" {}

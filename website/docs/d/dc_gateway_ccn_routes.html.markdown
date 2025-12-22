@@ -13,7 +13,7 @@ Use this data source to query detailed information of direct connect gateway rou
 
 ## Example Usage
 
-### Complete example
+Complete example
 
 ```hcl
 resource "tencentcloud_ccn" "main" {
@@ -45,7 +45,7 @@ data "tencentcloud_dc_gateway_ccn_routes" "test" {
 }
 ```
 
-### Query routes by filters
+Query routes by filters
 
 ```hcl
 data "tencentcloud_dc_gateway_ccn_routes" "test" {

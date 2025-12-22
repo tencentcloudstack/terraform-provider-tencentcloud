@@ -13,7 +13,7 @@ Provides a resource to create a tdmq professional_cluster
 
 ## Example Usage
 
-### single-zone Professional Cluster
+single-zone Professional Cluster
 
 ```hcl
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
@@ -35,7 +35,7 @@ resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
 }
 ```
 
-### Multi-zone Professional Cluster
+Multi-zone Professional Cluster
 
 ```hcl
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {

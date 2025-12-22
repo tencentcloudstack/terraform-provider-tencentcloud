@@ -15,7 +15,7 @@ Provides a resource to create a postgres instance ssl config
 
 ## Example Usage
 
-### Enable ssl config
+Enable ssl config
 
 ```hcl
 resource "tencentcloud_postgresql_instance_ssl_config" "example" {
@@ -25,7 +25,7 @@ resource "tencentcloud_postgresql_instance_ssl_config" "example" {
 }
 ```
 
-### Disable ssl config
+Disable ssl config
 
 ```hcl
 resource "tencentcloud_postgresql_instance_ssl_config" "example" {

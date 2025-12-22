@@ -13,7 +13,7 @@ Provides a resource to create a mps schedule
 
 ## Example Usage
 
-### Create a schedule through COS bucket
+Create a schedule through COS bucket
 
 ```hcl
 data "tencentcloud_cos_bucket_object" "object" {

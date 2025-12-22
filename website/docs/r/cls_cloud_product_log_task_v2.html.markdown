@@ -15,7 +15,7 @@ Provides a resource to create a cls cloud product log task
 
 ## Example Usage
 
-### Create log delivery using the default newly created logset and topic
+Create log delivery using the default newly created logset and topic
 
 ```hcl
 resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {
@@ -30,7 +30,7 @@ resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {
 }
 ```
 
-### Create log delivery using existing logset and topic
+Create log delivery using existing logset and topic
 
 ```hcl
 resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {

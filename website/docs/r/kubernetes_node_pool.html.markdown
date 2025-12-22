@@ -112,7 +112,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
-### Using Spot CVM Instance
+Using Spot CVM Instance
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {
@@ -156,7 +156,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
-### If instance_type is CBM
+If instance_type is CBM
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {
@@ -206,7 +206,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
-### Wait for all scaling nodes to be ready with wait_node_ready and scale_tolerance parameters. The default maximum scaling timeout is 30 minutes.
+Wait for all scaling nodes to be ready with wait_node_ready and scale_tolerance parameters. The default maximum scaling timeout is 30 minutes.
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {
@@ -278,7 +278,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
 }
 ```
 
-### Create Node pool for CDC cluster
+Create Node pool for CDC cluster
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "example" {

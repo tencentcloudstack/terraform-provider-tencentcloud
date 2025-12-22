@@ -13,7 +13,7 @@ Provides a resource to create a cynosdb backup_config
 
 ## Example Usage
 
-### Enable logical backup configuration and cross-region logical backup
+Enable logical backup configuration and cross-region logical backup
 
 ```hcl
 resource "tencentcloud_cynosdb_backup_config" "foo" {
@@ -33,7 +33,7 @@ resource "tencentcloud_cynosdb_backup_config" "foo" {
 }
 ```
 
-### Disable logical backup configuration
+Disable logical backup configuration
 
 ```hcl
 resource "tencentcloud_cynosdb_backup_config" "foo" {

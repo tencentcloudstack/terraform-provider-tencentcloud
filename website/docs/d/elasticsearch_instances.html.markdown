@@ -13,7 +13,7 @@ Use this data source to query Elasticsearch(ES) instances.
 
 ## Example Usage
 
-### Query ES instances by filters
+Query ES instances by filters
 
 ```hcl
 data "tencentcloud_elasticsearch_instances" "example" {

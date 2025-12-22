@@ -15,7 +15,7 @@ Provides a resource to create a group of AS (Auto scaling) instances.
 
 ## Example Usage
 
-### Create a basic Scaling Group
+Create a basic Scaling Group
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -61,7 +61,7 @@ resource "tencentcloud_as_scaling_group" "example" {
 }
 ```
 
-### Create a complete Scaling Group
+Create a complete Scaling Group
 
 ```hcl
 resource "tencentcloud_clb_instance" "example" {

@@ -15,7 +15,7 @@ Provides a resource to create a configuration for an AS (Auto scaling) instance.
 
 ## Example Usage
 
-### Create a normal configuration
+Create a normal configuration
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -61,7 +61,7 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
-### Using SPOTPAID charge type
+Using SPOTPAID charge type
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -84,7 +84,7 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
-### Using image family
+Using image family
 
 ```hcl
 resource "tencentcloud_as_scaling_config" "example" {
@@ -111,7 +111,7 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
-### Using DisasterRecoverGroupIds
+Using DisasterRecoverGroupIds
 
 ```hcl
 resource "tencentcloud_as_scaling_config" "example" {
@@ -139,7 +139,7 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
-### Create a CDC configuration
+Create a CDC configuration
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -187,7 +187,7 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
-### Create configuration with AntiDDos Eip
+Create configuration with AntiDDos Eip
 
 ```hcl
 data "tencentcloud_images" "example" {

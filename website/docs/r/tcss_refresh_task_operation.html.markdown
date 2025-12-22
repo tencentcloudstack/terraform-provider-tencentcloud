@@ -17,7 +17,7 @@ Provides a resource to create a TCSS refresh task operation
 resource "tencentcloud_tcss_refresh_task_operation" "example" {}
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_tcss_refresh_task_operation" "example" {

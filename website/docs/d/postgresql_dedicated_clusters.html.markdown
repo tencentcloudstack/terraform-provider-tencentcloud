@@ -13,13 +13,13 @@ Use this data source to query detailed information of Postgresql dedicated clust
 
 ## Example Usage
 
-### Query all instances
+Query all instances
 
 ```hcl
 data "tencentcloud_postgresql_dedicated_clusters" "example" {}
 ```
 
-### Query instances by filters
+Query instances by filters
 
 ```hcl
 data "tencentcloud_postgresql_dedicated_clusters" "example" {

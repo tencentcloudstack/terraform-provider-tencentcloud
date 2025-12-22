@@ -13,7 +13,7 @@ Use this resource to attach tcr instance with the vpc and subnet network.
 
 ## Example Usage
 
-### Attach a tcr instance with vpc resource
+Attach a tcr instance with vpc resource
 
 ```hcl
 locals {

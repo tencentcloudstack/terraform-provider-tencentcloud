@@ -13,7 +13,7 @@ Provides a resource to create a redis backup download restriction
 
 ## Example Usage
 
-### Modify the network information and address of the current region backup file download
+Modify the network information and address of the current region backup file download
 
 ```hcl
 resource "tencentcloud_redis_backup_download_restriction" "example" {

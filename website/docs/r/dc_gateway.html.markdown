@@ -13,7 +13,7 @@ Provides a resource to creating direct connect gateway instance.
 
 ## Example Usage
 
-### If network_type is VPC
+If network_type is VPC
 
 ```hcl
 // create vpc
@@ -31,7 +31,7 @@ resource "tencentcloud_dc_gateway" "example" {
 }
 ```
 
-### If network_type is CCN
+If network_type is CCN
 
 ```hcl
 // create ccn

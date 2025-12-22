@@ -13,7 +13,7 @@ Provides a resource to create a postgresql clone db instance
 
 ## Example Usage
 
-### Clone db instance by recovery_target_time
+Clone db instance by recovery_target_time
 
 ```hcl
 resource "tencentcloud_postgresql_clone_db_instance" "example" {
@@ -46,7 +46,7 @@ resource "tencentcloud_postgresql_clone_db_instance" "example" {
 }
 ```
 
-### Clone db instance by backup_set_id
+Clone db instance by backup_set_id
 
 ```hcl
 data "tencentcloud_postgresql_base_backups" "base_backups" {
@@ -89,7 +89,7 @@ resource "tencentcloud_postgresql_clone_db_instance" "example" {
 }
 ```
 
-### Clone db instance from CDC
+Clone db instance from CDC
 
 ```hcl
 resource "tencentcloud_postgresql_clone_db_instance" "example" {

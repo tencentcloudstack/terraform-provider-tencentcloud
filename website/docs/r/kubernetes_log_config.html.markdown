@@ -13,7 +13,7 @@ Provides a resource to create a tke kubernetes_log_config
 
 ## Example Usage
 
-### Create a cls log config
+Create a cls log config
 
 ```hcl
 locals {
@@ -124,7 +124,7 @@ resource "tencentcloud_kubernetes_log_config" "kubernetes_log_config_cls" {
 }
 ```
 
-### Create a ckafka log config
+Create a ckafka log config
 
 ```hcl
 locals {

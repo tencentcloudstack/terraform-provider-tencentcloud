@@ -13,7 +13,7 @@ Provides a resource to create a DC instance
 
 ## Example Usage
 
-### Create direct connect instance
+Create direct connect instance
 
 ```hcl
 resource "tencentcloud_dc_instance" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_dc_instance" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_dc_instance" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a mps process_live_stream_operation
 
 ## Example Usage
 
-### Process mps live stream through CMQ
+Process mps live stream through CMQ
 
 ```hcl
 resource "tencentcloud_cos_bucket" "output" {

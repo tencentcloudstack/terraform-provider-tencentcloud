@@ -13,7 +13,7 @@ Provides a resource to create a sqlserver wan ip config
 
 ## Example Usage
 
-### Open/Close wan ip for SQL instance
+Open/Close wan ip for SQL instance
 
 ```hcl
 # open
@@ -29,7 +29,7 @@ resource "tencentcloud_sqlserver_wan_ip_config" "example" {
 }
 ```
 
-### Open/Close wan ip for SQL read only group
+Open/Close wan ip for SQL read only group
 
 ```hcl
 # open

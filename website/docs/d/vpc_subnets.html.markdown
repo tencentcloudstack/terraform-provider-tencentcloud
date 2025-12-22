@@ -13,7 +13,7 @@ Use this data source to query vpc subnets information.
 
 ## Example Usage
 
-### Create subnet resource
+Create subnet resource
 
 ```hcl
 variable "availability_zone" {
@@ -47,13 +47,13 @@ resource "tencentcloud_subnet" "subnetCDC" {
 }
 ```
 
-### Query all subnets
+Query all subnets
 
 ```hcl
 data "tencentcloud_vpc_subnets" "subnets" {}
 ```
 
-### Query subnets by filter
+Query subnets by filter
 
 ```hcl
 data "tencentcloud_vpc_subnets" "subnets" {

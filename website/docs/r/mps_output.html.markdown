@@ -13,7 +13,7 @@ Provides a resource to create a mps output
 
 ## Example Usage
 
-### Create a output group with RTP
+Create a output group with RTP
 
 ```hcl
 resource "tencentcloud_mps_output" "output" {

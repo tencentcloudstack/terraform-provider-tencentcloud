@@ -13,7 +13,7 @@ Provide a resource to create serverless node pool of cluster.
 
 ## Example Usage
 
-### Add serverless node pool to a cluster
+Add serverless node pool to a cluster
 
 ```hcl
 variable "availability_zone" {

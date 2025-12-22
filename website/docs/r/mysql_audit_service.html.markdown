@@ -13,7 +13,7 @@ Provides a resource to create a Mysql audit service
 
 ## Example Usage
 
-### If audit_all is true
+If audit_all is true
 
 ```hcl
 resource "tencentcloud_mysql_audit_service" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_mysql_audit_service" "example" {
 }
 ```
 
-### If audit_all is false
+If audit_all is false
 
 ```hcl
 resource "tencentcloud_mysql_audit_service" "example" {

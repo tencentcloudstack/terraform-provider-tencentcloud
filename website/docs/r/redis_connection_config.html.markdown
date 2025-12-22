@@ -13,7 +13,7 @@ Provides a resource to create a redis connection config
 
 ## Example Usage
 
-### Modify the maximum number of connections and maximum network throughput of an instance
+Modify the maximum number of connections and maximum network throughput of an instance
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {

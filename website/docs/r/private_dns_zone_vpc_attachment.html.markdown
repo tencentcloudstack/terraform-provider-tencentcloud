@@ -15,7 +15,7 @@ Provides a resource to create a PrivateDns zone vpc attachment
 
 ## Example Usage
 
-### Append VPC associated with private dns zone
+Append VPC associated with private dns zone
 
 ```hcl
 resource "tencentcloud_private_dns_zone" "example" {
@@ -45,7 +45,7 @@ resource "tencentcloud_private_dns_zone_vpc_attachment" "example" {
 }
 ```
 
-### Add VPC information for associated accounts in the private dns zone
+Add VPC information for associated accounts in the private dns zone
 
 ```hcl
 resource "tencentcloud_private_dns_zone_vpc_attachment" "example" {

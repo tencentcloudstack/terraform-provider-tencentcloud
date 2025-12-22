@@ -13,7 +13,7 @@ Provides a resource to create a css watermark_rule
 
 ## Example Usage
 
-### Binding watermark rule with a css stream
+Binding watermark rule with a css stream
 
 ```hcl
 resource "tencentcloud_css_pull_stream_task" "example" {

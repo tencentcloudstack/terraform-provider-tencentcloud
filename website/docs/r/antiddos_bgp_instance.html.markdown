@@ -15,7 +15,7 @@ Provides a resource to create a AntiDDoS bgp instance
 
 ## Example Usage
 
-### Create standard bgp instance(POSTPAID)
+Create standard bgp instance(POSTPAID)
 
 ```hcl
 resource "tencentcloud_antiddos_bgp_instance" "example" {
@@ -35,7 +35,7 @@ resource "tencentcloud_antiddos_bgp_instance" "example" {
 }
 ```
 
-### Create standard edition 2.0 bgp instance(PREPAID)
+Create standard edition 2.0 bgp instance(PREPAID)
 
 ```hcl
 resource "tencentcloud_antiddos_bgp_instance" "example" {
@@ -61,7 +61,7 @@ resource "tencentcloud_antiddos_bgp_instance" "example" {
 }
 ```
 
-### Create enterprise bgp instance(POSTPAID)
+Create enterprise bgp instance(POSTPAID)
 
 ```hcl
 resource "tencentcloud_antiddos_bgp_instance" "example" {

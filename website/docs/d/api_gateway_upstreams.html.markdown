@@ -19,7 +19,7 @@ data "tencentcloud_api_gateway_upstreams" "example" {
 }
 ```
 
-### Filtered Queries
+Filtered Queries
 
 ```hcl
 data "tencentcloud_api_gateway_upstreams" "example" {

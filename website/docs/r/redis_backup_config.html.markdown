@@ -13,7 +13,7 @@ Use this resource to create a backup config of redis.
 
 ## Example Usage
 
-### Set configuration for automatic backups
+Set configuration for automatic backups
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {

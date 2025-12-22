@@ -13,7 +13,7 @@ Provides a resource to create a tcr customized domain
 
 ## Example Usage
 
-### Create a tcr customized domain
+Create a tcr customized domain
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

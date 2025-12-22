@@ -15,7 +15,7 @@ Provides a mysql instance resource to create CDB dr(disaster recovery) instance.
 
 ## Example Usage
 
-### Create POSTPAID dr instance
+Create POSTPAID dr instance
 
 ```hcl
 resource "tencentcloud_mysql_dr_instance" "example" {
@@ -45,7 +45,7 @@ resource "tencentcloud_mysql_dr_instance" "example" {
 }
 ```
 
-### Create PREPAID dr instance
+Create PREPAID dr instance
 
 ```hcl
 resource "tencentcloud_mysql_dr_instance" "example" {

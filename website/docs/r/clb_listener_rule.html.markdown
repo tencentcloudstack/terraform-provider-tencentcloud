@@ -15,7 +15,7 @@ Provides a resource to create a CLB listener rule.
 
 ## Example Usage
 
-### Create a single domain listener rule
+Create a single domain listener rule
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "example" {
@@ -39,7 +39,7 @@ resource "tencentcloud_clb_listener_rule" "example" {
 }
 ```
 
-### Create a listener rule for domain lists
+Create a listener rule for domain lists
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "example" {

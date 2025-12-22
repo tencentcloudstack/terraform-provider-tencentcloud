@@ -21,7 +21,7 @@ data "tencentcloud_cwp_machines_simple" "example" {
 }
 ```
 
-### Query by Keyword filter
+Query by Keyword filter
 
 ```hcl
 data "tencentcloud_cwp_machines_simple" "example" {
@@ -37,7 +37,7 @@ data "tencentcloud_cwp_machines_simple" "example" {
 }
 ```
 
-### Query by Version filter
+Query by Version filter
 
 ```hcl
 data "tencentcloud_cwp_machines_simple" "example" {
@@ -53,7 +53,7 @@ data "tencentcloud_cwp_machines_simple" "example" {
 }
 ```
 
-### Query by TagId filter
+Query by TagId filter
 
 ```hcl
 data "tencentcloud_cwp_machines_simple" "example" {

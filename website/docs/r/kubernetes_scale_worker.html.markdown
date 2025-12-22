@@ -72,7 +72,7 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
 }
 ```
 
-### Use Kubelet
+Use Kubelet
 
 ```hcl
 variable "availability_zone" {
@@ -123,7 +123,7 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
 }
 ```
 
-### Create scale worker for CDC cluster
+Create scale worker for CDC cluster
 
 ```hcl
 resource "tencentcloud_kubernetes_scale_worker" "example" {

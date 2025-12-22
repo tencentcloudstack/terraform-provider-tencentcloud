@@ -13,7 +13,7 @@ Provides a resource to create a mps edit_media_operation
 
 ## Example Usage
 
-### Operation through COS
+Operation through COS
 
 ```hcl
 resource "tencentcloud_cos_bucket" "output" {

@@ -13,7 +13,7 @@ Provides a resource to create a oceanus job_config
 
 ## Example Usage
 
-### is 2
+is 2
 
 ```hcl
 resource "tencentcloud_oceanus_job_config" "example" {
@@ -44,7 +44,7 @@ resource "tencentcloud_oceanus_job_config" "example" {
 }
 ```
 
-### is 3
+is 3
 
 ```hcl
 resource "tencentcloud_oceanus_job_config" "example" {

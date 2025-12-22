@@ -13,7 +13,7 @@ Provide a datasource to query cluster CommonNames.
 
 ## Example Usage
 
-### Query common names by subaccount uins
+Query common names by subaccount uins
 
 ```hcl
 data "tencentcloud_kubernetes_cluster_common_names" "example" {
@@ -22,7 +22,7 @@ data "tencentcloud_kubernetes_cluster_common_names" "example" {
 }
 ```
 
-### Query common names by role ids
+Query common names by role ids
 
 ```hcl
 data "tencentcloud_kubernetes_cluster_common_names" "example" {

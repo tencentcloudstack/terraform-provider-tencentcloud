@@ -13,7 +13,7 @@ Provides an elasticsearch instance resource.
 
 ## Example Usage
 
-### Create a basic version of elasticsearch instance paid by the hour
+Create a basic version of elasticsearch instance paid by the hour
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "availability_zone" {
@@ -74,7 +74,7 @@ resource "tencentcloud_elasticsearch_instance" "example" {
 }
 ```
 
-### Create a basic version of elasticsearch instance for multi-availability zone deployment
+Create a basic version of elasticsearch instance for multi-availability zone deployment
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "availability_zone" {

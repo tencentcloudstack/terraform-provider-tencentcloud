@@ -24,7 +24,7 @@ resource "tencentcloud_vpc_bandwidth_package" "example" {
 }
 ```
 
-### PrePaid Bandwidth Package
+PrePaid Bandwidth Package
 
 ```hcl
 resource "tencentcloud_vpc_bandwidth_package" "example" {
@@ -39,7 +39,7 @@ resource "tencentcloud_vpc_bandwidth_package" "example" {
 }
 ```
 
-### Bandwidth Package With Egress
+Bandwidth Package With Egress
 
 ```hcl
 resource "tencentcloud_vpc_bandwidth_package" "example" {

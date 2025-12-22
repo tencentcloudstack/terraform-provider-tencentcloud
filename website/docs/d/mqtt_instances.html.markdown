@@ -13,13 +13,13 @@ Use this data source to query detailed information of MQTT instances
 
 ## Example Usage
 
-### Query all mqtt instances
+Query all mqtt instances
 
 ```hcl
 data "tencentcloud_mqtt_instances" "example" {}
 ```
 
-### Query mqtt instances by filters
+Query mqtt instances by filters
 
 ```hcl
 data "tencentcloud_mqtt_instances" "example" {

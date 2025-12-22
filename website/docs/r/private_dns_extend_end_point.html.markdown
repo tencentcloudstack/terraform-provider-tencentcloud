@@ -13,7 +13,7 @@ Provides a resource to create a Private Dns extend end point
 
 ## Example Usage
 
-### If access_type is CLB
+If access_type is CLB
 
 ```hcl
 resource "tencentcloud_private_dns_extend_end_point" "example" {
@@ -28,7 +28,7 @@ resource "tencentcloud_private_dns_extend_end_point" "example" {
 }
 ```
 
-### If access_type is CCN
+If access_type is CCN
 
 ```hcl
 resource "tencentcloud_private_dns_extend_end_point" "example" {

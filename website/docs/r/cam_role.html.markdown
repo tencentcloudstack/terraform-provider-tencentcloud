@@ -13,7 +13,7 @@ Provides a resource to create a CAM role.
 
 ## Example Usage
 
-### Create normally
+Create normally
 
 ```hcl
 data "tencentcloud_user_info" "info" {}
@@ -57,7 +57,7 @@ output "arn" {
 }
 ```
 
-### Or use service
+Or use service
 
 ```hcl
 resource "tencentcloud_cam_role" "example" {
@@ -87,7 +87,7 @@ resource "tencentcloud_cam_role" "example" {
 }
 ```
 
-### Create with SAML provider
+Create with SAML provider
 
 ```hcl
 variable "saml-provider" {

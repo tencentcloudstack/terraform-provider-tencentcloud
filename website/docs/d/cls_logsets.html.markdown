@@ -13,13 +13,13 @@ Use this data source to query detailed information of cls logsets
 
 ## Example Usage
 
-### Query all cls logsets
+Query all cls logsets
 
 ```hcl
 data "tencentcloud_cls_logsets" "logsets" {}
 ```
 
-### Query by filters
+Query by filters
 
 ```hcl
 # Query by `logsetName`

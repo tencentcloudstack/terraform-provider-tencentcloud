@@ -13,7 +13,7 @@ Provides a resource to create a APIGateway ApiApp
 
 ## Example Usage
 
-### Create a basic apigateway api_app
+Create a basic apigateway api_app
 
 ```hcl
 resource "tencentcloud_api_gateway_api_app" "example" {
@@ -22,7 +22,7 @@ resource "tencentcloud_api_gateway_api_app" "example" {
 }
 ```
 
-### Bind Tag
+Bind Tag
 
 ```hcl
 resource "tencentcloud_api_gateway_api_app" "example" {

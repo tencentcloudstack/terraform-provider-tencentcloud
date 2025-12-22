@@ -15,7 +15,7 @@ This resource supports bidirectional binding (target group binding to the load b
 
 ## Example Usage
 
-### Load balancer binding to the target group
+Load balancer binding to the target group
 
 ```hcl
 resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" {
@@ -28,7 +28,7 @@ resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" 
 }
 ```
 
-### Target group binding to the load balancer
+Target group binding to the load balancer
 
 ```hcl
 resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" {

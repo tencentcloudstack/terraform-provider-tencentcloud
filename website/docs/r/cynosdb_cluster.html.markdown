@@ -15,7 +15,7 @@ Provide a resource to create a CynosDB cluster.
 
 ## Example Usage
 
-### Create a single availability zone NORMAL CynosDB cluster
+Create a single availability zone NORMAL CynosDB cluster
 
 ```hcl
 variable "availability_zone" {
@@ -114,7 +114,7 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 }
 ```
 
-### Create a multiple availability zone SERVERLESS CynosDB cluster
+Create a multiple availability zone SERVERLESS CynosDB cluster
 
 ```hcl
 variable "availability_zone" {

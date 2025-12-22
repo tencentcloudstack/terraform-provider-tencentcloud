@@ -15,7 +15,7 @@ Provides a resource to create a waf clb instance
 
 ## Example Usage
 
-### Create a basic waf premium clb instance
+Create a basic waf premium clb instance
 
 ```hcl
 resource "tencentcloud_waf_clb_instance" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_waf_clb_instance" "example" {
 }
 ```
 
-### Create a complete waf ultimate_clb instance
+Create a complete waf ultimate_clb instance
 
 ```hcl
 resource "tencentcloud_waf_clb_instance" "example" {
@@ -39,7 +39,7 @@ resource "tencentcloud_waf_clb_instance" "example" {
 }
 ```
 
-### Set waf ultimate_clb instance qps limit
+Set waf ultimate_clb instance qps limit
 
 ```hcl
 resource "tencentcloud_waf_clb_instance" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a cfw edge_firewall_switch
 
 ## Example Usage
 
-### If not set subnet_id
+If not set subnet_id
 
 ```hcl
 data "tencentcloud_cfw_edge_fw_switches" "example" {}
@@ -25,7 +25,7 @@ resource "tencentcloud_cfw_edge_firewall_switch" "example" {
 }
 ```
 
-### If set subnet id
+If set subnet id
 
 ```hcl
 data "tencentcloud_cfw_edge_fw_switches" "example" {}

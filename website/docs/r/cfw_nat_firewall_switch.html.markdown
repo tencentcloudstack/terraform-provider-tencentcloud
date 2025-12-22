@@ -13,7 +13,7 @@ Provides a resource to create a CFW nat firewall switch
 
 ## Example Usage
 
-### Turn off switch
+Turn off switch
 
 ```hcl
 data "tencentcloud_cfw_nat_fw_switches" "example" {
@@ -27,7 +27,7 @@ resource "tencentcloud_cfw_nat_firewall_switch" "example" {
 }
 ```
 
-### Or turn on switch
+Or turn on switch
 
 ```hcl
 data "tencentcloud_cfw_nat_fw_switches" "example" {

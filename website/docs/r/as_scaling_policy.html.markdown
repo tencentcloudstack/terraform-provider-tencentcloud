@@ -13,7 +13,7 @@ Provides a resource for an AS (Auto scaling) policy.
 
 ## Example Usage
 
-### Create Simple policy
+Create Simple policy
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -70,7 +70,7 @@ resource "tencentcloud_as_scaling_policy" "example" {
 }
 ```
 
-### Create a Target tracking policy
+Create a Target tracking policy
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {

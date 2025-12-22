@@ -13,7 +13,7 @@ Use this data source to query detailed information of CCN routes.
 
 ## Example Usage
 
-### Query CCN instance all routes
+Query CCN instance all routes
 
 ```hcl
 data "tencentcloud_ccn_routes" "routes" {
@@ -21,7 +21,7 @@ data "tencentcloud_ccn_routes" "routes" {
 }
 ```
 
-### Query CCN instance routes by filter
+Query CCN instance routes by filter
 
 ```hcl
 data "tencentcloud_ccn_routes" "routes" {

@@ -13,7 +13,7 @@ Provides a resource to create a CDC site
 
 ## Example Usage
 
-### Create a basic CDC site
+Create a basic CDC site
 
 ```hcl
 resource "tencentcloud_cdc_site" "example" {
@@ -26,7 +26,7 @@ resource "tencentcloud_cdc_site" "example" {
 }
 ```
 
-### Create a complete CDC site
+Create a complete CDC site
 
 ```hcl
 resource "tencentcloud_cdc_site" "example" {

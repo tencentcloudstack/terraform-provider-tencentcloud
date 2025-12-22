@@ -13,7 +13,7 @@ Provides a resource to create a vpc refresh_nat_dc_route
 
 ## Example Usage
 
-### is True
+is True
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
@@ -43,7 +43,7 @@ resource "tencentcloud_nat_refresh_nat_dc_route" "refresh_nat_dc_route" {
 }
 ```
 
-### is False
+is False
 
 ```hcl
 resource "tencentcloud_nat_refresh_nat_dc_route" "refresh_nat_dc_route" {

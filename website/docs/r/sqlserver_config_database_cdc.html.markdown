@@ -13,7 +13,7 @@ Provides a resource to create a sqlserver config_database_cdc
 
 ## Example Usage
 
-### Turn off database data change capture (CDC)
+Turn off database data change capture (CDC)
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -73,7 +73,7 @@ resource "tencentcloud_sqlserver_config_database_cdc" "example" {
 }
 ```
 
-### Enable Database Data Change Capture (CDC)
+Enable Database Data Change Capture (CDC)
 
 ```hcl
 resource "tencentcloud_sqlserver_config_database_cdc" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a sqlserver complete_expansion
 
 ## Example Usage
 
-### First, Create a basic SQL instance
+First, Create a basic SQL instance
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -57,7 +57,7 @@ resource "tencentcloud_sqlserver_instance" "example" {
 }
 ```
 
-### Expand the current instance, storage: 20->40, wait_switch = 1
+Expand the current instance, storage: 20->40, wait_switch = 1
 
 ```hcl
 resource "tencentcloud_sqlserver_instance" "example" {
@@ -80,7 +80,7 @@ resource "tencentcloud_sqlserver_instance" "example" {
 }
 ```
 
-### Complete the expansion task immediately
+Complete the expansion task immediately
 
 ```hcl
 resource "tencentcloud_sqlserver_complete_expansion" "example" {

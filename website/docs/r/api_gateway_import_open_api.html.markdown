@@ -13,7 +13,7 @@ Provides a resource to create a apiGateway import_open_api
 
 ## Example Usage
 
-### Import open Api by YAML
+Import open Api by YAML
 
 ```hcl
 resource "tencentcloud_api_gateway_import_open_api" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_api_gateway_import_open_api" "example" {
 }
 ```
 
-### Import open Api by JSON
+Import open Api by JSON
 
 ```hcl
 resource "tencentcloud_api_gateway_import_open_api" "example" {

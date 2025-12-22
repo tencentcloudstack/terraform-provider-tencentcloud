@@ -13,7 +13,7 @@ Use this resource to create TcaplusDB table group.
 
 ## Example Usage
 
-### Create a tcaplusdb table group
+Create a tcaplusdb table group
 
 ```hcl
 locals {

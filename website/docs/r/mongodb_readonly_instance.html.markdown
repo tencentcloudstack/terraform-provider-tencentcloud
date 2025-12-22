@@ -13,7 +13,7 @@ Provide a resource to create a Readonly mongodb instance.
 
 ## Example Usage
 
-### Replset readonly instance
+Replset readonly instance
 
 ```hcl
 resource "tencentcloud_mongodb_readonly_instance" "mongodb" {
@@ -33,7 +33,7 @@ resource "tencentcloud_mongodb_readonly_instance" "mongodb" {
 }
 ```
 
-### Shard readonly instance
+Shard readonly instance
 
 ```hcl
 resource "tencentcloud_mongodb_readonly_instance" "sharding_mongodb" {

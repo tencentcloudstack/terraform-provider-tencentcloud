@@ -18,13 +18,13 @@ resources provided by TencentCloud, as well as other public images and those ava
 
 ## Example Usage
 
-### Query image
+Query image
 
 ```hcl
 data "tencentcloud_image" "example" {}
 ```
 
-### Query image by filter
+Query image by filter
 
 ```hcl
 data "tencentcloud_image" "example" {
@@ -35,7 +35,7 @@ data "tencentcloud_image" "example" {
 }
 ```
 
-### Query image by os name
+Query image by os name
 
 ```hcl
 data "tencentcloud_image" "example" {
@@ -43,7 +43,7 @@ data "tencentcloud_image" "example" {
 }
 ```
 
-### Query image by image name regex
+Query image by image name regex
 
 ```hcl
 data "tencentcloud_image" "example" {

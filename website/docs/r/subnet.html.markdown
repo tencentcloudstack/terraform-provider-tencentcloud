@@ -13,7 +13,7 @@ Provide a resource to create a VPC subnet.
 
 ## Example Usage
 
-### Create a normal VPC subnet
+Create a normal VPC subnet
 
 ```hcl
 data "tencentcloud_availability_zones" "zones" {}
@@ -32,7 +32,7 @@ resource "tencentcloud_subnet" "subnet" {
 }
 ```
 
-### Create a CDC instance VPC subnet
+Create a CDC instance VPC subnet
 
 ```hcl
 data "tencentcloud_availability_zones" "zones" {}

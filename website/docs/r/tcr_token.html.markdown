@@ -13,7 +13,7 @@ Use this resource to create tcr long term token.
 
 ## Example Usage
 
-### Create a token for tcr instance
+Create a token for tcr instance
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

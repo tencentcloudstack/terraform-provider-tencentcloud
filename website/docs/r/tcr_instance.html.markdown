@@ -13,7 +13,7 @@ Use this resource to create tcr instance.
 
 ## Example Usage
 
-### Create a basic tcr instance.
+Create a basic tcr instance.
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
@@ -26,7 +26,7 @@ resource "tencentcloud_tcr_instance" "example" {
 }
 ```
 
-### Create instance with the public network access whitelist.
+Create instance with the public network access whitelist.
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
@@ -42,7 +42,7 @@ resource "tencentcloud_tcr_instance" "example" {
 }
 ```
 
-### Create instance with Replications.
+Create instance with Replications.
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

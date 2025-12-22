@@ -13,7 +13,7 @@ Provide a resource to configure kubernetes cluster app addons.
 
 ## Example Usage
 
-### Install tcr addon
+Install tcr addon
 
 ```hcl
 resource "tencentcloud_kubernetes_addon" "example" {

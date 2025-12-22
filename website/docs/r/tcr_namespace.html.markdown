@@ -13,7 +13,7 @@ Use this resource to create tcr namespace.
 
 ## Example Usage
 
-### Create a tcr namespace instance
+Create a tcr namespace instance
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

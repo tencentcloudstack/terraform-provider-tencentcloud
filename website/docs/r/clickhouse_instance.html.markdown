@@ -13,7 +13,7 @@ Provides a resource to create a Clickhouse instance.
 
 ## Example Usage
 
-### Create POSTPAID instance
+Create POSTPAID instance
 
 ```hcl
 variable "availability_zone" {
@@ -69,7 +69,7 @@ resource "tencentcloud_clickhouse_instance" "example" {
 }
 ```
 
-### Create PREPAID instance
+Create PREPAID instance
 
 ```hcl
 variable "availability_zone" {

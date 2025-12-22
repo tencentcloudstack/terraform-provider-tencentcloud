@@ -13,7 +13,7 @@ Provides a resource to create a cfs auto snapshot policy
 
 ## Example Usage
 
-### Use day of week
+Use day of week
 
 ```hcl
 resource "tencentcloud_cfs_auto_snapshot_policy" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_cfs_auto_snapshot_policy" "example" {
 }
 ```
 
-### Use day of month
+Use day of month
 
 ```hcl
 resource "tencentcloud_cfs_auto_snapshot_policy" "example" {
@@ -35,7 +35,7 @@ resource "tencentcloud_cfs_auto_snapshot_policy" "example" {
 }
 ```
 
-### Use interval days
+Use interval days
 
 ```hcl
 resource "tencentcloud_cfs_auto_snapshot_policy" "example" {

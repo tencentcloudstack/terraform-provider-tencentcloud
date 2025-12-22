@@ -13,7 +13,7 @@ Provides a resource to create security group.
 
 ## Example Usage
 
-### Create a basic security group
+Create a basic security group
 
 ```hcl
 resource "tencentcloud_security_group" "example" {
@@ -22,7 +22,7 @@ resource "tencentcloud_security_group" "example" {
 }
 ```
 
-### Create a complete security group
+Create a complete security group
 
 ```hcl
 resource "tencentcloud_security_group" "example" {

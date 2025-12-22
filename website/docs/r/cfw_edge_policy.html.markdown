@@ -29,7 +29,7 @@ resource "tencentcloud_cfw_edge_policy" "example" {
 }
 ```
 
-### If target_type is tag
+If target_type is tag
 
 ```hcl
 resource "tencentcloud_cfw_edge_policy" "example" {

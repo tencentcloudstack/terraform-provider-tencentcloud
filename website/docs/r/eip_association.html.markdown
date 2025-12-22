@@ -15,7 +15,7 @@ Provides an eip resource associated with other resource like CVM, ENI and CLB.
 
 ## Example Usage
 
-### Bind elastic public IP By Instance ID
+Bind elastic public IP By Instance ID
 
 ```hcl
 data "tencentcloud_availability_zones" "zones" {}
@@ -77,7 +77,7 @@ resource "tencentcloud_eip_association" "example" {
 }
 ```
 
-### Bind elastic public IP By elastic network card
+Bind elastic public IP By elastic network card
 
 ```hcl
 data "tencentcloud_availability_zones" "zones" {}
@@ -116,7 +116,7 @@ resource "tencentcloud_eip_association" "example" {
 }
 ```
 
-### Bind elastic public IP By WAF(SaaS)
+Bind elastic public IP By WAF(SaaS)
 
 ```hcl
 resource "tencentcloud_eip_association" "example" {

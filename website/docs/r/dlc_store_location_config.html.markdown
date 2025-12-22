@@ -13,7 +13,7 @@ Provides a resource to create a DLC store location config
 
 ## Example Usage
 
-### Select user-defined COS path storage
+Select user-defined COS path storage
 
 ```hcl
 resource "tencentcloud_dlc_store_location_config" "example" {
@@ -22,7 +22,7 @@ resource "tencentcloud_dlc_store_location_config" "example" {
 }
 ```
 
-### Select DLC internal storage
+Select DLC internal storage
 
 ```hcl
 resource "tencentcloud_dlc_store_location_config" "example" {

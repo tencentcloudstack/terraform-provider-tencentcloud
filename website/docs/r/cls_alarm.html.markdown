@@ -13,7 +13,7 @@ Provides a resource to create a cls alarm
 
 ## Example Usage
 
-### Use single condition
+Use single condition
 
 ```hcl
 resource "tencentcloud_cls_alarm" "example" {
@@ -60,7 +60,7 @@ resource "tencentcloud_cls_alarm" "example" {
 }
 ```
 
-### Use multi conditions
+Use multi conditions
 
 ```hcl
 resource "tencentcloud_cls_alarm" "example" {

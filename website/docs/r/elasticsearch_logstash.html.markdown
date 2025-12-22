@@ -38,7 +38,7 @@ resource "tencentcloud_elasticsearch_logstash" "logstash" {
 }
 ```
 
-### Create Multi Zone Instance
+Create Multi Zone Instance
 
 ```hcl
 resource "tencentcloud_elasticsearch_logstash" "logstash" {

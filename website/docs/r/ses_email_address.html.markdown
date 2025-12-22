@@ -13,7 +13,7 @@ Provides a resource to create a ses email address
 
 ## Example Usage
 
-### Create ses email address
+Create ses email address
 
 ```hcl
 resource "tencentcloud_ses_email_address" "example" {
@@ -22,7 +22,7 @@ resource "tencentcloud_ses_email_address" "example" {
 }
 ```
 
-### Set smtp password
+Set smtp password
 
 ```hcl
 resource "tencentcloud_ses_email_address" "example" {

@@ -22,7 +22,7 @@ resource "tencentcloud_image" "image_snap" {
 }
 ```
 
-### Use image family
+Use image family
 
 ```hcl
 resource "tencentcloud_image" "image_family" {

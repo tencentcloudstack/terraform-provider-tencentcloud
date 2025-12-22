@@ -13,7 +13,7 @@ Provides a resource to create a TEO customize error page
 
 ## Example Usage
 
-### If content_type is application/json
+If content_type is application/json
 
 ```hcl
 resource "tencentcloud_teo_customize_error_page" "example" {
@@ -27,7 +27,7 @@ resource "tencentcloud_teo_customize_error_page" "example" {
 }
 ```
 
-### If content_type is text/html
+If content_type is text/html
 
 ```hcl
 resource "tencentcloud_teo_customize_error_page" "example" {
@@ -50,7 +50,7 @@ resource "tencentcloud_teo_customize_error_page" "example" {
 }
 ```
 
-### If content_type is text/plain
+If content_type is text/plain
 
 ```hcl
 resource "tencentcloud_teo_customize_error_page" "example" {
@@ -62,7 +62,7 @@ resource "tencentcloud_teo_customize_error_page" "example" {
 }
 ```
 
-### If content_type is text/xml
+If content_type is text/xml
 
 ```hcl
 resource "tencentcloud_teo_customize_error_page" "example" {

@@ -13,7 +13,7 @@ Use this data source to query detailed information of cam role detail
 
 ## Example Usage
 
-### Query cam role detail by role ID
+Query cam role detail by role ID
 
 ```hcl
 data "tencentcloud_cam_role_detail" "example" {
@@ -21,7 +21,7 @@ data "tencentcloud_cam_role_detail" "example" {
 }
 ```
 
-### Query cam role detail by role name
+Query cam role detail by role name
 
 ```hcl
 data "tencentcloud_cam_role_detail" "example" {

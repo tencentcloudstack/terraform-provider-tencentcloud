@@ -25,7 +25,7 @@ Provides a CVM instance resource.
 
 ## Example Usage
 
-### Create a general POSTPAID_BY_HOUR CVM instance
+Create a general POSTPAID_BY_HOUR CVM instance
 
 ```hcl
 variable "availability_zone" {
@@ -86,7 +86,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### Create a general PREPAID CVM instance
+Create a general PREPAID CVM instance
 
 ```hcl
 variable "availability_zone" {
@@ -154,7 +154,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### Create a dedicated cluster CVM instance
+Create a dedicated cluster CVM instance
 
 ```hcl
 variable "availability_zone" {
@@ -219,7 +219,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### Create CVM instance with placement_group_id
+Create CVM instance with placement_group_id
 
 ```hcl
 resource "tencentcloud_instance" "example" {
@@ -249,7 +249,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### Create CVM instance with template
+Create CVM instance with template
 
 ```hcl
 resource "tencentcloud_instance" "example" {
@@ -258,7 +258,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### Create CVM instance with AntiDDos Eip
+Create CVM instance with AntiDDos Eip
 
 ```hcl
 resource "tencentcloud_instance" "example" {
@@ -290,7 +290,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### Create CVM instance with setting running flag
+Create CVM instance with setting running flag
 
 ```hcl
 resource "tencentcloud_instance" "example" {

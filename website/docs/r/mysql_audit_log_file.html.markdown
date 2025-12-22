@@ -71,7 +71,7 @@ resource "tencentcloud_mysql_audit_log_file" "example" {
 }
 ```
 
-### Add filter
+Add filter
 
 ```hcl
 resource "tencentcloud_mysql_audit_log_file" "example" {

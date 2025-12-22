@@ -19,7 +19,7 @@ resource "tencentcloud_dasb_user_group" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_dasb_user_group" "example" {

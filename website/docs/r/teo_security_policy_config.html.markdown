@@ -15,7 +15,7 @@ Provides a resource to create a teo security policy
 
 ## Example Usage
 
-### If entity is ZoneDefaultPolicy
+If entity is ZoneDefaultPolicy
 
 ```hcl
 resource "tencentcloud_teo_security_policy_config" "example" {
@@ -272,7 +272,7 @@ resource "tencentcloud_teo_security_policy_config" "example" {
 }
 ```
 
-### If entity is Host
+If entity is Host
 
 ```hcl
 resource "tencentcloud_teo_security_policy_config" "example" {
@@ -452,7 +452,7 @@ resource "tencentcloud_teo_security_policy_config" "example" {
 }
 ```
 
-### If entity is Template
+If entity is Template
 
 ```hcl
 resource "tencentcloud_teo_security_policy_config" "example" {

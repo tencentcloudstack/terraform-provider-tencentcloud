@@ -13,7 +13,7 @@ Provides a resource to create a tcr webhook trigger
 
 ## Example Usage
 
-### Create a tcr webhook trigger instance
+Create a tcr webhook trigger instance
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {

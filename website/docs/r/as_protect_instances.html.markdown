@@ -95,7 +95,7 @@ resource "tencentcloud_as_protect_instances" "protect" {
 }
 ```
 
-### Or close protect
+Or close protect
 
 ```hcl
 resource "tencentcloud_as_protect_instances" "protect" {

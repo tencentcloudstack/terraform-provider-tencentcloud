@@ -13,7 +13,7 @@ Provides a resource to create a WAF log post cls flow
 
 ## Example Usage
 
-### If log_type is 1
+If log_type is 1
 
 ```hcl
 resource "tencentcloud_waf_log_post_cls_flow" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_waf_log_post_cls_flow" "example" {
 }
 ```
 
-### If log_type is 2
+If log_type is 2
 
 ```hcl
 resource "tencentcloud_waf_log_post_cls_flow" "example" {

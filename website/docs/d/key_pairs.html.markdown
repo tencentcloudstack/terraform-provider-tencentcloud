@@ -13,7 +13,7 @@ Use this data source to query key pairs.
 
 ## Example Usage
 
-### Query key pairs by key ID
+Query key pairs by key ID
 
 ```hcl
 data "tencentcloud_key_pairs" "key_id" {
@@ -21,7 +21,7 @@ data "tencentcloud_key_pairs" "key_id" {
 }
 ```
 
-### Query key pairs by key name
+Query key pairs by key name
 
 ```hcl
 data "tencentcloud_key_pairs" "key_name" {

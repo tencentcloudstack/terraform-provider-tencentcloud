@@ -29,7 +29,7 @@ resource "tencentcloud_ssm_secret" "example" {
 }
 ```
 
-### OR you can filter by tags
+OR you can filter by tags
 
 ```hcl
 data "tencentcloud_ssm_secrets" "example" {

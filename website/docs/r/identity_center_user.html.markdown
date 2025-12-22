@@ -21,7 +21,7 @@ resource "tencentcloud_identity_center_user" "example" {
 }
 ```
 
-### Or
+Or
 
 ```hcl
 resource "tencentcloud_identity_center_user" "example" {

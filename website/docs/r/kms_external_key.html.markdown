@@ -13,7 +13,7 @@ Provide a resource to create a KMS external key.
 
 ## Example Usage
 
-### Create a basic instance.
+Create a basic instance.
 
 ```hcl
 resource "tencentcloud_kms_external_key" "example" {
@@ -26,7 +26,7 @@ resource "tencentcloud_kms_external_key" "example" {
 }
 ```
 
-### Create kms instance with HSM
+Create kms instance with HSM
 
 ```hcl
 resource "tencentcloud_kms_external_key" "example" {
@@ -40,7 +40,7 @@ resource "tencentcloud_kms_external_key" "example" {
 }
 ```
 
-### Specify the encryption algorithm and public key.
+Specify the encryption algorithm and public key.
 
 ```hcl
 resource "tencentcloud_kms_external_key" "example" {
@@ -56,7 +56,7 @@ resource "tencentcloud_kms_external_key" "example" {
 }
 ```
 
-### Disable the external kms key.
+Disable the external kms key.
 
 ```hcl
 resource "tencentcloud_kms_external_key" "example" {

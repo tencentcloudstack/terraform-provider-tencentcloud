@@ -13,7 +13,7 @@ Provides a resource to set as scaling_group status
 
 ## Example Usage
 
-### Deactivate Scaling Group
+Deactivate Scaling Group
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -61,7 +61,7 @@ resource "tencentcloud_as_scaling_group_status" "scaling_group_status" {
 }
 ```
 
-### Enable Scaling Group
+Enable Scaling Group
 
 ```hcl
 resource "tencentcloud_as_scaling_group_status" "scaling_group_status" {

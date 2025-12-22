@@ -13,7 +13,7 @@ Provides a resource to create a redis renew instance operation
 
 ## Example Usage
 
-### Renew Subscription Instances
+Renew Subscription Instances
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {

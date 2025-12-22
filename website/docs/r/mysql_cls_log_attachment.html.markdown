@@ -15,7 +15,7 @@ Provides a resource to create a mysql log to cls
 
 ## Example Usage
 
-### Create Error Log to ClS
+Create Error Log to ClS
 
 ```hcl
 # create vpc
@@ -80,7 +80,7 @@ resource "tencentcloud_mysql_cls_log_attachment" "example" {
 }
 ```
 
-### Create Slow Log to ClS
+Create Slow Log to ClS
 
 ```hcl
 resource "tencentcloud_mysql_cls_log_attachment" "example" {

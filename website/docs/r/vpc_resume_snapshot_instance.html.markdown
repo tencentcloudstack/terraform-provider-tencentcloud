@@ -13,7 +13,7 @@ Provides a resource to create a vpc resume_snapshot_instance
 
 ## Example Usage
 
-### Basic example
+Basic example
 
 ```hcl
 resource "tencentcloud_vpc_resume_snapshot_instance" "resume_snapshot_instance" {
@@ -23,7 +23,7 @@ resource "tencentcloud_vpc_resume_snapshot_instance" "resume_snapshot_instance" 
 }
 ```
 
-### Complete example
+Complete example
 
 ```hcl
 data "tencentcloud_vpc_snapshot_files" "example" {

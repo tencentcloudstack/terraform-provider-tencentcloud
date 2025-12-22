@@ -13,7 +13,7 @@ Use this resource to create API gateway access key.
 
 ## Example Usage
 
-### Automatically generate key for API gateway access key.
+Automatically generate key for API gateway access key.
 
 ```hcl
 resource "tencentcloud_api_gateway_api_key" "example_auto" {
@@ -22,7 +22,7 @@ resource "tencentcloud_api_gateway_api_key" "example_auto" {
 }
 ```
 
-### Manually generate a secret key for API gateway access key.
+Manually generate a secret key for API gateway access key.
 
 ```hcl
 resource "tencentcloud_api_gateway_api_key" "example_manual" {

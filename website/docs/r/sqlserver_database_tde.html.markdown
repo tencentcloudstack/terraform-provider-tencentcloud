@@ -13,7 +13,7 @@ Provides a resource to create a sqlserver database_tde
 
 ## Example Usage
 
-### Open database tde encryption
+Open database tde encryption
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
@@ -73,7 +73,7 @@ resource "tencentcloud_sqlserver_database_tde" "example" {
 }
 ```
 
-### Close database tde encryption
+Close database tde encryption
 
 ```hcl
 resource "tencentcloud_sqlserver_database_tde" "example" {

@@ -17,7 +17,7 @@ Provides a resource to create CBS set.
 
 ## Example Usage
 
-### Create 3 standard CBS storages
+Create 3 standard CBS storages
 
 ```hcl
 resource "tencentcloud_cbs_storage_set" "example" {
@@ -31,7 +31,7 @@ resource "tencentcloud_cbs_storage_set" "example" {
 }
 ```
 
-### Create 3 standard CBS storages with customize kms_key_id
+Create 3 standard CBS storages with customize kms_key_id
 
 ```hcl
 resource "tencentcloud_cbs_storage_set" "example" {
@@ -46,7 +46,7 @@ resource "tencentcloud_cbs_storage_set" "example" {
 }
 ```
 
-### Create 3 encrypted CBS storage with default generated kms_key_id
+Create 3 encrypted CBS storage with default generated kms_key_id
 
 ```hcl
 resource "tencentcloud_cbs_storage_set" "example" {
@@ -60,7 +60,7 @@ resource "tencentcloud_cbs_storage_set" "example" {
 }
 ```
 
-### Create 3 dedicated cluster CBS storages
+Create 3 dedicated cluster CBS storages
 
 ```hcl
 resource "tencentcloud_cbs_storage_set" "example" {

@@ -13,7 +13,7 @@ Provides a resource to create a ses template.
 
 ## Example Usage
 
-### Create a ses text template
+Create a ses text template
 
 ```hcl
 resource "tencentcloud_ses_template" "example" {
@@ -24,7 +24,7 @@ resource "tencentcloud_ses_template" "example" {
 }
 ```
 
-### Create a ses html template
+Create a ses html template
 
 ```hcl
 resource "tencentcloud_ses_template" "example" {

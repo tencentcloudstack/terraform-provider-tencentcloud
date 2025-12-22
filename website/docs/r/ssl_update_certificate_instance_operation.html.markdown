@@ -21,7 +21,7 @@ resource "tencentcloud_ssl_update_certificate_instance_operation" "update_certif
 }
 ```
 
-### Upload certificate
+Upload certificate
 
 ```hcl
 resource "tencentcloud_ssl_update_certificate_instance_operation" "update_certificate_instance" {

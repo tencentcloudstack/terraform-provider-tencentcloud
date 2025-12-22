@@ -13,7 +13,7 @@ Provides a resource to create a mps process_media_operation
 
 ## Example Usage
 
-### Process mps media through CMQ
+Process mps media through CMQ
 
 ```hcl
 resource "tencentcloud_cos_bucket" "output" {

@@ -13,7 +13,7 @@ Provides a resource to create a sms template
 
 ## Example Usage
 
-### Create a sms template
+Create a sms template
 
 ```hcl
 resource "tencentcloud_sms_template" "template" {
