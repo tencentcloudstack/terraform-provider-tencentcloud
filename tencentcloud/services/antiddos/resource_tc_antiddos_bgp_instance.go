@@ -19,21 +19,22 @@ func ResourceTencentCloudAntiddosBgpInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudAntiddosBgpInstanceCreate,
 		Read:   resourceTencentCloudAntiddosBgpInstanceRead,
-		Update: resourceTencentCloudAntiddosBgpInstanceUpdate,
 		Delete: resourceTencentCloudAntiddosBgpInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_charge_type": {
-				Required:    true,
 				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 				Description: "Payment Type: Payment Mode: PREPAID (Prepaid) / POSTPAID_BY_MONTH (Postpaid).",
 			},
 
 			"package_type": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "High-defense package types: Enterprise, Standard, StandardPlus (Standard Edition 2.0).",
 			},
 
@@ -41,17 +42,20 @@ func ResourceTencentCloudAntiddosBgpInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
+				ForceNew:    true,
 				Description: "Prepaid configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"period": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Purchase period in months.",
 						},
 						"renew_flag": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "OTIFY_AND_MANUAL_RENEW: Notify the user of the expiration date and do not automatically renew. NOTIFY_AND_AUTO_RENEW: Notify the user of the expiration date and automatically renew. DISABLE_NOTIFY_AND_MANUAL_RENEW: Do not notify the user of the expiration date and do not automatically renew. The default is: Notify the user of the expiration date and do not automatically renew.",
 						},
 					},
@@ -62,37 +66,46 @@ func ResourceTencentCloudAntiddosBgpInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
+				ForceNew:    true,
 				Description: "Enterprise package configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "The region where the high-defense package was purchased.",
 						},
 						"protect_ip_count": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Number of protected IPs.",
 						},
 						"basic_protect_bandwidth": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Guaranteed protection bandwidth.",
 						},
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Service bandwidth scale.",
 						},
 						"elastic_protect_bandwidth": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Elastic bandwidth (Gbps), selectable elastic bandwidth [0, 400, 500, 600, 800, 1000], default is 0.",
 						},
 						"elastic_bandwidth_flag": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Whether to enable elastic service bandwidth. The default value is false.",
 						},
 					},
@@ -103,27 +116,33 @@ func ResourceTencentCloudAntiddosBgpInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
+				ForceNew:    true,
 				Description: "Standard package configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "The region where the high-defense package was purchased.",
 						},
 						"protect_ip_count": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Number of protected IPs.",
 						},
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Protected service bandwidth 50Mbps.",
 						},
 						"elastic_bandwidth_flag": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Whether to enable elastic service bandwidth. The default value is false.",
 						},
 					},
@@ -134,32 +153,39 @@ func ResourceTencentCloudAntiddosBgpInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
+				ForceNew:    true,
 				Description: "Standard Plus package configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "The region where the high-defense package was purchased.",
 						},
 						"protect_count": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Protection Count: TWO_TIMES: Two full-power protections; UNLIMITED: Infinite protections.",
 						},
 						"protect_ip_count": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Number of protected IPs.",
 						},
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "50Mbps protected bandwidth.",
 						},
 						"elastic_bandwidth_flag": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
 							Description: "Whether to enable elastic service bandwidth. The default value is false.",
 						},
 					},
@@ -169,21 +195,31 @@ func ResourceTencentCloudAntiddosBgpInstance() *schema.Resource {
 			"tag_info_list": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Prepaid configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Tag key.",
 						},
 						"tag_value": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Tag value.",
 						},
 					},
 				},
+			},
+
+			// computed
+			"resource_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Bgp instance ID.",
 			},
 		},
 	}
@@ -301,6 +337,22 @@ func resourceTencentCloudAntiddosBgpInstanceCreate(d *schema.ResourceData, meta 
 		request.StandardPlusPackageConfig = &sppcMap
 	}
 
+	if v, ok := d.GetOk("tag_info_list"); ok {
+		for _, item := range v.([]interface{}) {
+			tagListMap := item.(map[string]interface{})
+			tag := antiddos.TagInfo{}
+			if v, ok := tagListMap["tag_key"]; ok {
+				tag.TagKey = helper.String(v.(string))
+			}
+
+			if v, ok := tagListMap["tag_value"]; ok {
+				tag.TagValue = helper.String(v.(string))
+			}
+
+			request.TagInfoList = append(request.TagInfoList, &tag)
+		}
+	}
+
 	request.InstanceCount = helper.IntUint64(1)
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAntiddosClient().CreateBgpInstanceWithContext(ctx, request)
@@ -337,9 +389,10 @@ func resourceTencentCloudAntiddosBgpInstanceRead(d *schema.ResourceData, meta in
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service = AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceChargeType string
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
@@ -361,25 +414,28 @@ func resourceTencentCloudAntiddosBgpInstanceRead(d *schema.ResourceData, meta in
 		return nil
 	}
 
-	if respData.InstanceChargePrepaid != nil {
-		_ = d.Set("instance_charge_type", *respData.InstanceChargePrepaid)
+	if respData.InstanceChargeType != nil {
+		_ = d.Set("instance_charge_type", *respData.InstanceChargeType)
+		instanceChargeType = *respData.InstanceChargeType
 	}
 
 	if respData.PackageType != nil {
 		_ = d.Set("package_type", *respData.PackageType)
 	}
 
-	if respData.InstanceChargePrepaid != nil {
-		icpMap := map[string]interface{}{}
-		if respData.InstanceChargePrepaid.Period != nil {
-			icpMap["period"] = *respData.InstanceChargePrepaid.Period
-		}
+	if instanceChargeType == "PREPAID" {
+		if respData.InstanceChargePrepaid != nil {
+			dMap := make(map[string]interface{}, 0)
+			if respData.InstanceChargePrepaid.Period != nil {
+				dMap["period"] = *respData.InstanceChargePrepaid.Period
+			}
 
-		if respData.InstanceChargePrepaid.RenewFlag != nil {
-			icpMap["renew_flag"] = *respData.InstanceChargePrepaid.RenewFlag
-		}
+			if respData.InstanceChargePrepaid.RenewFlag != nil {
+				dMap["renew_flag"] = *respData.InstanceChargePrepaid.RenewFlag
+			}
 
-		_ = d.Set("instance_charge_prepaid", []interface{}{icpMap})
+			_ = d.Set("instance_charge_prepaid", []interface{}{dMap})
+		}
 	}
 
 	if respData.EnterprisePackageConfig != nil {
@@ -475,19 +531,16 @@ func resourceTencentCloudAntiddosBgpInstanceRead(d *schema.ResourceData, meta in
 		_ = d.Set("tag_info_list", tagInfoList)
 	}
 
+	if respData.InstanceId != nil {
+		_ = d.Set("resource_id", *respData.InstanceId)
+	}
+
 	return nil
-}
-
-func resourceTencentCloudAntiddosBgpInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_antiddos_bgp_instance.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	return resourceTencentCloudAntiddosBgpInstanceRead(d, meta)
 }
 
 func resourceTencentCloudAntiddosBgpInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_antiddos_bgp_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	return nil
+	return fmt.Errorf("tencentcloud AntiDDoS bgp instance not supported delete, please contact the work order for processing")
 }

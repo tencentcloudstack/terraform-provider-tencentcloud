@@ -31,6 +31,18 @@ func TestAccTencentCloudAntiddosBgpInstanceResource_basic(t *testing.T) {
 
 const testAccAntiddosBgpInstance = `
 resource "tencentcloud_antiddos_bgp_instance" "example" {
-  
+  instance_charge_type = "POSTPAID_BY_MONTH"
+  package_type         = "Standard"
+  standard_package_config {
+    region                 = "ap-guangzhou"
+    protect_ip_count       = 1
+    bandwidth              = 100
+    elastic_bandwidth_flag = true
+  }
+
+  tag_info_list {
+    tag_key   = "createBy"
+    tag_value = "Terraform"
+  }
 }
 `
