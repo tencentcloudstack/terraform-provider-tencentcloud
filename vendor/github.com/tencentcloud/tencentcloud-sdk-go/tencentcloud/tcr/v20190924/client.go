@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ func (c *Client) BatchDeleteImagePersonalWithContext(ctx context.Context, reques
     if request == nil {
         request = NewBatchDeleteImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "BatchDeleteImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchDeleteImagePersonal require credential")
@@ -143,6 +144,7 @@ func (c *Client) BatchDeleteRepositoryPersonalWithContext(ctx context.Context, r
     if request == nil {
         request = NewBatchDeleteRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "BatchDeleteRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchDeleteRepositoryPersonal require credential")
@@ -222,6 +224,7 @@ func (c *Client) CheckInstanceWithContext(ctx context.Context, request *CheckIns
     if request == nil {
         request = NewCheckInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CheckInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckInstance require credential")
@@ -301,6 +304,7 @@ func (c *Client) CheckInstanceNameWithContext(ctx context.Context, request *Chec
     if request == nil {
         request = NewCheckInstanceNameRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CheckInstanceName")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckInstanceName require credential")
@@ -362,6 +366,7 @@ func (c *Client) CreateApplicationTriggerPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewCreateApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateApplicationTriggerPersonal require credential")
@@ -425,6 +430,7 @@ func (c *Client) CreateImageAccelerationServiceWithContext(ctx context.Context, 
     if request == nil {
         request = NewCreateImageAccelerationServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateImageAccelerationService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateImageAccelerationService require credential")
@@ -488,6 +494,7 @@ func (c *Client) CreateImmutableTagRulesWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateImmutableTagRules require credential")
@@ -581,6 +588,7 @@ func (c *Client) CreateInstanceWithContext(ctx context.Context, request *CreateI
     if request == nil {
         request = NewCreateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstance require credential")
@@ -658,6 +666,7 @@ func (c *Client) CreateInstanceCustomizedDomainWithContext(ctx context.Context, 
     if request == nil {
         request = NewCreateInstanceCustomizedDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInstanceCustomizedDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceCustomizedDomain require credential")
@@ -721,6 +730,7 @@ func (c *Client) CreateInstanceTokenWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceToken require credential")
@@ -804,6 +814,7 @@ func (c *Client) CreateInternalEndpointDnsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateInternalEndpointDnsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInternalEndpointDns")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInternalEndpointDns require credential")
@@ -875,6 +886,7 @@ func (c *Client) CreateMultipleSecurityPolicyWithContext(ctx context.Context, re
     if request == nil {
         request = NewCreateMultipleSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateMultipleSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateMultipleSecurityPolicy require credential")
@@ -958,6 +970,7 @@ func (c *Client) CreateNamespaceWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNamespace require credential")
@@ -1021,6 +1034,7 @@ func (c *Client) CreateNamespacePersonalWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateNamespacePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateNamespacePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNamespacePersonal require credential")
@@ -1098,6 +1112,7 @@ func (c *Client) CreateReplicationInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateReplicationInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateReplicationInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateReplicationInstance require credential")
@@ -1169,6 +1184,7 @@ func (c *Client) CreateRepositoryWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateRepositoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateRepository")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRepository require credential")
@@ -1226,6 +1242,7 @@ func (c *Client) CreateRepositoryPersonalWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRepositoryPersonal require credential")
@@ -1289,6 +1306,7 @@ func (c *Client) CreateSecurityPolicyWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSecurityPolicy require credential")
@@ -1350,6 +1368,7 @@ func (c *Client) CreateServiceAccountWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateServiceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateServiceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateServiceAccount require credential")
@@ -1423,6 +1442,7 @@ func (c *Client) CreateSignatureWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateSignatureRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateSignature")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSignature require credential")
@@ -1478,6 +1498,7 @@ func (c *Client) CreateSignaturePolicyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateSignaturePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateSignaturePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSignaturePolicy require credential")
@@ -1549,6 +1570,7 @@ func (c *Client) CreateTagRetentionExecutionWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateTagRetentionExecutionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateTagRetentionExecution")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTagRetentionExecution require credential")
@@ -1626,6 +1648,7 @@ func (c *Client) CreateTagRetentionRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateTagRetentionRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateTagRetentionRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTagRetentionRule require credential")
@@ -1679,6 +1702,7 @@ func (c *Client) CreateUserPersonalWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateUserPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateUserPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUserPersonal require credential")
@@ -1740,6 +1764,7 @@ func (c *Client) CreateWebhookTriggerWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateWebhookTrigger require credential")
@@ -1793,6 +1818,7 @@ func (c *Client) DeleteApplicationTriggerPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewDeleteApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteApplicationTriggerPersonal require credential")
@@ -1864,6 +1890,7 @@ func (c *Client) DeleteImageWithContext(ctx context.Context, request *DeleteImag
     if request == nil {
         request = NewDeleteImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImage require credential")
@@ -1925,6 +1952,7 @@ func (c *Client) DeleteImageAccelerateServiceWithContext(ctx context.Context, re
     if request == nil {
         request = NewDeleteImageAccelerateServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImageAccelerateService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImageAccelerateService require credential")
@@ -1974,6 +2002,7 @@ func (c *Client) DeleteImageLifecycleGlobalPersonalWithContext(ctx context.Conte
     if request == nil {
         request = NewDeleteImageLifecycleGlobalPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImageLifecycleGlobalPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImageLifecycleGlobalPersonal require credential")
@@ -2029,6 +2058,7 @@ func (c *Client) DeleteImagePersonalWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImagePersonal require credential")
@@ -2088,6 +2118,7 @@ func (c *Client) DeleteImmutableTagRulesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImmutableTagRules require credential")
@@ -2157,6 +2188,7 @@ func (c *Client) DeleteInstanceWithContext(ctx context.Context, request *DeleteI
     if request == nil {
         request = NewDeleteInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstance require credential")
@@ -2232,6 +2264,7 @@ func (c *Client) DeleteInstanceCustomizedDomainWithContext(ctx context.Context, 
     if request == nil {
         request = NewDeleteInstanceCustomizedDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInstanceCustomizedDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstanceCustomizedDomain require credential")
@@ -2293,6 +2326,7 @@ func (c *Client) DeleteInstanceTokenWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstanceToken require credential")
@@ -2368,6 +2402,7 @@ func (c *Client) DeleteInternalEndpointDnsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteInternalEndpointDnsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInternalEndpointDns")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInternalEndpointDns require credential")
@@ -2429,6 +2464,7 @@ func (c *Client) DeleteMultipleSecurityPolicyWithContext(ctx context.Context, re
     if request == nil {
         request = NewDeleteMultipleSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteMultipleSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMultipleSecurityPolicy require credential")
@@ -2514,6 +2550,7 @@ func (c *Client) DeleteNamespaceWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNamespace require credential")
@@ -2571,6 +2608,7 @@ func (c *Client) DeleteNamespacePersonalWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteNamespacePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteNamespacePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNamespacePersonal require credential")
@@ -2636,6 +2674,7 @@ func (c *Client) DeleteReplicationInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteReplicationInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteReplicationInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteReplicationInstance require credential")
@@ -2644,6 +2683,80 @@ func (c *Client) DeleteReplicationInstanceWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDeleteReplicationInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteReplicationRuleRequest() (request *DeleteReplicationRuleRequest) {
+    request = &DeleteReplicationRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DeleteReplicationRule")
+    
+    
+    return
+}
+
+func NewDeleteReplicationRuleResponse() (response *DeleteReplicationRuleResponse) {
+    response = &DeleteReplicationRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteReplicationRule
+// 删除实例同步规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteReplicationRule(request *DeleteReplicationRuleRequest) (response *DeleteReplicationRuleResponse, err error) {
+    return c.DeleteReplicationRuleWithContext(context.Background(), request)
+}
+
+// DeleteReplicationRule
+// 删除实例同步规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteReplicationRuleWithContext(ctx context.Context, request *DeleteReplicationRuleRequest) (response *DeleteReplicationRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteReplicationRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteReplicationRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteReplicationRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteReplicationRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -2707,6 +2820,7 @@ func (c *Client) DeleteRepositoryWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteRepositoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteRepository")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRepository require credential")
@@ -2762,6 +2876,7 @@ func (c *Client) DeleteRepositoryPersonalWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRepositoryPersonal require credential")
@@ -2835,6 +2950,7 @@ func (c *Client) DeleteRepositoryTagsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteRepositoryTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteRepositoryTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRepositoryTags require credential")
@@ -2906,6 +3022,7 @@ func (c *Client) DeleteSecurityPolicyWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSecurityPolicy require credential")
@@ -2963,6 +3080,7 @@ func (c *Client) DeleteServiceAccountWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteServiceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteServiceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteServiceAccount require credential")
@@ -3042,6 +3160,7 @@ func (c *Client) DeleteSignaturePolicyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteSignaturePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteSignaturePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSignaturePolicy require credential")
@@ -3117,6 +3236,7 @@ func (c *Client) DeleteTagRetentionRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteTagRetentionRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteTagRetentionRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTagRetentionRule require credential")
@@ -3182,6 +3302,7 @@ func (c *Client) DeleteWebhookTriggerWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWebhookTrigger require credential")
@@ -3233,6 +3354,7 @@ func (c *Client) DescribeApplicationTriggerLogPersonalWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeApplicationTriggerLogPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeApplicationTriggerLogPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeApplicationTriggerLogPersonal require credential")
@@ -3286,6 +3408,7 @@ func (c *Client) DescribeApplicationTriggerPersonalWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeApplicationTriggerPersonal require credential")
@@ -3341,6 +3464,7 @@ func (c *Client) DescribeChartDownloadInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeChartDownloadInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeChartDownloadInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeChartDownloadInfo require credential")
@@ -3412,6 +3536,7 @@ func (c *Client) DescribeExternalEndpointStatusWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeExternalEndpointStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeExternalEndpointStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeExternalEndpointStatus require credential")
@@ -3463,6 +3588,7 @@ func (c *Client) DescribeFavorRepositoryPersonalWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeFavorRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeFavorRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFavorRepositoryPersonal require credential")
@@ -3526,6 +3652,7 @@ func (c *Client) DescribeGCJobsWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeGCJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeGCJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGCJobs require credential")
@@ -3587,6 +3714,7 @@ func (c *Client) DescribeImageAccelerateServiceWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeImageAccelerateServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageAccelerateService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageAccelerateService require credential")
@@ -3642,6 +3770,7 @@ func (c *Client) DescribeImageFilterPersonalWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeImageFilterPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageFilterPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageFilterPersonal require credential")
@@ -3691,6 +3820,7 @@ func (c *Client) DescribeImageLifecycleGlobalPersonalWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeImageLifecycleGlobalPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageLifecycleGlobalPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageLifecycleGlobalPersonal require credential")
@@ -3742,6 +3872,7 @@ func (c *Client) DescribeImageLifecyclePersonalWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeImageLifecyclePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageLifecyclePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageLifecyclePersonal require credential")
@@ -3819,6 +3950,7 @@ func (c *Client) DescribeImageManifestsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeImageManifestsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageManifests")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageManifests require credential")
@@ -3874,6 +4006,7 @@ func (c *Client) DescribeImagePersonalWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImagePersonal require credential")
@@ -3953,6 +4086,7 @@ func (c *Client) DescribeImagesWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImages require credential")
@@ -4018,6 +4152,7 @@ func (c *Client) DescribeImmutableTagRulesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImmutableTagRules require credential")
@@ -4095,6 +4230,7 @@ func (c *Client) DescribeInstanceAllNamespacesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceAllNamespacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceAllNamespaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceAllNamespaces require credential")
@@ -4166,6 +4302,7 @@ func (c *Client) DescribeInstanceCustomizedDomainWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeInstanceCustomizedDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceCustomizedDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceCustomizedDomain require credential")
@@ -4227,6 +4364,7 @@ func (c *Client) DescribeInstanceStatusWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceStatus require credential")
@@ -4286,6 +4424,7 @@ func (c *Client) DescribeInstanceTokenWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceToken require credential")
@@ -4353,6 +4492,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -4422,6 +4562,7 @@ func (c *Client) DescribeInternalEndpointDnsStatusWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeInternalEndpointDnsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInternalEndpointDnsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternalEndpointDnsStatus require credential")
@@ -4483,6 +4624,7 @@ func (c *Client) DescribeInternalEndpointsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeInternalEndpointsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInternalEndpoints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternalEndpoints require credential")
@@ -4536,6 +4678,7 @@ func (c *Client) DescribeNamespacePersonalWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeNamespacePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeNamespacePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNamespacePersonal require credential")
@@ -4623,6 +4766,7 @@ func (c *Client) DescribeNamespacesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeNamespacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeNamespaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNamespaces require credential")
@@ -4682,6 +4826,7 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRegions require credential")
@@ -4743,6 +4888,7 @@ func (c *Client) DescribeReplicationInstanceCreateTasksWithContext(ctx context.C
     if request == nil {
         request = NewDescribeReplicationInstanceCreateTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationInstanceCreateTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationInstanceCreateTasks require credential")
@@ -4804,6 +4950,7 @@ func (c *Client) DescribeReplicationInstanceSyncStatusWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeReplicationInstanceSyncStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationInstanceSyncStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationInstanceSyncStatus require credential")
@@ -4869,6 +5016,7 @@ func (c *Client) DescribeReplicationInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeReplicationInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationInstances require credential")
@@ -4877,6 +5025,62 @@ func (c *Client) DescribeReplicationInstancesWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDescribeReplicationInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeReplicationPoliciesRequest() (request *DescribeReplicationPoliciesRequest) {
+    request = &DescribeReplicationPoliciesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationPolicies")
+    
+    
+    return
+}
+
+func NewDescribeReplicationPoliciesResponse() (response *DescribeReplicationPoliciesResponse) {
+    response = &DescribeReplicationPoliciesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeReplicationPolicies
+// 获取实例同步规则列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeReplicationPolicies(request *DescribeReplicationPoliciesRequest) (response *DescribeReplicationPoliciesResponse, err error) {
+    return c.DescribeReplicationPoliciesWithContext(context.Background(), request)
+}
+
+// DescribeReplicationPolicies
+// 获取实例同步规则列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeReplicationPoliciesWithContext(ctx context.Context, request *DescribeReplicationPoliciesRequest) (response *DescribeReplicationPoliciesResponse, err error) {
+    if request == nil {
+        request = NewDescribeReplicationPoliciesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationPolicies")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeReplicationPolicies require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeReplicationPoliciesResponse()
     err = c.Send(request, response)
     return
 }
@@ -4948,6 +5152,7 @@ func (c *Client) DescribeRepositoriesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeRepositoriesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositories")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositories require credential")
@@ -5001,6 +5206,7 @@ func (c *Client) DescribeRepositoryFilterPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeRepositoryFilterPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositoryFilterPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositoryFilterPersonal require credential")
@@ -5056,6 +5262,7 @@ func (c *Client) DescribeRepositoryOwnerPersonalWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeRepositoryOwnerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositoryOwnerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositoryOwnerPersonal require credential")
@@ -5109,6 +5316,7 @@ func (c *Client) DescribeRepositoryPersonalWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositoryPersonal require credential")
@@ -5182,6 +5390,7 @@ func (c *Client) DescribeSecurityPoliciesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSecurityPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeSecurityPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityPolicies require credential")
@@ -5241,6 +5450,7 @@ func (c *Client) DescribeServiceAccountsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeServiceAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeServiceAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeServiceAccounts require credential")
@@ -5316,6 +5526,7 @@ func (c *Client) DescribeTagRetentionExecutionWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeTagRetentionExecutionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeTagRetentionExecution")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagRetentionExecution require credential")
@@ -5389,6 +5600,7 @@ func (c *Client) DescribeTagRetentionExecutionTaskWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeTagRetentionExecutionTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeTagRetentionExecutionTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagRetentionExecutionTask require credential")
@@ -5468,6 +5680,7 @@ func (c *Client) DescribeTagRetentionRulesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeTagRetentionRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeTagRetentionRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagRetentionRules require credential")
@@ -5517,6 +5730,7 @@ func (c *Client) DescribeUserQuotaPersonalWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeUserQuotaPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeUserQuotaPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUserQuotaPersonal require credential")
@@ -5584,6 +5798,7 @@ func (c *Client) DescribeWebhookTriggerWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebhookTrigger require credential")
@@ -5649,6 +5864,7 @@ func (c *Client) DescribeWebhookTriggerLogWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeWebhookTriggerLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeWebhookTriggerLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebhookTriggerLog require credential")
@@ -5706,6 +5922,7 @@ func (c *Client) DownloadHelmChartWithContext(ctx context.Context, request *Down
     if request == nil {
         request = NewDownloadHelmChartRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DownloadHelmChart")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DownloadHelmChart require credential")
@@ -5781,6 +5998,7 @@ func (c *Client) DuplicateImageWithContext(ctx context.Context, request *Duplica
     if request == nil {
         request = NewDuplicateImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DuplicateImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DuplicateImage require credential")
@@ -5836,6 +6054,7 @@ func (c *Client) DuplicateImagePersonalWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDuplicateImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DuplicateImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DuplicateImagePersonal require credential")
@@ -5897,6 +6116,7 @@ func (c *Client) ManageExternalEndpointWithContext(ctx context.Context, request 
     if request == nil {
         request = NewManageExternalEndpointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageExternalEndpoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageExternalEndpoint require credential")
@@ -5946,6 +6166,7 @@ func (c *Client) ManageImageLifecycleGlobalPersonalWithContext(ctx context.Conte
     if request == nil {
         request = NewManageImageLifecycleGlobalPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageImageLifecycleGlobalPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageImageLifecycleGlobalPersonal require credential")
@@ -6021,6 +6242,7 @@ func (c *Client) ManageInternalEndpointWithContext(ctx context.Context, request 
     if request == nil {
         request = NewManageInternalEndpointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageInternalEndpoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageInternalEndpoint require credential")
@@ -6096,6 +6318,7 @@ func (c *Client) ManageReplicationWithContext(ctx context.Context, request *Mana
     if request == nil {
         request = NewManageReplicationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageReplication")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageReplication require credential")
@@ -6153,6 +6376,7 @@ func (c *Client) ModifyApplicationTriggerPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewModifyApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyApplicationTriggerPersonal require credential")
@@ -6212,6 +6436,7 @@ func (c *Client) ModifyImmutableTagRulesWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyImmutableTagRules require credential")
@@ -6279,6 +6504,7 @@ func (c *Client) ModifyInstanceWithContext(ctx context.Context, request *ModifyI
     if request == nil {
         request = NewModifyInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstance require credential")
@@ -6340,6 +6566,7 @@ func (c *Client) ModifyInstanceTokenWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceToken require credential")
@@ -6413,6 +6640,7 @@ func (c *Client) ModifyNamespaceWithContext(ctx context.Context, request *Modify
     if request == nil {
         request = NewModifyNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNamespace require credential")
@@ -6482,6 +6710,7 @@ func (c *Client) ModifyRepositoryWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyRepositoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyRepository")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRepository require credential")
@@ -6537,6 +6766,7 @@ func (c *Client) ModifyRepositoryAccessPersonalWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyRepositoryAccessPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyRepositoryAccessPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRepositoryAccessPersonal require credential")
@@ -6592,6 +6822,7 @@ func (c *Client) ModifyRepositoryInfoPersonalWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyRepositoryInfoPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyRepositoryInfoPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRepositoryInfoPersonal require credential")
@@ -6653,6 +6884,7 @@ func (c *Client) ModifySecurityPolicyWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifySecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifySecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifySecurityPolicy require credential")
@@ -6710,6 +6942,7 @@ func (c *Client) ModifyServiceAccountWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyServiceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyServiceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyServiceAccount require credential")
@@ -6767,6 +7000,7 @@ func (c *Client) ModifyServiceAccountPasswordWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyServiceAccountPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyServiceAccountPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyServiceAccountPassword require credential")
@@ -6842,6 +7076,7 @@ func (c *Client) ModifyTagRetentionRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyTagRetentionRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyTagRetentionRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTagRetentionRule require credential")
@@ -6895,6 +7130,7 @@ func (c *Client) ModifyUserPasswordPersonalWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyUserPasswordPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyUserPasswordPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUserPasswordPersonal require credential")
@@ -6960,6 +7196,7 @@ func (c *Client) ModifyWebhookTriggerWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebhookTrigger require credential")
@@ -7037,6 +7274,7 @@ func (c *Client) RenewInstanceWithContext(ctx context.Context, request *RenewIns
     if request == nil {
         request = NewRenewInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "RenewInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewInstance require credential")
@@ -7088,6 +7326,7 @@ func (c *Client) ValidateNamespaceExistPersonalWithContext(ctx context.Context, 
     if request == nil {
         request = NewValidateNamespaceExistPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ValidateNamespaceExistPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ValidateNamespaceExistPersonal require credential")
@@ -7141,6 +7380,7 @@ func (c *Client) ValidateRepositoryExistPersonalWithContext(ctx context.Context,
     if request == nil {
         request = NewValidateRepositoryExistPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ValidateRepositoryExistPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ValidateRepositoryExistPersonal require credential")

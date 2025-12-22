@@ -1868,6 +1868,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcr_create_image_signature_operation":                                     tcr.ResourceTencentCloudTcrCreateImageSignatureOperation(),
 			"tencentcloud_tcr_tag_retention_execution_config":                                       tcr.ResourceTencentCloudTcrTagRetentionExecutionConfig(),
 			"tencentcloud_tcr_service_account":                                                      tcr.ResourceTencentCloudTcrServiceAccount(),
+			"tencentcloud_tcr_replication":                                                          tcr.ResourceTencentCloudTcrReplication(),
 			"tencentcloud_tdmq_instance":                                                            tpulsar.ResourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                                                           tpulsar.ResourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                                               tpulsar.ResourceTencentCloudTdmqTopic(),
