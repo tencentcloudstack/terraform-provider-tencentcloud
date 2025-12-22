@@ -1323,7 +1323,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.547
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.1142
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.3.16
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss v1.1.50

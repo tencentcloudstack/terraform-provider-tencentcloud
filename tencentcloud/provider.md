@@ -1176,6 +1176,7 @@ tencentcloud_tcr_delete_image_operation
 tencentcloud_tcr_create_image_signature_operation
 tencentcloud_tcr_tag_retention_execution_config
 tencentcloud_tcr_service_account
+tencentcloud_tcr_replication
 
 Video on Demand(VOD)
 Data Source
