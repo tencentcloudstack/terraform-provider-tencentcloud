@@ -2491,3 +2491,69 @@ func (me *AntiddosService) DescribeAntiddosBgpInstancesById(ctx context.Context,
 	ret = response.Response.BGPInstanceList[0]
 	return
 }
+
+func (me *AntiddosService) DescribeAntiddosBgpInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*antiddos.BGPInstanceInfo, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = antiddos.NewDescribeBgpInstancesRequest()
+		response = antiddos.NewDescribeBgpInstancesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FilterRegion" {
+			request.FilterRegion = v.(*string)
+		}
+		if k == "FilterInstanceIdList" {
+			request.FilterInstanceIdList = v.([]*string)
+		}
+		if k == "FilterTag" {
+			request.FilterTag = v.([]*antiddos.TagInfo)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseAntiddosClient().DescribeBgpInstances(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.BGPInstanceList == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe bgp instances failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		ret = append(ret, response.Response.BGPInstanceList...)
+		if len(response.Response.BGPInstanceList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

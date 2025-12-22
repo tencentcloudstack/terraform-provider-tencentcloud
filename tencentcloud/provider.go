@@ -1285,6 +1285,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_bgp_biz_trend":                                antiddos.DataSourceTencentCloudAntiddosBgpBizTrend(),
 			"tencentcloud_antiddos_list_listener":                                antiddos.DataSourceTencentCloudAntiddosListListener(),
 			"tencentcloud_antiddos_overview_attack_trend":                        antiddos.DataSourceTencentCloudAntiddosOverviewAttackTrend(),
+			"tencentcloud_antiddos_bgp_instances":                                antiddos.DataSourceTencentCloudAntiddosBgpInstances(),
 			"tencentcloud_clickhouse_spec":                                       cdwch.DataSourceTencentCloudClickhouseSpec(),
 			"tencentcloud_clickhouse_instance_shards":                            cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
 			"tencentcloud_clickhouse_instance_nodes":                             cdwch.DataSourceTencentCloudClickhouseInstanceNodes(),
