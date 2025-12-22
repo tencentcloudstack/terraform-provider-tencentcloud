@@ -1,3 +1,15 @@
+## 1.82.48(Decmber 22, 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_antiddos_bgp_instances` ([#3662](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3662))
+* **New Resource:** `tencentcloud_antiddos_bgp_instance` ([#3662](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3662))
+* **New Resource:** `tencentcloud_tcr_replication` ([#3668](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3668))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_schedule: support `disable_update_desired_capacity` ([#3667](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3667))
+
 ## 1.82.47(Decmber 19, 2025)
 
 ENHANCEMENTS:
