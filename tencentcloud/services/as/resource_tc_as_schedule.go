@@ -66,6 +66,12 @@ func ResourceTencentCloudAsSchedule() *schema.Resource {
 				Optional:    true,
 				Description: "The time when recurring future actions will start. Start time is specified by the user following the Unix cron syntax format. And this argument should be set with end_time together.",
 			},
+			"disable_update_desired_capacity": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "This flag disables the normal update of the DesiredCapacityproperty that would otherwise occur when a scheduled scaling task is triggered.\nSpecifies whether the scheduled task triggers proactive modification of the DesiredCapacity when the value is True. DesiredCapacity may be modified by the minSize and maxSize mechanism.\nThe following cases assume that DisableUpdateDesiredCapacity is True:\n- When scheduled task triggered, the original DesiredCapacity is 5. The scheduled task changes the minSize to 10, the maxSize to 20, and the DesiredCapacity to 15. Since the DesiredCapacity update is disabled, 15 does not take effect. However, the original DesiredCapacity 5 is less than minSize 10, so the final new DesiredCapacity is 10.\n- When scheduled task triggered, the original DesiredCapacity is 25. The scheduled task changes the minSize to 10 and the maxSize to 20, and the DesiredCapacity to 15. Since the DesiredCapacity update is disabled, 15 does not take effect. However, the original DesiredCapacity 25 is greater than the maxSize 20, so the final new DesiredCapacity is 20.\n- When scheduled task triggered, the original DesiredCapacity is 13. The scheduled task changes the minSize to 10 and the maxSize to 20, and the DesiredCapacity to 15. Since the DesiredCapacity update is disabled, 15 does not take effect, and the DesiredCapacity is still 13.",
+			},
 		},
 	}
 }
@@ -95,6 +101,10 @@ func resourceTencentCloudAsScheduleCreate(d *schema.ResourceData, meta interface
 		if _, ok := d.GetOk("recurrence"); ok {
 			return fmt.Errorf("end_time and recurrence must be specified at the same time.")
 		}
+	}
+
+	if v, ok := d.GetOkExists("disable_update_desired_capacity"); ok {
+		request.DisableUpdateDesiredCapacity = helper.Bool(v.(bool))
 	}
 
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateScheduledAction(request)
@@ -148,6 +158,9 @@ func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}
 		if scheduledAction.Recurrence != nil {
 			_ = d.Set("recurrence", *scheduledAction.Recurrence)
 		}
+		if scheduledAction.DisableUpdateDesiredCapacity != nil {
+			_ = d.Set("disable_update_desired_capacity", *scheduledAction.DisableUpdateDesiredCapacity)
+		}
 		return nil
 	})
 	if err != nil {
@@ -187,7 +200,9 @@ func resourceTencentCloudAsScheduleUpdate(d *schema.ResourceData, meta interface
 		request.Recurrence = helper.String(d.Get("recurrence").(string))
 		request.EndTime = helper.String(d.Get("end_time").(string))
 	}
-
+	if d.HasChange("disable_update_desired_capacity") {
+		request.DisableUpdateDesiredCapacity = helper.Bool(d.Get("disable_update_desired_capacity").(bool))
+	}
 	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyScheduledAction(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

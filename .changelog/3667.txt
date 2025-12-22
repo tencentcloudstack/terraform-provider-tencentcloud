@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_as_schedule: support `disable_update_desired_capacity`
+```
