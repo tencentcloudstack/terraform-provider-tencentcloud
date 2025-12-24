@@ -224,8 +224,8 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 	}
 
 	if respData == nil || len(respData.Tasks) < 1 {
+		log.Printf("[WARN]%s resource `tencentcloud_cls_cloud_product_log_task_v2` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `cls_cloud_product_log_task` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
