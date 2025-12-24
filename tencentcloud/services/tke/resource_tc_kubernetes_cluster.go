@@ -96,7 +96,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether upgrade all instances when cluster_version change. Default is false.",
+				Description: "Indicates whether upgrade all cluster instances. Default is false.",
 			},
 
 			"cluster_ipvs": {
