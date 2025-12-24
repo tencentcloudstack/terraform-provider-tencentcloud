@@ -2,6 +2,7 @@ package vpc
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -261,8 +262,7 @@ func resourceTencentCloudVpcRoutePolicyEntriesUpdate(d *schema.ResourceData, met
 
 	if respData == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_vpc_route_policy_entries` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		d.SetId("")
-		return nil
+		return fmt.Errorf("resource `tencentcloud_vpc_route_policy_entries` [%s] not found, please check if it has been deleted.", d.Id())
 	}
 
 	if respData.RoutePolicyDescription != nil {

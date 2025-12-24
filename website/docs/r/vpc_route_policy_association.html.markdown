@@ -25,9 +25,9 @@ resource "tencentcloud_vpc_route_policy_association" "example" {
 
 The following arguments are supported:
 
+* `priority` - (Required, Int) Priority.
 * `route_policy_id` - (Required, String, ForceNew) Specifies the unique ID of the route reception policy.
 * `route_table_id` - (Required, String, ForceNew) Unique route table ID.
-* `priority` - (Optional, Int) Priority.
 
 ## Attributes Reference
 

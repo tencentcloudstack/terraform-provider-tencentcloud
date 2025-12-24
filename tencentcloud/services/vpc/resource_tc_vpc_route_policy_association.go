@@ -38,7 +38,7 @@ func ResourceTencentCloudVpcRoutePolicyAssociation() *schema.Resource {
 			},
 			"priority": {
 				Type:        schema.TypeInt,
-				Optional:    true,
+				Required:    true,
 				Description: "Priority.",
 			},
 		},
