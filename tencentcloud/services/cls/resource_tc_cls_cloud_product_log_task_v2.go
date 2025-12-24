@@ -249,8 +249,10 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 			return err
 		}
 
-		if info.LogsetName != nil {
-			_ = d.Set("logset_name", info.LogsetName)
+		if info != nil {
+			if info.LogsetName != nil {
+				_ = d.Set("logset_name", info.LogsetName)
+			}
 		}
 	}
 
@@ -261,8 +263,10 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 			return err
 		}
 
-		if info.TopicName != nil {
-			_ = d.Set("topic_name", info.TopicName)
+		if info != nil {
+			if info.TopicName != nil {
+				_ = d.Set("topic_name", info.TopicName)
+			}
 		}
 	}
 
