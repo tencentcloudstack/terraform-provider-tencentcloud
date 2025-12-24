@@ -1386,6 +1386,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_refresh_nat_dc_route":                                                 vpc.ResourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_vpc_private_nat_gateway":                                                  vpc.ResourceTencentCloudVpcPrivateNatGateway(),
 			"tencentcloud_vpc_private_nat_gateway_translation_nat_rule":                             vpc.ResourceTencentCloudVpcPrivateNatGatewayTranslationNatRule(),
+			"tencentcloud_vpc_private_nat_gateway_translation_acl_rule":                             vpc.ResourceTencentCloudVpcPrivateNatGatewayTranslationAclRule(),
 			"tencentcloud_oceanus_job":                                                              oceanus.ResourceTencentCloudOceanusJob(),
 			"tencentcloud_oceanus_job_config":                                                       oceanus.ResourceTencentCloudOceanusJobConfig(),
 			"tencentcloud_oceanus_job_copy":                                                         oceanus.ResourceTencentCloudOceanusJobCopy(),
