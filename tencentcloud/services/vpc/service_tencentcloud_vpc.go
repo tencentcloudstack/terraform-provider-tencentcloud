@@ -8634,3 +8634,136 @@ func (me *VpcService) DescribeVpcPrivateNatGatewayTranslationNatRuleById(ctx con
 
 	return
 }
+
+func (me *VpcService) DescribeVpcRoutePolicyById(ctx context.Context, routePolicyId string) (ret *vpc.RoutePolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeRoutePoliciesRequest()
+	response := vpc.NewDescribeRoutePoliciesResponse()
+	request.RoutePolicyIds = []*string{&routePolicyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeRoutePolicies(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RoutePolicySet == nil || len(result.Response.RoutePolicySet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc route policies failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.RoutePolicySet[0]
+	return
+}
+
+func (me *VpcService) DescribeVpcRoutePolicyEntriesById(ctx context.Context, routePolicyId string) (ret []*vpc.RoutePolicyEntry, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeRoutePolicyEntriesRequest()
+	response := vpc.NewDescribeRoutePolicyEntriesResponse()
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   common.StringPtr("route-policy-id"),
+			Values: common.StringPtrs([]string{routePolicyId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeRoutePolicyEntries(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RoutePolicyEntrySet == nil || len(result.Response.RoutePolicyEntrySet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc route policy entries failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.RoutePolicyEntrySet
+	return
+}
+
+func (me *VpcService) DescribeVpcRoutePolicyAssociationById(ctx context.Context, routePolicyId, routeTableId string) (ret *vpc.RoutePolicyAssociation, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeRoutePoliciesRequest()
+	response := vpc.NewDescribeRoutePoliciesResponse()
+	request.RoutePolicyIds = []*string{&routePolicyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeRoutePolicies(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RoutePolicySet == nil || len(result.Response.RoutePolicySet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc route policies failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	associationSet := response.Response.RoutePolicySet[0].RoutePolicyAssociationSet
+	if associationSet == nil || len(associationSet) == 0 {
+		return
+	}
+
+	for _, item := range associationSet {
+		if item != nil && item.RouteTableId != nil && *item.RouteTableId == routeTableId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}

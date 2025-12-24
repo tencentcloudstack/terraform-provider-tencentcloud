@@ -1325,6 +1325,9 @@ tencentcloud_reserve_ip_address
 tencentcloud_elastic_public_ipv6
 tencentcloud_classic_elastic_public_ipv6
 tencentcloud_elastic_public_ipv6_attachment
+tencentcloud_vpc_route_policy
+tencentcloud_vpc_route_policy_entries
+tencentcloud_vpc_route_policy_association
 
 Private Link(PLS)
 Resource
