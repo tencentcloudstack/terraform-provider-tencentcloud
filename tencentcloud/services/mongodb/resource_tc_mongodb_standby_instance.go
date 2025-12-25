@@ -398,6 +398,10 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 	tagService := svctag.NewTagService(client)
 	region := client.Region
 
+	if d.HasChange("engine_version") {
+		return fmt.Errorf("setting of the field[engine_version] does not support update")
+	}
+
 	d.Partial(true)
 
 	if d.HasChange("memory") || d.HasChange("volume") {
