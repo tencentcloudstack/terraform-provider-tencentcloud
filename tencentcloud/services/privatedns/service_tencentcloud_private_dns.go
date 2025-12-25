@@ -10,6 +10,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 
+	intlSdkError "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -511,6 +512,12 @@ func (me *PrivateDnsService) DescribePrivateDnsRecordById(ctx context.Context, z
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeRecord(request)
 		if e != nil {
+			if sdkError, ok := e.(*intlSdkError.TencentCloudSDKError); ok {
+				if sdkError.Code == "InvalidParameter.RecordNotExist" {
+					return nil
+				}
+			}
+
 			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -538,7 +545,10 @@ func (me *PrivateDnsService) DescribePrivateDnsRecordById(ctx context.Context, z
 		return
 	}
 
-	recordInfo = response.Response.RecordInfo
+	if response != nil && response.Response != nil {
+		recordInfo = response.Response.RecordInfo
+	}
+
 	return
 }
 
