@@ -23,7 +23,7 @@ resource "tencentcloud_bh_asset_sync_job_operation" "example" {
 
 The following arguments are supported:
 
-* `category` - (Required, Int, ForceNew) Asset synchronization category, 1 - host assets, 2 - database assets.
+* `category` - (Required, Int, ForceNew) Asset synchronization category. 1 - host assets, 2 - database assets, 3 - Container assets.
 
 ## Attributes Reference
 

@@ -34,7 +34,7 @@ func ResourceTencentCloudBhDevice() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
-							Description: "Operating system name, can only be Linux, Windows or MySQL.",
+							Description: "The operating system name can only be one of the following: Host (Linux, Windows), Database (MySQL, SQL Server, MariaDB, PostgreSQL, MongoDBReplicaSet, MongoDBSharded, Redis), or Container (TKE, EKS).",
 						},
 						"ip": {
 							Type:        schema.TypeString,
