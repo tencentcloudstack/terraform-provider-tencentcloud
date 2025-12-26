@@ -1232,6 +1232,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_bh_account_groups":                                     bh.DataSourceTencentCloudBhAccountGroups(),
 			"tencentcloud_bh_source_types":                                       bh.DataSourceTencentCloudBhSourceTypes(),
 			"tencentcloud_cwp_machines_simple":                                   cwp.DataSourceTencentCloudCwpMachinesSimple(),
+			"tencentcloud_cwp_machines":                                          cwp.DataSourceTencentCloudCwpMachines(),
 			"tencentcloud_ses_receivers":                                         ses.DataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                                        ses.DataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                                  ses.DataSourceTencentCloudSesEmailIdentities(),

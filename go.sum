@@ -948,8 +948,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860 h1:F3esKB
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860/go.mod h1:NZo1WplQcC314kMlCRUoy8NQju2BnolIJj7NAWgsuhY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1206 h1:tx8L5srClwK2T5dte7yw3N8PfxqtuHbT8fWfUZMOUwk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1206/go.mod h1:zkdrFNYxTFX7E3QRgNVayQi7fq/A1TYRKLkGE8NS0lQ=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762 h1:2egy69SP/wPsmnfozcQVZ6tUY6F6N/TpEe/7xtXrc/8=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762/go.mod h1:1XylIfNUbAzmNqi4XMhwcM3VhmUHdu1OYybOeaJ4sOw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.1.14 h1:OzekWDqgpM5s7K9nIzoLTTmN4rmCOcOqRqMyVH6fh+k=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.1.14/go.mod h1:o0y0YExDcKn9gpuZvdnoUP9LqAdh1AO3j2cKBRsP7uk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.11 h1:MPAXIEszoMhyks18vqcDkMj8nzSV698+lXKfWvQQUg8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.11/go.mod h1:EgkuM4By2dxr2qsJNupW4sX2eWCdepnRR3axxLC0flg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970 h1:qVIRHgG1twsqF4aVN/x2T2yMRfPpsZBTNefDkqzM06M=

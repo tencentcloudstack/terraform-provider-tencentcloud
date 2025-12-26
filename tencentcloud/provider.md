@@ -2386,6 +2386,7 @@ tencentcloud_dasb_asset_sync_job_operation
 Cwp
 Data Source
 tencentcloud_cwp_machines_simple
+tencentcloud_cwp_machines
 
 Resource
 tencentcloud_cwp_license_order

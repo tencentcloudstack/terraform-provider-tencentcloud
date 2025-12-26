@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cwp_machines_simple"
 sidebar_current: "docs-tencentcloud-datasource-cwp_machines_simple"
 description: |-
-  Use this data source to query detailed information of cwp machines_simple
+  Use this data source to query detailed information of CWP machines simple
 ---
 
 # tencentcloud_cwp_machines_simple
 
-Use this data source to query detailed information of cwp machines_simple
+Use this data source to query detailed information of CWP machines simple
 
 ## Example Usage
 

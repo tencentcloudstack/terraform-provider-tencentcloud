@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cwp_license_bind_attachment"
 sidebar_current: "docs-tencentcloud-resource-cwp_license_bind_attachment"
 description: |-
-  Provides a resource to create a cwp license_bind_attachment
+  Provides a resource to create a CWP license bind attachment
 ---
 
 # tencentcloud_cwp_license_bind_attachment
 
-Provides a resource to create a cwp license_bind_attachment
+Provides a resource to create a CWP license bind attachment
 
 ## Example Usage
 
@@ -70,7 +70,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cwp license_bind_attachment can be imported using the id, e.g.
+CWP license bind attachment can be imported using the resourceId#licenseId#quuid#licenseType, e.g.
 
 ```
 terraform import tencentcloud_cwp_license_bind_attachment.example cwplic-ab3edffa#44#2c7e5cce-1cec-4456-8d18-018f160dd987#0
