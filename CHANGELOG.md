@@ -1,3 +1,26 @@
+## 1.82.49(Decmber 26, 2025)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_bh_devices` ([#3681](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3681))
+* **New Data Source:** `tencentcloud_cwp_machines` ([#3676](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3676))
+* **New Resource:** `tencentcloud_vpc_route_policy` ([#3670](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3670))
+* **New Resource:** `tencentcloud_vpc_route_policy_association` ([#3670](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3670))
+* **New Resource:** `tencentcloud_vpc_route_policy_entries` ([#3670](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3670))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_apm_instance: support new params ([#3678](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3678))
+* resource/tencentcloud_bh_asset_sync_job_operation: update doc ([#3680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3680))
+* resource/tencentcloud_bh_device: update doc ([#3680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3680))
+* resource/tencentcloud_cls_cloud_product_log_task_v2: optimiz code logic ([#3672](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3672))
+* resource/tencentcloud_eip_association: update doc ([#3679](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3679))
+* resource/tencentcloud_kubernetes_cluster: update doc ([#3671](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3671))
+* resource/tencentcloud_mongodb_instance: support update `engine_version` ([#3674](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3674))
+* resource/tencentcloud_private_dns_record: optimiz code logic ([#3673](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3673))
+* resource/tencentcloud_route_table_entry: field next_type add new type `GWLB_ENDPOINT` ([#3675](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3675))
+* resource/tencentcloud_vpc_end_point_service: update doc ([#3677](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3677))
+
 ## 1.82.48(Decmber 22, 2025)
 
 FEATURES:
