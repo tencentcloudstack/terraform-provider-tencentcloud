@@ -23,8 +23,8 @@ func ResourceTencentCloudBhAssetSyncJobOperation() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2}),
-				Description:  "Asset synchronization category, 1 - host assets, 2 - database assets.",
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2, 3}),
+				Description:  "Asset synchronization category. 1 - host assets, 2 - database assets, 3 - Container assets.",
 			},
 		},
 	}

@@ -34,7 +34,7 @@ The following arguments are supported:
 The `device_set` object supports the following:
 
 * `ip` - (Required, String, ForceNew) IP address.
-* `os_name` - (Required, String, ForceNew) Operating system name, can only be Linux, Windows or MySQL.
+* `os_name` - (Required, String, ForceNew) The operating system name can only be one of the following: Host (Linux, Windows), Database (MySQL, SQL Server, MariaDB, PostgreSQL, MongoDBReplicaSet, MongoDBSharded, Redis), or Container (TKE, EKS).
 * `port` - (Required, Int) Management port.
 * `ap_code` - (Optional, String, ForceNew) Region to which the asset belongs.
 * `ap_name` - (Optional, String, ForceNew) Region name.
