@@ -1231,6 +1231,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_edge_fw_switches":                                  cfw.DataSourceTencentCloudCfwEdgeFwSwitches(),
 			"tencentcloud_bh_account_groups":                                     bh.DataSourceTencentCloudBhAccountGroups(),
 			"tencentcloud_bh_source_types":                                       bh.DataSourceTencentCloudBhSourceTypes(),
+			"tencentcloud_bh_devices":                                            bh.DataSourceTencentCloudBhDevices(),
 			"tencentcloud_cwp_machines_simple":                                   cwp.DataSourceTencentCloudCwpMachinesSimple(),
 			"tencentcloud_cwp_machines":                                          cwp.DataSourceTencentCloudCwpMachines(),
 			"tencentcloud_ses_receivers":                                         ses.DataSourceTencentCloudSesReceivers(),

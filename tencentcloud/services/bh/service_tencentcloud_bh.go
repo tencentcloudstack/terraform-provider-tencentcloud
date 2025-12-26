@@ -544,3 +544,109 @@ func (me *BhService) DescribeBhUserDirectoryById(ctx context.Context, directoryI
 
 	return
 }
+
+func (me *BhService) DescribeBhDevicesByFilter(ctx context.Context, param map[string]interface{}) (ret []*bhv20230418.Device, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = bhv20230418.NewDescribeDevicesRequest()
+		response = bhv20230418.NewDescribeDevicesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "IdSet" {
+			request.IdSet = v.([]*uint64)
+		}
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+		if k == "Ip" {
+			request.Ip = v.(*string)
+		}
+		if k == "ApCodeSet" {
+			request.ApCodeSet = v.([]*string)
+		}
+		if k == "Kind" {
+			request.Kind = v.(*uint64)
+		}
+		if k == "AuthorizedUserIdSet" {
+			request.AuthorizedUserIdSet = v.([]*uint64)
+		}
+		if k == "ResourceIdSet" {
+			request.ResourceIdSet = v.([]*string)
+		}
+		if k == "KindSet" {
+			request.KindSet = v.([]*uint64)
+		}
+		if k == "ManagedAccount" {
+			request.ManagedAccount = v.(*string)
+		}
+		if k == "DepartmentId" {
+			request.DepartmentId = v.(*string)
+		}
+		if k == "AccountIdSet" {
+			request.AccountIdSet = v.([]*uint64)
+		}
+		if k == "ProviderTypeSet" {
+			request.ProviderTypeSet = v.([]*uint64)
+		}
+		if k == "CloudDeviceStatusSet" {
+			request.CloudDeviceStatusSet = v.([]*uint64)
+		}
+		if k == "TagFilters" {
+			request.TagFilters = v.([]*bhv20230418.TagFilter)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*bhv20230418.Filter)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseBhV20230418Client().DescribeDevices(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.DeviceSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe devices failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.DeviceSet) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.DeviceSet...)
+		if len(response.Response.DeviceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

@@ -2354,6 +2354,7 @@ Bastion Host(BH)
 Data Source
 tencentcloud_bh_account_groups
 tencentcloud_bh_source_types
+tencentcloud_bh_devices
 Resource
 tencentcloud_bh_access_white_list_rule
 tencentcloud_bh_access_white_list_config
