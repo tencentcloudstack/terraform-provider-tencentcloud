@@ -433,6 +433,9 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("mongos_node_num") {
 		return fmt.Errorf("setting of the field[mongos_node_num] does not support update")
 	}
+	if d.HasChange("engine_version") {
+		return fmt.Errorf("setting of the field[engine_version] does not support update")
+	}
 
 	if d.HasChange("mongos_cpu") && d.HasChange("mongos_memory") {
 		if v, ok := d.GetOk("mongos_memory"); ok {

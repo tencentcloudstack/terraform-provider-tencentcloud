@@ -62,7 +62,7 @@ The following arguments are supported:
 
 * `available_zone` - (Required, String, ForceNew) The available zone of the Mongodb.
 * `cluster_type` - (Required, String, ForceNew) Instance schema type.	- REPLSET: Replset cluster;	- SHARD: Shard cluster.
-* `engine_version` - (Required, String, ForceNew) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
+* `engine_version` - (Required, String) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
 - MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.
 - MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.
 - MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.

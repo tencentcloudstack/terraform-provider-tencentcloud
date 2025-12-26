@@ -14,17 +14,17 @@ Provide a resource to create a Mongodb instance.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mongodb_instance" "mongodb" {
-  instance_name  = "mongodb"
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name  = "tf-example"
   memory         = 4
   volume         = 100
-  engine_version = "MONGO_36_WT"
+  engine_version = "MONGO_40_WT"
   machine_type   = "HIO10G"
-  available_zone = "ap-guangzhou-2"
-  vpc_id         = "vpc-xxxxxx"
-  subnet_id      = "subnet-xxxxxx"
+  available_zone = "ap-guangzhou-6"
+  vpc_id         = "vpc-i5yyodl9"
+  subnet_id      = "subnet-hhi88a58"
   project_id     = 0
-  password       = "password1234"
+  password       = "Password@123"
 }
 ```
 
@@ -33,7 +33,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 The following arguments are supported:
 
 * `available_zone` - (Required, String, ForceNew) The available zone of the Mongodb.
-* `engine_version` - (Required, String, ForceNew) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
+* `engine_version` - (Required, String) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
 - MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.
 - MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.
 - MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.
@@ -110,6 +110,6 @@ In addition to all arguments above, the following attributes are exported:
 Mongodb instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mongodb_instance.mongodb cmgo-41s6jwy4
+terraform import tencentcloud_mongodb_instance.example cmgo-41s6jwy4
 ```
 
