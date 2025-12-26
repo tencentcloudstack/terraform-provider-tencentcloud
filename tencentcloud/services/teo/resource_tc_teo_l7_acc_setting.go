@@ -595,6 +595,11 @@ func resourceTencentCloudTeoL7AccSettingRead(d *schema.ResourceData, meta interf
 		_ = d.Set("zone_name", respData.ZoneName)
 	}
 
+	if v, ok := d.GetOk("zone_config"); ok {
+		_ = d.Set("zone_config", v)
+		return nil
+	}
+
 	zoneConfigMap := map[string]interface{}{}
 
 	if respData.ZoneConfig != nil {
