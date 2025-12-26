@@ -80,7 +80,7 @@ func (me *ApmService) DescribeApmAgentById(ctx context.Context, instanceId strin
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.ApmAgent == nil {
+		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("Describe apm agent failed, Response is nil."))
 		}
 
