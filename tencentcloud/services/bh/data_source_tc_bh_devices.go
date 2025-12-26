@@ -149,12 +149,12 @@ func DataSourceTencentCloudBhDevices() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Field to filter.",
+							Description: "Field to filter. Support: BindingStatus, InstanceId, DeviceAccount, VpcId, DomainId, ResourceId, Name, Ip, ManageDimension.",
 						},
 						"values": {
 							Type:        schema.TypeSet,
 							Required:    true,
-							Description: "Filter values for the field. \r\nIf multiple Filters exist, the relationship between Filters is logical AND. \r\nIf multiple Values exist for the same Filter, the relationship between Values under the same Filter is logical OR.",
+							Description: "Filter values for the field. \nIf multiple Filters exist, the relationship between Filters is logical AND. \nIf multiple Values exist for the same Filter, the relationship between Values under the same Filter is logical OR.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

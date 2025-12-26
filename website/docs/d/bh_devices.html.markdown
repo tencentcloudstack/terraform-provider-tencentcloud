@@ -80,7 +80,7 @@ The following arguments are supported:
 
 The `filters` object supports the following:
 
-* `name` - (Required, String) Field to filter.
+* `name` - (Required, String) Field to filter. Support: BindingStatus, InstanceId, DeviceAccount, VpcId, DomainId, ResourceId, Name, Ip, ManageDimension.
 * `values` - (Required, Set) Filter values for the field. 
 If multiple Filters exist, the relationship between Filters is logical AND. 
 If multiple Values exist for the same Filter, the relationship between Values under the same Filter is logical OR.
