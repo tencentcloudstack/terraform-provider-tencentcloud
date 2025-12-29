@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_vcube_application_and_video
+```
+
+```release-note:new-resource
+tencentcloud_vcube_application_and_web_player_license
+```
+
+```release-note:new-resource
+tencentcloud_vcube_renew_video_operation
+```
