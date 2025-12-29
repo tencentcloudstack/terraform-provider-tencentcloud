@@ -98,7 +98,7 @@ func resourceTencentCloudCfwNatPolicyOrderConfigUpdate(d *schema.ResourceData, m
 		uuid    = d.Id()
 	)
 
-	natPolicy, err := service.DescribeCfwNatPolicyById(ctx, uuid)
+	natPolicy, err := service.DescribeCfwNatPolicyOrderConfigById(ctx, uuid)
 	if err != nil {
 		return err
 	}
