@@ -105,6 +105,7 @@ import (
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
+	vcubev20220410 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -247,6 +248,7 @@ type TencentCloudClient struct {
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
 	bhv20230418Conn             *bhv20230418.Client
+	vcubev20220410Conn          *vcubev20220410.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2163,4 +2165,16 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
+}
+
+// UseVcubeV20220410Client return VCUBE client for service
+func (me *TencentCloudClient) UseVcubeV20220410Client() *vcubev20220410.Client {
+	if me.vcubev20220410Conn != nil {
+		return me.vcubev20220410Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.vcubev20220410Conn, _ = vcubev20220410.NewClient(me.Credential, me.Region, cpf)
+	me.vcubev20220410Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.vcubev20220410Conn
 }
