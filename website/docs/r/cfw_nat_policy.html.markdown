@@ -52,6 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `internal_uuid` - Internal ID.
+* `order_index` - Execution order.
 * `uuid` - The unique id corresponding to the rule, no need to fill in when creating the rule.
 
 
