@@ -59,7 +59,7 @@ func ResourceTencentCloudVcubeApplicationAndWebPlayerLicense() *schema.Resource 
 			},
 
 			"application_id": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "User Application ID.",
 			},

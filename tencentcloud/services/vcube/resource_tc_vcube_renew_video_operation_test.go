@@ -26,5 +26,6 @@ func TestAccTencentCloudVcubeRenewVideoOperationResource_basic(t *testing.T) {
 
 const testAccVcubeRenewVideoOperation = `
 resource "tencentcloud_vcube_renew_video_operation" "example" {
+  license_id = 1513
 }
 `

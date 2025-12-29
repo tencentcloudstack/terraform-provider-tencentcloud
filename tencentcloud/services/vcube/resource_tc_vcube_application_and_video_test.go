@@ -33,5 +33,7 @@ func TestAccTencentCloudVcubeApplicationAndVideoResource_basic(t *testing.T) {
 
 const testAccVcubeApplicationAndVideo = `
 resource "tencentcloud_vcube_application_and_video" "example" {
+  app_name  = "tf-example"
+  bundle_id = "com.example.appName"
 }
 `

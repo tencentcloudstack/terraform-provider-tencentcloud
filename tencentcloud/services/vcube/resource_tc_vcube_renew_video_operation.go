@@ -18,7 +18,7 @@ func ResourceTencentCloudVcubeRenewVideoOperation() *schema.Resource {
 		Read:   resourceTencentCloudVcubeRenewVideoOperationRead,
 		Delete: resourceTencentCloudVcubeRenewVideoOperationDelete,
 		Schema: map[string]*schema.Schema{
-			"LicenseId": {
+			"license_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
@@ -39,7 +39,7 @@ func resourceTencentCloudVcubeRenewVideoOperationCreate(d *schema.ResourceData, 
 		licenseId string
 	)
 
-	if v, ok := d.GetOkExists("LicenseId"); ok {
+	if v, ok := d.GetOkExists("license_id"); ok {
 		request.LicenseId = helper.IntUint64(v.(int))
 		licenseId = helper.IntToStr(v.(int))
 	}

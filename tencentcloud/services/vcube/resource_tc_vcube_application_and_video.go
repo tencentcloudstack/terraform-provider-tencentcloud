@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -34,14 +33,14 @@ func ResourceTencentCloudVcubeApplicationAndVideo() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "iOS bundle ID.",
+				Description: "IOS bundle ID. Choose at least one of `bundle_id` and `package_name`.",
 			},
 
 			"package_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Android package name.",
+				Description: "Android package name. Choose at least one of `bundle_id` and `package_name`.",
 			},
 
 			// computed
@@ -64,7 +63,7 @@ func ResourceTencentCloudVcubeApplicationAndVideo() *schema.Resource {
 			},
 
 			"application_id": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "User Application ID.",
 			},
@@ -148,11 +147,6 @@ func resourceTencentCloudVcubeApplicationAndVideoRead(d *schema.ResourceData, me
 		service   = VcubeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		licenseId = d.Id()
 	)
-
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 0 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
 
 	respData, err := service.DescribeVcubeApplicationAndVideoById(ctx, licenseId)
 	if err != nil {
