@@ -69,6 +69,7 @@ The following arguments are supported:
 - MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.
 - MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.
 - MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.
+- MONGO_80_WT: version of the MongoDB 8.0 WiredTiger storage engine.
 * `father_instance_id` - (Required, String, ForceNew) Indicates the main instance ID of readonly instances.
 * `father_instance_region` - (Required, String, ForceNew) Indicates the region of main instance.
 * `instance_name` - (Required, String) Name of the Mongodb instance.
