@@ -1,3 +1,18 @@
+## 1.82.50(Decmber 30, 2025)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vcube_application_and_video` ([#3682](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3682))
+* **New Resource:** `tencentcloud_vcube_application_and_web_player_license` ([#3682](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3682))
+* **New Resource:** `tencentcloud_vcube_renew_video_operation` ([#3682](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3682))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_postgresql_instances: update doc ([#3685](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3685))
+* resource/tencentcloud_kubernetes_serverless_node_pool: optimiz code logic ([#3688](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3688))
+* resource/tencentcloud_mongodb_instance: update doc ([#3683](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3683))
+* resource/tencentcloud_tcr_manage_replication_operation: has been deprecated ([#3687](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3687))
+
 ## 1.82.49(Decmber 26, 2025)
 
 FEATURES:
