@@ -122,6 +122,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss v1.1.50
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc v1.0.998
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube v1.3.20
 	github.com/wI2L/jsondiff v0.3.0
 	k8s.io/apimachinery v0.22.4
 )

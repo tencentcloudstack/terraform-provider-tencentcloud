@@ -2498,3 +2498,9 @@ tencentcloud_igtm_instance
 tencentcloud_igtm_address_pool
 tencentcloud_igtm_monitor
 tencentcloud_igtm_strategy
+
+VCube
+Resource
+tencentcloud_vcube_application_and_video
+tencentcloud_vcube_application_and_web_player_license
+tencentcloud_vcube_renew_video_operation

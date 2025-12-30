@@ -1357,6 +1357,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube v1.3.20
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.860
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717

@@ -116,6 +116,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trocket"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tse"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vcube"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
@@ -2515,6 +2516,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_address_pool":                                                        igtm.ResourceTencentCloudIgtmAddressPool(),
 			"tencentcloud_igtm_monitor":                                                             igtm.ResourceTencentCloudIgtmMonitor(),
 			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
+			"tencentcloud_vcube_application_and_video":                                              vcube.ResourceTencentCloudVcubeApplicationAndVideo(),
+			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
+			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
 		},
 
 		ConfigureFunc: providerConfigure,
