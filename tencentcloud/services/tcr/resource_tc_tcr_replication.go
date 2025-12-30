@@ -77,7 +77,7 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										ForceNew:    true,
-										Description: "It is left blank by default.",
+										Description: "It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string.",
 									},
 								},
 							},
@@ -167,7 +167,7 @@ func resourceTencentCloudTcrReplicationCreate(d *schema.ResourceData, meta inter
 			ruleName = v
 		}
 
-		if v, ok := ruleMap["dest_namespace"].(string); ok && v != "" {
+		if v, ok := ruleMap["dest_namespace"].(string); ok {
 			replicationRule.DestNamespace = helper.String(v)
 		}
 
@@ -183,7 +183,7 @@ func resourceTencentCloudTcrReplicationCreate(d *schema.ResourceData, meta inter
 					replicationFilter.Type = helper.String(v)
 				}
 
-				if v, ok := filtersMap["value"].(string); ok && v != "" {
+				if v, ok := filtersMap["value"].(string); ok {
 					replicationFilter.Value = helper.String(v)
 				}
 
