@@ -3355,24 +3355,30 @@ func (me *TkeService) DescribeKubernetesServerlessNodePoolById(ctx context.Conte
 	}()
 
 	ratelimit.Check(request.GetAction())
-
 	response, err := me.client.UseTkeV20180525Client().DescribeClusterVirtualNodePools(request)
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Describe cluster virtual node pools failed, Response is nil.")
+		return
+	}
 
 	if len(response.Response.NodePoolSet) < 1 {
 		return
 	}
 
 	for _, info := range response.Response.NodePoolSet {
-		if info.NodePoolId != nil && *info.NodePoolId == nodePoolId {
+		if info != nil && info.NodePoolId != nil && *info.NodePoolId == nodePoolId {
 			ret = info
 			break
 		}
 	}
+
 	return
 }
 

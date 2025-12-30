@@ -102,8 +102,8 @@ resource "tencentcloud_kubernetes_serverless_node_pool" "example" {
 
 Import
 
-serverless node pool can be imported, e.g.
+serverless node pool can be imported using the clusterId#nodePoolId, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_serverless_node_pool.test cls-xxx#np-xxx
+terraform import tencentcloud_kubernetes_serverless_node_pool.example cls-62ch3v24#np-5avod190
 ```
