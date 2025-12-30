@@ -15,9 +15,10 @@ import (
 
 func ResourceTencentCloudTcrManageReplicationOperation() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTcrManageReplicationOperationCreate,
-		Read:   resourceTencentCloudTcrManageReplicationOperationRead,
-		Delete: resourceTencentCloudTcrManageReplicationOperationDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.82.50. Please use `tencentcloud_tcr_replication` instead.",
+		Create:             resourceTencentCloudTcrManageReplicationOperationCreate,
+		Read:               resourceTencentCloudTcrManageReplicationOperationRead,
+		Delete:             resourceTencentCloudTcrManageReplicationOperationDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
