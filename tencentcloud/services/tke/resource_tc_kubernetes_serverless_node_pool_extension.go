@@ -33,6 +33,10 @@ func resourceTencentCloudKubernetesServerlessNodePoolReadRequestOnSuccess0(ctx c
 	d := tccommon.ResourceDataFromContext(ctx)
 
 	nodePool := resp
+	if nodePool.LifeState == nil {
+		return resource.NonRetryableError(fmt.Errorf("LifeState is nil."))
+	}
+
 	if shouldServerlessNodePoolRetryReading(*nodePool.LifeState) {
 		return resource.RetryableError(fmt.Errorf("serverless node pool %s is now %s, retrying", d.Id(), *nodePool.LifeState))
 	}
