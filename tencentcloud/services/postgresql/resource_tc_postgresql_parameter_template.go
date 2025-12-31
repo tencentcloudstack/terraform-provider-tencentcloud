@@ -88,8 +88,6 @@ func resourceTencentCloudPostgresqlParameterTemplateCreate(d *schema.ResourceDat
 
 	var (
 		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service  = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request  = postgresql.NewCreateParameterTemplateRequest()
 		response = postgresql.NewCreateParameterTemplateResponse()
 	)
@@ -179,10 +177,6 @@ func resourceTencentCloudPostgresqlParameterTemplateCreate(d *schema.ResourceDat
 		})
 
 		if reqErr != nil {
-			log.Printf("[CRITAL]%s update postgresql ParameterTemplate in create method failed, reason:%+v", logId, reqErr)
-			// if error, need clean templete
-			_ = service.DeletePostgresqlParameterTemplateById(ctx, templateId)
-
 			return reqErr
 		}
 	}
