@@ -66,11 +66,6 @@ func ResourceTencentCloudCfwNatPolicy() *schema.Resource {
 				Required:    true,
 				Description: "Rule direction: 1, inbound; 0, outbound.",
 			},
-			"uuid": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "The unique id corresponding to the rule, no need to fill in when creating the rule.",
-			},
 			"enable": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -99,6 +94,17 @@ func ResourceTencentCloudCfwNatPolicy() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Scope of effective rules. ALL: Global effectiveness; ap-guangzhou: Effective territory; cfwnat-xxx: Effectiveness based on instance dimension.",
+			},
+			// computed
+			"uuid": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The unique id corresponding to the rule, no need to fill in when creating the rule.",
+			},
+			"order_index": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Execution order.",
 			},
 		},
 	}
@@ -247,10 +253,6 @@ func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface
 		_ = d.Set("direction", natPolicy.Direction)
 	}
 
-	if natPolicy.Uuid != nil {
-		_ = d.Set("uuid", natPolicy.Uuid)
-	}
-
 	if natPolicy.Enable != nil {
 		_ = d.Set("enable", natPolicy.Enable)
 	}
@@ -269,6 +271,14 @@ func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface
 
 	if natPolicy.InternalUuid != nil {
 		_ = d.Set("internal_uuid", natPolicy.InternalUuid)
+	}
+
+	if natPolicy.Uuid != nil {
+		_ = d.Set("uuid", natPolicy.Uuid)
+	}
+
+	if natPolicy.OrderIndex != nil {
+		_ = d.Set("order_index", natPolicy.OrderIndex)
 	}
 
 	return nil
