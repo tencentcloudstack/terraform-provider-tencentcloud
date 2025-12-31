@@ -1,33 +1,60 @@
-Provides a resource to create a postgresql parameter_template
+Provides a resource to create a PostgreSQL parameter template
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_postgresql_parameter_template" "parameter_template" {
-  template_name = "your_temp_name"
-  db_major_version = "13"
-  db_engine = "postgresql"
-  template_description = "For_tf_test"
+resource "tencentcloud_postgresql_parameter_template" "example" {
+  template_name        = "tf-example"
+  db_major_version     = "18"
+  db_engine            = "postgresql"
+  template_description = "remark."
 
   modify_param_entry_set {
-	name = "timezone"
-	expected_value = "UTC"
-  }
-  modify_param_entry_set {
-	name = "lock_timeout"
-	expected_value = "123"
+    name           = "timezone"
+    expected_value = "PRC"
   }
 
-  delete_param_set = ["lc_time"]
+  modify_param_entry_set {
+    name           = "lock_timeout"
+    expected_value = "60"
+  }
+
+  modify_param_entry_set {
+    name           = "event_triggers"
+    expected_value = "on"
+  }
+}
+```
+
+If you want delete some param like `lock_timeout`
+
+```hcl
+resource "tencentcloud_postgresql_parameter_template" "example" {
+  template_name        = "tf-example"
+  db_major_version     = "18"
+  db_engine            = "postgresql"
+  template_description = "remark."
+
+  modify_param_entry_set {
+    name           = "timezone"
+    expected_value = "PRC"
+  }
+
+  modify_param_entry_set {
+    name           = "event_triggers"
+    expected_value = "on"
+  }
+
+  delete_param_set = ["lock_timeout"]
 }
 ```
 
 Import
 
-postgresql parameter_template can be imported using the id, e.g.
+PostgreSQL parameter template can be imported using the id, e.g.
 
-Notice: `modify_param_entry_set` and `delete_param_set` do not support import.
+Notice: `delete_param_set` do not support import.
 
 ```
-terraform import tencentcloud_postgresql_parameter_template.parameter_template parameter_template_id
+terraform import tencentcloud_postgresql_parameter_template.example 81ec47ed-0e4e-5af2-a648-2072fe63f225
 ```

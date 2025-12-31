@@ -2,10 +2,12 @@ package postgresql
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
@@ -84,14 +86,12 @@ func resourceTencentCloudPostgresqlParameterTemplateCreate(d *schema.ResourceDat
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_parameter_template.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = postgresql.NewCreateParameterTemplateRequest()
 		response = postgresql.NewCreateParameterTemplateResponse()
-
-		modifyRequest = postgresql.NewModifyParameterTemplateRequest()
 	)
+
 	if v, ok := d.GetOk("template_name"); ok {
 		request.TemplateName = helper.String(v.(string))
 	}
@@ -108,17 +108,37 @@ func resourceTencentCloudPostgresqlParameterTemplateCreate(d *schema.ResourceDat
 		request.TemplateDescription = helper.String(v.(string))
 	}
 
-	result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateParameterTemplate(request)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateParameterTemplate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	if err != nil {
-		log.Printf("[CRITAL]%s create postgresql ParameterTemplate failed, reason:%+v", logId, err)
-		return err
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create postgresql parameter template failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s create postgresql parameter template failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
-	response = result
-	templateId := response.Response.TemplateId
 
-	// call ModifyParameterTemplate to set param entry
-	modifyRequest.TemplateId = templateId
+	if response.Response.TemplateId == nil {
+		return fmt.Errorf("TemplateId is nil.")
+	}
+
+	templateId := *response.Response.TemplateId
+	d.SetId(templateId)
+
+	// set param entry
+	modifyRequest := postgresql.NewModifyParameterTemplateRequest()
+	modifyRequest.TemplateId = &templateId
 	if v, ok := d.GetOk("modify_param_entry_set"); ok {
 		modifyParamSet := v.(*schema.Set).List()
 		for _, item := range modifyParamSet {
@@ -127,9 +147,11 @@ func resourceTencentCloudPostgresqlParameterTemplateCreate(d *schema.ResourceDat
 			if v, ok := dMap["name"]; ok {
 				paramEntry.Name = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["expected_value"]; ok {
 				paramEntry.ExpectedValue = helper.String(v.(string))
 			}
+
 			modifyRequest.ModifyParamEntrySet = append(modifyRequest.ModifyParamEntrySet, &paramEntry)
 		}
 	}
@@ -143,14 +165,21 @@ func resourceTencentCloudPostgresqlParameterTemplateCreate(d *schema.ResourceDat
 	}
 
 	if len(modifyRequest.ModifyParamEntrySet) > 0 || len(modifyRequest.DeleteParamSet) > 0 {
-		_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyParameterTemplate(modifyRequest)
-		if err != nil {
-			log.Printf("[CRITAL]%s update postgresql ParameterTemplate in create method failed, reason:%+v", logId, err)
-			return err
+		reqErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyParameterTemplate(modifyRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			return reqErr
 		}
 	}
-
-	d.SetId(*templateId)
 
 	return resourceTencentCloudPostgresqlParameterTemplateRead(d, meta)
 }
@@ -159,13 +188,12 @@ func resourceTencentCloudPostgresqlParameterTemplateRead(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_parameter_template.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	templateId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		templateId = d.Id()
+	)
 
 	ParameterTemplate, err := service.DescribePostgresqlParameterTemplateById(ctx, templateId)
 	if err != nil {
@@ -173,8 +201,8 @@ func resourceTencentCloudPostgresqlParameterTemplateRead(d *schema.ResourceData,
 	}
 
 	if ParameterTemplate == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_postgresql_parameter_template` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `PostgresqlParameterTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -198,12 +226,15 @@ func resourceTencentCloudPostgresqlParameterTemplateRead(d *schema.ResourceData,
 	paramInfoSetList := []interface{}{}
 	if ParameterTemplate.ParamInfoSet != nil {
 		for _, paramInfoSet := range ParameterTemplate.ParamInfoSet {
-			paramInfoSetList = append(paramInfoSetList, map[string]interface{}{
-				"name":           *paramInfoSet.Name,
-				"expected_value": *paramInfoSet.CurrentValue,
-			})
+			if paramInfoSet != nil && paramInfoSet.Name != nil && paramInfoSet.CurrentValue != nil {
+				paramInfoSetList = append(paramInfoSetList, map[string]interface{}{
+					"name":           *paramInfoSet.Name,
+					"expected_value": *paramInfoSet.CurrentValue,
+				})
+			}
 		}
 	}
+
 	_ = d.Set("modify_param_entry_set", paramInfoSetList)
 
 	return nil
@@ -213,11 +244,11 @@ func resourceTencentCloudPostgresqlParameterTemplateUpdate(d *schema.ResourceDat
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_parameter_template.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := postgresql.NewModifyParameterTemplateRequest()
-
-	request.TemplateId = helper.String(d.Id())
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		request    = postgresql.NewModifyParameterTemplateRequest()
+		templateId = d.Id()
+	)
 
 	if d.HasChange("template_name") {
 		if v, ok := d.GetOk("template_name"); ok {
@@ -240,9 +271,11 @@ func resourceTencentCloudPostgresqlParameterTemplateUpdate(d *schema.ResourceDat
 				if v, ok := dMap["name"]; ok {
 					paramEntry.Name = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["expected_value"]; ok {
 					paramEntry.ExpectedValue = helper.String(v.(string))
 				}
+
 				request.ModifyParamEntrySet = append(request.ModifyParamEntrySet, &paramEntry)
 			}
 		}
@@ -258,11 +291,21 @@ func resourceTencentCloudPostgresqlParameterTemplateUpdate(d *schema.ResourceDat
 		}
 	}
 
-	_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyParameterTemplate(request)
+	request.TemplateId = &templateId
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyParameterTemplate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	if err != nil {
-		log.Printf("[CRITAL]%s update postgresql ParameterTemplate failed, reason:%+v", logId, err)
-		return err
+		return nil
+	})
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s update postgresql ParameterTemplate in create method failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
 	return resourceTencentCloudPostgresqlParameterTemplateRead(d, meta)
@@ -272,11 +315,12 @@ func resourceTencentCloudPostgresqlParameterTemplateDelete(d *schema.ResourceDat
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_parameter_template.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	templateId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		templateId = d.Id()
+	)
 
 	if err := service.DeletePostgresqlParameterTemplateById(ctx, templateId); err != nil {
 		return err
