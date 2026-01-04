@@ -1562,6 +1562,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_bucket_object":                                                        cos.ResourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_bucket_referer":                                                       cos.ResourceTencentCloudCosBucketReferer(),
 			"tencentcloud_cos_bucket_version":                                                       cos.ResourceTencentCloudCosBucketVersion(),
+			"tencentcloud_cos_bucket_replication":                                                   cos.ResourceTencentCloudCosBucketReplication(),
 			"tencentcloud_cfs_file_system":                                                          cfs.ResourceTencentCloudCfsFileSystem(),
 			"tencentcloud_cfs_access_group":                                                         cfs.ResourceTencentCloudCfsAccessGroup(),
 			"tencentcloud_cfs_access_rule":                                                          cfs.ResourceTencentCloudCfsAccessRule(),

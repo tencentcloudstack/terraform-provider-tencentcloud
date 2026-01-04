@@ -610,6 +610,41 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 				ForceNew:    true,
 				Description: "CDC cluster ID.",
 			},
+			"object_lock_configuration": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Object locking configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable object lock configuration.",
+						},
+						"rule": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Object locking configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"days": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Object lock default duration (range: 1-36500).",
+									},
+									"mode": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The object lock default mode only supports the enumerated value `COMPLIANCE`. If this field is left blank, it defaults to `COMPLIANCE`.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			//computed
 			"cos_bucket_url": {
 				Type:        schema.TypeString,
