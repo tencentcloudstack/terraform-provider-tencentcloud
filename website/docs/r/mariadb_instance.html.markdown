@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mariadb_instance"
 sidebar_current: "docs-tencentcloud-resource-mariadb_instance"
 description: |-
-  Provides a resource to create a MariaDB instance
+  Provides a resource to create a MariaDB instance(prepaid)
 ---
 
 # tencentcloud_mariadb_instance
 
-Provides a resource to create a MariaDB instance
+Provides a resource to create a MariaDB instance(prepaid)
 
 ## Example Usage
 
@@ -124,7 +124,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-MariaDB instance can be imported using the id, e.g.
+MariaDB instance(prepaid) can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_mariadb_instance.example tdsql-4pzs5b67

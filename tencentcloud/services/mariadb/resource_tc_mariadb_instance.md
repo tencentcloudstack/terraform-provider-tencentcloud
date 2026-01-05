@@ -1,4 +1,4 @@
-Provides a resource to create a MariaDB instance
+Provides a resource to create a MariaDB instance(prepaid)
 
 Example Usage
 
@@ -42,7 +42,7 @@ resource "tencentcloud_mariadb_instance" "example" {
 
 Import
 
-MariaDB instance can be imported using the id, e.g.
+MariaDB instance(prepaid) can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_mariadb_instance.example tdsql-4pzs5b67
