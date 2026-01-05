@@ -1861,7 +1861,6 @@ func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string
 				if granteeEle != nil {
 					if granteeEle.SelectAttrValue("type", "unknown") == typeSeq {
 						orderedACL.AddChild(grantEle)
-						break
 					}
 				}
 			}
