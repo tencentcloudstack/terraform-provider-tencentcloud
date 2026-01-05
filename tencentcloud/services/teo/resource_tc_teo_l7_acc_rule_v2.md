@@ -55,6 +55,13 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
       }
     }
 
+    actions {
+      name = "ContentCompression"
+      content_compression_parameters {
+        switch = "on"
+      }
+    }
+
     sub_rules {
       description = ["1-1"]
       branches {
