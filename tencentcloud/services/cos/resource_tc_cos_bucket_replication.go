@@ -93,6 +93,11 @@ func ResourceTencentCloudCosBucketReplication() *schema.Resource {
 											},
 										},
 									},
+									"prefix": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The prefix of the objects to be copied.",
+									},
 								},
 							},
 						},
@@ -112,20 +117,20 @@ func ResourceTencentCloudCosBucketReplication() *schema.Resource {
 										Optional:    true,
 										Description: "Target storage type: This represents the storage type used when storing data in the target storage bucket. Examples include STANDARD, STANDARD_IA, etc.\nNote: The `storage_class` parameter is mandatory if any of the following conditions are met: The source bucket and the target bucket have different availability zone configurations (one is a multi-AZ bucket, the other is a single-AZ bucket). The source bucket and the target bucket have different intelligent tiering settings (one has intelligent tiering enabled, the other does not). If the StorageClass parameter is not specified, the storage class of the objects delivered to the target bucket will default to the same as the source bucket.",
 									},
-									"encryption_configuration": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: "This field must be included when `source_selection_criteria.sse_kms_encrypted_objects.status` is set to Enabled. It is used to specify the KMS key used for KMS-encrypted objects copied to the destination bucket.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"replica_kms_key_id": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "KMS key ID.",
-												},
-											},
-										},
-									},
+									// "encryption_configuration": {
+									// 	Type:        schema.TypeList,
+									// 	Optional:    true,
+									// 	Description: "This field must be included when `source_selection_criteria.sse_kms_encrypted_objects.status` is set to Enabled. It is used to specify the KMS key used for KMS-encrypted objects copied to the destination bucket.",
+									// 	Elem: &schema.Resource{
+									// 		Schema: map[string]*schema.Schema{
+									// 			"replica_kms_key_id": {
+									// 				Type:        schema.TypeString,
+									// 				Optional:    true,
+									// 				Description: "KMS key ID.",
+									// 			},
+									// 		},
+									// 	},
+									// },
 								},
 							},
 						},
@@ -143,29 +148,29 @@ func ResourceTencentCloudCosBucketReplication() *schema.Resource {
 								},
 							},
 						},
-						"source_selection_criteria": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: "This is used to specify additional conditions for objects supported by bucket replication rules. Currently, only the option to replicate KMS-encrypted objects is supported.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"sse_kms_encrypted_objects": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: "Choose whether to copy the KMS-encrypted objects.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"status": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "Choose whether to copy KMS encrypted objects; supported values ​​are Enabled and Disabled.",
-												},
-											},
-										},
-									},
-								},
-							},
-						},
+						// "source_selection_criteria": {
+						// 	Type:        schema.TypeList,
+						// 	Optional:    true,
+						// 	Description: "This is used to specify additional conditions for objects supported by bucket replication rules. Currently, only the option to replicate KMS-encrypted objects is supported.",
+						// 	Elem: &schema.Resource{
+						// 		Schema: map[string]*schema.Schema{
+						// 			"sse_kms_encrypted_objects": {
+						// 				Type:        schema.TypeList,
+						// 				Optional:    true,
+						// 				Description: "Choose whether to copy the KMS-encrypted objects.",
+						// 				Elem: &schema.Resource{
+						// 					Schema: map[string]*schema.Schema{
+						// 						"status": {
+						// 							Type:        schema.TypeString,
+						// 							Optional:    true,
+						// 							Description: "Choose whether to copy KMS encrypted objects; supported values ​​are Enabled and Disabled.",
+						// 						},
+						// 					},
+						// 				},
+						// 			},
+						// 		},
+						// 	},
+						// },
 					},
 				},
 			},
@@ -191,28 +196,90 @@ func resourceTencentCloudCosBucketReplicationRead(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket_replication.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		bucket  = d.Id()
+	)
 
-	service := CosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	bucket := d.Id()
-
-	bucketVersion, err := service.DescribeCosBucketReplicationById(ctx, bucket)
+	bucketReplication, err := service.DescribeCosBucketReplicationById(ctx, bucket)
 	if err != nil {
 		return err
 	}
 
-	if bucketVersion == nil {
+	if bucketReplication == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cos_bucket_replication` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CosBucketReplication` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
 	_ = d.Set("bucket", bucket)
 
-	if bucketVersion.Status != "" {
-		_ = d.Set("status", bucketVersion.Status)
+	if bucketReplication.Role != "" {
+		_ = d.Set("role", bucketReplication.Role)
+	}
+
+	if bucketReplication.Rule != nil {
+		ruleList := make([]map[string]interface{}, 0, len(bucketReplication.Rule))
+		for _, rule := range bucketReplication.Rule {
+			ruleMap := map[string]interface{}{
+				"id":       rule.ID,
+				"status":   rule.Status,
+				"priority": rule.Priority,
+			}
+
+			if rule.Filter != nil {
+				filterMap := map[string]interface{}{
+					"prefix": rule.Filter.Prefix,
+				}
+
+				if rule.Filter.And != nil {
+					andMap := map[string]interface{}{
+						"prefix": rule.Filter.And.Prefix,
+					}
+
+					if rule.Filter.And.Tag != nil {
+						tagList := make([]map[string]interface{}, 0)
+						for _, tag := range rule.Filter.And.Tag {
+							tagMap := map[string]interface{}{
+								"key":   tag.Key,
+								"value": tag.Value,
+							}
+
+							tagList = append(tagList, tagMap)
+						}
+
+						andMap["tag"] = tagList
+					}
+
+					filterMap["and"] = []interface{}{andMap}
+				}
+
+				ruleMap["filter"] = []interface{}{filterMap}
+			}
+
+			if rule.Destination != nil {
+				destinationMap := map[string]interface{}{
+					"bucket":        rule.Destination.Bucket,
+					"storage_class": rule.Destination.StorageClass,
+				}
+
+				ruleMap["destination"] = []interface{}{destinationMap}
+			}
+
+			if rule.DeleteMarkerReplication != nil {
+				deleteMarkerReplicationMap := map[string]interface{}{
+					"status": rule.DeleteMarkerReplication.Status,
+				}
+
+				ruleMap["delete_marker_replication"] = []interface{}{deleteMarkerReplicationMap}
+			}
+
+			ruleList = append(ruleList, ruleMap)
+		}
+
+		_ = d.Set("rule", ruleList)
 	}
 
 	return nil
@@ -235,17 +302,92 @@ func resourceTencentCloudCosBucketReplicationUpdate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("rule"); ok {
 		rules := make([]cos.BucketReplicationRule, 0)
-		for _, rule := range v.(*schema.Set).List() {
-			rules = append(rules, cos.BucketReplicationRule{
-				ID:     rule.(map[string]interface{})["id"].(string),
-				Prefix: rule.(map[string]interface{})["prefix"].(string),
-				Status: rule.(map[string]interface{})["status"].(string),
-				Destination: &cos.BucketReplicationDestination{
-					Bucket:       rule.(map[string]interface{})["destination"].(map[string]interface{})["bucket"].(string),
-					StorageClass: rule.(map[string]interface{})["destination"].(map[string]interface{})["storage_class"].(string),
-				},
-			})
+		for _, item := range v.(*schema.Set).List() {
+			rule := cos.BucketReplicationRule{}
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["id"]; ok && v.(string) != "" {
+				rule.ID = v.(string)
+			}
+
+			if v, ok := dMap["staus"]; ok && v.(string) != "" {
+				rule.Status = v.(string)
+			}
+
+			if v, ok := dMap["priority"]; ok {
+				rule.Priority = v.(int)
+			}
+
+			if v, ok := dMap["filter"]; ok {
+				for _, filterItem := range v.(*schema.Set).List() {
+					filter := cos.ReplicationFilter{}
+					filterMap := filterItem.(map[string]interface{})
+					if v, ok := filterMap["and"]; ok {
+						for _, andItem := range v.(*schema.Set).List() {
+							and := cos.ReplicationFilterAnd{}
+							andMap := andItem.(map[string]interface{})
+							if v, ok := andMap["prefix"]; ok && v.(string) != "" {
+								and.Prefix = v.(string)
+							}
+
+							if v, ok := andMap["tag"]; ok {
+								for _, tagItem := range v.(*schema.Set).List() {
+									tag := cos.ObjectTaggingTag{}
+									tagMap := tagItem.(map[string]interface{})
+									if v, ok := tagMap["key"]; ok && v.(string) != "" {
+										tag.Key = v.(string)
+									}
+
+									if v, ok := tagMap["value"]; ok && v.(string) != "" {
+										tag.Value = v.(string)
+									}
+
+									and.Tag = append(and.Tag, tag)
+								}
+							}
+
+							filter.And = &and
+						}
+					}
+
+					if v, ok := filterMap["prefix"]; ok && v.(string) != "" {
+						filter.Prefix = v.(string)
+					}
+
+					rule.Filter = &filter
+				}
+			}
+
+			if v, ok := dMap["destination"]; ok {
+				for _, destinationItem := range v.(*schema.Set).List() {
+					destination := cos.ReplicationDestination{}
+					destinationMap := destinationItem.(map[string]interface{})
+					if v, ok := destinationMap["bucket"]; ok && v.(string) != "" {
+						destination.Bucket = v.(string)
+					}
+
+					if v, ok := destinationMap["storage_class"]; ok && v.(string) != "" {
+						destination.StorageClass = v.(string)
+					}
+
+					rule.Destination = &destination
+				}
+			}
+
+			if v, ok := d.GetOk("delete_marker_replication"); ok {
+				for _, deleteMarkerReplicationItem := range v.(*schema.Set).List() {
+					deleteMarkerReplication := cos.DeleteMarkerReplication{}
+					deleteMarkerReplicationMap := deleteMarkerReplicationItem.(map[string]interface{})
+					if v, ok := deleteMarkerReplicationMap["status"]; ok && v.(string) != "" {
+						deleteMarkerReplication.Status = v.(string)
+					}
+
+					rule.DeleteMarkerReplication = &deleteMarkerReplication
+				}
+			}
+
+			rules = append(rules, rule)
 		}
+
 		request.Rule = rules
 	}
 

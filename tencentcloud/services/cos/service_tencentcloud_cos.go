@@ -1899,3 +1899,28 @@ func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string
 	// }
 	return
 }
+
+func (me *CosService) DescribeCosBucketReplicationById(ctx context.Context, bucket string) (*cos.BucketGetReplicationResult, error) {
+	var errRet error
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	resRaw, err := tccommon.RetryWithContext(ctx, tccommon.ReadRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		res, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetVersioning(ctx)
+		return res, err
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, errRet
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
+
+	return resRaw.(*cos.BucketGetReplicationResult), nil
+}
