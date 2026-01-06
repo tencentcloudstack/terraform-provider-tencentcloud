@@ -1,3 +1,16 @@
+## 1.82.51(January 6, 2026)
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_cos_buckets: optimiz code logic and doc ([#3699](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3699))
+* resource/tencentcloud_kubernetes_native_node_pool: optimiz code logic ([#3695](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3695))
+* resource/tencentcloud_mariadb_instance: optimiz code logic ([#3691](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3691))
+* resource/tencentcloud_mysql_instance: optimiz code logic ([#3698](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3698))
+* resource/tencentcloud_postgresql_parameter_template: optimiz code logic ([#3689](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3689))
+* resource/tencentcloud_tag: optmiz code logic ([#3696](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3696))
+* resource/tencentcloud_tcr_replication: update doc ([#3694](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3694))
+* resource/tencentcloud_teo_l7_acc_rule_v2: support new params `content_compression_parameters` ([#3693](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3693))
+
 ## 1.82.50(Decmber 30, 2025)
 
 FEATURES:
