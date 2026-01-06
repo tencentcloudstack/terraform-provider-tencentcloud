@@ -257,11 +257,25 @@ $ terraform plan
 
 ### Assume role with OIDC
 
-If provided with an assume role with OIDC, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration` and `web_identity_token` in-line in the tencentcloud provider block:
+If provided with an assume role with OIDC, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration` and `web_identity_token` or `web_identity_token_file` in-line in the tencentcloud provider block:
 
 -> **Note:** Assume-role-with-OIDC is a no-AK auth type, and there is no need setting secret_id and secret_key while using it.
 
+-> **Note:** If both `web_identity_token` and `web_identity_token_file` are configured, `web_identity_token` will be used preferentially(overriding `web_identity_token_file`).
+
+Content formatting guidelines of `web_identity_token_file`:
+
+The file content must be in JSON format and must contain the key: `web_identity_token`.
+
+```json
+{
+    "web_identity_token": "eyJ0eXAiOiJKV1QiLCJh......E8T0qyVA7hWM55_g"
+}
+```
+
 Usage:
+
+Use web_identity_token
 
 ```hcl
 provider "tencentcloud" {
@@ -275,7 +289,21 @@ provider "tencentcloud" {
 }
 ```
 
-The `provider_id`, `role_arn`, `session_name`, `session_duration`, `web_identity_token` can also provided via `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` and `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` environment variables.
+Use web_identity_token_file
+
+```hcl
+provider "tencentcloud" {
+  assume_role_with_web_identity {
+    provider_id             = "OIDC"
+    role_arn                = "my-role-arn"
+    session_name            = "my-session-name"
+    session_duration        = 3600
+    web_identity_token_file = "/AbsolutePath/to/your/secrets/web-identity-token-file"
+  }
+}
+```
+
+The `provider_id`, `role_arn`, `session_name`, `session_duration`, `web_identity_token`, `web_identity_token_file` can also provided via `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` and `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE` environment variables.
 
 Usage:
 
@@ -284,6 +312,7 @@ $ export TENCENTCLOUD_SECRET_ID="my-secret-id"
 $ export TENCENTCLOUD_SECRET_KEY="my-secret-key"
 $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
 $ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN="my-web-identity-token"
+$ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE="/AbsolutePath/to/your/secrets/web-identity-token-file"
 $ export TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID="OIDC"
 $ terraform plan
 ```
@@ -462,4 +491,5 @@ The nested `assume_role_with_web_identity` block supports the following:
 * `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.
 * `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
 * `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
-* `web_identity_token` - (Required) OIDC token issued by IdP. It can be sourced from the  `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.
+* `web_identity_token` - (Optional) OIDC token issued by IdP. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`. One of `web_identity_token` or `web_identity_token_file` is required.
+* `web_identity_token_file` - (Optional) File containing a web identity token from an OpenID Connect (OIDC) or OAuth provider. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE`. One of `web_identity_token` or `web_identity_token_file` is required.
