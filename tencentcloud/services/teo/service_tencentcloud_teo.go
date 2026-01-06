@@ -923,7 +923,14 @@ func (me *TeoService) ModifyZoneStatus(ctx context.Context, zoneId string, pause
 
 func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId, domainName, operate string) error {
 	d := tccommon.ResourceDataFromContext(ctx)
-	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+	var timeout time.Duration
+
+	if d.IsNewResource() {
+		timeout = d.Timeout(schema.TimeoutCreate)
+	} else {
+		timeout = d.Timeout(schema.TimeoutUpdate)
+	}
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		instance, errRet := me.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
