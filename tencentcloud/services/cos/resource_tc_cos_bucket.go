@@ -247,7 +247,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 						},
 						"status": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "Status identifier, available values: `Enabled`, `Disabled`.",
 						},
 						"prefix": {
@@ -264,6 +264,51 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Storage class of destination, available values: `STANDARD`, `INTELLIGENT_TIERING`, `STANDARD_IA`. default is following current class of destination.",
+						},
+						"destination_encryption_kms_key_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This field must be included when `source_selection_criteria.sse_kms_encrypted_objects.status` is set to Enabled. It is used to specify the KMS key used for KMS-encrypted objects copied to the destination bucket.",
+						},
+						"delete_marker_replication": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Synchronized deletion marker.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"status": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Whether to synchronously delete the tag, supports Disabled or Enabled. The default value is Enabled, meaning the tag will be deleted synchronously.",
+									},
+								},
+							},
+						},
+						"source_selection_criteria": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "This is used to specify additional conditions for objects supported by bucket replication rules. Currently, only the option to replicate KMS-encrypted objects is supported.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"sse_kms_encrypted_objects": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: "Choose whether to copy the KMS-encrypted objects.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"status": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Choose whether to copy KMS encrypted objects; supported values are Enabled and Disabled.",
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -2000,6 +2045,34 @@ func getBucketReplications(d *schema.ResourceData) (role string, rules []cos.Buc
 		if v, ok := item["destination_storage_class"].(string); ok {
 			rule.Destination.StorageClass = v
 		}
+		if v, ok := item["destination_encryption_kms_key_id"].(string); ok {
+			rule.Destination.EncryptionConfiguration = &cos.ReplicationEncryptionConfiguration{
+				ReplicaKmsKeyID: v,
+			}
+		}
+		if v, ok := item["delete_marker_replication"]; ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				rule.DeleteMarkerReplication = &cos.DeleteMarkerReplication{
+					Status: dMap["status"].(string),
+				}
+			}
+		}
+		if v, ok := item["source_selection_criteria"]; ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				if v, ok := dMap["sse_kms_encrypted_objects"]; ok {
+					for _, item := range v.([]interface{}) {
+						dMap := item.(map[string]interface{})
+						rule.SourceSelectionCriteria = &cos.SourceSelectionCriteria{
+							SseKmsEncryptedObjects: &cos.SseKmsEncryptedObjects{
+								Status: dMap["status"].(string),
+							},
+						}
+					}
+				}
+			}
+		}
 		rules = append(rules, rule)
 	}
 	return
@@ -2023,6 +2096,25 @@ func setBucketReplication(d *schema.ResourceData, result cos.GetBucketReplicatio
 			}
 			if item.Prefix != "" {
 				rule["prefix"] = item.Prefix
+			}
+			if item.DeleteMarkerReplication != nil {
+				deleteMarkerReplicationMap := map[string]interface{}{
+					"status": item.DeleteMarkerReplication.Status,
+				}
+
+				rule["delete_marker_replication"] = []interface{}{deleteMarkerReplicationMap}
+			}
+			if item.SourceSelectionCriteria != nil {
+				sourceSelectionCriteriaMap := map[string]interface{}{}
+				if item.SourceSelectionCriteria.SseKmsEncryptedObjects != nil {
+					sseKmsEncryptedObjectsMap := map[string]interface{}{
+						"status": item.SourceSelectionCriteria.SseKmsEncryptedObjects.Status,
+					}
+
+					sourceSelectionCriteriaMap["sse_kms_encrypted_objects"] = []interface{}{sseKmsEncryptedObjectsMap}
+				}
+
+				rule["source_selection_criteria"] = []interface{}{sourceSelectionCriteriaMap}
 			}
 			rules = append(rules, rule)
 		}
