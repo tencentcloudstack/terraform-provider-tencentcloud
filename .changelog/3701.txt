@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_teo_bind_security_template: support timeout.
+```
+
+```release-note:enhancement
+resource/tencentcloud_teo_certificate_config: support timeout.
+```
