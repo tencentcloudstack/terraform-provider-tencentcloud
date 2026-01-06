@@ -69,7 +69,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 		request.Header.Set("Authorization", me.Authorization)
 	}
 
-	request.Header.Set("X-Tc-RequestClient", reqClientFormat)
+	request.Header.Set("X-TC-RequestClient", reqClientFormat)
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {
