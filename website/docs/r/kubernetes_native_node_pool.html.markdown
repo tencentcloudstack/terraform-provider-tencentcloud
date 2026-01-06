@@ -117,7 +117,7 @@ The following arguments are supported:
 * `annotations` - (Optional, Set) Node Annotation List.
 * `deletion_protection` - (Optional, Bool) Whether to enable deletion protection.
 * `labels` - (Optional, Set) Node Labels.
-* `tags` - (Optional, List) Node tags.
+* `tags` - (Optional, Set) Node tags.
 * `taints` - (Optional, List) Node taint.
 * `unschedulable` - (Optional, Bool) Whether the node is not schedulable by default. The native node is not aware of it and passes false by default.
 
@@ -210,8 +210,8 @@ The `tags` object of `tags` supports the following:
 
 The `tags` object supports the following:
 
-* `resource_type` - (Optional, String) The resource type bound to the label.
-* `tags` - (Optional, List) Tag pair list.
+* `resource_type` - (Optional, String) The resource type bound to the label. `cluster`: related to clusters; `machine`: related to node pools.
+* `tags` - (Optional, Set) Tag pair list.
 
 The `taints` object supports the following:
 

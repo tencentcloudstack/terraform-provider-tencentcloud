@@ -93,7 +93,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Node tags.",
 				Elem: &schema.Resource{
@@ -101,10 +101,10 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 						"resource_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The resource type bound to the label.",
+							Description: "The resource type bound to the label. `cluster`: related to clusters; `machine`: related to node pools.",
 						},
 						"tags": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "Tag pair list.",
 							Elem: &schema.Resource{
@@ -654,14 +654,14 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			tagsMap := item.(map[string]interface{})
 			tagSpecification := tke2.TagSpecification{}
 			if v, ok := tagsMap["resource_type"]; ok {
 				tagSpecification.ResourceType = helper.String(v.(string))
 			}
 			if v, ok := tagsMap["tags"]; ok {
-				for _, item := range v.([]interface{}) {
+				for _, item := range v.(*schema.Set).List() {
 					tagsMap := item.(map[string]interface{})
 					tag := tke2.Tag{}
 					if v, ok := tagsMap["key"]; ok {
@@ -1469,14 +1469,14 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		}
 
 		if v, ok := d.GetOk("tags"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				tagsMap := item.(map[string]interface{})
 				tagSpecification := tke2.TagSpecification{}
 				if v, ok := tagsMap["resource_type"]; ok {
 					tagSpecification.ResourceType = helper.String(v.(string))
 				}
 				if v, ok := tagsMap["tags"]; ok {
-					for _, item := range v.([]interface{}) {
+					for _, item := range v.(*schema.Set).List() {
 						tagsMap := item.(map[string]interface{})
 						tag := tke2.Tag{}
 						if v, ok := tagsMap["key"]; ok {
