@@ -10,6 +10,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
@@ -921,7 +922,8 @@ func (me *TeoService) ModifyZoneStatus(ctx context.Context, zoneId string, pause
 }
 
 func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId, domainName, operate string) error {
-	err := resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	d := tccommon.ResourceDataFromContext(ctx)
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		instance, errRet := me.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
