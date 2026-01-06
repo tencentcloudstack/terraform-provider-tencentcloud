@@ -66,6 +66,13 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
       }
     }
 
+    actions {
+      name = "ContentCompression"
+      content_compression_parameters {
+        switch = "on"
+      }
+    }
+
     sub_rules {
       description = ["1-1"]
       branches {
@@ -162,6 +169,7 @@ The `actions` object of `branches` supports the following:
 * `client_ip_country_parameters` - (Optional, List) Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
 * `client_ip_header_parameters` - (Optional, List) Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
 * `compression_parameters` - (Optional, List) Intelligent compression configuration. this parameter is required when name is set to compression.
+* `content_compression_parameters` - (Optional, List) Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
 * `error_page_parameters` - (Optional, List) Custom error page configuration parameters. this parameter is required when name is errorpage.
 * `force_redirect_https_parameters` - (Optional, List) Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
 * `host_header_parameters` - (Optional, List) Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
@@ -256,6 +264,10 @@ The `compression_parameters` object of `actions` supports the following:
 
 * `algorithms` - (Optional, List) Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
 * `switch` - (Optional, String) Whether to enable smart compression. values: on: enable; off: disable.
+
+The `content_compression_parameters` object of `actions` supports the following:
+
+* `switch` - (Required, String) Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
 
 The `cookie` object of `cache_key_parameters` supports the following:
 
