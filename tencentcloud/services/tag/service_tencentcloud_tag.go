@@ -2,6 +2,7 @@ package tag
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -300,6 +301,7 @@ func (me *TagService) DescribeTagResourceById(ctx context.Context, tagKey string
 	logId := tccommon.GetLogId(ctx)
 
 	request := tag.NewGetTagsRequest()
+	response := tag.NewGetTagsResponse()
 	request.TagKeys = []*string{&tagKey}
 
 	defer func() {
@@ -308,23 +310,37 @@ func (me *TagService) DescribeTagResourceById(ctx context.Context, tagKey string
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTagClient().GetTags(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTagClient().GetTags(request)
+		if result == nil || result.Response == nil || result.Response.Tags == nil || len(result.Response.Tags) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe tags failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil || len(response.Response.Tags) < 1 {
-		return
-	}
 	for _, v := range response.Response.Tags {
-		if *v.TagKey == tagKey && *v.TagValue == tagValue {
-			tagRes = v
+		if v != nil && v.TagKey != nil && v.TagValue != nil {
+			if *v.TagKey == tagKey && *v.TagValue == tagValue {
+				tagRes = v
+				break
+			}
 		}
 	}
+
 	return
 }
 
@@ -341,14 +357,22 @@ func (me *TagService) DeleteTagResourceById(ctx context.Context, tagKey string, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTagClient().DeleteTag(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTagClient().DeleteTag(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tag"
 sidebar_current: "docs-tencentcloud-resource-tag"
 description: |-
-  Provides a resource to create a tag
+  Provides a resource to create a Tag
 ---
 
 # tencentcloud_tag
 
-Provides a resource to create a tag
+Provides a resource to create a Tag
 
 ## Example Usage
 
@@ -37,7 +37,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-tag can be imported using the id, e.g.
+Tag can be imported using the tagKey#tagValue, e.g.
 
 ```
 terraform import tencentcloud_tag.example tagKey#tagValue
