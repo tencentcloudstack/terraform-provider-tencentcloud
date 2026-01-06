@@ -2792,8 +2792,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
 			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
 			assumeRoleProviderId = assumeRoleWithWebIdentity["provider_id"].(string)
-			// get token from file
-			if assumeRoleWebIdentityTokenFile != "" {
+
+			// get token with priority: field first, then file
+			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
+			if assumeRoleWebIdentityToken == "" && assumeRoleWebIdentityTokenFile != "" {
 				config, err := getConfigFromWebIdentityTokenFile(assumeRoleWebIdentityTokenFile)
 				if err != nil {
 					return nil, err
@@ -2802,8 +2804,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 				assumeRoleWebIdentityToken = config["web_identity_token"].(string)
 			}
 
-			// get token from field
-			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
 			if assumeRoleWebIdentityToken == "" {
 				return nil, fmt.Errorf("`web_identity_token` can not be empty. you can choose to set it in `web_identity_token` or `web_identity_token_file`.\n")
 			}
