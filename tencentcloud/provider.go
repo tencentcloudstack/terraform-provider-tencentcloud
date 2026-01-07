@@ -1389,6 +1389,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_refresh_nat_dc_route":                                                 vpc.ResourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_vpc_private_nat_gateway":                                                  vpc.ResourceTencentCloudVpcPrivateNatGateway(),
 			"tencentcloud_vpc_private_nat_gateway_translation_nat_rule":                             vpc.ResourceTencentCloudVpcPrivateNatGatewayTranslationNatRule(),
+			"tencentcloud_vpc_private_nat_gateway_translation_acl_rule":                             vpc.ResourceTencentCloudVpcPrivateNatGatewayTranslationAclRule(),
 			"tencentcloud_eni":                                                                      vpc.ResourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                                                           vpc.ResourceTencentCloudEniAttachment(),
 			"tencentcloud_eni_sg_attachment":                                                        vpc.ResourceTencentCloudEniSgAttachment(),

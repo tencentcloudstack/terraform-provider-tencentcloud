@@ -6477,6 +6477,9 @@ func (r *CreatePrivateNatGatewayTranslationAclRuleRequest) FromJsonString(s stri
 
 // Predefined struct for user
 type CreatePrivateNatGatewayTranslationAclRuleResponseParams struct {
+	// 创建成功的访问控制列表。
+	TranslationAclRuleSet []*TranslationAclRule `json:"TranslationAclRuleSet,omitnil,omitempty" name:"TranslationAclRuleSet"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -17900,6 +17903,9 @@ type DescribePrivateNatGatewayTranslationAclRulesRequestParams struct {
 
 	// ACL规则描述
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 过滤条件。<li>AclRuleId - Integer - ACL规则ID。</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribePrivateNatGatewayTranslationAclRulesRequest struct {
@@ -17928,6 +17934,9 @@ type DescribePrivateNatGatewayTranslationAclRulesRequest struct {
 
 	// ACL规则描述
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 过滤条件。<li>AclRuleId - Integer - ACL规则ID。</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribePrivateNatGatewayTranslationAclRulesRequest) ToJsonString() string {
@@ -17950,6 +17959,7 @@ func (r *DescribePrivateNatGatewayTranslationAclRulesRequest) FromJsonString(s s
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "Description")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePrivateNatGatewayTranslationAclRulesRequest has unknown keys!", "")
 	}
@@ -24715,11 +24725,14 @@ type GatewayQos struct {
 	// 云服务器内网IP。
 	IpAddress *string `json:"IpAddress,omitnil,omitempty" name:"IpAddress"`
 
-	// 流控带宽值。
+	// 网关流控出方向带宽值，当值为-1时，代表未限速；当值大于等于0时，限速带宽上限为返回值。
 	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 创建时间。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 网关流控入方向带宽值，当值为-1时，代表未限速；当值大于等于0时，限速带宽上限为返回值。
+	InBandwidth *int64 `json:"InBandwidth,omitnil,omitempty" name:"InBandwidth"`
 }
 
 // Predefined struct for user
@@ -31527,6 +31540,9 @@ type NatGateway struct {
 	// NAT网关类型，1表示传统型NAT网关，2表示标准型NAT网关
 	NatProductVersion *uint64 `json:"NatProductVersion,omitnil,omitempty" name:"NatProductVersion"`
 
+	// true代表仅允许匹配SNAT规则的内网IP的流量进行转发，false代表所有内网IP发起的流量都进行转发。默认为false。
+	StrictSnatMode *bool `json:"StrictSnatMode,omitnil,omitempty" name:"StrictSnatMode"`
+
 	// 是否启用根据目的网段选择SNAT使用的EIP功能	
 	SmartScheduleMode *bool `json:"SmartScheduleMode,omitnil,omitempty" name:"SmartScheduleMode"`
 
@@ -31541,6 +31557,15 @@ type NatGateway struct {
 
 	// 独享实例规格。取值范围：ExclusiveSmall/ExclusiveMedium1/ExclusiveLarge1
 	ExclusiveType *string `json:"ExclusiveType,omitnil,omitempty" name:"ExclusiveType"`
+
+	// 标准型NAT网关自动扩容
+	AutoScaling *bool `json:"AutoScaling,omitnil,omitempty" name:"AutoScaling"`
+
+	// 是否代答公网发给NAT网关上弹性公网IP的ICMP echo请求报文，当前适用于标准型NAT网关
+	ICMPProxy *bool `json:"ICMPProxy,omitnil,omitempty" name:"ICMPProxy"`
+
+	// true代表同一个私网IP访问同一个公网目的IP时，固定使用同一个NAT网关上的弹性公网IP；false代表这种情况下使用的弹性公网IP不固定。默认为true。
+	PublicAddressAffinity *bool `json:"PublicAddressAffinity,omitnil,omitempty" name:"PublicAddressAffinity"`
 }
 
 type NatGatewayAddress struct {
@@ -36746,6 +36771,9 @@ type VpnGatewayRoute struct {
 
 	// 更新时间。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// 路由备注
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type VpnGatewayRouteModify struct {
@@ -36754,6 +36782,9 @@ type VpnGatewayRouteModify struct {
 
 	// VPN网关状态, ENABLE 启用, DISABLE禁用。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// VPN路由备注
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type VpngwCcnRoutes struct {

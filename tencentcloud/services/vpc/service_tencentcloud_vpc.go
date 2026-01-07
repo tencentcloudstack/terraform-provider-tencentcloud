@@ -8767,3 +8767,73 @@ func (me *VpcService) DescribeVpcRoutePolicyAssociationById(ctx context.Context,
 
 	return
 }
+
+func (me *VpcService) DescribeVpcPrivateNatGatewayTranslationAclRuleById(ctx context.Context, natGatewayId, translationDirection, translationType, translationIp, originalIp, aclruleId string) (ret []*vpc.TranslationAclRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribePrivateNatGatewayTranslationAclRulesRequest()
+	response := vpc.NewDescribePrivateNatGatewayTranslationAclRulesResponse()
+	request.NatGatewayId = &natGatewayId
+	request.TranslationDirection = &translationDirection
+	request.TranslationType = &translationType
+	request.TranslationIp = &translationIp
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   common.StringPtr("AclRuleId"),
+			Values: common.StringPtrs([]string{aclruleId}),
+		},
+	}
+	if originalIp != "" {
+		request.OriginalIp = &originalIp
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseVpcClient().DescribePrivateNatGatewayTranslationAclRules(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.TranslationAclRuleSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe private nat gateway translation acl rules failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.TranslationAclRuleSet) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.TranslationAclRuleSet...)
+		if len(response.Response.TranslationAclRuleSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
