@@ -1,5 +1,9 @@
 Provides a resource to create a CFW nat policy order config
 
+~> **NOTE:** If resource `tencentcloud_cfw_nat_policy_order_config` is used to sort resource `tencentcloud_cfw_nat_policy`, all instances of resource `tencentcloud_cfw_nat_policy` must be configured simultaneously, and the sorting of this resource cannot be declared elsewhere.
+
+~> **NOTE:** At any given time, resource `tencentcloud_cfw_nat_policy_order_config` can only be sorted against resources `tencentcloud_cfw_nat_policy` of the same `direction`.
+
 Example Usage
 
 ```hcl
@@ -56,8 +60,8 @@ resource "tencentcloud_cfw_nat_policy_order_config" "example" {
 
 Import
 
-CFW nat policy order config can be imported using the id, e.g.
+CFW nat policy order config can be imported using the customId(like uuid or base64 string), e.g.
 
 ```
-terraform import tencentcloud_cfw_nat_policy_order_config.example 151517
+terraform import tencentcloud_cfw_nat_policy_order_config.example GedqV07VpNU0ob8LuOXw==
 ```

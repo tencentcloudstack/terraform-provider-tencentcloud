@@ -19,6 +19,9 @@ func ResourceTencentCloudCfwNatPolicyOrderConfig() *schema.Resource {
 		Read:   resourceTencentCloudCfwNatPolicyOrderConfigRead,
 		Update: resourceTencentCloudCfwNatPolicyOrderConfigUpdate,
 		Delete: resourceTencentCloudCfwNatPolicyOrderConfigDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"uuid_list": {
 				Type:        schema.TypeList,
@@ -49,23 +52,25 @@ func resourceTencentCloudCfwNatPolicyOrderConfigRead(d *schema.ResourceData, met
 		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	if v, ok := d.GetOk("uuid_list"); ok {
-		for _, item := range v.([]interface{}) {
-			uuid := helper.IntToStr(item.(int))
-			natPolicy, err := service.DescribeCfwNatPolicyOrderConfigById(ctx, uuid)
-			if err != nil {
-				return err
-			}
+	respData, err := service.DescribeCfwNatPolicyOrderConfigs(ctx)
+	if err != nil {
+		return err
+	}
 
-			if natPolicy == nil {
-				return fmt.Errorf("uuid %d does not exist.", item.(int))
-			}
+	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_nat_policy_order_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
+		return nil
+	}
 
-			if natPolicy.Uuid == nil {
-				return fmt.Errorf("uuid %d does not exist.", item.(int))
-			}
+	tmpList := make([]int, 0, len(respData))
+	for _, item := range respData {
+		if item != nil && item.Uuid != nil {
+			tmpList = append(tmpList, int(*item.Uuid))
 		}
 	}
+
+	_ = d.Set("uuid_list", tmpList)
 
 	return nil
 }
