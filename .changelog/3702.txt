@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_vpc_private_nat_gateway_translation_acl_rule
+```
