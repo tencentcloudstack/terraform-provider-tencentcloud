@@ -74,13 +74,11 @@ func resourceTencentCloudCfwNatPolicyOrderConfigRead(d *schema.ResourceData, met
 	inTmpList := make([]int, 0, len(respData))
 	outTmpList := make([]int, 0, len(respData))
 	for _, item := range respData {
-		if item != nil && item.Uuid != nil {
-			if item.Direction != nil {
-				if *item.Direction == 1 {
-					inTmpList = append(inTmpList, int(*item.Uuid))
-				} else if *item.Direction == 0 {
-					outTmpList = append(outTmpList, int(*item.Uuid))
-				}
+		if item != nil && item.Uuid != nil && item.Direction != nil {
+			if *item.Direction == 1 {
+				inTmpList = append(inTmpList, int(*item.Uuid))
+			} else if *item.Direction == 0 {
+				outTmpList = append(outTmpList, int(*item.Uuid))
 			}
 		}
 	}
