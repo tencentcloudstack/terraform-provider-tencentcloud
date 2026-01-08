@@ -134,27 +134,28 @@ const (
 	PROVIDER_COS_DOMAIN     = "TENCENTCLOUD_COS_DOMAIN"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	PROVIDER_ASSUME_ROLE_ARN                    = "TENCENTCLOUD_ASSUME_ROLE_ARN"
-	PROVIDER_ASSUME_ROLE_SESSION_NAME           = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
-	PROVIDER_ASSUME_ROLE_SESSION_DURATION       = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
-	PROVIDER_ASSUME_ROLE_EXTERNAL_ID            = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
-	PROVIDER_ASSUME_ROLE_SOURCE_IDENTITY        = "TENCENTCLOUD_ASSUME_ROLE_SOURCE_IDENTITY"
-	PROVIDER_ASSUME_ROLE_SERIAL_NUMBER          = "TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER"
-	PROVIDER_ASSUME_ROLE_TOKEN_CODE             = "TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE"
-	PROVIDER_ASSUME_ROLE_SAML_ASSERTION         = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
-	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN          = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
-	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN     = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
-	PROVIDER_ASSUME_ROLE_PROVIDER_ID            = "TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID"
-	PROVIDER_MFA_CERTIFICATION_SERIAL_NUMBER    = "TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER"
-	PROVIDER_MFA_CERTIFICATION_TOKEN_CODE       = "TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE"
-	PROVIDER_MFA_CERTIFICATION_DURATION_SECONDS = "TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS"
-	PROVIDER_SHARED_CREDENTIALS_DIR             = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
-	PROVIDER_PROFILE                            = "TENCENTCLOUD_PROFILE"
-	PROVIDER_CAM_ROLE_NAME                      = "TENCENTCLOUD_CAM_ROLE_NAME"
-	POD_OIDC_TKE_REGION                         = "TKE_REGION"
-	POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE        = "TKE_WEB_IDENTITY_TOKEN_FILE"
-	POD_OIDC_TKE_PROVIDER_ID                    = "TKE_PROVIDER_ID"
-	POD_OIDC_TKE_ROLE_ARN                       = "TKE_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_ARN                     = "TENCENTCLOUD_ASSUME_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_SESSION_NAME            = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
+	PROVIDER_ASSUME_ROLE_SESSION_DURATION        = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	PROVIDER_ASSUME_ROLE_EXTERNAL_ID             = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
+	PROVIDER_ASSUME_ROLE_SOURCE_IDENTITY         = "TENCENTCLOUD_ASSUME_ROLE_SOURCE_IDENTITY"
+	PROVIDER_ASSUME_ROLE_SERIAL_NUMBER           = "TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER"
+	PROVIDER_ASSUME_ROLE_TOKEN_CODE              = "TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE"
+	PROVIDER_ASSUME_ROLE_SAML_ASSERTION          = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
+	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN           = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
+	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN      = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
+	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE"
+	PROVIDER_ASSUME_ROLE_PROVIDER_ID             = "TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID"
+	PROVIDER_MFA_CERTIFICATION_SERIAL_NUMBER     = "TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER"
+	PROVIDER_MFA_CERTIFICATION_TOKEN_CODE        = "TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE"
+	PROVIDER_MFA_CERTIFICATION_DURATION_SECONDS  = "TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS"
+	PROVIDER_SHARED_CREDENTIALS_DIR              = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
+	PROVIDER_PROFILE                             = "TENCENTCLOUD_PROFILE"
+	PROVIDER_CAM_ROLE_NAME                       = "TENCENTCLOUD_CAM_ROLE_NAME"
+	POD_OIDC_TKE_REGION                          = "TKE_REGION"
+	POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE         = "TKE_WEB_IDENTITY_TOKEN_FILE"
+	POD_OIDC_TKE_PROVIDER_ID                     = "TKE_PROVIDER_ID"
+	POD_OIDC_TKE_ROLE_ARN                        = "TKE_ROLE_ARN"
 )
 
 const (
@@ -358,9 +359,15 @@ func Provider() *schema.Provider {
 						},
 						"web_identity_token": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN, nil),
-							Description: "OIDC token issued by IdP. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.",
+							Description: "OIDC token issued by IdP. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`. One of `web_identity_token` or `web_identity_token_file` is required.",
+						},
+						"web_identity_token_file": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE, nil),
+							Description: "File containing a web identity token from an OpenID Connect (OIDC) or OAuth provider. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE`. One of `web_identity_token` or `web_identity_token_file` is required.",
 						},
 						"role_arn": {
 							Type:        schema.TypeString,
@@ -2748,10 +2755,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	var (
-		assumeRoleSamlAssertion    string
-		assumeRolePrincipalArn     string
-		assumeRoleWebIdentityToken string
-		assumeRoleProviderId       string
+		assumeRoleSamlAssertion        string
+		assumeRolePrincipalArn         string
+		assumeRoleWebIdentityToken     string
+		assumeRoleWebIdentityTokenFile string
+		assumeRoleProviderId           string
 	)
 
 	// get assume role with saml from tf
@@ -2779,11 +2787,27 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		assumeRoleWithWebIdentityList := v.([]interface{})
 		if len(assumeRoleWithWebIdentityList) == 1 {
 			assumeRoleWithWebIdentity := assumeRoleWithWebIdentityList[0].(map[string]interface{})
-			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
+			assumeRoleWebIdentityTokenFile = assumeRoleWithWebIdentity["web_identity_token_file"].(string)
 			assumeRoleArn = assumeRoleWithWebIdentity["role_arn"].(string)
 			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
 			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
 			assumeRoleProviderId = assumeRoleWithWebIdentity["provider_id"].(string)
+
+			// get token with priority: field first, then file
+			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
+			if assumeRoleWebIdentityToken == "" && assumeRoleWebIdentityTokenFile != "" {
+				config, err := getConfigFromWebIdentityTokenFile(assumeRoleWebIdentityTokenFile)
+				if err != nil {
+					return nil, err
+				}
+
+				assumeRoleWebIdentityToken = config["web_identity_token"].(string)
+			}
+
+			if assumeRoleWebIdentityToken == "" {
+				return nil, fmt.Errorf("`web_identity_token` can not be empty. you can choose to set it in `web_identity_token` or `web_identity_token_file`.\n")
+			}
+
 			err = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken, assumeRoleProviderId)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role with OIDC failed. Reason: %s", err.Error())
@@ -3264,4 +3288,29 @@ func verifyAccountIDAllowed(indentity *sdksts.GetCallerIdentityResponseParams, a
 	}
 
 	return nil
+}
+
+func getConfigFromWebIdentityTokenFile(filePath string) (map[string]interface{}, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read `web_identity_token_file` %s: %w", filePath, err)
+	}
+
+	var config struct {
+		WebIdentityToken string `json:"web_identity_token"`
+	}
+
+	if err := json.Unmarshal(data, &config); err != nil {
+		return nil, fmt.Errorf("failed to parse `web_identity_token_file` JSON from %s: %w", filePath, err)
+	}
+
+	if config.WebIdentityToken == "" {
+		return nil, fmt.Errorf("field `web_identity_token` in `web_identity_token_file` is empty in %s", filePath)
+	}
+
+	result := map[string]interface{}{
+		"web_identity_token": config.WebIdentityToken,
+	}
+
+	return result, nil
 }
