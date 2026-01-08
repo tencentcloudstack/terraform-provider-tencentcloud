@@ -50,7 +50,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 		return
 	}
 
-	var headName = "X-TC-Action"
+	var headName = "X-Tc-Action"
 
 	if envReqClient := os.Getenv(REQUEST_CLIENT); envReqClient != "" {
 		ReqClient = envReqClient
@@ -77,7 +77,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	}
 
 	inBytes = append(inBytes, requestBody...)
-	headName = "X-TC-Region"
+	headName = "X-Tc-Region"
 	appendMessage := []byte(fmt.Sprintf(
 		", (host %+v, region:%+v)",
 		request.Header["Host"],
