@@ -16,12 +16,8 @@ import (
 	"golang.org/x/tools/go/analysis/passes/inspect"
 	"golang.org/x/tools/go/analysis/passes/internal/analysisutil"
 	"golang.org/x/tools/go/ast/inspector"
-	"golang.org/x/tools/internal/typeparams"
+	"golang.org/x/tools/internal/typesinternal"
 )
-
-const Doc = `check for useless comparisons between functions and nil
-
-A useless comparison is one like f == nil as opposed to f() == nil.`
 
 //go:embed doc.go
 var doc string
@@ -34,7 +30,7 @@ var Analyzer = &analysis.Analyzer{
 	Run:      run,
 }
 
-func run(pass *analysis.Pass) (interface{}, error) {
+func run(pass *analysis.Pass) (any, error) {
 	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 
 	nodeFilter := []ast.Node{
@@ -59,24 +55,8 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			return
 		}
 
-		// Only want identifiers or selector expressions.
-		var obj types.Object
-		switch v := e2.(type) {
-		case *ast.Ident:
-			obj = pass.TypesInfo.Uses[v]
-		case *ast.SelectorExpr:
-			obj = pass.TypesInfo.Uses[v.Sel]
-		case *ast.IndexExpr, *typeparams.IndexListExpr:
-			// Check generic functions such as "f[T1,T2]".
-			x, _, _, _ := typeparams.UnpackIndexExpr(v)
-			if id, ok := x.(*ast.Ident); ok {
-				obj = pass.TypesInfo.Uses[id]
-			}
-		default:
-			return
-		}
-
 		// Only want functions.
+		obj := pass.TypesInfo.Uses[typesinternal.UsedIdent(pass.TypesInfo, e2)]
 		if _, ok := obj.(*types.Func); !ok {
 			return
 		}
