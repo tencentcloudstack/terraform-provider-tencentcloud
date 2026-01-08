@@ -18,7 +18,7 @@ Provides a resource to create a CFW nat policy order config
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cfw_nat_policy" "example1" {
+resource "tencentcloud_cfw_nat_policy" "in_example1" {
   source_content = "1.1.1.1/24"
   source_type    = "net"
   target_content = "0.0.0.0/0"
@@ -32,7 +32,7 @@ resource "tencentcloud_cfw_nat_policy" "example1" {
   scope          = "ALL"
 }
 
-resource "tencentcloud_cfw_nat_policy" "example2" {
+resource "tencentcloud_cfw_nat_policy" "in_example2" {
   source_content = "3.3.3.3/24"
   source_type    = "net"
   target_content = "0.0.0.0/0"
@@ -46,7 +46,7 @@ resource "tencentcloud_cfw_nat_policy" "example2" {
   scope          = "ALL"
 }
 
-resource "tencentcloud_cfw_nat_policy" "example3" {
+resource "tencentcloud_cfw_nat_policy" "in_example3" {
   source_content = "6.6.6.6/24"
   source_type    = "net"
   target_content = "0.0.0.0/0"
@@ -60,11 +60,45 @@ resource "tencentcloud_cfw_nat_policy" "example3" {
   scope          = "ALL"
 }
 
+resource "tencentcloud_cfw_nat_policy" "out_example1" {
+  source_content = "1.1.1.1/24"
+  source_type    = "net"
+  target_content = "0.0.0.0/0"
+  target_type    = "net"
+  protocol       = "TCP"
+  rule_action    = "drop"
+  port           = "-1/-1"
+  direction      = 0
+  enable         = "true"
+  description    = "remark."
+  scope          = "ALL"
+}
+
+resource "tencentcloud_cfw_nat_policy" "out_example2" {
+  source_content = "3.3.3.3/24"
+  source_type    = "net"
+  target_content = "0.0.0.0/0"
+  target_type    = "net"
+  protocol       = "ANY"
+  rule_action    = "accept"
+  port           = "-1/-1"
+  direction      = 0
+  enable         = "true"
+  description    = "remark."
+  scope          = "ALL"
+}
+
+
 resource "tencentcloud_cfw_nat_policy_order_config" "example" {
-  uuid_list = [
-    tencentcloud_cfw_nat_policy.example2.uuid,
-    tencentcloud_cfw_nat_policy.example3.uuid,
-    tencentcloud_cfw_nat_policy.example1.uuid,
+  inbound_rule_uuid_list = [
+    tencentcloud_cfw_nat_policy.in_example3.uuid,
+    tencentcloud_cfw_nat_policy.in_example1.uuid,
+    tencentcloud_cfw_nat_policy.in_example2.uuid,
+  ]
+
+  outbound_rule_uuid_list = [
+    tencentcloud_cfw_nat_policy.out_example2.uuid,
+    tencentcloud_cfw_nat_policy.out_example1.uuid,
   ]
 }
 ```
@@ -73,7 +107,8 @@ resource "tencentcloud_cfw_nat_policy_order_config" "example" {
 
 The following arguments are supported:
 
-* `uuid_list` - (Required, List: [`Int`]) The unique IDs of the rule, which is not required when you create a rule. The priority will be determined by the index position of the UUID in the list.
+* `inbound_rule_uuid_list` - (Optional, List: [`Int`]) The unique IDs of the inbound rule, which is not required when you create a rule. The priority will be determined by the index position of the UUID in the list.
+* `outbound_rule_uuid_list` - (Optional, List: [`Int`]) The unique IDs of the outbound rule, which is not required when you create a rule. The priority will be determined by the index position of the UUID in the list.
 
 ## Attributes Reference
 
