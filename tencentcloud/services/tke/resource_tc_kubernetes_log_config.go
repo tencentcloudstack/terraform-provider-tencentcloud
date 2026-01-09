@@ -25,7 +25,7 @@ func ResourceTencentCloudKubernetesLogConfig() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "JSON expression of log collection configuration.",
+				Description: "JSON expression of log collection configuration. For more details, please refer to the guide: https://www.tencentcloud.com/zh/document/product/457/64846.",
 			},
 
 			"log_config_name": {
