@@ -250,10 +250,68 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Optional:    true,
 							Description: "Status identifier, available values: `Enabled`, `Disabled`.",
 						},
+						"priority": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Execution priority, used to handle scenarios where the target storage buckets are the same and multiple replication rules match the same object. Note: Supports setting positive integers in the range of 1-1000. The Priority values of different rules cannot be duplicated. Storage bucket replication rules must either all have Priority set or all not have Priority set. When all rules have Priority set, overlapping prefixes are allowed for different rules when the target storage buckets are the same. When different rules match the same object, the rule with the smallest Priority value will be triggered first. When none of the rules have Priority set, overlapping prefixes are not allowed for different rules.",
+						},
 						"prefix": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.",
+						},
+						"filter": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Filter the objects to be copied. The bucket feature will copy objects that match the prefixes and tags specified in the Filter settings.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"and": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: "When filtering objects to be copied, if both prefix and object tag conditions are required simultaneously, or if multiple object tag conditions are needed, they must be enclosed in an `And` statement.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"prefix": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Filter objects by prefix; you can specify at most one prefix.",
+												},
+												"tag": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "When filtering objects to be copied, you can use object tags (multiple tags are supported) as filtering criteria, with a maximum of 10 tags allowed. After adding tags as filtering criteria, the `delete_marker_replication.status` option must be set to false.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"key": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Tag key.",
+															},
+															"value": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Tag value.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"prefix": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Filter objects by prefix; you can specify at most one prefix.",
+									},
+								},
+							},
 						},
 						"destination_bucket": {
 							Type:        schema.TypeString,
@@ -263,7 +321,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 						"destination_storage_class": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Storage class of destination, available values: `STANDARD`, `INTELLIGENT_TIERING`, `STANDARD_IA`. default is following current class of destination.",
+							Description: "Storage class of destination, available values: `Standard`, `Intelligent_Tiering`, `Standard_IA`. default is following current class of destination.",
 						},
 						"destination_encryption_kms_key_id": {
 							Type:        schema.TypeString,
@@ -288,6 +346,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 						"source_selection_criteria": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "This is used to specify additional conditions for objects supported by bucket replication rules. Currently, only the option to replicate KMS-encrypted objects is supported.",
 							Elem: &schema.Resource{
@@ -295,6 +354,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 									"sse_kms_encrypted_objects": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Choose whether to copy the KMS-encrypted objects.",
 										Elem: &schema.Resource{
@@ -302,6 +362,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 												"status": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Choose whether to copy KMS encrypted objects; supported values are Enabled and Disabled.",
 												},
 											},
@@ -649,6 +710,113 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 				Computed:    true,
 				Description: "Specify the access limit for converting standard layer data into low-frequency layer data in the configuration. The default value is once, which can be used in combination with the number of days to achieve the conversion effect. For example, if the parameter is set to 1 and the number of access days is 30, it means that objects with less than one visit in 30 consecutive days will be reduced from the standard layer to the low frequency layer.",
 			},
+			"intelligent_tiering_archiving_rule_list": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List of intelligent tiered storage, archiving, and deep archiving rules. NOTE: only `enable_intelligent_tiering` is true can configure this argument.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rule_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The name of the intelligent tiering rule name list task, with the ID set to a non-default string, indicates that this rule is a conversion rule for archive and deep archive tiers.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Indicates whether the intelligent tiering rule is enabled. Possible values: Enabled, Disabled. When the ID is `default`, only `Enabled` is supported.",
+						},
+						"filter": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Specifies configuration information related to data transformation in the intelligent tiered storage configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"and": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: "For filtering conditions, if both prefix and object tag conditions are required simultaneously, they need to be wrapped with an `And` operator.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"prefix": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Filter objects by prefix; you can specify at most one prefix.",
+												},
+												"tag": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "When filtering objects for analysis, you can use object tags (multiple tags are supported) as filtering criteria.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"key": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Tag key.",
+															},
+															"value": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Tag value.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"prefix": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Filter objects by prefix; you can specify at most one prefix.",
+									},
+									"tag": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "When filtering objects for analysis, you can use object tags (multiple tags are supported) as filtering criteria.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"key": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Tag key.",
+												},
+												"value": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Tag value.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"tiering": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "Specifies configuration information related to data transformation in the intelligent tiered storage configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"access_tier": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "When `rule_id` is not `default`, this parameter is used to specify the archiving or deep archiving tier.  The possible value are: ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS.",
+									},
+									"days": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "When the `rule_id` is not set to default, this specifies the number of days after which data is transitioned to the archive or deep archive tier in the intelligent tiering storage configuration. The archive tier (ARCHIVE_ACCESS) supports a range of 91 to 730 days. The deep archive tier (DEEP_ARCHIVE_ACCESS) supports a range of 180 to 730 days. Within the same rule, the number of days for the deep archive tier must be greater than the number of days for the archive tier.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"cdc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -658,13 +826,14 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 			"object_lock_configuration": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
-				Description: "Object locking configuration.",
+				Description: "Object locking configuration. Once enabled, this feature cannot be disabled.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
 							Type:        schema.TypeBool,
-							Optional:    true,
+							Required:    true,
 							Description: "Enable object lock configuration.",
 						},
 						"rule": {
@@ -676,14 +845,14 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"days": {
 										Type:        schema.TypeInt,
-										Optional:    true,
+										Required:    true,
 										Description: "Object lock default duration (range: 1-36500).",
 									},
-									"mode": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "The object lock default mode only supports the enumerated value `COMPLIANCE`. If this field is left blank, it defaults to `COMPLIANCE`.",
-									},
+									// "mode": {
+									// 	Type:        schema.TypeString,
+									// 	Optional:    true,
+									// 	Description: "The object lock default mode only supports the enumerated value `COMPLIANCE`. If this field is left blank, it defaults to `COMPLIANCE`.",
+									// },
 								},
 							},
 						},
@@ -947,11 +1116,117 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		} else {
 			_ = d.Set("enable_intelligent_tiering", false)
 		}
+
+		if result.Transition != nil {
+			_ = d.Set("intelligent_tiering_days", result.Transition.Days)
+			_ = d.Set("intelligent_tiering_request_frequent", result.Transition.RequestFrequent)
+		}
 	}
-	if result != nil && result.Transition != nil {
-		_ = d.Set("intelligent_tiering_days", result.Transition.Days)
-		_ = d.Set("intelligent_tiering_request_frequent", result.Transition.RequestFrequent)
+
+	//read intelligent tiering archiving rule list
+	respData, err := cosService.BucketGetIntelligentTieringArchivingRuleList(ctx, bucket, cdcId)
+	if err != nil {
+		return fmt.Errorf("get intelligent tiering archiving rule list failed: %v", err)
 	}
+
+	if respData != nil {
+		if respData.Configurations != nil && len(respData.Configurations) > 0 {
+			intelligentTieringArchivingRules := make([]map[string]interface{}, 0, len(respData.Configurations))
+			for _, config := range respData.Configurations {
+				intelligentTieringArchivingRule := make(map[string]interface{})
+				if config.Id == "default" {
+					continue
+				}
+
+				intelligentTieringArchivingRule["rule_id"] = config.Id
+				intelligentTieringArchivingRule["status"] = config.Status
+
+				if config.Filter != nil {
+					dMap := make(map[string]interface{})
+					if config.Filter.And != nil {
+						andMap := make(map[string]interface{}, 0)
+						if config.Filter.And.Prefix != "" {
+							andMap["prefix"] = config.Filter.And.Prefix
+						}
+
+						if config.Filter.And.Tag != nil && len(config.Filter.And.Tag) > 0 {
+							tagList := make([]map[string]interface{}, 0, len(config.Filter.And.Tag))
+							for _, item := range config.Filter.And.Tag {
+								dMap := make(map[string]interface{})
+								dMap["key"] = item.Key
+								dMap["value"] = item.Value
+								tagList = append(tagList, dMap)
+							}
+
+							andMap["tag"] = tagList
+						}
+
+						dMap["and"] = []interface{}{andMap}
+					}
+
+					if config.Filter.Prefix != "" {
+						dMap["prefix"] = config.Filter.Prefix
+					}
+
+					if config.Filter.Tag != nil && len(config.Filter.Tag) > 0 {
+						tagList := make([]map[string]interface{}, 0, len(config.Filter.Tag))
+						for _, item := range config.Filter.Tag {
+							dMap := make(map[string]interface{})
+							dMap["key"] = item.Key
+							dMap["value"] = item.Value
+							tagList = append(tagList, dMap)
+						}
+
+						dMap["tag"] = tagList
+					}
+
+					intelligentTieringArchivingRule["filter"] = []interface{}{dMap}
+				}
+
+				if config.Tiering != nil && len(config.Tiering) > 0 {
+					tieringList := make([]map[string]interface{}, 0, len(config.Tiering))
+					for _, item := range config.Tiering {
+						dMap := make(map[string]interface{})
+						dMap["access_tier"] = item.AccessTier
+						dMap["days"] = item.Days
+						tieringList = append(tieringList, dMap)
+					}
+
+					intelligentTieringArchivingRule["tiering"] = tieringList
+				}
+
+				intelligentTieringArchivingRules = append(intelligentTieringArchivingRules, intelligentTieringArchivingRule)
+			}
+
+			_ = d.Set("intelligent_tiering_archiving_rule_list", intelligentTieringArchivingRules)
+		}
+	}
+
+	//read object lock config
+	objLockData, err := cosService.BucketGetObjectLockConfiguration(ctx, bucket, cdcId)
+	if err != nil {
+		return fmt.Errorf("get object lock configuration failed: %v", err)
+	}
+
+	if objLockData != nil {
+		dMap := make(map[string]interface{})
+		if objLockData.ObjectLockEnabled == "Enabled" {
+			dMap["enabled"] = true
+		} else {
+			dMap["enabled"] = false
+		}
+
+		if objLockData.Rule != nil {
+			ruleList := make([]map[string]interface{}, 0, 1)
+			ruleMap := make(map[string]interface{})
+			ruleMap["days"] = objLockData.Rule.Days
+			ruleList = append(ruleList, ruleMap)
+			dMap["rule"] = ruleList
+		}
+
+		_ = d.Set("object_lock_configuration", []interface{}{dMap})
+	}
+
 	return nil
 }
 
@@ -991,6 +1266,124 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			err := cosService.BucketPutIntelligentTiering(ctx, d.Id(), opt, cdcId)
 			if err != nil {
 				return err
+			}
+		}
+	}
+
+	if d.HasChange("intelligent_tiering_archiving_rule_list") {
+		oldInterface, newInterface := d.GetChange("intelligent_tiering_archiving_rule_list")
+		oldList := oldInterface.([]interface{})
+		newList := newInterface.([]interface{})
+		if len(oldList) > 0 {
+			ruleIds := make([]string, 0, len(oldList))
+			for _, item := range oldList {
+				dMap := item.(map[string]interface{})
+				if v, ok := dMap["rule_id"].(string); ok && v != "" && v != "default" {
+					ruleIds = append(ruleIds, v)
+				}
+			}
+
+			if len(ruleIds) > 0 {
+				err := cosService.BucketDeleteIntelligentTieringArchivingRule(ctx, d.Id(), cdcId, ruleIds)
+				if err != nil {
+					return err
+				}
+			}
+		}
+
+		if len(newList) > 0 {
+			rules := make([]*cos.BucketPutIntelligentTieringOptions, 0)
+			for _, item := range newList {
+				dMap := item.(map[string]interface{})
+				rule := &cos.BucketPutIntelligentTieringOptions{}
+				if v, ok := dMap["rule_id"].(string); ok && v != "" && v != "default" {
+					rule.Id = v
+				}
+
+				if v, ok := dMap["status"].(string); ok && v != "" {
+					rule.Status = v
+				}
+
+				if v, ok := dMap["filter"]; ok {
+					for _, filterItem := range v.([]interface{}) {
+						filterMap := filterItem.(map[string]interface{})
+						filter := &cos.BucketIntelligentTieringFilter{}
+						if v, ok := filterMap["and"]; ok {
+							for _, andItem := range v.([]interface{}) {
+								andMap := andItem.(map[string]interface{})
+								and := &cos.BucketIntelligentTieringFilterAnd{}
+								if v, ok := andMap["prefix"].(string); ok && v != "" {
+									and.Prefix = v
+								}
+
+								if v, ok := andMap["tag"]; ok {
+									for _, tag := range v.([]interface{}) {
+										tagMap := tag.(map[string]interface{})
+										tmpTag := cos.BucketTaggingTag{}
+										if v, ok := tagMap["key"].(string); ok && v != "" {
+											tmpTag.Key = v
+										}
+
+										if v, ok := tagMap["value"].(string); ok && v != "" {
+											tmpTag.Value = v
+										}
+
+										and.Tag = append(and.Tag, &tmpTag)
+									}
+								}
+
+								filter.And = and
+							}
+						}
+
+						if v, ok := filterMap["prefix"].(string); ok && v != "" {
+							filter.Prefix = v
+						}
+
+						if v, ok := filterMap["tag"]; ok {
+							for _, tag := range v.([]interface{}) {
+								tagMap := tag.(map[string]interface{})
+								tmpTag := &cos.BucketTaggingTag{}
+								if v, ok := tagMap["key"].(string); ok && v != "" {
+									tmpTag.Key = v
+								}
+
+								if v, ok := tagMap["value"].(string); ok && v != "" {
+									tmpTag.Value = v
+								}
+
+								filter.Tag = append(filter.Tag, tmpTag)
+							}
+						}
+
+						rule.Filter = filter
+					}
+				}
+
+				if v, ok := dMap["tiering"]; ok {
+					for _, tieringItem := range v.([]interface{}) {
+						tieringMap := tieringItem.(map[string]interface{})
+						tiering := &cos.BucketIntelligentTieringTransition{}
+						if v, ok := tieringMap["access_tier"].(string); ok && v != "" {
+							tiering.AccessTier = v
+						}
+
+						if v, ok := tieringMap["days"].(int); ok {
+							tiering.Days = v
+						}
+
+						rule.Tiering = append(rule.Tiering, tiering)
+					}
+				}
+
+				rules = append(rules, rule)
+			}
+
+			if len(rules) > 0 {
+				err := cosService.BucketPutIntelligentTieringArchivingRule(ctx, d.Id(), cdcId, rules)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -1110,6 +1503,39 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
+	}
+
+	if d.HasChange("object_lock_configuration") {
+		if v, ok := d.GetOk("object_lock_configuration"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				objectLockConfig := &cos.BucketPutObjectLockOptions{}
+				if v, ok := dMap["enabled"].(bool); ok {
+					if v {
+						objectLockConfig.ObjectLockEnabled = "Enabled"
+					} else {
+						objectLockConfig.ObjectLockEnabled = "Disabled"
+					}
+				}
+
+				if v, ok := dMap["rule"]; ok {
+					for _, ruleItem := range v.([]interface{}) {
+						ruleMap := ruleItem.(map[string]interface{})
+						rule := &cos.ObjectLockRule{}
+						if v, ok := ruleMap["days"].(int); ok {
+							rule.Days = v
+						}
+
+						objectLockConfig.Rule = rule
+					}
+				}
+
+				err := cosService.BucketPutObjectLockConfiguration(ctx, d.Id(), cdcId, objectLockConfig)
+				if err != nil {
+					return err
+				}
+			}
+		}
 	}
 
 	d.Partial(false)
@@ -2036,25 +2462,69 @@ func getBucketReplications(d *schema.ResourceData) (role string, rules []cos.Buc
 				Bucket: item["destination_bucket"].(string),
 			},
 		}
+		if v, ok := item["priority"]; ok {
+			rule.Priority = v.(int)
+		}
 		if v, ok := item["prefix"].(string); ok {
 			rule.Prefix = v
+		}
+		if v, ok := item["filter"]; ok {
+			for _, filterItem := range v.([]interface{}) {
+				filterMap := filterItem.(map[string]interface{})
+				filter := &cos.ReplicationFilter{}
+				if v, ok := filterMap["and"]; ok {
+					for _, andItem := range v.([]interface{}) {
+						andMap := andItem.(map[string]interface{})
+						and := &cos.ReplicationFilterAnd{}
+						if v, ok := andMap["prefix"].(string); ok && v != "" {
+							and.Prefix = v
+						}
+
+						if v, ok := andMap["tag"]; ok {
+							for _, tag := range v.([]interface{}) {
+								tagMap := tag.(map[string]interface{})
+								tmpTag := cos.ObjectTaggingTag{}
+								if v, ok := tagMap["key"].(string); ok && v != "" {
+									tmpTag.Key = v
+								}
+
+								if v, ok := tagMap["value"].(string); ok && v != "" {
+									tmpTag.Value = v
+								}
+
+								and.Tag = append(and.Tag, tmpTag)
+							}
+						}
+
+						filter.And = and
+					}
+				}
+
+				if v, ok := filterMap["prefix"].(string); ok && v != "" {
+					filter.Prefix = v
+				}
+
+				rule.Filter = filter
+			}
 		}
 		if v, ok := item["id"].(string); ok {
 			rule.ID = v
 		}
-		if v, ok := item["destination_storage_class"].(string); ok {
+		if v, ok := item["destination_storage_class"].(string); ok && v != "" {
 			rule.Destination.StorageClass = v
 		}
-		if v, ok := item["destination_encryption_kms_key_id"].(string); ok {
+		if v, ok := item["destination_encryption_kms_key_id"].(string); ok && v != "" {
 			rule.Destination.EncryptionConfiguration = &cos.ReplicationEncryptionConfiguration{
 				ReplicaKmsKeyID: v,
 			}
 		}
 		if v, ok := item["delete_marker_replication"]; ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				rule.DeleteMarkerReplication = &cos.DeleteMarkerReplication{
-					Status: dMap["status"].(string),
+			for _, dmrConfig := range v.([]interface{}) {
+				dMap := dmrConfig.(map[string]interface{})
+				if vv, ok := dMap["status"].(string); ok {
+					rule.DeleteMarkerReplication = &cos.DeleteMarkerReplication{
+						Status: vv,
+					}
 				}
 			}
 		}
@@ -2094,16 +2564,55 @@ func setBucketReplication(d *schema.ResourceData, result cos.GetBucketReplicatio
 			if item.ID != "" {
 				rule["id"] = item.ID
 			}
+			if item.Priority != 0 {
+				rule["priority"] = item.Priority
+			}
 			if item.Prefix != "" {
 				rule["prefix"] = item.Prefix
 			}
-			if item.DeleteMarkerReplication != nil {
-				deleteMarkerReplicationMap := map[string]interface{}{
-					"status": item.DeleteMarkerReplication.Status,
+			if item.Filter != nil {
+				filter := make([]map[string]interface{}, 0)
+				filterMap := map[string]interface{}{}
+				if item.Filter.And != nil {
+					and := make([]map[string]interface{}, 0)
+					andMap := map[string]interface{}{}
+					if item.Filter.And.Prefix != "" {
+						andMap["prefix"] = item.Filter.And.Prefix
+					}
+					if len(item.Filter.And.Tag) > 0 {
+						tags := make([]map[string]interface{}, 0)
+						for i := range item.Filter.And.Tag {
+							tag := item.Filter.And.Tag[i]
+							tagMap := map[string]interface{}{
+								"key":   tag.Key,
+								"value": tag.Value,
+							}
+							tags = append(tags, tagMap)
+						}
+						andMap["tag"] = tags
+					}
+					and = append(and, andMap)
+					filterMap["and"] = and
 				}
-
-				rule["delete_marker_replication"] = []interface{}{deleteMarkerReplicationMap}
+				if item.Filter.Prefix != "" {
+					filterMap["prefix"] = item.Filter.Prefix
+				}
+				filter = append(filter, filterMap)
+				rule["filter"] = filter
 			}
+			if item.Destination.EncryptionConfiguration != nil {
+				rule["destination_encryption_kms_key_id"] = item.Destination.EncryptionConfiguration.ReplicaKmsKeyID
+			}
+			//
+			var deleteMarkerReplicationMap = map[string]interface{}{
+				"status": "Enabled",
+			}
+			if item.DeleteMarkerReplication != nil {
+				if item.DeleteMarkerReplication.Status != "" {
+					deleteMarkerReplicationMap["status"] = item.DeleteMarkerReplication.Status
+				}
+			}
+			rule["delete_marker_replication"] = []interface{}{deleteMarkerReplicationMap}
 			if item.SourceSelectionCriteria != nil {
 				sourceSelectionCriteriaMap := map[string]interface{}{}
 				if item.SourceSelectionCriteria.SseKmsEncryptedObjects != nil {

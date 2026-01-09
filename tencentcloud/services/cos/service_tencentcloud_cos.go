@@ -1548,7 +1548,6 @@ func (me *CosService) GetBucketReplication(ctx context.Context, bucket string, c
 	}
 
 	resp, _ := json.Marshal(response.Response.Body)
-
 	if err != nil {
 		errRet = err
 		return
@@ -1587,8 +1586,8 @@ func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, r
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
-		logId, "PutBucketReplication", resp)
+	log.Printf("[DEBUG]%s api[%s] request body [%s] response body [%s]\n",
+		logId, "PutBucketReplication", request, resp)
 
 	return
 }
@@ -1786,23 +1785,15 @@ func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket st
 		}
 	}()
 
-	ratelimit.Check("BucketPutIntelligentTiering")
+	ratelimit.Check("PutIntelligentTiering")
 	response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.PutIntelligentTiering(ctx, opt)
-
 	if err != nil {
 		errRet = fmt.Errorf("cos bucket put intelligent tiering error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
 	resp, _ := json.Marshal(response.Response.Body)
-
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
-		logId, "BucketPutIntelligentTiering", resp)
+	log.Printf("[DEBUG]%s api[%s] response body [%s]\n", logId, "PutIntelligentTiering", resp)
 
 	return nil
 }
@@ -1810,21 +1801,125 @@ func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket st
 func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket string, cdcId string) (result *cos.BucketGetIntelligentTieringResult, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	ratelimit.Check("BucketGetIntelligentTiering")
+	ratelimit.Check("GetIntelligentTiering")
 	intelligentTieringResult, response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.GetIntelligentTiering(ctx)
 
 	resp, _ := json.Marshal(response.Response.Body)
 	if response.StatusCode == 404 {
-		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
+		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetIntelligentTiering", response.StatusCode)
 		return
 	}
 
 	if err != nil {
+		errRet = err
 		return
 	}
+
 	result = intelligentTieringResult
-	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n",
-		logId, "GetIntelligentTiering", "", resp)
+	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n", logId, "GetIntelligentTiering", "", resp)
+	return
+}
+
+func (me *CosService) BucketGetIntelligentTieringArchivingRuleList(ctx context.Context, bucket string, cdcId string) (result *cos.ListIntelligentTieringConfigurations, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	ratelimit.Check("ListIntelligentTiering")
+	intelligentTieringResult, response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.ListIntelligentTiering(ctx)
+
+	resp, _ := json.Marshal(response.Response.Body)
+	if response.StatusCode == 404 {
+		log.Printf("[WARN]%s, api[%s] returns %d", logId, "ListIntelligentTiering", response.StatusCode)
+		return
+	}
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	result = intelligentTieringResult
+	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n", logId, "ListIntelligentTiering", "", resp)
+	return
+}
+
+func (me *CosService) BucketPutIntelligentTieringArchivingRule(ctx context.Context, bucket string, cdcId string, rules []*cos.BucketPutIntelligentTieringOptions) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	for _, rule := range rules {
+		ratelimit.Check("PutIntelligentTieringV2")
+		result, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.PutIntelligentTieringV2(ctx, rule)
+		if err != nil {
+			return err
+		}
+
+		resp, _ := json.Marshal(result.Response.Body)
+		log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n", logId, "PutIntelligentTieringV2", "", resp)
+	}
+
+	return
+}
+
+func (me *CosService) BucketDeleteIntelligentTieringArchivingRule(ctx context.Context, bucket string, cdcId string, ruleIds []string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	for _, ruleId := range ruleIds {
+		ratelimit.Check("DeleteIntelligentTiering")
+		result, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.DeleteIntelligentTiering(ctx, ruleId)
+		if err != nil {
+			return err
+		}
+
+		resp, _ := json.Marshal(result.Response.Body)
+		log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n", logId, "DeleteIntelligentTiering", "", resp)
+	}
+
+	return
+}
+
+func (me *CosService) BucketPutObjectLockConfiguration(ctx context.Context, bucket string, cdcId string, objectLockConfig *cos.BucketPutObjectLockOptions) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	req, _ := json.Marshal(objectLockConfig)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "PutObjectLockConfiguration", req, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("PutObjectLockConfiguration")
+	result, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.PutObjectLockConfiguration(ctx, objectLockConfig)
+	if err != nil {
+		errRet = fmt.Errorf("cos put object lock configuration error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	resp, _ := json.Marshal(result.Response.Body)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "PutObjectLockConfiguration", "", resp)
+	return nil
+}
+
+func (me *CosService) BucketGetObjectLockConfiguration(ctx context.Context, bucket string, cdcId string) (result *cos.BucketGetObjectLockResult, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetObjectLockConfiguration", "", errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("GetObjectLockConfiguration")
+	result, response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.GetObjectLockConfiguration(ctx)
+	resp, _ := json.Marshal(response.Response.Body)
+	if response.StatusCode == 404 {
+		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetObjectLockConfiguration", response.StatusCode)
+		return
+	}
+
+	if err != nil {
+		errRet = fmt.Errorf("cos get object lock configuration error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "GetObjectLockConfiguration", "", resp)
 	return
 }
 
