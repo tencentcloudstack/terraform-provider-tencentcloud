@@ -17,6 +17,7 @@ Provides a resource to create a CLB target group.
 resource "tencentcloud_clb_target_group" "test" {
   target_group_name = "test"
   port              = 33
+  type              = "v1"
 }
 ```
 
