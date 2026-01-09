@@ -12,7 +12,7 @@ require (
 	github.com/client9/misspell v0.3.4
 	github.com/fatih/color v1.15.0
 	github.com/golangci/golangci-lint v1.52.2
-	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2
@@ -100,7 +100,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.1.36
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.1.45
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
-	github.com/tencentyun/cos-go-sdk-v5 v0.7.66
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.72
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	gopkg.in/yaml.v2 v2.4.0
 )
@@ -200,7 +200,7 @@ require (
 	github.com/golangci/misspell v0.4.0 // indirect
 	github.com/golangci/revgrep v0.0.0-20220804021717-745bb2f7c2e6 // indirect
 	github.com/golangci/unconvert v0.0.0-20180507085042-28b1c447d1f4 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.1 // indirect
