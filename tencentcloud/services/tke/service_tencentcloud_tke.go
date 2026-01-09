@@ -1821,7 +1821,7 @@ func (me *TkeService) DescribeClusterNodePoolGlobalConfig(ctx context.Context, c
 }
 
 func (me *TkeService) WaitForAuthenticationOptionsUpdateSuccess(ctx context.Context, id string) (info *tke.ServiceAccountAuthenticationOptions, oidc *tke.OIDCConfigAuthenticationOptions, errRet error) {
-	err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		options, state, config, err := me.DescribeClusterAuthenticationOptions(ctx, id)
 		info = options
 		oidc = config

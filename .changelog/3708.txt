@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_encryption_protection: Adjust resource operation waiting time
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_auth_attachment: Adjust resource operation waiting time
+```
