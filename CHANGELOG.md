@@ -1,3 +1,23 @@
+## 1.82.52(January 9, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cfw_nat_policy_order_config` ([#3686](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3686))
+* **New Resource:** `tencentcloud_vpc_private_nat_gateway_translation_acl_rule` ([#3702](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3702))
+
+ENHANCEMENTS:
+
+* provider: OIDC support `web_identity_token_file` ([#3697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3697))
+* provider: optimiz code logic for log ([#3692](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3692))
+* resource/tencentcloud_clb_target_group: support `type`. ([#3704](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3704))
+* resource/tencentcloud_cos_bucket: support intelligent_tiering, object_lock, replica ([#3706](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3706))
+* resource/tencentcloud_kubernetes_auth_attachment: Adjust resource operation waiting time ([#3708](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3708))
+* resource/tencentcloud_kubernetes_encryption_protection: Adjust resource operation waiting time ([#3708](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3708))
+* resource/tencentcloud_kubernetes_log_config: Add detailed documentation guidelines ([#3705](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3705))
+* resource/tencentcloud_mongodb_sharding_instance: update doc. ([#3707](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3707))
+* resource/tencentcloud_teo_bind_security_template: support timeout. ([#3701](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3701))
+* resource/tencentcloud_teo_certificate_config: support timeout. ([#3701](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3701))
+
 ## 1.82.51(January 6, 2026)
 
 ENHANCEMENTS:
