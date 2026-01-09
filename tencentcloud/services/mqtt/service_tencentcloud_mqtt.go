@@ -462,6 +462,87 @@ func (me *MqttService) DescribeMqttAuthorizationPolicyById(ctx context.Context, 
 	return
 }
 
+func (me *MqttService) DescribeMqttMessageEnrichmentRuleById(ctx context.Context, instanceId string, ruleId int64) (ret *mqttv20240516.MessageEnrichmentRuleItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDescribeMessageEnrichmentRulesRequest()
+	response := mqttv20240516.NewDescribeMessageEnrichmentRulesResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMqttV20240516Client().DescribeMessageEnrichmentRules(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.Data == nil || len(response.Response.Data) == 0 {
+		return
+	}
+
+	// Find the rule with matching ID
+	for _, item := range response.Response.Data {
+		if item.Id != nil && *item.Id == ruleId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}
+
+func (me *MqttService) DeleteMqttMessageEnrichmentRuleById(ctx context.Context, instanceId string, ruleId int64) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDeleteMessageEnrichmentRuleRequest()
+	request.InstanceId = &instanceId
+	request.Id = &ruleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMqttV20240516Client().DeleteMessageEnrichmentRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *MqttService) DescribeMqttInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*mqttv20240516.MQTTInstanceItem, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
