@@ -79,6 +79,13 @@ func ResourceTencentCloudClbTargetGroup() *schema.Resource {
 				ForceNew:    true,
 				Description: "Target group type, currently supported v1 (legacy version target group) and v2 (new version target group), defaults to v1 (legacy version target group).",
 			},
+			"protocol": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Backend forwarding protocol of the target group. this field is required for the new version (v2) target group. currently supports TCP, UDP, HTTP, HTTPS, GRPC.",
+			},
 		},
 	}
 }
@@ -94,6 +101,7 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 		targetGroupName = d.Get("target_group_name").(string)
 		port            = uint64(d.Get("port").(int))
 		targetGroupType = d.Get("type").(string)
+		protocol        = d.Get("protocol").(string)
 		insAttachments  = make([]*clb.TargetGroupInstance, 0)
 		targetGroupId   string
 		err             error
@@ -117,7 +125,7 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	targetGroupId, err = clbService.CreateTargetGroup(ctx, targetGroupName, vpcId, port, insAttachments, targetGroupType)
+	targetGroupId, err = clbService.CreateTargetGroup(ctx, targetGroupName, vpcId, port, insAttachments, targetGroupType, protocol)
 	if err != nil {
 		return err
 	}
@@ -150,6 +158,7 @@ func resourceTencentCloudClbTargetRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("vpc_id", targetGroupInfos[0].VpcId)
 	_ = d.Set("port", targetGroupInfos[0].Port)
 	_ = d.Set("type", targetGroupInfos[0].TargetGroupType)
+	_ = d.Set("protocol", targetGroupInfos[0].Protocol)
 	return nil
 }
 

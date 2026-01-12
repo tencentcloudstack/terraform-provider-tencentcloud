@@ -26,6 +26,7 @@ resource "tencentcloud_clb_target_group" "test" {
 The following arguments are supported:
 
 * `port` - (Optional, Int) The default port of target group, add server after can use it.
+* `protocol` - (Optional, String, ForceNew) Backend forwarding protocol of the target group. this field is required for the new version (v2) target group. currently supports TCP, UDP, HTTP, HTTPS, GRPC.
 * `target_group_instances` - (Optional, List, **Deprecated**) It has been deprecated from version 1.77.3. please use `tencentcloud_clb_target_group_instance_attachment` instead. The backend server of target group bind.
 * `target_group_name` - (Optional, String) Target group name.
 * `type` - (Optional, String, ForceNew) Target group type, currently supported v1 (legacy version target group) and v2 (new version target group), defaults to v1 (legacy version target group).
