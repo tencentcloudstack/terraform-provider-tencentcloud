@@ -91,6 +91,29 @@ func ResourceTencentCloudCfwVpcInstance() *schema.Resource {
 								},
 							},
 						},
+						"fw_gateway": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"gateway_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Gateway ID.",
+									},
+									"vpc_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Vpc ID.",
+									},
+									"ip_address": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "IP address.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -450,6 +473,28 @@ func resourceTencentCloudCfwVpcInstanceRead(d *schema.ResourceData, meta interfa
 				}
 
 				vpcFwInstancesMap["fw_deploy"] = tmpList
+			}
+
+			if vpcFwInstances.FwGateway != nil {
+				fwGatewayList := []interface{}{}
+				for _, fwGateway := range vpcFwInstances.FwGateway {
+					fwGatewayMap := map[string]interface{}{}
+					if fwGateway.GatewayId != nil {
+						fwGatewayMap["gateway_id"] = fwGateway.GatewayId
+					}
+
+					if fwGateway.VpcId != nil {
+						fwGatewayMap["vpc_id"] = fwGateway.VpcId
+					}
+
+					if fwGateway.IpAddress != nil {
+						fwGatewayMap["ip_address"] = fwGateway.IpAddress
+					}
+
+					fwGatewayList = append(fwGatewayList, fwGatewayMap)
+				}
+
+				vpcFwInstancesMap["fw_gateway"] = fwGatewayList
 			}
 
 			vpcFwInstancesList = append(vpcFwInstancesList, vpcFwInstancesMap)
