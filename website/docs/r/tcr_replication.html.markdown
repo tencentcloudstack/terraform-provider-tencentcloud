@@ -92,7 +92,7 @@ The following arguments are supported:
 The `filters` object of `rule` supports the following:
 
 * `type` - (Required, String, ForceNew) Type (`name`, `tag` and `resource`).
-* `value` - (Optional, String, ForceNew) It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string.
+* `value` - (Optional, String, ForceNew) It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string. If the type is `name` it supports Namespace name/**, Namespace name/Repository name.
 
 The `peer_replication_option` object supports the following:
 
