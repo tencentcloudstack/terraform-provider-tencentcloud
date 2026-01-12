@@ -17,6 +17,7 @@ Create V2 target group
 ```hcl
 resource "tencentcloud_clb_target_group" "test" {
   target_group_name = "test"
+  vpc_id            = "vpc-axrsmmrv"
   port              = 33
   type              = "v2"
   protocol          = "TCP"
