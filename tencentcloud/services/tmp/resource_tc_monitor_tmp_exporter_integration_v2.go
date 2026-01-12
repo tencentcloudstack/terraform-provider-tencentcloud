@@ -40,7 +40,7 @@ func ResourceTencentCloudMonitorTmpExporterIntegrationV2() *schema.Resource {
 			"content": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Integration config.",
+				Description: "Integration config. For more details, please refer to [Cloud Monitoring](https://www.tencentcloud.com/document/product/248/63002?lang=en&pg=).",
 			},
 
 			"kube_type": {
