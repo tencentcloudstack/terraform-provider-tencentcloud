@@ -227,7 +227,7 @@ func resourceTencentCloudClsDataTransformUpdate(d *schema.ResourceData, meta int
 		dataTransformTaskId = d.Id()
 	)
 
-	immutableArgs := []string{"src_topic_id", "name", "etl_content", "enable_flag", "preview_log_statistics"}
+	immutableArgs := []string{"src_topic_id", "preview_log_statistics"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
