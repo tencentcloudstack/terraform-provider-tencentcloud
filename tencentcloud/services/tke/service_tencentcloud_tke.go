@@ -3899,3 +3899,49 @@ func (me *TkeService) DescribeKubernetesClusterReleaseById(ctx context.Context, 
 	ret = response.Response.Release
 	return
 }
+
+func (me *TkeService) DescribeKubernetesControlPlaneLogById(ctx context.Context, clusterId, clusterType, componentName string) (ret *tke.ComponentLogConfig, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeControlPlaneLogsRequest()
+	response := tke.NewDescribeControlPlaneLogsResponse()
+	request.ClusterId = helper.String(clusterId)
+	request.ClusterType = helper.String(clusterType)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeControlPlaneLogs(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Details == nil || len(result.Response.Details) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes control plane logs failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range response.Response.Details {
+		if item != nil && item.Name != nil && *item.Name == componentName {
+			ret = item
+			break
+		}
+	}
+
+	return
+}

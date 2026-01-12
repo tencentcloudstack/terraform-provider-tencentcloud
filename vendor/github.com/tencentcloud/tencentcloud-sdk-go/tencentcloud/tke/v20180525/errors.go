@@ -203,6 +203,9 @@ const (
 	// 节点池查询失败
 	FAILEDOPERATION_NODEPOOLQUERYFAILED = "FailedOperation.NodePoolQueryFailed"
 
+	// 您提交的操作被拒绝，请检查您的操作是否正确
+	FAILEDOPERATION_OPERATIONFORBIDDEN = "FailedOperation.OperationForbidden"
+
 	// 镜像OS不支持。
 	FAILEDOPERATION_OSNOTSUPPORT = "FailedOperation.OsNotSupport"
 
@@ -227,6 +230,9 @@ const (
 	// 记录没有发现。
 	FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 
+	// 切换内网直连失败
+	FAILEDOPERATION_SWITCHCLUSTERENDPOINT = "FailedOperation.SwitchClusterEndpoint"
+
 	// tag错误
 	FAILEDOPERATION_TAGCOMMON = "FailedOperation.TagCommon"
 
@@ -241,6 +247,9 @@ const (
 
 	// 询价错误。
 	FAILEDOPERATION_TRADECOMMON = "FailedOperation.TradeCommon"
+
+	// 账户余额不足
+	FAILEDOPERATION_TRADEINSUFFICIENTBALANCE = "FailedOperation.TradeInsufficientBalance"
 
 	// 不可预知的错误。
 	FAILEDOPERATION_UNEXPECTEDERROR = "FailedOperation.UnexpectedError"
@@ -550,6 +559,9 @@ const (
 
 	// 客户创建参数中，k8s 版本、运行时版本或 tke-eni-agent 版本不支持客户选择的操作系统中的CgroupV2。
 	INVALIDPARAMETER_VERSIONNOTSUPPORTCGROUPV2 = "InvalidParameter.VersionNotSupportCgroupV2"
+
+	// 镜像未找到
+	INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 
 	// 超出配额
 	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
