@@ -1,4 +1,4 @@
-Provides a resource to create a cfw vpc_instance
+Provides a resource to create a CFW vpc instance
 
 Example Usage
 
@@ -58,7 +58,7 @@ resource "tencentcloud_cfw_vpc_instance" "example" {
 
 Import
 
-cfw vpc_instance can be imported using the id, e.g.
+CFW vpc instance can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_cfw_vpc_instance.example cfwg-4ee69507
