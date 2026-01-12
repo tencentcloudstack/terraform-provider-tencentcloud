@@ -1,3 +1,17 @@
+## 1.82.53(January 12, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_kubernetes_control_plane_log` ([#3711](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3711))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfw_vpc_instance: add new params return ([#3715](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3715))
+* resource/tencentcloud_clb_target_group: support `protocol`. ([#3713](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3713))
+* resource/tencentcloud_cls_data_transform: support update name ([#3710](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3710))
+* resource/tencentcloud_monitor_tmp_exporter_integration_v2: update doc ([#3712](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3712))
+* resource/tencentcloud_sqlserver_recycle_ro_group: Remove Useless doc ([#3714](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3714))
+
 ## 1.82.52(January 9, 2026)
 
 FEATURES:
