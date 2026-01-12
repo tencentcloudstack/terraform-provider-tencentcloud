@@ -335,7 +335,7 @@ func resourceTencentCloudKubernetesControlPlaneLogDelete(d *schema.ResourceData,
 		}
 
 		if has {
-			resource.RetryableError(fmt.Errorf("wait for kubernetes control plane log deleteing..."))
+			return resource.RetryableError(fmt.Errorf("wait for kubernetes control plane log deleting..."))
 		}
 
 		return nil
