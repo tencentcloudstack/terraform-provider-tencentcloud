@@ -1246,7 +1246,7 @@ func clbNewTarget(instanceId, eniIp, port, weight interface{}) *clb.Target {
 }
 
 func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string, port uint64,
-	targetGroupInstances []*clb.TargetGroupInstance, targetGroupType string) (targetGroupId string, err error) {
+	targetGroupInstances []*clb.TargetGroupInstance, targetGroupType string, protocol string) (targetGroupId string, err error) {
 	var response *clb.CreateTargetGroupResponse
 
 	request := clb.NewCreateTargetGroupRequest()
@@ -1259,6 +1259,10 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 
 	if targetGroupType != "" {
 		request.Type = &targetGroupType
+	}
+
+	if protocol != "" {
+		request.Protocol = &protocol
 	}
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
