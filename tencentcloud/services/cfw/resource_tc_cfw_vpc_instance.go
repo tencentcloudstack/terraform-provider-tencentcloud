@@ -111,6 +111,12 @@ func ResourceTencentCloudCfwVpcInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cloud networking id, suitable for cloud networking mode.",
 			},
+			// computed
+			"fw_group_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Firewall group ID.",
+			},
 		},
 	}
 }
@@ -303,6 +309,10 @@ func resourceTencentCloudCfwVpcInstanceCreate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create cfw vpcInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -310,6 +320,10 @@ func resourceTencentCloudCfwVpcInstanceCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s create cfw vpcInstance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.FwGroupId == nil {
+		return fmt.Errorf("FwGroupId is nil.")
 	}
 
 	fwGroupId = *response.Response.FwGroupId
@@ -325,6 +339,10 @@ func resourceTencentCloudCfwVpcInstanceCreate(d *schema.ResourceData, meta inter
 		if vpcFwGroupInfo == nil {
 			e = fmt.Errorf("cfw vpc instance %s not exists", fwGroupId)
 			return resource.NonRetryableError(e)
+		}
+
+		if vpcFwGroupInfo.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("status is nil"))
 		}
 
 		if *vpcFwGroupInfo.Status == 0 {
@@ -360,8 +378,8 @@ func resourceTencentCloudCfwVpcInstanceRead(d *schema.ResourceData, meta interfa
 	}
 
 	if vpcInstance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_vpc_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CfwVpcInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -450,6 +468,10 @@ func resourceTencentCloudCfwVpcInstanceRead(d *schema.ResourceData, meta interfa
 
 	if vpcInstance.FwVpcCidr != nil {
 		_ = d.Set("fw_vpc_cidr", vpcInstance.FwVpcCidr)
+	}
+
+	if vpcInstance.FwGroupId != nil {
+		_ = d.Set("fw_group_id", vpcInstance.FwGroupId)
 	}
 
 	return nil
