@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_igtm_package_instance
+```
+
+```release-note:new-resource
+tencentcloud_igtm_package_task
+```
