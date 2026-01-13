@@ -87,81 +87,75 @@ func TestAccTencentCloudNeedFixWedataQualityRuleResource_fieldConfig(t *testing.
 }
 
 const testAccWedataQualityRule = `
-resource "tencentcloud_wedata_quality_rule" "example" {
-  project_id        = "1948767646355341312"
-  create_rule_scene = 1
-  name              = "tf_example_quality_rule"
-  type              = 1
-  datasource_id     = "20240101"
-  database_name     = "test_db"
-  table_name        = "test_table"
-  rule_template_id  = 1
-  quality_dim       = 1
-  rule_group_id     = 312
-  
+resource "tencentcloud_wedata_quality_rule" "system_rule" {
+  alarm_level                  = 2
+  condition_expression         = jsonencode(222)
+  condition_type               = 2
+  create_rule_scene            = 1
+  database_name                = "default"
+  datasource_id                = jsonencode(65253)
+  description                  = jsonencode(111)
+  name                         = "system_template_rule_tf_test"
+  project_id                   = jsonencode(3016337760439783424)
+  quality_dim                  = 1
+  rule_group_id                = 953
+  rule_template_id             = 6142
+  source_engine_types          = [2, 4, 16, 64, 128, 256, 512, 1024]
+  source_object_data_type_name = "table"
+  source_object_value          = "表"
+  table_id                     = jsonencode(120)
+  table_name                   = "big_table_500"
+  type                         = 1
   compare_rule {
+    compute_expression = jsonencode(0)
+    cycle_step         = 0
     items {
-      compare_type = 1
-      operator     = "=="
+      compare_type       = 1
+      operator           = "<"
+      value_compute_type = 0
       value_list {
+        value      = jsonencode(100)
         value_type = 3
-        value      = "100"
       }
     }
-    cycle_step         = 3600
-    compute_expression = "1"
   }
-  
-  alarm_level         = 1
-  source_engine_types = [1, 2]
-  
-  source_object_data_type_name = "table"
-  source_object_value          = "test_table"
-  condition_type               = 1
-  
-  description = "Example quality rule for testing"
 }
+
 `
 
 const testAccWedataQualityRuleUpdate = `
-resource "tencentcloud_wedata_quality_rule" "example" {
-  project_id        = "1948767646355341312"
-  create_rule_scene = 1
-  name              = "tf_example_quality_rule_update"
-  type              = 1
-  datasource_id     = "20240101"
-  database_name     = "test_db"
-  table_name        = "test_table"
-  rule_template_id  = 16
-  quality_dim       = 2
-  rule_group_id     = 312
-  
+resource "tencentcloud_wedata_quality_rule" "system_rule" {
+  alarm_level                  = 1
+  condition_expression         = "dt='000'"
+  condition_type               = 2
+  create_rule_scene            = 1
+  database_name                = "default"
+  datasource_id                = 65253
+  description                  = "rule desc"
+  name                         = "system_template_rule_tf_test"
+  project_id                   = jsonencode(3016337760439783424)
+  quality_dim                  = 1
+  rule_group_id                = 953
+  rule_template_id             = 6142
+  source_engine_types          = [2, 4, 16, 64, 128, 256, 512, 1024]
+  source_object_data_type_name = "table"
+  source_object_value          = "表"
+  table_id                     = jsonencode(120)
+  table_name                   = "big_table_500"
+  type                         = 1
   compare_rule {
+    compute_expression = jsonencode(0)
+    cycle_step         = 0
     items {
-      compare_type       = 2
-      value_compute_type = 1
+      compare_type       = 1
+      operator           = "<="
+      value_compute_type = 0
       value_list {
-        value_type = 1
-        value      = "50"
-      }
-      value_list {
-        value_type = 2
-        value      = "80"
+        value      = jsonencode(100)
+        value_type = 3
       }
     }
-    cycle_step         = 7200
-    compute_expression = "1"
   }
-  
-  alarm_level         = 2
-  source_engine_types = [1, 4]
-  
-  source_object_data_type_name = "string"
-  source_object_value          = "id"
-  condition_type               = 2
-  condition_expression         = "status = 'active'"
-  
-  description = "Updated quality rule description"
 }
 `
 

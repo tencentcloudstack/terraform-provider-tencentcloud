@@ -28,6 +28,7 @@ func ResourceTencentCloudWedataQualityRuleGroup() *schema.Resource {
 			"rule_group_exec_strategy_bo_list": {
 				Type:        schema.TypeList,
 				Required:    true,
+				MaxItems: 1,
 				Description: "Task parameters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -63,8 +64,8 @@ func ResourceTencentCloudWedataQualityRuleGroup() *schema.Resource {
 						},
 						"rule_group_id": {
 							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: "Monitor task ID, required when editing and updating monitor tasks.",
+							Computed:  true,
+							Description: "Monitor task ID, required when editing monitor tasks.",
 						},
 						"exec_queue": {
 							Type:        schema.TypeString,
@@ -333,12 +334,6 @@ func ResourceTencentCloudWedataQualityRuleGroup() *schema.Resource {
 				Required:    true,
 				Description: "Project ID.",
 			},
-
-			"rule_group_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Rule group ID.",
-			},
 		},
 	}
 }
@@ -382,9 +377,9 @@ func resourceTencentCloudWedataQualityRuleGroupCreate(d *schema.ResourceData, me
 			if v, ok := ruleGroupExecStrategyBOListMap["table_name"].(string); ok && v != "" {
 				qualityRuleGroupExecStrategy.TableName = helper.String(v)
 			}
-			if v, ok := ruleGroupExecStrategyBOListMap["rule_group_id"].(int); ok {
-				qualityRuleGroupExecStrategy.RuleGroupId = helper.IntUint64(v)
-			}
+			// if v, ok := ruleGroupExecStrategyBOListMap["rule_group_id"].(int); ok {
+			// 	qualityRuleGroupExecStrategy.RuleGroupId = helper.IntUint64(v)
+			// }
 			if v, ok := ruleGroupExecStrategyBOListMap["exec_queue"].(string); ok && v != "" {
 				qualityRuleGroupExecStrategy.ExecQueue = helper.String(v)
 			}
@@ -552,6 +547,7 @@ func resourceTencentCloudWedataQualityRuleGroupCreate(d *schema.ResourceData, me
 
 	if v, ok := d.GetOk("project_id"); ok {
 		request.ProjectId = helper.String(v.(string))
+		projectId = v.(string)
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -613,10 +609,6 @@ func resourceTencentCloudWedataQualityRuleGroupRead(d *schema.ResourceData, meta
 
 	_ = d.Set("project_id", projectId)
 
-	if respData.RuleGroupId != nil {
-		_ = d.Set("rule_group_id", respData.RuleGroupId)
-	}
-
 	if respData.ExecStrategy != nil {
 		execStrategyMap := map[string]interface{}{}
 		if respData.ExecStrategy.MonitorType != nil {
@@ -627,8 +619,8 @@ func resourceTencentCloudWedataQualityRuleGroupRead(d *schema.ResourceData, meta
 			execStrategyMap["executor_group_id"] = respData.ExecStrategy.ExecutorGroupId
 		}
 
-		if respData.ExecStrategy.RuleGroupName != nil {
-			execStrategyMap["rule_group_name"] = respData.ExecStrategy.RuleGroupName
+		if respData.Name != nil {
+			execStrategyMap["rule_group_name"] = respData.Name
 		}
 
 		if respData.DatabaseName != nil {
@@ -876,6 +868,11 @@ func resourceTencentCloudWedataQualityRuleGroupUpdate(d *schema.ResourceData, me
 	projectId := idSplit[0]
 	ruleGroupId := idSplit[1]
 
+	ruleGroupIdInt, err := strconv.ParseInt(ruleGroupId, 10, 64)
+	if err != nil {
+		return err
+	}
+
 	needChange := false
 	mutableArgs := []string{"rule_group_exec_strategy_bo_list"}
 	for _, v := range mutableArgs {
@@ -887,11 +884,14 @@ func resourceTencentCloudWedataQualityRuleGroupUpdate(d *schema.ResourceData, me
 
 	if needChange {
 		request := wedatav20250806.NewModifyQualityRuleGroupRequest()
+		request.ProjectId = &projectId
 
 		if v, ok := d.GetOk("rule_group_exec_strategy_bo_list"); ok {
 			for _, item := range v.([]interface{}) {
 				ruleGroupExecStrategyBOListMap := item.(map[string]interface{})
 				qualityRuleGroupExecStrategy := wedatav20250806.QualityRuleGroupExecStrategy{}
+				qualityRuleGroupExecStrategy.RuleGroupId = helper.Int64Uint64(ruleGroupIdInt)
+
 				if v, ok := ruleGroupExecStrategyBOListMap["monitor_type"].(int); ok {
 					qualityRuleGroupExecStrategy.MonitorType = helper.IntUint64(v)
 				}
@@ -909,9 +909,6 @@ func resourceTencentCloudWedataQualityRuleGroupUpdate(d *schema.ResourceData, me
 				}
 				if v, ok := ruleGroupExecStrategyBOListMap["table_name"].(string); ok && v != "" {
 					qualityRuleGroupExecStrategy.TableName = helper.String(v)
-				}
-				if v, ok := ruleGroupExecStrategyBOListMap["rule_group_id"].(int); ok {
-					qualityRuleGroupExecStrategy.RuleGroupId = helper.IntUint64(v)
 				}
 				if v, ok := ruleGroupExecStrategyBOListMap["exec_queue"].(string); ok && v != "" {
 					qualityRuleGroupExecStrategy.ExecQueue = helper.String(v)
@@ -1076,10 +1073,6 @@ func resourceTencentCloudWedataQualityRuleGroupUpdate(d *schema.ResourceData, me
 				}
 				request.RuleGroupExecStrategyBOList = append(request.RuleGroupExecStrategyBOList, &qualityRuleGroupExecStrategy)
 			}
-		}
-
-		if v, ok := d.GetOk("project_id"); ok {
-			request.ProjectId = helper.String(v.(string))
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
