@@ -63,6 +63,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Organization member can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_organization_org_member.example id=100043985088
+terraform import tencentcloud_organization_org_member.example 100043985088
 ```
 
