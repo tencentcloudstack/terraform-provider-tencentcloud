@@ -1,3 +1,33 @@
+## 1.82.54(January 13, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_wedata_downstream_trigger_tasks` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_ops_trigger_workflow` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_ops_trigger_workflows` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_quality_rule_group_exec_results` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_quality_rule_templates` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_trigger_task_code` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_trigger_task_run` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_trigger_task_version` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_trigger_task_versions` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_trigger_workflow_run` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_trigger_workflow_runs` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_trigger_workflows` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Data Source:** `tencentcloud_wedata_upstream_trigger_tasks` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Resource:** `tencentcloud_igtm_package_instance` ([#3719](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3719))
+* **New Resource:** `tencentcloud_igtm_package_task` ([#3719](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3719))
+* **New Resource:** `tencentcloud_wedata_quality_rule` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Resource:** `tencentcloud_wedata_quality_rule_group` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Resource:** `tencentcloud_wedata_trigger_task` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+* **New Resource:** `tencentcloud_wedata_trigger_workflow` ([#3721](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3721))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: status_code and response_header support import. ([#3718](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3718))
+* resource/tencentcloud_kubernetes_control_plane_log: `log_level` has been deprecated ([#3722](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3722))
+* resource/tencentcloud_organization_org_member: update doc ([#3720](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3720))
+
 ## 1.82.53(January 12, 2026)
 
 FEATURES:
