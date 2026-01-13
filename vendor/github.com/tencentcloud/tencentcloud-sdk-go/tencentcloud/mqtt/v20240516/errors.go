@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,12 @@ const (
 	// 策略优先级重复
 	FAILEDOPERATION_DUPLICATEAUTHORIZATIONIDORPRIORITY = "FailedOperation.DuplicateAuthorizationIdOrPriority"
 
+	// DuplicatePolicy
+	FAILEDOPERATION_DUPLICATEPOLICY = "FailedOperation.DuplicatePolicy"
+
+	// DuplicatePriority
+	FAILEDOPERATION_DUPLICATEPRIORITY = "FailedOperation.DuplicatePriority"
+
 	// FailedOperation.InstanceNotReady
 	FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
 
@@ -47,6 +53,15 @@ const (
 	// RelatedDeviceCertificateExists
 	FAILEDOPERATION_RELATEDDEVICECERTIFICATEEXISTS = "FailedOperation.RelatedDeviceCertificateExists"
 
+	// InstanceTypeNotMatch
+	INVALIDPARAMETER_INSTANCETYPENOTMATCH = "InvalidParameter.InstanceTypeNotMatch"
+
+	// 参数取值错误。
+	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// PublicNetworkInvalidParameterValue
+	INVALIDPARAMETERVALUE_PUBLICNETWORKINVALIDPARAMETERVALUE = "InvalidParameterValue.PublicNetworkInvalidParameterValue"
+
 	// LimitExceeded.TopicNum
 	LIMITEXCEEDED_TOPICNUM = "LimitExceeded.TopicNum"
 
@@ -59,11 +74,26 @@ const (
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
 
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
+
 	// 授权策略未找到
 	RESOURCENOTFOUND_AUTHORIZATIONPOLICY = "ResourceNotFound.AuthorizationPolicy"
 
+	// ResourceNotFound.Ca
+	RESOURCENOTFOUND_CA = "ResourceNotFound.Ca"
+
+	// ResourceNotFound.Certificate
+	RESOURCENOTFOUND_CERTIFICATE = "ResourceNotFound.Certificate"
+
 	// ResourceNotFound.Instance
 	RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+
+	// ResourceNotFound.Message
+	RESOURCENOTFOUND_MESSAGE = "ResourceNotFound.Message"
+
+	// NoAuthenticator
+	RESOURCENOTFOUND_NOAUTHENTICATOR = "ResourceNotFound.NoAuthenticator"
 
 	// ResourceNotFound.Role
 	RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
