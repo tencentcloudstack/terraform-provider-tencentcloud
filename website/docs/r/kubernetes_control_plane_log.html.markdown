@@ -21,7 +21,6 @@ resource "tencentcloud_kubernetes_control_plane_log" "example" {
   cluster_type = "tke"
   components {
     name         = "karpenter"
-    log_level    = "2"
     topic_region = "ap-guangzhou"
   }
 
@@ -37,7 +36,6 @@ resource "tencentcloud_kubernetes_control_plane_log" "example" {
   cluster_type = "tke"
   components {
     name         = "cluster-autoscaler"
-    log_level    = "2"
     log_set_id   = "40eed846-0f43-44b1-b216-c786a8970b1f"
     topic_id     = "21918a54-9ab4-40bc-90cd-c600cff00695"
     topic_region = "ap-guangzhou"
@@ -57,7 +55,7 @@ The following arguments are supported:
 The `components` object supports the following:
 
 * `name` - (Required, String) Component name.
-* `log_level` - (Optional, Int) Log level. for components that support dynamic adjustment, you can specify this parameter when enabling logs.
+* `log_level` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.82.54. Log level. for components that support dynamic adjustment, you can specify this parameter when enabling logs.
 * `log_set_id` - (Optional, String) Logset ID. if not specified, auto-create.
 * `topic_id` - (Optional, String) Log topic ID. if not specified, auto-create.
 * `topic_region` - (Optional, String) topic region. this parameter enables cross-region shipping of logs.

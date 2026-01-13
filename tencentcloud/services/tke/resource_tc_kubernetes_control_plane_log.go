@@ -55,6 +55,7 @@ func ResourceTencentCloudKubernetesControlPlaneLog() *schema.Resource {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.82.54.",
 							Description: "Log level. for components that support dynamic adjustment, you can specify this parameter when enabling logs.",
 						},
 						"log_set_id": {
