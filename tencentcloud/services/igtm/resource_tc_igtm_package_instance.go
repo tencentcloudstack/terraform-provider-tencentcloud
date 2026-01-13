@@ -276,5 +276,5 @@ func resourceTencentCloudIgtmPackageInstanceDelete(d *schema.ResourceData, meta 
 	defer tccommon.LogElapsed("resource.tencentcloud_igtm_package_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	return nil
+	return fmt.Errorf("tencentcloud igtm package instance supported delete, please contact the work order for processing")
 }

@@ -128,7 +128,7 @@ func resourceTencentCloudIgtmPackageTaskRead(d *schema.ResourceData, meta interf
 		taskId  = d.Id()
 	)
 
-	respData, err := service.DescribeIgtmPackageById(ctx, taskId)
+	respData, err := service.DescribeIgtmPackageTaskById(ctx, taskId)
 	if err != nil {
 		return err
 	}
@@ -139,8 +139,8 @@ func resourceTencentCloudIgtmPackageTaskRead(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	if respData.PackageType != nil {
-		_ = d.Set("goods_type", respData.PackageType)
+	if respData.Quota != nil {
+		_ = d.Set("task_detection_quantity", respData.Quota)
 	}
 
 	if respData.AutoRenewFlag != nil {
@@ -270,5 +270,5 @@ func resourceTencentCloudIgtmPackageTaskDelete(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_igtm_package_task.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	return nil
+	return fmt.Errorf("tencentcloud igtm package task supported delete, please contact the work order for processing")
 }

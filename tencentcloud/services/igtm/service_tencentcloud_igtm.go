@@ -646,3 +646,67 @@ func (me *IgtmService) DescribeIgtmPackageById(ctx context.Context, resourceId s
 
 	return
 }
+
+func (me *IgtmService) DescribeIgtmPackageTaskById(ctx context.Context, taskId string) (ret *igtmv20231024.DetectTaskPackage, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := igtmv20231024.NewDescribeDetectTaskPackageListRequest()
+	response := igtmv20231024.NewDescribeDetectTaskPackageListResponse()
+	request.Filters = []*igtmv20231024.ResourceFilter{
+		{
+			Name:  common.StringPtr("ResourceId"),
+			Value: common.StringPtrs([]string{taskId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset  uint64 = 0
+		limit   uint64 = 100
+		tmpList []*igtmv20231024.DetectTaskPackage
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseIgtmV20231024Client().DescribeDetectTaskPackageList(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.TaskPackageSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe idetect task package list failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		tmpList = append(tmpList, response.Response.TaskPackageSet...)
+		if len(response.Response.TaskPackageSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(tmpList) > 0 {
+		ret = tmpList[0]
+	}
+
+	return
+}
