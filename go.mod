@@ -116,7 +116,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.3
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.0.1136
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920

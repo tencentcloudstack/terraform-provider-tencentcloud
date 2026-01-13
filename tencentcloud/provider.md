@@ -2518,6 +2518,8 @@ tencentcloud_igtm_instance
 tencentcloud_igtm_address_pool
 tencentcloud_igtm_monitor
 tencentcloud_igtm_strategy
+tencentcloud_igtm_package_instance
+tencentcloud_igtm_package_task
 
 VCube
 Resource
