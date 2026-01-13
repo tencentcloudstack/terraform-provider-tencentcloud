@@ -26,7 +26,7 @@ func TestAccTencentCloudWedataTriggerTaskResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.task_folder_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.task_name", "tf-test-task"),
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.task_type_id", "35"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.workflow_id", "7b716065-d016-41aa-bc68-e18a1253df7e"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.workflow_id", "333368d7-bc8e-4b95-9a66-7a5151063eb2"),
 					// Configuration
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_configuration.0.broker_ip", "any"),
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_configuration.0.resource_group", "20241107171437783498"),
@@ -58,7 +58,7 @@ func TestAccTencentCloudWedataTriggerTaskResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.task_folder_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.task_name", "tf-test-task1"),
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.task_type_id", "35"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.workflow_id", "7b716065-d016-41aa-bc68-e18a1253df7e"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_base_attribute.0.workflow_id", "333368d7-bc8e-4b95-9a66-7a5151063eb2"),
 					// Configuration (updated)
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_configuration.0.broker_ip", "any"),
 					resource.TestCheckResourceAttr("tencentcloud_wedata_trigger_task.trigger_task", "trigger_task_configuration.0.resource_group", "20241107171437783498"),
@@ -89,7 +89,7 @@ resource "tencentcloud_wedata_trigger_task" "trigger_task" {
     task_folder_path = "/"
     task_name        = "tf-test-task"
     task_type_id     = 35
-    workflow_id      = "7b716065-d016-41aa-bc68-e18a1253df7e"
+    workflow_id      = "333368d7-bc8e-4b95-9a66-7a5151063eb2"
   }
   trigger_task_configuration {
     broker_ip           = "any"
@@ -157,7 +157,7 @@ resource "tencentcloud_wedata_trigger_task" "trigger_task" {
     task_folder_path = "/"
     task_name        = "tf-test-task1"
     task_type_id     = 35
-    workflow_id      = "7b716065-d016-41aa-bc68-e18a1253df7e"
+    workflow_id      = "333368d7-bc8e-4b95-9a66-7a5151063eb2"
   }
   trigger_task_configuration {
     broker_ip           = "any"

@@ -28,7 +28,7 @@ func ResourceTencentCloudWedataQualityRuleGroup() *schema.Resource {
 			"rule_group_exec_strategy_bo_list": {
 				Type:        schema.TypeList,
 				Required:    true,
-				MaxItems: 1,
+				MaxItems:    1,
 				Description: "Task parameters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -64,7 +64,7 @@ func ResourceTencentCloudWedataQualityRuleGroup() *schema.Resource {
 						},
 						"rule_group_id": {
 							Type:        schema.TypeInt,
-							Computed:  true,
+							Computed:    true,
 							Description: "Monitor task ID, required when editing monitor tasks.",
 						},
 						"exec_queue": {
@@ -647,8 +647,8 @@ func resourceTencentCloudWedataQualityRuleGroupRead(d *schema.ResourceData, meta
 			execStrategyMap["executor_group_name"] = respData.ExecStrategy.ExecutorGroupName
 		}
 
-		tasksList := make([]map[string]interface{}, 0, len(respData.ExecStrategy.Tasks))
-		if respData.ExecStrategy.Tasks != nil {
+		if respData.ExecStrategy.Tasks != nil && respData.ExecStrategy.MonitorType != nil && *respData.ExecStrategy.MonitorType == 2 {
+			tasksList := make([]map[string]interface{}, 0, len(respData.ExecStrategy.Tasks))
 			for _, tasks := range respData.ExecStrategy.Tasks {
 				tasksMap := map[string]interface{}{}
 
@@ -689,15 +689,15 @@ func resourceTencentCloudWedataQualityRuleGroupRead(d *schema.ResourceData, meta
 
 			execStrategyMap["tasks"] = tasksList
 		}
-		if respData.ExecStrategy.StartTime != nil {
+		if respData.ExecStrategy.StartTime != nil && respData.ExecStrategy.MonitorType != nil && *respData.ExecStrategy.MonitorType == 3 {
 			execStrategyMap["start_time"] = respData.ExecStrategy.StartTime
 		}
 
-		if respData.ExecStrategy.EndTime != nil {
+		if respData.ExecStrategy.EndTime != nil && respData.ExecStrategy.MonitorType != nil && *respData.ExecStrategy.MonitorType == 3 {
 			execStrategyMap["end_time"] = respData.ExecStrategy.EndTime
 		}
 
-		if respData.ExecStrategy.CycleType != nil {
+		if respData.ExecStrategy.CycleType != nil && respData.ExecStrategy.MonitorType != nil && *respData.ExecStrategy.MonitorType == 3 {
 			execStrategyMap["cycle_type"] = respData.ExecStrategy.CycleType
 		}
 
@@ -705,11 +705,11 @@ func resourceTencentCloudWedataQualityRuleGroupRead(d *schema.ResourceData, meta
 			execStrategyMap["delay_time"] = respData.ExecStrategy.DelayTime
 		}
 
-		if respData.ExecStrategy.CycleStep != nil {
+		if respData.ExecStrategy.CycleStep != nil && respData.ExecStrategy.MonitorType != nil && *respData.ExecStrategy.MonitorType == 3 {
 			execStrategyMap["cycle_step"] = respData.ExecStrategy.CycleStep
 		}
 
-		if respData.ExecStrategy.TaskAction != nil {
+		if respData.ExecStrategy.TaskAction != nil && respData.ExecStrategy.MonitorType != nil && *respData.ExecStrategy.MonitorType == 3 {
 			execStrategyMap["task_action"] = respData.ExecStrategy.TaskAction
 		}
 
@@ -729,7 +729,7 @@ func resourceTencentCloudWedataQualityRuleGroupRead(d *schema.ResourceData, meta
 			execStrategyMap["rule_name"] = respData.ExecStrategy.RuleName
 		}
 
-		if respData.ExecStrategy.TriggerTypes != nil {
+		if respData.ExecStrategy.TriggerTypes != nil && respData.ExecStrategy.MonitorType != nil && *respData.ExecStrategy.MonitorType == 2 {
 			execStrategyMap["trigger_types"] = respData.ExecStrategy.TriggerTypes
 		}
 

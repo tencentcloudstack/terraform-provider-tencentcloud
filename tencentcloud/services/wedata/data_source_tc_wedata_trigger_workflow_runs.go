@@ -453,9 +453,9 @@ func dataSourceTencentCloudWedataTriggerWorkflowRunsRead(d *schema.ResourceData,
 
 		dataMap["items"] = itemsList
 	}
+	_ = d.Set("data", []interface{}{dataMap})
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	_ = d.Set("data", []interface{}{dataMap})
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

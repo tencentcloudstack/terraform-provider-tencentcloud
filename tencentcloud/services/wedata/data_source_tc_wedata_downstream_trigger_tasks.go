@@ -18,71 +18,71 @@ func DataSourceTencentCloudWedataDownstreamTriggerTasks() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Project ID",
+				Description: "Project ID.",
 			},
 
 			"task_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Task ID",
+				Description: "Task ID.",
 			},
 
 			"data": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Downstream dependency details",
+				Description: "Downstream dependency details.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"items": {
 							Type:        schema.TypeList,
 							Required:    true,
-							Description: "Paginated data",
+							Description: "Paginated data.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"task_id": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Task ID",
+										Description: "Task ID.",
 									},
 									"task_name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Task name",
+										Description: "Task name.",
 									},
 									"workflow_id": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Workflow ID",
+										Description: "Workflow ID.",
 									},
 									"workflow_name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Workflow name",
+										Description: "Workflow name.",
 									},
 									"project_id": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Project ID",
+										Description: "Project ID.",
 									},
 									"status": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Task status: `Y`: Running, `N`: New",
+										Description: "Task status: `Y`: Running, `N`: New.",
 									},
 									"task_type_id": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Task type ID",
+										Description: "Task type ID.",
 									},
 									"task_type_desc": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Task type description; `20`: General Data Synchronization; `25`: ETLTaskType; `26`: ETLTaskType; `30`: Python; `31`: PySpark; `34`: HiveSQL; `35`: Shell; `36`: SparkSQL; `21`: JdbcSQL; `32`: DLC; `33`: ImpalaTaskType; `40`: CDWTaskType; `41`: Kettle; `42`: TCHouse-X; `43`: TCHouse-X SQL; `46`: DLCSparkTaskType; `47`: TiOneMachineLearningTaskType; `48`: Trino; `50`: DLCPySpark; `23`: TencentDistributedSQL; `39`: Spark; `92`: MRTaskType; `38`: ShellScript; `70`: HiveSQLScript; `130`: Branch; `131`: Merge; `132`: Notebook Exploration; `133`: SSH Node; `134`: StarRocks; `137`: For-each; `10000`: Custom Business General",
+										Description: "Task type description; `20`: General Data Synchronization; `25`: ETLTaskType; `26`: ETLTaskType; `30`: Python; `31`: PySpark; `34`: HiveSQL; `35`: Shell; `36`: SparkSQL; `21`: JdbcSQL; `32`: DLC; `33`: ImpalaTaskType; `40`: CDWTaskType; `41`: Kettle; `42`: TCHouse-X; `43`: TCHouse-X SQL; `46`: DLCSparkTaskType; `47`: TiOneMachineLearningTaskType; `48`: Trino; `50`: DLCPySpark; `23`: TencentDistributedSQL; `39`: Spark; `92`: MRTaskType; `38`: ShellScript; `70`: HiveSQLScript; `130`: Branch; `131`: Merge; `132`: Notebook Exploration; `133`: SSH Node; `134`: StarRocks; `137`: For-each; `10000`: Custom Business General.",
 									},
 									"owner_uin": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Owner",
+										Description: "Owner.",
 									},
 								},
 							},

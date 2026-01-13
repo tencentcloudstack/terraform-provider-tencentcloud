@@ -1,6 +1,6 @@
 Use this data source to query detailed information of wedata downstream trigger tasks.
 
-## Example Usage
+Example Usage
 
 ```hcl
 data "tencentcloud_wedata_downstream_trigger_tasks" "downstream_trigger_tasks" {

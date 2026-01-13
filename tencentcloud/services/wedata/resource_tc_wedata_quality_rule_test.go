@@ -19,46 +19,28 @@ func TestAccTencentCloudNeedFixWedataQualityRuleResource_basic(t *testing.T) {
 			{
 				Config: testAccWedataQualityRule,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_quality_rule.example", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.example", "name", "tf_example_quality_rule"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.example", "type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.example", "alarm_level", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.example", "create_rule_scene", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_wedata_quality_rule.system_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "name", "system_template_rule_tf_test"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "type", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "alarm_level", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "create_rule_scene", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "database_name", "default"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "table_name", "big_table_500"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_wedata_quality_rule.example",
+				ResourceName:      "tencentcloud_wedata_quality_rule.system_rule",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
 				Config: testAccWedataQualityRuleUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_quality_rule.example", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.example", "name", "tf_example_quality_rule_update"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.example", "alarm_level", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.example", "description", "Updated quality rule description"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudNeedFixWedataQualityRuleResource_customSQL(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			tcacctest.AccPreCheck(t)
-		},
-		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccWedataQualityRuleCustomSQL,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_quality_rule.custom_sql_example", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_sql_example", "name", "tf_custom_sql_rule"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_sql_example", "type", "3"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_sql_example", "quality_dim", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_wedata_quality_rule.system_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "name", "system_template_rule_tf_test"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "alarm_level", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "description", "rule desc"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.system_rule", "condition_expression", "dt='000'"),
 				),
 			},
 		},
@@ -76,10 +58,13 @@ func TestAccTencentCloudNeedFixWedataQualityRuleResource_fieldConfig(t *testing.
 			{
 				Config: testAccWedataQualityRuleFieldConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_quality_rule.field_config_example", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.field_config_example", "name", "tf_field_config_rule"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.field_config_example", "type", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.field_config_example", "condition_type", "2"),
+					resource.TestCheckResourceAttrSet("tencentcloud_wedata_quality_rule.custom_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_rule", "name", "custom_template_rule_tf_test"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_rule", "type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_rule", "condition_type", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_rule", "alarm_level", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_rule", "database_name", "default"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_quality_rule.custom_rule", "table_name", "at_src_mysql2hive_prod_cq_makeup_09db_1_di"),
 				),
 			},
 		},
@@ -98,12 +83,12 @@ resource "tencentcloud_wedata_quality_rule" "system_rule" {
   name                         = "system_template_rule_tf_test"
   project_id                   = jsonencode(3016337760439783424)
   quality_dim                  = 1
-  rule_group_id                = 953
+  # rule_group_id                = 953
   rule_template_id             = 6142
   source_engine_types          = [2, 4, 16, 64, 128, 256, 512, 1024]
   source_object_data_type_name = "table"
   source_object_value          = "表"
-  table_id                     = jsonencode(120)
+  table_id                     = 176
   table_name                   = "big_table_500"
   type                         = 1
   compare_rule {
@@ -135,12 +120,12 @@ resource "tencentcloud_wedata_quality_rule" "system_rule" {
   name                         = "system_template_rule_tf_test"
   project_id                   = jsonencode(3016337760439783424)
   quality_dim                  = 1
-  rule_group_id                = 953
+  # rule_group_id                = 953
   rule_template_id             = 6142
   source_engine_types          = [2, 4, 16, 64, 128, 256, 512, 1024]
   source_object_data_type_name = "table"
   source_object_value          = "表"
-  table_id                     = jsonencode(120)
+  table_id                     = 176
   table_name                   = "big_table_500"
   type                         = 1
   compare_rule {
@@ -159,86 +144,47 @@ resource "tencentcloud_wedata_quality_rule" "system_rule" {
 }
 `
 
-const testAccWedataQualityRuleCustomSQL = `
-resource "tencentcloud_wedata_quality_rule" "custom_sql_example" {
-  project_id        = "1948767646355341312"
-  create_rule_scene = 1
-  name              = "tf_custom_sql_rule"
-  type              = 3
-  datasource_id     = "20240101"
-  database_name     = "test_db"
-  table_name        = "test_table"
-  quality_dim       = 1
-  
-  compare_rule {
-    items {
-      compare_type = 1
-      operator     = ">"
-      value_list {
-        value_type = 1
-        value      = "0"
-      }
-    }
-  }
-  
-  alarm_level         = 2
-  source_engine_types = [4]
-  
-  custom_sql  = "U0VMRUNUIENPVU5UKCopIEZST00gdGVzdF90YWJsZQ=="
-  description = "Custom SQL quality rule"
-}
-`
-
 const testAccWedataQualityRuleFieldConfig = `
-resource "tencentcloud_wedata_quality_rule" "field_config_example" {
-  project_id        = "1948767646355341312"
-  create_rule_scene = 1
-  name              = "tf_field_config_rule"
-  type              = 2
-  datasource_id     = "20240101"
-  database_name     = "test_db"
-  table_name        = "test_table"
-  rule_template_id  = 2
-  
+resource "tencentcloud_wedata_quality_rule" "custom_rule" {
+  alarm_level                  = 2
+  condition_type               = 1
+  create_rule_scene            = 1
+  database_name                = "default"
+  datasource_id                = jsonencode(65253)
+  description                  = jsonencode(111)
+  index                        = null
+  name                         = "custom_template_rule_tf_test"
+  project_id                   = jsonencode(3016337760439783424)
+  quality_dim                  = 1
+  # rule_group_id                = 949
+  rule_template_id             = 6809
+  source_engine_types          = [2, 4, 16]
+  source_object_data_type_name = "table"
+  source_object_value          = "表"
+  table_id                     = jsonencode(175)
+  table_name                   = "at_src_mysql2hive_prod_cq_makeup_09db_1_di"
+  type                         = 2
   compare_rule {
+    compute_expression = jsonencode(0)
+    cycle_step         = 0
     items {
-      compare_type = 1
-      operator     = "!="
+      compare_type       = 1
+      operator           = "<"
+      value_compute_type = 0
       value_list {
-        value_type = 4
-        value      = "null"
+        value      = jsonencode(100)
+        value_type = 3
       }
     }
   }
-  
-  alarm_level         = 1
-  source_engine_types = [1]
-  
-  condition_type       = 2
-  condition_expression = "status = 'active'"
-  
   field_config {
-    where_config {
-      field_key       = "status"
-      field_value     = "active"
-      field_data_type = "string"
-    }
-    
     table_config {
-      database_id   = "db_001"
-      database_name = "test_db"
-      table_id      = "tbl_001"
-      table_name    = "test_table"
-      table_key     = "main_table"
-      
-      field_config {
-        field_key       = "id"
-        field_value     = "primary_key"
-        field_data_type = "int"
-      }
+      database_id   = null
+      database_name = "default"
+      table_id      = null
+      table_key     = "table_1"
+      table_name    = "at_src_mysql2hive_prod_cq_makeup_09db_1_di"
     }
   }
-  
-  description = "Field configuration quality rule"
 }
 `

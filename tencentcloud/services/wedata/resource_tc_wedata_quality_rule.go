@@ -158,11 +158,13 @@ func ResourceTencentCloudWedataQualityRule() *schema.Resource {
 			"rule_group_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Rule group ID.",
 			},
 			"table_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Data table ID. Either TableId or TableName must be provided.",
 			},
 			"source_object_data_type_name": {
@@ -188,7 +190,7 @@ func ResourceTencentCloudWedataQualityRule() *schema.Resource {
 			"custom_sql": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Custom SQL (Base64 encoded). Required when Type=3 (custom SQL).",
+				Description: "Custom SQL. Required when Type=3 (custom SQL).",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -400,6 +402,7 @@ func ResourceTencentCloudWedataQualityRule() *schema.Resource {
 			"catalog_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Data catalog name, mainly used for DLC data source.",
 			},
 			"target_catalog_name": {
@@ -532,7 +535,7 @@ func resourceTencentCloudWedataQualityRuleCreate(d *schema.ResourceData, meta in
 		qualityRuleInfo.ConditionExpression = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("custom_sql"); ok {
-		qualityRuleInfo.CustomSql = helper.String(v.(string))
+		qualityRuleInfo.CustomSql = helper.String(tccommon.StringToBase64(v.(string)))
 	}
 	if v, ok := d.GetOk("description"); ok {
 		qualityRuleInfo.Description = helper.String(v.(string))
@@ -1499,7 +1502,7 @@ func resourceTencentCloudWedataQualityRuleUpdate(d *schema.ResourceData, meta in
 		}
 
 		if v, ok := d.GetOk("custom_sql"); ok {
-			request.CustomSql = helper.String(v.(string))
+			request.CustomSql = helper.String(tccommon.StringToBase64(v.(string)))
 		}
 
 		if v, ok := d.GetOk("description"); ok {

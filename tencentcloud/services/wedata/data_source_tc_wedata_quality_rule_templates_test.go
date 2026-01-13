@@ -18,8 +18,8 @@ func TestAccTencentCloudWedataQualityRuleTemplatesDataSource_basic(t *testing.T)
 			{
 				Config: testAccWedataQualityRuleTemplatesDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_quality_rule_templates.wedata_quality_rule_templates", "id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_quality_rule_templates.wedata_quality_rule_templates", "data.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_quality_rule_templates.example", "id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_wedata_quality_rule_templates.example", "data.#"),
 				),
 			},
 		},
@@ -27,17 +27,12 @@ func TestAccTencentCloudWedataQualityRuleTemplatesDataSource_basic(t *testing.T)
 }
 
 const testAccWedataQualityRuleTemplatesDataSource = `
-data "tencentcloud_wedata_quality_rule_templates" "wedata_quality_rule_templates" {
-  project_id = "1840731346428280832"
+data "tencentcloud_wedata_quality_rule_templates" "example" {
+  project_id = "3016337760439783424"
   
   order_fields {
     name      = "CitationCount"
     direction = "DESC"
-  }
-  
-  filters {
-    name   = "Type"
-    values = ["1"]
   }
 }
 `

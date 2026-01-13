@@ -4244,7 +4244,7 @@ func (me *WedataService) DescribeWedataTriggerWorkflowRunsByFilter(ctx context.C
 	ratelimit.Check(request.GetAction())
 
 	var (
-		pageNumber uint64 = 0
+		pageNumber uint64 = 1
 		pageSize   uint64 = 100
 	)
 

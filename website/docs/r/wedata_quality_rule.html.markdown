@@ -82,7 +82,7 @@ The following arguments are supported:
 * `catalog_name` - (Optional, String) Data catalog name, mainly used for DLC data source.
 * `condition_expression` - (Optional, String) Conditional scan WHERE condition expression. Required when ConditionType=2 (conditional scan).
 * `condition_type` - (Optional, Int) Detection range. Required when Type=1 (system template) or 2 (custom template). Valid values: `1` (full table), `2` (conditional scan). Note: When CompareType is 2 (fluctuation value) or using user-defined template containing filter condition ${FILTER}, detection range must be 2 (conditional scan).
-* `custom_sql` - (Optional, String) Custom SQL (Base64 encoded). Required when Type=3 (custom SQL).
+* `custom_sql` - (Optional, String) Custom SQL. Required when Type=3 (custom SQL).
 * `database_id` - (Optional, String) Database ID.
 * `description` - (Optional, String) Rule description.
 * `field_config` - (Optional, List) Custom template SQL expression field replacement parameters. Required when Type=2 (custom template).

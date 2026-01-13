@@ -27,14 +27,14 @@ func TestAccTencentCloudWedataQualityRuleGroupExecResultsDataSource_basic(t *tes
 
 const testAccWedataQualityRuleGroupExecResultsDataSource = `
 data "tencentcloud_wedata_quality_rule_group_exec_results" "wedata_quality_rule_group_exec_results" {
-  project_id = "1840731342293087232"
+  project_id = "3016337760439783424"
   filters {
-    name   = "Status"
-    values = ["3"]
+    name   = "InstanceStatus"
+    values = ["FAILED"]
   }
   order_fields {
     name      = "UpdateTime"
-    direction = "DESC"
+    direction = "ASC"
   }
 }
 `
