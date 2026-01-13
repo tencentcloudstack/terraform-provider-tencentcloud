@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common"
 	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -577,6 +578,70 @@ func (me *IgtmService) DescribeIgtmDetectTaskPackageListByFilter(ctx context.Con
 		}
 
 		offset += limit
+	}
+
+	return
+}
+
+func (me *IgtmService) DescribeIgtmPackageById(ctx context.Context, resourceId string) (ret *igtmv20231024.InstancePackage, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := igtmv20231024.NewDescribeInstancePackageListRequest()
+	response := igtmv20231024.NewDescribeInstancePackageListResponse()
+	request.Filters = []*igtmv20231024.ResourceFilter{
+		{
+			Name:  common.StringPtr("ResourceId"),
+			Value: common.StringPtrs([]string{resourceId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset  uint64 = 0
+		limit   uint64 = 100
+		tmpList []*igtmv20231024.InstancePackage
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseIgtmV20231024Client().DescribeInstancePackageList(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.InstanceSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe instance package list failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		tmpList = append(tmpList, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(tmpList) > 0 {
+		ret = tmpList[0]
 	}
 
 	return
