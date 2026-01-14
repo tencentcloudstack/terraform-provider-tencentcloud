@@ -748,21 +748,9 @@ func resourceTencentCloudWedataQualityRuleRead(d *schema.ResourceData, meta inte
 		_ = d.Set("rule_template_id", respData.RuleTemplateId)
 	}
 
-	// if respData.RuleTemplateContent != nil {
-	// 	_ = d.Set("rule_template_content", respData.RuleTemplateContent)
-	// }
-
 	if respData.QualityDim != nil {
 		_ = d.Set("quality_dim", respData.QualityDim)
 	}
-
-	// if respData.SourceObjectType != nil {
-	// 	_ = d.Set("source_object_type", respData.SourceObjectType)
-	// }
-
-	// if respData.SourceObjectDataType != nil {
-	// 	_ = d.Set("source_object_data_type", respData.SourceObjectDataType)
-	// }
 
 	if respData.SourceObjectDataTypeName != nil {
 		_ = d.Set("source_object_data_type_name", respData.SourceObjectDataTypeName)
@@ -844,10 +832,6 @@ func resourceTencentCloudWedataQualityRuleRead(d *schema.ResourceData, meta inte
 	if respData.Description != nil {
 		_ = d.Set("description", respData.Description)
 	}
-
-	// if respData.Operator != nil {
-	// 	_ = d.Set("operator", respData.Operator)
-	// }
 
 	if respData.TargetDatabaseId != nil {
 		_ = d.Set("target_database_id", respData.TargetDatabaseId)
@@ -989,34 +973,6 @@ func resourceTencentCloudWedataQualityRuleRead(d *schema.ResourceData, meta inte
 		_ = d.Set("field_config", []interface{}{fieldConfigMap})
 	}
 
-	// if respData.MultiSourceFlag != nil {
-	// 	_ = d.Set("multi_source_flag", respData.MultiSourceFlag)
-	// }
-
-	// if respData.WhereFlag != nil {
-	// 	_ = d.Set("where_flag", respData.WhereFlag)
-	// }
-
-	// if respData.TemplateSql != nil {
-	// 	_ = d.Set("template_sql", respData.TemplateSql)
-	// }
-
-	// if respData.SubQualityDim != nil {
-	// 	_ = d.Set("sub_quality_dim", respData.SubQualityDim)
-	// }
-
-	// if respData.TargetObjectType != nil {
-	// 	_ = d.Set("target_object_type", respData.TargetObjectType)
-	// }
-
-	// if respData.TargetObjectDataType != nil {
-	// 	_ = d.Set("target_object_data_type", respData.TargetObjectDataType)
-	// }
-
-	// if respData.TargetObjectDataTypeName != nil {
-	// 	_ = d.Set("target_object_data_type_name", respData.TargetObjectDataTypeName)
-	// }
-
 	if respData.TargetObjectValue != nil {
 		_ = d.Set("target_object_value", respData.TargetObjectValue)
 	}
@@ -1029,311 +985,6 @@ func resourceTencentCloudWedataQualityRuleRead(d *schema.ResourceData, meta inte
 		_ = d.Set("table_name", respData.TableName)
 	}
 
-	// if respData.TableOwnerName != nil {
-	// 	_ = d.Set("table_owner_name", respData.TableOwnerName)
-	// }
-
-	// if respData.ExecStrategy != nil {
-	// 	execStrategyMap := map[string]interface{}{}
-	// 	if respData.ExecStrategy.MonitorType != nil {
-	// 		execStrategyMap["monitor_type"] = respData.ExecStrategy.MonitorType
-	// 	}
-
-	// 	if respData.ExecStrategy.ExecutorGroupId != nil {
-	// 		execStrategyMap["executor_group_id"] = respData.ExecStrategy.ExecutorGroupId
-	// 	}
-
-	// 	if respData.ExecStrategy.RuleGroupName != nil {
-	// 		execStrategyMap["rule_group_name"] = respData.ExecStrategy.RuleGroupName
-	// 	}
-
-	// 	if respData.ExecStrategy.DatabaseName != nil {
-	// 		execStrategyMap["database_name"] = respData.ExecStrategy.DatabaseName
-	// 	}
-
-	// 	if respData.ExecStrategy.DatasourceId != nil {
-	// 		execStrategyMap["datasource_id"] = respData.ExecStrategy.DatasourceId
-	// 	}
-
-	// 	if respData.ExecStrategy.TableName != nil {
-	// 		execStrategyMap["table_name"] = respData.ExecStrategy.TableName
-	// 	}
-
-	// 	if respData.ExecStrategy.RuleGroupId != nil {
-	// 		execStrategyMap["rule_group_id"] = respData.ExecStrategy.RuleGroupId
-	// 	}
-
-	// 	if respData.ExecStrategy.ExecQueue != nil {
-	// 		execStrategyMap["exec_queue"] = respData.ExecStrategy.ExecQueue
-	// 	}
-
-	// 	if respData.ExecStrategy.ExecutorGroupName != nil {
-	// 		execStrategyMap["executor_group_name"] = respData.ExecStrategy.ExecutorGroupName
-	// 	}
-
-	// 	if respData.ExecStrategy.Tasks != nil {
-	// 		tasksList := make([]map[string]interface{}, 0, len(respData.ExecStrategy.Tasks))
-	// 		for _, tasks := range respData.ExecStrategy.Tasks {
-	// 			tasksMap := map[string]interface{}{}
-
-	// 			if tasks.WorkflowId != nil {
-	// 				tasksMap["workflow_id"] = tasks.WorkflowId
-	// 			}
-
-	// 			if tasks.TaskId != nil {
-	// 				tasksMap["task_id"] = tasks.TaskId
-	// 			}
-
-	// 			if tasks.TaskName != nil {
-	// 				tasksMap["task_name"] = tasks.TaskName
-	// 			}
-
-	// 			if tasks.CycleType != nil {
-	// 				tasksMap["cycle_type"] = tasks.CycleType
-	// 			}
-
-	// 			if tasks.TaskType != nil {
-	// 				tasksMap["task_type"] = tasks.TaskType
-	// 			}
-
-	// 			if tasks.ScheduleTimeZone != nil {
-	// 				tasksMap["schedule_time_zone"] = tasks.ScheduleTimeZone
-	// 			}
-
-	// 			if tasks.InChargeIdList != nil {
-	// 				tasksMap["in_charge_id_list"] = tasks.InChargeIdList
-	// 			}
-
-	// 			if tasks.InChargeNameList != nil {
-	// 				tasksMap["in_charge_name_list"] = tasks.InChargeNameList
-	// 			}
-
-	// 			tasksList = append(tasksList, tasksMap)
-	// 		}
-
-	// 		execStrategyMap["tasks"] = tasksList
-	// 	}
-	// 	if respData.ExecStrategy.StartTime != nil {
-	// 		execStrategyMap["start_time"] = respData.ExecStrategy.StartTime
-	// 	}
-
-	// 	if respData.ExecStrategy.EndTime != nil {
-	// 		execStrategyMap["end_time"] = respData.ExecStrategy.EndTime
-	// 	}
-
-	// 	if respData.ExecStrategy.CycleType != nil {
-	// 		execStrategyMap["cycle_type"] = respData.ExecStrategy.CycleType
-	// 	}
-
-	// 	if respData.ExecStrategy.DelayTime != nil {
-	// 		execStrategyMap["delay_time"] = respData.ExecStrategy.DelayTime
-	// 	}
-
-	// 	if respData.ExecStrategy.CycleStep != nil {
-	// 		execStrategyMap["cycle_step"] = respData.ExecStrategy.CycleStep
-	// 	}
-
-	// 	if respData.ExecStrategy.TaskAction != nil {
-	// 		execStrategyMap["task_action"] = respData.ExecStrategy.TaskAction
-	// 	}
-
-	// 	if respData.ExecStrategy.ExecEngineType != nil {
-	// 		execStrategyMap["exec_engine_type"] = respData.ExecStrategy.ExecEngineType
-	// 	}
-
-	// 	if respData.ExecStrategy.ExecPlan != nil {
-	// 		execStrategyMap["exec_plan"] = respData.ExecStrategy.ExecPlan
-	// 	}
-
-	// 	if respData.ExecStrategy.RuleId != nil {
-	// 		execStrategyMap["rule_id"] = respData.ExecStrategy.RuleId
-	// 	}
-
-	// 	if respData.ExecStrategy.RuleName != nil {
-	// 		execStrategyMap["rule_name"] = respData.ExecStrategy.RuleName
-	// 	}
-
-	// 	if respData.ExecStrategy.TriggerTypes != nil {
-	// 		execStrategyMap["trigger_types"] = respData.ExecStrategy.TriggerTypes
-	// 	}
-
-	// 	if respData.ExecStrategy.DlcGroupName != nil {
-	// 		execStrategyMap["dlc_group_name"] = respData.ExecStrategy.DlcGroupName
-	// 	}
-
-	// 	if respData.ExecStrategy.SchemaName != nil {
-	// 		execStrategyMap["schema_name"] = respData.ExecStrategy.SchemaName
-	// 	}
-
-	// 	if respData.ExecStrategy.Description != nil {
-	// 		execStrategyMap["description"] = respData.ExecStrategy.Description
-	// 	}
-
-	// 	if respData.ExecStrategy.ScheduleTimeZone != nil {
-	// 		execStrategyMap["schedule_time_zone"] = respData.ExecStrategy.ScheduleTimeZone
-	// 	}
-
-	// 	// if respData.ExecStrategy.GroupConfig != nil {
-	// 	// 	groupConfigMap := map[string]interface{}{}
-	// 	// 	if respData.ExecStrategy.GroupConfig.AnalysisType != nil {
-	// 	// 		groupConfigMap["analysis_type"] = respData.ExecStrategy.GroupConfig.AnalysisType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.ModelMonitorType != nil {
-	// 	// 		groupConfigMap["model_monitor_type"] = respData.ExecStrategy.GroupConfig.ModelMonitorType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.PredictColumn != nil {
-	// 	// 		groupConfigMap["predict_column"] = respData.ExecStrategy.GroupConfig.PredictColumn
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.PredictColumnType != nil {
-	// 	// 		groupConfigMap["predict_column_type"] = respData.ExecStrategy.GroupConfig.PredictColumnType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.LabelColumn != nil {
-	// 	// 		groupConfigMap["label_column"] = respData.ExecStrategy.GroupConfig.LabelColumn
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.LabelColumnType != nil {
-	// 	// 		groupConfigMap["label_column_type"] = respData.ExecStrategy.GroupConfig.LabelColumnType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.ModelIdColumn != nil {
-	// 	// 		groupConfigMap["model_id_column"] = respData.ExecStrategy.GroupConfig.ModelIdColumn
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.ModelIdColumnType != nil {
-	// 	// 		groupConfigMap["model_id_column_type"] = respData.ExecStrategy.GroupConfig.ModelIdColumnType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.TimestampColumn != nil {
-	// 	// 		groupConfigMap["timestamp_column"] = respData.ExecStrategy.GroupConfig.TimestampColumn
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.TimestampColumnType != nil {
-	// 	// 		groupConfigMap["timestamp_column_type"] = respData.ExecStrategy.GroupConfig.TimestampColumnType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.Granularity != nil {
-	// 	// 		groupConfigMap["granularity"] = respData.ExecStrategy.GroupConfig.Granularity
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.GranularityType != nil {
-	// 	// 		groupConfigMap["granularity_type"] = respData.ExecStrategy.GroupConfig.GranularityType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.BaseTable != nil {
-	// 	// 		groupConfigMap["base_table"] = respData.ExecStrategy.GroupConfig.BaseTable
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.BaseDb != nil {
-	// 	// 		groupConfigMap["base_db"] = respData.ExecStrategy.GroupConfig.BaseDb
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.ComparisonColumn != nil {
-	// 	// 		groupConfigMap["comparison_column"] = respData.ExecStrategy.GroupConfig.ComparisonColumn
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.ComparisonColumnType != nil {
-	// 	// 		groupConfigMap["comparison_column_type"] = respData.ExecStrategy.GroupConfig.ComparisonColumnType
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.ProtectionValue != nil {
-	// 	// 		groupConfigMap["protection_value"] = respData.ExecStrategy.GroupConfig.ProtectionValue
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.PositiveValue != nil {
-	// 	// 		groupConfigMap["positive_value"] = respData.ExecStrategy.GroupConfig.PositiveValue
-	// 	// 	}
-
-	// 	// 	if respData.ExecStrategy.GroupConfig.FeatureColumn != nil {
-	// 	// 		groupConfigMap["feature_column"] = respData.ExecStrategy.GroupConfig.FeatureColumn
-	// 	// 	}
-
-	// 	// 	execStrategyMap["group_config"] = []interface{}{groupConfigMap}
-	// 	// }
-
-	// 	if respData.ExecStrategy.EngineParam != nil {
-	// 		execStrategyMap["engine_param"] = respData.ExecStrategy.EngineParam
-	// 	}
-
-	// 	if respData.ExecStrategy.CatalogName != nil {
-	// 		execStrategyMap["catalog_name"] = respData.ExecStrategy.CatalogName
-	// 	}
-
-	// 	_ = d.Set("exec_strategy", []interface{}{execStrategyMap})
-	// }
-
-	// if respData.Subscription != nil {
-	// 	subscriptionMap := map[string]interface{}{}
-	// 	if respData.Subscription.RuleGroupId != nil {
-	// 		subscriptionMap["rule_group_id"] = respData.Subscription.RuleGroupId
-	// 	}
-
-	// 	receiversList := make([]map[string]interface{}, 0, len(respData.Subscription.Receivers))
-	// 	if respData.Subscription.Receivers != nil {
-	// 		for _, receivers := range respData.Subscription.Receivers {
-	// 			receiversMap := map[string]interface{}{}
-
-	// 			if receivers.ReceiverUserId != nil {
-	// 				receiversMap["receiver_user_id"] = receivers.ReceiverUserId
-	// 			}
-
-	// 			if receivers.ReceiverName != nil {
-	// 				receiversMap["receiver_name"] = receivers.ReceiverName
-	// 			}
-
-	// 			if receivers.ReceiverUserIdStr != nil {
-	// 				receiversMap["receiver_user_id_str"] = receivers.ReceiverUserIdStr
-	// 			}
-
-	// 			receiversList = append(receiversList, receiversMap)
-	// 		}
-
-	// 		subscriptionMap["receivers"] = receiversList
-	// 	}
-	// 	if respData.Subscription.SubscribeType != nil {
-	// 		subscriptionMap["subscribe_type"] = respData.Subscription.SubscribeType
-	// 	}
-
-	// 	webHooksList := make([]map[string]interface{}, 0, len(respData.Subscription.WebHooks))
-	// 	if respData.Subscription.WebHooks != nil {
-	// 		for _, webHooks := range respData.Subscription.WebHooks {
-	// 			webHooksMap := map[string]interface{}{}
-
-	// 			if webHooks.HookType != nil {
-	// 				webHooksMap["hook_type"] = webHooks.HookType
-	// 			}
-
-	// 			if webHooks.HookAddress != nil {
-	// 				webHooksMap["hook_address"] = webHooks.HookAddress
-	// 			}
-
-	// 			webHooksList = append(webHooksList, webHooksMap)
-	// 		}
-
-	// 		subscriptionMap["web_hooks"] = webHooksList
-	// 	}
-	// 	if respData.Subscription.RuleId != nil {
-	// 		subscriptionMap["rule_id"] = respData.Subscription.RuleId
-	// 	}
-
-	// 	if respData.Subscription.RuleName != nil {
-	// 		subscriptionMap["rule_name"] = respData.Subscription.RuleName
-	// 	}
-
-	// 	if respData.Subscription.AlarmMessageRule != nil {
-	// 		subscriptionMap["alarm_message_rule"] = respData.Subscription.AlarmMessageRule
-	// 	}
-
-	// 	_ = d.Set("subscription", []interface{}{subscriptionMap})
-	// }
-
-	// if respData.CreateTime != nil {
-	// 	_ = d.Set("create_time", respData.CreateTime)
-	// }
-
 	if respData.DatasourceId != nil {
 		_ = d.Set("datasource_id", strconv.FormatUint(*respData.DatasourceId, 10))
 	}
@@ -1341,22 +992,6 @@ func resourceTencentCloudWedataQualityRuleRead(d *schema.ResourceData, meta inte
 	if respData.DatabaseId != nil {
 		_ = d.Set("database_id", respData.DatabaseId)
 	}
-
-	// if respData.MonitorStatus != nil {
-	// 	_ = d.Set("monitor_status", respData.MonitorStatus)
-	// }
-
-	// if respData.TriggerCondition != nil {
-	// 	_ = d.Set("trigger_condition", respData.TriggerCondition)
-	// }
-
-	// if respData.DsEnvType != nil {
-	// 	_ = d.Set("ds_env_type", respData.DsEnvType)
-	// }
-
-	// if respData.DatasourceType != nil {
-	// 	_ = d.Set("datasource_type", respData.DatasourceType)
-	// }
 
 	if respData.SchemaName != nil {
 		_ = d.Set("schema_name", respData.SchemaName)
@@ -1370,33 +1005,9 @@ func resourceTencentCloudWedataQualityRuleRead(d *schema.ResourceData, meta inte
 		_ = d.Set("project_id", respData.ProjectId)
 	}
 
-	// if respData.ProjectName != nil {
-	// 	_ = d.Set("project_name", respData.ProjectName)
-	// }
-
-	// if respData.UpdateTime != nil {
-	// 	_ = d.Set("update_time", respData.UpdateTime)
-	// }
-
-	// if respData.DatasourceName != nil {
-	// 	_ = d.Set("datasource_name", respData.DatasourceName)
-	// }
-
 	if respData.DatabaseName != nil {
 		_ = d.Set("database_name", respData.DatabaseName)
 	}
-
-	// if respData.FailMsg != nil {
-	// 	_ = d.Set("fail_msg", respData.FailMsg)
-	// }
-
-	// if respData.GroupType != nil {
-	// 	_ = d.Set("group_type", respData.GroupType)
-	// }
-
-	// if respData.AspectTaskId != nil {
-	// 	_ = d.Set("aspect_task_id", respData.AspectTaskId)
-	// }
 
 	if respData.CatalogName != nil {
 		_ = d.Set("catalog_name", respData.CatalogName)
