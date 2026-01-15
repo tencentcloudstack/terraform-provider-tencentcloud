@@ -77,10 +77,13 @@ const (
 	// 创建自定义推送任务认证失败, 请检查推送地址是否正确。
 	FAILEDOPERATION_CREATELOGTOPICTASKAUTHFAILURE = "FailedOperation.CreateLogTopicTaskAuthFailure"
 
+	// 创建预热回源限速配置失败，请稍后重试或提交工单。
+	FAILEDOPERATION_CREATEPREFETCHORIGINLIMITFAILED = "FailedOperation.CreatePrefetchOriginLimitFailed"
+
 	// 边缘客户端证书已过期，暂不支持下发过期证书。
 	FAILEDOPERATION_EDGECLIENTCERTIFICATEHASEXPIRED = "FailedOperation.EdgeClientCertificateHasExpired"
 
-	// 调用 DNSPod 失败，请稍后重试，若无法解决，请联系智能客服或提交工单。
+	// 调用 DNSPod 失败，请稍后重试，若无法解决，请提交工单。
 	FAILEDOPERATION_FAILEDTOCALLDNSPOD = "FailedOperation.FailedToCallDNSPod"
 
 	// 有其他任务正在部署中，请稍后重试。
@@ -97,6 +100,12 @@ const (
 
 	// 操作失败。
 	FAILEDOPERATION_MODIFYFAILED = "FailedOperation.ModifyFailed"
+
+	// 超出配置数量限制，无法创建更多，请删除不必要配置或申请提升配置数量。
+	FAILEDOPERATION_PREFETCHORIGINLIMITCOUNTEXCEEDED = "FailedOperation.PrefetchOriginLimitCountExceeded"
+
+	// 未找到对应预热回源限速配置，请确认是否存在配置后重试。
+	FAILEDOPERATION_PREFETCHORIGINLIMITNOTFOUND = "FailedOperation.PrefetchOriginLimitNotFound"
 
 	// 该产品即将下架，操作被拒绝。
 	FAILEDOPERATION_PRODUCTDISCONTINUED = "FailedOperation.ProductDiscontinued"
@@ -121,6 +130,9 @@ const (
 
 	// 回源客户端证书已过期，暂不支持下发过期证书。
 	FAILEDOPERATION_UPSTREAMCLIENTCERTIFICATEHASEXPIRED = "FailedOperation.UpstreamClientCertificateHasExpired"
+
+	// 源站 CA 证书已过期，暂不支持下发过期证书。
+	FAILEDOPERATION_UPSTREAMVERIFYCUSTOMCACERTIFICATEHASEXPIRED = "FailedOperation.UpstreamVerifyCustomCACertificateHasExpired"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -217,6 +229,9 @@ const (
 
 	// 函数内容超过大小限制。
 	INVALIDPARAMETER_CONTENTEXCEEDSLIMIT = "InvalidParameter.ContentExceedsLimit"
+
+	// 域名加速区域，无法支持该预热回源限速区域配置，请调整后重新提交。
+	INVALIDPARAMETER_DOMAINAREANOTSUPPORTPREFETCHORIGINLIMITAREA = "InvalidParameter.DomainAreaNotSupportPrefetchOriginLimitArea"
 
 	// 域名不存在或不属于该账号。
 	INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
@@ -683,6 +698,18 @@ const (
 	// 最大上传大小超出限制
 	INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
 
+	// 预热回源限速区域参数无效，请调整区域后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITAREAINVALID = "InvalidParameter.PrefetchOriginLimitAreaInvalid"
+
+	// 预热回源限速带宽值过大，请调整后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITBANDWIDTHTOOLARGE = "InvalidParameter.PrefetchOriginLimitBandwidthTooLarge"
+
+	// 预热回源限速带宽值过小，请调整后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITBANDWIDTHTOOSMALL = "InvalidParameter.PrefetchOriginLimitBandwidthTooSmall"
+
+	// 预热回源限速控制开关参数无效，请调整区域后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITENABLEDINVALID = "InvalidParameter.PrefetchOriginLimitEnabledInvalid"
+
 	// 实例名称重复。
 	INVALIDPARAMETER_PROXYNAMEDUPLICATING = "InvalidParameter.ProxyNameDuplicating"
 
@@ -767,6 +794,15 @@ const (
 	// 无效的回源客户端证书配置。
 	INVALIDPARAMETER_UPSTREAMCLIENTCERTCHECKERROR = "InvalidParameter.UpstreamClientCertCheckError"
 
+	// 无效的源站证书校验配置。
+	INVALIDPARAMETER_UPSTREAMVERIFYCERTCHECKERROR = "InvalidParameter.UpstreamVerifyCertCheckError"
+
+	// 无效的源站证书校验配置，证书内容为空。
+	INVALIDPARAMETER_UPSTREAMVERIFYCUSTOMCACERTNOINFO = "InvalidParameter.UpstreamVerifyCustomCACertNoInfo"
+
+	// 站点加速区域，无法支持该预热回源限速区域配置，请调整后重新提交。
+	INVALIDPARAMETER_ZONEAREANOTSUPPORTPREFETCHORIGINLIMITAREA = "InvalidParameter.ZoneAreaNotSupportPrefetchOriginLimitArea"
+
 	// 站点已被绑定。
 	INVALIDPARAMETER_ZONEHASBEENBOUND = "InvalidParameter.ZoneHasBeenBound"
 
@@ -794,6 +830,9 @@ const (
 	// 别称域名暂不支持配置回源双向认证。
 	INVALIDPARAMETERVALUE_ALIASDOMAINNOTSUPPORTUPSTREAMMTLS = "InvalidParameterValue.AliasDomainNotSupportUpstreamMTLS"
 
+	// 别称域名暂不支持配置源站证书校验。
+	INVALIDPARAMETERVALUE_ALIASDOMAINNOTSUPPORTUPSTREAMVERIFY = "InvalidParameterValue.AliasDomainNotSupportUpstreamVerify"
+
 	// 边缘双向认证配置中的客户端证书必须是CA证书。
 	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYCLIENTMUSTCA = "InvalidParameterValue.CertificateVerifyClientMustCa"
 
@@ -808,6 +847,15 @@ const (
 
 	// 回源双向认证配置至少需要配置一本证书。
 	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMCLIENTNEEDCERT = "InvalidParameterValue.CertificateVerifyUpstreamClientNeedCert"
+
+	// 源站证书校验的证书类型不正确，仅支持 CA 证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMVERIFYCUSTOMCAMUSTCA = "InvalidParameterValue.CertificateVerifyUpstreamVerifyCustomCAMustCA"
+
+	// 当前源站证书校验的证书仅支持 RSA或 ECC 算法证书，暂不支持国密 SM2 算法证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMVERIFYCUSTOMCAMUSTRSAORECC = "InvalidParameterValue.CertificateVerifyUpstreamVerifyCustomCAMustRSAorECC"
+
+	// 源站证书校验配置至少需要配置一本证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMVERIFYCUSTOMCANEEDCERT = "InvalidParameterValue.CertificateVerifyUpstreamVerifyCustomCANeedCert"
 
 	// 边缘双向认证配置中的客户端 CA 证书最多允许配置20本。
 	INVALIDPARAMETERVALUE_CLIENTCERTINFOQUOTALIMIT = "InvalidParameterValue.ClientCertInfoQuotaLimit"
@@ -881,6 +929,9 @@ const (
 	// 值不在指定范围。
 	INVALIDPARAMETERVALUE_NOTWITHINRANGE = "InvalidParameterValue.NotWithinRange"
 
+	// OC互转开启不支持开启源站证书校验
+	INVALIDPARAMETERVALUE_OCDIRECTORIGINDOMAINNOTSUPPORTUPSTREAMVERIFY = "InvalidParameterValue.OCDirectOriginDomainNotSupportUpstreamVerify"
+
 	// 指定的源站组不存在。
 	INVALIDPARAMETERVALUE_ORIGINGROUPNOTEXISTS = "InvalidParameterValue.OriginGroupNotExists"
 
@@ -916,6 +967,9 @@ const (
 
 	// 回源双向认证配置中的客户端证书最多允许配置1本。
 	INVALIDPARAMETERVALUE_UPSTREAMCLIENTCERTINFOQUOTALIMIT = "InvalidParameterValue.UpstreamClientCertInfoQuotaLimit"
+
+	// 源站证书校验配置中的 CA 证书最多允许配置1本。
+	INVALIDPARAMETERVALUE_UPSTREAMVERIFYCUSTOMCACERTINFOQUOTALIMIT = "InvalidParameterValue.UpstreamVerifyCustomCACertInfoQuotaLimit"
 
 	// 站点名称格式不正确，请输入正确的域名格式。
 	INVALIDPARAMETERVALUE_ZONENAMEINVALID = "InvalidParameterValue.ZoneNameInvalid"
@@ -1052,6 +1106,9 @@ const (
 	// 待变更域名回源双向认证证书不一致，请确认变更域名证书一致后重试。
 	OPERATIONDENIED_HOSTSUPSTREAMCERTIFICATEINCONSISTENCY = "OperationDenied.HostsUpstreamCertificateInconsistency"
 
+	// 待变更域名源站证书校验配置不一致，请确认变更域名配置一致后重试。
+	OPERATIONDENIED_HOSTSUPSTREAMCERTIFICATEVERIFYINCONSISTENCY = "OperationDenied.HostsUpstreamCertificateVerifyInconsistency"
+
 	// 开启高防时必须保证安全是开启状态。
 	OPERATIONDENIED_INVALIDADVANCEDDEFENSESECURITYTYPE = "OperationDenied.InvalidAdvancedDefenseSecurityType"
 
@@ -1123,6 +1180,9 @@ const (
 
 	// 当前无私钥证书功能仅针对白名单用户开放。
 	OPERATIONDENIED_NOTINKEYLESSWHITELIST = "OperationDenied.NotInKeylessWhiteList"
+
+	// 不在预热回源限速配置白名单中，请提交工单。
+	OPERATIONDENIED_NOTINPREFETCHORIGINLIMITWHITELIST = "OperationDenied.NotInPrefetchOriginLimitWhiteList"
 
 	// 当前回源双向认证功能仅针对白名单用户开放。
 	OPERATIONDENIED_NOTINUPSTREAMMTLSWHITELIST = "OperationDenied.NotInUpstreamMTLSWhiteList"
@@ -1267,6 +1327,9 @@ const (
 
 	// 资源被其他账号NS接入占用。
 	RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+
+	// 预热回源限速配置已存在，无法重复创建，请检查是否已创建对应配置。
+	RESOURCEINUSE_PREFETCHORIGINLIMITALREADYEXISTS = "ResourceInUse.PrefetchOriginLimitAlreadyExists"
 
 	// 资源被本账号和其他账号同时Cname接入占用。
 	RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"

@@ -2236,3 +2236,80 @@ func (me *TeoService) DescribeTeoOriginAclByFilter(ctx context.Context, param ma
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoWebSecurityTemplateById(ctx context.Context, zoneId, templateId string) (ret *teov20220901.SecurityPolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeWebSecurityTemplateRequest()
+	request.ZoneId = &zoneId
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.SecurityPolicy
+	return
+}
+
+func (me *TeoService) DescribeTeoWebSecurityTemplateNameById(ctx context.Context, zoneId string, templateId string) (templateName string, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = teo.NewDescribeWebSecurityTemplatesRequest()
+		response = teo.NewDescribeWebSecurityTemplatesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneIds = []*string{&zoneId}
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplates(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.SecurityPolicyTemplates == nil {
+		return
+	}
+
+	for _, template := range response.Response.SecurityPolicyTemplates {
+		if template.TemplateId != nil && *template.TemplateId == templateId {
+			if template.TemplateName != nil {
+				templateName = *template.TemplateName
+			}
+			break
+		}
+	}
+
+	return
+}
