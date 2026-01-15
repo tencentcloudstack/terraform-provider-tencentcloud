@@ -2347,6 +2347,9 @@ tencentcloud_wedata_trigger_workflow
 tencentcloud_wedata_trigger_task
 tencentcloud_wedata_quality_rule
 tencentcloud_wedata_quality_rule_group
+tencentcloud_wedata_submit_trigger_task
+tencentcloud_wedata_kill_trigger_workflow_run
+tencentcloud_wedata_rerun_trigger_workflow_run_async
 
 Cloud Firewall(CFW)
 Data Source

@@ -15,9 +15,9 @@
 package v20250806
 
 import (
-    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 // Predefined struct for user
@@ -31,7 +31,7 @@ type AddCalcEnginesToProjectRequestParams struct {
 
 type AddCalcEnginesToProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 修改的项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -40,8 +40,8 @@ type AddCalcEnginesToProjectRequest struct {
 }
 
 func (r *AddCalcEnginesToProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -71,8 +71,8 @@ type AddCalcEnginesToProjectResponse struct {
 }
 
 func (r *AddCalcEnginesToProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -130,7 +130,7 @@ type AlarmMessage struct {
 	// 告警规则Id
 	AlarmRuleId *string `json:"AlarmRuleId,omitnil,omitempty" name:"AlarmRuleId"`
 
-	// 告警渠道 1.邮件，2.短信，3.微信，4.语音，5.企业微信，6.Http，7.企业微信群， 8.飞书群，9.钉钉群，10.Slack群,11.Teams群（默认1.邮件），7.企业微信群，8.飞书群，9.钉钉群，10.Slack群，11.Teams群 
+	// 告警渠道 1.邮件，2.短信，3.微信，4.语音，5.企业微信，6.Http，7.企业微信群， 8.飞书群，9.钉钉群，10.Slack群,11.Teams群（默认1.邮件），7.企业微信群，8.飞书群，9.钉钉群，10.Slack群，11.Teams群
 	AlarmWays []*string `json:"AlarmWays,omitnil,omitempty" name:"AlarmWays"`
 
 	// 告警接收人
@@ -159,7 +159,7 @@ type AlarmRuleData struct {
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 监控对象类型,
-	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务） 
+	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务）
 	// 项目维度监控： 项目整体任务波动告警， 7：项目波动监控告警
 	MonitorObjectType *int64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
 
@@ -171,7 +171,7 @@ type AlarmRuleData struct {
 	// 项目波动告警
 	// projectFailureInstanceUpwardFluctuationAlarm： 当天失败实例数向上波动率超过阀值告警；
 	// projectSuccessInstanceDownwardFluctuationAlarm：当天成功实例数向下波动率超过阀值告警；
-	// 
+	//
 	// 离线集成任务对账告警：
 	// reconciliationFailure： 离线对账任务失败告警
 	// reconciliationOvertime： 离线对账任务运行超时告警
@@ -204,15 +204,15 @@ type AlarmRuleData struct {
 }
 
 type AlarmRuleDetail struct {
-	// 失败触发时机 
-	// 
+	// 失败触发时机
+	//
 	// 1 – 首次失败触发
 	// 2 --所有重试完成触发 (默认)
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Trigger *int64 `json:"Trigger,omitnil,omitempty" name:"Trigger"`
 
 	// 补录重跑触发时机
-	// 
+	//
 	// 1 –  首次失败触发
 	// 2 – 所有重试完成触发
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -274,7 +274,7 @@ type AssociateResourceGroupToProjectRequestParams struct {
 
 type AssociateResourceGroupToProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 资源组id
 	ResourceGroupId *string `json:"ResourceGroupId,omitnil,omitempty" name:"ResourceGroupId"`
 
@@ -283,8 +283,8 @@ type AssociateResourceGroupToProjectRequest struct {
 }
 
 func (r *AssociateResourceGroupToProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -318,8 +318,8 @@ type AssociateResourceGroupToProjectResponse struct {
 }
 
 func (r *AssociateResourceGroupToProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -354,7 +354,7 @@ type AuthorizeDataSourceRequestParams struct {
 
 type AuthorizeDataSourceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 数据源ID
 	DataSourceId *string `json:"DataSourceId,omitnil,omitempty" name:"DataSourceId"`
 
@@ -368,8 +368,8 @@ type AuthorizeDataSourceRequest struct {
 }
 
 func (r *AuthorizeDataSourceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -404,8 +404,8 @@ type AuthorizeDataSourceResponse struct {
 }
 
 func (r *AuthorizeDataSourceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -623,7 +623,7 @@ type CodeFolderNode struct {
 	// 是否叶子节点
 	IsLeaf *bool `json:"IsLeaf,omitnil,omitempty" name:"IsLeaf"`
 
-	// 业务参数	
+	// 业务参数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Params *string `json:"Params,omitnil,omitempty" name:"Params"`
 
@@ -640,7 +640,7 @@ type CodeFolderNode struct {
 	// 创建人
 	CreateUserUin *string `json:"CreateUserUin,omitnil,omitempty" name:"CreateUserUin"`
 
-	// 当前用户对节点拥有的权限	
+	// 当前用户对节点拥有的权限
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodePermission *string `json:"NodePermission,omitnil,omitempty" name:"NodePermission"`
 
@@ -815,7 +815,7 @@ type CreateCodeFileRequestParams struct {
 
 type CreateCodeFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -833,8 +833,8 @@ type CreateCodeFileRequest struct {
 }
 
 func (r *CreateCodeFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -870,8 +870,8 @@ type CreateCodeFileResponse struct {
 }
 
 func (r *CreateCodeFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -894,7 +894,7 @@ type CreateCodeFolderRequestParams struct {
 
 type CreateCodeFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -906,8 +906,8 @@ type CreateCodeFolderRequest struct {
 }
 
 func (r *CreateCodeFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -941,8 +941,8 @@ type CreateCodeFolderResponse struct {
 }
 
 func (r *CreateCodeFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -962,7 +962,7 @@ type CreateCodePermissionsRequestParams struct {
 
 type CreateCodePermissionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -971,8 +971,8 @@ type CreateCodePermissionsRequest struct {
 }
 
 func (r *CreateCodePermissionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1005,8 +1005,8 @@ type CreateCodePermissionsResponse struct {
 }
 
 func (r *CreateCodePermissionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1056,7 +1056,7 @@ type CreateDataBackfillPlanRequestParams struct {
 	// 补录是实例数据时间顺序，生效必须满足2个条件:
 	// 1. 必须同周期任务
 	// 2. 优先按依赖关系执行，无依赖关系影响的情况下按配置执行顺序执行
-	//  
+	//
 	// 可选值
 	// - NORMAL: 不设置
 	// - ORDER: 顺序
@@ -1071,7 +1071,7 @@ type CreateDataBackfillPlanRequestParams struct {
 
 type CreateDataBackfillPlanRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -1111,7 +1111,7 @@ type CreateDataBackfillPlanRequest struct {
 	// 补录是实例数据时间顺序，生效必须满足2个条件:
 	// 1. 必须同周期任务
 	// 2. 优先按依赖关系执行，无依赖关系影响的情况下按配置执行顺序执行
-	//  
+	//
 	// 可选值
 	// - NORMAL: 不设置
 	// - ORDER: 顺序
@@ -1125,8 +1125,8 @@ type CreateDataBackfillPlanRequest struct {
 }
 
 func (r *CreateDataBackfillPlanRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1171,8 +1171,8 @@ type CreateDataBackfillPlanResponse struct {
 }
 
 func (r *CreateDataBackfillPlanResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1195,7 +1195,7 @@ type CreateDataSourceRequestParams struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 数据源类型:枚举值
-	// 
+	//
 	// - MYSQL
 	// - TENCENT_MYSQL
 	// - POSTGRE
@@ -1256,12 +1256,12 @@ type CreateDataSourceRequestParams struct {
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 数据源的配置信息，以JSON KV存储，根据每个数据源类型不同，而KV存储信息不同
-	// 
-	// > deployType: 
-	// CONNSTR_PUBLICDB(公网实例) 
+	//
+	// > deployType:
+	// CONNSTR_PUBLICDB(公网实例)
 	// CONNSTR_CVMDB(自建实例)
 	// INSTANCE(云实例)
-	// 
+	//
 	// ```
 	// mysql: 自建实例
 	// {
@@ -1283,7 +1283,7 @@ type CreateDataSourceRequestParams struct {
 	//     "deployType": "INSTANCE",
 	//     "type": "TENCENT_MYSQL"
 	// }
-	// sql_server: 
+	// sql_server:
 	// {
 	//     "deployType": "CONNSTR_PUBLICDB",
 	//     "url": "jdbc:sqlserver://1.1.1.1:223;DatabaseName=database",
@@ -1304,7 +1304,7 @@ type CreateDataSourceRequestParams struct {
 	//     "redisType": "NO_ACCOUT",
 	//     "type": "REDIS"
 	// }
-	// oracle: 
+	// oracle:
 	// {
 	//     "deployType": "CONNSTR_CVMDB",
 	//     "url": "jdbc:oracle:thin:@1.1.1.1:1521:prod",
@@ -1357,7 +1357,7 @@ type CreateDataSourceRequestParams struct {
 	//     "principal": "aaaa",
 	//     "serviceName": "kafka"
 	// }
-	// 
+	//
 	// cos:
 	// {
 	//     "region": "ap-shanghai",
@@ -1367,7 +1367,7 @@ type CreateDataSourceRequestParams struct {
 	//     "bucket": "aaa",
 	//     "type": "COS"
 	// }
-	// 
+	//
 	// ```
 	ProdConProperties *string `json:"ProdConProperties,omitnil,omitempty" name:"ProdConProperties"`
 
@@ -1389,7 +1389,7 @@ type CreateDataSourceRequestParams struct {
 
 type CreateDataSourceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 数据源项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -1397,7 +1397,7 @@ type CreateDataSourceRequest struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 数据源类型:枚举值
-	// 
+	//
 	// - MYSQL
 	// - TENCENT_MYSQL
 	// - POSTGRE
@@ -1458,12 +1458,12 @@ type CreateDataSourceRequest struct {
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 数据源的配置信息，以JSON KV存储，根据每个数据源类型不同，而KV存储信息不同
-	// 
-	// > deployType: 
-	// CONNSTR_PUBLICDB(公网实例) 
+	//
+	// > deployType:
+	// CONNSTR_PUBLICDB(公网实例)
 	// CONNSTR_CVMDB(自建实例)
 	// INSTANCE(云实例)
-	// 
+	//
 	// ```
 	// mysql: 自建实例
 	// {
@@ -1485,7 +1485,7 @@ type CreateDataSourceRequest struct {
 	//     "deployType": "INSTANCE",
 	//     "type": "TENCENT_MYSQL"
 	// }
-	// sql_server: 
+	// sql_server:
 	// {
 	//     "deployType": "CONNSTR_PUBLICDB",
 	//     "url": "jdbc:sqlserver://1.1.1.1:223;DatabaseName=database",
@@ -1506,7 +1506,7 @@ type CreateDataSourceRequest struct {
 	//     "redisType": "NO_ACCOUT",
 	//     "type": "REDIS"
 	// }
-	// oracle: 
+	// oracle:
 	// {
 	//     "deployType": "CONNSTR_CVMDB",
 	//     "url": "jdbc:oracle:thin:@1.1.1.1:1521:prod",
@@ -1559,7 +1559,7 @@ type CreateDataSourceRequest struct {
 	//     "principal": "aaaa",
 	//     "serviceName": "kafka"
 	// }
-	// 
+	//
 	// cos:
 	// {
 	//     "region": "ap-shanghai",
@@ -1569,7 +1569,7 @@ type CreateDataSourceRequest struct {
 	//     "bucket": "aaa",
 	//     "type": "COS"
 	// }
-	// 
+	//
 	// ```
 	ProdConProperties *string `json:"ProdConProperties,omitnil,omitempty" name:"ProdConProperties"`
 
@@ -1590,8 +1590,8 @@ type CreateDataSourceRequest struct {
 }
 
 func (r *CreateDataSourceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1632,8 +1632,8 @@ type CreateDataSourceResponse struct {
 }
 
 func (r *CreateDataSourceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1658,15 +1658,15 @@ type CreateOpsAlarmRuleRequestParams struct {
 	// 监控对象业务id列表，根据MonitorType 的设置传入不同的业务id，如下1（任务）： MonitorObjectIds为任务id列表2（工作流）： MonitorObjectIds 为工作流id列表(工作流id可从接口ListWorkflows获取)3（项目）：  MonitorObjectIds为项目id列表
 	MonitorObjectIds []*string `json:"MonitorObjectIds,omitnil,omitempty" name:"MonitorObjectIds"`
 
-	// 告警规则监控类型 failure：失败告警 ；overtime：超时告警 success：成功告警; backTrackingOrRerunSuccess: 补录重跑成功告警 backTrackingOrRerunFailure：补录重跑失败告警； 
-	// 项目波动告警 projectFailureInstanceUpwardFluctuationAlarm： 当天失败实例数向上波动率超过阀值告警； projectSuccessInstanceDownwardFluctuationAlarm：当天成功实例数向下波动率超过阀值告警； 
+	// 告警规则监控类型 failure：失败告警 ；overtime：超时告警 success：成功告警; backTrackingOrRerunSuccess: 补录重跑成功告警 backTrackingOrRerunFailure：补录重跑失败告警；
+	// 项目波动告警 projectFailureInstanceUpwardFluctuationAlarm： 当天失败实例数向上波动率超过阀值告警； projectSuccessInstanceDownwardFluctuationAlarm：当天成功实例数向下波动率超过阀值告警；
 	// 离线集成任务对账告警： reconciliationFailure： 离线对账任务失败告警 reconciliationOvertime： 离线对账任务运行超时告警 reconciliationMismatch： 数据对账任务不一致条数超过阀值告警
 	AlarmTypes []*string `json:"AlarmTypes,omitnil,omitempty" name:"AlarmTypes"`
 
 	// 告警接收人配置信息
 	AlarmGroups []*AlarmGroup `json:"AlarmGroups,omitnil,omitempty" name:"AlarmGroups"`
 
-	// 监控对象类型, 
+	// 监控对象类型,
 	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务）
 	// 项目维度监控： 项目整体任务波动告警，  7：项目波动监控告警
 	MonitorObjectType *uint64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
@@ -1684,7 +1684,7 @@ type CreateOpsAlarmRuleRequestParams struct {
 
 type CreateOpsAlarmRuleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -1694,15 +1694,15 @@ type CreateOpsAlarmRuleRequest struct {
 	// 监控对象业务id列表，根据MonitorType 的设置传入不同的业务id，如下1（任务）： MonitorObjectIds为任务id列表2（工作流）： MonitorObjectIds 为工作流id列表(工作流id可从接口ListWorkflows获取)3（项目）：  MonitorObjectIds为项目id列表
 	MonitorObjectIds []*string `json:"MonitorObjectIds,omitnil,omitempty" name:"MonitorObjectIds"`
 
-	// 告警规则监控类型 failure：失败告警 ；overtime：超时告警 success：成功告警; backTrackingOrRerunSuccess: 补录重跑成功告警 backTrackingOrRerunFailure：补录重跑失败告警； 
-	// 项目波动告警 projectFailureInstanceUpwardFluctuationAlarm： 当天失败实例数向上波动率超过阀值告警； projectSuccessInstanceDownwardFluctuationAlarm：当天成功实例数向下波动率超过阀值告警； 
+	// 告警规则监控类型 failure：失败告警 ；overtime：超时告警 success：成功告警; backTrackingOrRerunSuccess: 补录重跑成功告警 backTrackingOrRerunFailure：补录重跑失败告警；
+	// 项目波动告警 projectFailureInstanceUpwardFluctuationAlarm： 当天失败实例数向上波动率超过阀值告警； projectSuccessInstanceDownwardFluctuationAlarm：当天成功实例数向下波动率超过阀值告警；
 	// 离线集成任务对账告警： reconciliationFailure： 离线对账任务失败告警 reconciliationOvertime： 离线对账任务运行超时告警 reconciliationMismatch： 数据对账任务不一致条数超过阀值告警
 	AlarmTypes []*string `json:"AlarmTypes,omitnil,omitempty" name:"AlarmTypes"`
 
 	// 告警接收人配置信息
 	AlarmGroups []*AlarmGroup `json:"AlarmGroups,omitnil,omitempty" name:"AlarmGroups"`
 
-	// 监控对象类型, 
+	// 监控对象类型,
 	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务）
 	// 项目维度监控： 项目整体任务波动告警，  7：项目波动监控告警
 	MonitorObjectType *uint64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
@@ -1719,8 +1719,8 @@ type CreateOpsAlarmRuleRequest struct {
 }
 
 func (r *CreateOpsAlarmRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1760,8 +1760,8 @@ type CreateOpsAlarmRuleResponse struct {
 }
 
 func (r *CreateOpsAlarmRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1784,7 +1784,7 @@ type CreateProjectMemberRequestParams struct {
 
 type CreateProjectMemberRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -1796,8 +1796,8 @@ type CreateProjectMemberRequest struct {
 }
 
 func (r *CreateProjectMemberRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1831,8 +1831,8 @@ type CreateProjectMemberResponse struct {
 }
 
 func (r *CreateProjectMemberResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1855,7 +1855,7 @@ type CreateProjectRequestParams struct {
 
 type CreateProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目基本信息
 	Project *ProjectRequest `json:"Project,omitnil,omitempty" name:"Project"`
 
@@ -1867,8 +1867,8 @@ type CreateProjectRequest struct {
 }
 
 func (r *CreateProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1902,8 +1902,8 @@ type CreateProjectResponse struct {
 }
 
 func (r *CreateProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1929,7 +1929,7 @@ type CreateQualityRuleGroupRequestParams struct {
 
 type CreateQualityRuleGroupRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 任务参数
 	RuleGroupExecStrategyBOList []*QualityRuleGroupExecStrategy `json:"RuleGroupExecStrategyBOList,omitnil,omitempty" name:"RuleGroupExecStrategyBOList"`
 
@@ -1938,8 +1938,8 @@ type CreateQualityRuleGroupRequest struct {
 }
 
 func (r *CreateQualityRuleGroupRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1973,8 +1973,8 @@ type CreateQualityRuleGroupResponse struct {
 }
 
 func (r *CreateQualityRuleGroupResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1999,13 +1999,13 @@ type CreateQualityRuleRequestParams struct {
 	// 3：克隆创建规则
 	CreateRuleScene *int64 `json:"CreateRuleScene,omitnil,omitempty" name:"CreateRuleScene"`
 
-	// 单条规则信息集合	
+	// 单条规则信息集合
 	RuleBOList []*QualityRuleInfo `json:"RuleBOList,omitnil,omitempty" name:"RuleBOList"`
 }
 
 type CreateQualityRuleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -2015,13 +2015,13 @@ type CreateQualityRuleRequest struct {
 	// 3：克隆创建规则
 	CreateRuleScene *int64 `json:"CreateRuleScene,omitnil,omitempty" name:"CreateRuleScene"`
 
-	// 单条规则信息集合	
+	// 单条规则信息集合
 	RuleBOList []*QualityRuleInfo `json:"RuleBOList,omitnil,omitempty" name:"RuleBOList"`
 }
 
 func (r *CreateQualityRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2056,8 +2056,8 @@ type CreateQualityRuleResponse struct {
 }
 
 func (r *CreateQualityRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2110,7 +2110,7 @@ type CreateResourceFileRequestParams struct {
 	ParentFolderPath *string `json:"ParentFolderPath,omitnil,omitempty" name:"ParentFolderPath"`
 
 	// - 上传文件及手填两种方式只能选择其一，如果两者均提供，取值顺序为文件>手填值
-	// -   手填值必须是存在的cos路径, parentFolderPath为父文件夹路径, name为文件名, 手填值取值示例:     /datastudio/resource/projectId/parentFolderPath/name 
+	// -   手填值必须是存在的cos路径, parentFolderPath为父文件夹路径, name为文件名, 手填值取值示例:     /datastudio/resource/projectId/parentFolderPath/name
 	ResourceFile *string `json:"ResourceFile,omitnil,omitempty" name:"ResourceFile"`
 
 	// bundle客户端ID
@@ -2122,7 +2122,7 @@ type CreateResourceFileRequestParams struct {
 
 type CreateResourceFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -2139,7 +2139,7 @@ type CreateResourceFileRequest struct {
 	ParentFolderPath *string `json:"ParentFolderPath,omitnil,omitempty" name:"ParentFolderPath"`
 
 	// - 上传文件及手填两种方式只能选择其一，如果两者均提供，取值顺序为文件>手填值
-	// -   手填值必须是存在的cos路径, parentFolderPath为父文件夹路径, name为文件名, 手填值取值示例:     /datastudio/resource/projectId/parentFolderPath/name 
+	// -   手填值必须是存在的cos路径, parentFolderPath为父文件夹路径, name为文件名, 手填值取值示例:     /datastudio/resource/projectId/parentFolderPath/name
 	ResourceFile *string `json:"ResourceFile,omitnil,omitempty" name:"ResourceFile"`
 
 	// bundle客户端ID
@@ -2150,8 +2150,8 @@ type CreateResourceFileRequest struct {
 }
 
 func (r *CreateResourceFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2190,8 +2190,8 @@ type CreateResourceFileResponse struct {
 }
 
 func (r *CreateResourceFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2219,7 +2219,7 @@ type CreateResourceFolderRequestParams struct {
 
 type CreateResourceFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -2231,8 +2231,8 @@ type CreateResourceFolderRequest struct {
 }
 
 func (r *CreateResourceFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2266,8 +2266,8 @@ type CreateResourceFolderResponse struct {
 }
 
 func (r *CreateResourceFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2308,7 +2308,7 @@ type CreateResourceGroupRequestParams struct {
 
 type CreateResourceGroupRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 资源组名称。创建通用资源组的名称，必须以字母开头，可包含字母、数字、下划线（_），最多 64 个字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -2338,8 +2338,8 @@ type CreateResourceGroupRequest struct {
 }
 
 func (r *CreateResourceGroupRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2379,8 +2379,8 @@ type CreateResourceGroupResponse struct {
 }
 
 func (r *CreateResourceGroupResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2406,7 +2406,7 @@ type CreateSQLFolderRequestParams struct {
 
 type CreateSQLFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 文件夹名称
 	FolderName *string `json:"FolderName,omitnil,omitempty" name:"FolderName"`
 
@@ -2421,8 +2421,8 @@ type CreateSQLFolderRequest struct {
 }
 
 func (r *CreateSQLFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2458,8 +2458,8 @@ type CreateSQLFolderResponse struct {
 }
 
 func (r *CreateSQLFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2491,7 +2491,7 @@ type CreateSQLScriptRequestParams struct {
 
 type CreateSQLScriptRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 脚本名称
 	ScriptName *string `json:"ScriptName,omitnil,omitempty" name:"ScriptName"`
 
@@ -2512,8 +2512,8 @@ type CreateSQLScriptRequest struct {
 }
 
 func (r *CreateSQLScriptRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2550,8 +2550,8 @@ type CreateSQLScriptResponse struct {
 }
 
 func (r *CreateSQLScriptResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2565,7 +2565,7 @@ type CreateTaskBaseAttribute struct {
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
 	// 任务类型ID：
-	// 
+	//
 	// * 21:JDBC SQL
 	// * 23:TDSQL-PostgreSQL
 	// * 26:OfflineSynchronization
@@ -2606,7 +2606,7 @@ type CreateTaskBaseAttribute struct {
 	TaskDescription *string `json:"TaskDescription,omitnil,omitempty" name:"TaskDescription"`
 
 	// 任务文件夹路径
-	// 
+	//
 	// 注意：
 	// - 路径上不要填写任务节点类型；例如，在 一个名为 wf01 的工作流，“通用” 分类下，现在想要在这个分类下的 tf_01 文件夹下，新建一个 shell 任务；则 填写 /tf_01 即可；
 	// - 如果 tf_01 文件夹不存在，则需要先创建这个文件夹（使用 CreateTaskFolder 接口）才能操作成功；
@@ -2660,7 +2660,7 @@ type CreateTaskFolderRequestParams struct {
 	TaskFolderName *string `json:"TaskFolderName,omitnil,omitempty" name:"TaskFolderName"`
 
 	// 任务文件夹类型
-	// 
+	//
 	// | 任务文件夹类型取值 | 任务文件夹类型界面对应名称 |
 	// | ---------------- | ------------------------ |
 	// | ETL              | 集成任务                 |
@@ -2680,7 +2680,7 @@ type CreateTaskFolderRequestParams struct {
 
 type CreateTaskFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -2691,7 +2691,7 @@ type CreateTaskFolderRequest struct {
 	TaskFolderName *string `json:"TaskFolderName,omitnil,omitempty" name:"TaskFolderName"`
 
 	// 任务文件夹类型
-	// 
+	//
 	// | 任务文件夹类型取值 | 任务文件夹类型界面对应名称 |
 	// | ---------------- | ------------------------ |
 	// | ETL              | 集成任务                 |
@@ -2710,8 +2710,8 @@ type CreateTaskFolderRequest struct {
 }
 
 func (r *CreateTaskFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2748,8 +2748,8 @@ type CreateTaskFolderResponse struct {
 }
 
 func (r *CreateTaskFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2780,7 +2780,7 @@ type CreateTaskRequestParams struct {
 
 type CreateTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -2795,8 +2795,8 @@ type CreateTaskRequest struct {
 }
 
 func (r *CreateTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2831,8 +2831,8 @@ type CreateTaskResponse struct {
 }
 
 func (r *CreateTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2849,9 +2849,9 @@ type CreateTaskResult struct {
 
 type CreateTaskSchedulerConfiguration struct {
 	// 周期类型：默认为 DAY_CYCLE
-	// 
-	// 支持的类型为 
-	// 
+	//
+	// 支持的类型为
+	//
 	// * ONEOFF_CYCLE: 一次性
 	// * YEAR_CYCLE: 年
 	// * MONTH_CYCLE: 月
@@ -2865,7 +2865,7 @@ type CreateTaskSchedulerConfiguration struct {
 	// 时区，默认为 UTC+8
 	ScheduleTimeZone *string `json:"ScheduleTimeZone,omitnil,omitempty" name:"ScheduleTimeZone"`
 
-	// Cron表达式，默认为 0 0 0 * * ? * 
+	// Cron表达式，默认为 0 0 0 * * ? *
 	CrontabExpression *string `json:"CrontabExpression,omitnil,omitempty" name:"CrontabExpression"`
 
 	// 生效日期，默认为当前日期的 00:00:00
@@ -2992,7 +2992,7 @@ type CreateTriggerTaskBaseAttribute struct {
 	TaskDescription *string `json:"TaskDescription,omitnil,omitempty" name:"TaskDescription"`
 
 	// 任务文件夹路径
-	// 
+	//
 	// 注意：
 	// - 路径上不要填写任务节点类型；例如，在 一个名为 wf01 的工作流，“通用” 分类下，现在想要在这个分类下的 tf_01 文件夹下，新建一个 shell 任务；则 填写 /tf_01 即可；
 	// - 如果 tf_01 文件夹不存在，则需要先创建这个文件夹（使用 CreateTaskFolder 接口）才能操作成功；
@@ -3051,7 +3051,7 @@ type CreateTriggerTaskRequestParams struct {
 
 type CreateTriggerTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3066,8 +3066,8 @@ type CreateTriggerTaskRequest struct {
 }
 
 func (r *CreateTriggerTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3103,8 +3103,8 @@ type CreateTriggerTaskResponse struct {
 }
 
 func (r *CreateTriggerTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3180,7 +3180,7 @@ type CreateTriggerWorkflowRequestParams struct {
 
 type CreateTriggerWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3213,8 +3213,8 @@ type CreateTriggerWorkflowRequest struct {
 }
 
 func (r *CreateTriggerWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3256,8 +3256,8 @@ type CreateTriggerWorkflowResponse struct {
 }
 
 func (r *CreateTriggerWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3286,7 +3286,7 @@ type CreateWorkflowFolderRequestParams struct {
 
 type CreateWorkflowFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3298,8 +3298,8 @@ type CreateWorkflowFolderRequest struct {
 }
 
 func (r *CreateWorkflowFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3333,8 +3333,8 @@ type CreateWorkflowFolderResponse struct {
 }
 
 func (r *CreateWorkflowFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3360,7 +3360,7 @@ type CreateWorkflowPermissionsRequestParams struct {
 
 type CreateWorkflowPermissionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3375,8 +3375,8 @@ type CreateWorkflowPermissionsRequest struct {
 }
 
 func (r *CreateWorkflowPermissionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3411,8 +3411,8 @@ type CreateWorkflowPermissionsResponse struct {
 }
 
 func (r *CreateWorkflowPermissionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3461,7 +3461,7 @@ type CreateWorkflowRequestParams struct {
 
 type CreateWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3494,8 +3494,8 @@ type CreateWorkflowRequest struct {
 }
 
 func (r *CreateWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3536,8 +3536,8 @@ type CreateWorkflowResponse struct {
 }
 
 func (r *CreateWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3571,7 +3571,7 @@ type DLCClusterInfo struct {
 
 	// 访问账号（ 仅对标准模式的项目生效并且标准模式必填），用于提交dlc任务的账号
 	// 建议使用指定子账号，给子账号设置对应库表的权限；任务负责人模式在负责人离职后容易造成任务失败；主账号模式在多个项目权限不同的情况下不易做权限控制。
-	// 
+	//
 	// 枚举值：
 	// - TASK_RUNNER （任务负责人）
 	// - OWNER （主账号模式）
@@ -3602,7 +3602,7 @@ type DataBackfill struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CheckParentType *string `json:"CheckParentType,omitnil,omitempty" name:"CheckParentType"`
 
-	// 补录是否忽略事件依赖	
+	// 补录是否忽略事件依赖
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SkipEventListening *bool `json:"SkipEventListening,omitnil,omitempty" name:"SkipEventListening"`
 
@@ -3724,7 +3724,7 @@ type DataSource struct {
 	DevConProperties *string `json:"DevConProperties,omitnil,omitempty" name:"DevConProperties"`
 
 	// 数据源类别：
-	// 
+	//
 	// - DB ---自定义源
 	// - CLUSTER --- 系统源
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3857,7 +3857,7 @@ type DeleteCodeFileRequestParams struct {
 
 type DeleteCodeFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3866,8 +3866,8 @@ type DeleteCodeFileRequest struct {
 }
 
 func (r *DeleteCodeFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3900,8 +3900,8 @@ type DeleteCodeFileResponse struct {
 }
 
 func (r *DeleteCodeFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3921,7 +3921,7 @@ type DeleteCodeFolderRequestParams struct {
 
 type DeleteCodeFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3930,8 +3930,8 @@ type DeleteCodeFolderRequest struct {
 }
 
 func (r *DeleteCodeFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3964,8 +3964,8 @@ type DeleteCodeFolderResponse struct {
 }
 
 func (r *DeleteCodeFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3985,7 +3985,7 @@ type DeleteCodePermissionsRequestParams struct {
 
 type DeleteCodePermissionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -3994,8 +3994,8 @@ type DeleteCodePermissionsRequest struct {
 }
 
 func (r *DeleteCodePermissionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4028,8 +4028,8 @@ type DeleteCodePermissionsResponse struct {
 }
 
 func (r *DeleteCodePermissionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4049,7 +4049,7 @@ type DeleteDataBackfillPlanAsyncRequestParams struct {
 
 type DeleteDataBackfillPlanAsyncRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4058,8 +4058,8 @@ type DeleteDataBackfillPlanAsyncRequest struct {
 }
 
 func (r *DeleteDataBackfillPlanAsyncRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4092,8 +4092,8 @@ type DeleteDataBackfillPlanAsyncResponse struct {
 }
 
 func (r *DeleteDataBackfillPlanAsyncResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4113,7 +4113,7 @@ type DeleteDataSourceRequestParams struct {
 
 type DeleteDataSourceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4122,8 +4122,8 @@ type DeleteDataSourceRequest struct {
 }
 
 func (r *DeleteDataSourceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4156,8 +4156,8 @@ type DeleteDataSourceResponse struct {
 }
 
 func (r *DeleteDataSourceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4179,14 +4179,14 @@ type DeleteLineageRequestParams struct {
 
 type DeleteLineageRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 需要删除的血缘关系列表
 	Relations []*LineagePair `json:"Relations,omitnil,omitempty" name:"Relations"`
 }
 
 func (r *DeleteLineageRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4218,8 +4218,8 @@ type DeleteLineageResponse struct {
 }
 
 func (r *DeleteLineageResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4240,7 +4240,7 @@ type DeleteOpsAlarmRuleRequestParams struct {
 
 type DeleteOpsAlarmRuleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4250,8 +4250,8 @@ type DeleteOpsAlarmRuleRequest struct {
 }
 
 func (r *DeleteOpsAlarmRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4284,8 +4284,8 @@ type DeleteOpsAlarmRuleResponse struct {
 }
 
 func (r *DeleteOpsAlarmRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4305,7 +4305,7 @@ type DeleteProjectMemberRequestParams struct {
 
 type DeleteProjectMemberRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4314,8 +4314,8 @@ type DeleteProjectMemberRequest struct {
 }
 
 func (r *DeleteProjectMemberRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4345,8 +4345,8 @@ type DeleteProjectMemberResponse struct {
 }
 
 func (r *DeleteProjectMemberResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4363,14 +4363,14 @@ type DeleteProjectRequestParams struct {
 
 type DeleteProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 删除的项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
 func (r *DeleteProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4402,8 +4402,8 @@ type DeleteProjectResponse struct {
 }
 
 func (r *DeleteProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4423,7 +4423,7 @@ type DeleteQualityRuleGroupRequestParams struct {
 
 type DeleteQualityRuleGroupRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4432,8 +4432,8 @@ type DeleteQualityRuleGroupRequest struct {
 }
 
 func (r *DeleteQualityRuleGroupRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4467,8 +4467,8 @@ type DeleteQualityRuleGroupResponse struct {
 }
 
 func (r *DeleteQualityRuleGroupResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4506,7 +4506,7 @@ type DeleteQualityRuleRequestParams struct {
 
 type DeleteQualityRuleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 质量规则ID
 	RuleId *uint64 `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 
@@ -4515,8 +4515,8 @@ type DeleteQualityRuleRequest struct {
 }
 
 func (r *DeleteQualityRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4550,8 +4550,8 @@ type DeleteQualityRuleResponse struct {
 }
 
 func (r *DeleteQualityRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4571,7 +4571,7 @@ type DeleteResourceFileRequestParams struct {
 
 type DeleteResourceFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4580,8 +4580,8 @@ type DeleteResourceFileRequest struct {
 }
 
 func (r *DeleteResourceFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4614,8 +4614,8 @@ type DeleteResourceFileResponse struct {
 }
 
 func (r *DeleteResourceFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4640,7 +4640,7 @@ type DeleteResourceFolderRequestParams struct {
 
 type DeleteResourceFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4649,8 +4649,8 @@ type DeleteResourceFolderRequest struct {
 }
 
 func (r *DeleteResourceFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4683,8 +4683,8 @@ type DeleteResourceFolderResponse struct {
 }
 
 func (r *DeleteResourceFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4701,14 +4701,14 @@ type DeleteResourceGroupRequestParams struct {
 
 type DeleteResourceGroupRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 资源组id
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *DeleteResourceGroupRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4740,8 +4740,8 @@ type DeleteResourceGroupResponse struct {
 }
 
 func (r *DeleteResourceGroupResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4761,7 +4761,7 @@ type DeleteSQLFolderRequestParams struct {
 
 type DeleteSQLFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 文件夹Id
 	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
@@ -4770,8 +4770,8 @@ type DeleteSQLFolderRequest struct {
 }
 
 func (r *DeleteSQLFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4804,8 +4804,8 @@ type DeleteSQLFolderResponse struct {
 }
 
 func (r *DeleteSQLFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4825,7 +4825,7 @@ type DeleteSQLScriptRequestParams struct {
 
 type DeleteSQLScriptRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 探索脚本Id
 	ScriptId *string `json:"ScriptId,omitnil,omitempty" name:"ScriptId"`
 
@@ -4834,8 +4834,8 @@ type DeleteSQLScriptRequest struct {
 }
 
 func (r *DeleteSQLScriptRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4868,8 +4868,8 @@ type DeleteSQLScriptResponse struct {
 }
 
 func (r *DeleteSQLScriptResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4892,7 +4892,7 @@ type DeleteTaskFolderRequestParams struct {
 
 type DeleteTaskFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4904,8 +4904,8 @@ type DeleteTaskFolderRequest struct {
 }
 
 func (r *DeleteTaskFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4940,8 +4940,8 @@ type DeleteTaskFolderResponse struct {
 }
 
 func (r *DeleteTaskFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4978,7 +4978,7 @@ type DeleteTaskRequestParams struct {
 
 type DeleteTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -4999,8 +4999,8 @@ type DeleteTaskRequest struct {
 }
 
 func (r *DeleteTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5036,8 +5036,8 @@ type DeleteTaskResponse struct {
 }
 
 func (r *DeleteTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5075,7 +5075,7 @@ type DeleteTriggerTaskRequestParams struct {
 
 type DeleteTriggerTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -5096,8 +5096,8 @@ type DeleteTriggerTaskRequest struct {
 }
 
 func (r *DeleteTriggerTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5133,8 +5133,8 @@ type DeleteTriggerTaskResponse struct {
 }
 
 func (r *DeleteTriggerTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5154,7 +5154,7 @@ type DeleteTriggerWorkflowRequestParams struct {
 
 type DeleteTriggerWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -5163,8 +5163,8 @@ type DeleteTriggerWorkflowRequest struct {
 }
 
 func (r *DeleteTriggerWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5197,8 +5197,8 @@ type DeleteTriggerWorkflowResponse struct {
 }
 
 func (r *DeleteTriggerWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5224,7 +5224,7 @@ type DeleteWorkflowFolderRequestParams struct {
 
 type DeleteWorkflowFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -5233,8 +5233,8 @@ type DeleteWorkflowFolderRequest struct {
 }
 
 func (r *DeleteWorkflowFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5267,8 +5267,8 @@ type DeleteWorkflowFolderResponse struct {
 }
 
 func (r *DeleteWorkflowFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5305,7 +5305,7 @@ type DeleteWorkflowPermissionsRequestParams struct {
 
 type DeleteWorkflowPermissionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -5320,8 +5320,8 @@ type DeleteWorkflowPermissionsRequest struct {
 }
 
 func (r *DeleteWorkflowPermissionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5356,8 +5356,8 @@ type DeleteWorkflowPermissionsResponse struct {
 }
 
 func (r *DeleteWorkflowPermissionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5382,7 +5382,7 @@ type DeleteWorkflowRequestParams struct {
 
 type DeleteWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -5391,8 +5391,8 @@ type DeleteWorkflowRequest struct {
 }
 
 func (r *DeleteWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5425,8 +5425,8 @@ type DeleteWorkflowResponse struct {
 }
 
 func (r *DeleteWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5464,17 +5464,17 @@ type DependencyConfigPage struct {
 
 type DependencyStrategyTask struct {
 	// 等待上游任务实例策略：EXECUTING（执行）；WAITING（等待）
-	// 
+	//
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PollingNullStrategy *string `json:"PollingNullStrategy,omitnil,omitempty" name:"PollingNullStrategy"`
 
 	// 仅当PollingNullStrategy为EXECUTING时才需要填本字段，List类型：NOT_EXIST（默认，在分钟依赖分钟/小时依赖小时的情况下，父实例不在下游实例调度时间范围内）；PARENT_EXPIRED（父实例失败）；PARENT_TIMEOUT（父实例超时）。以上场景满足任一条件即可通过该父任务实例依赖判断，除以上场景外均需等待父实例。
-	// 
+	//
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskDependencyExecutingStrategies []*string `json:"TaskDependencyExecutingStrategies,omitnil,omitempty" name:"TaskDependencyExecutingStrategies"`
 
 	// 仅当TaskDependencyExecutingStrategies中包含PARENT_TIMEOUT时才需要填本字段，下游任务依赖父实例执行超时时间，单位：分钟。
-	// 
+	//
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskDependencyExecutingTimeoutValue *int64 `json:"TaskDependencyExecutingTimeoutValue,omitnil,omitempty" name:"TaskDependencyExecutingTimeoutValue"`
 }
@@ -5485,7 +5485,7 @@ type DependencyTaskBrief struct {
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 主依赖配置，取值为：
-	// 
+	//
 	// * CRONTAB
 	// * DAY
 	// * HOUR
@@ -5552,14 +5552,14 @@ type DescribeDataSourceAuthorityRequestParams struct {
 
 type DescribeDataSourceAuthorityRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 对象唯一ID
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *DescribeDataSourceAuthorityRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5592,8 +5592,8 @@ type DescribeDataSourceAuthorityResponse struct {
 }
 
 func (r *DescribeDataSourceAuthorityResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5610,14 +5610,14 @@ type DisableProjectRequestParams struct {
 
 type DisableProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
 func (r *DisableProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5649,8 +5649,8 @@ type DisableProjectResponse struct {
 }
 
 func (r *DisableProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5670,7 +5670,7 @@ type DissociateResourceGroupFromProjectRequestParams struct {
 
 type DissociateResourceGroupFromProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 资源组id
 	ResourceGroupId *string `json:"ResourceGroupId,omitnil,omitempty" name:"ResourceGroupId"`
 
@@ -5679,8 +5679,8 @@ type DissociateResourceGroupFromProjectRequest struct {
 }
 
 func (r *DissociateResourceGroupFromProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5713,8 +5713,8 @@ type DissociateResourceGroupFromProjectResponse struct {
 }
 
 func (r *DissociateResourceGroupFromProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5731,14 +5731,14 @@ type EnableProjectRequestParams struct {
 
 type EnableProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
 func (r *EnableProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5770,8 +5770,8 @@ type EnableProjectResponse struct {
 }
 
 func (r *EnableProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5854,7 +5854,7 @@ type ExecutorResourceGroupInfo struct {
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 执行资源组类型，不能为空
-	// 
+	//
 	// - Schedule --- 调度资源组
 	// - Integration --- 集成资源组
 	// - DataService -- 数据服务资源组
@@ -6000,7 +6000,7 @@ type GetAlarmMessageRequestParams struct {
 
 type GetAlarmMessageRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6012,8 +6012,8 @@ type GetAlarmMessageRequest struct {
 }
 
 func (r *GetAlarmMessageRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6047,8 +6047,8 @@ type GetAlarmMessageResponse struct {
 }
 
 func (r *GetAlarmMessageResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6071,7 +6071,7 @@ type GetCodeFileRequestParams struct {
 
 type GetCodeFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6083,8 +6083,8 @@ type GetCodeFileRequest struct {
 }
 
 func (r *GetCodeFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6118,8 +6118,8 @@ type GetCodeFileResponse struct {
 }
 
 func (r *GetCodeFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6139,7 +6139,7 @@ type GetCodeFolderRequestParams struct {
 
 type GetCodeFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6148,8 +6148,8 @@ type GetCodeFolderRequest struct {
 }
 
 func (r *GetCodeFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6182,8 +6182,8 @@ type GetCodeFolderResponse struct {
 }
 
 func (r *GetCodeFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6206,7 +6206,7 @@ type GetDataBackfillPlanRequestParams struct {
 
 type GetDataBackfillPlanRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6218,8 +6218,8 @@ type GetDataBackfillPlanRequest struct {
 }
 
 func (r *GetDataBackfillPlanRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6253,8 +6253,8 @@ type GetDataBackfillPlanResponse struct {
 }
 
 func (r *GetDataBackfillPlanResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6271,14 +6271,14 @@ type GetDataSourceRelatedTasksRequestParams struct {
 
 type GetDataSourceRelatedTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 数据源id
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *GetDataSourceRelatedTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6310,8 +6310,8 @@ type GetDataSourceRelatedTasksResponse struct {
 }
 
 func (r *GetDataSourceRelatedTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6331,7 +6331,7 @@ type GetDataSourceRequestParams struct {
 
 type GetDataSourceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6340,8 +6340,8 @@ type GetDataSourceRequest struct {
 }
 
 func (r *GetDataSourceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6375,8 +6375,8 @@ type GetDataSourceResponse struct {
 }
 
 func (r *GetDataSourceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6396,7 +6396,7 @@ type GetMyCodeMaxPermissionRequestParams struct {
 
 type GetMyCodeMaxPermissionRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6405,8 +6405,8 @@ type GetMyCodeMaxPermissionRequest struct {
 }
 
 func (r *GetMyCodeMaxPermissionRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6439,8 +6439,8 @@ type GetMyCodeMaxPermissionResponse struct {
 }
 
 func (r *GetMyCodeMaxPermissionResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6463,7 +6463,7 @@ type GetMyWorkflowMaxPermissionRequestParams struct {
 
 type GetMyWorkflowMaxPermissionRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6475,8 +6475,8 @@ type GetMyWorkflowMaxPermissionRequest struct {
 }
 
 func (r *GetMyWorkflowMaxPermissionRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6511,8 +6511,8 @@ type GetMyWorkflowMaxPermissionResponse struct {
 }
 
 func (r *GetMyWorkflowMaxPermissionResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6532,7 +6532,7 @@ type GetOpsAlarmRuleRequestParams struct {
 
 type GetOpsAlarmRuleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6541,8 +6541,8 @@ type GetOpsAlarmRuleRequest struct {
 }
 
 func (r *GetOpsAlarmRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6575,8 +6575,8 @@ type GetOpsAlarmRuleResponse struct {
 }
 
 func (r *GetOpsAlarmRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6596,7 +6596,7 @@ type GetOpsAsyncJobRequestParams struct {
 
 type GetOpsAsyncJobRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6605,8 +6605,8 @@ type GetOpsAsyncJobRequest struct {
 }
 
 func (r *GetOpsAsyncJobRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6640,8 +6640,8 @@ type GetOpsAsyncJobResponse struct {
 }
 
 func (r *GetOpsAsyncJobResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6661,7 +6661,7 @@ type GetOpsTaskCodeRequestParams struct {
 
 type GetOpsTaskCodeRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6670,8 +6670,8 @@ type GetOpsTaskCodeRequest struct {
 }
 
 func (r *GetOpsTaskCodeRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6704,8 +6704,8 @@ type GetOpsTaskCodeResponse struct {
 }
 
 func (r *GetOpsTaskCodeResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6716,7 +6716,7 @@ func (r *GetOpsTaskCodeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type GetOpsTaskRequestParams struct {
-	// 任务Id	
+	// 任务Id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 项目Id
@@ -6725,8 +6725,8 @@ type GetOpsTaskRequestParams struct {
 
 type GetOpsTaskRequest struct {
 	*tchttp.BaseRequest
-	
-	// 任务Id	
+
+	// 任务Id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 项目Id
@@ -6734,8 +6734,8 @@ type GetOpsTaskRequest struct {
 }
 
 func (r *GetOpsTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6768,8 +6768,8 @@ type GetOpsTaskResponse struct {
 }
 
 func (r *GetOpsTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6792,7 +6792,7 @@ type GetOpsTriggerWorkflowRequestParams struct {
 
 type GetOpsTriggerWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6804,8 +6804,8 @@ type GetOpsTriggerWorkflowRequest struct {
 }
 
 func (r *GetOpsTriggerWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6839,8 +6839,8 @@ type GetOpsTriggerWorkflowResponse struct {
 }
 
 func (r *GetOpsTriggerWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6860,7 +6860,7 @@ type GetOpsWorkflowRequestParams struct {
 
 type GetOpsWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6869,8 +6869,8 @@ type GetOpsWorkflowRequest struct {
 }
 
 func (r *GetOpsWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6903,8 +6903,8 @@ type GetOpsWorkflowResponse struct {
 }
 
 func (r *GetOpsWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6921,14 +6921,14 @@ type GetProjectRequestParams struct {
 
 type GetProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id。一般使用项目Id来查询，与projectName必须存在一个。
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
 func (r *GetProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6961,8 +6961,8 @@ type GetProjectResponse struct {
 }
 
 func (r *GetProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6982,7 +6982,7 @@ type GetResourceFileRequestParams struct {
 
 type GetResourceFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -6991,8 +6991,8 @@ type GetResourceFileRequest struct {
 }
 
 func (r *GetResourceFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7025,8 +7025,8 @@ type GetResourceFileResponse struct {
 }
 
 func (r *GetResourceFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7046,7 +7046,7 @@ type GetResourceFolderRequestParams struct {
 
 type GetResourceFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7055,8 +7055,8 @@ type GetResourceFolderRequest struct {
 }
 
 func (r *GetResourceFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7090,8 +7090,8 @@ type GetResourceFolderResponse struct {
 }
 
 func (r *GetResourceFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7112,7 +7112,7 @@ type GetResourceGroupMetricsRequestParams struct {
 	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 指标维度
-	// 
+	//
 	// - all --- 全部
 	// - task --- 任务指标
 	// - system --- 系统指标
@@ -7124,7 +7124,7 @@ type GetResourceGroupMetricsRequestParams struct {
 
 type GetResourceGroupMetricsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 执行资源组id
 	ResourceGroupId *string `json:"ResourceGroupId,omitnil,omitempty" name:"ResourceGroupId"`
 
@@ -7135,7 +7135,7 @@ type GetResourceGroupMetricsRequest struct {
 	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 指标维度
-	// 
+	//
 	// - all --- 全部
 	// - task --- 任务指标
 	// - system --- 系统指标
@@ -7146,8 +7146,8 @@ type GetResourceGroupMetricsRequest struct {
 }
 
 func (r *GetResourceGroupMetricsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7184,8 +7184,8 @@ type GetResourceGroupMetricsResponse struct {
 }
 
 func (r *GetResourceGroupMetricsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7205,7 +7205,7 @@ type GetSQLFolderRequestParams struct {
 
 type GetSQLFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7214,8 +7214,8 @@ type GetSQLFolderRequest struct {
 }
 
 func (r *GetSQLFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7248,8 +7248,8 @@ type GetSQLFolderResponse struct {
 }
 
 func (r *GetSQLFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7269,7 +7269,7 @@ type GetSQLScriptRequestParams struct {
 
 type GetSQLScriptRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 探索脚本Id
 	ScriptId *string `json:"ScriptId,omitnil,omitempty" name:"ScriptId"`
 
@@ -7278,8 +7278,8 @@ type GetSQLScriptRequest struct {
 }
 
 func (r *GetSQLScriptRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7313,8 +7313,8 @@ type GetSQLScriptResponse struct {
 }
 
 func (r *GetSQLScriptResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7331,14 +7331,14 @@ type GetTableColumnsRequestParams struct {
 
 type GetTableColumnsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 数据表GUID
 	TableGuid *string `json:"TableGuid,omitnil,omitempty" name:"TableGuid"`
 }
 
 func (r *GetTableColumnsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7371,8 +7371,8 @@ type GetTableColumnsResponse struct {
 }
 
 func (r *GetTableColumnsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7389,14 +7389,14 @@ type GetTableRequestParams struct {
 
 type GetTableRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 表GUID
 	TableGuid *string `json:"TableGuid,omitnil,omitempty" name:"TableGuid"`
 }
 
 func (r *GetTableRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7429,8 +7429,8 @@ type GetTableResponse struct {
 }
 
 func (r *GetTableResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7450,7 +7450,7 @@ type GetTaskCodeRequestParams struct {
 
 type GetTaskCodeRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7459,8 +7459,8 @@ type GetTaskCodeRequest struct {
 }
 
 func (r *GetTaskCodeRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7493,8 +7493,8 @@ type GetTaskCodeResponse struct {
 }
 
 func (r *GetTaskCodeResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7517,7 +7517,7 @@ type GetTaskFolderRequestParams struct {
 
 type GetTaskFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7529,8 +7529,8 @@ type GetTaskFolderRequest struct {
 }
 
 func (r *GetTaskFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7565,8 +7565,8 @@ type GetTaskFolderResponse struct {
 }
 
 func (r *GetTaskFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7595,7 +7595,7 @@ type GetTaskInstanceLogRequestParams struct {
 
 type GetTaskInstanceLogRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// **项目ID**
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7613,8 +7613,8 @@ type GetTaskInstanceLogRequest struct {
 }
 
 func (r *GetTaskInstanceLogRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7651,8 +7651,8 @@ type GetTaskInstanceLogResponse struct {
 }
 
 func (r *GetTaskInstanceLogResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7675,7 +7675,7 @@ type GetTaskInstanceRequestParams struct {
 
 type GetTaskInstanceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7687,8 +7687,8 @@ type GetTaskInstanceRequest struct {
 }
 
 func (r *GetTaskInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7722,8 +7722,8 @@ type GetTaskInstanceResponse struct {
 }
 
 func (r *GetTaskInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7743,7 +7743,7 @@ type GetTaskRequestParams struct {
 
 type GetTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7752,8 +7752,8 @@ type GetTaskRequest struct {
 }
 
 func (r *GetTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7786,8 +7786,8 @@ type GetTaskResponse struct {
 }
 
 func (r *GetTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7810,7 +7810,7 @@ type GetTaskVersionRequestParams struct {
 
 type GetTaskVersionRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7822,8 +7822,8 @@ type GetTaskVersionRequest struct {
 }
 
 func (r *GetTaskVersionRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7858,8 +7858,8 @@ type GetTaskVersionResponse struct {
 }
 
 func (r *GetTaskVersionResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7879,7 +7879,7 @@ type GetTriggerTaskCodeRequestParams struct {
 
 type GetTriggerTaskCodeRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7888,8 +7888,8 @@ type GetTriggerTaskCodeRequest struct {
 }
 
 func (r *GetTriggerTaskCodeRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7923,8 +7923,8 @@ type GetTriggerTaskCodeResponse struct {
 }
 
 func (r *GetTriggerTaskCodeResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7944,7 +7944,7 @@ type GetTriggerTaskRequestParams struct {
 
 type GetTriggerTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -7953,8 +7953,8 @@ type GetTriggerTaskRequest struct {
 }
 
 func (r *GetTriggerTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7988,8 +7988,8 @@ type GetTriggerTaskResponse struct {
 }
 
 func (r *GetTriggerTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8009,7 +8009,7 @@ type GetTriggerTaskRunRequestParams struct {
 
 type GetTriggerTaskRunRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 工作空间 ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8018,8 +8018,8 @@ type GetTriggerTaskRunRequest struct {
 }
 
 func (r *GetTriggerTaskRunRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8052,8 +8052,8 @@ type GetTriggerTaskRunResponse struct {
 }
 
 func (r *GetTriggerTaskRunResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8076,7 +8076,7 @@ type GetTriggerTaskVersionRequestParams struct {
 
 type GetTriggerTaskVersionRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8088,8 +8088,8 @@ type GetTriggerTaskVersionRequest struct {
 }
 
 func (r *GetTriggerTaskVersionRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8124,8 +8124,8 @@ type GetTriggerTaskVersionResponse struct {
 }
 
 func (r *GetTriggerTaskVersionResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8145,7 +8145,7 @@ type GetTriggerWorkflowRequestParams struct {
 
 type GetTriggerWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8154,8 +8154,8 @@ type GetTriggerWorkflowRequest struct {
 }
 
 func (r *GetTriggerWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8189,8 +8189,8 @@ type GetTriggerWorkflowResponse struct {
 }
 
 func (r *GetTriggerWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8216,7 +8216,7 @@ type GetTriggerWorkflowRunRequestParams struct {
 
 type GetTriggerWorkflowRunRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8231,8 +8231,8 @@ type GetTriggerWorkflowRunRequest struct {
 }
 
 func (r *GetTriggerWorkflowRunRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8267,8 +8267,8 @@ type GetTriggerWorkflowRunResponse struct {
 }
 
 func (r *GetTriggerWorkflowRunResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8288,7 +8288,7 @@ type GetWorkflowFolderRequestParams struct {
 
 type GetWorkflowFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8297,8 +8297,8 @@ type GetWorkflowFolderRequest struct {
 }
 
 func (r *GetWorkflowFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8332,8 +8332,8 @@ type GetWorkflowFolderResponse struct {
 }
 
 func (r *GetWorkflowFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8353,7 +8353,7 @@ type GetWorkflowRequestParams struct {
 
 type GetWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8362,8 +8362,8 @@ type GetWorkflowRequest struct {
 }
 
 func (r *GetWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8397,8 +8397,8 @@ type GetWorkflowResponse struct {
 }
 
 func (r *GetWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8425,7 +8425,7 @@ type GrantMemberProjectRoleRequestParams struct {
 
 type GrantMemberProjectRoleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8441,8 +8441,8 @@ type GrantMemberProjectRoleRequest struct {
 }
 
 func (r *GrantMemberProjectRoleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8473,8 +8473,8 @@ type GrantMemberProjectRoleResponse struct {
 }
 
 func (r *GrantMemberProjectRoleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8507,7 +8507,7 @@ type InstanceExecution struct {
 	InstanceKey *string `json:"InstanceKey,omitnil,omitempty" name:"InstanceKey"`
 
 	// **实例生命周期编号，标识实例的某一次执行**
-	// 
+	//
 	// 例如：周期实例第一次运行的编号为0，用户后期又重跑了该实例，第二次执行的编号为1
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LifeRoundNum *uint64 `json:"LifeRoundNum,omitnil,omitempty" name:"LifeRoundNum"`
@@ -8525,7 +8525,7 @@ type InstanceExecution struct {
 	InstanceState *string `json:"InstanceState,omitnil,omitempty" name:"InstanceState"`
 
 	// **实例运行触发类型**
-	// 
+	//
 	// - RERUN 表示重跑
 	// - ADDITION 表示补录
 	// - PERIODIC 表示周期
@@ -8558,7 +8558,7 @@ type InstanceExecutionPhase struct {
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// **实例生命周期阶段状态**
-	// 
+	//
 	// - WAIT_UPSTREAM 表示 等待事件/上游状态
 	// - WAIT_RUN 表示 等待运行状态
 	// - RUNNING 表示 运行中状态
@@ -8593,8 +8593,8 @@ type InstanceLog struct {
 	LogInfo *string `json:"LogInfo,omitnil,omitempty" name:"LogInfo"`
 
 	// **分页查询日志时使用，无具体业务含义**
-	// 
-	// 第一次查询时值为null 
+	//
+	// 第一次查询时值为null
 	// 第二次及以后查询时使用上一次查询返回信息中的NextCursor字段值即可
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NextCursor *string `json:"NextCursor,omitnil,omitempty" name:"NextCursor"`
@@ -8602,12 +8602,12 @@ type InstanceLog struct {
 
 type IntegrationResource struct {
 	// 实时集成资源组
-	// 
+	//
 	// - i32c(实时数据同步-16C64G)
 	RealTimeDataSync *ResourceGroupSpecification `json:"RealTimeDataSync,omitnil,omitempty" name:"RealTimeDataSync"`
 
 	// 离线集成资源组
-	// 
+	//
 	// - integrated(离线数据同步-8C16G)
 	// - i16(离线数据同步-8C32G)
 	OfflineDataSync *ResourceGroupSpecification `json:"OfflineDataSync,omitnil,omitempty" name:"OfflineDataSync"`
@@ -8780,7 +8780,7 @@ type KillTaskInstancesAsyncRequestParams struct {
 
 type KillTaskInstancesAsyncRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -8789,8 +8789,8 @@ type KillTaskInstancesAsyncRequest struct {
 }
 
 func (r *KillTaskInstancesAsyncRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8823,8 +8823,8 @@ type KillTaskInstancesAsyncResponse struct {
 }
 
 func (r *KillTaskInstancesAsyncResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8835,7 +8835,7 @@ func (r *KillTaskInstancesAsyncResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type KillTriggerWorkflowRunsRequestParams struct {
-	// 项目ID	
+	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 工作流ID
@@ -8844,7 +8844,7 @@ type KillTriggerWorkflowRunsRequestParams struct {
 	// 指定要停止的工作流执行ID
 	WorkflowExecutionIdList []*string `json:"WorkflowExecutionIdList,omitnil,omitempty" name:"WorkflowExecutionIdList"`
 
-	// 当指定的工作流运行为空时，是否全部终止正在运行的工作流执行	
+	// 当指定的工作流运行为空时，是否全部终止正在运行的工作流执行
 	All *bool `json:"All,omitnil,omitempty" name:"All"`
 
 	// 当指定的工作流运行为空时，是否仅停止等待中的工作流运行
@@ -8853,8 +8853,8 @@ type KillTriggerWorkflowRunsRequestParams struct {
 
 type KillTriggerWorkflowRunsRequest struct {
 	*tchttp.BaseRequest
-	
-	// 项目ID	
+
+	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 工作流ID
@@ -8863,7 +8863,7 @@ type KillTriggerWorkflowRunsRequest struct {
 	// 指定要停止的工作流执行ID
 	WorkflowExecutionIdList []*string `json:"WorkflowExecutionIdList,omitnil,omitempty" name:"WorkflowExecutionIdList"`
 
-	// 当指定的工作流运行为空时，是否全部终止正在运行的工作流执行	
+	// 当指定的工作流运行为空时，是否全部终止正在运行的工作流执行
 	All *bool `json:"All,omitnil,omitempty" name:"All"`
 
 	// 当指定的工作流运行为空时，是否仅停止等待中的工作流运行
@@ -8871,8 +8871,8 @@ type KillTriggerWorkflowRunsRequest struct {
 }
 
 func (r *KillTriggerWorkflowRunsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8908,8 +8908,8 @@ type KillTriggerWorkflowRunsResponse struct {
 }
 
 func (r *KillTriggerWorkflowRunsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9137,7 +9137,7 @@ type ListAlarmMessagesRequestParams struct {
 
 type ListAlarmMessagesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -9164,8 +9164,8 @@ type ListAlarmMessagesRequest struct {
 }
 
 func (r *ListAlarmMessagesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9204,8 +9204,8 @@ type ListAlarmMessagesResponse struct {
 }
 
 func (r *ListAlarmMessagesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9262,7 +9262,7 @@ type ListCatalogRequestParams struct {
 
 type ListCatalogRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 页码，从1开始
 	PageNumber *int64 `json:"PageNumber,omitnil,omitempty" name:"PageNumber"`
 
@@ -9274,8 +9274,8 @@ type ListCatalogRequest struct {
 }
 
 func (r *ListCatalogRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9309,8 +9309,8 @@ type ListCatalogResponse struct {
 }
 
 func (r *ListCatalogResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9339,7 +9339,7 @@ type ListCodeFolderContentsRequestParams struct {
 
 type ListCodeFolderContentsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -9357,8 +9357,8 @@ type ListCodeFolderContentsRequest struct {
 }
 
 func (r *ListCodeFolderContentsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9395,8 +9395,8 @@ type ListCodeFolderContentsResponse struct {
 }
 
 func (r *ListCodeFolderContentsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9425,7 +9425,7 @@ type ListCodePermissionsRequestParams struct {
 
 type ListCodePermissionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -9443,8 +9443,8 @@ type ListCodePermissionsRequest struct {
 }
 
 func (r *ListCodePermissionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9480,8 +9480,8 @@ type ListCodePermissionsResponse struct {
 }
 
 func (r *ListCodePermissionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9513,7 +9513,7 @@ type ListColumnLineageRequestParams struct {
 
 type ListColumnLineageRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 表唯一ID
 	TableUniqueId *string `json:"TableUniqueId,omitnil,omitempty" name:"TableUniqueId"`
 
@@ -9534,8 +9534,8 @@ type ListColumnLineageRequest struct {
 }
 
 func (r *ListColumnLineageRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9572,8 +9572,8 @@ type ListColumnLineageResponse struct {
 }
 
 func (r *ListColumnLineageResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9602,7 +9602,7 @@ type ListDataBackfillInstancesRequestParams struct {
 
 type ListDataBackfillInstancesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -9620,8 +9620,8 @@ type ListDataBackfillInstancesRequest struct {
 }
 
 func (r *ListDataBackfillInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9657,8 +9657,8 @@ type ListDataBackfillInstancesResponse struct {
 }
 
 func (r *ListDataBackfillInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9685,7 +9685,7 @@ type ListDataSourcesRequestParams struct {
 	DisplayName *string `json:"DisplayName,omitnil,omitempty" name:"DisplayName"`
 
 	// 数据源类型:枚举值
-	// 
+	//
 	// - MYSQL
 	// - TENCENT_MYSQL
 	// - POSTGRE
@@ -9749,7 +9749,7 @@ type ListDataSourcesRequestParams struct {
 
 type ListDataSourcesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -9766,7 +9766,7 @@ type ListDataSourcesRequest struct {
 	DisplayName *string `json:"DisplayName,omitnil,omitempty" name:"DisplayName"`
 
 	// 数据源类型:枚举值
-	// 
+	//
 	// - MYSQL
 	// - TENCENT_MYSQL
 	// - POSTGRE
@@ -9829,8 +9829,8 @@ type ListDataSourcesRequest struct {
 }
 
 func (r *ListDataSourcesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9869,8 +9869,8 @@ type ListDataSourcesResponse struct {
 }
 
 func (r *ListDataSourcesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9916,7 +9916,7 @@ type ListDatabaseRequestParams struct {
 
 type ListDatabaseRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 页码，从1开始
 	PageNumber *int64 `json:"PageNumber,omitnil,omitempty" name:"PageNumber"`
 
@@ -9934,8 +9934,8 @@ type ListDatabaseRequest struct {
 }
 
 func (r *ListDatabaseRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9971,8 +9971,8 @@ type ListDatabaseResponse struct {
 }
 
 func (r *ListDatabaseResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9983,10 +9983,10 @@ func (r *ListDatabaseResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ListDownstreamOpsTasksRequestParams struct {
-	// 任务Id	
+	// 任务Id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 项目Id	
+	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 分页页码
@@ -9998,11 +9998,11 @@ type ListDownstreamOpsTasksRequestParams struct {
 
 type ListDownstreamOpsTasksRequest struct {
 	*tchttp.BaseRequest
-	
-	// 任务Id	
+
+	// 任务Id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 项目Id	
+	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 分页页码
@@ -10013,8 +10013,8 @@ type ListDownstreamOpsTasksRequest struct {
 }
 
 func (r *ListDownstreamOpsTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10049,8 +10049,8 @@ type ListDownstreamOpsTasksResponse struct {
 }
 
 func (r *ListDownstreamOpsTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10079,7 +10079,7 @@ type ListDownstreamTaskInstancesRequestParams struct {
 
 type ListDownstreamTaskInstancesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -10097,8 +10097,8 @@ type ListDownstreamTaskInstancesRequest struct {
 }
 
 func (r *ListDownstreamTaskInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10134,8 +10134,8 @@ type ListDownstreamTaskInstancesResponse struct {
 }
 
 func (r *ListDownstreamTaskInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10161,7 +10161,7 @@ type ListDownstreamTasksRequestParams struct {
 
 type ListDownstreamTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -10176,8 +10176,8 @@ type ListDownstreamTasksRequest struct {
 }
 
 func (r *ListDownstreamTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10212,8 +10212,8 @@ type ListDownstreamTasksResponse struct {
 }
 
 func (r *ListDownstreamTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10239,7 +10239,7 @@ type ListDownstreamTriggerTasksRequestParams struct {
 
 type ListDownstreamTriggerTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -10254,8 +10254,8 @@ type ListDownstreamTriggerTasksRequest struct {
 }
 
 func (r *ListDownstreamTriggerTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10291,8 +10291,8 @@ type ListDownstreamTriggerTasksResponse struct {
 }
 
 func (r *ListDownstreamTriggerTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10341,7 +10341,7 @@ type ListLineageRequestParams struct {
 
 type ListLineageRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 实体唯一ID
 	ResourceUniqueId *string `json:"ResourceUniqueId,omitnil,omitempty" name:"ResourceUniqueId"`
 
@@ -10362,8 +10362,8 @@ type ListLineageRequest struct {
 }
 
 func (r *ListLineageRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10400,8 +10400,8 @@ type ListLineageResponse struct {
 }
 
 func (r *ListLineageResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10462,7 +10462,7 @@ type ListOpsAlarmRulesRequestParams struct {
 
 type ListOpsAlarmRulesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -10512,8 +10512,8 @@ type ListOpsAlarmRulesRequest struct {
 }
 
 func (r *ListOpsAlarmRulesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10558,8 +10558,8 @@ type ListOpsAlarmRulesResponse struct {
 }
 
 func (r *ListOpsAlarmRulesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10577,7 +10577,7 @@ type ListOpsTasksPage struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalPageNumber *uint64 `json:"TotalPageNumber,omitnil,omitempty" name:"TotalPageNumber"`
 
-	// 记录列表	
+	// 记录列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*TaskOpsInfo `json:"Items,omitnil,omitempty" name:"Items"`
 
@@ -10592,7 +10592,7 @@ type ListOpsTasksPage struct {
 
 // Predefined struct for user
 type ListOpsTasksRequestParams struct {
-	// 项目Id	
+	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 分页大小
@@ -10601,7 +10601,7 @@ type ListOpsTasksRequestParams struct {
 	// 分页页码
 	PageNumber *string `json:"PageNumber,omitnil,omitempty" name:"PageNumber"`
 
-	// 任务类型Id 
+	// 任务类型Id
 	//  - 20：通用数据同步
 	//  - 25：ETLTaskType
 	//  - 26：ETLTaskType
@@ -10671,8 +10671,8 @@ type ListOpsTasksRequestParams struct {
 
 type ListOpsTasksRequest struct {
 	*tchttp.BaseRequest
-	
-	// 项目Id	
+
+	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 分页大小
@@ -10681,7 +10681,7 @@ type ListOpsTasksRequest struct {
 	// 分页页码
 	PageNumber *string `json:"PageNumber,omitnil,omitempty" name:"PageNumber"`
 
-	// 任务类型Id 
+	// 任务类型Id
 	//  - 20：通用数据同步
 	//  - 25：ETLTaskType
 	//  - 26：ETLTaskType
@@ -10750,8 +10750,8 @@ type ListOpsTasksRequest struct {
 }
 
 func (r *ListOpsTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10796,8 +10796,8 @@ type ListOpsTasksResponse struct {
 }
 
 func (r *ListOpsTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10826,7 +10826,7 @@ type ListOpsTriggerWorkflowsRequestParams struct {
 
 type ListOpsTriggerWorkflowsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -10844,8 +10844,8 @@ type ListOpsTriggerWorkflowsRequest struct {
 }
 
 func (r *ListOpsTriggerWorkflowsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10882,8 +10882,8 @@ type ListOpsTriggerWorkflowsResponse struct {
 }
 
 func (r *ListOpsTriggerWorkflowsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10942,7 +10942,7 @@ type ListOpsWorkflowsRequestParams struct {
 
 type ListOpsWorkflowsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -10990,8 +10990,8 @@ type ListOpsWorkflowsRequest struct {
 }
 
 func (r *ListOpsWorkflowsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11035,8 +11035,8 @@ type ListOpsWorkflowsResponse struct {
 }
 
 func (r *ListOpsWorkflowsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11082,7 +11082,7 @@ type ListProcessLineageRequestParams struct {
 
 type ListProcessLineageRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 任务唯一ID
 	ProcessId *string `json:"ProcessId,omitnil,omitempty" name:"ProcessId"`
 
@@ -11100,8 +11100,8 @@ type ListProcessLineageRequest struct {
 }
 
 func (r *ListProcessLineageRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11137,8 +11137,8 @@ type ListProcessLineageResponse struct {
 }
 
 func (r *ListProcessLineageResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11167,7 +11167,7 @@ type ListProjectMembersRequestParams struct {
 
 type ListProjectMembersRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -11185,8 +11185,8 @@ type ListProjectMembersRequest struct {
 }
 
 func (r *ListProjectMembersRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11222,8 +11222,8 @@ type ListProjectMembersResponse struct {
 }
 
 func (r *ListProjectMembersResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11249,7 +11249,7 @@ type ListProjectRolesRequestParams struct {
 
 type ListProjectRolesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -11264,8 +11264,8 @@ type ListProjectRolesRequest struct {
 }
 
 func (r *ListProjectRolesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11300,8 +11300,8 @@ type ListProjectRolesResponse struct {
 }
 
 func (r *ListProjectRolesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11333,7 +11333,7 @@ type ListProjectsRequestParams struct {
 
 type ListProjectsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id列表
 	ProjectIds []*string `json:"ProjectIds,omitnil,omitempty" name:"ProjectIds"`
 
@@ -11354,8 +11354,8 @@ type ListProjectsRequest struct {
 }
 
 func (r *ListProjectsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11392,8 +11392,8 @@ type ListProjectsResponse struct {
 }
 
 func (r *ListProjectsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11553,119 +11553,119 @@ type ListQualityRuleGroupExecResultsByPageRequestParams struct {
 	// 1. GroupType
 	// 描述：规则组类型，标识规则组所属的分类。
 	// 取值：DEFAULT - 默认类型；WORKFLOW_NODE - 编排空间工作流节点类型
-	// 
+	//
 	// 2. InstanceId
 	// 描述：规则组执行实例ID。
 	// 取值：字符串
-	// 
+	//
 	// 3. ParentInstanceId
 	// 描述：父实例ID。
 	// 取值：字符串
-	// 
+	//
 	// 4. LifeCycleRunNum
 	// 描述：生命周期运行号。
 	// 取值：字符串
-	// 
+	//
 	// 5. InstanceStatus
 	// 描述：实例状态。质量侧的实例状态，一个状态对应调度侧多个状态，具体参考取值说明
 	// 取值：
-	// 等待运行 - 
+	// 等待运行 -
 	// ["INITIAL", "EVENT_LISTENING", "DEPENDENCE", "ALLOCATED", "LAUNCHED", "BEFORE_ASPECT", "ISSUED"]；
 	// 运行中 - ["RUNNING", "AFTER_ASPECT", "WAITING_AFTER_ASPECT"]
 	// 失败 - ["FAILED", "EXPIRED", "KILL", "KILLING", "PENDING"]
 	// 成功 - ["COMPLETED"]
-	// 
-	// 
+	//
+	//
 	// 6. DatasourceId
 	// 描述：数据源ID。
 	// 取值：字符串
-	// 
+	//
 	// 7. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 8. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 9. DatabaseId
 	// 描述：数据库ID。
 	// 取值：字符串
-	// 
+	//
 	// 10. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 11. ReceiverFlag
 	// 描述：是否为当前登录用户的订阅。
 	// 取值：true - 是；false - 否
-	// 
+	//
 	// 12. TableName
 	// 描述：数据表名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 13. RuleGroupName
 	// 描述：规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 14. RuleGroupExecId
 	// 描述：规则组执行ID。
 	// 取值：整数
-	// 
+	//
 	// 15. RuleGroupTableId
 	// 描述：规则组表ID。
 	// 取值：整数
-	// 
+	//
 	// 16. Keyword
 	// 描述：关键字搜索，支持规则组执行Id、表名称、表负责人模糊搜索。如果keyword是纯数字，默认只匹配规则组执行Id。
 	// 取值：字符串
-	// 
+	//
 	// 17. StartTime
 	// 描述：实际运行时间，开始时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 18. EndTime
 	// 描述：实际运行时间，结束时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 19. ScheduledStartTime
 	// 描述：计划调度时间，开始时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 20. ScheduledEndTime
 	// 描述：计划调度时间，结束时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 21. DsJobId
 	// 描述：数据源任务ID。
 	// 取值：字符串
-	// 
+	//
 	// 22. TriggerType
 	// 描述：触发类型。
 	// 取值：1 - 手动触发；2 - 调度事中触发；3 - 周期调度触发；
-	// 
+	//
 	// 23. Status
 	// 描述：规则组执行状态。
 	// 取值：0 - 初始状态，未提交；1 - 已提交；2 - 检测中；3 - 正常；4 - 异常；5 - 下发中；6 - 执行链路异常；7 - 未检测，没有执行结果；
-	// 
+	//
 	// 24. TableIds
 	// 描述：数据表ID集合。
 	// 取值：字符串，支持多个值（OR关系）
-	// 
+	//
 	// 25. RuleGroupId
 	// 描述：规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 26. BizCatalogIds
 	// 描述：业务目录ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 27. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 通用排序， 
+	// 通用排序，
 	// 支持的排序字段：
 	// CreateTime - 按创建时间排序
 	// UpdateTime - 按更新时间排序（默认）
@@ -11677,7 +11677,7 @@ type ListQualityRuleGroupExecResultsByPageRequestParams struct {
 
 type ListQualityRuleGroupExecResultsByPageRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -11691,119 +11691,119 @@ type ListQualityRuleGroupExecResultsByPageRequest struct {
 	// 1. GroupType
 	// 描述：规则组类型，标识规则组所属的分类。
 	// 取值：DEFAULT - 默认类型；WORKFLOW_NODE - 编排空间工作流节点类型
-	// 
+	//
 	// 2. InstanceId
 	// 描述：规则组执行实例ID。
 	// 取值：字符串
-	// 
+	//
 	// 3. ParentInstanceId
 	// 描述：父实例ID。
 	// 取值：字符串
-	// 
+	//
 	// 4. LifeCycleRunNum
 	// 描述：生命周期运行号。
 	// 取值：字符串
-	// 
+	//
 	// 5. InstanceStatus
 	// 描述：实例状态。质量侧的实例状态，一个状态对应调度侧多个状态，具体参考取值说明
 	// 取值：
-	// 等待运行 - 
+	// 等待运行 -
 	// ["INITIAL", "EVENT_LISTENING", "DEPENDENCE", "ALLOCATED", "LAUNCHED", "BEFORE_ASPECT", "ISSUED"]；
 	// 运行中 - ["RUNNING", "AFTER_ASPECT", "WAITING_AFTER_ASPECT"]
 	// 失败 - ["FAILED", "EXPIRED", "KILL", "KILLING", "PENDING"]
 	// 成功 - ["COMPLETED"]
-	// 
-	// 
+	//
+	//
 	// 6. DatasourceId
 	// 描述：数据源ID。
 	// 取值：字符串
-	// 
+	//
 	// 7. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 8. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 9. DatabaseId
 	// 描述：数据库ID。
 	// 取值：字符串
-	// 
+	//
 	// 10. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 11. ReceiverFlag
 	// 描述：是否为当前登录用户的订阅。
 	// 取值：true - 是；false - 否
-	// 
+	//
 	// 12. TableName
 	// 描述：数据表名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 13. RuleGroupName
 	// 描述：规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 14. RuleGroupExecId
 	// 描述：规则组执行ID。
 	// 取值：整数
-	// 
+	//
 	// 15. RuleGroupTableId
 	// 描述：规则组表ID。
 	// 取值：整数
-	// 
+	//
 	// 16. Keyword
 	// 描述：关键字搜索，支持规则组执行Id、表名称、表负责人模糊搜索。如果keyword是纯数字，默认只匹配规则组执行Id。
 	// 取值：字符串
-	// 
+	//
 	// 17. StartTime
 	// 描述：实际运行时间，开始时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 18. EndTime
 	// 描述：实际运行时间，结束时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 19. ScheduledStartTime
 	// 描述：计划调度时间，开始时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 20. ScheduledEndTime
 	// 描述：计划调度时间，结束时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 21. DsJobId
 	// 描述：数据源任务ID。
 	// 取值：字符串
-	// 
+	//
 	// 22. TriggerType
 	// 描述：触发类型。
 	// 取值：1 - 手动触发；2 - 调度事中触发；3 - 周期调度触发；
-	// 
+	//
 	// 23. Status
 	// 描述：规则组执行状态。
 	// 取值：0 - 初始状态，未提交；1 - 已提交；2 - 检测中；3 - 正常；4 - 异常；5 - 下发中；6 - 执行链路异常；7 - 未检测，没有执行结果；
-	// 
+	//
 	// 24. TableIds
 	// 描述：数据表ID集合。
 	// 取值：字符串，支持多个值（OR关系）
-	// 
+	//
 	// 25. RuleGroupId
 	// 描述：规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 26. BizCatalogIds
 	// 描述：业务目录ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 27. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 通用排序， 
+	// 通用排序，
 	// 支持的排序字段：
 	// CreateTime - 按创建时间排序
 	// UpdateTime - 按更新时间排序（默认）
@@ -11814,8 +11814,8 @@ type ListQualityRuleGroupExecResultsByPageRequest struct {
 }
 
 func (r *ListQualityRuleGroupExecResultsByPageRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11852,8 +11852,8 @@ type ListQualityRuleGroupExecResultsByPageResponse struct {
 }
 
 func (r *ListQualityRuleGroupExecResultsByPageResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11874,48 +11874,48 @@ type ListQualityRuleGroupsRequestParams struct {
 	PageSize *uint64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
 
 	// 过滤条件,每次请求的Filters的上限为10，Filter.Values的上限为5，可选过滤条件如下：
-	// 
+	//
 	// 1. RuleGroupId
 	// 描述：规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 2. RuleGroupName
 	// 描述：规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 3. TableId
 	// 描述：数据源表id
 	// 取值：字符串
-	// 
+	//
 	// 4. TableName
 	// 描述：数据源表名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 5. TableOwnerName
 	// 描述：表负责人名称，支持模糊匹配。
 	// 取值：字符串
-	// 
-	// 
+	//
+	//
 	// 6. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 7. DatasourceId
 	// 描述：数据源ID。
 	// 取值：字符串
-	// 
+	//
 	// 8. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 9. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 10. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
-	// 
+	//
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 通用排序，支持的排序字段：
@@ -11929,7 +11929,7 @@ type ListQualityRuleGroupsRequestParams struct {
 
 type ListQualityRuleGroupsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -11940,48 +11940,48 @@ type ListQualityRuleGroupsRequest struct {
 	PageSize *uint64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
 
 	// 过滤条件,每次请求的Filters的上限为10，Filter.Values的上限为5，可选过滤条件如下：
-	// 
+	//
 	// 1. RuleGroupId
 	// 描述：规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 2. RuleGroupName
 	// 描述：规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 3. TableId
 	// 描述：数据源表id
 	// 取值：字符串
-	// 
+	//
 	// 4. TableName
 	// 描述：数据源表名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 5. TableOwnerName
 	// 描述：表负责人名称，支持模糊匹配。
 	// 取值：字符串
-	// 
-	// 
+	//
+	//
 	// 6. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 7. DatasourceId
 	// 描述：数据源ID。
 	// 取值：字符串
-	// 
+	//
 	// 8. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 9. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 10. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
-	// 
+	//
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 通用排序，支持的排序字段：
@@ -11994,8 +11994,8 @@ type ListQualityRuleGroupsRequest struct {
 }
 
 func (r *ListQualityRuleGroupsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12032,8 +12032,8 @@ type ListQualityRuleGroupsResponse struct {
 }
 
 func (r *ListQualityRuleGroupsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12057,59 +12057,59 @@ type ListQualityRuleGroupsTableRequestParams struct {
 	// 1. GroupType
 	// 描述：规则组类型，标识规则组所属的分类。
 	// 取值：DEFAULT - 默认类型；DASHBOARD-仪表盘类型；WORKFLOW_NODE - 编排空间工作流节点类型
-	// 
+	//
 	// 2. DeployStatus
 	// 描述：规则组部署状态，主要用于WORKFLOW_NODE类型的规则组
 	// 取值：PRODUCTION - 生产环境；DRAFT - 草稿套
-	// 
+	//
 	// 3. RuleGroupName
 	// 描述：规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 4. RuleGroupId
 	// 描述：规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 5. TableOwnerName
 	// 描述：表负责人名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 6. TableOwnerAccount
 	// 描述：表负责人账号ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 7. TableOwnerFlag
 	// 描述：是否为当前表负责人。
 	// 取值：true - 是；false - 否
-	// 
+	//
 	// 8. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 9. DatasourceId
 	// 描述：数据源ID。
 	// 取值：字符串
-	// 
+	//
 	// 10. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 11. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 12. TableName
 	// 描述：数据源表名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 13. BizCatalogIds
 	// 描述：业务目录ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 14. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
-	// 
+	//
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 通用排序，
@@ -12123,7 +12123,7 @@ type ListQualityRuleGroupsTableRequestParams struct {
 
 type ListQualityRuleGroupsTableRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -12137,59 +12137,59 @@ type ListQualityRuleGroupsTableRequest struct {
 	// 1. GroupType
 	// 描述：规则组类型，标识规则组所属的分类。
 	// 取值：DEFAULT - 默认类型；DASHBOARD-仪表盘类型；WORKFLOW_NODE - 编排空间工作流节点类型
-	// 
+	//
 	// 2. DeployStatus
 	// 描述：规则组部署状态，主要用于WORKFLOW_NODE类型的规则组
 	// 取值：PRODUCTION - 生产环境；DRAFT - 草稿套
-	// 
+	//
 	// 3. RuleGroupName
 	// 描述：规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 4. RuleGroupId
 	// 描述：规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 5. TableOwnerName
 	// 描述：表负责人名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 6. TableOwnerAccount
 	// 描述：表负责人账号ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 7. TableOwnerFlag
 	// 描述：是否为当前表负责人。
 	// 取值：true - 是；false - 否
-	// 
+	//
 	// 8. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 9. DatasourceId
 	// 描述：数据源ID。
 	// 取值：字符串
-	// 
+	//
 	// 10. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 11. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 12. TableName
 	// 描述：数据源表名称，支持模糊匹配。
 	// 取值：字符串
-	// 
+	//
 	// 13. BizCatalogIds
 	// 描述：业务目录ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 14. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
-	// 
+	//
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 通用排序，
@@ -12202,8 +12202,8 @@ type ListQualityRuleGroupsTableRequest struct {
 }
 
 func (r *ListQualityRuleGroupsTableRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12240,8 +12240,8 @@ type ListQualityRuleGroupsTableResponse struct {
 }
 
 func (r *ListQualityRuleGroupsTableResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12274,23 +12274,23 @@ type ListQualityRuleTemplatesRequestParams struct {
 	// 1. Id
 	// 描述：模板ID。
 	// 取值：模板的唯一标识
-	// 
+	//
 	// 2. Keyword
 	// 描述：关键字搜索，支持模板名称模糊搜索。
 	// 取值：字符串
-	// 
+	//
 	// 3. Type
 	// 描述：模板类型。
 	// 取值：1 - 系统模板；2 - 自定义模板；支持多个值（OR关系）
-	// 
+	//
 	// 4. QualityDim
 	// 描述：质量检测维度。
 	// 取值：1 - 准确性；2 - 唯一性；3 - 完整性；4 - 一致性；5 - 及时性；6 - 有效性；支持多个值（OR关系）
-	// 
+	//
 	// 5. SourceObjectType
 	// 描述：规则适用的源数据对象类型。
 	// 取值：1 - 常量；2 - 离线表级；3 - 离线字段级；4 - 库级；支持多个值（OR关系）
-	// 
+	//
 	// 6. SourceEngineTypes
 	// 描述：模板适用的源数据引擎类型。
 	// 取值：1 - MySQL；2 - Hive；4 - Spark；8 - Livy；16 - DLC；32 - Gbase；64 - TCHouse-P；128 - Doris；256 - TCHouse-D；512 - EMR_StarRocks；1024 - TCHouse-X；支持多个值（OR关系）
@@ -12299,7 +12299,7 @@ type ListQualityRuleTemplatesRequestParams struct {
 
 type ListQualityRuleTemplatesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 工作空间ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -12322,23 +12322,23 @@ type ListQualityRuleTemplatesRequest struct {
 	// 1. Id
 	// 描述：模板ID。
 	// 取值：模板的唯一标识
-	// 
+	//
 	// 2. Keyword
 	// 描述：关键字搜索，支持模板名称模糊搜索。
 	// 取值：字符串
-	// 
+	//
 	// 3. Type
 	// 描述：模板类型。
 	// 取值：1 - 系统模板；2 - 自定义模板；支持多个值（OR关系）
-	// 
+	//
 	// 4. QualityDim
 	// 描述：质量检测维度。
 	// 取值：1 - 准确性；2 - 唯一性；3 - 完整性；4 - 一致性；5 - 及时性；6 - 有效性；支持多个值（OR关系）
-	// 
+	//
 	// 5. SourceObjectType
 	// 描述：规则适用的源数据对象类型。
 	// 取值：1 - 常量；2 - 离线表级；3 - 离线字段级；4 - 库级；支持多个值（OR关系）
-	// 
+	//
 	// 6. SourceEngineTypes
 	// 描述：模板适用的源数据引擎类型。
 	// 取值：1 - MySQL；2 - Hive；4 - Spark；8 - Livy；16 - DLC；32 - Gbase；64 - TCHouse-P；128 - Doris；256 - TCHouse-D；512 - EMR_StarRocks；1024 - TCHouse-X；支持多个值（OR关系）
@@ -12346,8 +12346,8 @@ type ListQualityRuleTemplatesRequest struct {
 }
 
 func (r *ListQualityRuleTemplatesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12383,8 +12383,8 @@ type ListQualityRuleTemplatesResponse struct {
 }
 
 func (r *ListQualityRuleTemplatesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12408,108 +12408,108 @@ type ListQualityRulesRequestParams struct {
 	// 1. GroupType
 	// 描述：规则组类型，标识规则组所属的分类。
 	// 取值：DEFAULT - 默认类型，DASHBOARD - 仪表盘类型，WORKFLOW_NODE - 编排空间工作流节点类型
-	// 
+	//
 	// 2. Operator
 	// 描述：创建人ID。
 	// 取值：用户ID，支持多个值（OR关系）
-	// 
+	//
 	// 3. Keyword
 	// 描述：关键字搜索，支持规则名称模糊搜索。
 	// 取值：字符串
-	// 
+	//
 	// 4. RuleName
 	// 描述：规则名称。
 	// 取值：字符串
-	// 
+	//
 	// 5. Type
 	// 描述：规则类型。
 	// 取值：1 - 系统模板，2 - 自定义SQL，3 - 自定义模板
-	// 
+	//
 	// 6. SourceObjectValue
 	// 描述：数据对象，可以是字段名称或表名称。
 	// 取值：字符串，支持多个值（OR关系）
-	// 
+	//
 	// 7. RuleGroupId
 	// 描述：规则所属的规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 8. RuleGroupName
 	// 描述：规则所属的规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 9. TableId
 	// 描述：数据表ID。
 	// 取值：字符串，支持多个值（OR关系）
-	// 
+	//
 	// 10. TableName
 	// 描述：数据表名称。
 	// 取值：字符串
-	// 
+	//
 	// 11. SourceEngineType
 	// 描述：数据源引擎类型。
 	// 取值：整数，1 - MYSQL；2 - HIVE；4 - SPARK；8 - LIVY；16 - DLC；32 - GBASE；64 - TCHouse-P；128 - DORIS；256 - TCHouse-D；512 - EMR_STARROCKS；1024 - TCHouse-X；支持多个值（OR关系）
-	// 
+	//
 	// 12. DatasourceId
 	// 描述：数据源ID。
 	// 取值：整数
-	// 
+	//
 	// 13. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 14. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 15. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 16. RuleIds
 	// 描述：规则ID集合。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 17. RuleTemplateId
 	// 描述：规则模板ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 18. ReceiverUserId / ReceiverUserIdStr
 	// 描述：订阅人用户ID。
 	// 取值：整数
-	// 
+	//
 	// 19. StartTime
 	// 描述：查询开始时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 20. EndTime
 	// 描述：查询结束时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 21. ReceiverFlag
 	// 描述：是否为当前登录用户的订阅。
 	// 取值：
 	// true - 是
 	// false - 否
-	// 
+	//
 	// 22. MonitorType
 	// 描述：规则的监控执行方式。
 	// 取值：1 - 未配置；2 - 关联生产调度；3 - 离线周期检测；支持多个值（OR关系）
 	// 支持多个值（OR关系）
-	// 
+	//
 	// 23. MonitorStatus
 	// 描述：规则的监控状态。
 	// 取值：
 	// true - 已启用
 	// false - 已禁用
-	// 
+	//
 	// 24. BizCatalogIds
 	// 描述：业务目录ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 25. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
-	// 
+	//
 	// 26. DeployStatus
 	// 描述：规则部署状态，主要用于WORKFLOW_NODE类型的规则组（监控）上
 	// 取值：PRODUCTION - 生产环境，DRAFT - 草稿态
@@ -12527,7 +12527,7 @@ type ListQualityRulesRequestParams struct {
 
 type ListQualityRulesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -12541,108 +12541,108 @@ type ListQualityRulesRequest struct {
 	// 1. GroupType
 	// 描述：规则组类型，标识规则组所属的分类。
 	// 取值：DEFAULT - 默认类型，DASHBOARD - 仪表盘类型，WORKFLOW_NODE - 编排空间工作流节点类型
-	// 
+	//
 	// 2. Operator
 	// 描述：创建人ID。
 	// 取值：用户ID，支持多个值（OR关系）
-	// 
+	//
 	// 3. Keyword
 	// 描述：关键字搜索，支持规则名称模糊搜索。
 	// 取值：字符串
-	// 
+	//
 	// 4. RuleName
 	// 描述：规则名称。
 	// 取值：字符串
-	// 
+	//
 	// 5. Type
 	// 描述：规则类型。
 	// 取值：1 - 系统模板，2 - 自定义SQL，3 - 自定义模板
-	// 
+	//
 	// 6. SourceObjectValue
 	// 描述：数据对象，可以是字段名称或表名称。
 	// 取值：字符串，支持多个值（OR关系）
-	// 
+	//
 	// 7. RuleGroupId
 	// 描述：规则所属的规则组ID。
 	// 取值：整数
-	// 
+	//
 	// 8. RuleGroupName
 	// 描述：规则所属的规则组名称。
 	// 取值：字符串
-	// 
+	//
 	// 9. TableId
 	// 描述：数据表ID。
 	// 取值：字符串，支持多个值（OR关系）
-	// 
+	//
 	// 10. TableName
 	// 描述：数据表名称。
 	// 取值：字符串
-	// 
+	//
 	// 11. SourceEngineType
 	// 描述：数据源引擎类型。
 	// 取值：整数，1 - MYSQL；2 - HIVE；4 - SPARK；8 - LIVY；16 - DLC；32 - GBASE；64 - TCHouse-P；128 - DORIS；256 - TCHouse-D；512 - EMR_STARROCKS；1024 - TCHouse-X；支持多个值（OR关系）
-	// 
+	//
 	// 12. DatasourceId
 	// 描述：数据源ID。
 	// 取值：整数
-	// 
+	//
 	// 13. DatasourceType
 	// 描述：数据源类型。
 	// 取值：1 - MYSQL；2 - HIVE；3 - DLC；4 - GBASE；5 - TCHouse-P/CDW；6 - ICEBERG；7 - DORIS；8 - TCHouse-D；9 - EMR_STARROCKS；10 - TBDS_STARROCKS；11 - TCHouse-X
-	// 
+	//
 	// 14. DatabaseName
 	// 描述：数据库名称。
 	// 取值：字符串
-	// 
+	//
 	// 15. SchemaName
 	// 描述：Schema名称。
 	// 取值：字符串
-	// 
+	//
 	// 16. RuleIds
 	// 描述：规则ID集合。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 17. RuleTemplateId
 	// 描述：规则模板ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 18. ReceiverUserId / ReceiverUserIdStr
 	// 描述：订阅人用户ID。
 	// 取值：整数
-	// 
+	//
 	// 19. StartTime
 	// 描述：查询开始时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 20. EndTime
 	// 描述：查询结束时间。
 	// 取值：Unix时间戳（秒）
-	// 
+	//
 	// 21. ReceiverFlag
 	// 描述：是否为当前登录用户的订阅。
 	// 取值：
 	// true - 是
 	// false - 否
-	// 
+	//
 	// 22. MonitorType
 	// 描述：规则的监控执行方式。
 	// 取值：1 - 未配置；2 - 关联生产调度；3 - 离线周期检测；支持多个值（OR关系）
 	// 支持多个值（OR关系）
-	// 
+	//
 	// 23. MonitorStatus
 	// 描述：规则的监控状态。
 	// 取值：
 	// true - 已启用
 	// false - 已禁用
-	// 
+	//
 	// 24. BizCatalogIds
 	// 描述：业务目录ID。
 	// 取值：整数，支持多个值（OR关系）
-	// 
+	//
 	// 25. CatalogName
 	// 描述：数据目录名称。
 	// 取值：字符串
-	// 
+	//
 	// 26. DeployStatus
 	// 描述：规则部署状态，主要用于WORKFLOW_NODE类型的规则组（监控）上
 	// 取值：PRODUCTION - 生产环境，DRAFT - 草稿态
@@ -12659,8 +12659,8 @@ type ListQualityRulesRequest struct {
 }
 
 func (r *ListQualityRulesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12697,8 +12697,8 @@ type ListQualityRulesResponse struct {
 }
 
 func (r *ListQualityRulesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12742,7 +12742,7 @@ type ListResourceFilesRequestParams struct {
 
 type ListResourceFilesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -12775,8 +12775,8 @@ type ListResourceFilesRequest struct {
 }
 
 func (r *ListResourceFilesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12817,8 +12817,8 @@ type ListResourceFilesResponse struct {
 }
 
 func (r *ListResourceFilesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12845,7 +12845,7 @@ type ListResourceFoldersRequestParams struct {
 
 type ListResourceFoldersRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -12861,8 +12861,8 @@ type ListResourceFoldersRequest struct {
 }
 
 func (r *ListResourceFoldersRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12897,8 +12897,8 @@ type ListResourceFoldersResponse struct {
 }
 
 func (r *ListResourceFoldersResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12910,7 +12910,7 @@ func (r *ListResourceFoldersResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ListResourceGroupsRequestParams struct {
 	// 执行资源组类型
-	// 
+	//
 	// - Schedule --- 调度资源组
 	// - Integration --- 集成资源组
 	// - DataService -- 数据服务资源组
@@ -12934,9 +12934,9 @@ type ListResourceGroupsRequestParams struct {
 
 type ListResourceGroupsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 执行资源组类型
-	// 
+	//
 	// - Schedule --- 调度资源组
 	// - Integration --- 集成资源组
 	// - DataService -- 数据服务资源组
@@ -12959,8 +12959,8 @@ type ListResourceGroupsRequest struct {
 }
 
 func (r *ListResourceGroupsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12997,8 +12997,8 @@ type ListResourceGroupsResponse struct {
 }
 
 func (r *ListResourceGroupsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13030,7 +13030,7 @@ type ListSQLFolderContentsRequestParams struct {
 
 type ListSQLFolderContentsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -13051,8 +13051,8 @@ type ListSQLFolderContentsRequest struct {
 }
 
 func (r *ListSQLFolderContentsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13089,8 +13089,8 @@ type ListSQLFolderContentsResponse struct {
 }
 
 func (r *ListSQLFolderContentsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13125,7 +13125,7 @@ type ListSQLScriptRunsRequestParams struct {
 
 type ListSQLScriptRunsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -13149,8 +13149,8 @@ type ListSQLScriptRunsRequest struct {
 }
 
 func (r *ListSQLScriptRunsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13188,8 +13188,8 @@ type ListSQLScriptRunsResponse struct {
 }
 
 func (r *ListSQLScriptRunsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13238,7 +13238,7 @@ type ListSchemaRequestParams struct {
 
 type ListSchemaRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 页码，从1开始
 	PageNumber *int64 `json:"PageNumber,omitnil,omitempty" name:"PageNumber"`
 
@@ -13259,8 +13259,8 @@ type ListSchemaRequest struct {
 }
 
 func (r *ListSchemaRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13297,8 +13297,8 @@ type ListSchemaResponse struct {
 }
 
 func (r *ListSchemaResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13350,7 +13350,7 @@ type ListTableRequestParams struct {
 
 type ListTableRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 页码，从1开始
 	PageNumber *int64 `json:"PageNumber,omitnil,omitempty" name:"PageNumber"`
 
@@ -13374,8 +13374,8 @@ type ListTableRequest struct {
 }
 
 func (r *ListTableRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13413,8 +13413,8 @@ type ListTableResponse struct {
 }
 
 func (r *ListTableResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13435,7 +13435,7 @@ type ListTaskFoldersRequestParams struct {
 	WorkflowId *string `json:"WorkflowId,omitnil,omitempty" name:"WorkflowId"`
 
 	// 任务文件夹类型
-	// 
+	//
 	// | 任务文件夹类型取值 | 任务文件夹类型界面对应名称 |
 	// | ---------------- | ------------------------ |
 	// | ETL              | 集成任务                 |
@@ -13447,7 +13447,7 @@ type ListTaskFoldersRequestParams struct {
 	// | GENERAL          | 通用                     |
 	// | TI_ONE           | TI-ONE机器学习           |
 	// | ACROSS_WORKFLOWS | 跨工作流                 |
-	// 
+	//
 	TaskFolderType *string `json:"TaskFolderType,omitnil,omitempty" name:"TaskFolderType"`
 
 	// 数据页数，大于等于1。默认1
@@ -13459,7 +13459,7 @@ type ListTaskFoldersRequestParams struct {
 
 type ListTaskFoldersRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -13470,7 +13470,7 @@ type ListTaskFoldersRequest struct {
 	WorkflowId *string `json:"WorkflowId,omitnil,omitempty" name:"WorkflowId"`
 
 	// 任务文件夹类型
-	// 
+	//
 	// | 任务文件夹类型取值 | 任务文件夹类型界面对应名称 |
 	// | ---------------- | ------------------------ |
 	// | ETL              | 集成任务                 |
@@ -13482,7 +13482,7 @@ type ListTaskFoldersRequest struct {
 	// | GENERAL          | 通用                     |
 	// | TI_ONE           | TI-ONE机器学习           |
 	// | ACROSS_WORKFLOWS | 跨工作流                 |
-	// 
+	//
 	TaskFolderType *string `json:"TaskFolderType,omitnil,omitempty" name:"TaskFolderType"`
 
 	// 数据页数，大于等于1。默认1
@@ -13493,8 +13493,8 @@ type ListTaskFoldersRequest struct {
 }
 
 func (r *ListTaskFoldersRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13532,8 +13532,8 @@ type ListTaskFoldersResponse struct {
 }
 
 func (r *ListTaskFoldersResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13584,7 +13584,7 @@ type ListTaskInstanceExecutionsRequestParams struct {
 
 type ListTaskInstanceExecutionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -13602,8 +13602,8 @@ type ListTaskInstanceExecutionsRequest struct {
 }
 
 func (r *ListTaskInstanceExecutionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13639,8 +13639,8 @@ type ListTaskInstanceExecutionsResponse struct {
 }
 
 func (r *ListTaskInstanceExecutionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13668,9 +13668,9 @@ type ListTaskInstancesRequestParams struct {
 	// **时区**timeZone, 传入的时间字符串的所在时区，默认UTC+8
 	TimeZone *string `json:"TimeZone,omitnil,omitempty" name:"TimeZone"`
 
-	// **实例类型** 
-	// - 0 表示补录类型 
-	// - 1 表示周期实例 
+	// **实例类型**
+	// - 0 表示补录类型
+	// - 1 表示周期实例
 	// - 2 表示非周期实例
 	InstanceType *uint64 `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
@@ -13720,15 +13720,15 @@ type ListTaskInstancesRequestParams struct {
 	SortColumn *string `json:"SortColumn,omitnil,omitempty" name:"SortColumn"`
 
 	// **实例排序方式**
-	// 
-	// - ASC 
+	//
+	// - ASC
 	// - DESC
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
 }
 
 type ListTaskInstancesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// **项目ID**
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -13746,9 +13746,9 @@ type ListTaskInstancesRequest struct {
 	// **时区**timeZone, 传入的时间字符串的所在时区，默认UTC+8
 	TimeZone *string `json:"TimeZone,omitnil,omitempty" name:"TimeZone"`
 
-	// **实例类型** 
-	// - 0 表示补录类型 
-	// - 1 表示周期实例 
+	// **实例类型**
+	// - 0 表示补录类型
+	// - 1 表示周期实例
 	// - 2 表示非周期实例
 	InstanceType *uint64 `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
@@ -13798,15 +13798,15 @@ type ListTaskInstancesRequest struct {
 	SortColumn *string `json:"SortColumn,omitnil,omitempty" name:"SortColumn"`
 
 	// **实例排序方式**
-	// 
-	// - ASC 
+	//
+	// - ASC
 	// - DESC
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
 }
 
 func (r *ListTaskInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13858,8 +13858,8 @@ type ListTaskInstancesResponse struct {
 }
 
 func (r *ListTaskInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13869,7 +13869,7 @@ func (r *ListTaskInstancesResponse) FromJsonString(s string) error {
 }
 
 type ListTaskVersions struct {
-	// 记录列表	
+	// 记录列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*TaskVersion `json:"Items,omitnil,omitempty" name:"Items"`
 
@@ -13916,7 +13916,7 @@ type ListTaskVersionsRequestParams struct {
 
 type ListTaskVersionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -13936,8 +13936,8 @@ type ListTaskVersionsRequest struct {
 }
 
 func (r *ListTaskVersionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13974,8 +13974,8 @@ type ListTaskVersionsResponse struct {
 }
 
 func (r *ListTaskVersionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14008,11 +14008,11 @@ type ListTasksRequestParams struct {
 	TaskTypeId *int64 `json:"TaskTypeId,omitnil,omitempty" name:"TaskTypeId"`
 
 	// 任务状态
-	// * N: 新建 
-	// * Y: 调度中 
-	// * F: 已下线 
-	// * O: 已暂停 
-	// * T: 下线中 
+	// * N: 新建
+	// * Y: 调度中
+	// * F: 已下线
+	// * O: 已暂停
+	// * T: 下线中
 	// * INVALID: 已失效
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
@@ -14034,7 +14034,7 @@ type ListTasksRequestParams struct {
 
 type ListTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14057,11 +14057,11 @@ type ListTasksRequest struct {
 	TaskTypeId *int64 `json:"TaskTypeId,omitnil,omitempty" name:"TaskTypeId"`
 
 	// 任务状态
-	// * N: 新建 
-	// * Y: 调度中 
-	// * F: 已下线 
-	// * O: 已暂停 
-	// * T: 下线中 
+	// * N: 新建
+	// * Y: 调度中
+	// * F: 已下线
+	// * O: 已暂停
+	// * T: 下线中
 	// * INVALID: 已失效
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
@@ -14082,8 +14082,8 @@ type ListTasksRequest struct {
 }
 
 func (r *ListTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14127,8 +14127,8 @@ type ListTasksResponse struct {
 }
 
 func (r *ListTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14145,14 +14145,14 @@ type ListTenantRolesRequestParams struct {
 
 type ListTenantRolesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 角色中文展示名模糊查询，只能传一个值
 	RoleDisplayName *string `json:"RoleDisplayName,omitnil,omitempty" name:"RoleDisplayName"`
 }
 
 func (r *ListTenantRolesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14184,8 +14184,8 @@ type ListTenantRolesResponse struct {
 }
 
 func (r *ListTenantRolesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14217,7 +14217,7 @@ type ListTriggerTaskInfo struct {
 }
 
 type ListTriggerTaskVersions struct {
-	// 记录列表	
+	// 记录列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*TriggerTaskVersion `json:"Items,omitnil,omitempty" name:"Items"`
 
@@ -14264,7 +14264,7 @@ type ListTriggerTaskVersionsRequestParams struct {
 
 type ListTriggerTaskVersionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14284,8 +14284,8 @@ type ListTriggerTaskVersionsRequest struct {
 }
 
 func (r *ListTriggerTaskVersionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14322,8 +14322,8 @@ type ListTriggerTaskVersionsResponse struct {
 }
 
 func (r *ListTriggerTaskVersionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14356,8 +14356,8 @@ type ListTriggerTasksRequestParams struct {
 	TaskTypeId *int64 `json:"TaskTypeId,omitnil,omitempty" name:"TaskTypeId"`
 
 	// 任务状态
-	// * N: 新建 
-	// * Y: 调度中 
+	// * N: 新建
+	// * Y: 调度中
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 提交状态
@@ -14378,7 +14378,7 @@ type ListTriggerTasksRequestParams struct {
 
 type ListTriggerTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14401,8 +14401,8 @@ type ListTriggerTasksRequest struct {
 	TaskTypeId *int64 `json:"TaskTypeId,omitnil,omitempty" name:"TaskTypeId"`
 
 	// 任务状态
-	// * N: 新建 
-	// * Y: 调度中 
+	// * N: 新建
+	// * Y: 调度中
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 提交状态
@@ -14422,8 +14422,8 @@ type ListTriggerTasksRequest struct {
 }
 
 func (r *ListTriggerTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14468,8 +14468,8 @@ type ListTriggerTasksResponse struct {
 }
 
 func (r *ListTriggerTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14520,7 +14520,7 @@ type ListTriggerWorkflowRunsRequestParams struct {
 
 type ListTriggerWorkflowRunsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14538,8 +14538,8 @@ type ListTriggerWorkflowRunsRequest struct {
 }
 
 func (r *ListTriggerWorkflowRunsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14575,8 +14575,8 @@ type ListTriggerWorkflowRunsResponse struct {
 }
 
 func (r *ListTriggerWorkflowRunsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14620,7 +14620,7 @@ type ListTriggerWorkflowsRequestParams struct {
 
 type ListTriggerWorkflowsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14653,8 +14653,8 @@ type ListTriggerWorkflowsRequest struct {
 }
 
 func (r *ListTriggerWorkflowsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14695,8 +14695,8 @@ type ListTriggerWorkflowsResponse struct {
 }
 
 func (r *ListTriggerWorkflowsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14722,7 +14722,7 @@ type ListUpstreamOpsTasksRequestParams struct {
 
 type ListUpstreamOpsTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14737,8 +14737,8 @@ type ListUpstreamOpsTasksRequest struct {
 }
 
 func (r *ListUpstreamOpsTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14773,8 +14773,8 @@ type ListUpstreamOpsTasksResponse struct {
 }
 
 func (r *ListUpstreamOpsTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14803,7 +14803,7 @@ type ListUpstreamTaskInstancesRequestParams struct {
 
 type ListUpstreamTaskInstancesRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14821,8 +14821,8 @@ type ListUpstreamTaskInstancesRequest struct {
 }
 
 func (r *ListUpstreamTaskInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14858,8 +14858,8 @@ type ListUpstreamTaskInstancesResponse struct {
 }
 
 func (r *ListUpstreamTaskInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14885,7 +14885,7 @@ type ListUpstreamTasksRequestParams struct {
 
 type ListUpstreamTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14900,8 +14900,8 @@ type ListUpstreamTasksRequest struct {
 }
 
 func (r *ListUpstreamTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14936,8 +14936,8 @@ type ListUpstreamTasksResponse struct {
 }
 
 func (r *ListUpstreamTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14963,7 +14963,7 @@ type ListUpstreamTriggerTasksRequestParams struct {
 
 type ListUpstreamTriggerTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -14978,8 +14978,8 @@ type ListUpstreamTriggerTasksRequest struct {
 }
 
 func (r *ListUpstreamTriggerTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15015,8 +15015,8 @@ type ListUpstreamTriggerTasksResponse struct {
 }
 
 func (r *ListUpstreamTriggerTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15042,7 +15042,7 @@ type ListWorkflowFoldersRequestParams struct {
 
 type ListWorkflowFoldersRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -15057,8 +15057,8 @@ type ListWorkflowFoldersRequest struct {
 }
 
 func (r *ListWorkflowFoldersRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15093,8 +15093,8 @@ type ListWorkflowFoldersResponse struct {
 }
 
 func (r *ListWorkflowFoldersResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15145,7 +15145,7 @@ type ListWorkflowPermissionsRequestParams struct {
 
 type ListWorkflowPermissionsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -15163,8 +15163,8 @@ type ListWorkflowPermissionsRequest struct {
 }
 
 func (r *ListWorkflowPermissionsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15200,8 +15200,8 @@ type ListWorkflowPermissionsResponse struct {
 }
 
 func (r *ListWorkflowPermissionsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15248,7 +15248,7 @@ type ListWorkflowsRequestParams struct {
 
 type ListWorkflowsRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -15284,8 +15284,8 @@ type ListWorkflowsRequest struct {
 }
 
 func (r *ListWorkflowsRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15327,8 +15327,8 @@ type ListWorkflowsResponse struct {
 }
 
 func (r *ListWorkflowsResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15339,7 +15339,7 @@ func (r *ListWorkflowsResponse) FromJsonString(s string) error {
 
 type MetricData struct {
 	// 指标名称
-	// 
+	//
 	// - ConcurrencyUsage --- 并发使用率
 	// - CpuCoreUsage --- cpu使用率
 	// - CpuLoad --- cpu负载
@@ -15379,7 +15379,7 @@ type ModifyQualityRuleGroupRequestParams struct {
 
 type ModifyQualityRuleGroupRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 任务参数
 	RuleGroupExecStrategyBOList []*QualityRuleGroupExecStrategy `json:"RuleGroupExecStrategyBOList,omitnil,omitempty" name:"RuleGroupExecStrategyBOList"`
 
@@ -15388,8 +15388,8 @@ type ModifyQualityRuleGroupRequest struct {
 }
 
 func (r *ModifyQualityRuleGroupRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15423,8 +15423,8 @@ type ModifyQualityRuleGroupResponse struct {
 }
 
 func (r *ModifyQualityRuleGroupResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15528,7 +15528,7 @@ type ModifyQualityRuleRequestParams struct {
 
 type ModifyQualityRuleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -15615,8 +15615,8 @@ type ModifyQualityRuleRequest struct {
 }
 
 func (r *ModifyQualityRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15676,8 +15676,8 @@ type ModifyQualityRuleResponse struct {
 }
 
 func (r *ModifyQualityRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15710,7 +15710,7 @@ type NotificationFatigue struct {
 	NotifyInterval *uint64 `json:"NotifyInterval,omitnil,omitempty" name:"NotifyInterval"`
 
 	// 免打扰时间，例如示例值
-	// [{DaysOfWeek: [1, 2], StartTime: "00:00:00", EndTime: "09:00:00"}]	
+	// [{DaysOfWeek: [1, 2], StartTime: "00:00:00", EndTime: "09:00:00"}]
 	// 每周一、周二的00:00到09:00免打扰
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	QuietIntervals []*AlarmQuietInterval `json:"QuietIntervals,omitnil,omitempty" name:"QuietIntervals"`
@@ -16065,7 +16065,7 @@ type OpsWorkflowDetail struct {
 }
 
 type OpsWorkflows struct {
-	// 记录列表	
+	// 记录列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OpsWorkflow `json:"Items,omitnil,omitempty" name:"Items"`
 
@@ -16170,7 +16170,7 @@ type PauseOpsTasksAsyncRequestParams struct {
 
 type PauseOpsTasksAsyncRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -16182,8 +16182,8 @@ type PauseOpsTasksAsyncRequest struct {
 }
 
 func (r *PauseOpsTasksAsyncRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16217,8 +16217,8 @@ type PauseOpsTasksAsyncResponse struct {
 }
 
 func (r *PauseOpsTasksAsyncResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16287,10 +16287,10 @@ type ProjectBrief struct {
 }
 
 type ProjectInstanceStatisticsAlarmInfo struct {
-	// 告警类型 
-	// 
+	// 告警类型
+	//
 	// projectFailureInstanceUpwardFluctuationAlarm: 失败实例向上波动告警
-	// 
+	//
 	// projectSuccessInstanceDownwardFluctuationAlarm： 成功实例向下波动告警
 	AlarmType *string `json:"AlarmType,omitnil,omitempty" name:"AlarmType"`
 
@@ -16450,11 +16450,11 @@ type QualityCompareRuleItem struct {
 	//   - 1 = 绝对值(ABS)
 	//   - 2 = 上升(ASCEND)
 	//   - 3 = 下降(DESCEND)
-	// 
+	//
 	// 当 compareType = 3(数值范围) 时：
 	//   - 4 = 范围内(WITH_IN_RANGE)
 	//   - 5 = 范围外(OUT_OF_RANGE)
-	// 
+	//
 	// 当 compareType = 7(公平性) 时：
 	//   - 6 = 公平率(FAIRNESS_RATE)
 	//   - 7 = 公平差(FAIRNESS_GAP)
@@ -16727,7 +16727,7 @@ type QualityRule struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DatasourceName *string `json:"DatasourceName,omitnil,omitempty" name:"DatasourceName"`
 
-	// 数据库名称 
+	// 数据库名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
 
@@ -17225,7 +17225,7 @@ type QualityRuleGroupExecStrategy struct {
 	// 时间指定，主要用于调度周期为周/月的任务
 	// 调度周期为周时：含义为指定周几运行，可选多个，英文逗号隔开
 	// 可填1,2...7，依次代表周日，周一...周六，例如填“1,2”，表示周日、周一执行；
-	// 
+	//
 	// 调度周期为月时，含义为指定每月的几号运行，可选多个，英文逗号隔开
 	// 可填1,2,...,31，依次代表1号，2号...31号，例如填“1,2”，表示每月的1号、2号执行
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -17462,7 +17462,7 @@ type QualityRuleInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 规则类型 
+	// 规则类型
 	// 1：系统模版
 	// 2：自定义模版
 	// 3：自定义SQL
@@ -17534,7 +17534,7 @@ type QualityRuleInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceObjectValue *string `json:"SourceObjectValue,omitnil,omitempty" name:"SourceObjectValue"`
 
-	// 检测范围，【条件必填】当Type=1（系统模板）或2（自定义模板）时必填。 
+	// 检测范围，【条件必填】当Type=1（系统模板）或2（自定义模板）时必填。
 	// 1.全表
 	// 2.条件扫描
 	// 注意：CompareType为2（波动值）或 使用用户自定义模板时包含过滤条件${FILTER}时，检测范围必须为2条件扫描
@@ -17825,14 +17825,14 @@ type RegisterLineageRequestParams struct {
 
 type RegisterLineageRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 需要注册的血缘关系列表
 	Relations []*LineagePair `json:"Relations,omitnil,omitempty" name:"Relations"`
 }
 
 func (r *RegisterLineageRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17864,8 +17864,8 @@ type RegisterLineageResponse struct {
 }
 
 func (r *RegisterLineageResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17876,7 +17876,7 @@ func (r *RegisterLineageResponse) FromJsonString(s string) error {
 
 type RelateTask struct {
 	// 任务类型
-	// 
+	//
 	// - OfflineIntegration --- 离线集成任务
 	// - RealtimeIntegration --- 实时集成任务
 	// - DataDevelopment --- 数据开发任务
@@ -17911,7 +17911,7 @@ type RemoveMemberProjectRoleRequestParams struct {
 
 type RemoveMemberProjectRoleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -17927,8 +17927,8 @@ type RemoveMemberProjectRoleRequest struct {
 }
 
 func (r *RemoveMemberProjectRoleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17959,8 +17959,8 @@ type RemoveMemberProjectRoleResponse struct {
 }
 
 func (r *RemoveMemberProjectRoleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18001,7 +18001,7 @@ type RerunTaskInstancesAsyncRequestParams struct {
 
 type RerunTaskInstancesAsyncRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -18031,8 +18031,8 @@ type RerunTaskInstancesAsyncRequest struct {
 }
 
 func (r *RerunTaskInstancesAsyncRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18072,8 +18072,8 @@ type RerunTaskInstancesAsyncResponse struct {
 }
 
 func (r *RerunTaskInstancesAsyncResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18111,7 +18111,7 @@ type RerunTriggerWorkflowRunAsyncRequestParams struct {
 
 type RerunTriggerWorkflowRunAsyncRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -18138,8 +18138,8 @@ type RerunTriggerWorkflowRunAsyncRequest struct {
 }
 
 func (r *RerunTriggerWorkflowRunAsyncRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18178,8 +18178,8 @@ type RerunTriggerWorkflowRunAsyncResponse struct {
 }
 
 func (r *RerunTriggerWorkflowRunAsyncResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18357,7 +18357,7 @@ type ResourceGroupMetrics struct {
 	MaximumConcurrency *uint64 `json:"MaximumConcurrency,omitnil,omitempty" name:"MaximumConcurrency"`
 
 	// 资源组状态
-	// 
+	//
 	// - 0 --- 初始化中
 	// - 1 --- 运行中
 	// - 2 --- 运行异常
@@ -18388,7 +18388,7 @@ type ResourceGroupSpecification struct {
 
 type ResourceNumber struct {
 	// 增加/减少枚举
-	// 
+	//
 	// - ADD -- 增加
 	// - DELETE -- 减少
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
@@ -18415,7 +18415,7 @@ type ResourceStatus struct {
 
 type ResourceType struct {
 	// 资源组类型
-	// 
+	//
 	// - Schedule --- 调度资源组
 	// - Integration --- 集成资源组
 	// - DataService -- 数据服务资源组
@@ -18425,17 +18425,17 @@ type ResourceType struct {
 	Integration *IntegrationResource `json:"Integration,omitnil,omitempty" name:"Integration"`
 
 	// 调度资源组(集成、调度、数据服务资源组不可以同时购买)
-	// 
+	//
 	// - s_test(测试规格)
 	// - s_small(基础规格)
 	// - s_medium(普及规格)
 	// - s_large(专业规格)
-	// 
-	// 
+	//
+	//
 	Schedule *ResourceGroupSpecification `json:"Schedule,omitnil,omitempty" name:"Schedule"`
 
 	// 数据服务资源组(集成、调度、数据服务资源组不可以同时购买)
-	// 
+	//
 	// - ds_t(测试规格)
 	// - ds_s(基础规格)
 	// - ds_m(普及规格)
@@ -18453,13 +18453,13 @@ type RevokeDataSourceAuthorizationRequestParams struct {
 
 	// 回收项目下用户列表，格式为：项目id_用户id
 	// 与RevokeProjectId参数只能填一个
-	// 
+	//
 	RevokeUser *string `json:"RevokeUser,omitnil,omitempty" name:"RevokeUser"`
 }
 
 type RevokeDataSourceAuthorizationRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 数据源id
 	DataSourceId *string `json:"DataSourceId,omitnil,omitempty" name:"DataSourceId"`
 
@@ -18468,13 +18468,13 @@ type RevokeDataSourceAuthorizationRequest struct {
 
 	// 回收项目下用户列表，格式为：项目id_用户id
 	// 与RevokeProjectId参数只能填一个
-	// 
+	//
 	RevokeUser *string `json:"RevokeUser,omitnil,omitempty" name:"RevokeUser"`
 }
 
 func (r *RevokeDataSourceAuthorizationRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18508,8 +18508,8 @@ type RevokeDataSourceAuthorizationResponse struct {
 }
 
 func (r *RevokeDataSourceAuthorizationResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18535,7 +18535,7 @@ type RunSQLScriptRequestParams struct {
 
 type RunSQLScriptRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 脚本id
 	ScriptId *string `json:"ScriptId,omitnil,omitempty" name:"ScriptId"`
 
@@ -18550,8 +18550,8 @@ type RunSQLScriptRequest struct {
 }
 
 func (r *RunSQLScriptRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18586,8 +18586,8 @@ type RunSQLScriptResponse struct {
 }
 
 func (r *RunSQLScriptResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18627,7 +18627,7 @@ type SQLFolderNode struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsLeaf *bool `json:"IsLeaf,omitnil,omitempty" name:"IsLeaf"`
 
-	// 业务参数	
+	// 业务参数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Params *string `json:"Params,omitnil,omitempty" name:"Params"`
 
@@ -18643,7 +18643,7 @@ type SQLFolderNode struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateUserUin *string `json:"CreateUserUin,omitnil,omitempty" name:"CreateUserUin"`
 
-	// 当前用户对节点拥有的权限	
+	// 当前用户对节点拥有的权限
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodePermission *string `json:"NodePermission,omitnil,omitempty" name:"NodePermission"`
 
@@ -18777,7 +18777,7 @@ type SetSuccessTaskInstancesAsyncRequestParams struct {
 
 type SetSuccessTaskInstancesAsyncRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -18786,8 +18786,8 @@ type SetSuccessTaskInstancesAsyncRequest struct {
 }
 
 func (r *SetSuccessTaskInstancesAsyncRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18820,8 +18820,8 @@ type SetSuccessTaskInstancesAsyncResponse struct {
 }
 
 func (r *SetSuccessTaskInstancesAsyncResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18850,7 +18850,7 @@ type StartOpsTasksRequestParams struct {
 
 type StartOpsTasksRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -18862,8 +18862,8 @@ type StartOpsTasksRequest struct {
 }
 
 func (r *StartOpsTasksRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18897,8 +18897,8 @@ type StartOpsTasksResponse struct {
 }
 
 func (r *StartOpsTasksResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18926,7 +18926,7 @@ type StopOpsTasksAsyncRequestParams struct {
 
 type StopOpsTasksAsyncRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -18938,8 +18938,8 @@ type StopOpsTasksAsyncRequest struct {
 }
 
 func (r *StopOpsTasksAsyncRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18973,8 +18973,8 @@ type StopOpsTasksAsyncResponse struct {
 }
 
 func (r *StopOpsTasksAsyncResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18994,7 +18994,7 @@ type StopSQLScriptRunRequestParams struct {
 
 type StopSQLScriptRunRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 查询id
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
@@ -19003,8 +19003,8 @@ type StopSQLScriptRunRequest struct {
 }
 
 func (r *StopSQLScriptRunRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19037,8 +19037,8 @@ type StopSQLScriptRunResponse struct {
 }
 
 func (r *StopSQLScriptRunResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19061,7 +19061,7 @@ type SubmitTaskRequestParams struct {
 
 type SubmitTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -19073,8 +19073,8 @@ type SubmitTaskRequest struct {
 }
 
 func (r *SubmitTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19108,8 +19108,8 @@ type SubmitTaskResponse struct {
 }
 
 func (r *SubmitTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19142,7 +19142,7 @@ type SubmitTriggerTaskRequestParams struct {
 
 type SubmitTriggerTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -19154,8 +19154,8 @@ type SubmitTriggerTaskRequest struct {
 }
 
 func (r *SubmitTriggerTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19190,8 +19190,8 @@ type SubmitTriggerTaskResponse struct {
 }
 
 func (r *SubmitTriggerTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19279,7 +19279,7 @@ type TaskBaseAttribute struct {
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 任务类型ID：
-	// 
+	//
 	// * 21:JDBC SQL
 	// * 23:TDSQL-PostgreSQL
 	// * 26:OfflineSynchronization
@@ -19381,7 +19381,7 @@ type TaskBaseAttribute struct {
 	CreateUserUin *string `json:"CreateUserUin,omitnil,omitempty" name:"CreateUserUin"`
 
 	// 任务文件夹路径
-	// 
+	//
 	// 注意：
 	// - 路径上不要填写任务节点类型；例如，在 一个名为 wf01 的工作流，“通用” 分类下，现在想要在这个分类下的 tf_01 文件夹下，新建一个 shell 任务；则 填写 /tf_01 即可；
 	// - 如果 tf_01 文件夹不存在，则需要先创建这个文件夹（使用 CreateTaskFolder 接口）才能操作成功；
@@ -19597,9 +19597,9 @@ type TaskDependDto struct {
 	DelayTime *uint64 `json:"DelayTime,omitnil,omitempty" name:"DelayTime"`
 
 	// 周期类型：默认为 D
-	// 
-	// 支持的类型为 
-	// 
+	//
+	// 支持的类型为
+	//
 	// * O: 一次性
 	// * Y: 年
 	// * M: 月
@@ -19686,7 +19686,7 @@ type TaskFolderDetail struct {
 	WorkflowId *string `json:"WorkflowId,omitnil,omitempty" name:"WorkflowId"`
 
 	// 任务文件夹类型
-	// 
+	//
 	// | 任务文件夹类型取值 | 任务文件夹类型界面对应名称 |
 	// | ---------------- | ------------------------ |
 	// | ETL              | 集成任务                 |
@@ -19698,7 +19698,7 @@ type TaskFolderDetail struct {
 	// | GENERAL          | 通用                     |
 	// | TI_ONE           | TI-ONE机器学习           |
 	// | ACROSS_WORKFLOWS | 跨工作流                 |
-	// 
+	//
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskFolderType *string `json:"TaskFolderType,omitnil,omitempty" name:"TaskFolderType"`
 }
@@ -19775,7 +19775,7 @@ type TaskInstance struct {
 	InstanceState *string `json:"InstanceState,omitnil,omitempty" name:"InstanceState"`
 
 	// **实例类型**
-	// 
+	//
 	// - 0 表示补录类型
 	// - 1 表示周期实例
 	// - 2 表示非周期实例
@@ -19917,7 +19917,7 @@ type TaskInstanceDetail struct {
 	InstanceState *string `json:"InstanceState,omitnil,omitempty" name:"InstanceState"`
 
 	// **实例类型**
-	// 
+	//
 	// - 0 表示补录类型
 	// - 1 表示周期实例
 	// - 2 表示非周期实例
@@ -20154,7 +20154,7 @@ type TaskOpsInfo struct {
 
 type TaskSchedulerConfiguration struct {
 	// 周期类型：支持的类型为
-	// 
+	//
 	// ONEOFF_CYCLE: 一次性
 	// YEAR_CYCLE: 年
 	// MONTH_CYCLE: 月
@@ -20170,7 +20170,7 @@ type TaskSchedulerConfiguration struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScheduleTimeZone *string `json:"ScheduleTimeZone,omitnil,omitempty" name:"ScheduleTimeZone"`
 
-	// 0 2 3 1,L,2 * ?	
+	// 0 2 3 1,L,2 * ?
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CrontabExpression *string `json:"CrontabExpression,omitnil,omitempty" name:"CrontabExpression"`
 
@@ -20405,13 +20405,13 @@ type TechnicalMetadata struct {
 
 type TimeOutStrategyInfo struct {
 	// 超时告警超时配置：
-	// 
+	//
 	// 1.预计运行耗时超时，2.预计完成时间超时，3.预计等待调度耗时超时，4.预计周期内完成但实际未完成
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleType *int64 `json:"RuleType,omitnil,omitempty" name:"RuleType"`
 
 	// 超时值配置类型
-	// 
+	//
 	// 1--指定值
 	// 2--平均值
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -20494,7 +20494,7 @@ type TriggerTaskBaseAttribute struct {
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 任务类型ID：
-	// 
+	//
 	// - 26:OfflineSynchronization
 	// - 30:Python
 	// - 32:DLC SQL
@@ -20535,7 +20535,7 @@ type TriggerTaskBaseAttribute struct {
 	// 任务状态：
 	// * N: 新建
 	// * Y: 调度中
-	// 
+	//
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
@@ -20580,9 +20580,9 @@ type TriggerTaskBaseAttribute struct {
 	CreateUserUin *string `json:"CreateUserUin,omitnil,omitempty" name:"CreateUserUin"`
 
 	// 任务文件夹路径
-	// 
+	//
 	// 注意：
-	// 
+	//
 	// 路径上不要填写任务节点类型；例如，在 一个名为 wf01 的工作流，“通用” 分类下，现在想要在这个分类下的 tf_01 文件夹下，新建一个 shell 任务；则 填写 /tf_01 即可；
 	// 如果 tf_01 文件夹不存在，则需要先创建这个文件夹（使用 CreateTaskFolder 接口）才能操作成功；
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -20747,7 +20747,7 @@ type TriggerTaskDependDto struct {
 	// 任务状态:
 	// - Y: 运行
 	// - N: 新建
-	// 
+	//
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
@@ -21472,7 +21472,7 @@ type UpdateCodeFileRequestParams struct {
 
 type UpdateCodeFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -21487,8 +21487,8 @@ type UpdateCodeFileRequest struct {
 }
 
 func (r *UpdateCodeFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21523,8 +21523,8 @@ type UpdateCodeFileResponse struct {
 }
 
 func (r *UpdateCodeFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21547,7 +21547,7 @@ type UpdateCodeFolderRequestParams struct {
 
 type UpdateCodeFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -21559,8 +21559,8 @@ type UpdateCodeFolderRequest struct {
 }
 
 func (r *UpdateCodeFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21594,8 +21594,8 @@ type UpdateCodeFolderResponse struct {
 }
 
 func (r *UpdateCodeFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21613,12 +21613,12 @@ type UpdateDataSourceRequestParams struct {
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 数据源的配置信息，以JSON KV存储，根据每个数据源类型不同，而KV存储信息不同
-	// 
-	// > deployType: 
-	// CONNSTR_PUBLICDB(公网实例) 
+	//
+	// > deployType:
+	// CONNSTR_PUBLICDB(公网实例)
 	// CONNSTR_CVMDB(自建实例)
 	// INSTANCE(云实例)
-	// 
+	//
 	// ```
 	// mysql: 自建实例
 	// {
@@ -21640,7 +21640,7 @@ type UpdateDataSourceRequestParams struct {
 	//     "deployType": "INSTANCE",
 	//     "type": "TENCENT_MYSQL"
 	// }
-	// sql_server: 
+	// sql_server:
 	// {
 	//     "deployType": "CONNSTR_PUBLICDB",
 	//     "url": "jdbc:sqlserver://1.1.1.1:223;DatabaseName=database",
@@ -21661,7 +21661,7 @@ type UpdateDataSourceRequestParams struct {
 	//     "redisType": "NO_ACCOUT",
 	//     "type": "REDIS"
 	// }
-	// oracle: 
+	// oracle:
 	// {
 	//     "deployType": "CONNSTR_CVMDB",
 	//     "url": "jdbc:oracle:thin:@1.1.1.1:1521:prod",
@@ -21714,7 +21714,7 @@ type UpdateDataSourceRequestParams struct {
 	//     "principal": "aaaa",
 	//     "serviceName": "kafka"
 	// }
-	// 
+	//
 	// cos:
 	// {
 	//     "region": "ap-shanghai",
@@ -21724,7 +21724,7 @@ type UpdateDataSourceRequestParams struct {
 	//     "bucket": "aaa",
 	//     "type": "COS"
 	// }
-	// 
+	//
 	// ```
 	ProdConProperties *string `json:"ProdConProperties,omitnil,omitempty" name:"ProdConProperties"`
 
@@ -21746,7 +21746,7 @@ type UpdateDataSourceRequestParams struct {
 
 type UpdateDataSourceRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 数据源id
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
@@ -21754,12 +21754,12 @@ type UpdateDataSourceRequest struct {
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 数据源的配置信息，以JSON KV存储，根据每个数据源类型不同，而KV存储信息不同
-	// 
-	// > deployType: 
-	// CONNSTR_PUBLICDB(公网实例) 
+	//
+	// > deployType:
+	// CONNSTR_PUBLICDB(公网实例)
 	// CONNSTR_CVMDB(自建实例)
 	// INSTANCE(云实例)
-	// 
+	//
 	// ```
 	// mysql: 自建实例
 	// {
@@ -21781,7 +21781,7 @@ type UpdateDataSourceRequest struct {
 	//     "deployType": "INSTANCE",
 	//     "type": "TENCENT_MYSQL"
 	// }
-	// sql_server: 
+	// sql_server:
 	// {
 	//     "deployType": "CONNSTR_PUBLICDB",
 	//     "url": "jdbc:sqlserver://1.1.1.1:223;DatabaseName=database",
@@ -21802,7 +21802,7 @@ type UpdateDataSourceRequest struct {
 	//     "redisType": "NO_ACCOUT",
 	//     "type": "REDIS"
 	// }
-	// oracle: 
+	// oracle:
 	// {
 	//     "deployType": "CONNSTR_CVMDB",
 	//     "url": "jdbc:oracle:thin:@1.1.1.1:1521:prod",
@@ -21855,7 +21855,7 @@ type UpdateDataSourceRequest struct {
 	//     "principal": "aaaa",
 	//     "serviceName": "kafka"
 	// }
-	// 
+	//
 	// cos:
 	// {
 	//     "region": "ap-shanghai",
@@ -21865,7 +21865,7 @@ type UpdateDataSourceRequest struct {
 	//     "bucket": "aaa",
 	//     "type": "COS"
 	// }
-	// 
+	//
 	// ```
 	ProdConProperties *string `json:"ProdConProperties,omitnil,omitempty" name:"ProdConProperties"`
 
@@ -21886,8 +21886,8 @@ type UpdateDataSourceRequest struct {
 }
 
 func (r *UpdateDataSourceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21926,8 +21926,8 @@ type UpdateDataSourceResponse struct {
 }
 
 func (r *UpdateDataSourceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21952,8 +21952,8 @@ type UpdateOpsAlarmRuleRequestParams struct {
 	// 告警规则新的规则名称
 	AlarmRuleName *string `json:"AlarmRuleName,omitnil,omitempty" name:"AlarmRuleName"`
 
-	// 监控对象类型, 
-	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务） 
+	// 监控对象类型,
+	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务）
 	// 项目维度监控： 项目整体任务波动告警， 7：项目波动监控告警
 	MonitorObjectType *int64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
 
@@ -21981,7 +21981,7 @@ type UpdateOpsAlarmRuleRequestParams struct {
 
 type UpdateOpsAlarmRuleRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -21991,8 +21991,8 @@ type UpdateOpsAlarmRuleRequest struct {
 	// 告警规则新的规则名称
 	AlarmRuleName *string `json:"AlarmRuleName,omitnil,omitempty" name:"AlarmRuleName"`
 
-	// 监控对象类型, 
-	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务） 
+	// 监控对象类型,
+	// 任务维度监控： 可按照任务/工作流/项目来配置：1.任务、2.工作流、3.项目（默认为1.任务）
 	// 项目维度监控： 项目整体任务波动告警， 7：项目波动监控告警
 	MonitorObjectType *int64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
 
@@ -22019,8 +22019,8 @@ type UpdateOpsAlarmRuleRequest struct {
 }
 
 func (r *UpdateOpsAlarmRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22063,8 +22063,8 @@ type UpdateOpsAlarmRuleResponse struct {
 }
 
 func (r *UpdateOpsAlarmRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22087,7 +22087,7 @@ type UpdateOpsTasksOwnerRequestParams struct {
 
 type UpdateOpsTasksOwnerRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 所属项目Id
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22099,8 +22099,8 @@ type UpdateOpsTasksOwnerRequest struct {
 }
 
 func (r *UpdateOpsTasksOwnerRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22134,8 +22134,8 @@ type UpdateOpsTasksOwnerResponse struct {
 }
 
 func (r *UpdateOpsTasksOwnerResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22158,7 +22158,7 @@ type UpdateOpsTriggerTasksOwnerRequestParams struct {
 
 type UpdateOpsTriggerTasksOwnerRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22170,8 +22170,8 @@ type UpdateOpsTriggerTasksOwnerRequest struct {
 }
 
 func (r *UpdateOpsTriggerTasksOwnerRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22205,8 +22205,8 @@ type UpdateOpsTriggerTasksOwnerResponse struct {
 }
 
 func (r *UpdateOpsTriggerTasksOwnerResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22232,7 +22232,7 @@ type UpdateProjectRequestParams struct {
 
 type UpdateProjectRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 目标修改的项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22247,8 +22247,8 @@ type UpdateProjectRequest struct {
 }
 
 func (r *UpdateProjectRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22280,8 +22280,8 @@ type UpdateProjectResponse struct {
 }
 
 func (r *UpdateProjectResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22300,7 +22300,7 @@ type UpdateResourceFileRequestParams struct {
 
 	// - 上传文件及手填两种方式只能选择其一，如果两者均提供，取值顺序为文件>手填值
 	// -  手填值必须是存在的cos路径, parentFolderPath为父文件夹路径, name为文件名, 手填值取值示例:
-	//      /datastudio/resource/projectId/parentFolderPath/name 
+	//      /datastudio/resource/projectId/parentFolderPath/name
 	ResourceFile *string `json:"ResourceFile,omitnil,omitempty" name:"ResourceFile"`
 
 	// 资源名称, 尽可能和文件名保持一致
@@ -22315,7 +22315,7 @@ type UpdateResourceFileRequestParams struct {
 
 type UpdateResourceFileRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22324,7 +22324,7 @@ type UpdateResourceFileRequest struct {
 
 	// - 上传文件及手填两种方式只能选择其一，如果两者均提供，取值顺序为文件>手填值
 	// -  手填值必须是存在的cos路径, parentFolderPath为父文件夹路径, name为文件名, 手填值取值示例:
-	//      /datastudio/resource/projectId/parentFolderPath/name 
+	//      /datastudio/resource/projectId/parentFolderPath/name
 	ResourceFile *string `json:"ResourceFile,omitnil,omitempty" name:"ResourceFile"`
 
 	// 资源名称, 尽可能和文件名保持一致
@@ -22338,8 +22338,8 @@ type UpdateResourceFileRequest struct {
 }
 
 func (r *UpdateResourceFileRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22376,8 +22376,8 @@ type UpdateResourceFileResponse struct {
 }
 
 func (r *UpdateResourceFileResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22405,7 +22405,7 @@ type UpdateResourceFolderRequestParams struct {
 
 type UpdateResourceFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22417,8 +22417,8 @@ type UpdateResourceFolderRequest struct {
 }
 
 func (r *UpdateResourceFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22452,8 +22452,8 @@ type UpdateResourceFolderResponse struct {
 }
 
 func (r *UpdateResourceFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22468,20 +22468,20 @@ type UpdateResourceGroupRequestParams struct {
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// **变更配置(变配、续费、修改资源包数量 不能同时操作), 变配无法修改资源组类型**
-	// 
-	// 实时集成资源组  
+	//
+	// 实时集成资源组
 	// - i32c(实时数据同步-16C64G)
-	// 
+	//
 	// 离线集成资源组
 	// - integrated(离线数据同步-8C16G)
 	// - i16(离线数据同步-8C32G)
-	// 
+	//
 	// 调度资源组
 	// - s_test(测试规格)
 	// - s_small(基础规格)
 	// - s_medium(普及规格)
 	// - s_large(专业规格)
-	// 
+	//
 	// 数据服务资源组
 	// - ds_t(测试规格)
 	// - ds_s(基础规格)
@@ -22501,25 +22501,25 @@ type UpdateResourceGroupRequestParams struct {
 
 type UpdateResourceGroupRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 资源组id
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// **变更配置(变配、续费、修改资源包数量 不能同时操作), 变配无法修改资源组类型**
-	// 
-	// 实时集成资源组  
+	//
+	// 实时集成资源组
 	// - i32c(实时数据同步-16C64G)
-	// 
+	//
 	// 离线集成资源组
 	// - integrated(离线数据同步-8C16G)
 	// - i16(离线数据同步-8C32G)
-	// 
+	//
 	// 调度资源组
 	// - s_test(测试规格)
 	// - s_small(基础规格)
 	// - s_medium(普及规格)
 	// - s_large(专业规格)
-	// 
+	//
 	// 数据服务资源组
 	// - ds_t(测试规格)
 	// - ds_s(基础规格)
@@ -22538,8 +22538,8 @@ type UpdateResourceGroupRequest struct {
 }
 
 func (r *UpdateResourceGroupRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22575,8 +22575,8 @@ type UpdateResourceGroupResponse struct {
 }
 
 func (r *UpdateResourceGroupResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22602,7 +22602,7 @@ type UpdateSQLFolderRequestParams struct {
 
 type UpdateSQLFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 文件夹Id
 	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
@@ -22617,8 +22617,8 @@ type UpdateSQLFolderRequest struct {
 }
 
 func (r *UpdateSQLFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22654,8 +22654,8 @@ type UpdateSQLFolderResponse struct {
 }
 
 func (r *UpdateSQLFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22681,7 +22681,7 @@ type UpdateSQLScriptRequestParams struct {
 
 type UpdateSQLScriptRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 探索脚本Id
 	ScriptId *string `json:"ScriptId,omitnil,omitempty" name:"ScriptId"`
 
@@ -22696,8 +22696,8 @@ type UpdateSQLScriptRequest struct {
 }
 
 func (r *UpdateSQLScriptRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22733,8 +22733,8 @@ type UpdateSQLScriptResponse struct {
 }
 
 func (r *UpdateSQLScriptResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22803,7 +22803,7 @@ type UpdateTaskFolderRequestParams struct {
 
 type UpdateTaskFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22818,8 +22818,8 @@ type UpdateTaskFolderRequest struct {
 }
 
 func (r *UpdateTaskFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22854,8 +22854,8 @@ type UpdateTaskFolderResponse struct {
 }
 
 func (r *UpdateTaskFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22897,7 +22897,7 @@ type UpdateTaskPartiallyRequestParams struct {
 
 type UpdateTaskPartiallyRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22912,8 +22912,8 @@ type UpdateTaskPartiallyRequest struct {
 }
 
 func (r *UpdateTaskPartiallyRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22949,8 +22949,8 @@ type UpdateTaskPartiallyResponse struct {
 }
 
 func (r *UpdateTaskPartiallyResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22973,7 +22973,7 @@ type UpdateTaskRequestParams struct {
 
 type UpdateTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -22985,8 +22985,8 @@ type UpdateTaskRequest struct {
 }
 
 func (r *UpdateTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23020,8 +23020,8 @@ type UpdateTaskResponse struct {
 }
 
 func (r *UpdateTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23107,7 +23107,7 @@ type UpdateTriggerTaskPartiallyRequestParams struct {
 
 type UpdateTriggerTaskPartiallyRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -23122,8 +23122,8 @@ type UpdateTriggerTaskPartiallyRequest struct {
 }
 
 func (r *UpdateTriggerTaskPartiallyRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23159,8 +23159,8 @@ type UpdateTriggerTaskPartiallyResponse struct {
 }
 
 func (r *UpdateTriggerTaskPartiallyResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23183,7 +23183,7 @@ type UpdateTriggerTaskRequestParams struct {
 
 type UpdateTriggerTaskRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -23195,8 +23195,8 @@ type UpdateTriggerTaskRequest struct {
 }
 
 func (r *UpdateTriggerTaskRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23231,8 +23231,8 @@ type UpdateTriggerTaskResponse struct {
 }
 
 func (r *UpdateTriggerTaskResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23280,14 +23280,14 @@ type UpdateTriggerWorkflowPartiallyRequestParams struct {
 
 	// 删除字段内容，采用属性路径的形式标识，删除的值以":"分割，多个值以","分割
 	//  // 删除调度参数中 ParamKey 为 aa,bb 的属性 "WorkflowParams:aa,bb"
-	//  // 删除配置的 TriggerId 为 da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0 的调度配置"TriggerWorkflowSchedulerConfigurations :da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0" 
-	// // 删除spark sql通用参数 "GeneralTaskParams: SPARK_SQL" 
+	//  // 删除配置的 TriggerId 为 da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0 的调度配置"TriggerWorkflowSchedulerConfigurations :da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0"
+	// // 删除spark sql通用参数 "GeneralTaskParams: SPARK_SQL"
 	FieldToRemoveList []*string `json:"FieldToRemoveList,omitnil,omitempty" name:"FieldToRemoveList"`
 }
 
 type UpdateTriggerWorkflowPartiallyRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -23299,14 +23299,14 @@ type UpdateTriggerWorkflowPartiallyRequest struct {
 
 	// 删除字段内容，采用属性路径的形式标识，删除的值以":"分割，多个值以","分割
 	//  // 删除调度参数中 ParamKey 为 aa,bb 的属性 "WorkflowParams:aa,bb"
-	//  // 删除配置的 TriggerId 为 da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0 的调度配置"TriggerWorkflowSchedulerConfigurations :da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0" 
-	// // 删除spark sql通用参数 "GeneralTaskParams: SPARK_SQL" 
+	//  // 删除配置的 TriggerId 为 da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0 的调度配置"TriggerWorkflowSchedulerConfigurations :da46d950-d5ca-4cfb-a5a9-f3c2eeea1bf0"
+	// // 删除spark sql通用参数 "GeneralTaskParams: SPARK_SQL"
 	FieldToRemoveList []*string `json:"FieldToRemoveList,omitnil,omitempty" name:"FieldToRemoveList"`
 }
 
 func (r *UpdateTriggerWorkflowPartiallyRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23341,8 +23341,8 @@ type UpdateTriggerWorkflowPartiallyResponse struct {
 }
 
 func (r *UpdateTriggerWorkflowPartiallyResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23386,7 +23386,7 @@ type UpdateTriggerWorkflowRequestParams struct {
 
 type UpdateTriggerWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -23419,8 +23419,8 @@ type UpdateTriggerWorkflowRequest struct {
 }
 
 func (r *UpdateTriggerWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23461,8 +23461,8 @@ type UpdateTriggerWorkflowResponse struct {
 }
 
 func (r *UpdateTriggerWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23491,7 +23491,7 @@ type UpdateWorkflowFolderRequestParams struct {
 
 type UpdateWorkflowFolderRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -23503,8 +23503,8 @@ type UpdateWorkflowFolderRequest struct {
 }
 
 func (r *UpdateWorkflowFolderRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23538,8 +23538,8 @@ type UpdateWorkflowFolderResponse struct {
 }
 
 func (r *UpdateWorkflowFolderResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23580,7 +23580,7 @@ type UpdateWorkflowRequestParams struct {
 
 type UpdateWorkflowRequest struct {
 	*tchttp.BaseRequest
-	
+
 	// 项目ID
 	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
@@ -23610,8 +23610,8 @@ type UpdateWorkflowRequest struct {
 }
 
 func (r *UpdateWorkflowRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23651,8 +23651,8 @@ type UpdateWorkflowResponse struct {
 }
 
 func (r *UpdateWorkflowResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
+	b, _ := json.Marshal(r)
+	return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23957,7 +23957,7 @@ type WorkflowSchedulerConfigurationInfo struct {
 	// * RANGE_MINUTE
 	// * WEEK
 	// * YEAR
-	// 
+	//
 	// https://capi.woa.com/object/detail?product=wedata&env=api_dev&version=2025-08-06&name=WorkflowSchedulerConfigurationInfo
 	MainCyclicConfig *string `json:"MainCyclicConfig,omitnil,omitempty" name:"MainCyclicConfig"`
 
@@ -23986,7 +23986,7 @@ type WorkflowSchedulerConfigurationInfo struct {
 	// * PREVIOUS_WEEK
 	// * PREVIOUS_WEEKEND
 	// * RECENT_DATE
-	// 
+	//
 	// https://capi.woa.com/object/detail?product=wedata&env=api_dev&version=2025-08-06&name=WorkflowSchedulerConfigurationInfo
 	SubordinateCyclicConfig *string `json:"SubordinateCyclicConfig,omitnil,omitempty" name:"SubordinateCyclicConfig"`
 
@@ -24008,7 +24008,7 @@ type WorkflowTriggerConfig struct {
 	// - 定时触发：TIME_TRIGGER
 	// - 持续运行：CONTINUE_RUN
 	// - 文件到达：FILE_ARRIVAL
-	// 
+	//
 	// 注意：
 	// - TIME_TRIGGER 和 CONTINUE_RUN 模式下，SchedulerStatus、SchedulerTimeZone、StartTime、EndTime、ConfigMode、CycleType、CrontabExpression 必填；
 	// - FILE_ARRIVAL 模式下，FileArrivalPath、TriggerMinimumIntervalSecond、TriggerWaitTimeSecond 必填；
