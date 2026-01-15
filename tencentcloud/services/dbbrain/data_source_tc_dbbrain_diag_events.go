@@ -17,90 +17,96 @@ func DataSourceTencentCloudDbbrainDiagEvents() *schema.Resource {
 		Read: dataSourceTencentCloudDbbrainDiagEventsRead,
 		Schema: map[string]*schema.Schema{
 			"instance_ids": {
-				Optional: true,
 				Type:     schema.TypeSet,
+				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "instance id list.",
+				Description: "Instance ID list.",
+			},
+
+			"product": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Service product type; supported values include: `mysql` - Cloud Database MySQL, `redis` - Cloud Database Redis, `mariadb` - MariaDB database. The default is `mysql`.",
 			},
 
 			"start_time": {
-				Required:    true,
 				Type:        schema.TypeString,
-				Description: "start time.",
+				Required:    true,
+				Description: "Start time.",
 			},
 
 			"end_time": {
-				Required:    true,
 				Type:        schema.TypeString,
-				Description: "end time.",
+				Required:    true,
+				Description: "End time.",
 			},
 
 			"severities": {
-				Optional: true,
 				Type:     schema.TypeSet,
+				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
-				Description: "severity list, optional value is 1-fatal, 2-severity, 3-warning, 4-tips, 5-health.",
+				Description: "Severity list, optional value is 1-fatal, 2-severity, 3-warning, 4-tips, 5-health.",
 			},
 
 			"list": {
-				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "diag event list.",
+				Computed:    true,
+				Description: "Diag event list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"diag_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "diag type.",
+							Description: "Diag type.",
 						},
 						"end_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "end time.",
+							Description: "End time.",
 						},
 						"start_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "start time.",
+							Description: "Start time.",
 						},
 						"event_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "event id.",
+							Description: "Event ID.",
 						},
 						"severity": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "severity.",
+							Description: "Severity.",
 						},
 						"outline": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "outline.",
+							Description: "Outline.",
 						},
 						"diag_item": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "diag item.",
+							Description: "Diag item.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance id.",
+							Description: "Instance ID.",
 						},
 						"metric": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "metric.",
+							Description: "Metric.",
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region.",
+							Description: "Region.",
 						},
 					},
 				},
@@ -119,14 +125,20 @@ func dataSourceTencentCloudDbbrainDiagEventsRead(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("data_source.tencentcloud_dbbrain_diag_events.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DbbrainService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_ids"); ok {
 		instanceIdsSet := v.(*schema.Set).List()
 		paramMap["instance_ids"] = helper.InterfacesStringsPoint(instanceIdsSet)
+	}
+
+	if v, ok := d.GetOk("product"); ok {
+		paramMap["product"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -144,32 +156,29 @@ func dataSourceTencentCloudDbbrainDiagEventsRead(d *schema.ResourceData, meta in
 			severities := severitiesSet[i].(int)
 			tmpSet = append(tmpSet, helper.IntInt64(severities))
 		}
+
 		paramMap["severities"] = tmpSet
 	}
 
-	service := DbbrainService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var items []*dbbrain.DiagHistoryEventItem
-
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeDbbrainDiagEventsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		items = result
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(items))
 	tmpList := make([]map[string]interface{}, 0, len(items))
-
 	if items != nil {
 		for _, diagHistoryEventItem := range items {
 			diagHistoryEventItemMap := map[string]interface{}{}
-
 			if diagHistoryEventItem.DiagType != nil {
 				diagHistoryEventItemMap["diag_type"] = diagHistoryEventItem.DiagType
 			}
@@ -210,18 +219,19 @@ func dataSourceTencentCloudDbbrainDiagEventsRead(d *schema.ResourceData, meta in
 				diagHistoryEventItemMap["region"] = diagHistoryEventItem.Region
 			}
 
-			ids = append(ids, helper.Int64ToStr(*diagHistoryEventItem.EventId))
 			tmpList = append(tmpList, diagHistoryEventItemMap)
 		}
-		d.SetId(helper.DataResourceIdsHash(ids))
+
 		_ = d.Set("list", tmpList)
 	}
 
+	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
+
 	return nil
 }
