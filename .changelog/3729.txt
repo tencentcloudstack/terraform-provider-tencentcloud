@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_wedata_workflow_max_permission
+```
+
+```release-note:new-data-source
+tencentcloud_wedata_code_max_permission
+```
+
+```release-note:new-resource
+tencentcloud_wedata_workflow_permissions
+```
+
+```release-note:new-resource
+tencentcloud_wedata_data_backfill_plan
+```

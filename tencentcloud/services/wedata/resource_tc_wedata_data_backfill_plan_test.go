@@ -19,7 +19,7 @@ func TestAccTencentCloudWedataDataBackfillPlanOperationResource_basic(t *testing
 			{
 				Config: testAccWedataDataBackfillPlanOperation,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_data_backfill_plan_operation.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_wedata_data_backfill_plan.example", "id"),
 				),
 			},
 		},
@@ -27,17 +27,25 @@ func TestAccTencentCloudWedataDataBackfillPlanOperationResource_basic(t *testing
 }
 
 const testAccWedataDataBackfillPlanOperation = `
-resource "tencentcloud_wedata_data_backfill_plan_operation" "example" {
-  project_id = "20241107221758402"
+resource "tencentcloud_wedata_data_backfill_plan" "example" {
+  project_id = "2430455587205529600"
   task_ids = [
-    "20250827115253729"
+    "20250625105147756"
   ]
 
   data_backfill_range_list {
-    start_date = "2025-09-02"
-    end_date   = "2025-09-02"
+    start_date           = "2026-01-14"
+    end_date             = "2026-01-14"
+    execution_start_time = "00:01"
+    execution_end_time   = "23:59"
   }
 
-  skip_event_listening = true
+  time_zone                         = "UTC+8"
+  data_backfill_plan_name           = "tf-example"
+  check_parent_type                 = "NONE"
+  skip_event_listening              = true
+  redefine_self_workflow_dependency = "no"
+  redefine_parallel_num             = 2
+  data_time_order                   = "NORMAL"
 }
 `

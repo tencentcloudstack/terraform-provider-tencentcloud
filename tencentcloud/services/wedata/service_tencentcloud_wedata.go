@@ -4535,3 +4535,332 @@ func (me *WedataService) DescribeWedataQualityRuleTemplatesByFilter(ctx context.
 
 	return
 }
+
+func (me *WedataService) DescribeWedataAuthorizeDataSourceById(ctx context.Context, dataSourceId string) (ret *wedatav20250806.AuthInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewDescribeDataSourceAuthorityRequest()
+	response := wedatav20250806.NewDescribeDataSourceAuthorityResponse()
+	request.Id = helper.StrToUint64Point(dataSourceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().DescribeDataSourceAuthority(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe instance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataWorkflowPermissionsById(ctx context.Context, projectId, entityId, entityType string) (ret []*wedatav20250806.WorkflowPermission, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListWorkflowPermissionsRequest()
+	response := wedatav20250806.NewListWorkflowPermissionsResponse()
+	request.ProjectId = &projectId
+	request.EntityId = &entityId
+	request.EntityType = &entityType
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		pageNum  uint64 = 1
+		pageSize uint64 = 100
+	)
+
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWedataV20250806Client().ListWorkflowPermissions(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe workflow permissions failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataCodePermissionsById(ctx context.Context, projectId string) (ret []*wedatav20250806.ExploreFilePrivilegeItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListCodePermissionsRequest()
+	response := wedatav20250806.NewListCodePermissionsResponse()
+	request.ProjectId = &projectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		pageNum  int64 = 1
+		pageSize int64 = 100
+	)
+
+	for {
+		request.PageNumber = &pageNum
+		request.PageSize = &pageSize
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseWedataV20250806Client().ListCodePermissions(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe code permissions failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response.Response.Data == nil || response.Response.Data.Rows == nil || len(response.Response.Data.Rows) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data.Rows...)
+		if len(response.Response.Data.Rows) < int(pageSize) {
+			break
+		}
+
+		pageNum += pageSize
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataWorkflowMaxPermissionByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.WorkflowMaxPermission, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = wedatav20250806.NewGetMyWorkflowMaxPermissionRequest()
+		response = wedatav20250806.NewGetMyWorkflowMaxPermissionResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "EntityId" {
+			request.EntityId = v.(*string)
+		}
+		if k == "EntityType" {
+			request.EntityType = v.(*string)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetMyWorkflowMaxPermission(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe workflow max permission failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataCodeMaxPermissionByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.CodeStudioMaxPermission, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = wedatav20250806.NewGetMyCodeMaxPermissionRequest()
+		response = wedatav20250806.NewGetMyCodeMaxPermissionResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "ResourceId" {
+			request.ResourceId = v.(*string)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetMyCodeMaxPermission(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe code max permission failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataDataBackfillPlanById(ctx context.Context, projectId, dataBackfillPlanId string) (ret *wedatav20250806.DataBackfill, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = wedatav20250806.NewGetDataBackfillPlanRequest()
+		response = wedatav20250806.NewGetDataBackfillPlanResponse()
+	)
+
+	request.ProjectId = &projectId
+	request.DataBackfillPlanId = &dataBackfillPlanId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWedataV20250806Client().GetDataBackfillPlan(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe data back fill plan failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) WedataOpsAsyncJobRefresh(ctx context.Context, projectId string, asyncId string) resource.StateRefreshFunc {
+	var req *wedatav20250806.GetOpsAsyncJobRequest
+	return func() (interface{}, string, error) {
+		meta := tccommon.ProviderMetaFromContext(ctx)
+		if meta == nil {
+			return nil, "", fmt.Errorf("resource data can not be nil")
+		}
+
+		if req == nil {
+			d := tccommon.ResourceDataFromContext(ctx)
+			if d == nil {
+				return nil, "", fmt.Errorf("resource data can not be nil")
+			}
+
+			req = wedatav20250806.NewGetOpsAsyncJobRequest()
+			req.ProjectId = helper.String(projectId)
+			req.AsyncId = helper.String(asyncId)
+		}
+
+		resp, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().GetOpsAsyncJobWithContext(ctx, req)
+		if err != nil {
+			return nil, "", err
+		}
+
+		if resp == nil || resp.Response == nil {
+			return nil, "", nil
+		}
+
+		state := fmt.Sprintf("%v", *resp.Response.Data.Status)
+		return resp.Response, state, nil
+	}
+}
