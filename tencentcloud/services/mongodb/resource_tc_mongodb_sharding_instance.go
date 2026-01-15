@@ -30,11 +30,10 @@ func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			Description:  "Number of sharding.",
 		},
 		"nodes_per_shard": {
-			Type:         schema.TypeInt,
-			Required:     true,
-			ForceNew:     true,
-			ValidateFunc: tccommon.ValidateIntegerInRange(3, 5),
-			Description:  "Number of nodes per shard, at least 3(one master and two slaves).",
+			Type:        schema.TypeInt,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Number of nodes per shard, at least 3(one master and two slaves). Allow value[3, 5, 7].",
 		},
 		"availability_zone_list": {
 			Type:     schema.TypeList,

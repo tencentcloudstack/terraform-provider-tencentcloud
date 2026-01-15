@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cdn_domain: status_code and response_header support import.
+```

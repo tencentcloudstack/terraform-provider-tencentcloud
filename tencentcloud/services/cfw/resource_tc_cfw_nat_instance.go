@@ -130,6 +130,13 @@ func ResourceTencentCloudCfwNatInstance() *schema.Resource {
 			//		},
 			//	},
 			//},
+
+			// computed
+			"nat_instance_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Nat instance ID.",
+			},
 		},
 	}
 }
@@ -476,6 +483,10 @@ func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interfa
 	//
 	//	_ = d.Set("fw_cidr_info", []interface{}{fwCidrInfoMap})
 	//}
+
+	if natInstance.NatinsId != nil {
+		_ = d.Set("nat_instance_id", natInstance.NatinsId)
+	}
 
 	return nil
 }

@@ -755,6 +755,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Status code cache configurations.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -995,6 +996,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Response header configurations.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -2793,7 +2795,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 		_ = helper.SetMapInterfaces(d, "ip_freq_limit", dMap)
 	}
-	if ok := checkCdnInfoWritable(d, "status_code_cache", dc.StatusCodeCache); ok {
+	if dc.StatusCodeCache != nil {
 		dMap := map[string]interface{}{
 			"switch": dc.StatusCodeCache.Switch,
 		}
@@ -2885,7 +2887,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 		_ = helper.SetMapInterfaces(d, "error_page", dMap)
 	}
-	if ok := checkCdnInfoWritable(d, "response_header", dc.ResponseHeader); ok {
+	if dc.ResponseHeader != nil {
 		dMap := map[string]interface{}{
 			"switch": dc.ResponseHeader.Switch,
 		}

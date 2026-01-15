@@ -134,27 +134,28 @@ const (
 	PROVIDER_COS_DOMAIN     = "TENCENTCLOUD_COS_DOMAIN"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	PROVIDER_ASSUME_ROLE_ARN                    = "TENCENTCLOUD_ASSUME_ROLE_ARN"
-	PROVIDER_ASSUME_ROLE_SESSION_NAME           = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
-	PROVIDER_ASSUME_ROLE_SESSION_DURATION       = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
-	PROVIDER_ASSUME_ROLE_EXTERNAL_ID            = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
-	PROVIDER_ASSUME_ROLE_SOURCE_IDENTITY        = "TENCENTCLOUD_ASSUME_ROLE_SOURCE_IDENTITY"
-	PROVIDER_ASSUME_ROLE_SERIAL_NUMBER          = "TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER"
-	PROVIDER_ASSUME_ROLE_TOKEN_CODE             = "TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE"
-	PROVIDER_ASSUME_ROLE_SAML_ASSERTION         = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
-	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN          = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
-	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN     = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
-	PROVIDER_ASSUME_ROLE_PROVIDER_ID            = "TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID"
-	PROVIDER_MFA_CERTIFICATION_SERIAL_NUMBER    = "TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER"
-	PROVIDER_MFA_CERTIFICATION_TOKEN_CODE       = "TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE"
-	PROVIDER_MFA_CERTIFICATION_DURATION_SECONDS = "TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS"
-	PROVIDER_SHARED_CREDENTIALS_DIR             = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
-	PROVIDER_PROFILE                            = "TENCENTCLOUD_PROFILE"
-	PROVIDER_CAM_ROLE_NAME                      = "TENCENTCLOUD_CAM_ROLE_NAME"
-	POD_OIDC_TKE_REGION                         = "TKE_REGION"
-	POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE        = "TKE_WEB_IDENTITY_TOKEN_FILE"
-	POD_OIDC_TKE_PROVIDER_ID                    = "TKE_PROVIDER_ID"
-	POD_OIDC_TKE_ROLE_ARN                       = "TKE_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_ARN                     = "TENCENTCLOUD_ASSUME_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_SESSION_NAME            = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
+	PROVIDER_ASSUME_ROLE_SESSION_DURATION        = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	PROVIDER_ASSUME_ROLE_EXTERNAL_ID             = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
+	PROVIDER_ASSUME_ROLE_SOURCE_IDENTITY         = "TENCENTCLOUD_ASSUME_ROLE_SOURCE_IDENTITY"
+	PROVIDER_ASSUME_ROLE_SERIAL_NUMBER           = "TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER"
+	PROVIDER_ASSUME_ROLE_TOKEN_CODE              = "TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE"
+	PROVIDER_ASSUME_ROLE_SAML_ASSERTION          = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
+	PROVIDER_ASSUME_ROLE_PRINCIPAL_ARN           = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
+	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN      = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN"
+	PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE = "TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE"
+	PROVIDER_ASSUME_ROLE_PROVIDER_ID             = "TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID"
+	PROVIDER_MFA_CERTIFICATION_SERIAL_NUMBER     = "TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER"
+	PROVIDER_MFA_CERTIFICATION_TOKEN_CODE        = "TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE"
+	PROVIDER_MFA_CERTIFICATION_DURATION_SECONDS  = "TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS"
+	PROVIDER_SHARED_CREDENTIALS_DIR              = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
+	PROVIDER_PROFILE                             = "TENCENTCLOUD_PROFILE"
+	PROVIDER_CAM_ROLE_NAME                       = "TENCENTCLOUD_CAM_ROLE_NAME"
+	POD_OIDC_TKE_REGION                          = "TKE_REGION"
+	POD_OIDC_TKE_WEB_IDENTITY_TOKEN_FILE         = "TKE_WEB_IDENTITY_TOKEN_FILE"
+	POD_OIDC_TKE_PROVIDER_ID                     = "TKE_PROVIDER_ID"
+	POD_OIDC_TKE_ROLE_ARN                        = "TKE_ROLE_ARN"
 )
 
 const (
@@ -358,9 +359,15 @@ func Provider() *schema.Provider {
 						},
 						"web_identity_token": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN, nil),
-							Description: "OIDC token issued by IdP. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`.",
+							Description: "OIDC token issued by IdP. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`. One of `web_identity_token` or `web_identity_token_file` is required.",
+						},
+						"web_identity_token_file": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE, nil),
+							Description: "File containing a web identity token from an OpenID Connect (OIDC) or OAuth provider. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE`. One of `web_identity_token` or `web_identity_token_file` is required.",
 						},
 						"role_arn": {
 							Type:        schema.TypeString,
@@ -1208,6 +1215,19 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_list_table":                                     wedata.DataSourceTencentCloudWedataListTable(),
 			"tencentcloud_wedata_get_table":                                      wedata.DataSourceTencentCloudWedataGetTable(),
 			"tencentcloud_wedata_get_table_columns":                              wedata.DataSourceTencentCloudWedataGetTableColumns(),
+			"tencentcloud_wedata_trigger_task_code":                              wedata.DataSourceTencentCloudWedataTriggerTaskCode(),
+			"tencentcloud_wedata_trigger_workflows":                              wedata.DataSourceTencentCloudWedataTriggerWorkflows(),
+			"tencentcloud_wedata_trigger_task_version":                           wedata.DataSourceTencentCloudWedataTriggerTaskVersion(),
+			"tencentcloud_wedata_upstream_trigger_tasks":                         wedata.DataSourceTencentCloudWedataUpstreamTriggerTasks(),
+			"tencentcloud_wedata_downstream_trigger_tasks":                       wedata.DataSourceTencentCloudWedataDownstreamTriggerTasks(),
+			"tencentcloud_wedata_trigger_task_versions":                          wedata.DataSourceTencentCloudWedataTriggerTaskVersions(),
+			"tencentcloud_wedata_ops_trigger_workflow":                           wedata.DataSourceTencentCloudWedataOpsTriggerWorkflow(),
+			"tencentcloud_wedata_ops_trigger_workflows":                          wedata.DataSourceTencentCloudWedataOpsTriggerWorkflows(),
+			"tencentcloud_wedata_trigger_workflow_runs":                          wedata.DataSourceTencentCloudWedataTriggerWorkflowRuns(),
+			"tencentcloud_wedata_trigger_workflow_run":                           wedata.DataSourceTencentCloudWedataTriggerWorkflowRun(),
+			"tencentcloud_wedata_trigger_task_run":                               wedata.DataSourceTencentCloudWedataTriggerTaskRun(),
+			"tencentcloud_wedata_quality_rule_group_exec_results":                wedata.DataSourceTencentCloudWedataQualityRuleGroupExecResults(),
+			"tencentcloud_wedata_quality_rule_templates":                         wedata.DataSourceTencentCloudWedataQualityRuleTemplates(),
 			"tencentcloud_private_dns_records":                                   privatedns.DataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_private_dns_private_zone_list":                         privatedns.DataSourceTencentCloudPrivateDnsPrivateZoneList(),
 			"tencentcloud_private_dns_forward_rules":                             privatedns.DataSourceTencentCloudPrivateDnsForwardRules(),
@@ -1389,6 +1409,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_refresh_nat_dc_route":                                                 vpc.ResourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_vpc_private_nat_gateway":                                                  vpc.ResourceTencentCloudVpcPrivateNatGateway(),
 			"tencentcloud_vpc_private_nat_gateway_translation_nat_rule":                             vpc.ResourceTencentCloudVpcPrivateNatGatewayTranslationNatRule(),
+			"tencentcloud_vpc_private_nat_gateway_translation_acl_rule":                             vpc.ResourceTencentCloudVpcPrivateNatGatewayTranslationAclRule(),
 			"tencentcloud_eni":                                                                      vpc.ResourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                                                           vpc.ResourceTencentCloudEniAttachment(),
 			"tencentcloud_eni_sg_attachment":                                                        vpc.ResourceTencentCloudEniSgAttachment(),
@@ -1509,6 +1530,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_native_node_pool":                                              tke.ResourceTencentCloudKubernetesNativeNodePool(),
 			"tencentcloud_kubernetes_health_check_policy":                                           tke.ResourceTencentCloudKubernetesHealthCheckPolicy(),
 			"tencentcloud_kubernetes_log_config":                                                    tke.ResourceTencentCloudKubernetesLogConfig(),
+			"tencentcloud_kubernetes_control_plane_log":                                             tke.ResourceTencentCloudKubernetesControlPlaneLog(),
 			"tencentcloud_mysql_backup_policy":                                                      cdb.ResourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                                            cdb.ResourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                                                  cdb.ResourceTencentCloudMysqlAccountPrivilege(),
@@ -2415,11 +2437,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_add_calc_engines_to_project_operation":                             wedata.ResourceTencentCloudWedataAddCalcEnginesToProjectOperation(),
 			"tencentcloud_wedata_data_backfill_plan_operation":                                      wedata.ResourceTencentCloudWedataDataBackfillPlanOperation(),
 			"tencentcloud_wedata_lineage_attachment":                                                wedata.ResourceTencentCloudWedataLineageAttachment(),
+			"tencentcloud_wedata_trigger_workflow":                                                  wedata.ResourceTencentCloudWedataTriggerWorkflow(),
+			"tencentcloud_wedata_trigger_task":                                                      wedata.ResourceTencentCloudWedataTriggerTask(),
+			"tencentcloud_wedata_quality_rule":                                                      wedata.ResourceTencentCloudWedataQualityRule(),
+			"tencentcloud_wedata_quality_rule_group":                                                wedata.ResourceTencentCloudWedataQualityRuleGroup(),
 			"tencentcloud_cfw_address_template":                                                     cfw.ResourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                                         cfw.ResourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                                          cfw.ResourceTencentCloudCfwEdgePolicy(),
 			"tencentcloud_cfw_nat_instance":                                                         cfw.ResourceTencentCloudCfwNatInstance(),
 			"tencentcloud_cfw_nat_policy":                                                           cfw.ResourceTencentCloudCfwNatPolicy(),
+			"tencentcloud_cfw_nat_policy_order_config":                                              cfw.ResourceTencentCloudCfwNatPolicyOrderConfig(),
 			"tencentcloud_cfw_vpc_instance":                                                         cfw.ResourceTencentCloudCfwVpcInstance(),
 			"tencentcloud_cfw_vpc_policy":                                                           cfw.ResourceTencentCloudCfwVpcPolicy(),
 			"tencentcloud_cfw_sync_asset":                                                           cfw.ResourceTencentCloudCfwSyncAsset(),
@@ -2517,6 +2544,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_address_pool":                                                        igtm.ResourceTencentCloudIgtmAddressPool(),
 			"tencentcloud_igtm_monitor":                                                             igtm.ResourceTencentCloudIgtmMonitor(),
 			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
+			"tencentcloud_igtm_package_instance":                                                    igtm.ResourceTencentCloudIgtmPackageInstance(),
+			"tencentcloud_igtm_package_task":                                                        igtm.ResourceTencentCloudIgtmPackageTask(),
 			"tencentcloud_vcube_application_and_video":                                              vcube.ResourceTencentCloudVcubeApplicationAndVideo(),
 			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
@@ -2749,10 +2778,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	var (
-		assumeRoleSamlAssertion    string
-		assumeRolePrincipalArn     string
-		assumeRoleWebIdentityToken string
-		assumeRoleProviderId       string
+		assumeRoleSamlAssertion        string
+		assumeRolePrincipalArn         string
+		assumeRoleWebIdentityToken     string
+		assumeRoleWebIdentityTokenFile string
+		assumeRoleProviderId           string
 	)
 
 	// get assume role with saml from tf
@@ -2780,11 +2810,27 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		assumeRoleWithWebIdentityList := v.([]interface{})
 		if len(assumeRoleWithWebIdentityList) == 1 {
 			assumeRoleWithWebIdentity := assumeRoleWithWebIdentityList[0].(map[string]interface{})
-			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
+			assumeRoleWebIdentityTokenFile = assumeRoleWithWebIdentity["web_identity_token_file"].(string)
 			assumeRoleArn = assumeRoleWithWebIdentity["role_arn"].(string)
 			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
 			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
 			assumeRoleProviderId = assumeRoleWithWebIdentity["provider_id"].(string)
+
+			// get token with priority: field first, then file
+			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
+			if assumeRoleWebIdentityToken == "" && assumeRoleWebIdentityTokenFile != "" {
+				config, err := getConfigFromWebIdentityTokenFile(assumeRoleWebIdentityTokenFile)
+				if err != nil {
+					return nil, err
+				}
+
+				assumeRoleWebIdentityToken = config["web_identity_token"].(string)
+			}
+
+			if assumeRoleWebIdentityToken == "" {
+				return nil, fmt.Errorf("`web_identity_token` can not be empty. you can choose to set it in `web_identity_token` or `web_identity_token_file`.\n")
+			}
+
 			err = genClientWithOidcSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRoleWebIdentityToken, assumeRoleProviderId)
 			if err != nil {
 				return nil, fmt.Errorf("Get auth from assume role with OIDC failed. Reason: %s", err.Error())
@@ -3265,4 +3311,29 @@ func verifyAccountIDAllowed(indentity *sdksts.GetCallerIdentityResponseParams, a
 	}
 
 	return nil
+}
+
+func getConfigFromWebIdentityTokenFile(filePath string) (map[string]interface{}, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read `web_identity_token_file` %s: %w", filePath, err)
+	}
+
+	var config struct {
+		WebIdentityToken string `json:"web_identity_token"`
+	}
+
+	if err := json.Unmarshal(data, &config); err != nil {
+		return nil, fmt.Errorf("failed to parse `web_identity_token_file` JSON from %s: %w", filePath, err)
+	}
+
+	if config.WebIdentityToken == "" {
+		return nil, fmt.Errorf("field `web_identity_token` in `web_identity_token_file` is empty in %s", filePath)
+	}
+
+	result := map[string]interface{}{
+		"web_identity_token": config.WebIdentityToken,
+	}
+
+	return result, nil
 }

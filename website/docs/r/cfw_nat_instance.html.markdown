@@ -77,7 +77,7 @@ The `new_mode_items` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `nat_instance_id` - Nat instance ID.
 
 
 ## Import

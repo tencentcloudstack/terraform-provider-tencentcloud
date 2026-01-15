@@ -70,7 +70,20 @@ In addition to all arguments above, the following attributes are exported:
       * `days` - Specifies the number of days after object creation when the specific rule action takes effect.
       * `storage_class` - Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.
   * `origin_domain_rules` - Bucket origin domain rules.
+    * `domain` - Specify domain host.
+    * `status` - Domain status, default: `ENABLED`.
+    * `type` - Specify origin domain type, available values: `REST`, `WEBSITE`, `ACCELERATE`, default: `REST`.
   * `origin_pull_rules` - Bucket Origin-Pull rules.
+    * `back_to_source_mode` - Back to source mode. Allow value: Proxy, Mirror, Redirect.
+    * `custom_http_headers` - Specifies the custom headers that you can add for COS to access your origin server.
+    * `follow_http_headers` - Specifies the pass through headers when accessing the origin server.
+    * `follow_query_string` - Specifies whether to pass through COS request query string when accessing the origin server.
+    * `follow_redirection` - Specifies whether to follow 3XX redirect to another origin server to pull data from.
+    * `host` - Allows only a domain name or IP address. You can optionally append a port number to the address.
+    * `prefix` - Triggers the origin-pull rule when the requested file name matches this prefix.
+    * `priority` - Priority of origin-pull rules, do not set the same value for multiple rules.
+    * `protocol` - the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.
+    * `sync_back_to_source` - If `true`, COS will not return 3XX status code when pulling data from an origin server. Currently available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
   * `tags` - The tags of a bucket.
   * `website` - A list of one element containing configuration parameters used when the bucket is used as a website.
     * `error_document` - An absolute path to the document to return in case of a 4XX error.

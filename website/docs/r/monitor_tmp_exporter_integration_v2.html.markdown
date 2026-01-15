@@ -120,7 +120,7 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
 
 The following arguments are supported:
 
-* `content` - (Required, String) Integration config.
+* `content` - (Required, String) Integration config. For more details, please refer to [Cloud Monitoring](https://www.tencentcloud.com/document/product/248/63002?lang=en&pg=).
 * `instance_id` - (Required, String) Instance ID.
 * `kind` - (Required, String) Type.
 * `cluster_id` - (Optional, String) Cluster ID.

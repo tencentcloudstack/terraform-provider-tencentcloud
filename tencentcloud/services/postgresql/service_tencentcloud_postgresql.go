@@ -1220,6 +1220,7 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context
 	logId := tccommon.GetLogId(ctx)
 
 	request := postgresql.NewDescribeParameterTemplateAttributesRequest()
+	response := postgresql.NewDescribeParameterTemplateAttributesResponse()
 	request.TemplateId = &templateId
 
 	defer func() {
@@ -1228,14 +1229,27 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DescribeParameterTemplateAttributes(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePostgresqlClient().DescribeParameterTemplateAttributes(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe parameter template attributes failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ParameterTemplate = response.Response
 	return
@@ -1243,7 +1257,6 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context
 
 func (me *PostgresqlService) DeletePostgresqlParameterTemplateById(ctx context.Context, templateId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
-
 	request := postgresql.NewDeleteParameterTemplateRequest()
 	request.TemplateId = &templateId
 
@@ -1253,14 +1266,22 @@ func (me *PostgresqlService) DeletePostgresqlParameterTemplateById(ctx context.C
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DeleteParameterTemplate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePostgresqlClient().DeleteParameterTemplate(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

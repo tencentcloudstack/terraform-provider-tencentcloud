@@ -4246,6 +4246,9 @@ func NewDescribeBatchOperateTaskResponse() (response *DescribeBatchOperateTaskRe
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeBatchOperateTask(request *DescribeBatchOperateTaskRequest) (response *DescribeBatchOperateTaskResponse, err error) {
     return c.DescribeBatchOperateTaskWithContext(context.Background(), request)
 }
@@ -4256,6 +4259,9 @@ func (c *Client) DescribeBatchOperateTask(request *DescribeBatchOperateTaskReque
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeBatchOperateTaskWithContext(ctx context.Context, request *DescribeBatchOperateTaskRequest) (response *DescribeBatchOperateTaskResponse, err error) {
     if request == nil {
         request = NewDescribeBatchOperateTaskRequest()
@@ -5723,6 +5729,9 @@ func NewDescribeFormVersionParamResponse() (response *DescribeFormVersionParamRe
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeFormVersionParam(request *DescribeFormVersionParamRequest) (response *DescribeFormVersionParamResponse, err error) {
     return c.DescribeFormVersionParamWithContext(context.Background(), request)
 }
@@ -5732,6 +5741,9 @@ func (c *Client) DescribeFormVersionParam(request *DescribeFormVersionParamReque
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeFormVersionParamWithContext(ctx context.Context, request *DescribeFormVersionParamRequest) (response *DescribeFormVersionParamResponse, err error) {
     if request == nil {
         request = NewDescribeFormVersionParamRequest()
@@ -6857,6 +6869,88 @@ func (c *Client) DescribeIntegrationVersionNodesInfoWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewDescribeIntegrationVersionNodesInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLineageInfoRequest() (request *DescribeLineageInfoRequest) {
+    request = &DescribeLineageInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "DescribeLineageInfo")
+    
+    
+    return
+}
+
+func NewDescribeLineageInfoResponse() (response *DescribeLineageInfoResponse) {
+    response = &DescribeLineageInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLineageInfo
+// 通用血缘查询接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeLineageInfo(request *DescribeLineageInfoRequest) (response *DescribeLineageInfoResponse, err error) {
+    return c.DescribeLineageInfoWithContext(context.Background(), request)
+}
+
+// DescribeLineageInfo
+// 通用血缘查询接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeLineageInfoWithContext(ctx context.Context, request *DescribeLineageInfoRequest) (response *DescribeLineageInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeLineageInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "wedata", APIVersion, "DescribeLineageInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLineageInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLineageInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -10361,6 +10455,62 @@ func (c *Client) DescribeTaskDetailDsWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeTaskInstancesStatusRequest() (request *DescribeTaskInstancesStatusRequest) {
+    request = &DescribeTaskInstancesStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "DescribeTaskInstancesStatus")
+    
+    
+    return
+}
+
+func NewDescribeTaskInstancesStatusResponse() (response *DescribeTaskInstancesStatusResponse) {
+    response = &DescribeTaskInstancesStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTaskInstancesStatus
+// 分组获取编排空间调试任务实例状态信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeTaskInstancesStatus(request *DescribeTaskInstancesStatusRequest) (response *DescribeTaskInstancesStatusResponse, err error) {
+    return c.DescribeTaskInstancesStatusWithContext(context.Background(), request)
+}
+
+// DescribeTaskInstancesStatus
+// 分组获取编排空间调试任务实例状态信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeTaskInstancesStatusWithContext(ctx context.Context, request *DescribeTaskInstancesStatusRequest) (response *DescribeTaskInstancesStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeTaskInstancesStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "wedata", APIVersion, "DescribeTaskInstancesStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTaskInstancesStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTaskInstancesStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTaskLineageRequest() (request *DescribeTaskLineageRequest) {
     request = &DescribeTaskLineageRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10385,7 +10535,7 @@ func NewDescribeTaskLineageResponse() (response *DescribeTaskLineageResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INVALIDPARAMETER_CLIENTIPNOTAUTHORIZED = "InvalidParameter.ClientIpNotAuthorized"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeTaskLineage(request *DescribeTaskLineageRequest) (response *DescribeTaskLineageResponse, err error) {
@@ -10397,7 +10547,7 @@ func (c *Client) DescribeTaskLineage(request *DescribeTaskLineageRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INVALIDPARAMETER_CLIENTIPNOTAUTHORIZED = "InvalidParameter.ClientIpNotAuthorized"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeTaskLineageWithContext(ctx context.Context, request *DescribeTaskLineageRequest) (response *DescribeTaskLineageResponse, err error) {
@@ -16449,6 +16599,9 @@ func NewUpdateWorkflowInfoResponse() (response *UpdateWorkflowInfoResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) UpdateWorkflowInfo(request *UpdateWorkflowInfoRequest) (response *UpdateWorkflowInfoResponse, err error) {
     return c.UpdateWorkflowInfoWithContext(context.Background(), request)
 }
@@ -16460,6 +16613,9 @@ func (c *Client) UpdateWorkflowInfo(request *UpdateWorkflowInfoRequest) (respons
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) UpdateWorkflowInfoWithContext(ctx context.Context, request *UpdateWorkflowInfoRequest) (response *UpdateWorkflowInfoResponse, err error) {
     if request == nil {
         request = NewUpdateWorkflowInfoRequest()

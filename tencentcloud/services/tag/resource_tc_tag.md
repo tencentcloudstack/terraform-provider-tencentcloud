@@ -1,4 +1,4 @@
-Provides a resource to create a tag
+Provides a resource to create a Tag
 
 Example Usage
 
@@ -11,7 +11,7 @@ resource "tencentcloud_tag" "example" {
 
 Import
 
-tag can be imported using the id, e.g.
+Tag can be imported using the tagKey#tagValue, e.g.
 
 ```
 terraform import tencentcloud_tag.example tagKey#tagValue

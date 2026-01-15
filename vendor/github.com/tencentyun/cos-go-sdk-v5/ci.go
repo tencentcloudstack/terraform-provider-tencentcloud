@@ -63,20 +63,21 @@ type PicImageInfo struct {
 	Orientation int    `xml:"Orientation,omitempty"`
 }
 type PicProcessObject struct {
-	Key             string       `xml:"Key,omitempty"`
-	Location        string       `xml:"Location,omitempty"`
-	Format          string       `xml:"Format,omitempty"`
-	Width           int          `xml:"Width,omitempty"`
-	Height          int          `xml:"Height,omitempty"`
-	Size            int          `xml:"Size,omitempty"`
-	Quality         int          `xml:"Quality,omitempty"`
-	ETag            string       `xml:"ETag,omitempty"`
-	WatermarkStatus int          `xml:"WatermarkStatus,omitempty"`
-	CodeStatus      int          `xml:"CodeStatus,omitempty"`
-	QRcodeInfo      []QRcodeInfo `xml:"QRcodeInfo,omitempty"`
-	FrameCount      int          `xml:"FrameCount,omitempty"`
-	Md5             string       `xml:"Md5,omitempty"`
-	BitDepth        int          `xml:"BitDepth,omitempty"`
+	Key             string        `xml:"Key,omitempty"`
+	Location        string        `xml:"Location,omitempty"`
+	Format          string        `xml:"Format,omitempty"`
+	Width           int           `xml:"Width,omitempty"`
+	Height          int           `xml:"Height,omitempty"`
+	Size            int           `xml:"Size,omitempty"`
+	Quality         int           `xml:"Quality,omitempty"`
+	ETag            string        `xml:"ETag,omitempty"`
+	WatermarkStatus int           `xml:"WatermarkStatus,omitempty"`
+	CodeStatus      int           `xml:"CodeStatus,omitempty"`
+	QRcodeInfo      []QRcodeInfo  `xml:"QRcodeInfo,omitempty"`
+	FrameCount      int           `xml:"FrameCount,omitempty"`
+	Md5             string        `xml:"Md5,omitempty"`
+	BitDepth        int           `xml:"BitDepth,omitempty"`
+	AIGCMetadata    *AIGCMetadata `xml:"AIGCMetadata,omitempty"`
 }
 type QRcodeInfo struct {
 	CodeUrl      string        `xml:"CodeUrl,omitempty"`
@@ -103,6 +104,25 @@ func (s *CIService) ImageProcess(ctx context.Context, name string, opt *ImagePro
 		uri:       "/" + encodeURIComponent(name) + "?image_process",
 		method:    http.MethodPost,
 		optHeader: header,
+		result:    &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
+
+type ImageProcessHeader struct {
+	PicOperations string       `header:"Pic-Operations" xml:"-" url:"-"`
+	XOptionHeader *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+}
+
+// 云上数据处理 https://cloud.tencent.com/document/product/460/18147
+func (s *CIService) ImageProcessWithHeader(ctx context.Context, name string, opt *ImageProcessHeader) (*ImageProcessResult, *Response, error) {
+	var res ImageProcessResult
+	sendOpt := sendOptions{
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/" + encodeURIComponent(name) + "?image_process",
+		method:    http.MethodPost,
+		optHeader: opt,
 		result:    &res,
 	}
 	resp, err := s.client.send(ctx, &sendOpt)
@@ -2872,4 +2892,8 @@ type ImgTargetRecResult struct {
 			Height string `xml:"Height"`
 		} `xml:"PlateDetailInfo"`
 	} `xml:"PlateDetailInfos"`
+}
+
+type AIGCResult struct {
+	AIGC string `json:"AIGC,omitempty"`
 }

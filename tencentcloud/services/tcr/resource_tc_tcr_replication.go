@@ -77,7 +77,7 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										ForceNew:    true,
-										Description: "It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string.",
+										Description: "It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string. If the type is `name` it supports Namespace name/**, Namespace name/Repository name.",
 									},
 								},
 							},

@@ -366,10 +366,9 @@ func resourceTencentCloudMariadbInstanceCreate(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_mariadb_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request    = mariadb.NewCreateDBInstanceRequest()
 		response   = mariadb.NewCreateDBInstanceResponse()
 		instanceId string
@@ -487,6 +486,10 @@ func resourceTencentCloudMariadbInstanceCreate(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil || result.Response.InstanceIds == nil || len(result.Response.InstanceIds) == 0 {
+			return resource.RetryableError(fmt.Errorf("Create mariadb instance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -499,22 +502,27 @@ func resourceTencentCloudMariadbInstanceCreate(d *schema.ResourceData, meta inte
 	instanceId = *response.Response.InstanceIds[0]
 	d.SetId(instanceId)
 
+	// wait
 	service := MariadbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, e := service.DescribeMariadbInstanceById(ctx, instanceId)
 		if e != nil {
 			return resource.NonRetryableError(e)
 		}
+
 		if instance == nil {
 			err = fmt.Errorf("mariadb %s instance not exists", instanceId)
 			return resource.NonRetryableError(err)
 		}
+
 		if *instance.Status == 0 || *instance.Status == 1 || *instance.Status == 4 {
 			return resource.RetryableError(fmt.Errorf("create mariadb status is %v,start retrying ...", *instance.Status))
 		}
+
 		if *instance.Status == 2 {
 			return nil
 		}
+
 		err = fmt.Errorf("create mariadb status is %v,we won't wait for it finish", *instance.Status)
 		return resource.NonRetryableError(err)
 	})
@@ -553,191 +561,189 @@ func resourceTencentCloudMariadbInstanceRead(d *schema.ResourceData, meta interf
 	}
 
 	if instance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_mariadb_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `MariadbInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if instance != nil {
-		if instance.InstanceId != nil {
-			_ = d.Set("instance_id", instance.InstanceId)
-		}
+	if instance.InstanceId != nil {
+		_ = d.Set("instance_id", instance.InstanceId)
+	}
 
-		if instance.InstanceName != nil {
-			_ = d.Set("instance_name", instance.InstanceName)
-		}
+	if instance.InstanceName != nil {
+		_ = d.Set("instance_name", instance.InstanceName)
+	}
 
-		if instance.AppId != nil {
-			_ = d.Set("app_id", instance.AppId)
-		}
+	if instance.AppId != nil {
+		_ = d.Set("app_id", instance.AppId)
+	}
 
-		if instance.ProjectId != nil {
-			_ = d.Set("project_id", instance.ProjectId)
-		}
+	if instance.ProjectId != nil {
+		_ = d.Set("project_id", instance.ProjectId)
+	}
 
-		if instance.Region != nil {
-			_ = d.Set("region", instance.Region)
-		}
+	if instance.Region != nil {
+		_ = d.Set("region", instance.Region)
+	}
 
-		if instance.VpcId != nil {
-			_ = d.Set("vpc_id", instance.UniqueVpcId)
-		}
+	if instance.VpcId != nil {
+		_ = d.Set("vpc_id", instance.UniqueVpcId)
+	}
 
-		if instance.SubnetId != nil {
-			_ = d.Set("subnet_id", instance.UniqueSubnetId)
-		}
+	if instance.SubnetId != nil {
+		_ = d.Set("subnet_id", instance.UniqueSubnetId)
+	}
 
-		if instance.Status != nil {
-			_ = d.Set("status", instance.Status)
-		}
+	if instance.Status != nil {
+		_ = d.Set("status", instance.Status)
+	}
 
-		if instance.Vip != nil {
-			_ = d.Set("vip", instance.Vip)
-		}
+	if instance.Vip != nil {
+		_ = d.Set("vip", instance.Vip)
+	}
 
-		if instance.Vport != nil {
-			_ = d.Set("vport", instance.Vport)
-		}
+	if instance.Vport != nil {
+		_ = d.Set("vport", instance.Vport)
+	}
 
-		if instance.WanDomain != nil {
-			_ = d.Set("wan_domain", instance.WanDomain)
-		}
+	if instance.WanDomain != nil {
+		_ = d.Set("wan_domain", instance.WanDomain)
+	}
 
-		if instance.WanVip != nil {
-			_ = d.Set("wan_vip", instance.WanVip)
-		}
+	if instance.WanVip != nil {
+		_ = d.Set("wan_vip", instance.WanVip)
+	}
 
-		if instance.WanPort != nil {
-			_ = d.Set("wan_port", instance.WanPort)
-		}
+	if instance.WanPort != nil {
+		_ = d.Set("wan_port", instance.WanPort)
+	}
 
-		if instance.CreateTime != nil {
-			_ = d.Set("create_time", instance.CreateTime)
-		}
+	if instance.CreateTime != nil {
+		_ = d.Set("create_time", instance.CreateTime)
+	}
 
-		if instance.UpdateTime != nil {
-			_ = d.Set("update_time", instance.UpdateTime)
-		}
+	if instance.UpdateTime != nil {
+		_ = d.Set("update_time", instance.UpdateTime)
+	}
 
-		if instance.AutoRenewFlag != nil {
-			_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
-		}
+	if instance.AutoRenewFlag != nil {
+		_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
+	}
 
-		if instance.PeriodEndTime != nil {
-			_ = d.Set("period_end_time", instance.PeriodEndTime)
-		}
+	if instance.PeriodEndTime != nil {
+		_ = d.Set("period_end_time", instance.PeriodEndTime)
+	}
 
-		if instance.Uin != nil {
-			_ = d.Set("uin", instance.Uin)
-		}
+	if instance.Uin != nil {
+		_ = d.Set("uin", instance.Uin)
+	}
 
-		if instance.TdsqlVersion != nil {
-			_ = d.Set("tdsql_version", instance.TdsqlVersion)
-		}
+	if instance.TdsqlVersion != nil {
+		_ = d.Set("tdsql_version", instance.TdsqlVersion)
+	}
 
-		if instance.Memory != nil {
-			_ = d.Set("memory", instance.Memory)
-		}
+	if instance.Memory != nil {
+		_ = d.Set("memory", instance.Memory)
+	}
 
-		if instance.Storage != nil {
-			_ = d.Set("storage", instance.Storage)
-		}
+	if instance.Storage != nil {
+		_ = d.Set("storage", instance.Storage)
+	}
 
-		if instance.NodeCount != nil {
-			_ = d.Set("node_count", instance.NodeCount)
-		}
+	if instance.NodeCount != nil {
+		_ = d.Set("node_count", instance.NodeCount)
+	}
 
-		if instance.IsTmp != nil {
-			_ = d.Set("is_tmp", instance.IsTmp)
-		}
+	if instance.IsTmp != nil {
+		_ = d.Set("is_tmp", instance.IsTmp)
+	}
 
-		if instance.ExclusterId != nil {
-			_ = d.Set("excluster_id", instance.ExclusterId)
-		}
+	if instance.ExclusterId != nil {
+		_ = d.Set("excluster_id", instance.ExclusterId)
+	}
 
-		if instance.Pid != nil {
-			_ = d.Set("pid", instance.Pid)
-		}
+	if instance.Pid != nil {
+		_ = d.Set("pid", instance.Pid)
+	}
 
-		if instance.Qps != nil {
-			_ = d.Set("qps", instance.Qps)
-		}
+	if instance.Qps != nil {
+		_ = d.Set("qps", instance.Qps)
+	}
 
-		if instance.Paymode != nil {
-			_ = d.Set("paymode", instance.Paymode)
-		}
+	if instance.Paymode != nil {
+		_ = d.Set("paymode", instance.Paymode)
+	}
 
-		if instance.Locker != nil {
-			_ = d.Set("locker", instance.Locker)
-		}
+	if instance.Locker != nil {
+		_ = d.Set("locker", instance.Locker)
+	}
 
-		if instance.StatusDesc != nil {
-			_ = d.Set("status_desc", instance.StatusDesc)
-		}
+	if instance.StatusDesc != nil {
+		_ = d.Set("status_desc", instance.StatusDesc)
+	}
 
-		if instance.WanStatus != nil {
-			_ = d.Set("wan_status", instance.WanStatus)
-		}
+	if instance.WanStatus != nil {
+		_ = d.Set("wan_status", instance.WanStatus)
+	}
 
-		if instance.IsAuditSupported != nil {
-			_ = d.Set("is_audit_supported", instance.IsAuditSupported)
-		}
+	if instance.IsAuditSupported != nil {
+		_ = d.Set("is_audit_supported", instance.IsAuditSupported)
+	}
 
-		if instance.Machine != nil {
-			_ = d.Set("machine", instance.Machine)
-		}
+	if instance.Machine != nil {
+		_ = d.Set("machine", instance.Machine)
+	}
 
-		if instance.IsEncryptSupported != nil {
-			_ = d.Set("is_encrypt_supported", instance.IsEncryptSupported)
-		}
+	if instance.IsEncryptSupported != nil {
+		_ = d.Set("is_encrypt_supported", instance.IsEncryptSupported)
+	}
 
-		if instance.Cpu != nil {
-			_ = d.Set("cpu", instance.Cpu)
-		}
+	if instance.Cpu != nil {
+		_ = d.Set("cpu", instance.Cpu)
+	}
 
-		if instance.Ipv6Flag != nil {
-			_ = d.Set("ipv6_flag", instance.Ipv6Flag)
-		}
+	if instance.Ipv6Flag != nil {
+		_ = d.Set("ipv6_flag", instance.Ipv6Flag)
+	}
 
-		if instance.Vipv6 != nil {
-			_ = d.Set("vipv6", instance.Vipv6)
-		}
+	if instance.Vipv6 != nil {
+		_ = d.Set("vipv6", instance.Vipv6)
+	}
 
-		if instance.WanVipv6 != nil {
-			_ = d.Set("wan_vipv6", instance.WanVipv6)
-		}
+	if instance.WanVipv6 != nil {
+		_ = d.Set("wan_vipv6", instance.WanVipv6)
+	}
 
-		if instance.WanPortIpv6 != nil {
-			_ = d.Set("wan_port_ipv6", instance.WanPortIpv6)
-		}
+	if instance.WanPortIpv6 != nil {
+		_ = d.Set("wan_port_ipv6", instance.WanPortIpv6)
+	}
 
-		if instance.WanStatusIpv6 != nil {
-			_ = d.Set("wan_status_ipv6", instance.WanStatusIpv6)
-		}
+	if instance.WanStatusIpv6 != nil {
+		_ = d.Set("wan_status_ipv6", instance.WanStatusIpv6)
+	}
 
-		if instance.DbEngine != nil {
-			_ = d.Set("db_engine", instance.DbEngine)
-		}
+	if instance.DbEngine != nil {
+		_ = d.Set("db_engine", instance.DbEngine)
+	}
 
-		if instance.DcnFlag != nil {
-			_ = d.Set("dcn_flag", instance.DcnFlag)
-		}
+	if instance.DcnFlag != nil {
+		_ = d.Set("dcn_flag", instance.DcnFlag)
+	}
 
-		if instance.DcnStatus != nil {
-			_ = d.Set("dcn_status", instance.DcnStatus)
-		}
+	if instance.DcnStatus != nil {
+		_ = d.Set("dcn_status", instance.DcnStatus)
+	}
 
-		if instance.DcnDstNum != nil {
-			_ = d.Set("dcn_dst_num", instance.DcnDstNum)
-		}
+	if instance.DcnDstNum != nil {
+		_ = d.Set("dcn_dst_num", instance.DcnDstNum)
+	}
 
-		if instance.InstanceType != nil {
-			_ = d.Set("instance_type", instance.InstanceType)
-		}
+	if instance.InstanceType != nil {
+		_ = d.Set("instance_type", instance.InstanceType)
+	}
 
-		if instance.DbVersionId != nil {
-			_ = d.Set("db_version_id", instance.DbVersionId)
-		}
+	if instance.DbVersionId != nil {
+		_ = d.Set("db_version_id", instance.DbVersionId)
 	}
 
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -754,14 +760,22 @@ func resourceTencentCloudMariadbInstanceRead(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	if DbInstance.Zone != nil {
-		var zones []*string
-		zones = append(zones, DbInstance.Zone)
-		if DbInstance.SlaveZones != nil {
-			zones = append(zones, DbInstance.SlaveZones...)
-		}
-		_ = d.Set("zones", zones)
+	if DbInstance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_mariadb_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
+		return nil
 	}
+
+	var zones []*string
+	if DbInstance.MasterZone != nil {
+		zones = append(zones, DbInstance.MasterZone)
+	}
+
+	if DbInstance.SlaveZones != nil {
+		zones = append(zones, DbInstance.SlaveZones...)
+	}
+
+	_ = d.Set("zones", zones)
 
 	return nil
 }

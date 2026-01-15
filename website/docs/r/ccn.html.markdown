@@ -19,13 +19,15 @@ Provides a resource to create a CCN instance.
 
 ```hcl
 resource "tencentcloud_ccn" "example" {
-  name                 = "tf-example"
-  description          = "desc."
-  qos                  = "AG"
-  charge_type          = "PREPAID"
-  bandwidth_limit_type = "INTER_REGION_LIMIT"
-  route_ecmp_flag      = true
-  route_overlap_flag   = true
+  name                   = "tf-example"
+  description            = "desc."
+  qos                    = "AG"
+  charge_type            = "PREPAID"
+  bandwidth_limit_type   = "INTER_REGION_LIMIT"
+  instance_metering_type = "BANDWIDTH"
+  route_ecmp_flag        = true
+  route_overlap_flag     = true
+
   tags = {
     createBy = "Terraform"
   }
@@ -69,6 +71,7 @@ The following arguments are supported:
 * `bandwidth_limit_type` - (Optional, String) The speed limit type. Valid values: `INTER_REGION_LIMIT`, `OUTER_REGION_LIMIT`. `OUTER_REGION_LIMIT` represents the regional export speed limit, `INTER_REGION_LIMIT` is the inter-regional speed limit. The default is `OUTER_REGION_LIMIT`.
 * `charge_type` - (Optional, String, ForceNew) Billing mode. Valid values: `PREPAID`, `POSTPAID`. `PREPAID` means prepaid, which means annual and monthly subscription, `POSTPAID` means post-payment, which means billing by volume. The default is `POSTPAID`. The prepaid model only supports inter-regional speed limit, and the post-paid model supports inter-regional speed limit and regional export speed limit.
 * `description` - (Optional, String) Description of CCN, and maximum length does not exceed 100 bytes.
+* `instance_metering_type` - (Optional, String, ForceNew) Instance metering type. Valid values: `BANDWIDTH` (bandwidth billing), `TRAFFIC` (traffic billing). This parameter cannot be modified after creation.
 * `qos` - (Optional, String, ForceNew) CCN service quality, 'PT': Platinum, 'AU': Gold, 'AG': Silver. The default is 'AU'.
 * `route_ecmp_flag` - (Optional, Bool) Whether to enable the equivalent routing function. `true`: enabled, `false`: disabled. Default is false.
 * `route_overlap_flag` - (Optional, Bool) Whether to enable the routing overlap function. `true`: enabled, `false`: disabled. Default is true, cannot set to false.

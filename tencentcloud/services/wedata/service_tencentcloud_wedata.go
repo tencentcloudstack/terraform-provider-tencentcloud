@@ -3739,3 +3739,799 @@ func (me *WedataService) DescribeWedataLineageAttachmentById(ctx context.Context
 
 	return
 }
+
+func (me *WedataService) DescribeWedataTriggerWorkflowById(ctx context.Context, projectId, workflowId string) (ret *wedatav20250806.TriggerWorkflowDetail, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetTriggerWorkflowRequest()
+	request.ProjectId = &projectId
+	request.WorkflowId = &workflowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTriggerWorkflow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerTaskById(ctx context.Context, projectId, taskId string) (ret *wedatav20250806.TriggerTask, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewGetTriggerTaskRequest()
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTriggerTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Data
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerTaskCodeByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetTriggerTaskCodeResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTriggerTaskCodeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTriggerTaskCode(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerWorkflowsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.TriggerWorkflowInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListTriggerWorkflowsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+		if k == "ParentFolderPath" {
+			request.ParentFolderPath = v.(*string)
+		}
+		if k == "BundleId" {
+			request.BundleId = v.(*string)
+		}
+		if k == "OwnerUin" {
+			request.OwnerUin = v.(*string)
+		}
+		if k == "CreateUserUin" {
+			request.CreateUserUin = v.(*string)
+		}
+		if k == "ModifyTime" {
+			request.ModifyTime = v.([]*string)
+		}
+		if k == "CreateTime" {
+			request.CreateTime = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		pageNumber int64 = 1
+		pageSize   int64 = 100
+	)
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+		response, err := me.client.UseWedataV20250806Client().ListTriggerWorkflows(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNumber += 1
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerTaskVersionsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.TriggerTaskVersion, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListTriggerTaskVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+		if k == "TaskVersionType" {
+			request.TaskVersionType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 100
+	)
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+		response, err := me.client.UseWedataV20250806Client().ListTriggerTaskVersions(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil || len(response.Response.Data.Items) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.Data.Items...)
+		if len(response.Response.Data.Items) < int(pageSize) {
+			break
+		}
+
+		pageNumber += 1
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerTaskVersionByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetTriggerTaskVersionResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTriggerTaskVersionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+		if k == "VersionId" {
+			request.VersionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTriggerTaskVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataUpstreamTriggerTasksByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.TriggerTaskDependDto, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListUpstreamTriggerTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 100
+	)
+
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+
+		response, err := me.client.UseWedataV20250806Client().ListUpstreamTriggerTasks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil {
+			break
+		}
+
+		if response.Response.Data.Items != nil {
+			ret = append(ret, response.Response.Data.Items...)
+		}
+
+		if response.Response.Data.TotalPageNumber == nil || pageNumber >= *response.Response.Data.TotalPageNumber {
+			break
+		}
+
+		pageNumber++
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataDownstreamTriggerTasksByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.TriggerTaskDependDto, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListDownstreamTriggerTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 100
+	)
+
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+
+		response, err := me.client.UseWedataV20250806Client().ListDownstreamTriggerTasks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil {
+			break
+		}
+
+		if response.Response.Data.Items != nil {
+			ret = append(ret, response.Response.Data.Items...)
+		}
+
+		if response.Response.Data.TotalPageNumber == nil || pageNumber >= *response.Response.Data.TotalPageNumber {
+			break
+		}
+
+		pageNumber++
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsTriggerWorkflowsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.TriggerWorkflowBrief, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListOpsTriggerWorkflowsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*wedatav20250806.Filter)
+		}
+		if k == "OrderFields" {
+			request.OrderFields = v.([]*wedatav20250806.OrderField)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 100
+	)
+
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+
+		response, err := me.client.UseWedataV20250806Client().ListOpsTriggerWorkflows(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil {
+			break
+		}
+
+		if response.Response.Data.Items != nil {
+			ret = append(ret, response.Response.Data.Items...)
+		}
+
+		if response.Response.Data.TotalPageNumber == nil || pageNumber >= *response.Response.Data.TotalPageNumber {
+			break
+		}
+
+		pageNumber++
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataOpsTriggerWorkflowByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetOpsTriggerWorkflowResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetOpsTriggerWorkflowRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "WorkflowId" {
+			request.WorkflowId = v.(*string)
+		}
+		if k == "WorkflowExecutionId" {
+			request.WorkflowExecutionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetOpsTriggerWorkflow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerWorkflowRunsByFilter(ctx context.Context, param map[string]interface{}) (ret []*wedatav20250806.TriggerWorkflowRunBrief, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListTriggerWorkflowRunsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*wedatav20250806.Filter)
+		}
+		if k == "OrderFields" {
+			request.OrderFields = v.([]*wedatav20250806.OrderField)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 100
+	)
+
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+
+		response, err := me.client.UseWedataV20250806Client().ListTriggerWorkflowRuns(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil {
+			break
+		}
+
+		if response.Response.Data.Items != nil {
+			ret = append(ret, response.Response.Data.Items...)
+		}
+
+		if response.Response.Data.TotalPageNumber == nil || pageNumber >= *response.Response.Data.TotalPageNumber {
+			break
+		}
+
+		pageNumber++
+	}
+
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerWorkflowRunByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetTriggerWorkflowRunResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTriggerWorkflowRunRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "WorkflowExecutionId" {
+			request.WorkflowExecutionId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*wedatav20250806.Filter)
+		}
+		if k == "OrderFields" {
+			request.OrderFields = v.([]*wedatav20250806.OrderField)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTriggerWorkflowRun(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataTriggerTaskRunByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.GetTriggerTaskRunResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewGetTriggerTaskRunRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "TaskExecutionId" {
+			request.TaskExecutionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().GetTriggerTaskRun(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataQualityRuleById(ctx context.Context, projectId, ruleId string) (ret *wedatav20250806.QualityRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListQualityRulesRequest()
+	request.ProjectId = &projectId
+	request.Filters = []*wedatav20250806.Filter{
+		{
+			Name:   helper.String("RuleIds"),
+			Values: []*string{&ruleId},
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListQualityRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Data.Items == nil || len(response.Response.Data.Items) == 0 {
+		return
+	}
+
+	ret = response.Response.Data.Items[0]
+	return
+}
+
+func (me *WedataService) DescribeWedataQualityRuleGroupById(ctx context.Context, projectId, ruleGroupId string) (ret *wedatav20250806.QualityRuleGroup, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := wedatav20250806.NewListQualityRuleGroupsRequest()
+	request.ProjectId = &projectId
+	request.Filters = []*wedatav20250806.Filter{
+		{
+			Name:   helper.String("RuleGroupId"),
+			Values: []*string{&ruleGroupId},
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListQualityRuleGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Data == nil || response.Response.Data.Items == nil || len(response.Response.Data.Items) == 0 {
+		return
+	}
+
+	ret = response.Response.Data.Items[0]
+	return
+}
+
+func (me *WedataService) DescribeWedataQualityRuleGroupExecResultsByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListQualityRuleGroupExecResultsByPageResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = wedatav20250806.NewListQualityRuleGroupExecResultsByPageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*wedatav20250806.Filter)
+		}
+		if k == "OrderFields" {
+			request.OrderFields = v.([]*wedatav20250806.OrderField)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataV20250806Client().ListQualityRuleGroupExecResultsByPage(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *WedataService) DescribeWedataQualityRuleTemplatesByFilter(ctx context.Context, param map[string]interface{}) (ret *wedatav20250806.ListQualityRuleTemplatesResponseParams, errRet error) {
+	var (
+		logId      = tccommon.GetLogId(ctx)
+		request    = wedatav20250806.NewListQualityRuleTemplatesRequest()
+		allItems   []*wedatav20250806.QualityRuleTemplate
+		pageNumber uint64 = 1
+		pageSize   uint64 = 20
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		switch k {
+		case "ProjectId":
+			request.ProjectId = v.(*string)
+		case "OrderFields":
+			request.OrderFields = v.([]*wedatav20250806.OrderField)
+		case "Filters":
+			request.Filters = v.([]*wedatav20250806.Filter)
+		}
+	}
+
+	// 分页循环获取所有数据
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseWedataV20250806Client().ListQualityRuleTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Data == nil {
+			break
+		}
+
+		if response.Response.Data.Items != nil {
+			allItems = append(allItems, response.Response.Data.Items...)
+		}
+
+		if response.Response.Data.TotalCount == nil ||
+			uint64(len(allItems)) >= *response.Response.Data.TotalCount {
+			ret = &wedatav20250806.ListQualityRuleTemplatesResponseParams{
+				Data: &wedatav20250806.QualityRuleTemplatePage{
+					TotalCount: response.Response.Data.TotalCount,
+					Items:      allItems,
+				},
+				RequestId: response.Response.RequestId,
+			}
+			break
+		}
+
+		pageNumber++
+	}
+
+	return
+}
