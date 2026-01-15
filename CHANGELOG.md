@@ -1,3 +1,23 @@
+## 1.82.55(January 15, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_wedata_code_max_permission` ([#3729](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3729))
+* **New Data Source:** `tencentcloud_wedata_workflow_max_permission` ([#3729](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3729))
+* **New Resource:** `tencentcloud_teo_web_security_template` ([#3700](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3700))
+* **New Resource:** `tencentcloud_wedata_data_backfill_plan` ([#3729](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3729))
+* **New Resource:** `tencentcloud_wedata_kill_trigger_workflow_run` ([#3728](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3728))
+* **New Resource:** `tencentcloud_wedata_rerun_trigger_workflow_run_async` ([#3728](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3728))
+* **New Resource:** `tencentcloud_wedata_submit_trigger_task` ([#3728](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3728))
+* **New Resource:** `tencentcloud_wedata_workflow_permissions` ([#3729](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3729))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dbbrain_diag_events: add new params `product` ([#3723](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3723))
+* resource/tencentcloud_cam_policy: support `tags` ([#3727](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3727))
+* resource/tencentcloud_ccn: support `instance_metering_type` ([#3726](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3726))
+* resource/tencentcloud_wedata_trigger_task: Deletion supports `operate_inform` and `delete_mode`. ([#3724](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3724))
+
 ## 1.82.54(January 13, 2026)
 
 FEATURES:
