@@ -174,6 +174,34 @@ func TestAccTencentCloudCcnV3Update(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCcnV3WithMeteringType(t *testing.T) {
+	t.Parallel()
+	keyName := "tencentcloud_ccn.main"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCcnDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCcnConfigWithMeteringType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCcnExists(keyName),
+					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn-metering"),
+					resource.TestCheckResourceAttr(keyName, "description", "ci-temp-test-ccn-metering-des"),
+					resource.TestCheckResourceAttr(keyName, "qos", "AG"),
+					resource.TestCheckResourceAttr(keyName, "instance_metering_type", "INTER_REGION_BANDWIDTH"),
+				),
+			},
+			{
+				ResourceName:      keyName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccCheckCcnExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -238,6 +266,15 @@ resource tencentcloud_ccn main {
   name                 = "ci-temp-test-ccn"
   description          = "ci-temp-test-ccn-des"
   qos                  = "AG"
+}
+`
+
+const testAccCcnConfigWithMeteringType = `
+resource tencentcloud_ccn main {
+  name                    = "ci-temp-test-ccn-metering"
+  description             = "ci-temp-test-ccn-metering-des"
+  qos                     = "AG"
+  instance_metering_type  = "INTER_REGION_BANDWIDTH"
 }
 `
 

@@ -187,6 +187,9 @@ type AddBandwidthPackageResourcesRequestParams struct {
 
 	// 带宽包协议类型。当前支持'ipv4'和'ipv6'协议类型。
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 用于带宽包内添加IP资源时指定IP带宽值。<p>说明：当前功能处于内测中，如需使用，请提交[工单申请](https://console.cloud.tencent.com/workorder/category)。</p>
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 }
 
 type AddBandwidthPackageResourcesRequest struct {
@@ -214,6 +217,9 @@ type AddBandwidthPackageResourcesRequest struct {
 
 	// 带宽包协议类型。当前支持'ipv4'和'ipv6'协议类型。
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 用于带宽包内添加IP资源时指定IP带宽值。<p>说明：当前功能处于内测中，如需使用，请提交[工单申请](https://console.cloud.tencent.com/workorder/category)。</p>
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 }
 
 func (r *AddBandwidthPackageResourcesRequest) ToJsonString() string {
@@ -233,6 +239,7 @@ func (r *AddBandwidthPackageResourcesRequest) FromJsonString(s string) error {
 	delete(f, "NetworkType")
 	delete(f, "ResourceType")
 	delete(f, "Protocol")
+	delete(f, "InternetMaxBandwidthOut")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddBandwidthPackageResourcesRequest has unknown keys!", "")
 	}
@@ -2635,6 +2642,9 @@ type CCN struct {
 	// 付费类型，PREPAID为预付费，POSTPAID为后付费。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
+	// 计量类型
+	InstanceMeteringType *string `json:"InstanceMeteringType,omitnil,omitempty" name:"InstanceMeteringType"`
+
 	// 限速类型，`INTER_REGION_LIMIT` 为地域间限速；`OUTER_REGION_LIMIT` 为地域出口限速。
 	BandwidthLimitType *string `json:"BandwidthLimitType,omitnil,omitempty" name:"BandwidthLimitType"`
 
@@ -4191,6 +4201,9 @@ type CreateCcnRequestParams struct {
 	// 计费模式，`PREPAID`：表示预付费，即包年包月，`POSTPAID`：表示后付费，即按量计费。默认：`POSTPAID`。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
+	// 计量模式
+	InstanceMeteringType *string `json:"InstanceMeteringType,omitnil,omitempty" name:"InstanceMeteringType"`
+
 	// 限速类型，`OUTER_REGION_LIMIT`表示地域出口限速，`INTER_REGION_LIMIT`为地域间限速，默认为`OUTER_REGION_LIMIT`。预付费模式仅支持地域间限速，后付费模式支持地域间限速和地域出口限速。
 	BandwidthLimitType *string `json:"BandwidthLimitType,omitnil,omitempty" name:"BandwidthLimitType"`
 
@@ -4212,6 +4225,9 @@ type CreateCcnRequest struct {
 
 	// 计费模式，`PREPAID`：表示预付费，即包年包月，`POSTPAID`：表示后付费，即按量计费。默认：`POSTPAID`。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
+
+	// 计量模式
+	InstanceMeteringType *string `json:"InstanceMeteringType,omitnil,omitempty" name:"InstanceMeteringType"`
 
 	// 限速类型，`OUTER_REGION_LIMIT`表示地域出口限速，`INTER_REGION_LIMIT`为地域间限速，默认为`OUTER_REGION_LIMIT`。预付费模式仅支持地域间限速，后付费模式支持地域间限速和地域出口限速。
 	BandwidthLimitType *string `json:"BandwidthLimitType,omitnil,omitempty" name:"BandwidthLimitType"`
@@ -4236,6 +4252,7 @@ func (r *CreateCcnRequest) FromJsonString(s string) error {
 	delete(f, "CcnDescription")
 	delete(f, "QosLevel")
 	delete(f, "InstanceChargeType")
+	delete(f, "InstanceMeteringType")
 	delete(f, "BandwidthLimitType")
 	delete(f, "Tags")
 	if len(f) > 0 {
@@ -31841,6 +31858,12 @@ type NetworkAclQuintupleEntry struct {
 
 	// 方向，INGRESS或EGRESS，用于DescribeNetworkAclQuintupleEntries的出参。
 	NetworkAclDirection *string `json:"NetworkAclDirection,omitnil,omitempty" name:"NetworkAclDirection"`
+
+	// IPv6源CIDR。
+	SourceIPv6Cidr *string `json:"SourceIPv6Cidr,omitnil,omitempty" name:"SourceIPv6Cidr"`
+
+	// IPv6目的CIDR。
+	DestinationIPv6Cidr *string `json:"DestinationIPv6Cidr,omitnil,omitempty" name:"DestinationIPv6Cidr"`
 }
 
 type NetworkInterface struct {
@@ -32628,6 +32651,12 @@ type RemoveBandwidthPackageResourcesRequestParams struct {
 	// <li>Address：弹性公网IP</li>
 	// <li>LoadBalance：负载均衡</li>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// 用于移除带宽包内IP资源时指定IP的带宽值。<p>说明：当前功能处于内测中，如需使用，请提交[工单申请](https://console.cloud.tencent.com/workorder/category)。</p>
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 用于移除带宽包内IP资源时指定资源移除后的计费模式。<li>小时流量：TRAFFIC_POSTPAID_BY_HOUR；</li><li>小时带宽：BANDWIDTH_POSTPAID_BY_HOUR</li><p>说明：当前功能处于内测中，如需使用，请提交[工单申请](https://console.cloud.tencent.com/workorder/category)。</p>
+	InternetChargeType *string `json:"InternetChargeType,omitnil,omitempty" name:"InternetChargeType"`
 }
 
 type RemoveBandwidthPackageResourcesRequest struct {
@@ -32643,6 +32672,12 @@ type RemoveBandwidthPackageResourcesRequest struct {
 	// <li>Address：弹性公网IP</li>
 	// <li>LoadBalance：负载均衡</li>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// 用于移除带宽包内IP资源时指定IP的带宽值。<p>说明：当前功能处于内测中，如需使用，请提交[工单申请](https://console.cloud.tencent.com/workorder/category)。</p>
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 用于移除带宽包内IP资源时指定资源移除后的计费模式。<li>小时流量：TRAFFIC_POSTPAID_BY_HOUR；</li><li>小时带宽：BANDWIDTH_POSTPAID_BY_HOUR</li><p>说明：当前功能处于内测中，如需使用，请提交[工单申请](https://console.cloud.tencent.com/workorder/category)。</p>
+	InternetChargeType *string `json:"InternetChargeType,omitnil,omitempty" name:"InternetChargeType"`
 }
 
 func (r *RemoveBandwidthPackageResourcesRequest) ToJsonString() string {
@@ -32660,6 +32695,8 @@ func (r *RemoveBandwidthPackageResourcesRequest) FromJsonString(s string) error 
 	delete(f, "ResourceIds")
 	delete(f, "BandwidthPackageId")
 	delete(f, "ResourceType")
+	delete(f, "InternetMaxBandwidthOut")
+	delete(f, "InternetChargeType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveBandwidthPackageResourcesRequest has unknown keys!", "")
 	}
@@ -33444,6 +33481,75 @@ func (r *ReplaceRoutesResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *ReplaceRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ReplaceRoutesWithRoutePolicyRequestParams struct {
+	// 路由表实例ID。
+	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
+
+	// 路由策略对象。需要指定路由策略唯一ID（RouteItemId）。
+	Routes []*ReplaceRoutesWithRoutePolicyRoute `json:"Routes,omitnil,omitempty" name:"Routes"`
+}
+
+type ReplaceRoutesWithRoutePolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 路由表实例ID。
+	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
+
+	// 路由策略对象。需要指定路由策略唯一ID（RouteItemId）。
+	Routes []*ReplaceRoutesWithRoutePolicyRoute `json:"Routes,omitnil,omitempty" name:"Routes"`
+}
+
+func (r *ReplaceRoutesWithRoutePolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReplaceRoutesWithRoutePolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RouteTableId")
+	delete(f, "Routes")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ReplaceRoutesWithRoutePolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ReplaceRoutesWithRoutePolicyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ReplaceRoutesWithRoutePolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *ReplaceRoutesWithRoutePolicyResponseParams `json:"Response"`
+}
+
+func (r *ReplaceRoutesWithRoutePolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReplaceRoutesWithRoutePolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ReplaceRoutesWithRoutePolicyRoute struct {
+	// 路由唯一策略ID。
+	RouteItemId *string `json:"RouteItemId,omitnil,omitempty" name:"RouteItemId"`
+
+	// 匹配路由接收策略标记。
+	ForceMatchPolicy *bool `json:"ForceMatchPolicy,omitnil,omitempty" name:"ForceMatchPolicy"`
 }
 
 // Predefined struct for user

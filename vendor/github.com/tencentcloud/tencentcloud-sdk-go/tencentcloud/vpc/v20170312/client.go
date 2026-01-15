@@ -7928,6 +7928,7 @@ func NewCreateVpnGatewaySslServerResponse() (response *CreateVpnGatewaySslServer
 // 本接口（CreateVpnGatewaySslServer）用于创建SSL-VPN Server端。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SSLCCNVPNSERVERCIDRCONFLICT = "InvalidParameterValue.SslCcnVpnServerCidrConflict"
@@ -7937,6 +7938,7 @@ func NewCreateVpnGatewaySslServerResponse() (response *CreateVpnGatewaySslServer
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTEDLOCALADDRESSTYPE = "UnsupportedOperation.NotSupportedLocalAddressType"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) CreateVpnGatewaySslServer(request *CreateVpnGatewaySslServerRequest) (response *CreateVpnGatewaySslServerResponse, err error) {
     return c.CreateVpnGatewaySslServerWithContext(context.Background(), request)
 }
@@ -7945,6 +7947,7 @@ func (c *Client) CreateVpnGatewaySslServer(request *CreateVpnGatewaySslServerReq
 // 本接口（CreateVpnGatewaySslServer）用于创建SSL-VPN Server端。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SSLCCNVPNSERVERCIDRCONFLICT = "InvalidParameterValue.SslCcnVpnServerCidrConflict"
@@ -7954,6 +7957,7 @@ func (c *Client) CreateVpnGatewaySslServer(request *CreateVpnGatewaySslServerReq
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTEDLOCALADDRESSTYPE = "UnsupportedOperation.NotSupportedLocalAddressType"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) CreateVpnGatewaySslServerWithContext(ctx context.Context, request *CreateVpnGatewaySslServerRequest) (response *CreateVpnGatewaySslServerResponse, err error) {
     if request == nil {
         request = NewCreateVpnGatewaySslServerRequest()
@@ -26048,11 +26052,13 @@ func NewModifyVpnGatewaySslServerResponse() (response *ModifyVpnGatewaySslServer
 // 本接口用于修改 SSL-VPN 服务端属性
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
 //  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) ModifyVpnGatewaySslServer(request *ModifyVpnGatewaySslServerRequest) (response *ModifyVpnGatewaySslServerResponse, err error) {
     return c.ModifyVpnGatewaySslServerWithContext(context.Background(), request)
 }
@@ -26061,11 +26067,13 @@ func (c *Client) ModifyVpnGatewaySslServer(request *ModifyVpnGatewaySslServerReq
 // 本接口用于修改 SSL-VPN 服务端属性
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
 //  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) ModifyVpnGatewaySslServerWithContext(ctx context.Context, request *ModifyVpnGatewaySslServerRequest) (response *ModifyVpnGatewaySslServerResponse, err error) {
     if request == nil {
         request = NewModifyVpnGatewaySslServerRequest()
@@ -27517,6 +27525,66 @@ func (c *Client) ReplaceRoutesWithContext(ctx context.Context, request *ReplaceR
     request.SetContext(ctx)
     
     response = NewReplaceRoutesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewReplaceRoutesWithRoutePolicyRequest() (request *ReplaceRoutesWithRoutePolicyRequest) {
+    request = &ReplaceRoutesWithRoutePolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ReplaceRoutesWithRoutePolicy")
+    
+    
+    return
+}
+
+func NewReplaceRoutesWithRoutePolicyResponse() (response *ReplaceRoutesWithRoutePolicyResponse) {
+    response = &ReplaceRoutesWithRoutePolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ReplaceRoutesWithRoutePolicy
+// 本接口（ReplaceRoutes）根据路由策略ID（RouteId）修改指定的路由策略（Route），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTROUTETYPE = "UnsupportedOperation.NotSupportRouteType"
+func (c *Client) ReplaceRoutesWithRoutePolicy(request *ReplaceRoutesWithRoutePolicyRequest) (response *ReplaceRoutesWithRoutePolicyResponse, err error) {
+    return c.ReplaceRoutesWithRoutePolicyWithContext(context.Background(), request)
+}
+
+// ReplaceRoutesWithRoutePolicy
+// 本接口（ReplaceRoutes）根据路由策略ID（RouteId）修改指定的路由策略（Route），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTROUTETYPE = "UnsupportedOperation.NotSupportRouteType"
+func (c *Client) ReplaceRoutesWithRoutePolicyWithContext(ctx context.Context, request *ReplaceRoutesWithRoutePolicyRequest) (response *ReplaceRoutesWithRoutePolicyResponse, err error) {
+    if request == nil {
+        request = NewReplaceRoutesWithRoutePolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ReplaceRoutesWithRoutePolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReplaceRoutesWithRoutePolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReplaceRoutesWithRoutePolicyResponse()
     err = c.Send(request, response)
     return
 }

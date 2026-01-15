@@ -70,6 +70,13 @@ func ResourceTencentCloudCcn() *schema.Resource {
 					"`INTER_REGION_LIMIT` is the inter-regional speed limit. " +
 					"The default is `OUTER_REGION_LIMIT`.",
 			},
+			"instance_metering_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Instance metering type. Valid values: `BANDWIDTH` (bandwidth billing), `TRAFFIC` (traffic billing). This parameter cannot be modified after creation.",
+			},
 			"route_ecmp_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -111,14 +118,15 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	defer tccommon.LogElapsed("resource.tencentcloud_ccn.create")()
 
 	var (
-		logId              = tccommon.GetLogId(tccommon.ContextNil)
-		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service            = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		name               string
-		description        string
-		qos                string
-		chargeType         string
-		bandwidthLimitType string
+		logId                = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                  = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service              = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		name                 string
+		description          string
+		qos                  string
+		chargeType           string
+		bandwidthLimitType   string
+		instanceMeteringType string
 	)
 
 	if temp, ok := d.GetOk("name"); ok {
@@ -141,7 +149,11 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 		bandwidthLimitType = temp.(string)
 	}
 
-	info, err := service.CreateCcn(ctx, name, description, qos, chargeType, bandwidthLimitType)
+	if temp, ok := d.GetOk("instance_metering_type"); ok {
+		instanceMeteringType = temp.(string)
+	}
+
+	info, err := service.CreateCcn(ctx, name, description, qos, chargeType, bandwidthLimitType, instanceMeteringType)
 	if err != nil {
 		return err
 	}
@@ -234,6 +246,7 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("create_time", info.createTime)
 		_ = d.Set("charge_type", info.chargeType)
 		_ = d.Set("bandwidth_limit_type", info.bandWithLimitType)
+		_ = d.Set("instance_metering_type", info.instanceMeteringType)
 		_ = d.Set("route_ecmp_flag", info.ecmpFlag)
 		_ = d.Set("route_overlap_flag", info.overlapFlag)
 
