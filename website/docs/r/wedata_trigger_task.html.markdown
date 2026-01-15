@@ -79,6 +79,8 @@ The following arguments are supported:
 * `trigger_task_base_attribute` - (Required, List) Basic task attributes.
 * `trigger_task_configuration` - (Required, List) Task configuration.
 * `trigger_task_scheduler_configuration` - (Required, List) Task scheduling configuration.
+* `delete_mode` - (Optional, Bool) Task deletion method: `true`: does not force downstream task instances to fail; `false`: forces downstream task instances to fail; defaults to `false` if not specified, and is only used during deletion.
+* `operate_inform` - (Optional, Bool) Should task operations trigger notifications to downstream task owners, `true`: Notify; `false`: Do not notify; If not specified, the default is `false`. This parameter is only used during deletion.
 
 The `param_task_in_list` object of `trigger_task_scheduler_configuration` supports the following:
 
