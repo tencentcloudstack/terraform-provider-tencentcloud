@@ -404,5 +404,39 @@ func resourceTencentCloudWedataProjectDelete(d *schema.ResourceData, meta interf
 	defer tccommon.LogElapsed("resource.tencentcloud_wedata_project.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	return fmt.Errorf("tencentcloud wedata project not supported delete, please contact the work order for processing")
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request   = wedatav20250806.NewDeleteProjectRequest()
+		response  = wedatav20250806.NewDeleteProjectResponse()
+		projectId = d.Id()
+	)
+
+	request.ProjectId = &projectId
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().DeleteProjectWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil || result.Response.Data.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete project failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s delete wedata project failed, reason:%+v", logId, reqErr)
+		return reqErr
+	}
+
+	if *response.Response.Data.Status {
+		return nil
+	}
+
+	return fmt.Errorf("Delete project %s failed, Status is false.", projectId)
 }
