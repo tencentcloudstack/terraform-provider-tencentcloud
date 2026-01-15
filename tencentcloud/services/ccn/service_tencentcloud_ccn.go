@@ -20,17 +20,18 @@ import (
 
 // Ccn basic information
 type CcnBasicInfo struct {
-	ccnId             string
-	name              string
-	description       string
-	state             string
-	qos               string
-	chargeType        string
-	bandWithLimitType string
-	instanceCount     int64
-	createTime        string
-	ecmpFlag          bool
-	overlapFlag       bool
+	ccnId                string
+	name                 string
+	description          string
+	state                string
+	qos                  string
+	chargeType           string
+	bandWithLimitType    string
+	instanceMeteringType string
+	instanceCount        int64
+	createTime           string
+	ecmpFlag             bool
+	overlapFlag          bool
 }
 
 type CcnInstanceBind struct {
@@ -209,6 +210,9 @@ getMoreData:
 		basicInfo.state = *item.State
 		basicInfo.chargeType = *item.InstanceChargeType
 		basicInfo.bandWithLimitType = *item.BandwidthLimitType
+		if item.InstanceMeteringType != nil {
+			basicInfo.instanceMeteringType = *item.InstanceMeteringType
+		}
 		basicInfo.ecmpFlag = *item.RouteECMPFlag
 		basicInfo.overlapFlag = *item.RouteOverlapFlag
 
@@ -270,7 +274,7 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, ccnI
 }
 
 func (me *VpcService) CreateCcn(ctx context.Context, name, description,
-	qos, chargeType, bandWithLimitType string) (basicInfo CcnBasicInfo, errRet error) {
+	qos, chargeType, bandWithLimitType, instanceMeteringType string) (basicInfo CcnBasicInfo, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewCreateCcnRequest()
@@ -280,6 +284,9 @@ func (me *VpcService) CreateCcn(ctx context.Context, name, description,
 	request.QosLevel = &qos
 	request.InstanceChargeType = &chargeType
 	request.BandwidthLimitType = &bandWithLimitType
+	if instanceMeteringType != "" {
+		request.InstanceMeteringType = &instanceMeteringType
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateCcn(request)
 
