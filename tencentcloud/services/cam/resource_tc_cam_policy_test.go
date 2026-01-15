@@ -90,6 +90,40 @@ func TestAccTencentCloudCamPolicy_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCamPolicy_tags(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCamPolicyDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCamPolicy_tags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCamPolicyExists("tencentcloud_cam_policy.policy_tags"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_tags", "name", "cam-policy-test-tags"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_tags", "tags.env", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_tags", "tags.team", "terraform"),
+				),
+			},
+			{
+				Config: testAccCamPolicy_tags_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCamPolicyExists("tencentcloud_cam_policy.policy_tags"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_tags", "name", "cam-policy-test-tags"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_tags", "tags.env", "production"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_tags", "tags.owner", "admin"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cam_policy.policy_tags",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccCheckCamPolicyDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -145,5 +179,31 @@ resource "tencentcloud_cam_policy" "policy_basic" {
   name     = "cam-policy-test4"
   document = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"},{\"effect\":\"allow\",\"action\":[\"cam:ListUsersForGroup\",\"cam:ListGroups\",\"cam:GetGroup\"],\"resource\":[\"*\"]}]}"
   description = "test2"
+}
+`
+
+const testAccCamPolicy_tags = `
+resource "tencentcloud_cam_policy" "policy_tags" {
+  name        = "cam-policy-test-tags"
+  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"}]}"
+  description = "test policy with tags"
+  
+  tags = {
+    env  = "test"
+    team = "terraform"
+  }
+}
+`
+
+const testAccCamPolicy_tags_update = `
+resource "tencentcloud_cam_policy" "policy_tags" {
+  name        = "cam-policy-test-tags"
+  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"}]}"
+  description = "test policy with tags updated"
+  
+  tags = {
+    env   = "production"
+    owner = "admin"
+  }
 }
 `

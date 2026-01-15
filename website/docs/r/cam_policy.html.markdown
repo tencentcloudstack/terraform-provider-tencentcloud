@@ -33,6 +33,11 @@ resource "tencentcloud_cam_policy" "foo" {
 }
 EOF
   description = "tf_test"
+
+  tags = {
+    createBy = "Terraform"
+    env      = "test"
+  }
 }
 ```
 
@@ -43,6 +48,7 @@ The following arguments are supported:
 * `document` - (Required, String) Document of the CAM policy. The syntax refers to [CAM POLICY](https://intl.cloud.tencent.com/document/product/598/10604). There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.
 * `name` - (Required, String, ForceNew) Name of CAM policy.
 * `description` - (Optional, String) Description of the CAM policy.
+* `tags` - (Optional, Map) Instance tag.
 
 ## Attributes Reference
 
