@@ -80,7 +80,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	headName = "X-Tc-Region"
 	appendMessage := []byte(fmt.Sprintf(
 		", (host %+v, region:%+v)",
-		request.Header["Host"],
+		request.Host,
 		request.Header[headName],
 	))
 
