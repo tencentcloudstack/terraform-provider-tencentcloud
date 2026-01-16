@@ -404,7 +404,7 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 				request.Name = helper.String(v.(string))
 			}
 
-			if v, ok := d.GetOk("is_modify_nick_name"); ok {
+			if v, ok := d.GetOkExists("is_modify_nick_name"); ok {
 				request.IsModifyNickName = helper.IntUint64(v.(int))
 			}
 		}
