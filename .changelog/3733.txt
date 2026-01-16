@@ -1,19 +1,23 @@
 ```release-note:new-data-source
-tencentcloud_wedata_quality_rule_templates
+tencentcloud_teo_environments
 ```
 
 ```release-note:new-data-source
-tencentcloud_wedata_quality_rule_templates
+tencentcloud_teo_config_group_versions
 ```
 
 ```release-note:new-data-source
-tencentcloud_wedata_quality_rule_templates
+tencentcloud_teo_config_group_version_detail
 ```
 
 ```release-note:new-data-source
-tencentcloud_wedata_quality_rule_templates
+tencentcloud_teo_deploy_config_version_history
 ```
 
 ```release-note:new-resource
-tencentcloud_wedata_submit_trigger_task
+tencentcloud_teo_config_group_version
+```
+
+```release-note:new-resource
+tencentcloud_teo_deploy_config_group_version
 ```
