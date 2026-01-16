@@ -64,32 +64,22 @@ func resourceTencentCloudKubernetesLogConfigCreate(d *schema.ResourceData, meta 
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_log_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
 	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request       = tkev20180525.NewCreateCLSLogConfigRequest()
 		clusterId     string
 		logConfigName string
 		clusterType   string
 	)
-	var (
-		request  = tkev20180525.NewCreateCLSLogConfigRequest()
-		response = tkev20180525.NewCreateCLSLogConfigResponse()
-	)
 
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
 	if v, ok := d.GetOk("log_config_name"); ok {
 		logConfigName = v.(string)
-	}
-	if v, ok := d.GetOk("cluster_type"); ok {
-		clusterType = v.(string)
 	}
 
 	if v, ok := d.GetOk("cluster_id"); ok {
 		request.ClusterId = helper.String(v.(string))
+		clusterId = v.(string)
 	}
 
 	if v, ok := d.GetOk("log_config"); ok {
@@ -102,6 +92,7 @@ func resourceTencentCloudKubernetesLogConfigCreate(d *schema.ResourceData, meta 
 
 	if v, ok := d.GetOk("cluster_type"); ok {
 		request.ClusterType = helper.String(v.(string))
+		clusterType = v.(string)
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -111,17 +102,41 @@ func resourceTencentCloudKubernetesLogConfigCreate(d *schema.ResourceData, meta 
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create kubernetes log config failed, reason:%+v", logId, err)
 		return err
 	}
 
-	_ = response
-
 	d.SetId(strings.Join([]string{clusterId, logConfigName, clusterType}, tccommon.FILED_SP))
+
+	// wait
+	waitReq := tkev20180525.NewDescribeLogConfigsRequest()
+	waitReq.ClusterId = &clusterId
+	waitReq.LogConfigNames = &logConfigName
+	waitReq.ClusterType = &clusterType
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DescribeLogConfigsWithContext(ctx, waitReq)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.LogConfigs == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes log configs failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create kubernetes log config failed, reason:%+v", logId, err)
+		return err
+	}
 
 	return resourceTencentCloudKubernetesLogConfigRead(d, meta)
 }
