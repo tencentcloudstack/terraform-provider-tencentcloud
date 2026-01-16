@@ -292,3 +292,67 @@ func (me *ApmService) DescribeApmPrometheusRuleById(ctx context.Context, instanc
 
 	return
 }
+
+func (me *ApmService) DescribeApmInstances(ctx context.Context, params map[string]interface{}) (instances []*apm.ApmInstanceDetail, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := apm.NewDescribeApmInstancesRequest()
+	response := apm.NewDescribeApmInstancesResponse()
+
+	// Set filter parameters
+	if v, ok := params["instance_ids"]; ok {
+		request.InstanceIds = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+	if v, ok := params["instance_id"]; ok {
+		request.InstanceId = helper.String(v.(string))
+	}
+	if v, ok := params["instance_name"]; ok {
+		request.InstanceName = helper.String(v.(string))
+	}
+	if v, ok := params["tags"]; ok {
+		tags := v.(map[string]interface{})
+		for key, value := range tags {
+			tag := apm.ApmTag{
+				Key:   helper.String(key),
+				Value: helper.String(value.(string)),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+	if v, ok := params["demo_instance_flag"]; ok {
+		request.DemoInstanceFlag = helper.IntInt64(v.(int))
+	}
+	if v, ok := params["all_regions_flag"]; ok {
+		request.AllRegionsFlag = helper.IntInt64(v.(int))
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseApmClient().DescribeApmInstances(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response != nil && response.Response.Instances != nil {
+		instances = response.Response.Instances
+	}
+
+	return
+}
