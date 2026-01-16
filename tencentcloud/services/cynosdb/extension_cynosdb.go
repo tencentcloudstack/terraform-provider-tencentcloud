@@ -496,7 +496,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Computed:    true,
-			Description: "Kernel version, you can enter it when modifying.",
+			Description: "Kernel minor version, like `3.1.16.002`.",
 		},
 	}
 
