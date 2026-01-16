@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -293,8 +294,6 @@ func resourceTencentCloudCfwClusterVpcFwSwitchCreate(d *schema.ResourceData, met
 		return reqErr
 	}
 
-	d.SetId(ccnId)
-
 	// wait
 	waitReq := cfwv20190904.NewDescribeClusterVpcFwSwitchsRequest()
 	waitReq.Filters = []*cfwv20190904.CommonFilter{
@@ -353,6 +352,7 @@ func resourceTencentCloudCfwClusterVpcFwSwitchCreate(d *schema.ResourceData, met
 		return reqErr
 	}
 
+	d.SetId(ccnId)
 	return resourceTencentCloudCfwClusterVpcFwSwitchRead(d, meta)
 }
 
@@ -605,6 +605,65 @@ func resourceTencentCloudCfwClusterVpcFwSwitchUpdate(d *schema.ResourceData, met
 
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update cfw cluster vpc fw switch failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		// wait
+		time.Sleep(60 * time.Second)
+		waitReq := cfwv20190904.NewDescribeClusterVpcFwSwitchsRequest()
+		waitReq.Filters = []*cfwv20190904.CommonFilter{
+			{
+				Name:         helper.String("InsObj"),
+				OperatorType: helper.IntInt64(1),
+				Values:       helper.Strings([]string{ccnId}),
+			},
+		}
+		waitReq.Offset = helper.IntUint64(0)
+		waitReq.Limit = helper.IntUint64(20)
+		reqErr = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwV20190904Client().DescribeClusterVpcFwSwitchsWithContext(ctx, waitReq)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Data == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe cluster vpc fw switchs ailed, Response is nil."))
+			}
+
+			if len(result.Response.Data) == 0 {
+				return resource.NonRetryableError(fmt.Errorf("Data is empty."))
+			}
+
+			obj := result.Response.Data[0]
+			if obj != nil && obj.Status != nil {
+				if *obj.Status == 1 {
+					return nil
+				}
+
+				// update error
+				if *obj.Status == 0 {
+					service := CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+					respData, e := service.DescribeCfwVpcSwitchErrorById(ctx, ccnId, "ERR_VPC_FW_UPDATE_FAILED")
+					if e != nil {
+						return resource.NonRetryableError(e)
+					}
+
+					if respData == nil || respData.ErrMsg == nil {
+						return resource.NonRetryableError(fmt.Errorf("Describe switch error failed. Response is nil."))
+					}
+
+					errMsg := *respData.ErrMsg
+					return resource.NonRetryableError(fmt.Errorf("Cluster vpc fw switch update failed. Reason:%s", errMsg))
+				}
+			}
+
+			return resource.RetryableError(fmt.Errorf("wait for cluster vpc fw switch update."))
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s create cfw cluster vpc fw switch failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}
