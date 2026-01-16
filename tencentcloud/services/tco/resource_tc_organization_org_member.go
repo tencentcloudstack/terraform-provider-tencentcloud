@@ -83,6 +83,12 @@ func ResourceTencentCloudOrganizationOrgMember() *schema.Resource {
 				Description: "Whether to force delete the member account when deleting the organization member. It is only applicable to member accounts of the creation type, not to member accounts of the invitation type. Default is false.",
 			},
 
+			"is_modify_nick_name": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Whether to synchronize organization member names to their account nicknames. Values: 1 - Sync, 0 - Do not sync. This parameter takes effect only when the name field is being modified.",
+			},
+
 			// computed
 			"node_name": {
 				Type:        schema.TypeString,
@@ -396,6 +402,10 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 		if d.HasChange("name") {
 			if v, ok := d.GetOk("name"); ok {
 				request.Name = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("is_modify_nick_name"); ok {
+				request.IsModifyNickName = helper.IntUint64(v.(int))
 			}
 		}
 
