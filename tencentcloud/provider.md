@@ -2365,6 +2365,9 @@ Data Source
 tencentcloud_cfw_nat_fw_switches
 tencentcloud_cfw_vpc_fw_switches
 tencentcloud_cfw_edge_fw_switches
+tencentcloud_cfw_ccn_instance_region_status
+tencentcloud_cfw_ccn_associated_instances
+tencentcloud_cfw_ccn_vpc_fw_switch
 
 Resource
 tencentcloud_cfw_address_template
@@ -2381,6 +2384,7 @@ tencentcloud_cfw_nat_firewall_switch
 tencentcloud_cfw_vpc_firewall_switch
 tencentcloud_cfw_edge_firewall_switch
 tencentcloud_sg_rule
+tencentcloud_cfw_cluster_vpc_fw_switch
 
 Bastion Host(BH)
 Data Source

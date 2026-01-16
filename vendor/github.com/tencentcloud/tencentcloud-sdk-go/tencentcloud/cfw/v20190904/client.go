@@ -1283,62 +1283,6 @@ func (c *Client) DeleteAddressTemplateWithContext(ctx context.Context, request *
     return
 }
 
-func NewDeleteAllAccessControlRuleRequest() (request *DeleteAllAccessControlRuleRequest) {
-    request = &DeleteAllAccessControlRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cfw", APIVersion, "DeleteAllAccessControlRule")
-    
-    
-    return
-}
-
-func NewDeleteAllAccessControlRuleResponse() (response *DeleteAllAccessControlRuleResponse) {
-    response = &DeleteAllAccessControlRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DeleteAllAccessControlRule
-// 全部删除规则
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-func (c *Client) DeleteAllAccessControlRule(request *DeleteAllAccessControlRuleRequest) (response *DeleteAllAccessControlRuleResponse, err error) {
-    return c.DeleteAllAccessControlRuleWithContext(context.Background(), request)
-}
-
-// DeleteAllAccessControlRule
-// 全部删除规则
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-func (c *Client) DeleteAllAccessControlRuleWithContext(ctx context.Context, request *DeleteAllAccessControlRuleRequest) (response *DeleteAllAccessControlRuleResponse, err error) {
-    if request == nil {
-        request = NewDeleteAllAccessControlRuleRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DeleteAllAccessControlRule")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteAllAccessControlRule require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteAllAccessControlRuleResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDeleteBlockIgnoreRuleListRequest() (request *DeleteBlockIgnoreRuleListRequest) {
     request = &DeleteBlockIgnoreRuleListRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2337,6 +2281,228 @@ func (c *Client) DescribeBlockStaticListWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribeCcnAssociatedInstancesRequest() (request *DescribeCcnAssociatedInstancesRequest) {
+    request = &DescribeCcnAssociatedInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeCcnAssociatedInstances")
+    
+    
+    return
+}
+
+func NewDescribeCcnAssociatedInstancesResponse() (response *DescribeCcnAssociatedInstancesResponse) {
+    response = &DescribeCcnAssociatedInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCcnAssociatedInstances
+// 查询云联网关联的实例信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCcnAssociatedInstances(request *DescribeCcnAssociatedInstancesRequest) (response *DescribeCcnAssociatedInstancesResponse, err error) {
+    return c.DescribeCcnAssociatedInstancesWithContext(context.Background(), request)
+}
+
+// DescribeCcnAssociatedInstances
+// 查询云联网关联的实例信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCcnAssociatedInstancesWithContext(ctx context.Context, request *DescribeCcnAssociatedInstancesRequest) (response *DescribeCcnAssociatedInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCcnAssociatedInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeCcnAssociatedInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCcnAssociatedInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCcnAssociatedInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCcnInstanceRegionStatusRequest() (request *DescribeCcnInstanceRegionStatusRequest) {
+    request = &DescribeCcnInstanceRegionStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeCcnInstanceRegionStatus")
+    
+    
+    return
+}
+
+func NewDescribeCcnInstanceRegionStatusResponse() (response *DescribeCcnInstanceRegionStatusResponse) {
+    response = &DescribeCcnInstanceRegionStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCcnInstanceRegionStatus
+// 查询CCN关联实例的地域防火墙引流网络部署状态
+//
+// 1.根据CCN ID和实例ID列表，返回实例对应地域的防火墙引流网络部署状态
+//
+// 2.如果传入实例ID列表为空，则返回CCN关联的所有实例的地域防火墙引流网络部署状态
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCcnInstanceRegionStatus(request *DescribeCcnInstanceRegionStatusRequest) (response *DescribeCcnInstanceRegionStatusResponse, err error) {
+    return c.DescribeCcnInstanceRegionStatusWithContext(context.Background(), request)
+}
+
+// DescribeCcnInstanceRegionStatus
+// 查询CCN关联实例的地域防火墙引流网络部署状态
+//
+// 1.根据CCN ID和实例ID列表，返回实例对应地域的防火墙引流网络部署状态
+//
+// 2.如果传入实例ID列表为空，则返回CCN关联的所有实例的地域防火墙引流网络部署状态
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCcnInstanceRegionStatusWithContext(ctx context.Context, request *DescribeCcnInstanceRegionStatusRequest) (response *DescribeCcnInstanceRegionStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeCcnInstanceRegionStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeCcnInstanceRegionStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCcnInstanceRegionStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCcnInstanceRegionStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCcnVpcFwPolicyLimitRequest() (request *DescribeCcnVpcFwPolicyLimitRequest) {
+    request = &DescribeCcnVpcFwPolicyLimitRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeCcnVpcFwPolicyLimit")
+    
+    
+    return
+}
+
+func NewDescribeCcnVpcFwPolicyLimitResponse() (response *DescribeCcnVpcFwPolicyLimitResponse) {
+    response = &DescribeCcnVpcFwPolicyLimitResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCcnVpcFwPolicyLimit
+// 查询CCN中VPC防火墙接入策略配置时的规则数量限制
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCcnVpcFwPolicyLimit(request *DescribeCcnVpcFwPolicyLimitRequest) (response *DescribeCcnVpcFwPolicyLimitResponse, err error) {
+    return c.DescribeCcnVpcFwPolicyLimitWithContext(context.Background(), request)
+}
+
+// DescribeCcnVpcFwPolicyLimit
+// 查询CCN中VPC防火墙接入策略配置时的规则数量限制
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCcnVpcFwPolicyLimitWithContext(ctx context.Context, request *DescribeCcnVpcFwPolicyLimitRequest) (response *DescribeCcnVpcFwPolicyLimitResponse, err error) {
+    if request == nil {
+        request = NewDescribeCcnVpcFwPolicyLimitRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeCcnVpcFwPolicyLimit")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCcnVpcFwPolicyLimit require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCcnVpcFwPolicyLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCcnVpcFwSwitchRequest() (request *DescribeCcnVpcFwSwitchRequest) {
+    request = &DescribeCcnVpcFwSwitchRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeCcnVpcFwSwitch")
+    
+    
+    return
+}
+
+func NewDescribeCcnVpcFwSwitchResponse() (response *DescribeCcnVpcFwSwitchResponse) {
+    response = &DescribeCcnVpcFwSwitchResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCcnVpcFwSwitch
+// 查询CCN VPC防火墙开关配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeCcnVpcFwSwitch(request *DescribeCcnVpcFwSwitchRequest) (response *DescribeCcnVpcFwSwitchResponse, err error) {
+    return c.DescribeCcnVpcFwSwitchWithContext(context.Background(), request)
+}
+
+// DescribeCcnVpcFwSwitch
+// 查询CCN VPC防火墙开关配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeCcnVpcFwSwitchWithContext(ctx context.Context, request *DescribeCcnVpcFwSwitchRequest) (response *DescribeCcnVpcFwSwitchResponse, err error) {
+    if request == nil {
+        request = NewDescribeCcnVpcFwSwitchRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeCcnVpcFwSwitch")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCcnVpcFwSwitch require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCcnVpcFwSwitchResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeCfwEipsRequest() (request *DescribeCfwEipsRequest) {
     request = &DescribeCfwEipsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2501,6 +2667,62 @@ func (c *Client) DescribeCfwInsStatusWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeCfwInsStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterVpcFwSwitchsRequest() (request *DescribeClusterVpcFwSwitchsRequest) {
+    request = &DescribeClusterVpcFwSwitchsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeClusterVpcFwSwitchs")
+    
+    
+    return
+}
+
+func NewDescribeClusterVpcFwSwitchsResponse() (response *DescribeClusterVpcFwSwitchsResponse) {
+    response = &DescribeClusterVpcFwSwitchsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterVpcFwSwitchs
+// 查询集群模式Vpc间防火墙开关
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeClusterVpcFwSwitchs(request *DescribeClusterVpcFwSwitchsRequest) (response *DescribeClusterVpcFwSwitchsResponse, err error) {
+    return c.DescribeClusterVpcFwSwitchsWithContext(context.Background(), request)
+}
+
+// DescribeClusterVpcFwSwitchs
+// 查询集群模式Vpc间防火墙开关
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeClusterVpcFwSwitchsWithContext(ctx context.Context, request *DescribeClusterVpcFwSwitchsRequest) (response *DescribeClusterVpcFwSwitchsResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterVpcFwSwitchsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeClusterVpcFwSwitchs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterVpcFwSwitchs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterVpcFwSwitchsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3199,6 +3421,64 @@ func (c *Client) DescribeIPStatusListWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeIPStatusListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeIpsModeSwitchRequest() (request *DescribeIpsModeSwitchRequest) {
+    request = &DescribeIpsModeSwitchRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeIpsModeSwitch")
+    
+    
+    return
+}
+
+func NewDescribeIpsModeSwitchResponse() (response *DescribeIpsModeSwitchResponse) {
+    response = &DescribeIpsModeSwitchResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIpsModeSwitch
+// 获取入侵防御防护模式
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeIpsModeSwitch(request *DescribeIpsModeSwitchRequest) (response *DescribeIpsModeSwitchResponse, err error) {
+    return c.DescribeIpsModeSwitchWithContext(context.Background(), request)
+}
+
+// DescribeIpsModeSwitch
+// 获取入侵防御防护模式
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeIpsModeSwitchWithContext(ctx context.Context, request *DescribeIpsModeSwitchRequest) (response *DescribeIpsModeSwitchResponse, err error) {
+    if request == nil {
+        request = NewDescribeIpsModeSwitchRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeIpsModeSwitch")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIpsModeSwitch require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIpsModeSwitchResponse()
     err = c.Send(request, response)
     return
 }
@@ -4237,6 +4517,56 @@ func (c *Client) DescribeSourceAssetWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDescribeSwitchErrorRequest() (request *DescribeSwitchErrorRequest) {
+    request = &DescribeSwitchErrorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeSwitchError")
+    
+    
+    return
+}
+
+func NewDescribeSwitchErrorResponse() (response *DescribeSwitchErrorResponse) {
+    response = &DescribeSwitchErrorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSwitchError
+// 互联网边界防火墙开关横幅错误信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeSwitchError(request *DescribeSwitchErrorRequest) (response *DescribeSwitchErrorResponse, err error) {
+    return c.DescribeSwitchErrorWithContext(context.Background(), request)
+}
+
+// DescribeSwitchError
+// 互联网边界防火墙开关横幅错误信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeSwitchErrorWithContext(ctx context.Context, request *DescribeSwitchErrorRequest) (response *DescribeSwitchErrorResponse, err error) {
+    if request == nil {
+        request = NewDescribeSwitchErrorRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeSwitchError")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSwitchError require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSwitchErrorResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeSwitchListsRequest() (request *DescribeSwitchListsRequest) {
     request = &DescribeSwitchListsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4649,6 +4979,90 @@ func (c *Client) DescribeVpcAcRuleWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeVpcAcRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeVpcFwCcnPolicyWhiteListRequest() (request *DescribeVpcFwCcnPolicyWhiteListRequest) {
+    request = &DescribeVpcFwCcnPolicyWhiteListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "DescribeVpcFwCcnPolicyWhiteList")
+    
+    
+    return
+}
+
+func NewDescribeVpcFwCcnPolicyWhiteListResponse() (response *DescribeVpcFwCcnPolicyWhiteListResponse) {
+    response = &DescribeVpcFwCcnPolicyWhiteListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeVpcFwCcnPolicyWhiteList
+// 查询VPC防火墙策略路由功能开白的CCN列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeVpcFwCcnPolicyWhiteList(request *DescribeVpcFwCcnPolicyWhiteListRequest) (response *DescribeVpcFwCcnPolicyWhiteListResponse, err error) {
+    return c.DescribeVpcFwCcnPolicyWhiteListWithContext(context.Background(), request)
+}
+
+// DescribeVpcFwCcnPolicyWhiteList
+// 查询VPC防火墙策略路由功能开白的CCN列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeVpcFwCcnPolicyWhiteListWithContext(ctx context.Context, request *DescribeVpcFwCcnPolicyWhiteListRequest) (response *DescribeVpcFwCcnPolicyWhiteListResponse, err error) {
+    if request == nil {
+        request = NewDescribeVpcFwCcnPolicyWhiteListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "DescribeVpcFwCcnPolicyWhiteList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeVpcFwCcnPolicyWhiteList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeVpcFwCcnPolicyWhiteListResponse()
     err = c.Send(request, response)
     return
 }
@@ -5503,6 +5917,90 @@ func (c *Client) ModifyBlockTopWithContext(ctx context.Context, request *ModifyB
     return
 }
 
+func NewModifyClusterVpcFwSwitchRequest() (request *ModifyClusterVpcFwSwitchRequest) {
+    request = &ModifyClusterVpcFwSwitchRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "ModifyClusterVpcFwSwitch")
+    
+    
+    return
+}
+
+func NewModifyClusterVpcFwSwitchResponse() (response *ModifyClusterVpcFwSwitchResponse) {
+    response = &ModifyClusterVpcFwSwitchResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyClusterVpcFwSwitch
+// 修改集群模式VPC防火墙开关
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyClusterVpcFwSwitch(request *ModifyClusterVpcFwSwitchRequest) (response *ModifyClusterVpcFwSwitchResponse, err error) {
+    return c.ModifyClusterVpcFwSwitchWithContext(context.Background(), request)
+}
+
+// ModifyClusterVpcFwSwitch
+// 修改集群模式VPC防火墙开关
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyClusterVpcFwSwitchWithContext(ctx context.Context, request *ModifyClusterVpcFwSwitchRequest) (response *ModifyClusterVpcFwSwitchResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterVpcFwSwitchRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "ModifyClusterVpcFwSwitch")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterVpcFwSwitch require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyClusterVpcFwSwitchResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyEWRuleStatusRequest() (request *ModifyEWRuleStatusRequest) {
     request = &ModifyEWRuleStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5823,6 +6321,64 @@ func (c *Client) ModifyFwGroupSwitchWithContext(ctx context.Context, request *Mo
     request.SetContext(ctx)
     
     response = NewModifyFwGroupSwitchResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyIpsModeSwitchRequest() (request *ModifyIpsModeSwitchRequest) {
+    request = &ModifyIpsModeSwitchRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "ModifyIpsModeSwitch")
+    
+    
+    return
+}
+
+func NewModifyIpsModeSwitchResponse() (response *ModifyIpsModeSwitchResponse) {
+    response = &ModifyIpsModeSwitchResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyIpsModeSwitch
+// 修改入侵防御防护模式
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyIpsModeSwitch(request *ModifyIpsModeSwitchRequest) (response *ModifyIpsModeSwitchResponse, err error) {
+    return c.ModifyIpsModeSwitchWithContext(context.Background(), request)
+}
+
+// ModifyIpsModeSwitch
+// 修改入侵防御防护模式
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyIpsModeSwitchWithContext(ctx context.Context, request *ModifyIpsModeSwitchRequest) (response *ModifyIpsModeSwitchResponse, err error) {
+    if request == nil {
+        request = NewModifyIpsModeSwitchRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "ModifyIpsModeSwitch")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyIpsModeSwitch require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyIpsModeSwitchResponse()
     err = c.Send(request, response)
     return
 }
@@ -7967,6 +8523,118 @@ func (c *Client) SyncFwOperateWithContext(ctx context.Context, request *SyncFwOp
     request.SetContext(ctx)
     
     response = NewSyncFwOperateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateCheckCcnNonDirectFlagRequest() (request *UpdateCheckCcnNonDirectFlagRequest) {
+    request = &UpdateCheckCcnNonDirectFlagRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "UpdateCheckCcnNonDirectFlag")
+    
+    
+    return
+}
+
+func NewUpdateCheckCcnNonDirectFlagResponse() (response *UpdateCheckCcnNonDirectFlagResponse) {
+    response = &UpdateCheckCcnNonDirectFlagResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateCheckCcnNonDirectFlag
+// 重新检测CCN中接入VPC防火墙的VPC实例非同城直通标记
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) UpdateCheckCcnNonDirectFlag(request *UpdateCheckCcnNonDirectFlagRequest) (response *UpdateCheckCcnNonDirectFlagResponse, err error) {
+    return c.UpdateCheckCcnNonDirectFlagWithContext(context.Background(), request)
+}
+
+// UpdateCheckCcnNonDirectFlag
+// 重新检测CCN中接入VPC防火墙的VPC实例非同城直通标记
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) UpdateCheckCcnNonDirectFlagWithContext(ctx context.Context, request *UpdateCheckCcnNonDirectFlagRequest) (response *UpdateCheckCcnNonDirectFlagResponse, err error) {
+    if request == nil {
+        request = NewUpdateCheckCcnNonDirectFlagRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "UpdateCheckCcnNonDirectFlag")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateCheckCcnNonDirectFlag require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateCheckCcnNonDirectFlagResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateClusterVpcFwRequest() (request *UpdateClusterVpcFwRequest) {
+    request = &UpdateClusterVpcFwRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cfw", APIVersion, "UpdateClusterVpcFw")
+    
+    
+    return
+}
+
+func NewUpdateClusterVpcFwResponse() (response *UpdateClusterVpcFwResponse) {
+    response = &UpdateClusterVpcFwResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateClusterVpcFw
+// 修改更新CCN中VPC防火墙策略配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateClusterVpcFw(request *UpdateClusterVpcFwRequest) (response *UpdateClusterVpcFwResponse, err error) {
+    return c.UpdateClusterVpcFwWithContext(context.Background(), request)
+}
+
+// UpdateClusterVpcFw
+// 修改更新CCN中VPC防火墙策略配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateClusterVpcFwWithContext(ctx context.Context, request *UpdateClusterVpcFwRequest) (response *UpdateClusterVpcFwResponse, err error) {
+    if request == nil {
+        request = NewUpdateClusterVpcFwRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cfw", APIVersion, "UpdateClusterVpcFw")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateClusterVpcFw require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateClusterVpcFwResponse()
     err = c.Send(request, response)
     return
 }

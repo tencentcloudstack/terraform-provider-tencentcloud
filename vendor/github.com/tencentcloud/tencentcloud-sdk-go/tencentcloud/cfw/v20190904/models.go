@@ -96,6 +96,23 @@ type AcListsData struct {
 	RegName2 *string `json:"RegName2,omitnil,omitempty" name:"RegName2"`
 }
 
+type AccessInstanceInfo struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 实例类型VPC or DIRECTCONNECT等类型
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 实例所在地域
+	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
+
+	// 接入防火墙的网段模式：0-不接入，1-接入实例关联的所有网段，2-接入用户自定义的网段
+	AccessCidrMode *int64 `json:"AccessCidrMode,omitnil,omitempty" name:"AccessCidrMode"`
+
+	// 接入防火墙的网段列表
+	AccessCidrList []*string `json:"AccessCidrList,omitnil,omitempty" name:"AccessCidrList"`
+}
+
 // Predefined struct for user
 type AddAclRuleRequestParams struct {
 	// 需要添加的访问控制规则列表
@@ -423,6 +440,17 @@ type AssociatedInstanceInfo struct {
 	CdbId *string `json:"CdbId,omitnil,omitempty" name:"CdbId"`
 }
 
+type AttachInsInfo struct {
+	// 实例对象可以是cvm类型:ins-ad21xuds1形式;路由表类型:rtb-da12daxd形式;vpc类型:vpc-1dxdad2d形式
+	InsId *string `json:"InsId,omitnil,omitempty" name:"InsId"`
+
+	// 实例对象名称
+	InsName *string `json:"InsName,omitnil,omitempty" name:"InsName"`
+
+	// 实例的cidr
+	Cidr *string `json:"Cidr,omitnil,omitempty" name:"Cidr"`
+}
+
 type BanAndAllowRule struct {
 	// 规则评论
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
@@ -540,6 +568,47 @@ type BlockIgnoreRule struct {
 	FwType *int64 `json:"FwType,omitnil,omitempty" name:"FwType"`
 }
 
+type CcnAssociatedInstance struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 实例名称
+	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
+
+	// 实例类型
+	InsType *string `json:"InsType,omitnil,omitempty" name:"InsType"`
+
+	// 实例的网段列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CidrLst []*string `json:"CidrLst,omitnil,omitempty" name:"CidrLst"`
+
+	// 实例所属地域
+	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
+}
+
+type CcnSwitchInfo struct {
+	// ccn的id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+
+	// 开关接入模式，1:自动接入,2:手动接入
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SwitchMode *uint64 `json:"SwitchMode,omitnil,omitempty" name:"SwitchMode"`
+
+	// 引流路由方法 0:多路由表, 1:策略路由
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RoutingMode *int64 `json:"RoutingMode,omitnil,omitempty" name:"RoutingMode"`
+
+	// 地域级别CIDR配置
+	RegionCidrConfigs []*RegionCidrConfig `json:"RegionCidrConfigs,omitnil,omitempty" name:"RegionCidrConfigs"`
+
+	// 互联集合对列表
+	InterconnectPairs []*InterconnectPair `json:"InterconnectPairs,omitnil,omitempty" name:"InterconnectPairs"`
+
+	// 引流通用CIDR(废弃)
+	FwVpcCidr *string `json:"FwVpcCidr,omitnil,omitempty" name:"FwVpcCidr"`
+}
+
 type CfwInsStatus struct {
 	// 防火墙实例id
 	CfwInsId *string `json:"CfwInsId,omitnil,omitempty" name:"CfwInsId"`
@@ -585,6 +654,69 @@ type CfwNatDnatRule struct {
 
 	// NAT防火墙转发规则描述。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+type ClusterSwitchDetail struct {
+	// 实例对象可以是ccnid类型:ccn-ad21xuds形式;nat网关类型:nat-da12daxd形式;ip类型:1.1.1.1形式等
+	InsObj *string `json:"InsObj,omitnil,omitempty" name:"InsObj"`
+
+	// 实例对象名称
+	ObjName *string `json:"ObjName,omitnil,omitempty" name:"ObjName"`
+
+	// 防火墙类型，ew：vpc间防火墙；nat：nat防火墙；border：互联网边界防火墙
+	FwType *string `json:"FwType,omitnil,omitempty" name:"FwType"`
+
+	// 资产类型，ccn：ccn实例类型；nat：nat网关类型
+	AssetType *string `json:"AssetType,omitnil,omitempty" name:"AssetType"`
+
+	// 地域
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 开关状态
+	// 0 : 关闭
+	// 1 : 开启
+	// 2 : 开启中
+	// 3 : 关闭中
+	// 4 : 异常
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 开关接入模式，1：自动接入；2，手动接入，0：未选择
+	SwitchMode *uint64 `json:"SwitchMode,omitnil,omitempty" name:"SwitchMode"`
+
+	// 实例对象是否处于非集群接入场景（主备模式）
+	NonCluster *int64 `json:"NonCluster,omitnil,omitempty" name:"NonCluster"`
+
+	// ip版本，0：ipv4；1：ipv6
+	IpVersion *int64 `json:"IpVersion,omitnil,omitempty" name:"IpVersion"`
+
+	// 关联实例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AttachIns []*AttachInsInfo `json:"AttachIns,omitnil,omitempty" name:"AttachIns"`
+
+	// 引流私有网络端点信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Endpoints []*EndpointInfo `json:"Endpoints,omitnil,omitempty" name:"Endpoints"`
+
+	// 入侵防护模式,0:观察;1:拦截;2:严格;3:关闭
+	Idpsaction *uint64 `json:"Idpsaction,omitnil,omitempty" name:"Idpsaction"`
+
+	// //透明模式开关,0:未开启,1:已开启
+	TransEnable *uint64 `json:"TransEnable,omitnil,omitempty" name:"TransEnable"`
+
+	// 开关状态 0关闭 1开启
+	Enable *int64 `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// 路由模式：0：多路由表，1：策略路由
+	RoutingMode *int64 `json:"RoutingMode,omitnil,omitempty" name:"RoutingMode"`
+
+	// 是否跨租户开关 1是 0不是
+	IsPeer *int64 `json:"IsPeer,omitnil,omitempty" name:"IsPeer"`
+
+	// 跨租户appid
+	PeerAppid *string `json:"PeerAppid,omitnil,omitempty" name:"PeerAppid"`
+
+	// 跨租户操作状态 1不允许操作 0可以
+	PeerStatus *int64 `json:"PeerStatus,omitnil,omitempty" name:"PeerStatus"`
 }
 
 type Column struct {
@@ -2182,80 +2314,6 @@ func (r *DeleteAddressTemplateResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type DeleteAllAccessControlRuleRequestParams struct {
-	// 方向，0：出站，1：入站  默认值是 0
-	Direction *uint64 `json:"Direction,omitnil,omitempty" name:"Direction"`
-
-	// VPC间防火墙开关ID  全部删除 EdgeId和Area只填写一个，不填写则不删除vpc间防火墙开关 ，默认值为‘’
-	EdgeId *string `json:"EdgeId,omitnil,omitempty" name:"EdgeId"`
-
-	// nat地域 全部删除 EdgeId和Area只填写一个，不填写则不删除nat防火墙开关 默认值为‘’
-	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
-}
-
-type DeleteAllAccessControlRuleRequest struct {
-	*tchttp.BaseRequest
-	
-	// 方向，0：出站，1：入站  默认值是 0
-	Direction *uint64 `json:"Direction,omitnil,omitempty" name:"Direction"`
-
-	// VPC间防火墙开关ID  全部删除 EdgeId和Area只填写一个，不填写则不删除vpc间防火墙开关 ，默认值为‘’
-	EdgeId *string `json:"EdgeId,omitnil,omitempty" name:"EdgeId"`
-
-	// nat地域 全部删除 EdgeId和Area只填写一个，不填写则不删除nat防火墙开关 默认值为‘’
-	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
-}
-
-func (r *DeleteAllAccessControlRuleRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DeleteAllAccessControlRuleRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "Direction")
-	delete(f, "EdgeId")
-	delete(f, "Area")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteAllAccessControlRuleRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DeleteAllAccessControlRuleResponseParams struct {
-	// 状态值 0: 修改成功, 非0: 修改失败
-	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
-
-	// 删除了几条访问控制规则
-	Info *int64 `json:"Info,omitnil,omitempty" name:"Info"`
-
-	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
-}
-
-type DeleteAllAccessControlRuleResponse struct {
-	*tchttp.BaseResponse
-	Response *DeleteAllAccessControlRuleResponseParams `json:"Response"`
-}
-
-func (r *DeleteAllAccessControlRuleResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DeleteAllAccessControlRuleResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
 type DeleteBlockIgnoreRuleListRequestParams struct {
 	// 规则列表
 	Rules []*IocListData `json:"Rules,omitnil,omitempty" name:"Rules"`
@@ -3718,6 +3776,258 @@ func (r *DescribeBlockStaticListResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeCcnAssociatedInstancesRequestParams struct {
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+}
+
+type DescribeCcnAssociatedInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+}
+
+func (r *DescribeCcnAssociatedInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnAssociatedInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CcnId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCcnAssociatedInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCcnAssociatedInstancesResponseParams struct {
+	// 实例总数
+	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 云联网关联的实例信息
+	CcnAssociatedInstances []*CcnAssociatedInstance `json:"CcnAssociatedInstances,omitnil,omitempty" name:"CcnAssociatedInstances"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCcnAssociatedInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCcnAssociatedInstancesResponseParams `json:"Response"`
+}
+
+func (r *DescribeCcnAssociatedInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnAssociatedInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCcnInstanceRegionStatusRequestParams struct {
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+
+	// 要查询引流网络部署状态的云联网关联的实例ID列表
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// 引流路由方法 0:多路由表, 1:策略路由
+	RoutingMode *uint64 `json:"RoutingMode,omitnil,omitempty" name:"RoutingMode"`
+}
+
+type DescribeCcnInstanceRegionStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+
+	// 要查询引流网络部署状态的云联网关联的实例ID列表
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// 引流路由方法 0:多路由表, 1:策略路由
+	RoutingMode *uint64 `json:"RoutingMode,omitnil,omitempty" name:"RoutingMode"`
+}
+
+func (r *DescribeCcnInstanceRegionStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnInstanceRegionStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CcnId")
+	delete(f, "InstanceIds")
+	delete(f, "RoutingMode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCcnInstanceRegionStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCcnInstanceRegionStatusResponseParams struct {
+	// 地域总数量
+	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 地域防火墙引流网络状态列表
+	RegionFwStatus []*RegionFwStatus `json:"RegionFwStatus,omitnil,omitempty" name:"RegionFwStatus"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCcnInstanceRegionStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCcnInstanceRegionStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeCcnInstanceRegionStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnInstanceRegionStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCcnVpcFwPolicyLimitRequestParams struct {
+
+}
+
+type DescribeCcnVpcFwPolicyLimitRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeCcnVpcFwPolicyLimitRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnVpcFwPolicyLimitRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCcnVpcFwPolicyLimitRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCcnVpcFwPolicyLimitResponseParams struct {
+	// 支持的引流策略数量（最外层总条数）
+	CcnPolicyInterconnectPairLenLimit *uint64 `json:"CcnPolicyInterconnectPairLenLimit,omitnil,omitempty" name:"CcnPolicyInterconnectPairLenLimit"`
+
+	// 单条引流策略中单组的最大配置数量（内层单组总条数）
+	CcnPolicyGroupLenLimit *uint64 `json:"CcnPolicyGroupLenLimit,omitnil,omitempty" name:"CcnPolicyGroupLenLimit"`
+
+	// 接入的实例网段长度（网段数量）限制
+	CcnPolicyCidrLenLimit *uint64 `json:"CcnPolicyCidrLenLimit,omitnil,omitempty" name:"CcnPolicyCidrLenLimit"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCcnVpcFwPolicyLimitResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCcnVpcFwPolicyLimitResponseParams `json:"Response"`
+}
+
+func (r *DescribeCcnVpcFwPolicyLimitResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnVpcFwPolicyLimitResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCcnVpcFwSwitchRequestParams struct {
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+}
+
+type DescribeCcnVpcFwSwitchRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+}
+
+func (r *DescribeCcnVpcFwSwitchRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnVpcFwSwitchRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CcnId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCcnVpcFwSwitchRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCcnVpcFwSwitchResponseParams struct {
+	// 互联对配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InterconnectPairs []*InterconnectPair `json:"InterconnectPairs,omitnil,omitempty" name:"InterconnectPairs"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCcnVpcFwSwitchResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCcnVpcFwSwitchResponseParams `json:"Response"`
+}
+
+func (r *DescribeCcnVpcFwSwitchResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCcnVpcFwSwitchResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeCfwEipsRequestParams struct {
 	// 1：cfw接入模式，目前仅支持接入模式实例
 	Mode *uint64 `json:"Mode,omitnil,omitempty" name:"Mode"`
@@ -3843,6 +4153,116 @@ func (r *DescribeCfwInsStatusResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfwInsStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterVpcFwSwitchsRequestParams struct {
+	// 需要查询的索引，特定场景使用，可不填
+	Index *string `json:"Index,omitnil,omitempty" name:"Index"`
+
+	// 过滤条件组合
+	Filters []*CommonFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 每页条数
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移值
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 检索的起始时间，可不传
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 检索的截止时间，可不传
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// desc：降序；asc：升序。根据By字段的值进行排序，这里传参的话则By也必须有值
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 排序所用到的字段
+	By *string `json:"By,omitnil,omitempty" name:"By"`
+}
+
+type DescribeClusterVpcFwSwitchsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 需要查询的索引，特定场景使用，可不填
+	Index *string `json:"Index,omitnil,omitempty" name:"Index"`
+
+	// 过滤条件组合
+	Filters []*CommonFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 每页条数
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移值
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 检索的起始时间，可不传
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 检索的截止时间，可不传
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// desc：降序；asc：升序。根据By字段的值进行排序，这里传参的话则By也必须有值
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 排序所用到的字段
+	By *string `json:"By,omitnil,omitempty" name:"By"`
+}
+
+func (r *DescribeClusterVpcFwSwitchsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterVpcFwSwitchsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Index")
+	delete(f, "Filters")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Order")
+	delete(f, "By")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterVpcFwSwitchsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterVpcFwSwitchsResponseParams struct {
+	// 总条数
+	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 防火墙开关列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Data []*ClusterSwitchDetail `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeClusterVpcFwSwitchsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeClusterVpcFwSwitchsResponseParams `json:"Response"`
+}
+
+func (r *DescribeClusterVpcFwSwitchsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterVpcFwSwitchsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4657,6 +5077,66 @@ func (r *DescribeIPStatusListResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeIpsModeSwitchRequestParams struct {
+
+}
+
+type DescribeIpsModeSwitchRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeIpsModeSwitchRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeIpsModeSwitchRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeIpsModeSwitchRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeIpsModeSwitchResponseParams struct {
+	// // Mode 取值校验：0-观察模式, 1-拦截模式, 2-严格模式
+	Data *ModeInfo `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 0 成功 非0失败
+	ReturnCode *int64 `json:"ReturnCode,omitnil,omitempty" name:"ReturnCode"`
+
+	// success 成功 其他失败
+	ReturnMsg *string `json:"ReturnMsg,omitnil,omitempty" name:"ReturnMsg"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeIpsModeSwitchResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeIpsModeSwitchResponseParams `json:"Response"`
+}
+
+func (r *DescribeIpsModeSwitchResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeIpsModeSwitchResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeLogStorageStatisticRequestParams struct {
 
 }
@@ -4767,7 +5247,7 @@ type DescribeLogsRequestParams struct {
 	// 操作日志：防火墙开关-开关操作operate_switch，防火墙开关-实例配置operate_instance，资产中心操作operate_assetgroup，访问控制操作operate_acl，零信任防护操作operate_identity，入侵防御操作-入侵防御operate_ids，入侵防御操作-安全基线operate_baseline，常用工具操作operate_tool，网络蜜罐操作operate_honeypot，日志投递操作operate_logdelivery，通用设置操作operate_logstorage，登录日志operate_login
 	Index *string `json:"Index,omitnil,omitempty" name:"Index"`
 
-	// 每页条数，最大支持2000
+	// 每页条数，最大支持1000
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 偏移值，最大支持60000
@@ -4793,7 +5273,7 @@ type DescribeLogsRequest struct {
 	// 操作日志：防火墙开关-开关操作operate_switch，防火墙开关-实例配置operate_instance，资产中心操作operate_assetgroup，访问控制操作operate_acl，零信任防护操作operate_identity，入侵防御操作-入侵防御operate_ids，入侵防御操作-安全基线operate_baseline，常用工具操作operate_tool，网络蜜罐操作operate_honeypot，日志投递操作operate_logdelivery，通用设置操作operate_logstorage，登录日志operate_login
 	Index *string `json:"Index,omitnil,omitempty" name:"Index"`
 
-	// 每页条数，最大支持2000
+	// 每页条数，最大支持1000
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 偏移值，最大支持60000
@@ -5961,6 +6441,64 @@ func (r *DescribeSourceAssetResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSwitchErrorRequestParams struct {
+	// EDGE_FW : 互联网边界防火墙 , NDR: 流量分析，VPC_FW：VPC边界防火墙
+	FwType *string `json:"FwType,omitnil,omitempty" name:"FwType"`
+}
+
+type DescribeSwitchErrorRequest struct {
+	*tchttp.BaseRequest
+	
+	// EDGE_FW : 互联网边界防火墙 , NDR: 流量分析，VPC_FW：VPC边界防火墙
+	FwType *string `json:"FwType,omitnil,omitempty" name:"FwType"`
+}
+
+func (r *DescribeSwitchErrorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSwitchErrorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "FwType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSwitchErrorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSwitchErrorResponseParams struct {
+	// 错误信息列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Data []*SwitchError `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSwitchErrorResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSwitchErrorResponseParams `json:"Response"`
+}
+
+func (r *DescribeSwitchErrorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSwitchErrorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSwitchListsRequestParams struct {
 	// 防火墙状态  0: 关闭，1：开启
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
@@ -6511,6 +7049,65 @@ func (r *DescribeVpcAcRuleResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeVpcFwCcnPolicyWhiteListRequestParams struct {
+
+}
+
+type DescribeVpcFwCcnPolicyWhiteListRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeVpcFwCcnPolicyWhiteListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpcFwCcnPolicyWhiteListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVpcFwCcnPolicyWhiteListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeVpcFwCcnPolicyWhiteListResponseParams struct {
+	// 支持自动接入和策略路由的CCN列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportCcnPolicy []*string `json:"SupportCcnPolicy,omitnil,omitempty" name:"SupportCcnPolicy"`
+
+	// 自动接入中支持自定义cidr的CCN列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportCcnPolicyCidr []*string `json:"SupportCcnPolicyCidr,omitnil,omitempty" name:"SupportCcnPolicyCidr"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeVpcFwCcnPolicyWhiteListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeVpcFwCcnPolicyWhiteListResponseParams `json:"Response"`
+}
+
+func (r *DescribeVpcFwCcnPolicyWhiteListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpcFwCcnPolicyWhiteListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeVpcFwGroupSwitchRequestParams struct {
 	// 每页条数
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
@@ -6659,6 +7256,7 @@ type EdgeIpInfo struct {
 	// 0: 该地域暂未支持串行
 	// 1: 该用户未在该地域配置串行带宽
 	// 2: 该用户已在该地域配置串行带宽，可以开启串行开关
+	// 3. 该地域可以支持串行，但是未部署公共集群
 	IsSerialRegion *int64 `json:"IsSerialRegion,omitnil,omitempty" name:"IsSerialRegion"`
 
 	// 0: 不是公网CLB 可以开启串行开关
@@ -6666,7 +7264,7 @@ type EdgeIpInfo struct {
 	IsPublicClb *int64 `json:"IsPublicClb,omitnil,omitempty" name:"IsPublicClb"`
 
 	// 0: 开启开关时提示要创建私有连接。
-	// 1: 关闭该开关是提示删除私有连接。
+	// 1: 关闭该开关时提示删除私有连接。
 	// 如果大于 1: 关闭开关 、开启开关不需提示创建删除私有连接。
 	EndpointBindEipNum *int64 `json:"EndpointBindEipNum,omitnil,omitempty" name:"EndpointBindEipNum"`
 
@@ -6703,6 +7301,12 @@ type EdgeIpInfo struct {
 
 	// IP超量状态
 	OverUsedStatus *int64 `json:"OverUsedStatus,omitnil,omitempty" name:"OverUsedStatus"`
+
+	// 0 都不支持
+	// 1 支持旁路
+	// 2 支持串行
+	// 3 旁路串行都支持
+	SwitchSupportType *int64 `json:"SwitchSupportType,omitnil,omitempty" name:"SwitchSupportType"`
 }
 
 type EdgeIpSwitch struct {
@@ -6717,6 +7321,20 @@ type EdgeIpSwitch struct {
 
 	// 0 : 旁路 1 : 串行
 	SwitchMode *int64 `json:"SwitchMode,omitnil,omitempty" name:"SwitchMode"`
+}
+
+type EndpointInfo struct {
+	// 引流私有连接端点id
+	EndpointId *string `json:"EndpointId,omitnil,omitempty" name:"EndpointId"`
+
+	// 引流VpcId
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 所属地域
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 引流Vpc的Cidr
+	VpcCidr *string `json:"VpcCidr,omitnil,omitempty" name:"VpcCidr"`
 }
 
 type EnterpriseSecurityGroupRuleBetaInfo struct {
@@ -7146,6 +7764,17 @@ type IntArray struct {
 	List []*int64 `json:"List,omitnil,omitempty" name:"List"`
 }
 
+type InterconnectPair struct {
+	// 集合A
+	GroupA []*AccessInstanceInfo `json:"GroupA,omitnil,omitempty" name:"GroupA"`
+
+	// 集合B
+	GroupB []*AccessInstanceInfo `json:"GroupB,omitnil,omitempty" name:"GroupB"`
+
+	// 互联模式："CrossConnect": 交叉互联（组A内每个实例和组B内每个实例互联），"FullMesh": 全互联（组A实际和组B内容一致，相当于组内两两互联）
+	InterconnectMode *string `json:"InterconnectMode,omitnil,omitempty" name:"InterconnectMode"`
+}
+
 type IntrusionDefenseRule struct {
 	// 规则方向，0出站，1入站，3内网间
 	Direction *int64 `json:"Direction,omitnil,omitempty" name:"Direction"`
@@ -7235,6 +7864,11 @@ type LogItem struct {
 type LogItems struct {
 	// 分析结果返回的KV数据对
 	Data []*LogItem `json:"Data,omitnil,omitempty" name:"Data"`
+}
+
+type ModeInfo struct {
+	// 0-观察模式, 1-拦截模式, 2-严格模式
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
 }
 
 // Predefined struct for user
@@ -8058,6 +8692,67 @@ func (r *ModifyBlockTopResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyClusterVpcFwSwitchRequestParams struct {
+	// 开关，0：关闭，1：开启
+	Enable *int64 `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// 集群模式vpc间防火墙ccn开关信息
+	CcnSwitch []*CcnSwitchInfo `json:"CcnSwitch,omitnil,omitempty" name:"CcnSwitch"`
+}
+
+type ModifyClusterVpcFwSwitchRequest struct {
+	*tchttp.BaseRequest
+	
+	// 开关，0：关闭，1：开启
+	Enable *int64 `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// 集群模式vpc间防火墙ccn开关信息
+	CcnSwitch []*CcnSwitchInfo `json:"CcnSwitch,omitnil,omitempty" name:"CcnSwitch"`
+}
+
+func (r *ModifyClusterVpcFwSwitchRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterVpcFwSwitchRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Enable")
+	delete(f, "CcnSwitch")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterVpcFwSwitchRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyClusterVpcFwSwitchResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyClusterVpcFwSwitchResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyClusterVpcFwSwitchResponseParams `json:"Response"`
+}
+
+func (r *ModifyClusterVpcFwSwitchResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterVpcFwSwitchResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyEWRuleStatusRequestParams struct {
 	// vpc规则必填，边id
 	EdgeId *string `json:"EdgeId,omitnil,omitempty" name:"EdgeId"`
@@ -8445,6 +9140,60 @@ func (r *ModifyFwGroupSwitchResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyFwGroupSwitchResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyIpsModeSwitchRequestParams struct {
+	// 防护模式：0-观察模式, 1-拦截模式, 2-严格模式
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
+}
+
+type ModifyIpsModeSwitchRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防护模式：0-观察模式, 1-拦截模式, 2-严格模式
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
+}
+
+func (r *ModifyIpsModeSwitchRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyIpsModeSwitchRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Mode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyIpsModeSwitchRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyIpsModeSwitchResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyIpsModeSwitchResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyIpsModeSwitchResponseParams `json:"Response"`
+}
+
+func (r *ModifyIpsModeSwitchResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyIpsModeSwitchResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9896,6 +10645,35 @@ type NewModeItems struct {
 	AddCount *int64 `json:"AddCount,omitnil,omitempty" name:"AddCount"`
 }
 
+type RegionCidrConfig struct {
+	// 引流地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// CIDR模式：0-跳过，1-自动，2-自定义
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CidrMode *int64 `json:"CidrMode,omitnil,omitempty" name:"CidrMode"`
+
+	// 自定义CIDR（CidrMode=2时必填），其它时候为空字符串
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CustomCidr *string `json:"CustomCidr,omitnil,omitempty" name:"CustomCidr"`
+}
+
+type RegionFwStatus struct {
+	// 地域
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 引流网络部署状态
+	// 1. "NotDeployed"  防火墙集群未部署
+	// 2. "Deployed"        防火墙集群已部署，但未创建引流网络
+	// 3. "Auto"                防火墙集群已部署，并自动选择网段创建了引流网络
+	// 4. "Custom"            防火墙集群已部署，并根据用户自定义网段创建了引流网络
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 引流网络的cidr，如果没有部署引流网络则为空
+	Cidr *string `json:"Cidr,omitnil,omitempty" name:"Cidr"`
+}
+
 // Predefined struct for user
 type RemoveAcRuleRequestParams struct {
 	// 规则的uuid，可通过查询规则列表获取
@@ -11189,6 +11967,24 @@ type StorageHistogramShow struct {
 	Data []*IntArray `json:"Data,omitnil,omitempty" name:"Data"`
 }
 
+type SwitchError struct {
+	// 开关唯一标识
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrIns *string `json:"ErrIns,omitnil,omitempty" name:"ErrIns"`
+
+	// 错误信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
+
+	// 错误类型区分
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrKey *string `json:"ErrKey,omitnil,omitempty" name:"ErrKey"`
+
+	// 错误时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InsertTime *string `json:"InsertTime,omitnil,omitempty" name:"InsertTime"`
+}
+
 type SwitchListsData struct {
 	// 公网IP
 	PublicIp *string `json:"PublicIp,omitnil,omitempty" name:"PublicIp"`
@@ -11380,6 +12176,119 @@ type UnHandleEventDetail struct {
 
 	// 未处置事件数量
 	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+}
+
+// Predefined struct for user
+type UpdateCheckCcnNonDirectFlagRequestParams struct {
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+}
+
+type UpdateCheckCcnNonDirectFlagRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云联网ID
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+}
+
+func (r *UpdateCheckCcnNonDirectFlagRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateCheckCcnNonDirectFlagRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CcnId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateCheckCcnNonDirectFlagRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateCheckCcnNonDirectFlagResponseParams struct {
+	// 检测更新状态
+	// "Checked"：重新检测完成
+	// "Checking": 正在重新检测中，请稍后刷新状态查看
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateCheckCcnNonDirectFlagResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateCheckCcnNonDirectFlagResponseParams `json:"Response"`
+}
+
+func (r *UpdateCheckCcnNonDirectFlagResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateCheckCcnNonDirectFlagResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateClusterVpcFwRequestParams struct {
+	// ccn防火墙开关配置信息
+	CcnSwitch *CcnSwitchInfo `json:"CcnSwitch,omitnil,omitempty" name:"CcnSwitch"`
+}
+
+type UpdateClusterVpcFwRequest struct {
+	*tchttp.BaseRequest
+	
+	// ccn防火墙开关配置信息
+	CcnSwitch *CcnSwitchInfo `json:"CcnSwitch,omitnil,omitempty" name:"CcnSwitch"`
+}
+
+func (r *UpdateClusterVpcFwRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateClusterVpcFwRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CcnSwitch")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateClusterVpcFwRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateClusterVpcFwResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateClusterVpcFwResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateClusterVpcFwResponseParams `json:"Response"`
+}
+
+func (r *UpdateClusterVpcFwResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateClusterVpcFwResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type VpcDnsInfo struct {
