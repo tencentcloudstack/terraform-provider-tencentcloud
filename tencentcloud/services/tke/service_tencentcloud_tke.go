@@ -1939,7 +1939,7 @@ func (me *TkeService) ModifyDeletionProtection(ctx context.Context, id string, e
 	return
 }
 
-func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId string) (errRet error) {
+func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId string) (requestId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tke.NewAcquireClusterAdminRoleRequest()
 	defer func() {
@@ -1961,6 +1961,10 @@ func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId str
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && response.Response.RequestId != nil {
+		requestId = *response.Response.RequestId
+	}
 
 	return
 }

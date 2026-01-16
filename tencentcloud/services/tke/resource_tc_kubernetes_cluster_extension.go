@@ -493,7 +493,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 
 	// sync
 	if v, ok := d.GetOk("acquire_cluster_admin_role"); ok && v.(bool) {
-		err := service.AcquireClusterAdminRole(ctx, id)
+		_, err := service.AcquireClusterAdminRole(ctx, id)
 		if err != nil {
 			return err
 		}
@@ -1481,7 +1481,7 @@ func resourceTencentCloudKubernetesClusterUpdateOnExit(ctx context.Context) erro
 		if o.(bool) && !n.(bool) {
 			return fmt.Errorf("argument `acquire_cluster_admin_role` cannot set to false")
 		}
-		err := tkeService.AcquireClusterAdminRole(ctx, id)
+		_, err := tkeService.AcquireClusterAdminRole(ctx, id)
 		if err != nil {
 			return err
 		}

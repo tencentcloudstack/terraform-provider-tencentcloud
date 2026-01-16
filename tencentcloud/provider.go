@@ -583,6 +583,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_cluster_levels":                             tke.DataSourceTencentCloudKubernetesClusterLevels(),
 			"tencentcloud_kubernetes_cluster_common_names":                       tke.DataSourceTencentCloudKubernetesClusterCommonNames(),
 			"tencentcloud_kubernetes_cluster_authentication_options":             tke.DataSourceTencentCloudKubernetesClusterAuthenticationOptions(),
+			"tencentcloud_kubernetes_cluster_admin_role":                         tke.DataSourceTencentCloudKubernetesClusterAdminRole(),
 			"tencentcloud_kubernetes_available_cluster_versions":                 tke.DataSourceTencentCloudKubernetesAvailableClusterVersions(),
 			"tencentcloud_eks_clusters":                                          tke.DataSourceTencentCloudEKSClusters(),
 			"tencentcloud_eks_cluster_credential":                                tke.DataSourceTencentCloudEksClusterCredential(),
