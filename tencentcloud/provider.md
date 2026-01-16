@@ -1510,6 +1510,10 @@ tencentcloud_teo_rule_engine_settings
 tencentcloud_teo_zones
 tencentcloud_teo_plans
 tencentcloud_teo_origin_acl
+tencentcloud_teo_environments
+tencentcloud_teo_config_group_versions
+tencentcloud_teo_config_group_version_detail
+tencentcloud_teo_deploy_config_version_history
 
 Resource
 tencentcloud_teo_zone
@@ -1540,6 +1544,8 @@ tencentcloud_teo_content_identifier
 tencentcloud_teo_customize_error_page
 tencentcloud_teo_origin_acl
 tencentcloud_teo_ddos_protection_config
+tencentcloud_teo_config_group_version
+tencentcloud_teo_deploy_config_group_version
 
 TencentCloud ServiceMesh(TCM)
 Data Source
