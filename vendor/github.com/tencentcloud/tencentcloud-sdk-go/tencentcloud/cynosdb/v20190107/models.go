@@ -2314,6 +2314,9 @@ type CreateClustersRequestParams struct {
 
 	// 暂停后的归档处理时间
 	AutoArchiveDelayHours *int64 `json:"AutoArchiveDelayHours,omitnil,omitempty" name:"AutoArchiveDelayHours"`
+
+	// 内核小版本号
+	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
 }
 
 type CreateClustersRequest struct {
@@ -2477,6 +2480,9 @@ type CreateClustersRequest struct {
 
 	// 暂停后的归档处理时间
 	AutoArchiveDelayHours *int64 `json:"AutoArchiveDelayHours,omitnil,omitempty" name:"AutoArchiveDelayHours"`
+
+	// 内核小版本号
+	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
 }
 
 func (r *CreateClustersRequest) ToJsonString() string {
@@ -2536,6 +2542,7 @@ func (r *CreateClustersRequest) FromJsonString(s string) error {
 	delete(f, "ProxyConfig")
 	delete(f, "AutoArchive")
 	delete(f, "AutoArchiveDelayHours")
+	delete(f, "CynosVersion")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateClustersRequest has unknown keys!", "")
 	}
@@ -2964,130 +2971,154 @@ func (r *CreateParamTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateProxyEndPointRequestParams struct {
-	// 集群ID
+	// 集群 ID。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 私有网络ID，默认与集群私有网络ID保持一致
+	// 私有网络 ID，默认与集群私有网络 ID 保持一致。
 	UniqueVpcId *string `json:"UniqueVpcId,omitnil,omitempty" name:"UniqueVpcId"`
 
-	// 私有网络子网ID，默认与集群子网ID保持一致
+	// 私有网络子网 ID，默认与集群子网 ID 保持一致。
 	UniqueSubnetId *string `json:"UniqueSubnetId,omitnil,omitempty" name:"UniqueSubnetId"`
 
-	// 连接池类型：SessionConnectionPool(会话级别连接池 )
+	// 连接池类型：SessionConnectionPool（会话级别连接池）。
 	ConnectionPoolType *string `json:"ConnectionPoolType,omitnil,omitempty" name:"ConnectionPoolType"`
 
-	// 是否开启连接池,yes-开启，no-不开启
+	// 是否开启连接池。
+	// yes：表示开启。
+	// no：表示不开启。
 	OpenConnectionPool *string `json:"OpenConnectionPool,omitnil,omitempty" name:"OpenConnectionPool"`
 
-	// 连接池阈值：单位（秒）
+	// 连接池阈值：单位（秒），可选范围：0 - 300秒。
 	ConnectionPoolTimeOut *int64 `json:"ConnectionPoolTimeOut,omitnil,omitempty" name:"ConnectionPoolTimeOut"`
 
-	// 绑定的安全组ID数组
+	// 绑定的安全组 ID 数组。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 描述说明
+	// 描述说明。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 想要绑定的vip信息，需与UniqueVpcId对应。
+	// 想要绑定的 vip 信息，需与 UniqueVpcId 对应。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 权重模式：
-	// system-系统分配，custom-自定义
+	// system：系统分配。
+	// custom：自定义。
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
-	// 是否自动添加只读实例，yes-是，no-不自动添加
+	// 是否自动添加只读实例。
+	// yes：表示自动添加只读实例。
+	// no：表示不自动添加只读实例。
 	AutoAddRo *string `json:"AutoAddRo,omitnil,omitempty" name:"AutoAddRo"`
 
 	// 是否开启故障转移。
-	// yes：开启
-	// no：不开启。
-	// 数据库代理出现故障时，链接地址将会路由到主实例
+	// yes：表示开启，开启后，当数据库代理出现故障时，连接地址将会路由到主实例。
+	// no：表示不开启。
+	// 说明：
+	// 仅当 RwType 参数值为 READWRITE 时，才支持设置此项。
 	FailOver *string `json:"FailOver,omitnil,omitempty" name:"FailOver"`
 
 	// 一致性类型：
-	// eventual,global,session
+	// eventual：最终一致性。
+	// global：全局一致性。
+	// session：会话一致性。
+	// 说明：
+	// 仅当 RwType 参数值为 READWRITE 时，才支持设置此项。
 	ConsistencyType *string `json:"ConsistencyType,omitnil,omitempty" name:"ConsistencyType"`
 
 	// 读写属性：
-	// READWRITE,READONLY
+	// READWRITE：表示读写分离。当此参数值为 READWRITE 时，才支持设置 FailOver、ConsistencyType 参数。
+	// READONLY：表示只读。
 	RwType *string `json:"RwType,omitnil,omitempty" name:"RwType"`
 
-	// 一致性超时时间。取值范围：0~1000000（微秒）,设置0则表示若只读实例出现延迟, 导致一致性策略不满足, 请求将一直等待
+	// 一致性超时时间。取值范围：0 ~ 1000000（微秒）。设置为0时，表示若只读实例出现延迟导致一致性策略不满足时，请求将一直等待。
 	ConsistencyTimeOut *int64 `json:"ConsistencyTimeOut,omitnil,omitempty" name:"ConsistencyTimeOut"`
 
-	// 是否开启事务拆分。在一个事务中拆分读和写到不同的实例上去执行
+	// 是否开启事务拆分。开启后，在一个事务中拆分读和写到不同的实例上去执行。
 	TransSplit *bool `json:"TransSplit,omitnil,omitempty" name:"TransSplit"`
 
-	// 连接模式：
-	// nearby,balance
+	// 接入模式：
+	// nearby：就近访问。
+	// balance：均衡分配。
 	AccessMode *string `json:"AccessMode,omitnil,omitempty" name:"AccessMode"`
 
-	// 实例权重
+	// 实例权重。
 	InstanceWeights []*ProxyInstanceWeight `json:"InstanceWeights,omitnil,omitempty" name:"InstanceWeights"`
 }
 
 type CreateProxyEndPointRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// 集群 ID。
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 私有网络ID，默认与集群私有网络ID保持一致
+	// 私有网络 ID，默认与集群私有网络 ID 保持一致。
 	UniqueVpcId *string `json:"UniqueVpcId,omitnil,omitempty" name:"UniqueVpcId"`
 
-	// 私有网络子网ID，默认与集群子网ID保持一致
+	// 私有网络子网 ID，默认与集群子网 ID 保持一致。
 	UniqueSubnetId *string `json:"UniqueSubnetId,omitnil,omitempty" name:"UniqueSubnetId"`
 
-	// 连接池类型：SessionConnectionPool(会话级别连接池 )
+	// 连接池类型：SessionConnectionPool（会话级别连接池）。
 	ConnectionPoolType *string `json:"ConnectionPoolType,omitnil,omitempty" name:"ConnectionPoolType"`
 
-	// 是否开启连接池,yes-开启，no-不开启
+	// 是否开启连接池。
+	// yes：表示开启。
+	// no：表示不开启。
 	OpenConnectionPool *string `json:"OpenConnectionPool,omitnil,omitempty" name:"OpenConnectionPool"`
 
-	// 连接池阈值：单位（秒）
+	// 连接池阈值：单位（秒），可选范围：0 - 300秒。
 	ConnectionPoolTimeOut *int64 `json:"ConnectionPoolTimeOut,omitnil,omitempty" name:"ConnectionPoolTimeOut"`
 
-	// 绑定的安全组ID数组
+	// 绑定的安全组 ID 数组。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 描述说明
+	// 描述说明。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 想要绑定的vip信息，需与UniqueVpcId对应。
+	// 想要绑定的 vip 信息，需与 UniqueVpcId 对应。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 权重模式：
-	// system-系统分配，custom-自定义
+	// system：系统分配。
+	// custom：自定义。
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
-	// 是否自动添加只读实例，yes-是，no-不自动添加
+	// 是否自动添加只读实例。
+	// yes：表示自动添加只读实例。
+	// no：表示不自动添加只读实例。
 	AutoAddRo *string `json:"AutoAddRo,omitnil,omitempty" name:"AutoAddRo"`
 
 	// 是否开启故障转移。
-	// yes：开启
-	// no：不开启。
-	// 数据库代理出现故障时，链接地址将会路由到主实例
+	// yes：表示开启，开启后，当数据库代理出现故障时，连接地址将会路由到主实例。
+	// no：表示不开启。
+	// 说明：
+	// 仅当 RwType 参数值为 READWRITE 时，才支持设置此项。
 	FailOver *string `json:"FailOver,omitnil,omitempty" name:"FailOver"`
 
 	// 一致性类型：
-	// eventual,global,session
+	// eventual：最终一致性。
+	// global：全局一致性。
+	// session：会话一致性。
+	// 说明：
+	// 仅当 RwType 参数值为 READWRITE 时，才支持设置此项。
 	ConsistencyType *string `json:"ConsistencyType,omitnil,omitempty" name:"ConsistencyType"`
 
 	// 读写属性：
-	// READWRITE,READONLY
+	// READWRITE：表示读写分离。当此参数值为 READWRITE 时，才支持设置 FailOver、ConsistencyType 参数。
+	// READONLY：表示只读。
 	RwType *string `json:"RwType,omitnil,omitempty" name:"RwType"`
 
-	// 一致性超时时间。取值范围：0~1000000（微秒）,设置0则表示若只读实例出现延迟, 导致一致性策略不满足, 请求将一直等待
+	// 一致性超时时间。取值范围：0 ~ 1000000（微秒）。设置为0时，表示若只读实例出现延迟导致一致性策略不满足时，请求将一直等待。
 	ConsistencyTimeOut *int64 `json:"ConsistencyTimeOut,omitnil,omitempty" name:"ConsistencyTimeOut"`
 
-	// 是否开启事务拆分。在一个事务中拆分读和写到不同的实例上去执行
+	// 是否开启事务拆分。开启后，在一个事务中拆分读和写到不同的实例上去执行。
 	TransSplit *bool `json:"TransSplit,omitnil,omitempty" name:"TransSplit"`
 
-	// 连接模式：
-	// nearby,balance
+	// 接入模式：
+	// nearby：就近访问。
+	// balance：均衡分配。
 	AccessMode *string `json:"AccessMode,omitnil,omitempty" name:"AccessMode"`
 
-	// 实例权重
+	// 实例权重。
 	InstanceWeights []*ProxyInstanceWeight `json:"InstanceWeights,omitnil,omitempty" name:"InstanceWeights"`
 }
 
@@ -3129,13 +3160,13 @@ func (r *CreateProxyEndPointRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateProxyEndPointResponseParams struct {
-	// 异步流程ID
+	// 异步流程 ID。
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
-	// 异步任务ID
+	// 异步任务 ID。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 数据库代理组ID
+	// 数据库代理组 ID。
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -10197,6 +10228,18 @@ type GdnTaskInfo struct {
 
 	// 从集群名称
 	StandbyClusterName *string `json:"StandbyClusterName,omitnil,omitempty" name:"StandbyClusterName"`
+
+	// 是否已强切
+	ForceSwitchGdn *string `json:"ForceSwitchGdn,omitnil,omitempty" name:"ForceSwitchGdn"`
+
+	// 返回码
+	Code *int64 `json:"Code,omitnil,omitempty" name:"Code"`
+
+	// 提示信息
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// 是否支持强切
+	IsSupportForce *string `json:"IsSupportForce,omitnil,omitempty" name:"IsSupportForce"`
 }
 
 type GoodsPrice struct {
@@ -13779,6 +13822,9 @@ type ModifyServerlessStrategyRequestParams struct {
 
 	// 是否开启归档，可选范围<li>yes</li><li>no</li>默认值:yes
 	AutoArchive *string `json:"AutoArchive,omitnil,omitempty" name:"AutoArchive"`
+
+	// 升级类型。 默认值：upgradeImmediate。 可选值： upgradeImmediate：立即完成修改 upgradeInMaintain：在维护时间窗口内完成修改
+	UpgradeType *string `json:"UpgradeType,omitnil,omitempty" name:"UpgradeType"`
 }
 
 type ModifyServerlessStrategyRequest struct {
@@ -13821,6 +13867,9 @@ type ModifyServerlessStrategyRequest struct {
 
 	// 是否开启归档，可选范围<li>yes</li><li>no</li>默认值:yes
 	AutoArchive *string `json:"AutoArchive,omitnil,omitempty" name:"AutoArchive"`
+
+	// 升级类型。 默认值：upgradeImmediate。 可选值： upgradeImmediate：立即完成修改 upgradeInMaintain：在维护时间窗口内完成修改
+	UpgradeType *string `json:"UpgradeType,omitnil,omitempty" name:"UpgradeType"`
 }
 
 func (r *ModifyServerlessStrategyRequest) ToJsonString() string {
@@ -13847,6 +13896,7 @@ func (r *ModifyServerlessStrategyRequest) FromJsonString(s string) error {
 	delete(f, "MinRoCount")
 	delete(f, "MaxRoCount")
 	delete(f, "AutoArchive")
+	delete(f, "UpgradeType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyServerlessStrategyRequest has unknown keys!", "")
 	}
@@ -13856,7 +13906,12 @@ func (r *ModifyServerlessStrategyRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyServerlessStrategyResponseParams struct {
 	// 异步流程id
+	//
+	// Deprecated: FlowId is deprecated.
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 任务id
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
