@@ -2073,6 +2073,9 @@ Resource
 tencentcloud_mdl_stream_live_input
 
 Application Performance Management(APM)
+Data Source
+tencentcloud_apm_instances
+
 Resource
 tencentcloud_apm_instance
 tencentcloud_apm_sample_config
