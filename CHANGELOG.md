@@ -1,3 +1,20 @@
+## 1.82.56(January 16, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_apm_instances` ([#3731](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3731))
+* **New Data Source:** `tencentcloud_cfw_ccn_associated_instances` ([#3735](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3735))
+* **New Data Source:** `tencentcloud_cfw_ccn_instance_region_status` ([#3735](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3735))
+* **New Data Source:** `tencentcloud_cfw_ccn_vpc_fw_switch` ([#3735](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3735))
+* **New Data Source:** `tencentcloud_kubernetes_cluster_admin_role` ([#3730](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3730))
+* **New Resource:** `tencentcloud_cfw_cluster_vpc_fw_switch` ([#3735](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3735))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: support `cynos_version` ([#3732](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3732))
+* resource/tencentcloud_kubernetes_log_config: optimize execution waiting time ([#3736](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3736))
+* resource/tencentcloud_organization_org_member: support `is_modify_nick_name` ([#3733](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3733))
+
 ## 1.82.55(January 15, 2026)
 
 FEATURES:
