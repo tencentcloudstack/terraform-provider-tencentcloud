@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_log_config"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_log_config"
 description: |-
-  Provides a resource to create a tke kubernetes_log_config
+  Provides a resource to create a TKE kubernetes log config
 ---
 
 # tencentcloud_kubernetes_log_config
 
-Provides a resource to create a tke kubernetes_log_config
+Provides a resource to create a TKE kubernetes log config
 
 ## Example Usage
 
