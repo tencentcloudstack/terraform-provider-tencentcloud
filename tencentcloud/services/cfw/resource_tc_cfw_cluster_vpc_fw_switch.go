@@ -298,7 +298,7 @@ func resourceTencentCloudCfwClusterVpcFwSwitchCreate(d *schema.ResourceData, met
 	// wait
 	waitReq := cfwv20190904.NewDescribeClusterVpcFwSwitchsRequest()
 	waitReq.Filters = []*cfwv20190904.CommonFilter{
-		&cfwv20190904.CommonFilter{
+		{
 			Name:         helper.String("InsObj"),
 			OperatorType: helper.IntInt64(1),
 			Values:       helper.Strings([]string{ccnId}),
@@ -326,6 +326,22 @@ func resourceTencentCloudCfwClusterVpcFwSwitchCreate(d *schema.ResourceData, met
 		if obj != nil && obj.Status != nil {
 			if *obj.Status == 1 {
 				return nil
+			}
+
+			// create error
+			if *obj.Status == 0 {
+				service := CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+				respData, e := service.DescribeCfwVpcSwitchErrorById(ctx, ccnId, "ERR_VPC_FW_OPEN_FAILED")
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+
+				if respData == nil || respData.ErrMsg == nil {
+					return resource.NonRetryableError(fmt.Errorf("Describe switch error failed. Response is nil."))
+				}
+
+				errMsg := *respData.ErrMsg
+				return resource.NonRetryableError(fmt.Errorf("Cluster vpc fw switch create failed. Reason:%s", errMsg))
 			}
 		}
 
@@ -634,7 +650,7 @@ func resourceTencentCloudCfwClusterVpcFwSwitchDelete(d *schema.ResourceData, met
 	// wait
 	waitReq := cfwv20190904.NewDescribeClusterVpcFwSwitchsRequest()
 	waitReq.Filters = []*cfwv20190904.CommonFilter{
-		&cfwv20190904.CommonFilter{
+		{
 			Name:         helper.String("InsObj"),
 			OperatorType: helper.IntInt64(1),
 			Values:       helper.Strings([]string{ccnId}),
@@ -663,13 +679,29 @@ func resourceTencentCloudCfwClusterVpcFwSwitchDelete(d *schema.ResourceData, met
 			if *obj.Status == 0 {
 				return nil
 			}
+
+			// delete error
+			if *obj.Status == 1 {
+				service := CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+				respData, e := service.DescribeCfwVpcSwitchErrorById(ctx, ccnId, "ERR_VPC_FW_CLOSE_FAILED")
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+
+				if respData == nil || respData.ErrMsg == nil {
+					return resource.NonRetryableError(fmt.Errorf("Describe switch error failed. Response is nil."))
+				}
+
+				errMsg := *respData.ErrMsg
+				return resource.NonRetryableError(fmt.Errorf("Cluster vpc fw switch delete failed. Reason:%s", errMsg))
+			}
 		}
 
 		return resource.RetryableError(fmt.Errorf("wait for cluster vpc fw switch delete."))
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s create cfw cluster vpc fw switch failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s delete cfw cluster vpc fw switch failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
