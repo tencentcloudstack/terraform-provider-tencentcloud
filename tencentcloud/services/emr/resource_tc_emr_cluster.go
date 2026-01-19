@@ -250,6 +250,12 @@ func ResourceTencentCloudEmrCluster() *schema.Resource {
 				Computed:    true,
 				Description: "0 means turn off automatic renewal, 1 means turn on automatic renewal. Default is 0.",
 			},
+			"cos_bucket": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "COS bucket path, used when creating StarRocks shared-data cluster. Format: cosn://<bucket-name>-<appid>/<path>",
+			},
 			"pre_executed_file_settings": {
 				Type:        schema.TypeList,
 				Optional:    true,
