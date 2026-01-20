@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_waf_object
+```
+
+```release-note:enhancement
+resource/tencentcloud_waf_clb_domain: add new params
+```
