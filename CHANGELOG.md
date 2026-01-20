@@ -1,3 +1,18 @@
+## 1.82.57(January 20, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ckafka_version` ([#3742](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3742))
+* **New Resource:** `tencentcloud_kubernetes_user_permissions` ([#3737](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3737))
+* **New Resource:** `tencentcloud_wedata_authorize_data_source` ([#3743](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3743))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: add new parasm ([#3742](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3742))
+* resource/tencentcloud_cynosdb_cluster: update `slave_zone` field property ([#3745](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3745))
+* resource/tencentcloud_cynosdb_cluster_slave_zone: optimize doc ([#3745](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3745))
+* resource/tencentcloud_cynosdb_proxy: add new param `vip` ([#3744](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3744))
+
 ## 1.82.56(January 16, 2026)
 
 FEATURES:
