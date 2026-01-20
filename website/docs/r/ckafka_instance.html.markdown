@@ -136,6 +136,7 @@ The following arguments are supported:
 * `band_width` - (Optional, Int) Instance bandwidth in MBps.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `PREPAID`.
 * `config` - (Optional, List) Instance configuration.
+* `custom_ssl_cert_id` - (Optional, String) Custom certificate ID, only effective when `specifications_type` is set to `profession`, supports custom certificate capabilities.
 * `disk_size` - (Optional, Int) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `disk_type` - (Optional, String) Type of disk.
 * `dynamic_retention_config` - (Optional, List) Dynamic message retention policy configuration.
