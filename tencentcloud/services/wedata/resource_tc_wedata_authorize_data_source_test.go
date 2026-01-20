@@ -15,19 +15,54 @@ func TestAccTencentCloudWedataAuthorizeDataSourceResource_basic(t *testing.T) {
 			tcacctest.AccPreCheck(t)
 		},
 		Providers: tcacctest.AccProviders,
-		Steps: []resource.TestStep{{
-			Config: testAccWedataAuthorizeDataSource,
-			Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_wedata_authorize_data_source.wedata_authorize_data_source", "id")),
-		}, {
-			ResourceName:      "tencentcloud_wedata_authorize_data_source.wedata_authorize_data_source",
-			ImportState:       true,
-			ImportStateVerify: true,
-		}},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccWedataAuthorizeDataSource,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_wedata_authorize_data_source.example", "id"),
+				),
+			},
+			{
+				Config: testAccWedataAuthorizeDataSourceUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_wedata_authorize_data_source.example", "id"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_wedata_authorize_data_source.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
 	})
 }
 
 const testAccWedataAuthorizeDataSource = `
+resource "tencentcloud_wedata_authorize_data_source" "example" {
+  data_source_id = "116203"
+  auth_project_ids = [
+    "1857740139240632320",
+  ]
 
-resource "tencentcloud_wedata_authorize_data_source" "wedata_authorize_data_source" {
+  auth_users = [
+    "1857740139240632320_100028448903",
+    "1857740139240632320_100028578751",
+    "3108707295180644352_100028448903",
+    "3108707295180644352_100032159948",
+    "3108707295180644352_100044349576",
+  ]
+}
+`
+
+const testAccWedataAuthorizeDataSourceUpdate = `
+resource "tencentcloud_wedata_authorize_data_source" "example" {
+  data_source_id = "116203"
+  auth_users = [
+    "1857740139240632320_100028448903",
+    "1857740139240632320_100028578751",
+    "3108707295180644352_100028448903",
+    "3108707295180644352_100032159948",
+    "3108707295180644352_100044349576",
+  ]
 }
 `
