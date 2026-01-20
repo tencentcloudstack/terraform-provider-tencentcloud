@@ -1830,3 +1830,32 @@ func (me *CkafkaService) CkafkaRouteStateRefreshFunc(flowId int64, failStates []
 		return object, status, nil
 	}
 }
+
+func (me *CkafkaService) DescribeCkafkaVersionByFilter(ctx context.Context, instanceId string) (instanceVersion *ckafka.InstanceVersion, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ckafka.NewDescribeCkafkaVersionRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeCkafkaVersionWithContext(ctx, request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	instanceVersion = response.Response.Result
+	return
+}

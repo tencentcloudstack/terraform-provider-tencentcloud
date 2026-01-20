@@ -274,6 +274,11 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Elastic bandwidth switch 0 not turned on 1 turned on (0 default). This takes effect only when the instance is created.",
 			},
+			"custom_ssl_cert_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom certificate ID, only effective when `specifications_type` is set to `profession`, supports custom certificate capabilities.",
+			},
 			"vip": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -373,6 +378,10 @@ func ckafkaRequestSetParams(request interface{}, d *schema.ResourceData) {
 
 	if v, ok := d.GetOk("elastic_bandwidth_switch"); ok {
 		values.FieldByName("ElasticBandwidthSwitch").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+	}
+
+	if v, ok := d.GetOk("custom_ssl_cert_id"); ok {
+		values.FieldByName("CustomSslCertId").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 }
 
@@ -731,7 +740,8 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		"zone_id", "period", "vpc_id",
 		"subnet_id", "renew_flag", "kafka_version",
 		"multi_zone_flag", "zone_ids", "disk_type",
-		"specifications_type", "instance_type", "elastic_bandwidth_switch",
+		"specifications_type", "instance_type",
+		"elastic_bandwidth_switch", "custom_ssl_cert_id",
 	}
 
 	for _, v := range immutableArgs {
