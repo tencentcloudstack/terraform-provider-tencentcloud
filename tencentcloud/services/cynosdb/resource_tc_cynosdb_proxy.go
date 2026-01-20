@@ -52,6 +52,11 @@ func ResourceTencentCloudCynosdbProxy() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The private network subnet ID is consistent with the cluster subnet ID by default.",
 			},
+			"vip": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Internal IP address.",
+			},
 			"proxy_count": {
 				Optional:      true,
 				Computed:      true,
@@ -339,6 +344,10 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 
 			if netAddrInfo.UniqSubnetId != nil {
 				_ = d.Set("unique_subnet_id", netAddrInfo.UniqSubnetId)
+			}
+
+			if netAddrInfo.Vip != nil {
+				_ = d.Set("vip", netAddrInfo.Vip)
 			}
 		}
 
