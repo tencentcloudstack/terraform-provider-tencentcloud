@@ -208,6 +208,133 @@ func resourceTencentCloudKubernetesUserPermissionsUpdate(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_user_permissions.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		targetUin = d.Id()
+	)
+
+	if d.HasChange("permissions") {
+		oldInterface, newInterface := d.GetChange("permissions")
+		olds := oldInterface.(*schema.Set)
+		news := newInterface.(*schema.Set)
+		remove := olds.Difference(news).List()
+		add := news.Difference(olds).List()
+		if len(remove) > 0 {
+			var allPermissions []*tkev20180525.PermissionItem
+			for _, item := range remove {
+				permissionsMap := item.(map[string]interface{})
+				permissionItem := tkev20180525.PermissionItem{}
+				if v, ok := permissionsMap["cluster_id"].(string); ok && v != "" {
+					permissionItem.ClusterId = helper.String(v)
+				}
+
+				if v, ok := permissionsMap["role_name"].(string); ok && v != "" {
+					permissionItem.RoleName = helper.String(v)
+				}
+
+				if v, ok := permissionsMap["role_type"].(string); ok && v != "" {
+					permissionItem.RoleType = helper.String(v)
+				}
+
+				if v, ok := permissionsMap["is_custom"].(bool); ok {
+					permissionItem.IsCustom = helper.Bool(v)
+				}
+
+				if v, ok := permissionsMap["namespace"].(string); ok && v != "" {
+					permissionItem.Namespace = helper.String(v)
+				}
+
+				allPermissions = append(allPermissions, &permissionItem)
+			}
+
+			totalPermissions := len(allPermissions)
+			for i := 0; i < totalPermissions; i += maxPermissionsPerRequest {
+				end := i + maxPermissionsPerRequest
+				if end > totalPermissions {
+					end = totalPermissions
+				}
+
+				batchPermissions := allPermissions[i:end]
+				request := tkev20180525.NewDeleteUserPermissionsRequest()
+				request.TargetUin = &targetUin
+				request.Permissions = batchPermissions
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().DeleteUserPermissionsWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success for batch %d-%d, request body [%s], response body [%s]\n", logId, request.GetAction(), i+1, end, request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s delete kubernetes user permissions failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+			}
+		}
+
+		if len(add) > 0 {
+			var allPermissions []*tkev20180525.PermissionItem
+			for _, item := range add {
+				permissionsMap := item.(map[string]interface{})
+				permissionItem := tkev20180525.PermissionItem{}
+				if v, ok := permissionsMap["cluster_id"].(string); ok && v != "" {
+					permissionItem.ClusterId = helper.String(v)
+				}
+
+				if v, ok := permissionsMap["role_name"].(string); ok && v != "" {
+					permissionItem.RoleName = helper.String(v)
+				}
+
+				if v, ok := permissionsMap["role_type"].(string); ok && v != "" {
+					permissionItem.RoleType = helper.String(v)
+				}
+
+				if v, ok := permissionsMap["is_custom"].(bool); ok {
+					permissionItem.IsCustom = helper.Bool(v)
+				}
+
+				if v, ok := permissionsMap["namespace"].(string); ok && v != "" {
+					permissionItem.Namespace = helper.String(v)
+				}
+
+				allPermissions = append(allPermissions, &permissionItem)
+			}
+
+			totalPermissions := len(allPermissions)
+			for i := 0; i < totalPermissions; i += maxPermissionsPerRequest {
+				end := i + maxPermissionsPerRequest
+				if end > totalPermissions {
+					end = totalPermissions
+				}
+
+				batchPermissions := allPermissions[i:end]
+				request := tkev20180525.NewGrantUserPermissionsRequest()
+				request.TargetUin = &targetUin
+				request.Permissions = batchPermissions
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().GrantUserPermissionsWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success for batch %d-%d, request body [%s], response body [%s]\n", logId, request.GetAction(), i+1, end, request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s create kubernetes user permissions failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+			}
+		}
+	}
+
 	return resourceTencentCloudKubernetesUserPermissionsRead(d, meta)
 }
 
