@@ -2311,3 +2311,52 @@ func (me *WafService) DescribeWafOwaspWhiteRuleById(ctx context.Context, domain,
 	ret = response.Response.List[0]
 	return
 }
+
+func (me *WafService) DescribeWafObjectById(ctx context.Context, objectId string) (ret *waf.ClbObject, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewDescribeObjectsRequest()
+	response := waf.NewDescribeObjectsResponse()
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("ObjectId"),
+			Values:     common.StringPtrs([]string{objectId}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribeObjects(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ClbObjects == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe objects failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.ClbObjects) == 0 {
+		return
+	}
+
+	ret = response.Response.ClbObjects[0]
+	return
+}
