@@ -303,6 +303,6 @@ In addition to all arguments above, the following attributes are exported:
 CynosDB cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
+terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
 ```
 

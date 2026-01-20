@@ -479,6 +479,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"slave_zone": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Multi zone Addresses of the CynosDB Cluster.",
 		},
 		"serverless_status_flag": {
