@@ -717,6 +717,7 @@ tencentcloud_kubernetes_log_config
 tencentcloud_kubernetes_cluster_master_attachment
 tencentcloud_kubernetes_cluster_release
 tencentcloud_kubernetes_control_plane_log
+tencentcloud_kubernetes_user_permissions
 
 TDMQ for Pulsar(tpulsar)
 Data Source

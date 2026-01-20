@@ -1539,6 +1539,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_health_check_policy":                                           tke.ResourceTencentCloudKubernetesHealthCheckPolicy(),
 			"tencentcloud_kubernetes_log_config":                                                    tke.ResourceTencentCloudKubernetesLogConfig(),
 			"tencentcloud_kubernetes_control_plane_log":                                             tke.ResourceTencentCloudKubernetesControlPlaneLog(),
+			"tencentcloud_kubernetes_user_permissions":                                              tke.ResourceTencentCloudKubernetesUserPermissions(),
 			"tencentcloud_mysql_backup_policy":                                                      cdb.ResourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                                            cdb.ResourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                                                  cdb.ResourceTencentCloudMysqlAccountPrivilege(),
