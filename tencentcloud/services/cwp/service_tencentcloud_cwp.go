@@ -337,3 +337,41 @@ func (me *CwpService) DescribeCwpMachinesByFilter(ctx context.Context, param map
 
 	return
 }
+
+func (me *CwpService) DescribeCwpAutoOpenProversionConfigById(ctx context.Context) (ret *cwp.DescribeLicenseGeneralResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cwp.NewDescribeLicenseGeneralRequest()
+	response := cwp.NewDescribeLicenseGeneralResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCwpClient().DescribeLicenseGeneral(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe license general failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
