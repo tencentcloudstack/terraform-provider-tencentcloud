@@ -1,3 +1,21 @@
+## 1.82.58(January 21, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_teo_config_group_version_detail` ([#3734](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3734))
+* **New Data Source:** `tencentcloud_teo_config_group_versions` ([#3734](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3734))
+* **New Data Source:** `tencentcloud_teo_deploy_config_version_history` ([#3734](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3734))
+* **New Data Source:** `tencentcloud_teo_environments` ([#3734](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3734))
+* **New Resource:** `tencentcloud_cfw_ips_mode_switch` ([#3747](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3747))
+* **New Resource:** `tencentcloud_cwp_auto_open_proversion_config` ([#3749](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3749))
+* **New Resource:** `tencentcloud_mqtt_message_enrichment_rule` ([#3746](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3746))
+* **New Resource:** `tencentcloud_teo_config_group_version` ([#3734](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3734))
+* **New Resource:** `tencentcloud_teo_deploy_config_group_version` ([#3734](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3734))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_vpc_route_tables: support `route_item_id` field ([#3750](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3750))
+
 ## 1.82.57(January 20, 2026)
 
 FEATURES:
