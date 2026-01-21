@@ -2508,6 +2508,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_check_certificate_domain_verification_operation":                      ssl.ResourceTencentCloudSslCheckCertificateDomainVerificationOperation(),
 			"tencentcloud_cwp_license_order":                                                        cwp.ResourceTencentCloudCwpLicenseOrder(),
 			"tencentcloud_cwp_license_bind_attachment":                                              cwp.ResourceTencentCloudCwpLicenseBindAttachment(),
+			"tencentcloud_cwp_auto_open_proversion_config":                                          cwp.ResourceTencentCloudCwpAutoOpenProversionConfig(),
 			"tencentcloud_ssl_replace_certificate_operation":                                        ssl.ResourceTencentCloudSslReplaceCertificateOperation(),
 			"tencentcloud_ssl_revoke_certificate_operation":                                         ssl.ResourceTencentCloudSslRevokeCertificateOperation(),
 			"tencentcloud_ssl_update_certificate_instance_operation":                                ssl.ResourceTencentCloudSslUpdateCertificateInstanceOperation(),

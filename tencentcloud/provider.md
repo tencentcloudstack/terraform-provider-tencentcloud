@@ -2432,6 +2432,7 @@ tencentcloud_cwp_machines
 Resource
 tencentcloud_cwp_license_order
 tencentcloud_cwp_license_bind_attachment
+tencentcloud_cwp_auto_open_proversion_config
 
 Business Intelligence(BI)
 Data Source
