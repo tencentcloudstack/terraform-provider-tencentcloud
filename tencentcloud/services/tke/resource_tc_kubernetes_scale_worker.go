@@ -80,6 +80,13 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							Default:     "",
 							Description: "The name of the device or partition to mount.",
 						},
+						"delete_with_instance": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     true,
+							Description: "Indicate whether to delete the disk when deleting the instance. Only supports disk paid by the hour.",
+						},
 					},
 				},
 			},
