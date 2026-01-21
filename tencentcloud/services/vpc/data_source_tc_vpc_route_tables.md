@@ -1,4 +1,4 @@
-Use this data source to query vpc route tables information.
+Use this data source to query VPC route tables information.
 
 Example Usage
 

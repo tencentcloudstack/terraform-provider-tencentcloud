@@ -133,6 +133,11 @@ func DataSourceTencentCloudVpcRouteTables() *schema.Resource {
 										Computed:    true,
 										Description: "ID of next-hop gateway. Note: when 'next_type' is EIP, GatewayId will fix the value `0`.",
 									},
+									"route_item_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The unique policy ID for the route.",
+									},
 								},
 							},
 						},
@@ -207,6 +212,7 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 			routeEntryInfo["destination_cidr_block"] = v.destinationCidr
 			routeEntryInfo["next_type"] = v.nextType
 			routeEntryInfo["next_hub"] = v.nextBub
+			routeEntryInfo["route_item_id"] = v.routeItemId
 			routeEntryInfos = append(routeEntryInfos, routeEntryInfo)
 		}
 
