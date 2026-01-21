@@ -2471,6 +2471,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_edge_firewall_switch":                                                 cfw.ResourceTencentCloudCfwEdgeFirewallSwitch(),
 			"tencentcloud_sg_rule":                                                                  cfw.ResourceTencentCloudSgRule(),
 			"tencentcloud_cfw_cluster_vpc_fw_switch":                                                cfw.ResourceTencentCloudCfwClusterVpcFwSwitch(),
+			"tencentcloud_cfw_ips_mode_switch":                                                      cfw.ResourceTencentCloudCfwIpsModeSwitch(),
 			"tencentcloud_bh_access_white_list_rule":                                                bh.ResourceTencentCloudBhAccessWhiteListRule(),
 			"tencentcloud_bh_access_white_list_config":                                              bh.ResourceTencentCloudBhAccessWhiteListConfig(),
 			"tencentcloud_bh_device":                                                                bh.ResourceTencentCloudBhDevice(),
