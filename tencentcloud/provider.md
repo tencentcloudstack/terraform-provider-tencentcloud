@@ -2510,6 +2510,7 @@ tencentcloud_mqtt_user
 tencentcloud_mqtt_jwt_authenticator
 tencentcloud_mqtt_jwks_authenticator
 tencentcloud_mqtt_http_authenticator
+tencentcloud_mqtt_message_enrichment_rule
 
 Billing
 Data Source

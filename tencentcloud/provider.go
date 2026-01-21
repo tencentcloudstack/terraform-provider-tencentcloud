@@ -2554,6 +2554,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_jwt_authenticator":                                                   mqtt.ResourceTencentCloudMqttJwtAuthenticator(),
 			"tencentcloud_mqtt_jwks_authenticator":                                                  mqtt.ResourceTencentCloudMqttJwksAuthenticator(),
 			"tencentcloud_mqtt_http_authenticator":                                                  mqtt.ResourceTencentCloudMqttHttpAuthenticator(),
+			"tencentcloud_mqtt_message_enrichment_rule":                                             mqtt.ResourceTencentCloudMqttMessageEnrichmentRule(),
 			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
 			"tencentcloud_billing_budget":                                                           billing.ResourceTencentCloudBillingBudget(),
 			"tencentcloud_igtm_instance":                                                            igtm.ResourceTencentCloudIgtmInstance(),
