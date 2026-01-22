@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -90,6 +90,7 @@ func (c *Client) AuthorizeTokenWithContext(ctx context.Context, request *Authori
     if request == nil {
         request = NewAuthorizeTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "AuthorizeToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AuthorizeToken require credential")
@@ -143,6 +144,7 @@ func (c *Client) BatchCreateAclWithContext(ctx context.Context, request *BatchCr
     if request == nil {
         request = NewBatchCreateAclRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "BatchCreateAcl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchCreateAcl require credential")
@@ -202,6 +204,7 @@ func (c *Client) BatchModifyGroupOffsetsWithContext(ctx context.Context, request
     if request == nil {
         request = NewBatchModifyGroupOffsetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "BatchModifyGroupOffsets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchModifyGroupOffsets require credential")
@@ -265,6 +268,7 @@ func (c *Client) BatchModifyTopicAttributesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewBatchModifyTopicAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "BatchModifyTopicAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchModifyTopicAttributes require credential")
@@ -322,6 +326,7 @@ func (c *Client) CancelAuthorizationTokenWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCancelAuthorizationTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CancelAuthorizationToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelAuthorizationToken require credential")
@@ -358,10 +363,6 @@ func NewCheckCdcClusterResponse() (response *CheckCdcClusterResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 func (c *Client) CheckCdcCluster(request *CheckCdcClusterRequest) (response *CheckCdcClusterResponse, err error) {
     return c.CheckCdcClusterWithContext(context.Background(), request)
 }
@@ -371,14 +372,11 @@ func (c *Client) CheckCdcCluster(request *CheckCdcClusterRequest) (response *Che
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 func (c *Client) CheckCdcClusterWithContext(ctx context.Context, request *CheckCdcClusterRequest) (response *CheckCdcClusterResponse, err error) {
     if request == nil {
         request = NewCheckCdcClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CheckCdcCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckCdcCluster require credential")
@@ -454,6 +452,7 @@ func (c *Client) CreateAclWithContext(ctx context.Context, request *CreateAclReq
     if request == nil {
         request = NewCreateAclRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateAcl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAcl require credential")
@@ -531,6 +530,7 @@ func (c *Client) CreateAclRuleWithContext(ctx context.Context, request *CreateAc
     if request == nil {
         request = NewCreateAclRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateAclRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAclRule require credential")
@@ -608,6 +608,7 @@ func (c *Client) CreateCdcClusterWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateCdcClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateCdcCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCdcCluster require credential")
@@ -671,6 +672,7 @@ func (c *Client) CreateConnectResourceWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateConnectResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateConnectResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateConnectResource require credential")
@@ -732,6 +734,7 @@ func (c *Client) CreateConsumerWithContext(ctx context.Context, request *CreateC
     if request == nil {
         request = NewCreateConsumerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateConsumer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateConsumer require credential")
@@ -797,6 +800,7 @@ func (c *Client) CreateDatahubTaskWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateDatahubTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateDatahubTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDatahubTask require credential")
@@ -876,6 +880,7 @@ func (c *Client) CreateDatahubTopicWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateDatahubTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateDatahubTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDatahubTopic require credential")
@@ -884,83 +889,6 @@ func (c *Client) CreateDatahubTopicWithContext(ctx context.Context, request *Cre
     request.SetContext(ctx)
     
     response = NewCreateDatahubTopicResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateInstancePostRequest() (request *CreateInstancePostRequest) {
-    request = &CreateInstancePostRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ckafka", APIVersion, "CreateInstancePost")
-    
-    
-    return
-}
-
-func NewCreateInstancePostResponse() (response *CreateInstancePostResponse) {
-    response = &CreateInstancePostResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateInstancePost
-// 由于出参需要更新，当前接口将会在未来版本中废弃，建议用户迁移使用 CreatePostPaidInstance 接口。创建按量计费实例。通常用于 SDK 或云 API 控制台调用接口，创建后付费 CKafka 实例。调用接口与在 CKafka 控制台购买按量付费实例效果相同。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
-//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
-//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
-//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
-//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
-//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
-//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
-//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
-//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
-func (c *Client) CreateInstancePost(request *CreateInstancePostRequest) (response *CreateInstancePostResponse, err error) {
-    return c.CreateInstancePostWithContext(context.Background(), request)
-}
-
-// CreateInstancePost
-// 由于出参需要更新，当前接口将会在未来版本中废弃，建议用户迁移使用 CreatePostPaidInstance 接口。创建按量计费实例。通常用于 SDK 或云 API 控制台调用接口，创建后付费 CKafka 实例。调用接口与在 CKafka 控制台购买按量付费实例效果相同。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
-//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
-//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
-//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
-//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
-//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
-//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
-//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
-//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
-func (c *Client) CreateInstancePostWithContext(ctx context.Context, request *CreateInstancePostRequest) (response *CreateInstancePostResponse, err error) {
-    if request == nil {
-        request = NewCreateInstancePostRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateInstancePost require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateInstancePostResponse()
     err = c.Send(request, response)
     return
 }
@@ -1030,6 +958,7 @@ func (c *Client) CreateInstancePreWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateInstancePreRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateInstancePre")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstancePre require credential")
@@ -1107,6 +1036,7 @@ func (c *Client) CreatePartitionWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreatePartitionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreatePartition")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePartition require credential")
@@ -1184,6 +1114,7 @@ func (c *Client) CreatePostPaidInstanceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreatePostPaidInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreatePostPaidInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePostPaidInstance require credential")
@@ -1216,7 +1147,7 @@ func NewCreatePrometheusResponse() (response *CreatePrometheusResponse) {
 }
 
 // CreatePrometheus
-// 添加普罗米修斯监控1
+// 添加普罗米修斯监控
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1234,7 +1165,7 @@ func (c *Client) CreatePrometheus(request *CreatePrometheusRequest) (response *C
 }
 
 // CreatePrometheus
-// 添加普罗米修斯监控1
+// 添加普罗米修斯监控
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1251,6 +1182,7 @@ func (c *Client) CreatePrometheusWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreatePrometheusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreatePrometheus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePrometheus require credential")
@@ -1334,6 +1266,7 @@ func (c *Client) CreateRouteWithContext(ctx context.Context, request *CreateRout
     if request == nil {
         request = NewCreateRouteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateRoute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRoute require credential")
@@ -1391,6 +1324,7 @@ func (c *Client) CreateTokenWithContext(ctx context.Context, request *CreateToke
     if request == nil {
         request = NewCreateTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateToken require credential")
@@ -1472,6 +1406,7 @@ func (c *Client) CreateTopicWithContext(ctx context.Context, request *CreateTopi
     if request == nil {
         request = NewCreateTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTopic require credential")
@@ -1547,6 +1482,7 @@ func (c *Client) CreateTopicIpWhiteListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateTopicIpWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateTopicIpWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTopicIpWhiteList require credential")
@@ -1622,6 +1558,7 @@ func (c *Client) CreateUserWithContext(ctx context.Context, request *CreateUserR
     if request == nil {
         request = NewCreateUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUser require credential")
@@ -1697,6 +1634,7 @@ func (c *Client) DeleteAclWithContext(ctx context.Context, request *DeleteAclReq
     if request == nil {
         request = NewDeleteAclRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteAcl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAcl require credential")
@@ -1774,6 +1712,7 @@ func (c *Client) DeleteAclRuleWithContext(ctx context.Context, request *DeleteAc
     if request == nil {
         request = NewDeleteAclRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteAclRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAclRule require credential")
@@ -1837,6 +1776,7 @@ func (c *Client) DeleteConnectResourceWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteConnectResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteConnectResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteConnectResource require credential")
@@ -1896,6 +1836,7 @@ func (c *Client) DeleteDatahubTaskWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteDatahubTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteDatahubTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDatahubTask require credential")
@@ -1975,6 +1916,7 @@ func (c *Client) DeleteDatahubTopicWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteDatahubTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteDatahubTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDatahubTopic require credential")
@@ -2048,6 +1990,7 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     if request == nil {
         request = NewDeleteGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteGroup require credential")
@@ -2056,6 +1999,58 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     request.SetContext(ctx)
     
     response = NewDeleteGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGroupSubscribeTopicRequest() (request *DeleteGroupSubscribeTopicRequest) {
+    request = &DeleteGroupSubscribeTopicRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DeleteGroupSubscribeTopic")
+    
+    
+    return
+}
+
+func NewDeleteGroupSubscribeTopicResponse() (response *DeleteGroupSubscribeTopicResponse) {
+    response = &DeleteGroupSubscribeTopicResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGroupSubscribeTopic
+// 删除消费分组订阅的topic(消费分组必须是Empty 状态)
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteGroupSubscribeTopic(request *DeleteGroupSubscribeTopicRequest) (response *DeleteGroupSubscribeTopicResponse, err error) {
+    return c.DeleteGroupSubscribeTopicWithContext(context.Background(), request)
+}
+
+// DeleteGroupSubscribeTopic
+// 删除消费分组订阅的topic(消费分组必须是Empty 状态)
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteGroupSubscribeTopicWithContext(ctx context.Context, request *DeleteGroupSubscribeTopicRequest) (response *DeleteGroupSubscribeTopicResponse, err error) {
+    if request == nil {
+        request = NewDeleteGroupSubscribeTopicRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteGroupSubscribeTopic")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGroupSubscribeTopic require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGroupSubscribeTopicResponse()
     err = c.Send(request, response)
     return
 }
@@ -2080,7 +2075,7 @@ func NewDeleteInstancePostResponse() (response *DeleteInstancePostResponse) {
 }
 
 // DeleteInstancePost
-// 删除后付费实例
+// 删除后付费实例，通过调用API删除不会对连接器和任务进行关联预检查，直接进行实例销毁。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2102,7 +2097,7 @@ func (c *Client) DeleteInstancePost(request *DeleteInstancePostRequest) (respons
 }
 
 // DeleteInstancePost
-// 删除后付费实例
+// 删除后付费实例，通过调用API删除不会对连接器和任务进行关联预检查，直接进行实例销毁。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2123,6 +2118,7 @@ func (c *Client) DeleteInstancePostWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteInstancePostRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteInstancePost")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstancePost require credential")
@@ -2155,7 +2151,7 @@ func NewDeleteInstancePreResponse() (response *DeleteInstancePreResponse) {
 }
 
 // DeleteInstancePre
-// 删除预付费实例，该接口会对实例执行隔离并删除的动作，执行成功后实例会被直接删除销毁
+// 删除预付费实例，该接口会对实例执行隔离并删除的动作，执行成功后实例会被直接删除销毁。通过调用API删除不会对连接器和任务进行关联预检查，直接进行实例销毁。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2165,7 +2161,7 @@ func (c *Client) DeleteInstancePre(request *DeleteInstancePreRequest) (response 
 }
 
 // DeleteInstancePre
-// 删除预付费实例，该接口会对实例执行隔离并删除的动作，执行成功后实例会被直接删除销毁
+// 删除预付费实例，该接口会对实例执行隔离并删除的动作，执行成功后实例会被直接删除销毁。通过调用API删除不会对连接器和任务进行关联预检查，直接进行实例销毁。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2174,6 +2170,7 @@ func (c *Client) DeleteInstancePreWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteInstancePreRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteInstancePre")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstancePre require credential")
@@ -2253,6 +2250,7 @@ func (c *Client) DeleteRouteWithContext(ctx context.Context, request *DeleteRout
     if request == nil {
         request = NewDeleteRouteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteRoute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRoute require credential")
@@ -2310,6 +2308,7 @@ func (c *Client) DeleteRouteTriggerTimeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteRouteTriggerTimeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteRouteTriggerTime")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRouteTriggerTime require credential")
@@ -2391,6 +2390,7 @@ func (c *Client) DeleteTopicWithContext(ctx context.Context, request *DeleteTopi
     if request == nil {
         request = NewDeleteTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTopic require credential")
@@ -2466,6 +2466,7 @@ func (c *Client) DeleteTopicIpWhiteListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteTopicIpWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteTopicIpWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTopicIpWhiteList require credential")
@@ -2541,6 +2542,7 @@ func (c *Client) DeleteUserWithContext(ctx context.Context, request *DeleteUserR
     if request == nil {
         request = NewDeleteUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUser require credential")
@@ -2616,6 +2618,7 @@ func (c *Client) DescribeACLWithContext(ctx context.Context, request *DescribeAC
     if request == nil {
         request = NewDescribeACLRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeACL")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeACL require credential")
@@ -2691,6 +2694,7 @@ func (c *Client) DescribeAclRuleWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeAclRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeAclRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAclRule require credential")
@@ -2703,75 +2707,52 @@ func (c *Client) DescribeAclRuleWithContext(ctx context.Context, request *Descri
     return
 }
 
-func NewDescribeAppInfoRequest() (request *DescribeAppInfoRequest) {
-    request = &DescribeAppInfoRequest{
+func NewDescribeCkafkaVersionRequest() (request *DescribeCkafkaVersionRequest) {
+    request = &DescribeCkafkaVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeAppInfo")
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeCkafkaVersion")
     
     
     return
 }
 
-func NewDescribeAppInfoResponse() (response *DescribeAppInfoResponse) {
-    response = &DescribeAppInfoResponse{
+func NewDescribeCkafkaVersionResponse() (response *DescribeCkafkaVersionResponse) {
+    response = &DescribeCkafkaVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// DescribeAppInfo
-// 查询用户列表
+// DescribeCkafkaVersion
+// 查询实例版本信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
-//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
-//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
-//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
-//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
-//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
-//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
-//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
-func (c *Client) DescribeAppInfo(request *DescribeAppInfoRequest) (response *DescribeAppInfoResponse, err error) {
-    return c.DescribeAppInfoWithContext(context.Background(), request)
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeCkafkaVersion(request *DescribeCkafkaVersionRequest) (response *DescribeCkafkaVersionResponse, err error) {
+    return c.DescribeCkafkaVersionWithContext(context.Background(), request)
 }
 
-// DescribeAppInfo
-// 查询用户列表
+// DescribeCkafkaVersion
+// 查询实例版本信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
-//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
-//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
-//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
-//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
-//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
-//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
-//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
-func (c *Client) DescribeAppInfoWithContext(ctx context.Context, request *DescribeAppInfoRequest) (response *DescribeAppInfoResponse, err error) {
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeCkafkaVersionWithContext(ctx context.Context, request *DescribeCkafkaVersionRequest) (response *DescribeCkafkaVersionResponse, err error) {
     if request == nil {
-        request = NewDescribeAppInfoRequest()
+        request = NewDescribeCkafkaVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeCkafkaVersion")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAppInfo require credential")
+        return nil, errors.New("DescribeCkafkaVersion require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeAppInfoResponse()
+    response = NewDescribeCkafkaVersionResponse()
     err = c.Send(request, response)
     return
 }
@@ -2841,6 +2822,7 @@ func (c *Client) DescribeCkafkaZoneWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeCkafkaZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeCkafkaZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCkafkaZone require credential")
@@ -2904,6 +2886,7 @@ func (c *Client) DescribeConnectResourceWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeConnectResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeConnectResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeConnectResource require credential")
@@ -2967,6 +2950,7 @@ func (c *Client) DescribeConnectResourcesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeConnectResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeConnectResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeConnectResources require credential")
@@ -3042,6 +3026,7 @@ func (c *Client) DescribeConsumerGroupWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeConsumerGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeConsumerGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeConsumerGroup require credential")
@@ -3050,6 +3035,68 @@ func (c *Client) DescribeConsumerGroupWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDescribeConsumerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCvmInfoRequest() (request *DescribeCvmInfoRequest) {
+    request = &DescribeCvmInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeCvmInfo")
+    
+    
+    return
+}
+
+func NewDescribeCvmInfoResponse() (response *DescribeCvmInfoResponse) {
+    response = &DescribeCvmInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCvmInfo
+// 本接口用于获取实例对应后端CVM信息，包括cvmId和ip等。用于专业版，标准版返回数据为空
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DescribeCvmInfo(request *DescribeCvmInfoRequest) (response *DescribeCvmInfoResponse, err error) {
+    return c.DescribeCvmInfoWithContext(context.Background(), request)
+}
+
+// DescribeCvmInfo
+// 本接口用于获取实例对应后端CVM信息，包括cvmId和ip等。用于专业版，标准版返回数据为空
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DescribeCvmInfoWithContext(ctx context.Context, request *DescribeCvmInfoRequest) (response *DescribeCvmInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeCvmInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeCvmInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCvmInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCvmInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -3117,6 +3164,7 @@ func (c *Client) DescribeDatahubGroupOffsetsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeDatahubGroupOffsetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeDatahubGroupOffsets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatahubGroupOffsets require credential")
@@ -3174,6 +3222,7 @@ func (c *Client) DescribeDatahubTaskWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeDatahubTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeDatahubTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatahubTask require credential")
@@ -3235,6 +3284,7 @@ func (c *Client) DescribeDatahubTasksWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeDatahubTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeDatahubTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatahubTasks require credential")
@@ -3312,6 +3362,7 @@ func (c *Client) DescribeDatahubTopicWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeDatahubTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeDatahubTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatahubTopic require credential")
@@ -3389,6 +3440,7 @@ func (c *Client) DescribeDatahubTopicsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeDatahubTopicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeDatahubTopics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatahubTopics require credential")
@@ -3464,6 +3516,7 @@ func (c *Client) DescribeGroupWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGroup require credential")
@@ -3539,6 +3592,7 @@ func (c *Client) DescribeGroupInfoWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeGroupInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeGroupInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGroupInfo require credential")
@@ -3614,6 +3668,7 @@ func (c *Client) DescribeGroupOffsetsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeGroupOffsetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeGroupOffsets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGroupOffsets require credential")
@@ -3693,6 +3748,7 @@ func (c *Client) DescribeInstanceAttributesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeInstanceAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeInstanceAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceAttributes require credential")
@@ -3725,7 +3781,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 }
 
 // DescribeInstances
-// 本接口（DescribeInstance）用于在用户账户下获取消息队列 CKafka 实例列表
+// 本接口（DescribeInstances）用于在用户账户下获取消息队列 CKafka 实例列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3744,7 +3800,7 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 }
 
 // DescribeInstances
-// 本接口（DescribeInstance）用于在用户账户下获取消息队列 CKafka 实例列表
+// 本接口（DescribeInstances）用于在用户账户下获取消息队列 CKafka 实例列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3762,6 +3818,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -3839,6 +3896,7 @@ func (c *Client) DescribeInstancesDetailWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeInstancesDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeInstancesDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesDetail require credential")
@@ -3847,6 +3905,114 @@ func (c *Client) DescribeInstancesDetailWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDescribeInstancesDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeModifyTypeRequest() (request *DescribeModifyTypeRequest) {
+    request = &DescribeModifyTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeModifyType")
+    
+    
+    return
+}
+
+func NewDescribeModifyTypeResponse() (response *DescribeModifyTypeResponse) {
+    response = &DescribeModifyTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeModifyType
+// 查询实例变配类型
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ROUTEOVERLIMIT = "LimitExceeded.RouteOverLimit"
+//  LIMITEXCEEDED_ROUTESASLOVERLIMIT = "LimitExceeded.RouteSASLOverLimit"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DescribeModifyType(request *DescribeModifyTypeRequest) (response *DescribeModifyTypeResponse, err error) {
+    return c.DescribeModifyTypeWithContext(context.Background(), request)
+}
+
+// DescribeModifyType
+// 查询实例变配类型
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ROUTEOVERLIMIT = "LimitExceeded.RouteOverLimit"
+//  LIMITEXCEEDED_ROUTESASLOVERLIMIT = "LimitExceeded.RouteSASLOverLimit"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DescribeModifyTypeWithContext(ctx context.Context, request *DescribeModifyTypeRequest) (response *DescribeModifyTypeResponse, err error) {
+    if request == nil {
+        request = NewDescribeModifyTypeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeModifyType")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeModifyType require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeModifyTypeResponse()
     err = c.Send(request, response)
     return
 }
@@ -3906,6 +4072,7 @@ func (c *Client) DescribePrometheusWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribePrometheusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribePrometheus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrometheus require credential")
@@ -3981,6 +4148,7 @@ func (c *Client) DescribeRegionWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeRegionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeRegion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRegion require credential")
@@ -4060,6 +4228,7 @@ func (c *Client) DescribeRouteWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeRouteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeRoute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRoute require credential")
@@ -4068,6 +4237,66 @@ func (c *Client) DescribeRouteWithContext(ctx context.Context, request *Describe
     request.SetContext(ctx)
     
     response = NewDescribeRouteResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSecurityGroupRoutesRequest() (request *DescribeSecurityGroupRoutesRequest) {
+    request = &DescribeSecurityGroupRoutesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeSecurityGroupRoutes")
+    
+    
+    return
+}
+
+func NewDescribeSecurityGroupRoutesResponse() (response *DescribeSecurityGroupRoutesResponse) {
+    response = &DescribeSecurityGroupRoutesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSecurityGroupRoutes
+// 获取安全组路由信息列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeSecurityGroupRoutes(request *DescribeSecurityGroupRoutesRequest) (response *DescribeSecurityGroupRoutesResponse, err error) {
+    return c.DescribeSecurityGroupRoutesWithContext(context.Background(), request)
+}
+
+// DescribeSecurityGroupRoutes
+// 获取安全组路由信息列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeSecurityGroupRoutesWithContext(ctx context.Context, request *DescribeSecurityGroupRoutesRequest) (response *DescribeSecurityGroupRoutesResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecurityGroupRoutesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeSecurityGroupRoutes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecurityGroupRoutes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecurityGroupRoutesResponse()
     err = c.Send(request, response)
     return
 }
@@ -4135,6 +4364,7 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTaskStatus require credential")
@@ -4216,6 +4446,7 @@ func (c *Client) DescribeTopicWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopic require credential")
@@ -4293,6 +4524,7 @@ func (c *Client) DescribeTopicAttributesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeTopicAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTopicAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopicAttributes require credential")
@@ -4362,6 +4594,7 @@ func (c *Client) DescribeTopicDetailWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeTopicDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTopicDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopicDetail require credential")
@@ -4423,6 +4656,7 @@ func (c *Client) DescribeTopicFlowRankingWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeTopicFlowRankingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTopicFlowRanking")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopicFlowRanking require credential")
@@ -4482,6 +4716,7 @@ func (c *Client) DescribeTopicProduceConnectionWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeTopicProduceConnectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTopicProduceConnection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopicProduceConnection require credential")
@@ -4567,6 +4802,7 @@ func (c *Client) DescribeTopicSubscribeGroupWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeTopicSubscribeGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTopicSubscribeGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopicSubscribeGroup require credential")
@@ -4626,6 +4862,7 @@ func (c *Client) DescribeTopicSyncReplicaWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeTopicSyncReplicaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTopicSyncReplica")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopicSyncReplica require credential")
@@ -4634,6 +4871,74 @@ func (c *Client) DescribeTopicSyncReplicaWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeTopicSyncReplicaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTypeInstancesRequest() (request *DescribeTypeInstancesRequest) {
+    request = &DescribeTypeInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeTypeInstances")
+    
+    
+    return
+}
+
+func NewDescribeTypeInstancesResponse() (response *DescribeTypeInstancesResponse) {
+    response = &DescribeTypeInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTypeInstances
+// 本接口（DescribeTypeInstances）用于在用户账户下获取指定类型消息队列 CKafka 实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DescribeTypeInstances(request *DescribeTypeInstancesRequest) (response *DescribeTypeInstancesResponse, err error) {
+    return c.DescribeTypeInstancesWithContext(context.Background(), request)
+}
+
+// DescribeTypeInstances
+// 本接口（DescribeTypeInstances）用于在用户账户下获取指定类型消息队列 CKafka 实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DescribeTypeInstancesWithContext(ctx context.Context, request *DescribeTypeInstancesRequest) (response *DescribeTypeInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeTypeInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeTypeInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTypeInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTypeInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -4701,6 +5006,7 @@ func (c *Client) DescribeUserWithContext(ctx context.Context, request *DescribeU
     if request == nil {
         request = NewDescribeUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUser require credential")
@@ -4750,6 +5056,7 @@ func (c *Client) FetchDatahubMessageByOffsetWithContext(ctx context.Context, req
     if request == nil {
         request = NewFetchDatahubMessageByOffsetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "FetchDatahubMessageByOffset")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FetchDatahubMessageByOffset require credential")
@@ -4801,6 +5108,7 @@ func (c *Client) FetchLatestDatahubMessageListWithContext(ctx context.Context, r
     if request == nil {
         request = NewFetchLatestDatahubMessageListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "FetchLatestDatahubMessageList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FetchLatestDatahubMessageList require credential")
@@ -4850,6 +5158,7 @@ func (c *Client) FetchMessageByOffsetWithContext(ctx context.Context, request *F
     if request == nil {
         request = NewFetchMessageByOffsetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "FetchMessageByOffset")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FetchMessageByOffset require credential")
@@ -4901,6 +5210,7 @@ func (c *Client) FetchMessageListByOffsetWithContext(ctx context.Context, reques
     if request == nil {
         request = NewFetchMessageListByOffsetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "FetchMessageListByOffset")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FetchMessageListByOffset require credential")
@@ -4952,6 +5262,7 @@ func (c *Client) FetchMessageListByTimestampWithContext(ctx context.Context, req
     if request == nil {
         request = NewFetchMessageListByTimestampRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "FetchMessageListByTimestamp")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FetchMessageListByTimestamp require credential")
@@ -5011,6 +5322,7 @@ func (c *Client) InquireCkafkaPriceWithContext(ctx context.Context, request *Inq
     if request == nil {
         request = NewInquireCkafkaPriceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "InquireCkafkaPrice")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquireCkafkaPrice require credential")
@@ -5070,6 +5382,7 @@ func (c *Client) InstanceScalingDownWithContext(ctx context.Context, request *In
     if request == nil {
         request = NewInstanceScalingDownRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "InstanceScalingDown")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InstanceScalingDown require credential")
@@ -5127,6 +5440,7 @@ func (c *Client) ModifyAclRuleWithContext(ctx context.Context, request *ModifyAc
     if request == nil {
         request = NewModifyAclRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyAclRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAclRule require credential")
@@ -5190,6 +5504,7 @@ func (c *Client) ModifyConnectResourceWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyConnectResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyConnectResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyConnectResource require credential")
@@ -5251,6 +5566,7 @@ func (c *Client) ModifyDatahubTaskWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyDatahubTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyDatahubTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDatahubTask require credential")
@@ -5326,6 +5642,7 @@ func (c *Client) ModifyDatahubTopicWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyDatahubTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyDatahubTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDatahubTopic require credential")
@@ -5401,6 +5718,7 @@ func (c *Client) ModifyGroupOffsetsWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyGroupOffsetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyGroupOffsets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyGroupOffsets require credential")
@@ -5478,6 +5796,7 @@ func (c *Client) ModifyInstanceAttributesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyInstanceAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyInstanceAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceAttributes require credential")
@@ -5510,7 +5829,7 @@ func NewModifyInstancePreResponse() (response *ModifyInstancePreResponse) {
 }
 
 // ModifyInstancePre
-// 预付费实例变配接口，调整磁盘，带宽
+// 预付费实例变配接口，调整磁盘，带宽,  分区
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5531,7 +5850,7 @@ func (c *Client) ModifyInstancePre(request *ModifyInstancePreRequest) (response 
 }
 
 // ModifyInstancePre
-// 预付费实例变配接口，调整磁盘，带宽
+// 预付费实例变配接口，调整磁盘，带宽,  分区
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5551,6 +5870,7 @@ func (c *Client) ModifyInstancePreWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyInstancePreRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyInstancePre")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancePre require credential")
@@ -5626,6 +5946,7 @@ func (c *Client) ModifyPasswordWithContext(ctx context.Context, request *ModifyP
     if request == nil {
         request = NewModifyPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPassword require credential")
@@ -5701,6 +6022,7 @@ func (c *Client) ModifyRoutineMaintenanceTaskWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyRoutineMaintenanceTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyRoutineMaintenanceTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRoutineMaintenanceTask require credential")
@@ -5776,6 +6098,7 @@ func (c *Client) ModifyTopicAttributesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyTopicAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyTopicAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTopicAttributes require credential")
@@ -5784,6 +6107,66 @@ func (c *Client) ModifyTopicAttributesWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyTopicAttributesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewPauseDatahubTaskRequest() (request *PauseDatahubTaskRequest) {
+    request = &PauseDatahubTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "PauseDatahubTask")
+    
+    
+    return
+}
+
+func NewPauseDatahubTaskResponse() (response *PauseDatahubTaskResponse) {
+    response = &PauseDatahubTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// PauseDatahubTask
+// 暂停Dip任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) PauseDatahubTask(request *PauseDatahubTaskRequest) (response *PauseDatahubTaskResponse, err error) {
+    return c.PauseDatahubTaskWithContext(context.Background(), request)
+}
+
+// PauseDatahubTask
+// 暂停Dip任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) PauseDatahubTaskWithContext(ctx context.Context, request *PauseDatahubTaskRequest) (response *PauseDatahubTaskResponse, err error) {
+    if request == nil {
+        request = NewPauseDatahubTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "PauseDatahubTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PauseDatahubTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPauseDatahubTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -5833,6 +6216,7 @@ func (c *Client) RenewCkafkaInstanceWithContext(ctx context.Context, request *Re
     if request == nil {
         request = NewRenewCkafkaInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "RenewCkafkaInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewCkafkaInstance require credential")
@@ -5841,6 +6225,124 @@ func (c *Client) RenewCkafkaInstanceWithContext(ctx context.Context, request *Re
     request.SetContext(ctx)
     
     response = NewRenewCkafkaInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRestartDatahubTaskRequest() (request *RestartDatahubTaskRequest) {
+    request = &RestartDatahubTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "RestartDatahubTask")
+    
+    
+    return
+}
+
+func NewRestartDatahubTaskResponse() (response *RestartDatahubTaskResponse) {
+    response = &RestartDatahubTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RestartDatahubTask
+// Datahub任务异常时，重启Datahub任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) RestartDatahubTask(request *RestartDatahubTaskRequest) (response *RestartDatahubTaskResponse, err error) {
+    return c.RestartDatahubTaskWithContext(context.Background(), request)
+}
+
+// RestartDatahubTask
+// Datahub任务异常时，重启Datahub任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) RestartDatahubTaskWithContext(ctx context.Context, request *RestartDatahubTaskRequest) (response *RestartDatahubTaskResponse, err error) {
+    if request == nil {
+        request = NewRestartDatahubTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "RestartDatahubTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RestartDatahubTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRestartDatahubTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResumeDatahubTaskRequest() (request *ResumeDatahubTaskRequest) {
+    request = &ResumeDatahubTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "ResumeDatahubTask")
+    
+    
+    return
+}
+
+func NewResumeDatahubTaskResponse() (response *ResumeDatahubTaskResponse) {
+    response = &ResumeDatahubTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResumeDatahubTask
+// 恢复Dip任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) ResumeDatahubTask(request *ResumeDatahubTaskRequest) (response *ResumeDatahubTaskResponse, err error) {
+    return c.ResumeDatahubTaskWithContext(context.Background(), request)
+}
+
+// ResumeDatahubTask
+// 恢复Dip任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) ResumeDatahubTaskWithContext(ctx context.Context, request *ResumeDatahubTaskRequest) (response *ResumeDatahubTaskResponse, err error) {
+    if request == nil {
+        request = NewResumeDatahubTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ResumeDatahubTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResumeDatahubTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResumeDatahubTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -5900,6 +6402,7 @@ func (c *Client) SendMessageWithContext(ctx context.Context, request *SendMessag
     if request == nil {
         request = NewSendMessageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "SendMessage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SendMessage require credential")
@@ -5908,6 +6411,60 @@ func (c *Client) SendMessageWithContext(ctx context.Context, request *SendMessag
     request.SetContext(ctx)
     
     response = NewSendMessageResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeBrokerVersionRequest() (request *UpgradeBrokerVersionRequest) {
+    request = &UpgradeBrokerVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "UpgradeBrokerVersion")
+    
+    
+    return
+}
+
+func NewUpgradeBrokerVersionResponse() (response *UpgradeBrokerVersionResponse) {
+    response = &UpgradeBrokerVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpgradeBrokerVersion
+// broker版本升级
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpgradeBrokerVersion(request *UpgradeBrokerVersionRequest) (response *UpgradeBrokerVersionResponse, err error) {
+    return c.UpgradeBrokerVersionWithContext(context.Background(), request)
+}
+
+// UpgradeBrokerVersion
+// broker版本升级
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpgradeBrokerVersionWithContext(ctx context.Context, request *UpgradeBrokerVersionRequest) (response *UpgradeBrokerVersionResponse, err error) {
+    if request == nil {
+        request = NewUpgradeBrokerVersionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "UpgradeBrokerVersion")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeBrokerVersion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeBrokerVersionResponse()
     err = c.Send(request, response)
     return
 }

@@ -40,7 +40,7 @@ func ResourceTencentCloudMonitorTmpExporterIntegrationV2() *schema.Resource {
 			"content": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Integration config.",
+				Description: "Integration config. For more details, please refer to [Cloud Monitoring](https://www.tencentcloud.com/document/product/248/63002?lang=en&pg=).",
 			},
 
 			"kube_type": {
@@ -111,6 +111,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Create(d *schema.Resourc
 		results, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribePrometheusInstanceInitStatus(initStatus)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+
+		if results == nil || results.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit results is nil, operate failed"))
 		}
 
 		status := results.Response.Status
@@ -205,8 +209,8 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Read(d *schema.ResourceD
 	}
 
 	if tmpExporterIntegration == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_monitor_tmp_exporter_integration_v2` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `tmpExporterIntegration` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 

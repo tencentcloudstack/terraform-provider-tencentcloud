@@ -1,0 +1,2 @@
+```release-note:enhancement
+resource/tencentcloud_as_scaling_group: add `priority_scale_in_unhealthy`

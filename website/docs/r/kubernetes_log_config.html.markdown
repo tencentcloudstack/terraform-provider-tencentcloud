@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_log_config"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_log_config"
 description: |-
-  Provides a resource to create a tke kubernetes_log_config
+  Provides a resource to create a TKE kubernetes log config
 ---
 
 # tencentcloud_kubernetes_log_config
 
-Provides a resource to create a tke kubernetes_log_config
+Provides a resource to create a TKE kubernetes log config
 
 ## Example Usage
 
@@ -216,7 +216,7 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) Cluster ID.
 * `log_config_name` - (Required, String, ForceNew) Log config name.
-* `log_config` - (Required, String, ForceNew) JSON expression of log collection configuration.
+* `log_config` - (Required, String, ForceNew) JSON expression of log collection configuration. For more details, please refer to the guide: https://www.tencentcloud.com/zh/document/product/457/64846.
 * `cluster_type` - (Optional, String, ForceNew) The current cluster type supports tke and eks, default is tke.
 * `logset_id` - (Optional, String, ForceNew) CLS log set ID.
 

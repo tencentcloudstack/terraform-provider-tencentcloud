@@ -227,6 +227,11 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.",
 			},
+			"associate_endpoint": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The associated terminal node ID; passing an empty string indicates unassociating the node.",
+			},
 			"domain": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -598,6 +603,39 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if v, ok := d.GetOkExists("associate_endpoint"); ok {
+		endpointId := v.(string)
+		if endpointId != "" {
+			mRequest := clb.NewModifyLoadBalancerAttributesRequest()
+			mRequest.LoadBalancerId = helper.String(clbId)
+			mRequest.AssociateEndpoint = &endpointId
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				mResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerAttributes(mRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
+					if mResponse == nil || mResponse.Response == nil || mResponse.Response.RequestId == nil {
+						return resource.NonRetryableError(fmt.Errorf("Modify load balancer attributes failed, Response is nil."))
+					}
+
+					requestId := *mResponse.Response.RequestId
+					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+					if retryErr != nil {
+						return tccommon.RetryError(errors.WithStack(retryErr))
+					}
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudClbInstanceRead(d, meta)
 }
 
@@ -726,6 +764,10 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	if instance.AssociateEndpoint != nil {
+		_ = d.Set("associate_endpoint", instance.AssociateEndpoint)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "clb", "clb", tcClient.Region, d.Id())
@@ -832,6 +874,12 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		isDeleteProtect = d.Get("delete_protect").(bool)
 		request.DeleteProtect = &isDeleteProtect
+	}
+
+	if d.HasChange("associate_endpoint") {
+		changed = true
+		associateEndpoint := d.Get("associate_endpoint").(string)
+		request.AssociateEndpoint = &associateEndpoint
 	}
 
 	if changed {

@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster: update `slave_zone` field property
+```
+
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster_slave_zone: optimize doc
+```

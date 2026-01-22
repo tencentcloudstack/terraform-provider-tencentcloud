@@ -8,6 +8,7 @@ resource "tencentcloud_mongodb_instance_backup_rule" "example" {
   backup_method           = 0
   backup_time             = 10
   backup_retention_period = 7
+  backup_version          = 1
 }
 ```
 

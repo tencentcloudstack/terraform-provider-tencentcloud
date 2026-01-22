@@ -212,6 +212,9 @@ const (
 	// 指定云联网关联黑石私有网络数量达到上限。
 	INVALIDPARAMETERVALUE_CCNATTACHBMVPCLIMITEXCEEDED = "InvalidParameterValue.CcnAttachBmvpcLimitExceeded"
 
+	// 指定CIDR存在重叠。
+	INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
+
 	// 目的网段不在对端VPC的CIDR范围内。
 	INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 
@@ -290,6 +293,9 @@ const (
 	// 网络计费模式没有更改。
 	INVALIDPARAMETERVALUE_INTERNETCHARGETYPENOTCHANGED = "InvalidParameterValue.InternetChargeTypeNotChanged"
 
+	// 参数非法
+	INVALIDPARAMETERVALUE_INVALID = "InvalidParameterValue.Invalid"
+
 	// 无效的带宽包计费方式。
 	INVALIDPARAMETERVALUE_INVALIDBANDWIDTHPACKAGECHARGETYPE = "InvalidParameterValue.InvalidBandwidthPackageChargeType"
 
@@ -356,6 +362,9 @@ const (
 	// 集群类型不同的IP不可在同一请求中。
 	INVALIDPARAMETERVALUE_MIXEDADDRESSIPSETTYPE = "InvalidParameterValue.MixedAddressIpSetType"
 
+	// 缺少参数，至少提供一个。
+	INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+
 	// NAT网关的DNAT转换规则已存在。
 	INVALIDPARAMETERVALUE_NATGATEWAYDNATRULEEXISTED = "InvalidParameterValue.NatGatewayDnatRuleExisted"
 
@@ -419,6 +428,9 @@ const (
 	// 私网NAT网关传入规则类型不支持。
 	INVALIDPARAMETERVALUE_PRIVATENATSNATRULENOTSUPPORT = "InvalidParameterValue.PrivateNatSnatRuleNotSupport"
 
+	// 必须携带服务等级。
+	INVALIDPARAMETERVALUE_QOSLEVELREQUIRED = "InvalidParameterValue.QosLevelRequired"
+
 	// 参数值不在指定范围。
 	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 
@@ -445,6 +457,9 @@ const (
 
 	// 自定义路由的下一跳参数不正确。
 	INVALIDPARAMETERVALUE_ROUTENEXTHOPINVALID = "InvalidParameterValue.RouteNextHopInvalid"
+
+	// 路由策略绑定规则已经存在。
+	INVALIDPARAMETERVALUE_ROUTEPOLICYASSOCIATIONEXISTS = "InvalidParameterValue.RoutePolicyAssociationExists"
 
 	// 指定的优先级之间冲突或与已存在的优先级冲突。
 	INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
@@ -725,6 +740,9 @@ const (
 	// 缺少多个参数错误
 	MISSINGPARAMETER_MULTIMISSINGPARAMETER = "MissingParameter.MultiMissingParameter"
 
+	// EIP实例开启了删除保护开关。
+	OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
+
 	// 指定公网IP处于隔离状态。
 	OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
 
@@ -869,6 +887,12 @@ const (
 	// CCN实例所属账号未通过联通审批。
 	UNSUPPORTEDOPERATION_CCNINSTANCEACCOUNTNOTAPPROVEDBYUNICOM = "UnsupportedOperation.CcnInstanceAccountNotApprovedByUnicom"
 
+	// 云联网关联实例绑定了策略路由下一跳，不允许解关联，需要先解绑策略路由下一跳
+	UNSUPPORTEDOPERATION_CCNINSTANCEHASBOUNDPOLICYROUTENEXTHOPNOTALLOWEDDETACH = "UnsupportedOperation.CcnInstanceHasBoundPolicyRouteNextHopNotAllowedDetach"
+
+	// 云联网关联实例绑定了策略路由规则，不允许解关联，需要先解绑策略路由规则
+	UNSUPPORTEDOPERATION_CCNINSTANCEHASBOUNDPOLICYROUTERULENOTALLOWEDDETACH = "UnsupportedOperation.CcnInstanceHasBoundPolicyRouteRuleNotAllowedDetach"
+
 	// 云联网开启ipv6不支持创建多路由表
 	UNSUPPORTEDOPERATION_CCNIPV6NOTSUPPORTMULTIPLEROUTETABLE = "UnsupportedOperation.CcnIpv6NotSupportMultipleRouteTable"
 
@@ -949,6 +973,9 @@ const (
 
 	// VPN通道状态为更新中/销毁中/创建中，不支持此操作。
 	UNSUPPORTEDOPERATION_DELETEVPNCONNINVALIDSTATE = "UnsupportedOperation.DeleteVpnConnInvalidState"
+
+	// NAT网关已开启删除保护，不允许删除
+	UNSUPPORTEDOPERATION_DELETIONPROTECTIONENABLED = "UnsupportedOperation.DeletionProtectionEnabled"
 
 	// 发货失败。
 	UNSUPPORTEDOPERATION_DELIVERYFAILED = "UnsupportedOperation.DeliveryFailed"
@@ -1049,6 +1076,9 @@ const (
 	// 该地址绑定的实例状态不支持此操作。
 	UNSUPPORTEDOPERATION_INSTANCESTATENOTSUPPORTED = "UnsupportedOperation.InstanceStateNotSupported"
 
+	// 子机在关机不收费状态下不支持绑定EIP。
+	UNSUPPORTEDOPERATION_INSTANCESTATUSNOTPERMIT = "UnsupportedOperation.InstanceStatusNotPermit"
+
 	// 账户余额不足。
 	UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
 
@@ -1112,6 +1142,18 @@ const (
 	// NAT网关存在未解绑的IP。
 	UNSUPPORTEDOPERATION_NATGATEWAYHADEIPUNASSOCIATE = "UnsupportedOperation.NatGatewayHadEipUnassociate"
 
+	// NAT网关最近流量“出/入带宽”峰值取大超过检测带宽阈值。
+	UNSUPPORTEDOPERATION_NATGATEWAYHAVEHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveHighTraffic"
+
+	// NAT网关存在路由。
+	UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTE = "UnsupportedOperation.NatGatewayHaveRoute"
+
+	// NAT网关存在路由和最近流量“出/入带宽”峰值取大超过检测带宽阈值。
+	UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
+
+	// NAT实例当前负载较高，请稍后重试
+	UNSUPPORTEDOPERATION_NATGATEWAYISBUSY = "UnsupportedOperation.NatGatewayIsBusy"
+
 	// NAT网关已被封禁，不支持此操作。
 	UNSUPPORTEDOPERATION_NATGATEWAYRESTRICTED = "UnsupportedOperation.NatGatewayRestricted"
 
@@ -1168,6 +1210,9 @@ const (
 
 	// 默认路由表，不支持修改。
 	UNSUPPORTEDOPERATION_NOTSUPPORTMODIFYDEFAULTCCNROUTETABLE = "UnsupportedOperation.NotSupportModifyDefaultCcnRouteTable"
+
+	// 不支持的自定义路由类型。
+	UNSUPPORTEDOPERATION_NOTSUPPORTROUTETYPE = "UnsupportedOperation.NotSupportRouteType"
 
 	// 不支持编辑相同的实例和源地址。
 	UNSUPPORTEDOPERATION_NOTSUPPORTSAMECCNINSTANCEANDSOURCEADDRESS = "UnsupportedOperation.NotSupportSameCcnInstanceAndSourceAddress"
@@ -1261,6 +1306,9 @@ const (
 
 	// 未找到相关角色，请确认角色是否授权。
 	UNSUPPORTEDOPERATION_ROLENOTFOUND = "UnsupportedOperation.RoleNotFound"
+
+	// 路由策略被关联到路由表，不支持删除。
+	UNSUPPORTEDOPERATION_ROUTEPOLICYASSOCIATION = "UnsupportedOperation.RoutePolicyAssociation"
 
 	// 只支持自研VPC创建或修改PVGW2类型路由。
 	UNSUPPORTEDOPERATION_ROUTEPVGW2 = "UnsupportedOperation.RoutePvgw2"
@@ -1385,6 +1433,9 @@ const (
 	// 指定安全组规则版本号和当前最新版本不一致。
 	UNSUPPORTEDOPERATION_VERSIONMISMATCH = "UnsupportedOperation.VersionMismatch"
 
+	// 当前VPN版本小于4.0，不支持该操作。
+	UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
+
 	// 资源不属于同一个VPC。
 	UNSUPPORTEDOPERATION_VPCMISMATCH = "UnsupportedOperation.VpcMismatch"
 
@@ -1414,6 +1465,9 @@ const (
 
 	// VPC类型VPN网关必须携带VpcId。
 	UNSUPPORTEDOPERATION_VPNGWVPCIDMUSTHAVE = "UnsupportedOperation.VpnGwVpcIdMustHave"
+
+	// CCN类型VPN网关 不用携带VpcId
+	UNSUPPORTEDOPERATION_VPNGWVPCIDNOTHAVE = "UnsupportedOperation.VpnGwVpcIdNotHave"
 
 	// VPN不支持BGP
 	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"

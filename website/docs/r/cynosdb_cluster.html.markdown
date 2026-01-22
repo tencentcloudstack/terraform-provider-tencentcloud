@@ -108,6 +108,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     device_type    = "exclusive"
   }
 
+  cynos_version = "2.1.14.001"
+
   tags = {
     createBy = "terraform"
   }
@@ -221,7 +223,7 @@ The following arguments are supported:
 * `auto_pause` - (Optional, String) Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`.
-* `cynos_version` - (Optional, String) Kernel version, you can enter it when modifying.
+* `cynos_version` - (Optional, String) Kernel minor version, like `3.1.16.002`.
 * `db_mode` - (Optional, String) Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.
 * `force_delete` - (Optional, Bool) Indicate whether to delete cluster instance directly or not. Default is false. If set true, the cluster and its `All RELATED INSTANCES` will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
 * `instance_count` - (Optional, Int, ForceNew) The number of instances, the range is (0,16], the default value is 2 (i.e. one RW instance + one Ro instance), the passed n means 1 RW instance + n-1 Ro instances (with the same specifications), if you need a more accurate cluster composition, please use InstanceInitInfos.
@@ -301,6 +303,6 @@ In addition to all arguments above, the following attributes are exported:
 CynosDB cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
+terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
 ```
 

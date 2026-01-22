@@ -33,6 +33,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `user_ids` - Collection of IDs of users to be bound to working groups.
+* `work_group_id` - Working group ID.
 
 
 ## Import

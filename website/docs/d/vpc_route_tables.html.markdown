@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc_route_tables"
 sidebar_current: "docs-tencentcloud-datasource-vpc_route_tables"
 description: |-
-  Use this data source to query vpc route tables information.
+  Use this data source to query VPC route tables information.
 ---
 
 # tencentcloud_vpc_route_tables
 
-Use this data source to query vpc route tables information.
+Use this data source to query VPC route tables information.
 
 ## Example Usage
 
@@ -76,6 +76,7 @@ In addition to all arguments above, the following attributes are exported:
     * `next_hub` - ID of next-hop gateway. Note: when 'next_type' is EIP, GatewayId will fix the value `0`.
     * `next_type` - Type of next-hop, and available values include `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `SSLVPN`, `NAT`, `NORMAL_CVM`, `EIP` and `CCN`.
     * `route_entry_id` - ID of a route table entry.
+    * `route_item_id` - The unique policy ID for the route.
   * `route_table_id` - ID of the routing table.
   * `subnet_ids` - List of subnet IDs bound to the route table.
   * `tags` - Tags of the routing table.

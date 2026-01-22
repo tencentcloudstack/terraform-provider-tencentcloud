@@ -117,5 +117,5 @@ Import
 IGTM strategy can be imported using the instanceId#strategyId, e.g.
 
 ```
-terraform import tencentcloud_igtm_strategy.igtm_strategy gtm-uukztqtoaru#7556
+terraform import tencentcloud_igtm_strategy.example gtm-uukztqtoaru#7556
 ```

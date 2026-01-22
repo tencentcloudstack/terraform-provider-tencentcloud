@@ -1169,8 +1169,6 @@ func NewAssociateAddressResponse() (response *AssociateAddressResponse) {
 //
 // * 将 EIP 绑定到指定网卡的内网 IP上（非主网卡的主内网IP），则必须先解绑该 EIP，才能再绑定新的。
 //
-// * 将 EIP 绑定到内网型CLB实例的功能处于内测阶段，如需使用，请提交[内测申请](https://cloud.tencent.com/apply/p/4kxj7picqci)。
-//
 // * 将 EIP 绑定到NAT网关，请使用接口[AssociateNatGatewayAddress](https://cloud.tencent.com/document/product/215/36722)。
 //
 // * EIP 如果欠费或被封堵，则不能被绑定。
@@ -1214,6 +1212,7 @@ func NewAssociateAddressResponse() (response *AssociateAddressResponse) {
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INCORRECTADDRESSRESOURCETYPE = "UnsupportedOperation.IncorrectAddressResourceType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATENOTSUPPORTED = "UnsupportedOperation.InstanceStateNotSupported"
+//  UNSUPPORTEDOPERATION_INSTANCESTATUSNOTPERMIT = "UnsupportedOperation.InstanceStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 //  UNSUPPORTEDOPERATION_INVALIDADDRESSINTERNETCHARGETYPE = "UnsupportedOperation.InvalidAddressInternetChargeType"
 //  UNSUPPORTEDOPERATION_ISPNOTSUPPORTED = "UnsupportedOperation.IspNotSupported"
@@ -1230,8 +1229,6 @@ func (c *Client) AssociateAddress(request *AssociateAddressRequest) (response *A
 //
 // * 将 EIP 绑定到指定网卡的内网 IP上（非主网卡的主内网IP），则必须先解绑该 EIP，才能再绑定新的。
 //
-// * 将 EIP 绑定到内网型CLB实例的功能处于内测阶段，如需使用，请提交[内测申请](https://cloud.tencent.com/apply/p/4kxj7picqci)。
-//
 // * 将 EIP 绑定到NAT网关，请使用接口[AssociateNatGatewayAddress](https://cloud.tencent.com/document/product/215/36722)。
 //
 // * EIP 如果欠费或被封堵，则不能被绑定。
@@ -1275,6 +1272,7 @@ func (c *Client) AssociateAddress(request *AssociateAddressRequest) (response *A
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INCORRECTADDRESSRESOURCETYPE = "UnsupportedOperation.IncorrectAddressResourceType"
 //  UNSUPPORTEDOPERATION_INSTANCESTATENOTSUPPORTED = "UnsupportedOperation.InstanceStateNotSupported"
+//  UNSUPPORTEDOPERATION_INSTANCESTATUSNOTPERMIT = "UnsupportedOperation.InstanceStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 //  UNSUPPORTEDOPERATION_INVALIDADDRESSINTERNETCHARGETYPE = "UnsupportedOperation.InvalidAddressInternetChargeType"
 //  UNSUPPORTEDOPERATION_ISPNOTSUPPORTED = "UnsupportedOperation.IspNotSupported"
@@ -4130,6 +4128,7 @@ func NewCreateHaVipResponse() (response *CreateHaVipResponse) {
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_SUBNETNOTEXISTS = "UnsupportedOperation.SubnetNotExists"
 func (c *Client) CreateHaVip(request *CreateHaVipRequest) (response *CreateHaVipResponse, err error) {
     return c.CreateHaVipWithContext(context.Background(), request)
@@ -4151,6 +4150,7 @@ func (c *Client) CreateHaVip(request *CreateHaVipRequest) (response *CreateHaVip
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_SUBNETNOTEXISTS = "UnsupportedOperation.SubnetNotExists"
 func (c *Client) CreateHaVipWithContext(ctx context.Context, request *CreateHaVipRequest) (response *CreateHaVipResponse, err error) {
     if request == nil {
@@ -5083,7 +5083,7 @@ func NewCreateNetworkInterfaceResponse() (response *CreateNetworkInterfaceRespon
 //
 // * 创建弹性网卡时可以指定需要申请的内网IP数量，系统会随机生成内网IP地址。
 //
-// * 一个弹性网卡支持绑定的IP地址是有限制的，更多资源限制信息详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
+// * 一个弹性网卡支持绑定的IP地址是有限制的，更多资源限制信息详见<a href="https://cloud.tencent.com/document/product/576/18527">弹性网卡使用限制</a>。
 //
 // * 创建弹性网卡同时可以绑定已有安全组。
 //
@@ -5148,7 +5148,7 @@ func (c *Client) CreateNetworkInterface(request *CreateNetworkInterfaceRequest) 
 //
 // * 创建弹性网卡时可以指定需要申请的内网IP数量，系统会随机生成内网IP地址。
 //
-// * 一个弹性网卡支持绑定的IP地址是有限制的，更多资源限制信息详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
+// * 一个弹性网卡支持绑定的IP地址是有限制的，更多资源限制信息详见<a href="https://cloud.tencent.com/document/product/576/18527">弹性网卡使用限制</a>。
 //
 // * 创建弹性网卡同时可以绑定已有安全组。
 //
@@ -5571,6 +5571,186 @@ func (c *Client) CreateReserveIpAddressesWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewCreateReserveIpAddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRoutePolicyRequest() (request *CreateRoutePolicyRequest) {
+    request = &CreateRoutePolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CreateRoutePolicy")
+    
+    
+    return
+}
+
+func NewCreateRoutePolicyResponse() (response *CreateRoutePolicyResponse) {
+    response = &CreateRoutePolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRoutePolicy
+// 创建VPC路由接收策略，包括名字，描述和策略条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) CreateRoutePolicy(request *CreateRoutePolicyRequest) (response *CreateRoutePolicyResponse, err error) {
+    return c.CreateRoutePolicyWithContext(context.Background(), request)
+}
+
+// CreateRoutePolicy
+// 创建VPC路由接收策略，包括名字，描述和策略条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) CreateRoutePolicyWithContext(ctx context.Context, request *CreateRoutePolicyRequest) (response *CreateRoutePolicyResponse, err error) {
+    if request == nil {
+        request = NewCreateRoutePolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "CreateRoutePolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRoutePolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRoutePolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRoutePolicyAssociationsRequest() (request *CreateRoutePolicyAssociationsRequest) {
+    request = &CreateRoutePolicyAssociationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CreateRoutePolicyAssociations")
+    
+    
+    return
+}
+
+func NewCreateRoutePolicyAssociationsResponse() (response *CreateRoutePolicyAssociationsResponse) {
+    response = &CreateRoutePolicyAssociationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRoutePolicyAssociations
+// 本接口（CreateRoutePolicyAssociations）用于创建路由接收策略绑定(路由策略实例和路由表实例的绑定关系以及绑定优先级)。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYASSOCIATIONEXISTS = "InvalidParameterValue.RoutePolicyAssociationExists"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateRoutePolicyAssociations(request *CreateRoutePolicyAssociationsRequest) (response *CreateRoutePolicyAssociationsResponse, err error) {
+    return c.CreateRoutePolicyAssociationsWithContext(context.Background(), request)
+}
+
+// CreateRoutePolicyAssociations
+// 本接口（CreateRoutePolicyAssociations）用于创建路由接收策略绑定(路由策略实例和路由表实例的绑定关系以及绑定优先级)。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYASSOCIATIONEXISTS = "InvalidParameterValue.RoutePolicyAssociationExists"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateRoutePolicyAssociationsWithContext(ctx context.Context, request *CreateRoutePolicyAssociationsRequest) (response *CreateRoutePolicyAssociationsResponse, err error) {
+    if request == nil {
+        request = NewCreateRoutePolicyAssociationsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "CreateRoutePolicyAssociations")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRoutePolicyAssociations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRoutePolicyAssociationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRoutePolicyEntriesRequest() (request *CreateRoutePolicyEntriesRequest) {
+    request = &CreateRoutePolicyEntriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CreateRoutePolicyEntries")
+    
+    
+    return
+}
+
+func NewCreateRoutePolicyEntriesResponse() (response *CreateRoutePolicyEntriesResponse) {
+    response = &CreateRoutePolicyEntriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRoutePolicyEntries
+// 本接口（CreateRoutePolicyEntries）用于创建路由接收策略条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateRoutePolicyEntries(request *CreateRoutePolicyEntriesRequest) (response *CreateRoutePolicyEntriesResponse, err error) {
+    return c.CreateRoutePolicyEntriesWithContext(context.Background(), request)
+}
+
+// CreateRoutePolicyEntries
+// 本接口（CreateRoutePolicyEntries）用于创建路由接收策略条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateRoutePolicyEntriesWithContext(ctx context.Context, request *CreateRoutePolicyEntriesRequest) (response *CreateRoutePolicyEntriesResponse, err error) {
+    if request == nil {
+        request = NewCreateRoutePolicyEntriesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "CreateRoutePolicyEntries")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRoutePolicyEntries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRoutePolicyEntriesResponse()
     err = c.Send(request, response)
     return
 }
@@ -7520,6 +7700,7 @@ func NewCreateVpnGatewayResponse() (response *CreateVpnGatewayResponse) {
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
 //  UNSUPPORTEDOPERATION_VPNGATEWAYVPCNOIPV6SUBNET = "UnsupportedOperation.VpnGatewayVpcNoIpv6Subnet"
 //  UNSUPPORTEDOPERATION_VPNGWVPCIDMUSTHAVE = "UnsupportedOperation.VpnGwVpcIdMustHave"
+//  UNSUPPORTEDOPERATION_VPNGWVPCIDNOTHAVE = "UnsupportedOperation.VpnGwVpcIdNotHave"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
 func (c *Client) CreateVpnGateway(request *CreateVpnGatewayRequest) (response *CreateVpnGatewayResponse, err error) {
     return c.CreateVpnGatewayWithContext(context.Background(), request)
@@ -7573,6 +7754,7 @@ func (c *Client) CreateVpnGateway(request *CreateVpnGatewayRequest) (response *C
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
 //  UNSUPPORTEDOPERATION_VPNGATEWAYVPCNOIPV6SUBNET = "UnsupportedOperation.VpnGatewayVpcNoIpv6Subnet"
 //  UNSUPPORTEDOPERATION_VPNGWVPCIDMUSTHAVE = "UnsupportedOperation.VpnGwVpcIdMustHave"
+//  UNSUPPORTEDOPERATION_VPNGWVPCIDNOTHAVE = "UnsupportedOperation.VpnGwVpcIdNotHave"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
 func (c *Client) CreateVpnGatewayWithContext(ctx context.Context, request *CreateVpnGatewayRequest) (response *CreateVpnGatewayResponse, err error) {
     if request == nil {
@@ -7746,6 +7928,7 @@ func NewCreateVpnGatewaySslServerResponse() (response *CreateVpnGatewaySslServer
 // 本接口（CreateVpnGatewaySslServer）用于创建SSL-VPN Server端。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SSLCCNVPNSERVERCIDRCONFLICT = "InvalidParameterValue.SslCcnVpnServerCidrConflict"
@@ -7755,6 +7938,7 @@ func NewCreateVpnGatewaySslServerResponse() (response *CreateVpnGatewaySslServer
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTEDLOCALADDRESSTYPE = "UnsupportedOperation.NotSupportedLocalAddressType"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) CreateVpnGatewaySslServer(request *CreateVpnGatewaySslServerRequest) (response *CreateVpnGatewaySslServerResponse, err error) {
     return c.CreateVpnGatewaySslServerWithContext(context.Background(), request)
 }
@@ -7763,6 +7947,7 @@ func (c *Client) CreateVpnGatewaySslServer(request *CreateVpnGatewaySslServerReq
 // 本接口（CreateVpnGatewaySslServer）用于创建SSL-VPN Server端。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_SSLCCNVPNSERVERCIDRCONFLICT = "InvalidParameterValue.SslCcnVpnServerCidrConflict"
@@ -7772,6 +7957,7 @@ func (c *Client) CreateVpnGatewaySslServer(request *CreateVpnGatewaySslServerReq
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTEDLOCALADDRESSTYPE = "UnsupportedOperation.NotSupportedLocalAddressType"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) CreateVpnGatewaySslServerWithContext(ctx context.Context, request *CreateVpnGatewaySslServerRequest) (response *CreateVpnGatewaySslServerResponse, err error) {
     if request == nil {
         request = NewCreateVpnGatewaySslServerRequest()
@@ -8998,7 +9184,11 @@ func NewDeleteNatGatewayResponse() (response *DeleteNatGatewayResponse) {
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_NATUSEDBYCFW = "ResourceInUse.NatUsedByCFW"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_DELETIONPROTECTIONENABLED = "UnsupportedOperation.DeletionProtectionEnabled"
 //  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveHighTraffic"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTE = "UnsupportedOperation.NatGatewayHaveRoute"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
 func (c *Client) DeleteNatGateway(request *DeleteNatGatewayRequest) (response *DeleteNatGatewayResponse, err error) {
     return c.DeleteNatGatewayWithContext(context.Background(), request)
 }
@@ -9013,7 +9203,11 @@ func (c *Client) DeleteNatGateway(request *DeleteNatGatewayRequest) (response *D
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_NATUSEDBYCFW = "ResourceInUse.NatUsedByCFW"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_DELETIONPROTECTIONENABLED = "UnsupportedOperation.DeletionProtectionEnabled"
 //  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveHighTraffic"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTE = "UnsupportedOperation.NatGatewayHaveRoute"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
 func (c *Client) DeleteNatGatewayWithContext(ctx context.Context, request *DeleteNatGatewayRequest) (response *DeleteNatGatewayResponse, err error) {
     if request == nil {
         request = NewDeleteNatGatewayRequest()
@@ -9505,6 +9699,10 @@ func NewDeletePrivateNatGatewayResponse() (response *DeletePrivateNatGatewayResp
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION_DELETIONPROTECTIONENABLED = "UnsupportedOperation.DeletionProtectionEnabled"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveHighTraffic"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTE = "UnsupportedOperation.NatGatewayHaveRoute"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
 //  UNSUPPORTEDOPERATION_PRIVATENATGATEWAYASSOCIATIONEXISTS = "UnsupportedOperation.PrivateNatGatewayAssociationExists"
 func (c *Client) DeletePrivateNatGateway(request *DeletePrivateNatGatewayRequest) (response *DeletePrivateNatGatewayResponse, err error) {
     return c.DeletePrivateNatGatewayWithContext(context.Background(), request)
@@ -9521,6 +9719,10 @@ func (c *Client) DeletePrivateNatGateway(request *DeletePrivateNatGatewayRequest
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION_DELETIONPROTECTIONENABLED = "UnsupportedOperation.DeletionProtectionEnabled"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveHighTraffic"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTE = "UnsupportedOperation.NatGatewayHaveRoute"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
 //  UNSUPPORTEDOPERATION_PRIVATENATGATEWAYASSOCIATIONEXISTS = "UnsupportedOperation.PrivateNatGatewayAssociationExists"
 func (c *Client) DeletePrivateNatGatewayWithContext(ctx context.Context, request *DeletePrivateNatGatewayRequest) (response *DeletePrivateNatGatewayResponse, err error) {
     if request == nil {
@@ -9789,6 +9991,172 @@ func (c *Client) DeleteReserveIpAddressesWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDeleteReserveIpAddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRoutePolicyRequest() (request *DeleteRoutePolicyRequest) {
+    request = &DeleteRoutePolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DeleteRoutePolicy")
+    
+    
+    return
+}
+
+func NewDeleteRoutePolicyResponse() (response *DeleteRoutePolicyResponse) {
+    response = &DeleteRoutePolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRoutePolicy
+// 本接口（DeleteRoutePolicy）用于删除路由接收策略和条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_ROUTEPOLICYASSOCIATION = "UnsupportedOperation.RoutePolicyAssociation"
+func (c *Client) DeleteRoutePolicy(request *DeleteRoutePolicyRequest) (response *DeleteRoutePolicyResponse, err error) {
+    return c.DeleteRoutePolicyWithContext(context.Background(), request)
+}
+
+// DeleteRoutePolicy
+// 本接口（DeleteRoutePolicy）用于删除路由接收策略和条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_ROUTEPOLICYASSOCIATION = "UnsupportedOperation.RoutePolicyAssociation"
+func (c *Client) DeleteRoutePolicyWithContext(ctx context.Context, request *DeleteRoutePolicyRequest) (response *DeleteRoutePolicyResponse, err error) {
+    if request == nil {
+        request = NewDeleteRoutePolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DeleteRoutePolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRoutePolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRoutePolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRoutePolicyAssociationsRequest() (request *DeleteRoutePolicyAssociationsRequest) {
+    request = &DeleteRoutePolicyAssociationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DeleteRoutePolicyAssociations")
+    
+    
+    return
+}
+
+func NewDeleteRoutePolicyAssociationsResponse() (response *DeleteRoutePolicyAssociationsResponse) {
+    response = &DeleteRoutePolicyAssociationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRoutePolicyAssociations
+// 本接口(DeleteRoutePolicyAssociations)用于删除路由接收策略绑定（路由接收策略对象和路由表的绑定关系）。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYASSOCIATIONEXISTS = "InvalidParameterValue.RoutePolicyAssociationExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteRoutePolicyAssociations(request *DeleteRoutePolicyAssociationsRequest) (response *DeleteRoutePolicyAssociationsResponse, err error) {
+    return c.DeleteRoutePolicyAssociationsWithContext(context.Background(), request)
+}
+
+// DeleteRoutePolicyAssociations
+// 本接口(DeleteRoutePolicyAssociations)用于删除路由接收策略绑定（路由接收策略对象和路由表的绑定关系）。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYASSOCIATIONEXISTS = "InvalidParameterValue.RoutePolicyAssociationExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteRoutePolicyAssociationsWithContext(ctx context.Context, request *DeleteRoutePolicyAssociationsRequest) (response *DeleteRoutePolicyAssociationsResponse, err error) {
+    if request == nil {
+        request = NewDeleteRoutePolicyAssociationsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DeleteRoutePolicyAssociations")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRoutePolicyAssociations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRoutePolicyAssociationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRoutePolicyEntriesRequest() (request *DeleteRoutePolicyEntriesRequest) {
+    request = &DeleteRoutePolicyEntriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DeleteRoutePolicyEntries")
+    
+    
+    return
+}
+
+func NewDeleteRoutePolicyEntriesResponse() (response *DeleteRoutePolicyEntriesResponse) {
+    response = &DeleteRoutePolicyEntriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRoutePolicyEntries
+// 本接口(DeleteRoutePolicyEntries)用于删除路由接收策略条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteRoutePolicyEntries(request *DeleteRoutePolicyEntriesRequest) (response *DeleteRoutePolicyEntriesResponse, err error) {
+    return c.DeleteRoutePolicyEntriesWithContext(context.Background(), request)
+}
+
+// DeleteRoutePolicyEntries
+// 本接口(DeleteRoutePolicyEntries)用于删除路由接收策略条目。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteRoutePolicyEntriesWithContext(ctx context.Context, request *DeleteRoutePolicyEntriesRequest) (response *DeleteRoutePolicyEntriesResponse, err error) {
+    if request == nil {
+        request = NewDeleteRoutePolicyEntriesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DeleteRoutePolicyEntries")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRoutePolicyEntries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRoutePolicyEntriesResponse()
     err = c.Send(request, response)
     return
 }
@@ -11243,6 +11611,62 @@ func (c *Client) DescribeAddressQuotaWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeAddressTemplateGroupInstancesRequest() (request *DescribeAddressTemplateGroupInstancesRequest) {
+    request = &DescribeAddressTemplateGroupInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeAddressTemplateGroupInstances")
+    
+    
+    return
+}
+
+func NewDescribeAddressTemplateGroupInstancesResponse() (response *DescribeAddressTemplateGroupInstancesResponse) {
+    response = &DescribeAddressTemplateGroupInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAddressTemplateGroupInstances
+// 本接口（DescribeAddressTemplateGroupInstances）用于查询参数模板IP地址组口关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeAddressTemplateGroupInstances(request *DescribeAddressTemplateGroupInstancesRequest) (response *DescribeAddressTemplateGroupInstancesResponse, err error) {
+    return c.DescribeAddressTemplateGroupInstancesWithContext(context.Background(), request)
+}
+
+// DescribeAddressTemplateGroupInstances
+// 本接口（DescribeAddressTemplateGroupInstances）用于查询参数模板IP地址组口关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeAddressTemplateGroupInstancesWithContext(ctx context.Context, request *DescribeAddressTemplateGroupInstancesRequest) (response *DescribeAddressTemplateGroupInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAddressTemplateGroupInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeAddressTemplateGroupInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAddressTemplateGroupInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAddressTemplateGroupInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAddressTemplateGroupsRequest() (request *DescribeAddressTemplateGroupsRequest) {
     request = &DescribeAddressTemplateGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -11293,6 +11717,62 @@ func (c *Client) DescribeAddressTemplateGroupsWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDescribeAddressTemplateGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAddressTemplateInstancesRequest() (request *DescribeAddressTemplateInstancesRequest) {
+    request = &DescribeAddressTemplateInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeAddressTemplateInstances")
+    
+    
+    return
+}
+
+func NewDescribeAddressTemplateInstancesResponse() (response *DescribeAddressTemplateInstancesResponse) {
+    response = &DescribeAddressTemplateInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAddressTemplateInstances
+// 本接口（DescribeAddressTemplateInstances）用于查询参数模板IP地址关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeAddressTemplateInstances(request *DescribeAddressTemplateInstancesRequest) (response *DescribeAddressTemplateInstancesResponse, err error) {
+    return c.DescribeAddressTemplateInstancesWithContext(context.Background(), request)
+}
+
+// DescribeAddressTemplateInstances
+// 本接口（DescribeAddressTemplateInstances）用于查询参数模板IP地址关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeAddressTemplateInstancesWithContext(ctx context.Context, request *DescribeAddressTemplateInstancesRequest) (response *DescribeAddressTemplateInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAddressTemplateInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeAddressTemplateInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAddressTemplateInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAddressTemplateInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -14195,6 +14675,74 @@ func (c *Client) DescribeNatGatewaySourceIpTranslationNatRulesWithContext(ctx co
     return
 }
 
+func NewDescribeNatGatewayZonesRequest() (request *DescribeNatGatewayZonesRequest) {
+    request = &DescribeNatGatewayZonesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeNatGatewayZones")
+    
+    
+    return
+}
+
+func NewDescribeNatGatewayZonesResponse() (response *DescribeNatGatewayZonesResponse) {
+    response = &DescribeNatGatewayZonesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNatGatewayZones
+// 本接口(DescribeNatGatewayZones)用于查询NAT网关可售卖的可用区信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeNatGatewayZones(request *DescribeNatGatewayZonesRequest) (response *DescribeNatGatewayZonesResponse, err error) {
+    return c.DescribeNatGatewayZonesWithContext(context.Background(), request)
+}
+
+// DescribeNatGatewayZones
+// 本接口(DescribeNatGatewayZones)用于查询NAT网关可售卖的可用区信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeNatGatewayZonesWithContext(ctx context.Context, request *DescribeNatGatewayZonesRequest) (response *DescribeNatGatewayZonesResponse, err error) {
+    if request == nil {
+        request = NewDescribeNatGatewayZonesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeNatGatewayZones")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNatGatewayZones require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNatGatewayZonesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeNatGatewaysRequest() (request *DescribeNatGatewaysRequest) {
     request = &DescribeNatGatewaysRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -15351,6 +15899,132 @@ func (c *Client) DescribeRouteListWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeRoutePoliciesRequest() (request *DescribeRoutePoliciesRequest) {
+    request = &DescribeRoutePoliciesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeRoutePolicies")
+    
+    
+    return
+}
+
+func NewDescribeRoutePoliciesResponse() (response *DescribeRoutePoliciesResponse) {
+    response = &DescribeRoutePoliciesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRoutePolicies
+// 本接口（DescribeRoutePolicies）用于查询路由策略列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
+//  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
+//  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRoutePolicies(request *DescribeRoutePoliciesRequest) (response *DescribeRoutePoliciesResponse, err error) {
+    return c.DescribeRoutePoliciesWithContext(context.Background(), request)
+}
+
+// DescribeRoutePolicies
+// 本接口（DescribeRoutePolicies）用于查询路由策略列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
+//  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
+//  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRoutePoliciesWithContext(ctx context.Context, request *DescribeRoutePoliciesRequest) (response *DescribeRoutePoliciesResponse, err error) {
+    if request == nil {
+        request = NewDescribeRoutePoliciesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeRoutePolicies")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRoutePolicies require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRoutePoliciesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRoutePolicyEntriesRequest() (request *DescribeRoutePolicyEntriesRequest) {
+    request = &DescribeRoutePolicyEntriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeRoutePolicyEntries")
+    
+    
+    return
+}
+
+func NewDescribeRoutePolicyEntriesResponse() (response *DescribeRoutePolicyEntriesResponse) {
+    response = &DescribeRoutePolicyEntriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRoutePolicyEntries
+// 本接口（DescribeRoutePolicyEntries）用于查询路由接收策略条目列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRoutePolicyEntries(request *DescribeRoutePolicyEntriesRequest) (response *DescribeRoutePolicyEntriesResponse, err error) {
+    return c.DescribeRoutePolicyEntriesWithContext(context.Background(), request)
+}
+
+// DescribeRoutePolicyEntries
+// 本接口（DescribeRoutePolicyEntries）用于查询路由接收策略条目列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRoutePolicyEntriesWithContext(ctx context.Context, request *DescribeRoutePolicyEntriesRequest) (response *DescribeRoutePolicyEntriesResponse, err error) {
+    if request == nil {
+        request = NewDescribeRoutePolicyEntriesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeRoutePolicyEntries")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRoutePolicyEntries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRoutePolicyEntriesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRouteTableAssociatedInstancesRequest() (request *DescribeRouteTableAssociatedInstancesRequest) {
     request = &DescribeRouteTableAssociatedInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -15653,6 +16327,70 @@ func (c *Client) DescribeSecurityGroupAssociationStatisticsWithContext(ctx conte
     return
 }
 
+func NewDescribeSecurityGroupExpandedPoliciesRequest() (request *DescribeSecurityGroupExpandedPoliciesRequest) {
+    request = &DescribeSecurityGroupExpandedPoliciesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeSecurityGroupExpandedPolicies")
+    
+    
+    return
+}
+
+func NewDescribeSecurityGroupExpandedPoliciesResponse() (response *DescribeSecurityGroupExpandedPoliciesResponse) {
+    response = &DescribeSecurityGroupExpandedPoliciesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSecurityGroupExpandedPolicies
+// 本接口（DescribeSecurityGroupExpandedPolicies）用于查看参数模板展开后的安全组规则。本接口会通过缓存降低请求后端服务的调用次数，因此拉取结果会存在延迟（缓存超时时间为1分钟）。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
+//  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
+//  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeSecurityGroupExpandedPolicies(request *DescribeSecurityGroupExpandedPoliciesRequest) (response *DescribeSecurityGroupExpandedPoliciesResponse, err error) {
+    return c.DescribeSecurityGroupExpandedPoliciesWithContext(context.Background(), request)
+}
+
+// DescribeSecurityGroupExpandedPolicies
+// 本接口（DescribeSecurityGroupExpandedPolicies）用于查看参数模板展开后的安全组规则。本接口会通过缓存降低请求后端服务的调用次数，因此拉取结果会存在延迟（缓存超时时间为1分钟）。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
+//  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
+//  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeSecurityGroupExpandedPoliciesWithContext(ctx context.Context, request *DescribeSecurityGroupExpandedPoliciesRequest) (response *DescribeSecurityGroupExpandedPoliciesResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecurityGroupExpandedPoliciesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeSecurityGroupExpandedPolicies")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecurityGroupExpandedPolicies require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecurityGroupExpandedPoliciesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeSecurityGroupLimitsRequest() (request *DescribeSecurityGroupLimitsRequest) {
     request = &DescribeSecurityGroupLimitsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -15889,6 +16627,62 @@ func (c *Client) DescribeSecurityGroupsWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeServiceTemplateGroupInstancesRequest() (request *DescribeServiceTemplateGroupInstancesRequest) {
+    request = &DescribeServiceTemplateGroupInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeServiceTemplateGroupInstances")
+    
+    
+    return
+}
+
+func NewDescribeServiceTemplateGroupInstancesResponse() (response *DescribeServiceTemplateGroupInstancesResponse) {
+    response = &DescribeServiceTemplateGroupInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServiceTemplateGroupInstances
+// 本接口（DescribeServiceTemplateGroupInstances）用于查询参数模板协议端口组关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeServiceTemplateGroupInstances(request *DescribeServiceTemplateGroupInstancesRequest) (response *DescribeServiceTemplateGroupInstancesResponse, err error) {
+    return c.DescribeServiceTemplateGroupInstancesWithContext(context.Background(), request)
+}
+
+// DescribeServiceTemplateGroupInstances
+// 本接口（DescribeServiceTemplateGroupInstances）用于查询参数模板协议端口组关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeServiceTemplateGroupInstancesWithContext(ctx context.Context, request *DescribeServiceTemplateGroupInstancesRequest) (response *DescribeServiceTemplateGroupInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeServiceTemplateGroupInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeServiceTemplateGroupInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServiceTemplateGroupInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServiceTemplateGroupInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeServiceTemplateGroupsRequest() (request *DescribeServiceTemplateGroupsRequest) {
     request = &DescribeServiceTemplateGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -15939,6 +16733,62 @@ func (c *Client) DescribeServiceTemplateGroupsWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDescribeServiceTemplateGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeServiceTemplateInstancesRequest() (request *DescribeServiceTemplateInstancesRequest) {
+    request = &DescribeServiceTemplateInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeServiceTemplateInstances")
+    
+    
+    return
+}
+
+func NewDescribeServiceTemplateInstancesResponse() (response *DescribeServiceTemplateInstancesResponse) {
+    response = &DescribeServiceTemplateInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServiceTemplateInstances
+// 本接口（DescribeServiceTemplateInstances）用于查询参数模板协议端口关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeServiceTemplateInstances(request *DescribeServiceTemplateInstancesRequest) (response *DescribeServiceTemplateInstancesResponse, err error) {
+    return c.DescribeServiceTemplateInstancesWithContext(context.Background(), request)
+}
+
+// DescribeServiceTemplateInstances
+// 本接口（DescribeServiceTemplateInstances）用于查询参数模板协议端口关联的实例列表。本接口不会返回查询的结果，需要根据返回的RequestId调用DescribeVpcTaskResult接口获取结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
+func (c *Client) DescribeServiceTemplateInstancesWithContext(ctx context.Context, request *DescribeServiceTemplateInstancesRequest) (response *DescribeServiceTemplateInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeServiceTemplateInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeServiceTemplateInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServiceTemplateInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServiceTemplateInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -16726,6 +17576,7 @@ func NewDescribeTrafficQosPolicyResponse() (response *DescribeTrafficQosPolicyRe
 // 查询流量调度规则
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_QOSLEVELREQUIRED = "InvalidParameterValue.QosLevelRequired"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeTrafficQosPolicy(request *DescribeTrafficQosPolicyRequest) (response *DescribeTrafficQosPolicyResponse, err error) {
     return c.DescribeTrafficQosPolicyWithContext(context.Background(), request)
@@ -16735,6 +17586,7 @@ func (c *Client) DescribeTrafficQosPolicy(request *DescribeTrafficQosPolicyReque
 // 查询流量调度规则
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_QOSLEVELREQUIRED = "InvalidParameterValue.QosLevelRequired"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeTrafficQosPolicyWithContext(ctx context.Context, request *DescribeTrafficQosPolicyRequest) (response *DescribeTrafficQosPolicyResponse, err error) {
     if request == nil {
@@ -18044,6 +18896,8 @@ func NewDetachCcnInstancesResponse() (response *DetachCcnInstancesResponse) {
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
 //  UNSUPPORTEDOPERATION_APPIDNOTFOUND = "UnsupportedOperation.AppIdNotFound"
+//  UNSUPPORTEDOPERATION_CCNINSTANCEHASBOUNDPOLICYROUTENEXTHOPNOTALLOWEDDETACH = "UnsupportedOperation.CcnInstanceHasBoundPolicyRouteNextHopNotAllowedDetach"
+//  UNSUPPORTEDOPERATION_CCNINSTANCEHASBOUNDPOLICYROUTERULENOTALLOWEDDETACH = "UnsupportedOperation.CcnInstanceHasBoundPolicyRouteRuleNotAllowedDetach"
 //  UNSUPPORTEDOPERATION_CCNNOTATTACHED = "UnsupportedOperation.CcnNotAttached"
 //  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
 func (c *Client) DetachCcnInstances(request *DetachCcnInstancesRequest) (response *DetachCcnInstancesResponse, err error) {
@@ -18062,6 +18916,8 @@ func (c *Client) DetachCcnInstances(request *DetachCcnInstancesRequest) (respons
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
 //  UNSUPPORTEDOPERATION_APPIDNOTFOUND = "UnsupportedOperation.AppIdNotFound"
+//  UNSUPPORTEDOPERATION_CCNINSTANCEHASBOUNDPOLICYROUTENEXTHOPNOTALLOWEDDETACH = "UnsupportedOperation.CcnInstanceHasBoundPolicyRouteNextHopNotAllowedDetach"
+//  UNSUPPORTEDOPERATION_CCNINSTANCEHASBOUNDPOLICYROUTERULENOTALLOWEDDETACH = "UnsupportedOperation.CcnInstanceHasBoundPolicyRouteRuleNotAllowedDetach"
 //  UNSUPPORTEDOPERATION_CCNNOTATTACHED = "UnsupportedOperation.CcnNotAttached"
 //  UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
 func (c *Client) DetachCcnInstancesWithContext(ctx context.Context, request *DetachCcnInstancesRequest) (response *DetachCcnInstancesResponse, err error) {
@@ -23787,6 +24643,64 @@ func (c *Client) ModifyReserveIpAddressWithContext(ctx context.Context, request 
     return
 }
 
+func NewModifyRoutePolicyAttributeRequest() (request *ModifyRoutePolicyAttributeRequest) {
+    request = &ModifyRoutePolicyAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyRoutePolicyAttribute")
+    
+    
+    return
+}
+
+func NewModifyRoutePolicyAttributeResponse() (response *ModifyRoutePolicyAttributeResponse) {
+    response = &ModifyRoutePolicyAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRoutePolicyAttribute
+// 本接口（ModifyRoutePolicyAttribute）用于修改路由接收策略属性属性。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyRoutePolicyAttribute(request *ModifyRoutePolicyAttributeRequest) (response *ModifyRoutePolicyAttributeResponse, err error) {
+    return c.ModifyRoutePolicyAttributeWithContext(context.Background(), request)
+}
+
+// ModifyRoutePolicyAttribute
+// 本接口（ModifyRoutePolicyAttribute）用于修改路由接收策略属性属性。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyRoutePolicyAttributeWithContext(ctx context.Context, request *ModifyRoutePolicyAttributeRequest) (response *ModifyRoutePolicyAttributeResponse, err error) {
+    if request == nil {
+        request = NewModifyRoutePolicyAttributeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ModifyRoutePolicyAttribute")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRoutePolicyAttribute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRoutePolicyAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyRouteTableAttributeRequest() (request *ModifyRouteTableAttributeRequest) {
     request = &ModifyRouteTableAttributeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -25138,11 +26052,13 @@ func NewModifyVpnGatewaySslServerResponse() (response *ModifyVpnGatewaySslServer
 // 本接口用于修改 SSL-VPN 服务端属性
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
 //  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) ModifyVpnGatewaySslServer(request *ModifyVpnGatewaySslServerRequest) (response *ModifyVpnGatewaySslServerResponse, err error) {
     return c.ModifyVpnGatewaySslServerWithContext(context.Background(), request)
 }
@@ -25151,11 +26067,13 @@ func (c *Client) ModifyVpnGatewaySslServer(request *ModifyVpnGatewaySslServerReq
 // 本接口用于修改 SSL-VPN 服务端属性
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_CIDRCONFLICT = "InvalidParameterValue.CidrConflict"
 //  INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
 //  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
 //  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) ModifyVpnGatewaySslServerWithContext(ctx context.Context, request *ModifyVpnGatewaySslServerRequest) (response *ModifyVpnGatewaySslServerResponse, err error) {
     if request == nil {
         request = NewModifyVpnGatewaySslServerRequest()
@@ -25451,7 +26369,6 @@ func NewReleaseAddressesResponse() (response *ReleaseAddressesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TASKFAILED = "FailedOperation.TaskFailed"
-//  INVALIDADDRESSID_BLOCKED = "InvalidAddressId.Blocked"
 //  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
 //  INVALIDADDRESSSTATE = "InvalidAddressState"
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
@@ -25459,6 +26376,7 @@ func NewReleaseAddressesResponse() (response *ReleaseAddressesResponse) {
 //  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
 //  INVALIDPARAMETERVALUE_ADDRESSTYPECONFLICT = "InvalidParameterValue.AddressTypeConflict"
 //  LIMITEXCEEDED_ACCOUNTRETURNQUOTA = "LimitExceeded.AccountReturnQuota"
+//  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
@@ -25475,7 +26393,6 @@ func (c *Client) ReleaseAddresses(request *ReleaseAddressesRequest) (response *R
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TASKFAILED = "FailedOperation.TaskFailed"
-//  INVALIDADDRESSID_BLOCKED = "InvalidAddressId.Blocked"
 //  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
 //  INVALIDADDRESSSTATE = "InvalidAddressState"
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
@@ -25483,6 +26400,7 @@ func (c *Client) ReleaseAddresses(request *ReleaseAddressesRequest) (response *R
 //  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
 //  INVALIDPARAMETERVALUE_ADDRESSTYPECONFLICT = "InvalidParameterValue.AddressTypeConflict"
 //  LIMITEXCEEDED_ACCOUNTRETURNQUOTA = "LimitExceeded.AccountReturnQuota"
+//  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
@@ -25534,6 +26452,7 @@ func NewReleaseIPv6AddressesResponse() (response *ReleaseIPv6AddressesResponse) 
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
 //  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 func (c *Client) ReleaseIPv6Addresses(request *ReleaseIPv6AddressesRequest) (response *ReleaseIPv6AddressesResponse, err error) {
@@ -25552,6 +26471,7 @@ func (c *Client) ReleaseIPv6Addresses(request *ReleaseIPv6AddressesRequest) (res
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
 //  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
+//  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 func (c *Client) ReleaseIPv6AddressesWithContext(ctx context.Context, request *ReleaseIPv6AddressesRequest) (response *ReleaseIPv6AddressesResponse, err error) {
@@ -26349,6 +27269,124 @@ func (c *Client) ReplaceHighPriorityRoutesWithContext(ctx context.Context, reque
     return
 }
 
+func NewReplaceRoutePolicyAssociationsRequest() (request *ReplaceRoutePolicyAssociationsRequest) {
+    request = &ReplaceRoutePolicyAssociationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ReplaceRoutePolicyAssociations")
+    
+    
+    return
+}
+
+func NewReplaceRoutePolicyAssociationsResponse() (response *ReplaceRoutePolicyAssociationsResponse) {
+    response = &ReplaceRoutePolicyAssociationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ReplaceRoutePolicyAssociations
+// 本接口（ReplaceRoutePolicyAssociations）根据路由接收策略实例ID（RoutePolicyId）和路由表实例ID（RouteTableId）修改绑定优先级（Priority），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYASSOCIATIONEXISTS = "InvalidParameterValue.RoutePolicyAssociationExists"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ReplaceRoutePolicyAssociations(request *ReplaceRoutePolicyAssociationsRequest) (response *ReplaceRoutePolicyAssociationsResponse, err error) {
+    return c.ReplaceRoutePolicyAssociationsWithContext(context.Background(), request)
+}
+
+// ReplaceRoutePolicyAssociations
+// 本接口（ReplaceRoutePolicyAssociations）根据路由接收策略实例ID（RoutePolicyId）和路由表实例ID（RouteTableId）修改绑定优先级（Priority），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYASSOCIATIONEXISTS = "InvalidParameterValue.RoutePolicyAssociationExists"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ReplaceRoutePolicyAssociationsWithContext(ctx context.Context, request *ReplaceRoutePolicyAssociationsRequest) (response *ReplaceRoutePolicyAssociationsResponse, err error) {
+    if request == nil {
+        request = NewReplaceRoutePolicyAssociationsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ReplaceRoutePolicyAssociations")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReplaceRoutePolicyAssociations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReplaceRoutePolicyAssociationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewReplaceRoutePolicyEntriesRequest() (request *ReplaceRoutePolicyEntriesRequest) {
+    request = &ReplaceRoutePolicyEntriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ReplaceRoutePolicyEntries")
+    
+    
+    return
+}
+
+func NewReplaceRoutePolicyEntriesResponse() (response *ReplaceRoutePolicyEntriesResponse) {
+    response = &ReplaceRoutePolicyEntriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ReplaceRoutePolicyEntries
+// 本接口（ReplaceRoutePolicyEntries）根据路由接收策略规则ID（RoutePolicyEntryId）修改指定的路由策略条目（RoutePolicyEntry），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ReplaceRoutePolicyEntries(request *ReplaceRoutePolicyEntriesRequest) (response *ReplaceRoutePolicyEntriesResponse, err error) {
+    return c.ReplaceRoutePolicyEntriesWithContext(context.Background(), request)
+}
+
+// ReplaceRoutePolicyEntries
+// 本接口（ReplaceRoutePolicyEntries）根据路由接收策略规则ID（RoutePolicyEntryId）修改指定的路由策略条目（RoutePolicyEntry），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  INVALIDPARAMETERVALUE_ROUTEPOLICYPRIORITYCONFLICT = "InvalidParameterValue.RoutePolicyPriorityConflict"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ReplaceRoutePolicyEntriesWithContext(ctx context.Context, request *ReplaceRoutePolicyEntriesRequest) (response *ReplaceRoutePolicyEntriesResponse, err error) {
+    if request == nil {
+        request = NewReplaceRoutePolicyEntriesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ReplaceRoutePolicyEntries")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReplaceRoutePolicyEntries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReplaceRoutePolicyEntriesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewReplaceRouteTableAssociationRequest() (request *ReplaceRouteTableAssociationRequest) {
     request = &ReplaceRouteTableAssociationRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -26491,6 +27529,66 @@ func (c *Client) ReplaceRoutesWithContext(ctx context.Context, request *ReplaceR
     return
 }
 
+func NewReplaceRoutesWithRoutePolicyRequest() (request *ReplaceRoutesWithRoutePolicyRequest) {
+    request = &ReplaceRoutesWithRoutePolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ReplaceRoutesWithRoutePolicy")
+    
+    
+    return
+}
+
+func NewReplaceRoutesWithRoutePolicyResponse() (response *ReplaceRoutesWithRoutePolicyResponse) {
+    response = &ReplaceRoutesWithRoutePolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ReplaceRoutesWithRoutePolicy
+// 本接口（ReplaceRoutes）根据路由策略ID（RouteId）修改指定的路由策略（Route），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTROUTETYPE = "UnsupportedOperation.NotSupportRouteType"
+func (c *Client) ReplaceRoutesWithRoutePolicy(request *ReplaceRoutesWithRoutePolicyRequest) (response *ReplaceRoutesWithRoutePolicyResponse, err error) {
+    return c.ReplaceRoutesWithRoutePolicyWithContext(context.Background(), request)
+}
+
+// ReplaceRoutesWithRoutePolicy
+// 本接口（ReplaceRoutes）根据路由策略ID（RouteId）修改指定的路由策略（Route），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTROUTETYPE = "UnsupportedOperation.NotSupportRouteType"
+func (c *Client) ReplaceRoutesWithRoutePolicyWithContext(ctx context.Context, request *ReplaceRoutesWithRoutePolicyRequest) (response *ReplaceRoutesWithRoutePolicyResponse, err error) {
+    if request == nil {
+        request = NewReplaceRoutesWithRoutePolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ReplaceRoutesWithRoutePolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReplaceRoutesWithRoutePolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReplaceRoutesWithRoutePolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewReplaceSecurityGroupPoliciesRequest() (request *ReplaceSecurityGroupPoliciesRequest) {
     request = &ReplaceSecurityGroupPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -26521,6 +27619,7 @@ func NewReplaceSecurityGroupPoliciesResponse() (response *ReplaceSecurityGroupPo
 //  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//  INVALIDPARAMETERVALUE_INVALID = "InvalidParameterValue.Invalid"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_MEMBERAPPROVALAPPLICATIONIDMISMATCH = "InvalidParameterValue.MemberApprovalApplicationIdMismatch"
@@ -26552,6 +27651,7 @@ func (c *Client) ReplaceSecurityGroupPolicies(request *ReplaceSecurityGroupPolic
 //  INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//  INVALIDPARAMETERVALUE_INVALID = "InvalidParameterValue.Invalid"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_MEMBERAPPROVALAPPLICATIONIDMISMATCH = "InvalidParameterValue.MemberApprovalApplicationIdMismatch"
@@ -26817,26 +27917,28 @@ func NewResetNatGatewayConnectionResponse() (response *ResetNatGatewayConnection
 }
 
 // ResetNatGatewayConnection
-// 本接口（ResetNatGatewayConnection）用来NAT网关并发连接上限。
+// 本接口（ResetNatGatewayConnection）用于调整传统型NAT网关并发连接数上限。
 //
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
+//  UNSUPPORTEDOPERATION_NATGATEWAYISBUSY = "UnsupportedOperation.NatGatewayIsBusy"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
 func (c *Client) ResetNatGatewayConnection(request *ResetNatGatewayConnectionRequest) (response *ResetNatGatewayConnectionResponse, err error) {
     return c.ResetNatGatewayConnectionWithContext(context.Background(), request)
 }
 
 // ResetNatGatewayConnection
-// 本接口（ResetNatGatewayConnection）用来NAT网关并发连接上限。
+// 本接口（ResetNatGatewayConnection）用于调整传统型NAT网关并发连接数上限。
 //
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
+//  UNSUPPORTEDOPERATION_NATGATEWAYISBUSY = "UnsupportedOperation.NatGatewayIsBusy"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
 func (c *Client) ResetNatGatewayConnectionWithContext(ctx context.Context, request *ResetNatGatewayConnectionRequest) (response *ResetNatGatewayConnectionResponse, err error) {
     if request == nil {
@@ -26851,6 +27953,138 @@ func (c *Client) ResetNatGatewayConnectionWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewResetNatGatewayConnectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetRoutePolicyAssociationsRequest() (request *ResetRoutePolicyAssociationsRequest) {
+    request = &ResetRoutePolicyAssociationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ResetRoutePolicyAssociations")
+    
+    
+    return
+}
+
+func NewResetRoutePolicyAssociationsResponse() (response *ResetRoutePolicyAssociationsResponse) {
+    response = &ResetRoutePolicyAssociationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetRoutePolicyAssociations
+// 本接口（ResetRoutePolicyAssociations）用于对某个路由表实例已经绑定的路由策略实例解除绑定关系，并重新设置新的绑定路由策略及优先级。<br />
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_ECMP = "UnsupportedOperation.Ecmp"
+//  UNSUPPORTEDOPERATION_SYSTEMROUTE = "UnsupportedOperation.SystemRoute"
+func (c *Client) ResetRoutePolicyAssociations(request *ResetRoutePolicyAssociationsRequest) (response *ResetRoutePolicyAssociationsResponse, err error) {
+    return c.ResetRoutePolicyAssociationsWithContext(context.Background(), request)
+}
+
+// ResetRoutePolicyAssociations
+// 本接口（ResetRoutePolicyAssociations）用于对某个路由表实例已经绑定的路由策略实例解除绑定关系，并重新设置新的绑定路由策略及优先级。<br />
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  INVALIDPARAMETERVALUE_VPCCIDRCONFLICT = "InvalidParameterValue.VpcCidrConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER_WITHGUESS = "UnknownParameter.WithGuess"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_ECMP = "UnsupportedOperation.Ecmp"
+//  UNSUPPORTEDOPERATION_SYSTEMROUTE = "UnsupportedOperation.SystemRoute"
+func (c *Client) ResetRoutePolicyAssociationsWithContext(ctx context.Context, request *ResetRoutePolicyAssociationsRequest) (response *ResetRoutePolicyAssociationsResponse, err error) {
+    if request == nil {
+        request = NewResetRoutePolicyAssociationsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ResetRoutePolicyAssociations")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetRoutePolicyAssociations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetRoutePolicyAssociationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetRoutePolicyEntriesRequest() (request *ResetRoutePolicyEntriesRequest) {
+    request = &ResetRoutePolicyEntriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ResetRoutePolicyEntries")
+    
+    
+    return
+}
+
+func NewResetRoutePolicyEntriesResponse() (response *ResetRoutePolicyEntriesResponse) {
+    response = &ResetRoutePolicyEntriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetRoutePolicyEntries
+// 本接口（ResetRoutePolicyEntries）根据路由接收策略规则ID（RoutePolicyId）重置指定的路由接收策略条目（RoutePolicyEntry），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ResetRoutePolicyEntries(request *ResetRoutePolicyEntriesRequest) (response *ResetRoutePolicyEntriesResponse, err error) {
+    return c.ResetRoutePolicyEntriesWithContext(context.Background(), request)
+}
+
+// ResetRoutePolicyEntries
+// 本接口（ResetRoutePolicyEntries）根据路由接收策略规则ID（RoutePolicyId）重置指定的路由接收策略条目（RoutePolicyEntry），支持批量修改。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ResetRoutePolicyEntriesWithContext(ctx context.Context, request *ResetRoutePolicyEntriesRequest) (response *ResetRoutePolicyEntriesResponse, err error) {
+    if request == nil {
+        request = NewResetRoutePolicyEntriesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ResetRoutePolicyEntries")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetRoutePolicyEntries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetRoutePolicyEntriesResponse()
     err = c.Send(request, response)
     return
 }

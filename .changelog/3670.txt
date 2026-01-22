@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_vpc_route_policy
+```
+
+```release-note:new-resource
+tencentcloud_vpc_route_policy_entries
+```
+
+```release-note:new-resource
+tencentcloud_vpc_route_policy_association
+```

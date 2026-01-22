@@ -174,13 +174,6 @@ func ResourceTencentCloudWedataResourceGroup() *schema.Resource {
 				Description: "Associated project space project ID.",
 			},
 
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Resource group description.",
-			},
-
 			// computed
 			"resource_group_id": {
 				Type:        schema.TypeString,
@@ -297,10 +290,6 @@ func resourceTencentCloudWedataResourceGroupCreate(d *schema.ResourceData, meta 
 		request.AssociatedProjectId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("description"); ok {
-		request.Description = helper.String(v.(string))
-	}
-
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataV20250806Client().CreateResourceGroupWithContext(ctx, request)
 		if e != nil {
@@ -374,13 +363,9 @@ func resourceTencentCloudWedataResourceGroupRead(d *schema.ResourceData, meta in
 			_ = d.Set("subnet", items.SubNet)
 		}
 
-		// if items.Region != nil {
-		// 	_ = d.Set("resource_region", items.Region)
-		// }
-
-		// if items.Description != nil {
-		// 	_ = d.Set("description", items.Description)
-		// }
+		if items.Region != nil {
+			_ = d.Set("resource_region", items.Region)
+		}
 
 		if items.Id != nil {
 			_ = d.Set("resource_group_id", items.Id)

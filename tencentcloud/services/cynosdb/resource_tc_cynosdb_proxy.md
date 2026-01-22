@@ -1,4 +1,4 @@
-Provides a resource to create a cynosdb proxy
+Provides a resource to create a CynosDB proxy
 
 Example Usage
 

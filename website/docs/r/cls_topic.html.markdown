@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a cls topic.
 
+~> **NOTE:** Field `encryption` can only be enabled, not disabled.
+
 ## Example Usage
 
 ### Create a standard cls topic
@@ -86,6 +88,8 @@ The following arguments are supported:
 * `topic_name` - (Required, String) Log topic name.
 * `auto_split` - (Optional, Bool) Whether to enable automatic split. Default value: true.
 * `describes` - (Optional, String) Log Topic Description.
+* `encryption` - (Optional, Int) Encryption-related parameters. This parameter is supported for users with an open access list and from encrypted regions; it cannot be passed in other scenarios. 0 or not passed: No encryption. 1: KMS-CLS cloud product key encryption. Once enabled, it cannot be disabled.
+Supported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangkok, ap-jakarta, eu-frankfurt, ap-seoul, ap-tokyo.
 * `extends` - (Optional, List) Log Subject Extension Information.
 * `hot_period` - (Optional, Int) 0: Turn off log sinking. Non 0: The number of days of standard storage after enabling log settling. HotPeriod needs to be greater than or equal to 7 and less than Period. Only effective when StorageType is hot.
 * `is_web_tracking` - (Optional, Bool) No authentication switch. False: closed; True: Enable. The default is false. After activation, anonymous access to the log topic will be supported for specified operations.

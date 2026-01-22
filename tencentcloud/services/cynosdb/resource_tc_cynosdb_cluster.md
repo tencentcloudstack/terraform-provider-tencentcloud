@@ -53,7 +53,7 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   instance_cpu_core            = 2
   instance_memory_size         = 4
   force_delete                 = false
-  instance_maintain_weekdays   = [
+  instance_maintain_weekdays = [
     "Fri",
     "Mon",
     "Sat",
@@ -96,6 +96,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     instance_count = 1
     device_type    = "exclusive"
   }
+
+  cynos_version = "2.1.14.001"
 
   tags = {
     createBy = "terraform"
@@ -200,5 +202,5 @@ Import
 CynosDB cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
+terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
 ```

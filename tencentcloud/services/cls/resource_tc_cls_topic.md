@@ -1,5 +1,7 @@
 Provides a resource to create a cls topic.
 
+~> **NOTE:** Field `encryption` can only be enabled, not disabled.
+
 Example Usage
 
 Create a standard cls topic

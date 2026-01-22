@@ -1,4 +1,4 @@
-Provides a resource to create a cwp license_order
+Provides a resource to create a CWP license order
 
 Example Usage
 
@@ -9,15 +9,15 @@ resource "tencentcloud_cwp_license_order" "example" {
   license_num  = 1
   region_id    = 1
   project_id   = 0
-  tags        = {
-    "createdBy" = "terraform"
+  tags = {
+    createdBy = "terraform"
   }
 }
 ```
 
 Import
 
-cwp license_order can be imported using the id, e.g.
+CWP license order can be imported using the resourceId#regionId, e.g.
 
 ```
 terraform import tencentcloud_cwp_license_order.example cwplic-130715d2#1

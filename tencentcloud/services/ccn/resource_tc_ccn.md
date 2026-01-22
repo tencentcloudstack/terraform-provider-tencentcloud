@@ -8,13 +8,15 @@ Create a PREPAID CCN
 
 ```hcl
 resource "tencentcloud_ccn" "example" {
-  name                 = "tf-example"
-  description          = "desc."
-  qos                  = "AG"
-  charge_type          = "PREPAID"
-  bandwidth_limit_type = "INTER_REGION_LIMIT"
-  route_ecmp_flag      = true
-  route_overlap_flag   = true
+  name                   = "tf-example"
+  description            = "desc."
+  qos                    = "AG"
+  charge_type            = "PREPAID"
+  bandwidth_limit_type   = "INTER_REGION_LIMIT"
+  instance_metering_type = "BANDWIDTH"
+  route_ecmp_flag        = true
+  route_overlap_flag     = true
+
   tags = {
     createBy = "Terraform"
   }

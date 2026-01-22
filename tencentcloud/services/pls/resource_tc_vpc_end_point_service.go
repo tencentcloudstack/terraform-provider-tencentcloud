@@ -53,7 +53,7 @@ func ResourceTencentCloudVpcEndPointService() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Type of service instance, like `CLB`, `CDB`, `CRS`, default is `CLB`.",
+				Description: "Type of service instance, like `CLB`, `CDB`, `CRS`, `GWLB`. default is `CLB`.",
 			},
 
 			"service_owner": {
@@ -128,7 +128,7 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil {
+		if result == nil || result.Response == nil || result.Response.EndPointService == nil {
 			return resource.RetryableError(fmt.Errorf("Create vpc endPointService failed, Response is nil."))
 		}
 
@@ -141,7 +141,7 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	if response.Response.EndPointService == nil || response.Response.EndPointService.EndPointServiceId == nil {
+	if response.Response.EndPointService.EndPointServiceId == nil {
 		return fmt.Errorf("EndPointServiceId is nil.")
 	}
 
@@ -169,7 +169,7 @@ func resourceTencentCloudVpcEndPointServiceRead(d *schema.ResourceData, meta int
 
 	if endPointService == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		return fmt.Errorf("resource `tencentcloud_vpc_end_point_service` %s does not exist", d.Id())
 	}
 
 	if endPointService.VpcId != nil {

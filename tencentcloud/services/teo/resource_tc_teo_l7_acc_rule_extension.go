@@ -1083,6 +1083,21 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 							},
 						},
 					},
+					"content_compression_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"switch": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.",
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -1693,6 +1708,13 @@ func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{})
 							setContentIdentifierParameters.ContentIdentifier = helper.String(v)
 						}
 						ruleEngineAction.SetContentIdentifierParameters = &setContentIdentifierParameters
+					}
+					if contentCompressionParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["content_compression_parameters"]); ok {
+						contentCompressionParameters := teov20220901.ContentCompressionParameters{}
+						if v, ok := contentCompressionParametersMap["switch"].(string); ok && v != "" {
+							contentCompressionParameters.Switch = helper.String(v)
+						}
+						ruleEngineAction.ContentCompressionParameters = &contentCompressionParameters
 					}
 					ruleBranch.Actions = append(ruleBranch.Actions, &ruleEngineAction)
 				}
@@ -2483,6 +2505,15 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 						}
 
 						actionsMap["set_content_identifier_parameters"] = []interface{}{setContentIdentifierParametersMap}
+					}
+
+					contentCompressionParametersMap := map[string]interface{}{}
+					if actions.ContentCompressionParameters != nil {
+						if actions.ContentCompressionParameters.Switch != nil {
+							contentCompressionParametersMap["switch"] = actions.ContentCompressionParameters.Switch
+						}
+
+						actionsMap["content_compression_parameters"] = []interface{}{contentCompressionParametersMap}
 					}
 
 					actionsList = append(actionsList, actionsMap)

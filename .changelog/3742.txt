@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_ckafka_version
+```
+
+```release-note:enhancement
+resource/tencentcloud_ckafka_instance: add new parasm
+```

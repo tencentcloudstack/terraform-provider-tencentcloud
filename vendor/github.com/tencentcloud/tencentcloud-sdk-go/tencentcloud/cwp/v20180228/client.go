@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,8 +59,9 @@ func NewAddLoginWhiteListsRequest() (request *AddLoginWhiteListsRequest) {
 func NewAddLoginWhiteListsResponse() (response *AddLoginWhiteListsResponse) {
     response = &AddLoginWhiteListsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddLoginWhiteLists
@@ -95,6 +96,7 @@ func (c *Client) AddLoginWhiteListsWithContext(ctx context.Context, request *Add
     if request == nil {
         request = NewAddLoginWhiteListsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "AddLoginWhiteLists")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddLoginWhiteLists require credential")
@@ -103,64 +105,6 @@ func (c *Client) AddLoginWhiteListsWithContext(ctx context.Context, request *Add
     request.SetContext(ctx)
     
     response = NewAddLoginWhiteListsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCancelIgnoreVulRequest() (request *CancelIgnoreVulRequest) {
-    request = &CancelIgnoreVulRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "CancelIgnoreVul")
-    
-    
-    return
-}
-
-func NewCancelIgnoreVulResponse() (response *CancelIgnoreVulResponse) {
-    response = &CancelIgnoreVulResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// CancelIgnoreVul
-// 取消漏洞忽略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) CancelIgnoreVul(request *CancelIgnoreVulRequest) (response *CancelIgnoreVulResponse, err error) {
-    return c.CancelIgnoreVulWithContext(context.Background(), request)
-}
-
-// CancelIgnoreVul
-// 取消漏洞忽略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) CancelIgnoreVulWithContext(ctx context.Context, request *CancelIgnoreVulRequest) (response *CancelIgnoreVulResponse, err error) {
-    if request == nil {
-        request = NewCancelIgnoreVulRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CancelIgnoreVul require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCancelIgnoreVulResponse()
     err = c.Send(request, response)
     return
 }
@@ -179,8 +123,9 @@ func NewChangeRuleEventsIgnoreStatusRequest() (request *ChangeRuleEventsIgnoreSt
 func NewChangeRuleEventsIgnoreStatusResponse() (response *ChangeRuleEventsIgnoreStatusResponse) {
     response = &ChangeRuleEventsIgnoreStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ChangeRuleEventsIgnoreStatus
@@ -211,6 +156,7 @@ func (c *Client) ChangeRuleEventsIgnoreStatusWithContext(ctx context.Context, re
     if request == nil {
         request = NewChangeRuleEventsIgnoreStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ChangeRuleEventsIgnoreStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ChangeRuleEventsIgnoreStatus require credential")
@@ -237,8 +183,9 @@ func NewChangeStrategyEnableStatusRequest() (request *ChangeStrategyEnableStatus
 func NewChangeStrategyEnableStatusResponse() (response *ChangeStrategyEnableStatusResponse) {
     response = &ChangeStrategyEnableStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ChangeStrategyEnableStatus
@@ -269,6 +216,7 @@ func (c *Client) ChangeStrategyEnableStatusWithContext(ctx context.Context, requ
     if request == nil {
         request = NewChangeStrategyEnableStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ChangeStrategyEnableStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ChangeStrategyEnableStatus require credential")
@@ -295,8 +243,9 @@ func NewCheckBashPolicyParamsRequest() (request *CheckBashPolicyParamsRequest) {
 func NewCheckBashPolicyParamsResponse() (response *CheckBashPolicyParamsResponse) {
     response = &CheckBashPolicyParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckBashPolicyParams
@@ -325,6 +274,7 @@ func (c *Client) CheckBashPolicyParamsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCheckBashPolicyParamsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CheckBashPolicyParams")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckBashPolicyParams require credential")
@@ -351,8 +301,9 @@ func NewCheckBashRuleParamsRequest() (request *CheckBashRuleParamsRequest) {
 func NewCheckBashRuleParamsResponse() (response *CheckBashRuleParamsResponse) {
     response = &CheckBashRuleParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckBashRuleParams
@@ -381,6 +332,7 @@ func (c *Client) CheckBashRuleParamsWithContext(ctx context.Context, request *Ch
     if request == nil {
         request = NewCheckBashRuleParamsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CheckBashRuleParams")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckBashRuleParams require credential")
@@ -407,8 +359,9 @@ func NewCheckFileTamperRuleRequest() (request *CheckFileTamperRuleRequest) {
 func NewCheckFileTamperRuleResponse() (response *CheckFileTamperRuleResponse) {
     response = &CheckFileTamperRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckFileTamperRule
@@ -437,6 +390,7 @@ func (c *Client) CheckFileTamperRuleWithContext(ctx context.Context, request *Ch
     if request == nil {
         request = NewCheckFileTamperRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CheckFileTamperRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckFileTamperRule require credential")
@@ -463,8 +417,9 @@ func NewCheckFirstScanBaselineRequest() (request *CheckFirstScanBaselineRequest)
 func NewCheckFirstScanBaselineResponse() (response *CheckFirstScanBaselineResponse) {
     response = &CheckFirstScanBaselineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckFirstScanBaseline
@@ -485,6 +440,7 @@ func (c *Client) CheckFirstScanBaselineWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCheckFirstScanBaselineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CheckFirstScanBaseline")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckFirstScanBaseline require credential")
@@ -511,8 +467,9 @@ func NewCheckLogKafkaConnectionStateRequest() (request *CheckLogKafkaConnectionS
 func NewCheckLogKafkaConnectionStateResponse() (response *CheckLogKafkaConnectionStateResponse) {
     response = &CheckLogKafkaConnectionStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckLogKafkaConnectionState
@@ -533,6 +490,7 @@ func (c *Client) CheckLogKafkaConnectionStateWithContext(ctx context.Context, re
     if request == nil {
         request = NewCheckLogKafkaConnectionStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CheckLogKafkaConnectionState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckLogKafkaConnectionState require credential")
@@ -559,8 +517,9 @@ func NewClearLocalStorageRequest() (request *ClearLocalStorageRequest) {
 func NewClearLocalStorageResponse() (response *ClearLocalStorageResponse) {
     response = &ClearLocalStorageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ClearLocalStorage
@@ -581,6 +540,7 @@ func (c *Client) ClearLocalStorageWithContext(ctx context.Context, request *Clea
     if request == nil {
         request = NewClearLocalStorageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ClearLocalStorage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ClearLocalStorage require credential")
@@ -607,8 +567,9 @@ func NewCreateBanWhiteListRequest() (request *CreateBanWhiteListRequest) {
 func NewCreateBanWhiteListResponse() (response *CreateBanWhiteListResponse) {
     response = &CreateBanWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBanWhiteList
@@ -647,6 +608,7 @@ func (c *Client) CreateBanWhiteListWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateBanWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateBanWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateBanWhiteList require credential")
@@ -673,8 +635,9 @@ func NewCreateBaselineStrategyRequest() (request *CreateBaselineStrategyRequest)
 func NewCreateBaselineStrategyResponse() (response *CreateBaselineStrategyResponse) {
     response = &CreateBaselineStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBaselineStrategy
@@ -715,6 +678,7 @@ func (c *Client) CreateBaselineStrategyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateBaselineStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateBaselineStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateBaselineStrategy require credential")
@@ -741,8 +705,9 @@ func NewCreateBuyBindTaskRequest() (request *CreateBuyBindTaskRequest) {
 func NewCreateBuyBindTaskResponse() (response *CreateBuyBindTaskResponse) {
     response = &CreateBuyBindTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBuyBindTask
@@ -767,6 +732,7 @@ func (c *Client) CreateBuyBindTaskWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateBuyBindTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateBuyBindTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateBuyBindTask require credential")
@@ -775,58 +741,6 @@ func (c *Client) CreateBuyBindTaskWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateBuyBindTaskResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateCloudProtectServiceOrderRecordRequest() (request *CreateCloudProtectServiceOrderRecordRequest) {
-    request = &CreateCloudProtectServiceOrderRecordRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "CreateCloudProtectServiceOrderRecord")
-    
-    
-    return
-}
-
-func NewCreateCloudProtectServiceOrderRecordResponse() (response *CreateCloudProtectServiceOrderRecordResponse) {
-    response = &CreateCloudProtectServiceOrderRecordResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// CreateCloudProtectServiceOrderRecord
-// 云护航服务使用完成后，该接口可以确认收货
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) CreateCloudProtectServiceOrderRecord(request *CreateCloudProtectServiceOrderRecordRequest) (response *CreateCloudProtectServiceOrderRecordResponse, err error) {
-    return c.CreateCloudProtectServiceOrderRecordWithContext(context.Background(), request)
-}
-
-// CreateCloudProtectServiceOrderRecord
-// 云护航服务使用完成后，该接口可以确认收货
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) CreateCloudProtectServiceOrderRecordWithContext(ctx context.Context, request *CreateCloudProtectServiceOrderRecordRequest) (response *CreateCloudProtectServiceOrderRecordResponse, err error) {
-    if request == nil {
-        request = NewCreateCloudProtectServiceOrderRecordRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateCloudProtectServiceOrderRecord require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateCloudProtectServiceOrderRecordResponse()
     err = c.Send(request, response)
     return
 }
@@ -845,8 +759,9 @@ func NewCreateEmergencyVulScanRequest() (request *CreateEmergencyVulScanRequest)
 func NewCreateEmergencyVulScanResponse() (response *CreateEmergencyVulScanResponse) {
     response = &CreateEmergencyVulScanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEmergencyVulScan
@@ -885,6 +800,7 @@ func (c *Client) CreateEmergencyVulScanWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateEmergencyVulScanRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateEmergencyVulScan")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEmergencyVulScan require credential")
@@ -911,8 +827,9 @@ func NewCreateIncidentBacktrackingRequest() (request *CreateIncidentBacktracking
 func NewCreateIncidentBacktrackingResponse() (response *CreateIncidentBacktrackingResponse) {
     response = &CreateIncidentBacktrackingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateIncidentBacktracking
@@ -951,6 +868,7 @@ func (c *Client) CreateIncidentBacktrackingWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateIncidentBacktrackingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateIncidentBacktracking")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateIncidentBacktracking require credential")
@@ -977,8 +895,9 @@ func NewCreateLicenseOrderRequest() (request *CreateLicenseOrderRequest) {
 func NewCreateLicenseOrderResponse() (response *CreateLicenseOrderResponse) {
     response = &CreateLicenseOrderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLicenseOrder
@@ -1023,6 +942,7 @@ func (c *Client) CreateLicenseOrderWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateLicenseOrderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateLicenseOrder")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLicenseOrder require credential")
@@ -1049,8 +969,9 @@ func NewCreateLogExportRequest() (request *CreateLogExportRequest) {
 func NewCreateLogExportResponse() (response *CreateLogExportResponse) {
     response = &CreateLogExportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLogExport
@@ -1083,6 +1004,7 @@ func (c *Client) CreateLogExportWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateLogExportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateLogExport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLogExport require credential")
@@ -1109,8 +1031,9 @@ func NewCreateMaliciousRequestWhiteListRequest() (request *CreateMaliciousReques
 func NewCreateMaliciousRequestWhiteListResponse() (response *CreateMaliciousRequestWhiteListResponse) {
     response = &CreateMaliciousRequestWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateMaliciousRequestWhiteList
@@ -1139,6 +1062,7 @@ func (c *Client) CreateMaliciousRequestWhiteListWithContext(ctx context.Context,
     if request == nil {
         request = NewCreateMaliciousRequestWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateMaliciousRequestWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateMaliciousRequestWhiteList require credential")
@@ -1165,8 +1089,9 @@ func NewCreateMalwareWhiteListRequest() (request *CreateMalwareWhiteListRequest)
 func NewCreateMalwareWhiteListResponse() (response *CreateMalwareWhiteListResponse) {
     response = &CreateMalwareWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateMalwareWhiteList
@@ -1189,6 +1114,7 @@ func (c *Client) CreateMalwareWhiteListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateMalwareWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateMalwareWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateMalwareWhiteList require credential")
@@ -1215,8 +1141,9 @@ func NewCreateNetAttackWhiteListRequest() (request *CreateNetAttackWhiteListRequ
 func NewCreateNetAttackWhiteListResponse() (response *CreateNetAttackWhiteListResponse) {
     response = &CreateNetAttackWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNetAttackWhiteList
@@ -1239,6 +1166,7 @@ func (c *Client) CreateNetAttackWhiteListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateNetAttackWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateNetAttackWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNetAttackWhiteList require credential")
@@ -1265,8 +1193,9 @@ func NewCreateProtectServerRequest() (request *CreateProtectServerRequest) {
 func NewCreateProtectServerResponse() (response *CreateProtectServerResponse) {
     response = &CreateProtectServerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateProtectServer
@@ -1297,6 +1226,7 @@ func (c *Client) CreateProtectServerWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateProtectServerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateProtectServer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateProtectServer require credential")
@@ -1323,8 +1253,9 @@ func NewCreateRansomDefenseStrategyRequest() (request *CreateRansomDefenseStrate
 func NewCreateRansomDefenseStrategyResponse() (response *CreateRansomDefenseStrategyResponse) {
     response = &CreateRansomDefenseStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRansomDefenseStrategy
@@ -1347,6 +1278,7 @@ func (c *Client) CreateRansomDefenseStrategyWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateRansomDefenseStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateRansomDefenseStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRansomDefenseStrategy require credential")
@@ -1373,8 +1305,9 @@ func NewCreateScanMalwareSettingRequest() (request *CreateScanMalwareSettingRequ
 func NewCreateScanMalwareSettingResponse() (response *CreateScanMalwareSettingResponse) {
     response = &CreateScanMalwareSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateScanMalwareSetting
@@ -1421,6 +1354,7 @@ func (c *Client) CreateScanMalwareSettingWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateScanMalwareSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateScanMalwareSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateScanMalwareSetting require credential")
@@ -1447,8 +1381,9 @@ func NewCreateSearchLogRequest() (request *CreateSearchLogRequest) {
 func NewCreateSearchLogResponse() (response *CreateSearchLogResponse) {
     response = &CreateSearchLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSearchLog
@@ -1475,6 +1410,7 @@ func (c *Client) CreateSearchLogWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateSearchLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateSearchLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSearchLog require credential")
@@ -1501,8 +1437,9 @@ func NewCreateSearchTemplateRequest() (request *CreateSearchTemplateRequest) {
 func NewCreateSearchTemplateResponse() (response *CreateSearchTemplateResponse) {
     response = &CreateSearchTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSearchTemplate
@@ -1533,6 +1470,7 @@ func (c *Client) CreateSearchTemplateWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateSearchTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateSearchTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSearchTemplate require credential")
@@ -1559,8 +1497,9 @@ func NewCreateVulFixRequest() (request *CreateVulFixRequest) {
 func NewCreateVulFixResponse() (response *CreateVulFixResponse) {
     response = &CreateVulFixResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateVulFix
@@ -1599,6 +1538,7 @@ func (c *Client) CreateVulFixWithContext(ctx context.Context, request *CreateVul
     if request == nil {
         request = NewCreateVulFixRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateVulFix")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateVulFix require credential")
@@ -1625,8 +1565,9 @@ func NewCreateWhiteListOrderRequest() (request *CreateWhiteListOrderRequest) {
 func NewCreateWhiteListOrderResponse() (response *CreateWhiteListOrderResponse) {
     response = &CreateWhiteListOrderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateWhiteListOrder
@@ -1634,6 +1575,7 @@ func NewCreateWhiteListOrderResponse() (response *CreateWhiteListOrderResponse) 
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateWhiteListOrder(request *CreateWhiteListOrderRequest) (response *CreateWhiteListOrderResponse, err error) {
     return c.CreateWhiteListOrderWithContext(context.Background(), request)
 }
@@ -1643,10 +1585,12 @@ func (c *Client) CreateWhiteListOrder(request *CreateWhiteListOrderRequest) (res
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateWhiteListOrderWithContext(ctx context.Context, request *CreateWhiteListOrderRequest) (response *CreateWhiteListOrderResponse, err error) {
     if request == nil {
         request = NewCreateWhiteListOrderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "CreateWhiteListOrder")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateWhiteListOrder require credential")
@@ -1673,8 +1617,9 @@ func NewDeleteAllJavaMemShellsRequest() (request *DeleteAllJavaMemShellsRequest)
 func NewDeleteAllJavaMemShellsResponse() (response *DeleteAllJavaMemShellsResponse) {
     response = &DeleteAllJavaMemShellsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAllJavaMemShells
@@ -1707,6 +1652,7 @@ func (c *Client) DeleteAllJavaMemShellsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteAllJavaMemShellsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteAllJavaMemShells")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAllJavaMemShells require credential")
@@ -1715,70 +1661,6 @@ func (c *Client) DeleteAllJavaMemShellsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDeleteAllJavaMemShellsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDeleteAttackLogsRequest() (request *DeleteAttackLogsRequest) {
-    request = &DeleteAttackLogsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DeleteAttackLogs")
-    
-    
-    return
-}
-
-func NewDeleteAttackLogsResponse() (response *DeleteAttackLogsResponse) {
-    response = &DeleteAttackLogsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DeleteAttackLogs
-// 删除网络攻击日志
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DeleteAttackLogs(request *DeleteAttackLogsRequest) (response *DeleteAttackLogsResponse, err error) {
-    return c.DeleteAttackLogsWithContext(context.Background(), request)
-}
-
-// DeleteAttackLogs
-// 删除网络攻击日志
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DeleteAttackLogsWithContext(ctx context.Context, request *DeleteAttackLogsRequest) (response *DeleteAttackLogsResponse, err error) {
-    if request == nil {
-        request = NewDeleteAttackLogsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteAttackLogs require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteAttackLogsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1797,8 +1679,9 @@ func NewDeleteBanWhiteListRequest() (request *DeleteBanWhiteListRequest) {
 func NewDeleteBanWhiteListResponse() (response *DeleteBanWhiteListResponse) {
     response = &DeleteBanWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBanWhiteList
@@ -1833,6 +1716,7 @@ func (c *Client) DeleteBanWhiteListWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteBanWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBanWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBanWhiteList require credential")
@@ -1859,8 +1743,9 @@ func NewDeleteBaselinePolicyRequest() (request *DeleteBaselinePolicyRequest) {
 func NewDeleteBaselinePolicyResponse() (response *DeleteBaselinePolicyResponse) {
     response = &DeleteBaselinePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBaselinePolicy
@@ -1895,6 +1780,7 @@ func (c *Client) DeleteBaselinePolicyWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteBaselinePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBaselinePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBaselinePolicy require credential")
@@ -1921,8 +1807,9 @@ func NewDeleteBaselineRuleRequest() (request *DeleteBaselineRuleRequest) {
 func NewDeleteBaselineRuleResponse() (response *DeleteBaselineRuleResponse) {
     response = &DeleteBaselineRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBaselineRule
@@ -1945,6 +1832,7 @@ func (c *Client) DeleteBaselineRuleWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteBaselineRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBaselineRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBaselineRule require credential")
@@ -1971,8 +1859,9 @@ func NewDeleteBaselineRuleIgnoreRequest() (request *DeleteBaselineRuleIgnoreRequ
 func NewDeleteBaselineRuleIgnoreResponse() (response *DeleteBaselineRuleIgnoreResponse) {
     response = &DeleteBaselineRuleIgnoreResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBaselineRuleIgnore
@@ -1995,6 +1884,7 @@ func (c *Client) DeleteBaselineRuleIgnoreWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteBaselineRuleIgnoreRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBaselineRuleIgnore")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBaselineRuleIgnore require credential")
@@ -2021,8 +1911,9 @@ func NewDeleteBaselineStrategyRequest() (request *DeleteBaselineStrategyRequest)
 func NewDeleteBaselineStrategyResponse() (response *DeleteBaselineStrategyResponse) {
     response = &DeleteBaselineStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBaselineStrategy
@@ -2055,6 +1946,7 @@ func (c *Client) DeleteBaselineStrategyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteBaselineStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBaselineStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBaselineStrategy require credential")
@@ -2081,8 +1973,9 @@ func NewDeleteBaselineWeakPasswordRequest() (request *DeleteBaselineWeakPassword
 func NewDeleteBaselineWeakPasswordResponse() (response *DeleteBaselineWeakPasswordResponse) {
     response = &DeleteBaselineWeakPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBaselineWeakPassword
@@ -2105,6 +1998,7 @@ func (c *Client) DeleteBaselineWeakPasswordWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteBaselineWeakPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBaselineWeakPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBaselineWeakPassword require credential")
@@ -2131,8 +2025,9 @@ func NewDeleteBashEventsRequest() (request *DeleteBashEventsRequest) {
 func NewDeleteBashEventsResponse() (response *DeleteBashEventsResponse) {
     response = &DeleteBashEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBashEvents
@@ -2171,6 +2066,7 @@ func (c *Client) DeleteBashEventsWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteBashEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBashEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBashEvents require credential")
@@ -2197,8 +2093,9 @@ func NewDeleteBashPoliciesRequest() (request *DeleteBashPoliciesRequest) {
 func NewDeleteBashPoliciesResponse() (response *DeleteBashPoliciesResponse) {
     response = &DeleteBashPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBashPolicies
@@ -2237,6 +2134,7 @@ func (c *Client) DeleteBashPoliciesWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteBashPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBashPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBashPolicies require credential")
@@ -2263,8 +2161,9 @@ func NewDeleteBashRulesRequest() (request *DeleteBashRulesRequest) {
 func NewDeleteBashRulesResponse() (response *DeleteBashRulesResponse) {
     response = &DeleteBashRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBashRules
@@ -2303,6 +2202,7 @@ func (c *Client) DeleteBashRulesWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteBashRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBashRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBashRules require credential")
@@ -2329,8 +2229,9 @@ func NewDeleteBruteAttacksRequest() (request *DeleteBruteAttacksRequest) {
 func NewDeleteBruteAttacksResponse() (response *DeleteBruteAttacksResponse) {
     response = &DeleteBruteAttacksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBruteAttacks
@@ -2363,6 +2264,7 @@ func (c *Client) DeleteBruteAttacksWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteBruteAttacksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteBruteAttacks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBruteAttacks require credential")
@@ -2389,8 +2291,9 @@ func NewDeleteLicenseRecordRequest() (request *DeleteLicenseRecordRequest) {
 func NewDeleteLicenseRecordResponse() (response *DeleteLicenseRecordResponse) {
     response = &DeleteLicenseRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLicenseRecord
@@ -2421,6 +2324,7 @@ func (c *Client) DeleteLicenseRecordWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteLicenseRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteLicenseRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLicenseRecord require credential")
@@ -2447,8 +2351,9 @@ func NewDeleteLicenseRecordAllRequest() (request *DeleteLicenseRecordAllRequest)
 func NewDeleteLicenseRecordAllResponse() (response *DeleteLicenseRecordAllResponse) {
     response = &DeleteLicenseRecordAllResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLicenseRecordAll
@@ -2479,6 +2384,7 @@ func (c *Client) DeleteLicenseRecordAllWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteLicenseRecordAllRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteLicenseRecordAll")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLicenseRecordAll require credential")
@@ -2505,8 +2411,9 @@ func NewDeleteLogExportRequest() (request *DeleteLogExportRequest) {
 func NewDeleteLogExportResponse() (response *DeleteLogExportResponse) {
     response = &DeleteLogExportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLogExport
@@ -2537,6 +2444,7 @@ func (c *Client) DeleteLogExportWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteLogExportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteLogExport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLogExport require credential")
@@ -2563,8 +2471,9 @@ func NewDeleteLoginWhiteListRequest() (request *DeleteLoginWhiteListRequest) {
 func NewDeleteLoginWhiteListResponse() (response *DeleteLoginWhiteListResponse) {
     response = &DeleteLoginWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLoginWhiteList
@@ -2597,6 +2506,7 @@ func (c *Client) DeleteLoginWhiteListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteLoginWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteLoginWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLoginWhiteList require credential")
@@ -2623,8 +2533,9 @@ func NewDeleteMachineRequest() (request *DeleteMachineRequest) {
 func NewDeleteMachineResponse() (response *DeleteMachineResponse) {
     response = &DeleteMachineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMachine
@@ -2667,6 +2578,7 @@ func (c *Client) DeleteMachineWithContext(ctx context.Context, request *DeleteMa
     if request == nil {
         request = NewDeleteMachineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMachine")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMachine require credential")
@@ -2693,8 +2605,9 @@ func NewDeleteMachineClearHistoryRequest() (request *DeleteMachineClearHistoryRe
 func NewDeleteMachineClearHistoryResponse() (response *DeleteMachineClearHistoryResponse) {
     response = &DeleteMachineClearHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMachineClearHistory
@@ -2737,6 +2650,7 @@ func (c *Client) DeleteMachineClearHistoryWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteMachineClearHistoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMachineClearHistory")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMachineClearHistory require credential")
@@ -2763,8 +2677,9 @@ func NewDeleteMachineTagRequest() (request *DeleteMachineTagRequest) {
 func NewDeleteMachineTagResponse() (response *DeleteMachineTagResponse) {
     response = &DeleteMachineTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMachineTag
@@ -2797,6 +2712,7 @@ func (c *Client) DeleteMachineTagWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteMachineTagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMachineTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMachineTag require credential")
@@ -2823,8 +2739,9 @@ func NewDeleteMaliciousRequestWhiteListRequest() (request *DeleteMaliciousReques
 func NewDeleteMaliciousRequestWhiteListResponse() (response *DeleteMaliciousRequestWhiteListResponse) {
     response = &DeleteMaliciousRequestWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMaliciousRequestWhiteList
@@ -2851,6 +2768,7 @@ func (c *Client) DeleteMaliciousRequestWhiteListWithContext(ctx context.Context,
     if request == nil {
         request = NewDeleteMaliciousRequestWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMaliciousRequestWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMaliciousRequestWhiteList require credential")
@@ -2877,8 +2795,9 @@ func NewDeleteMaliciousRequestsRequest() (request *DeleteMaliciousRequestsReques
 func NewDeleteMaliciousRequestsResponse() (response *DeleteMaliciousRequestsResponse) {
     response = &DeleteMaliciousRequestsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMaliciousRequests
@@ -2909,6 +2828,7 @@ func (c *Client) DeleteMaliciousRequestsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteMaliciousRequestsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMaliciousRequests")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMaliciousRequests require credential")
@@ -2935,8 +2855,9 @@ func NewDeleteMalwareScanTaskRequest() (request *DeleteMalwareScanTaskRequest) {
 func NewDeleteMalwareScanTaskResponse() (response *DeleteMalwareScanTaskResponse) {
     response = &DeleteMalwareScanTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMalwareScanTask
@@ -2969,6 +2890,7 @@ func (c *Client) DeleteMalwareScanTaskWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteMalwareScanTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMalwareScanTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMalwareScanTask require credential")
@@ -2995,8 +2917,9 @@ func NewDeleteMalwareWhiteListRequest() (request *DeleteMalwareWhiteListRequest)
 func NewDeleteMalwareWhiteListResponse() (response *DeleteMalwareWhiteListResponse) {
     response = &DeleteMalwareWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMalwareWhiteList
@@ -3035,6 +2958,7 @@ func (c *Client) DeleteMalwareWhiteListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteMalwareWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMalwareWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMalwareWhiteList require credential")
@@ -3061,8 +2985,9 @@ func NewDeleteMalwaresRequest() (request *DeleteMalwaresRequest) {
 func NewDeleteMalwaresResponse() (response *DeleteMalwaresResponse) {
     response = &DeleteMalwaresResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMalwares
@@ -3095,6 +3020,7 @@ func (c *Client) DeleteMalwaresWithContext(ctx context.Context, request *DeleteM
     if request == nil {
         request = NewDeleteMalwaresRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteMalwares")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMalwares require credential")
@@ -3121,8 +3047,9 @@ func NewDeleteNetAttackWhiteListRequest() (request *DeleteNetAttackWhiteListRequ
 func NewDeleteNetAttackWhiteListResponse() (response *DeleteNetAttackWhiteListResponse) {
     response = &DeleteNetAttackWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNetAttackWhiteList
@@ -3161,6 +3088,7 @@ func (c *Client) DeleteNetAttackWhiteListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteNetAttackWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteNetAttackWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNetAttackWhiteList require credential")
@@ -3187,8 +3115,9 @@ func NewDeleteNonlocalLoginPlacesRequest() (request *DeleteNonlocalLoginPlacesRe
 func NewDeleteNonlocalLoginPlacesResponse() (response *DeleteNonlocalLoginPlacesResponse) {
     response = &DeleteNonlocalLoginPlacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNonlocalLoginPlaces
@@ -3227,6 +3156,7 @@ func (c *Client) DeleteNonlocalLoginPlacesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteNonlocalLoginPlacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteNonlocalLoginPlaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNonlocalLoginPlaces require credential")
@@ -3253,8 +3183,9 @@ func NewDeletePrivilegeEventsRequest() (request *DeletePrivilegeEventsRequest) {
 func NewDeletePrivilegeEventsResponse() (response *DeletePrivilegeEventsResponse) {
     response = &DeletePrivilegeEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrivilegeEvents
@@ -3289,6 +3220,7 @@ func (c *Client) DeletePrivilegeEventsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeletePrivilegeEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeletePrivilegeEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePrivilegeEvents require credential")
@@ -3315,8 +3247,9 @@ func NewDeletePrivilegeRulesRequest() (request *DeletePrivilegeRulesRequest) {
 func NewDeletePrivilegeRulesResponse() (response *DeletePrivilegeRulesResponse) {
     response = &DeletePrivilegeRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrivilegeRules
@@ -3359,6 +3292,7 @@ func (c *Client) DeletePrivilegeRulesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeletePrivilegeRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeletePrivilegeRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePrivilegeRules require credential")
@@ -3385,8 +3319,9 @@ func NewDeleteProtectDirRequest() (request *DeleteProtectDirRequest) {
 func NewDeleteProtectDirResponse() (response *DeleteProtectDirResponse) {
     response = &DeleteProtectDirResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteProtectDir
@@ -3425,6 +3360,7 @@ func (c *Client) DeleteProtectDirWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteProtectDirRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteProtectDir")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteProtectDir require credential")
@@ -3433,6 +3369,80 @@ func (c *Client) DeleteProtectDirWithContext(ctx context.Context, request *Delet
     request.SetContext(ctx)
     
     response = NewDeleteProtectDirResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRaspRulesRequest() (request *DeleteRaspRulesRequest) {
+    request = &DeleteRaspRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cwp", APIVersion, "DeleteRaspRules")
+    
+    
+    return
+}
+
+func NewDeleteRaspRulesResponse() (response *DeleteRaspRulesResponse) {
+    response = &DeleteRaspRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRaspRules
+// 删除漏洞防御白名单
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETER_REVERSHELLKEYFIELDALLEMPTY = "InvalidParameter.ReverShellKeyFieldAllEmpty"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteRaspRules(request *DeleteRaspRulesRequest) (response *DeleteRaspRulesResponse, err error) {
+    return c.DeleteRaspRulesWithContext(context.Background(), request)
+}
+
+// DeleteRaspRules
+// 删除漏洞防御白名单
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETER_REVERSHELLKEYFIELDALLEMPTY = "InvalidParameter.ReverShellKeyFieldAllEmpty"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteRaspRulesWithContext(ctx context.Context, request *DeleteRaspRulesRequest) (response *DeleteRaspRulesResponse, err error) {
+    if request == nil {
+        request = NewDeleteRaspRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteRaspRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRaspRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRaspRulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -3451,8 +3461,9 @@ func NewDeleteReverseShellEventsRequest() (request *DeleteReverseShellEventsRequ
 func NewDeleteReverseShellEventsResponse() (response *DeleteReverseShellEventsResponse) {
     response = &DeleteReverseShellEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteReverseShellEvents
@@ -3489,6 +3500,7 @@ func (c *Client) DeleteReverseShellEventsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteReverseShellEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteReverseShellEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteReverseShellEvents require credential")
@@ -3515,8 +3527,9 @@ func NewDeleteReverseShellRulesRequest() (request *DeleteReverseShellRulesReques
 func NewDeleteReverseShellRulesResponse() (response *DeleteReverseShellRulesResponse) {
     response = &DeleteReverseShellRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteReverseShellRules
@@ -3561,6 +3574,7 @@ func (c *Client) DeleteReverseShellRulesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteReverseShellRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteReverseShellRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteReverseShellRules require credential")
@@ -3587,8 +3601,9 @@ func NewDeleteRiskDnsEventRequest() (request *DeleteRiskDnsEventRequest) {
 func NewDeleteRiskDnsEventResponse() (response *DeleteRiskDnsEventResponse) {
     response = &DeleteRiskDnsEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRiskDnsEvent
@@ -3611,6 +3626,7 @@ func (c *Client) DeleteRiskDnsEventWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteRiskDnsEventRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteRiskDnsEvent")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRiskDnsEvent require credential")
@@ -3637,8 +3653,9 @@ func NewDeleteRiskDnsPolicyRequest() (request *DeleteRiskDnsPolicyRequest) {
 func NewDeleteRiskDnsPolicyResponse() (response *DeleteRiskDnsPolicyResponse) {
     response = &DeleteRiskDnsPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRiskDnsPolicy
@@ -3659,6 +3676,7 @@ func (c *Client) DeleteRiskDnsPolicyWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteRiskDnsPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteRiskDnsPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRiskDnsPolicy require credential")
@@ -3685,8 +3703,9 @@ func NewDeleteScanTaskRequest() (request *DeleteScanTaskRequest) {
 func NewDeleteScanTaskResponse() (response *DeleteScanTaskResponse) {
     response = &DeleteScanTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteScanTask
@@ -3727,6 +3746,7 @@ func (c *Client) DeleteScanTaskWithContext(ctx context.Context, request *DeleteS
     if request == nil {
         request = NewDeleteScanTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteScanTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteScanTask require credential")
@@ -3753,8 +3773,9 @@ func NewDeleteSearchTemplateRequest() (request *DeleteSearchTemplateRequest) {
 func NewDeleteSearchTemplateResponse() (response *DeleteSearchTemplateResponse) {
     response = &DeleteSearchTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSearchTemplate
@@ -3783,6 +3804,7 @@ func (c *Client) DeleteSearchTemplateWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteSearchTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteSearchTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSearchTemplate require credential")
@@ -3809,8 +3831,9 @@ func NewDeleteTagsRequest() (request *DeleteTagsRequest) {
 func NewDeleteTagsResponse() (response *DeleteTagsResponse) {
     response = &DeleteTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTags
@@ -3839,6 +3862,7 @@ func (c *Client) DeleteTagsWithContext(ctx context.Context, request *DeleteTagsR
     if request == nil {
         request = NewDeleteTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTags require credential")
@@ -3865,8 +3889,9 @@ func NewDeleteWebHookPolicyRequest() (request *DeleteWebHookPolicyRequest) {
 func NewDeleteWebHookPolicyResponse() (response *DeleteWebHookPolicyResponse) {
     response = &DeleteWebHookPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWebHookPolicy
@@ -3895,6 +3920,7 @@ func (c *Client) DeleteWebHookPolicyWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteWebHookPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteWebHookPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWebHookPolicy require credential")
@@ -3921,8 +3947,9 @@ func NewDeleteWebHookReceiverRequest() (request *DeleteWebHookReceiverRequest) {
 func NewDeleteWebHookReceiverResponse() (response *DeleteWebHookReceiverResponse) {
     response = &DeleteWebHookReceiverResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWebHookReceiver
@@ -3951,6 +3978,7 @@ func (c *Client) DeleteWebHookReceiverWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteWebHookReceiverRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteWebHookReceiver")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWebHookReceiver require credential")
@@ -3977,8 +4005,9 @@ func NewDeleteWebHookRuleRequest() (request *DeleteWebHookRuleRequest) {
 func NewDeleteWebHookRuleResponse() (response *DeleteWebHookRuleResponse) {
     response = &DeleteWebHookRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWebHookRule
@@ -4001,6 +4030,7 @@ func (c *Client) DeleteWebHookRuleWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteWebHookRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteWebHookRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWebHookRule require credential")
@@ -4027,8 +4057,9 @@ func NewDeleteWebPageEventLogRequest() (request *DeleteWebPageEventLogRequest) {
 func NewDeleteWebPageEventLogResponse() (response *DeleteWebPageEventLogResponse) {
     response = &DeleteWebPageEventLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWebPageEventLog
@@ -4059,6 +4090,7 @@ func (c *Client) DeleteWebPageEventLogWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteWebPageEventLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DeleteWebPageEventLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWebPageEventLog require credential")
@@ -4085,8 +4117,9 @@ func NewDescribeABTestConfigRequest() (request *DescribeABTestConfigRequest) {
 func NewDescribeABTestConfigResponse() (response *DescribeABTestConfigResponse) {
     response = &DescribeABTestConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeABTestConfig
@@ -4107,6 +4140,7 @@ func (c *Client) DescribeABTestConfigWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeABTestConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeABTestConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeABTestConfig require credential")
@@ -4133,8 +4167,9 @@ func NewDescribeAESKeyRequest() (request *DescribeAESKeyRequest) {
 func NewDescribeAESKeyResponse() (response *DescribeAESKeyResponse) {
     response = &DescribeAESKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAESKey
@@ -4155,6 +4190,7 @@ func (c *Client) DescribeAESKeyWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeAESKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAESKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAESKey require credential")
@@ -4181,12 +4217,13 @@ func NewDescribeAccountStatisticsRequest() (request *DescribeAccountStatisticsRe
 func NewDescribeAccountStatisticsResponse() (response *DescribeAccountStatisticsResponse) {
     response = &DescribeAccountStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountStatistics
-// 本接口 (DescribeAccountStatistics) 用于获取帐号统计列表数据。
+// 本接口 (DescribeAccountStatistics) 用于获取账号统计列表数据。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -4201,7 +4238,7 @@ func (c *Client) DescribeAccountStatistics(request *DescribeAccountStatisticsReq
 }
 
 // DescribeAccountStatistics
-// 本接口 (DescribeAccountStatistics) 用于获取帐号统计列表数据。
+// 本接口 (DescribeAccountStatistics) 用于获取账号统计列表数据。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -4215,6 +4252,7 @@ func (c *Client) DescribeAccountStatisticsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAccountStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAccountStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccountStatistics require credential")
@@ -4241,8 +4279,9 @@ func NewDescribeAgentInstallCommandRequest() (request *DescribeAgentInstallComma
 func NewDescribeAgentInstallCommandResponse() (response *DescribeAgentInstallCommandResponse) {
     response = &DescribeAgentInstallCommandResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAgentInstallCommand
@@ -4269,6 +4308,7 @@ func (c *Client) DescribeAgentInstallCommandWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeAgentInstallCommandRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAgentInstallCommand")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAgentInstallCommand require credential")
@@ -4295,8 +4335,9 @@ func NewDescribeAgentInstallationTokenRequest() (request *DescribeAgentInstallat
 func NewDescribeAgentInstallationTokenResponse() (response *DescribeAgentInstallationTokenResponse) {
     response = &DescribeAgentInstallationTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAgentInstallationToken
@@ -4325,6 +4366,7 @@ func (c *Client) DescribeAgentInstallationTokenWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeAgentInstallationTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAgentInstallationToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAgentInstallationToken require credential")
@@ -4351,8 +4393,9 @@ func NewDescribeAlarmIncidentNodesRequest() (request *DescribeAlarmIncidentNodes
 func NewDescribeAlarmIncidentNodesResponse() (response *DescribeAlarmIncidentNodesResponse) {
     response = &DescribeAlarmIncidentNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmIncidentNodes
@@ -4381,6 +4424,7 @@ func (c *Client) DescribeAlarmIncidentNodesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeAlarmIncidentNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAlarmIncidentNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAlarmIncidentNodes require credential")
@@ -4407,8 +4451,9 @@ func NewDescribeAlarmVertexIdRequest() (request *DescribeAlarmVertexIdRequest) {
 func NewDescribeAlarmVertexIdResponse() (response *DescribeAlarmVertexIdResponse) {
     response = &DescribeAlarmVertexIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmVertexId
@@ -4437,6 +4482,7 @@ func (c *Client) DescribeAlarmVertexIdWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAlarmVertexIdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAlarmVertexId")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAlarmVertexId require credential")
@@ -4463,8 +4509,9 @@ func NewDescribeAssetAppCountRequest() (request *DescribeAssetAppCountRequest) {
 func NewDescribeAssetAppCountResponse() (response *DescribeAssetAppCountResponse) {
     response = &DescribeAssetAppCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetAppCount
@@ -4491,6 +4538,7 @@ func (c *Client) DescribeAssetAppCountWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAssetAppCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetAppCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetAppCount require credential")
@@ -4517,8 +4565,9 @@ func NewDescribeAssetAppListRequest() (request *DescribeAssetAppListRequest) {
 func NewDescribeAssetAppListResponse() (response *DescribeAssetAppListResponse) {
     response = &DescribeAssetAppListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetAppList
@@ -4553,6 +4602,7 @@ func (c *Client) DescribeAssetAppListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAssetAppListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetAppList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetAppList require credential")
@@ -4579,8 +4629,9 @@ func NewDescribeAssetAppProcessListRequest() (request *DescribeAssetAppProcessLi
 func NewDescribeAssetAppProcessListResponse() (response *DescribeAssetAppProcessListResponse) {
     response = &DescribeAssetAppProcessListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetAppProcessList
@@ -4607,6 +4658,7 @@ func (c *Client) DescribeAssetAppProcessListWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeAssetAppProcessListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetAppProcessList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetAppProcessList require credential")
@@ -4633,8 +4685,9 @@ func NewDescribeAssetCoreModuleInfoRequest() (request *DescribeAssetCoreModuleIn
 func NewDescribeAssetCoreModuleInfoResponse() (response *DescribeAssetCoreModuleInfoResponse) {
     response = &DescribeAssetCoreModuleInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetCoreModuleInfo
@@ -4661,6 +4714,7 @@ func (c *Client) DescribeAssetCoreModuleInfoWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeAssetCoreModuleInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetCoreModuleInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetCoreModuleInfo require credential")
@@ -4687,8 +4741,9 @@ func NewDescribeAssetCoreModuleListRequest() (request *DescribeAssetCoreModuleLi
 func NewDescribeAssetCoreModuleListResponse() (response *DescribeAssetCoreModuleListResponse) {
     response = &DescribeAssetCoreModuleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetCoreModuleList
@@ -4723,6 +4778,7 @@ func (c *Client) DescribeAssetCoreModuleListWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeAssetCoreModuleListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetCoreModuleList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetCoreModuleList require credential")
@@ -4749,8 +4805,9 @@ func NewDescribeAssetDatabaseCountRequest() (request *DescribeAssetDatabaseCount
 func NewDescribeAssetDatabaseCountResponse() (response *DescribeAssetDatabaseCountResponse) {
     response = &DescribeAssetDatabaseCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetDatabaseCount
@@ -4777,6 +4834,7 @@ func (c *Client) DescribeAssetDatabaseCountWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeAssetDatabaseCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetDatabaseCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetDatabaseCount require credential")
@@ -4803,8 +4861,9 @@ func NewDescribeAssetDatabaseInfoRequest() (request *DescribeAssetDatabaseInfoRe
 func NewDescribeAssetDatabaseInfoResponse() (response *DescribeAssetDatabaseInfoResponse) {
     response = &DescribeAssetDatabaseInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetDatabaseInfo
@@ -4815,6 +4874,7 @@ func NewDescribeAssetDatabaseInfoResponse() (response *DescribeAssetDatabaseInfo
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAssetDatabaseInfo(request *DescribeAssetDatabaseInfoRequest) (response *DescribeAssetDatabaseInfoResponse, err error) {
     return c.DescribeAssetDatabaseInfoWithContext(context.Background(), request)
 }
@@ -4827,10 +4887,12 @@ func (c *Client) DescribeAssetDatabaseInfo(request *DescribeAssetDatabaseInfoReq
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAssetDatabaseInfoWithContext(ctx context.Context, request *DescribeAssetDatabaseInfoRequest) (response *DescribeAssetDatabaseInfoResponse, err error) {
     if request == nil {
         request = NewDescribeAssetDatabaseInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetDatabaseInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetDatabaseInfo require credential")
@@ -4857,8 +4919,9 @@ func NewDescribeAssetDatabaseListRequest() (request *DescribeAssetDatabaseListRe
 func NewDescribeAssetDatabaseListResponse() (response *DescribeAssetDatabaseListResponse) {
     response = &DescribeAssetDatabaseListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetDatabaseList
@@ -4893,6 +4956,7 @@ func (c *Client) DescribeAssetDatabaseListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAssetDatabaseListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetDatabaseList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetDatabaseList require credential")
@@ -4919,8 +4983,9 @@ func NewDescribeAssetDiskListRequest() (request *DescribeAssetDiskListRequest) {
 func NewDescribeAssetDiskListResponse() (response *DescribeAssetDiskListResponse) {
     response = &DescribeAssetDiskListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetDiskList
@@ -4947,6 +5012,7 @@ func (c *Client) DescribeAssetDiskListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAssetDiskListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetDiskList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetDiskList require credential")
@@ -4973,8 +5039,9 @@ func NewDescribeAssetEnvListRequest() (request *DescribeAssetEnvListRequest) {
 func NewDescribeAssetEnvListResponse() (response *DescribeAssetEnvListResponse) {
     response = &DescribeAssetEnvListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetEnvList
@@ -5009,6 +5076,7 @@ func (c *Client) DescribeAssetEnvListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAssetEnvListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetEnvList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetEnvList require credential")
@@ -5035,8 +5103,9 @@ func NewDescribeAssetHostTotalCountRequest() (request *DescribeAssetHostTotalCou
 func NewDescribeAssetHostTotalCountResponse() (response *DescribeAssetHostTotalCountResponse) {
     response = &DescribeAssetHostTotalCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetHostTotalCount
@@ -5063,6 +5132,7 @@ func (c *Client) DescribeAssetHostTotalCountWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeAssetHostTotalCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetHostTotalCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetHostTotalCount require credential")
@@ -5089,8 +5159,9 @@ func NewDescribeAssetInfoRequest() (request *DescribeAssetInfoRequest) {
 func NewDescribeAssetInfoResponse() (response *DescribeAssetInfoResponse) {
     response = &DescribeAssetInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetInfo
@@ -5117,6 +5188,7 @@ func (c *Client) DescribeAssetInfoWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeAssetInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetInfo require credential")
@@ -5143,8 +5215,9 @@ func NewDescribeAssetInitServiceListRequest() (request *DescribeAssetInitService
 func NewDescribeAssetInitServiceListResponse() (response *DescribeAssetInitServiceListResponse) {
     response = &DescribeAssetInitServiceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetInitServiceList
@@ -5173,6 +5246,7 @@ func (c *Client) DescribeAssetInitServiceListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeAssetInitServiceListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetInitServiceList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetInitServiceList require credential")
@@ -5199,8 +5273,9 @@ func NewDescribeAssetJarInfoRequest() (request *DescribeAssetJarInfoRequest) {
 func NewDescribeAssetJarInfoResponse() (response *DescribeAssetJarInfoResponse) {
     response = &DescribeAssetJarInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetJarInfo
@@ -5227,6 +5302,7 @@ func (c *Client) DescribeAssetJarInfoWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAssetJarInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetJarInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetJarInfo require credential")
@@ -5253,8 +5329,9 @@ func NewDescribeAssetJarListRequest() (request *DescribeAssetJarListRequest) {
 func NewDescribeAssetJarListResponse() (response *DescribeAssetJarListResponse) {
     response = &DescribeAssetJarListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetJarList
@@ -5289,6 +5366,7 @@ func (c *Client) DescribeAssetJarListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAssetJarListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetJarList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetJarList require credential")
@@ -5315,8 +5393,9 @@ func NewDescribeAssetLoadInfoRequest() (request *DescribeAssetLoadInfoRequest) {
 func NewDescribeAssetLoadInfoResponse() (response *DescribeAssetLoadInfoResponse) {
     response = &DescribeAssetLoadInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetLoadInfo
@@ -5341,6 +5420,7 @@ func (c *Client) DescribeAssetLoadInfoWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAssetLoadInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetLoadInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetLoadInfo require credential")
@@ -5367,8 +5447,9 @@ func NewDescribeAssetMachineDetailRequest() (request *DescribeAssetMachineDetail
 func NewDescribeAssetMachineDetailResponse() (response *DescribeAssetMachineDetailResponse) {
     response = &DescribeAssetMachineDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetMachineDetail
@@ -5395,6 +5476,7 @@ func (c *Client) DescribeAssetMachineDetailWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeAssetMachineDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetMachineDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetMachineDetail require credential")
@@ -5421,8 +5503,9 @@ func NewDescribeAssetMachineListRequest() (request *DescribeAssetMachineListRequ
 func NewDescribeAssetMachineListResponse() (response *DescribeAssetMachineListResponse) {
     response = &DescribeAssetMachineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetMachineList
@@ -5451,6 +5534,7 @@ func (c *Client) DescribeAssetMachineListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeAssetMachineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetMachineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetMachineList require credential")
@@ -5477,8 +5561,9 @@ func NewDescribeAssetMachineTagTopRequest() (request *DescribeAssetMachineTagTop
 func NewDescribeAssetMachineTagTopResponse() (response *DescribeAssetMachineTagTopResponse) {
     response = &DescribeAssetMachineTagTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetMachineTagTop
@@ -5503,6 +5588,7 @@ func (c *Client) DescribeAssetMachineTagTopWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeAssetMachineTagTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetMachineTagTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetMachineTagTop require credential")
@@ -5529,8 +5615,9 @@ func NewDescribeAssetPlanTaskListRequest() (request *DescribeAssetPlanTaskListRe
 func NewDescribeAssetPlanTaskListResponse() (response *DescribeAssetPlanTaskListResponse) {
     response = &DescribeAssetPlanTaskListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetPlanTaskList
@@ -5565,6 +5652,7 @@ func (c *Client) DescribeAssetPlanTaskListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAssetPlanTaskListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetPlanTaskList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetPlanTaskList require credential")
@@ -5591,8 +5679,9 @@ func NewDescribeAssetPortCountRequest() (request *DescribeAssetPortCountRequest)
 func NewDescribeAssetPortCountResponse() (response *DescribeAssetPortCountResponse) {
     response = &DescribeAssetPortCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetPortCount
@@ -5619,6 +5708,7 @@ func (c *Client) DescribeAssetPortCountWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeAssetPortCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetPortCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetPortCount require credential")
@@ -5645,8 +5735,9 @@ func NewDescribeAssetPortInfoListRequest() (request *DescribeAssetPortInfoListRe
 func NewDescribeAssetPortInfoListResponse() (response *DescribeAssetPortInfoListResponse) {
     response = &DescribeAssetPortInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetPortInfoList
@@ -5675,6 +5766,7 @@ func (c *Client) DescribeAssetPortInfoListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAssetPortInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetPortInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetPortInfoList require credential")
@@ -5701,8 +5793,9 @@ func NewDescribeAssetProcessCountRequest() (request *DescribeAssetProcessCountRe
 func NewDescribeAssetProcessCountResponse() (response *DescribeAssetProcessCountResponse) {
     response = &DescribeAssetProcessCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetProcessCount
@@ -5729,6 +5822,7 @@ func (c *Client) DescribeAssetProcessCountWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAssetProcessCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetProcessCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetProcessCount require credential")
@@ -5755,8 +5849,9 @@ func NewDescribeAssetProcessInfoListRequest() (request *DescribeAssetProcessInfo
 func NewDescribeAssetProcessInfoListResponse() (response *DescribeAssetProcessInfoListResponse) {
     response = &DescribeAssetProcessInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetProcessInfoList
@@ -5785,6 +5880,7 @@ func (c *Client) DescribeAssetProcessInfoListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeAssetProcessInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetProcessInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetProcessInfoList require credential")
@@ -5811,14 +5907,16 @@ func NewDescribeAssetRecentMachineInfoRequest() (request *DescribeAssetRecentMac
 func NewDescribeAssetRecentMachineInfoResponse() (response *DescribeAssetRecentMachineInfoResponse) {
     response = &DescribeAssetRecentMachineInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetRecentMachineInfo
 // 获取主机最近趋势情况
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
@@ -5834,6 +5932,7 @@ func (c *Client) DescribeAssetRecentMachineInfo(request *DescribeAssetRecentMach
 // 获取主机最近趋势情况
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
@@ -5845,6 +5944,7 @@ func (c *Client) DescribeAssetRecentMachineInfoWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeAssetRecentMachineInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetRecentMachineInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetRecentMachineInfo require credential")
@@ -5871,8 +5971,9 @@ func NewDescribeAssetSystemPackageListRequest() (request *DescribeAssetSystemPac
 func NewDescribeAssetSystemPackageListResponse() (response *DescribeAssetSystemPackageListResponse) {
     response = &DescribeAssetSystemPackageListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetSystemPackageList
@@ -5899,6 +6000,7 @@ func (c *Client) DescribeAssetSystemPackageListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeAssetSystemPackageListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetSystemPackageList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetSystemPackageList require credential")
@@ -5925,8 +6027,9 @@ func NewDescribeAssetTotalCountRequest() (request *DescribeAssetTotalCountReques
 func NewDescribeAssetTotalCountResponse() (response *DescribeAssetTotalCountResponse) {
     response = &DescribeAssetTotalCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetTotalCount
@@ -5955,6 +6058,7 @@ func (c *Client) DescribeAssetTotalCountWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeAssetTotalCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetTotalCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetTotalCount require credential")
@@ -5981,8 +6085,9 @@ func NewDescribeAssetTypeTopRequest() (request *DescribeAssetTypeTopRequest) {
 func NewDescribeAssetTypeTopResponse() (response *DescribeAssetTypeTopResponse) {
     response = &DescribeAssetTypeTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetTypeTop
@@ -6007,6 +6112,7 @@ func (c *Client) DescribeAssetTypeTopWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAssetTypeTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetTypeTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetTypeTop require credential")
@@ -6033,8 +6139,9 @@ func NewDescribeAssetTypesRequest() (request *DescribeAssetTypesRequest) {
 func NewDescribeAssetTypesResponse() (response *DescribeAssetTypesResponse) {
     response = &DescribeAssetTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetTypes
@@ -6059,6 +6166,7 @@ func (c *Client) DescribeAssetTypesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeAssetTypesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetTypes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetTypes require credential")
@@ -6085,8 +6193,9 @@ func NewDescribeAssetUserCountRequest() (request *DescribeAssetUserCountRequest)
 func NewDescribeAssetUserCountResponse() (response *DescribeAssetUserCountResponse) {
     response = &DescribeAssetUserCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetUserCount
@@ -6111,6 +6220,7 @@ func (c *Client) DescribeAssetUserCountWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeAssetUserCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetUserCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetUserCount require credential")
@@ -6137,8 +6247,9 @@ func NewDescribeAssetUserInfoRequest() (request *DescribeAssetUserInfoRequest) {
 func NewDescribeAssetUserInfoResponse() (response *DescribeAssetUserInfoResponse) {
     response = &DescribeAssetUserInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetUserInfo
@@ -6163,6 +6274,7 @@ func (c *Client) DescribeAssetUserInfoWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAssetUserInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetUserInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetUserInfo require credential")
@@ -6189,8 +6301,9 @@ func NewDescribeAssetUserKeyListRequest() (request *DescribeAssetUserKeyListRequ
 func NewDescribeAssetUserKeyListResponse() (response *DescribeAssetUserKeyListResponse) {
     response = &DescribeAssetUserKeyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetUserKeyList
@@ -6219,6 +6332,7 @@ func (c *Client) DescribeAssetUserKeyListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeAssetUserKeyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetUserKeyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetUserKeyList require credential")
@@ -6245,8 +6359,9 @@ func NewDescribeAssetUserListRequest() (request *DescribeAssetUserListRequest) {
 func NewDescribeAssetUserListResponse() (response *DescribeAssetUserListResponse) {
     response = &DescribeAssetUserListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetUserList
@@ -6275,6 +6390,7 @@ func (c *Client) DescribeAssetUserListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAssetUserListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetUserList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetUserList require credential")
@@ -6301,8 +6417,9 @@ func NewDescribeAssetWebAppCountRequest() (request *DescribeAssetWebAppCountRequ
 func NewDescribeAssetWebAppCountResponse() (response *DescribeAssetWebAppCountResponse) {
     response = &DescribeAssetWebAppCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebAppCount
@@ -6329,6 +6446,7 @@ func (c *Client) DescribeAssetWebAppCountWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeAssetWebAppCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebAppCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebAppCount require credential")
@@ -6355,8 +6473,9 @@ func NewDescribeAssetWebAppListRequest() (request *DescribeAssetWebAppListReques
 func NewDescribeAssetWebAppListResponse() (response *DescribeAssetWebAppListResponse) {
     response = &DescribeAssetWebAppListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebAppList
@@ -6385,6 +6504,7 @@ func (c *Client) DescribeAssetWebAppListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeAssetWebAppListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebAppList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebAppList require credential")
@@ -6411,8 +6531,9 @@ func NewDescribeAssetWebAppPluginListRequest() (request *DescribeAssetWebAppPlug
 func NewDescribeAssetWebAppPluginListResponse() (response *DescribeAssetWebAppPluginListResponse) {
     response = &DescribeAssetWebAppPluginListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebAppPluginList
@@ -6439,6 +6560,7 @@ func (c *Client) DescribeAssetWebAppPluginListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeAssetWebAppPluginListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebAppPluginList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebAppPluginList require credential")
@@ -6465,8 +6587,9 @@ func NewDescribeAssetWebFrameCountRequest() (request *DescribeAssetWebFrameCount
 func NewDescribeAssetWebFrameCountResponse() (response *DescribeAssetWebFrameCountResponse) {
     response = &DescribeAssetWebFrameCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebFrameCount
@@ -6493,6 +6616,7 @@ func (c *Client) DescribeAssetWebFrameCountWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeAssetWebFrameCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebFrameCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebFrameCount require credential")
@@ -6519,8 +6643,9 @@ func NewDescribeAssetWebFrameListRequest() (request *DescribeAssetWebFrameListRe
 func NewDescribeAssetWebFrameListResponse() (response *DescribeAssetWebFrameListResponse) {
     response = &DescribeAssetWebFrameListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebFrameList
@@ -6547,6 +6672,7 @@ func (c *Client) DescribeAssetWebFrameListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAssetWebFrameListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebFrameList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebFrameList require credential")
@@ -6573,8 +6699,9 @@ func NewDescribeAssetWebLocationCountRequest() (request *DescribeAssetWebLocatio
 func NewDescribeAssetWebLocationCountResponse() (response *DescribeAssetWebLocationCountResponse) {
     response = &DescribeAssetWebLocationCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebLocationCount
@@ -6601,6 +6728,7 @@ func (c *Client) DescribeAssetWebLocationCountWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeAssetWebLocationCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebLocationCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebLocationCount require credential")
@@ -6627,8 +6755,9 @@ func NewDescribeAssetWebLocationInfoRequest() (request *DescribeAssetWebLocation
 func NewDescribeAssetWebLocationInfoResponse() (response *DescribeAssetWebLocationInfoResponse) {
     response = &DescribeAssetWebLocationInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebLocationInfo
@@ -6655,6 +6784,7 @@ func (c *Client) DescribeAssetWebLocationInfoWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeAssetWebLocationInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebLocationInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebLocationInfo require credential")
@@ -6681,8 +6811,9 @@ func NewDescribeAssetWebLocationListRequest() (request *DescribeAssetWebLocation
 func NewDescribeAssetWebLocationListResponse() (response *DescribeAssetWebLocationListResponse) {
     response = &DescribeAssetWebLocationListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebLocationList
@@ -6709,6 +6840,7 @@ func (c *Client) DescribeAssetWebLocationListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeAssetWebLocationListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebLocationList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebLocationList require credential")
@@ -6735,8 +6867,9 @@ func NewDescribeAssetWebLocationPathListRequest() (request *DescribeAssetWebLoca
 func NewDescribeAssetWebLocationPathListResponse() (response *DescribeAssetWebLocationPathListResponse) {
     response = &DescribeAssetWebLocationPathListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebLocationPathList
@@ -6763,6 +6896,7 @@ func (c *Client) DescribeAssetWebLocationPathListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeAssetWebLocationPathListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebLocationPathList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebLocationPathList require credential")
@@ -6789,8 +6923,9 @@ func NewDescribeAssetWebServiceCountRequest() (request *DescribeAssetWebServiceC
 func NewDescribeAssetWebServiceCountResponse() (response *DescribeAssetWebServiceCountResponse) {
     response = &DescribeAssetWebServiceCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebServiceCount
@@ -6817,6 +6952,7 @@ func (c *Client) DescribeAssetWebServiceCountWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeAssetWebServiceCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebServiceCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebServiceCount require credential")
@@ -6843,8 +6979,9 @@ func NewDescribeAssetWebServiceInfoListRequest() (request *DescribeAssetWebServi
 func NewDescribeAssetWebServiceInfoListResponse() (response *DescribeAssetWebServiceInfoListResponse) {
     response = &DescribeAssetWebServiceInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebServiceInfoList
@@ -6879,6 +7016,7 @@ func (c *Client) DescribeAssetWebServiceInfoListWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeAssetWebServiceInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebServiceInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebServiceInfoList require credential")
@@ -6905,8 +7043,9 @@ func NewDescribeAssetWebServiceProcessListRequest() (request *DescribeAssetWebSe
 func NewDescribeAssetWebServiceProcessListResponse() (response *DescribeAssetWebServiceProcessListResponse) {
     response = &DescribeAssetWebServiceProcessListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAssetWebServiceProcessList
@@ -6933,6 +7072,7 @@ func (c *Client) DescribeAssetWebServiceProcessListWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeAssetWebServiceProcessListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAssetWebServiceProcessList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAssetWebServiceProcessList require credential")
@@ -6959,8 +7099,9 @@ func NewDescribeAttackEventInfoRequest() (request *DescribeAttackEventInfoReques
 func NewDescribeAttackEventInfoResponse() (response *DescribeAttackEventInfoResponse) {
     response = &DescribeAttackEventInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAttackEventInfo
@@ -6981,6 +7122,7 @@ func (c *Client) DescribeAttackEventInfoWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeAttackEventInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAttackEventInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAttackEventInfo require credential")
@@ -7007,8 +7149,9 @@ func NewDescribeAttackEventsRequest() (request *DescribeAttackEventsRequest) {
 func NewDescribeAttackEventsResponse() (response *DescribeAttackEventsResponse) {
     response = &DescribeAttackEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAttackEvents
@@ -7043,6 +7186,7 @@ func (c *Client) DescribeAttackEventsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAttackEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAttackEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAttackEvents require credential")
@@ -7051,266 +7195,6 @@ func (c *Client) DescribeAttackEventsWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeAttackEventsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeAttackLogInfoRequest() (request *DescribeAttackLogInfoRequest) {
-    request = &DescribeAttackLogInfoRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeAttackLogInfo")
-    
-    
-    return
-}
-
-func NewDescribeAttackLogInfoResponse() (response *DescribeAttackLogInfoResponse) {
-    response = &DescribeAttackLogInfoResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeAttackLogInfo
-// 网络攻击日志详情
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackLogInfo(request *DescribeAttackLogInfoRequest) (response *DescribeAttackLogInfoResponse, err error) {
-    return c.DescribeAttackLogInfoWithContext(context.Background(), request)
-}
-
-// DescribeAttackLogInfo
-// 网络攻击日志详情
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackLogInfoWithContext(ctx context.Context, request *DescribeAttackLogInfoRequest) (response *DescribeAttackLogInfoResponse, err error) {
-    if request == nil {
-        request = NewDescribeAttackLogInfoRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAttackLogInfo require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeAttackLogInfoResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeAttackLogsRequest() (request *DescribeAttackLogsRequest) {
-    request = &DescribeAttackLogsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeAttackLogs")
-    
-    
-    return
-}
-
-func NewDescribeAttackLogsResponse() (response *DescribeAttackLogsResponse) {
-    response = &DescribeAttackLogsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeAttackLogs
-// 按分页形式展示网络攻击日志列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackLogs(request *DescribeAttackLogsRequest) (response *DescribeAttackLogsResponse, err error) {
-    return c.DescribeAttackLogsWithContext(context.Background(), request)
-}
-
-// DescribeAttackLogs
-// 按分页形式展示网络攻击日志列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackLogsWithContext(ctx context.Context, request *DescribeAttackLogsRequest) (response *DescribeAttackLogsResponse, err error) {
-    if request == nil {
-        request = NewDescribeAttackLogsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAttackLogs require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeAttackLogsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeAttackSourceRequest() (request *DescribeAttackSourceRequest) {
-    request = &DescribeAttackSourceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeAttackSource")
-    
-    
-    return
-}
-
-func NewDescribeAttackSourceResponse() (response *DescribeAttackSourceResponse) {
-    response = &DescribeAttackSourceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeAttackSource
-// 查询攻击溯源
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackSource(request *DescribeAttackSourceRequest) (response *DescribeAttackSourceResponse, err error) {
-    return c.DescribeAttackSourceWithContext(context.Background(), request)
-}
-
-// DescribeAttackSource
-// 查询攻击溯源
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackSourceWithContext(ctx context.Context, request *DescribeAttackSourceRequest) (response *DescribeAttackSourceResponse, err error) {
-    if request == nil {
-        request = NewDescribeAttackSourceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAttackSource require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeAttackSourceResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeAttackSourceEventsRequest() (request *DescribeAttackSourceEventsRequest) {
-    request = &DescribeAttackSourceEventsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeAttackSourceEvents")
-    
-    
-    return
-}
-
-func NewDescribeAttackSourceEventsResponse() (response *DescribeAttackSourceEventsResponse) {
-    response = &DescribeAttackSourceEventsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeAttackSourceEvents
-// 查询攻击溯源事件
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackSourceEvents(request *DescribeAttackSourceEventsRequest) (response *DescribeAttackSourceEventsResponse, err error) {
-    return c.DescribeAttackSourceEventsWithContext(context.Background(), request)
-}
-
-// DescribeAttackSourceEvents
-// 查询攻击溯源事件
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeAttackSourceEventsWithContext(ctx context.Context, request *DescribeAttackSourceEventsRequest) (response *DescribeAttackSourceEventsResponse, err error) {
-    if request == nil {
-        request = NewDescribeAttackSourceEventsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAttackSourceEvents require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeAttackSourceEventsResponse()
     err = c.Send(request, response)
     return
 }
@@ -7329,24 +7213,22 @@ func NewDescribeAttackStatisticsRequest() (request *DescribeAttackStatisticsRequ
 func NewDescribeAttackStatisticsResponse() (response *DescribeAttackStatisticsResponse) {
     response = &DescribeAttackStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAttackStatistics
 // 网络攻击数据统计
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
 //  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAttackStatistics(request *DescribeAttackStatisticsRequest) (response *DescribeAttackStatisticsResponse, err error) {
     return c.DescribeAttackStatisticsWithContext(context.Background(), request)
@@ -7356,21 +7238,19 @@ func (c *Client) DescribeAttackStatistics(request *DescribeAttackStatisticsReque
 // 网络攻击数据统计
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
 //  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAttackStatisticsWithContext(ctx context.Context, request *DescribeAttackStatisticsRequest) (response *DescribeAttackStatisticsResponse, err error) {
     if request == nil {
         request = NewDescribeAttackStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAttackStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAttackStatistics require credential")
@@ -7397,24 +7277,22 @@ func NewDescribeAttackTopRequest() (request *DescribeAttackTopRequest) {
 func NewDescribeAttackTopResponse() (response *DescribeAttackTopResponse) {
     response = &DescribeAttackTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAttackTop
 // 网络攻击top5数据列表
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
 //  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAttackTop(request *DescribeAttackTopRequest) (response *DescribeAttackTopResponse, err error) {
     return c.DescribeAttackTopWithContext(context.Background(), request)
@@ -7424,21 +7302,19 @@ func (c *Client) DescribeAttackTop(request *DescribeAttackTopRequest) (response 
 // 网络攻击top5数据列表
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
 //  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAttackTopWithContext(ctx context.Context, request *DescribeAttackTopRequest) (response *DescribeAttackTopResponse, err error) {
     if request == nil {
         request = NewDescribeAttackTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAttackTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAttackTop require credential")
@@ -7465,24 +7341,22 @@ func NewDescribeAttackTrendsRequest() (request *DescribeAttackTrendsRequest) {
 func NewDescribeAttackTrendsResponse() (response *DescribeAttackTrendsResponse) {
     response = &DescribeAttackTrendsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAttackTrends
 // 网络攻击趋势数据
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
 //  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAttackTrends(request *DescribeAttackTrendsRequest) (response *DescribeAttackTrendsResponse, err error) {
     return c.DescribeAttackTrendsWithContext(context.Background(), request)
@@ -7492,21 +7366,19 @@ func (c *Client) DescribeAttackTrends(request *DescribeAttackTrendsRequest) (res
 // 网络攻击趋势数据
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
 //  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
 //  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeAttackTrendsWithContext(ctx context.Context, request *DescribeAttackTrendsRequest) (response *DescribeAttackTrendsResponse, err error) {
     if request == nil {
         request = NewDescribeAttackTrendsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAttackTrends")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAttackTrends require credential")
@@ -7533,8 +7405,9 @@ func NewDescribeAttackVulTypeListRequest() (request *DescribeAttackVulTypeListRe
 func NewDescribeAttackVulTypeListResponse() (response *DescribeAttackVulTypeListResponse) {
     response = &DescribeAttackVulTypeListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAttackVulTypeList
@@ -7555,6 +7428,7 @@ func (c *Client) DescribeAttackVulTypeListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAttackVulTypeListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeAttackVulTypeList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAttackVulTypeList require credential")
@@ -7563,58 +7437,6 @@ func (c *Client) DescribeAttackVulTypeListWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeAttackVulTypeListResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeAvailableExpertServiceDetailRequest() (request *DescribeAvailableExpertServiceDetailRequest) {
-    request = &DescribeAvailableExpertServiceDetailRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeAvailableExpertServiceDetail")
-    
-    
-    return
-}
-
-func NewDescribeAvailableExpertServiceDetailResponse() (response *DescribeAvailableExpertServiceDetailResponse) {
-    response = &DescribeAvailableExpertServiceDetailResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeAvailableExpertServiceDetail
-// 专家服务-可用订单详情
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_MAINDBFAIL = "InternalError.MainDBFail"
-//  INVALIDPARAMETER = "InvalidParameter"
-func (c *Client) DescribeAvailableExpertServiceDetail(request *DescribeAvailableExpertServiceDetailRequest) (response *DescribeAvailableExpertServiceDetailResponse, err error) {
-    return c.DescribeAvailableExpertServiceDetailWithContext(context.Background(), request)
-}
-
-// DescribeAvailableExpertServiceDetail
-// 专家服务-可用订单详情
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_MAINDBFAIL = "InternalError.MainDBFail"
-//  INVALIDPARAMETER = "InvalidParameter"
-func (c *Client) DescribeAvailableExpertServiceDetailWithContext(ctx context.Context, request *DescribeAvailableExpertServiceDetailRequest) (response *DescribeAvailableExpertServiceDetailResponse, err error) {
-    if request == nil {
-        request = NewDescribeAvailableExpertServiceDetailRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAvailableExpertServiceDetail require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeAvailableExpertServiceDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -7633,8 +7455,9 @@ func NewDescribeBanModeRequest() (request *DescribeBanModeRequest) {
 func NewDescribeBanModeResponse() (response *DescribeBanModeResponse) {
     response = &DescribeBanModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBanMode
@@ -7665,6 +7488,7 @@ func (c *Client) DescribeBanModeWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeBanModeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBanMode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBanMode require credential")
@@ -7691,8 +7515,9 @@ func NewDescribeBanRegionsRequest() (request *DescribeBanRegionsRequest) {
 func NewDescribeBanRegionsResponse() (response *DescribeBanRegionsResponse) {
     response = &DescribeBanRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBanRegions
@@ -7723,6 +7548,7 @@ func (c *Client) DescribeBanRegionsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeBanRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBanRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBanRegions require credential")
@@ -7749,8 +7575,9 @@ func NewDescribeBanStatusRequest() (request *DescribeBanStatusRequest) {
 func NewDescribeBanStatusResponse() (response *DescribeBanStatusResponse) {
     response = &DescribeBanStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBanStatus
@@ -7785,6 +7612,7 @@ func (c *Client) DescribeBanStatusWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeBanStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBanStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBanStatus require credential")
@@ -7811,8 +7639,9 @@ func NewDescribeBanWhiteListRequest() (request *DescribeBanWhiteListRequest) {
 func NewDescribeBanWhiteListResponse() (response *DescribeBanWhiteListResponse) {
     response = &DescribeBanWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBanWhiteList
@@ -7847,6 +7676,7 @@ func (c *Client) DescribeBanWhiteListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBanWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBanWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBanWhiteList require credential")
@@ -7873,8 +7703,9 @@ func NewDescribeBaselineAnalysisDataRequest() (request *DescribeBaselineAnalysis
 func NewDescribeBaselineAnalysisDataResponse() (response *DescribeBaselineAnalysisDataResponse) {
     response = &DescribeBaselineAnalysisDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineAnalysisData
@@ -7907,6 +7738,7 @@ func (c *Client) DescribeBaselineAnalysisDataWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeBaselineAnalysisDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineAnalysisData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineAnalysisData require credential")
@@ -7933,8 +7765,9 @@ func NewDescribeBaselineBasicInfoRequest() (request *DescribeBaselineBasicInfoRe
 func NewDescribeBaselineBasicInfoResponse() (response *DescribeBaselineBasicInfoResponse) {
     response = &DescribeBaselineBasicInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineBasicInfo
@@ -7965,6 +7798,7 @@ func (c *Client) DescribeBaselineBasicInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeBaselineBasicInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineBasicInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineBasicInfo require credential")
@@ -7991,8 +7825,9 @@ func NewDescribeBaselineDefaultStrategyListRequest() (request *DescribeBaselineD
 func NewDescribeBaselineDefaultStrategyListResponse() (response *DescribeBaselineDefaultStrategyListResponse) {
     response = &DescribeBaselineDefaultStrategyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineDefaultStrategyList
@@ -8013,6 +7848,7 @@ func (c *Client) DescribeBaselineDefaultStrategyListWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeBaselineDefaultStrategyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineDefaultStrategyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineDefaultStrategyList require credential")
@@ -8039,8 +7875,9 @@ func NewDescribeBaselineDetailRequest() (request *DescribeBaselineDetailRequest)
 func NewDescribeBaselineDetailResponse() (response *DescribeBaselineDetailResponse) {
     response = &DescribeBaselineDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineDetail
@@ -8071,6 +7908,7 @@ func (c *Client) DescribeBaselineDetailWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeBaselineDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineDetail require credential")
@@ -8097,8 +7935,9 @@ func NewDescribeBaselineDetectListRequest() (request *DescribeBaselineDetectList
 func NewDescribeBaselineDetectListResponse() (response *DescribeBaselineDetectListResponse) {
     response = &DescribeBaselineDetectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineDetectList
@@ -8123,6 +7962,7 @@ func (c *Client) DescribeBaselineDetectListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeBaselineDetectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineDetectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineDetectList require credential")
@@ -8149,8 +7989,9 @@ func NewDescribeBaselineDetectOverviewRequest() (request *DescribeBaselineDetect
 func NewDescribeBaselineDetectOverviewResponse() (response *DescribeBaselineDetectOverviewResponse) {
     response = &DescribeBaselineDetectOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineDetectOverview
@@ -8175,6 +8016,7 @@ func (c *Client) DescribeBaselineDetectOverviewWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineDetectOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineDetectOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineDetectOverview require credential")
@@ -8201,8 +8043,9 @@ func NewDescribeBaselineDownloadListRequest() (request *DescribeBaselineDownload
 func NewDescribeBaselineDownloadListResponse() (response *DescribeBaselineDownloadListResponse) {
     response = &DescribeBaselineDownloadListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineDownloadList
@@ -8225,6 +8068,7 @@ func (c *Client) DescribeBaselineDownloadListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeBaselineDownloadListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineDownloadList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineDownloadList require credential")
@@ -8251,8 +8095,9 @@ func NewDescribeBaselineEffectHostListRequest() (request *DescribeBaselineEffect
 func NewDescribeBaselineEffectHostListResponse() (response *DescribeBaselineEffectHostListResponse) {
     response = &DescribeBaselineEffectHostListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineEffectHostList
@@ -8285,6 +8130,7 @@ func (c *Client) DescribeBaselineEffectHostListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineEffectHostListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineEffectHostList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineEffectHostList require credential")
@@ -8311,8 +8157,9 @@ func NewDescribeBaselineFixListRequest() (request *DescribeBaselineFixListReques
 func NewDescribeBaselineFixListResponse() (response *DescribeBaselineFixListResponse) {
     response = &DescribeBaselineFixListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineFixList
@@ -8335,6 +8182,7 @@ func (c *Client) DescribeBaselineFixListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeBaselineFixListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineFixList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineFixList require credential")
@@ -8361,8 +8209,9 @@ func NewDescribeBaselineHostDetectListRequest() (request *DescribeBaselineHostDe
 func NewDescribeBaselineHostDetectListResponse() (response *DescribeBaselineHostDetectListResponse) {
     response = &DescribeBaselineHostDetectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineHostDetectList
@@ -8387,6 +8236,7 @@ func (c *Client) DescribeBaselineHostDetectListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineHostDetectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineHostDetectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineHostDetectList require credential")
@@ -8413,8 +8263,9 @@ func NewDescribeBaselineHostIgnoreListRequest() (request *DescribeBaselineHostIg
 func NewDescribeBaselineHostIgnoreListResponse() (response *DescribeBaselineHostIgnoreListResponse) {
     response = &DescribeBaselineHostIgnoreListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineHostIgnoreList
@@ -8439,6 +8290,7 @@ func (c *Client) DescribeBaselineHostIgnoreListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineHostIgnoreListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineHostIgnoreList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineHostIgnoreList require credential")
@@ -8465,8 +8317,9 @@ func NewDescribeBaselineHostRiskTopRequest() (request *DescribeBaselineHostRiskT
 func NewDescribeBaselineHostRiskTopResponse() (response *DescribeBaselineHostRiskTopResponse) {
     response = &DescribeBaselineHostRiskTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineHostRiskTop
@@ -8491,6 +8344,7 @@ func (c *Client) DescribeBaselineHostRiskTopWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeBaselineHostRiskTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineHostRiskTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineHostRiskTop require credential")
@@ -8517,8 +8371,9 @@ func NewDescribeBaselineHostTopRequest() (request *DescribeBaselineHostTopReques
 func NewDescribeBaselineHostTopResponse() (response *DescribeBaselineHostTopResponse) {
     response = &DescribeBaselineHostTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineHostTop
@@ -8551,6 +8406,7 @@ func (c *Client) DescribeBaselineHostTopWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeBaselineHostTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineHostTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineHostTop require credential")
@@ -8577,8 +8433,9 @@ func NewDescribeBaselineItemDetectListRequest() (request *DescribeBaselineItemDe
 func NewDescribeBaselineItemDetectListResponse() (response *DescribeBaselineItemDetectListResponse) {
     response = &DescribeBaselineItemDetectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineItemDetectList
@@ -8603,6 +8460,7 @@ func (c *Client) DescribeBaselineItemDetectListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineItemDetectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineItemDetectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineItemDetectList require credential")
@@ -8629,8 +8487,9 @@ func NewDescribeBaselineItemIgnoreListRequest() (request *DescribeBaselineItemIg
 func NewDescribeBaselineItemIgnoreListResponse() (response *DescribeBaselineItemIgnoreListResponse) {
     response = &DescribeBaselineItemIgnoreListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineItemIgnoreList
@@ -8655,6 +8514,7 @@ func (c *Client) DescribeBaselineItemIgnoreListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineItemIgnoreListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineItemIgnoreList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineItemIgnoreList require credential")
@@ -8681,8 +8541,9 @@ func NewDescribeBaselineItemInfoRequest() (request *DescribeBaselineItemInfoRequ
 func NewDescribeBaselineItemInfoResponse() (response *DescribeBaselineItemInfoResponse) {
     response = &DescribeBaselineItemInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineItemInfo
@@ -8705,6 +8566,7 @@ func (c *Client) DescribeBaselineItemInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeBaselineItemInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineItemInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineItemInfo require credential")
@@ -8731,8 +8593,9 @@ func NewDescribeBaselineItemListRequest() (request *DescribeBaselineItemListRequ
 func NewDescribeBaselineItemListResponse() (response *DescribeBaselineItemListResponse) {
     response = &DescribeBaselineItemListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineItemList
@@ -8757,6 +8620,7 @@ func (c *Client) DescribeBaselineItemListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeBaselineItemListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineItemList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineItemList require credential")
@@ -8783,8 +8647,9 @@ func NewDescribeBaselineItemRiskTopRequest() (request *DescribeBaselineItemRiskT
 func NewDescribeBaselineItemRiskTopResponse() (response *DescribeBaselineItemRiskTopResponse) {
     response = &DescribeBaselineItemRiskTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineItemRiskTop
@@ -8809,6 +8674,7 @@ func (c *Client) DescribeBaselineItemRiskTopWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeBaselineItemRiskTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineItemRiskTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineItemRiskTop require credential")
@@ -8835,8 +8701,9 @@ func NewDescribeBaselineListRequest() (request *DescribeBaselineListRequest) {
 func NewDescribeBaselineListResponse() (response *DescribeBaselineListResponse) {
     response = &DescribeBaselineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineList
@@ -8869,6 +8736,7 @@ func (c *Client) DescribeBaselineListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBaselineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineList require credential")
@@ -8895,8 +8763,9 @@ func NewDescribeBaselinePolicyListRequest() (request *DescribeBaselinePolicyList
 func NewDescribeBaselinePolicyListResponse() (response *DescribeBaselinePolicyListResponse) {
     response = &DescribeBaselinePolicyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselinePolicyList
@@ -8921,6 +8790,7 @@ func (c *Client) DescribeBaselinePolicyListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeBaselinePolicyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselinePolicyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselinePolicyList require credential")
@@ -8947,8 +8817,9 @@ func NewDescribeBaselineRuleRequest() (request *DescribeBaselineRuleRequest) {
 func NewDescribeBaselineRuleResponse() (response *DescribeBaselineRuleResponse) {
     response = &DescribeBaselineRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineRule
@@ -8979,6 +8850,7 @@ func (c *Client) DescribeBaselineRuleWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBaselineRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineRule require credential")
@@ -9005,8 +8877,9 @@ func NewDescribeBaselineRuleCategoryListRequest() (request *DescribeBaselineRule
 func NewDescribeBaselineRuleCategoryListResponse() (response *DescribeBaselineRuleCategoryListResponse) {
     response = &DescribeBaselineRuleCategoryListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineRuleCategoryList
@@ -9027,6 +8900,7 @@ func (c *Client) DescribeBaselineRuleCategoryListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeBaselineRuleCategoryListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineRuleCategoryList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineRuleCategoryList require credential")
@@ -9053,14 +8927,16 @@ func NewDescribeBaselineRuleDetectListRequest() (request *DescribeBaselineRuleDe
 func NewDescribeBaselineRuleDetectListResponse() (response *DescribeBaselineRuleDetectListResponse) {
     response = &DescribeBaselineRuleDetectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineRuleDetectList
 // 获取基线规则检测列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeBaselineRuleDetectList(request *DescribeBaselineRuleDetectListRequest) (response *DescribeBaselineRuleDetectListResponse, err error) {
@@ -9071,12 +8947,14 @@ func (c *Client) DescribeBaselineRuleDetectList(request *DescribeBaselineRuleDet
 // 获取基线规则检测列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeBaselineRuleDetectListWithContext(ctx context.Context, request *DescribeBaselineRuleDetectListRequest) (response *DescribeBaselineRuleDetectListResponse, err error) {
     if request == nil {
         request = NewDescribeBaselineRuleDetectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineRuleDetectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineRuleDetectList require credential")
@@ -9103,8 +8981,9 @@ func NewDescribeBaselineRuleIgnoreListRequest() (request *DescribeBaselineRuleIg
 func NewDescribeBaselineRuleIgnoreListResponse() (response *DescribeBaselineRuleIgnoreListResponse) {
     response = &DescribeBaselineRuleIgnoreListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineRuleIgnoreList
@@ -9127,6 +9006,7 @@ func (c *Client) DescribeBaselineRuleIgnoreListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineRuleIgnoreListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineRuleIgnoreList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineRuleIgnoreList require credential")
@@ -9153,8 +9033,9 @@ func NewDescribeBaselineRuleListRequest() (request *DescribeBaselineRuleListRequ
 func NewDescribeBaselineRuleListResponse() (response *DescribeBaselineRuleListResponse) {
     response = &DescribeBaselineRuleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineRuleList
@@ -9179,6 +9060,7 @@ func (c *Client) DescribeBaselineRuleListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeBaselineRuleListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineRuleList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineRuleList require credential")
@@ -9205,8 +9087,9 @@ func NewDescribeBaselineScanScheduleRequest() (request *DescribeBaselineScanSche
 func NewDescribeBaselineScanScheduleResponse() (response *DescribeBaselineScanScheduleResponse) {
     response = &DescribeBaselineScanScheduleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineScanSchedule
@@ -9239,6 +9122,7 @@ func (c *Client) DescribeBaselineScanScheduleWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeBaselineScanScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineScanSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineScanSchedule require credential")
@@ -9265,8 +9149,9 @@ func NewDescribeBaselineStrategyDetailRequest() (request *DescribeBaselineStrate
 func NewDescribeBaselineStrategyDetailResponse() (response *DescribeBaselineStrategyDetailResponse) {
     response = &DescribeBaselineStrategyDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineStrategyDetail
@@ -9299,6 +9184,7 @@ func (c *Client) DescribeBaselineStrategyDetailWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeBaselineStrategyDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineStrategyDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineStrategyDetail require credential")
@@ -9325,8 +9211,9 @@ func NewDescribeBaselineStrategyListRequest() (request *DescribeBaselineStrategy
 func NewDescribeBaselineStrategyListResponse() (response *DescribeBaselineStrategyListResponse) {
     response = &DescribeBaselineStrategyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineStrategyList
@@ -9359,6 +9246,7 @@ func (c *Client) DescribeBaselineStrategyListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeBaselineStrategyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineStrategyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineStrategyList require credential")
@@ -9385,8 +9273,9 @@ func NewDescribeBaselineTopRequest() (request *DescribeBaselineTopRequest) {
 func NewDescribeBaselineTopResponse() (response *DescribeBaselineTopResponse) {
     response = &DescribeBaselineTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineTop
@@ -9419,6 +9308,7 @@ func (c *Client) DescribeBaselineTopWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeBaselineTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineTop require credential")
@@ -9445,8 +9335,9 @@ func NewDescribeBaselineWeakPasswordListRequest() (request *DescribeBaselineWeak
 func NewDescribeBaselineWeakPasswordListResponse() (response *DescribeBaselineWeakPasswordListResponse) {
     response = &DescribeBaselineWeakPasswordListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineWeakPasswordList
@@ -9471,6 +9362,7 @@ func (c *Client) DescribeBaselineWeakPasswordListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeBaselineWeakPasswordListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBaselineWeakPasswordList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBaselineWeakPasswordList require credential")
@@ -9497,8 +9389,9 @@ func NewDescribeBashEventsRequest() (request *DescribeBashEventsRequest) {
 func NewDescribeBashEventsResponse() (response *DescribeBashEventsResponse) {
     response = &DescribeBashEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBashEvents
@@ -9535,6 +9428,7 @@ func (c *Client) DescribeBashEventsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeBashEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBashEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBashEvents require credential")
@@ -9561,8 +9455,9 @@ func NewDescribeBashEventsInfoRequest() (request *DescribeBashEventsInfoRequest)
 func NewDescribeBashEventsInfoResponse() (response *DescribeBashEventsInfoResponse) {
     response = &DescribeBashEventsInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBashEventsInfo
@@ -9603,6 +9498,7 @@ func (c *Client) DescribeBashEventsInfoWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeBashEventsInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBashEventsInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBashEventsInfo require credential")
@@ -9629,8 +9525,9 @@ func NewDescribeBashEventsInfoNewRequest() (request *DescribeBashEventsInfoNewRe
 func NewDescribeBashEventsInfoNewResponse() (response *DescribeBashEventsInfoNewResponse) {
     response = &DescribeBashEventsInfoNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBashEventsInfoNew
@@ -9671,6 +9568,7 @@ func (c *Client) DescribeBashEventsInfoNewWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeBashEventsInfoNewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBashEventsInfoNew")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBashEventsInfoNew require credential")
@@ -9697,8 +9595,9 @@ func NewDescribeBashEventsNewRequest() (request *DescribeBashEventsNewRequest) {
 func NewDescribeBashEventsNewResponse() (response *DescribeBashEventsNewResponse) {
     response = &DescribeBashEventsNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBashEventsNew
@@ -9737,6 +9636,7 @@ func (c *Client) DescribeBashEventsNewWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeBashEventsNewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBashEventsNew")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBashEventsNew require credential")
@@ -9763,8 +9663,9 @@ func NewDescribeBashPoliciesRequest() (request *DescribeBashPoliciesRequest) {
 func NewDescribeBashPoliciesResponse() (response *DescribeBashPoliciesResponse) {
     response = &DescribeBashPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBashPolicies
@@ -9803,6 +9704,7 @@ func (c *Client) DescribeBashPoliciesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBashPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBashPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBashPolicies require credential")
@@ -9829,8 +9731,9 @@ func NewDescribeBashRulesRequest() (request *DescribeBashRulesRequest) {
 func NewDescribeBashRulesResponse() (response *DescribeBashRulesResponse) {
     response = &DescribeBashRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBashRules
@@ -9867,6 +9770,7 @@ func (c *Client) DescribeBashRulesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeBashRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBashRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBashRules require credential")
@@ -9893,8 +9797,9 @@ func NewDescribeBruteAttackListRequest() (request *DescribeBruteAttackListReques
 func NewDescribeBruteAttackListResponse() (response *DescribeBruteAttackListResponse) {
     response = &DescribeBruteAttackListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBruteAttackList
@@ -9929,6 +9834,7 @@ func (c *Client) DescribeBruteAttackListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeBruteAttackListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBruteAttackList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBruteAttackList require credential")
@@ -9955,8 +9861,9 @@ func NewDescribeBruteAttackRulesRequest() (request *DescribeBruteAttackRulesRequ
 func NewDescribeBruteAttackRulesResponse() (response *DescribeBruteAttackRulesResponse) {
     response = &DescribeBruteAttackRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBruteAttackRules
@@ -9977,6 +9884,7 @@ func (c *Client) DescribeBruteAttackRulesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeBruteAttackRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeBruteAttackRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBruteAttackRules require credential")
@@ -10003,8 +9911,9 @@ func NewDescribeCanFixVulMachineRequest() (request *DescribeCanFixVulMachineRequ
 func NewDescribeCanFixVulMachineResponse() (response *DescribeCanFixVulMachineResponse) {
     response = &DescribeCanFixVulMachineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCanFixVulMachine
@@ -10041,6 +9950,7 @@ func (c *Client) DescribeCanFixVulMachineWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeCanFixVulMachineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeCanFixVulMachine")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCanFixVulMachine require credential")
@@ -10067,8 +9977,9 @@ func NewDescribeCanNotSeparateMachineRequest() (request *DescribeCanNotSeparateM
 func NewDescribeCanNotSeparateMachineResponse() (response *DescribeCanNotSeparateMachineResponse) {
     response = &DescribeCanNotSeparateMachineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCanNotSeparateMachine
@@ -10107,6 +10018,7 @@ func (c *Client) DescribeCanNotSeparateMachineWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeCanNotSeparateMachineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeCanNotSeparateMachine")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCanNotSeparateMachine require credential")
@@ -10133,8 +10045,9 @@ func NewDescribeClientExceptionRequest() (request *DescribeClientExceptionReques
 func NewDescribeClientExceptionResponse() (response *DescribeClientExceptionResponse) {
     response = &DescribeClientExceptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClientException
@@ -10173,6 +10086,7 @@ func (c *Client) DescribeClientExceptionWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeClientExceptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeClientException")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClientException require credential")
@@ -10181,132 +10095,6 @@ func (c *Client) DescribeClientExceptionWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDescribeClientExceptionResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeCloudProtectServiceOrderListRequest() (request *DescribeCloudProtectServiceOrderListRequest) {
-    request = &DescribeCloudProtectServiceOrderListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeCloudProtectServiceOrderList")
-    
-    
-    return
-}
-
-func NewDescribeCloudProtectServiceOrderListResponse() (response *DescribeCloudProtectServiceOrderListResponse) {
-    response = &DescribeCloudProtectServiceOrderListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeCloudProtectServiceOrderList
-// 查询云护航服务订单列表
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_MAINDBFAIL = "InternalError.MainDBFail"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeCloudProtectServiceOrderList(request *DescribeCloudProtectServiceOrderListRequest) (response *DescribeCloudProtectServiceOrderListResponse, err error) {
-    return c.DescribeCloudProtectServiceOrderListWithContext(context.Background(), request)
-}
-
-// DescribeCloudProtectServiceOrderList
-// 查询云护航服务订单列表
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_MAINDBFAIL = "InternalError.MainDBFail"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeCloudProtectServiceOrderListWithContext(ctx context.Context, request *DescribeCloudProtectServiceOrderListRequest) (response *DescribeCloudProtectServiceOrderListResponse, err error) {
-    if request == nil {
-        request = NewDescribeCloudProtectServiceOrderListRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCloudProtectServiceOrderList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeCloudProtectServiceOrderListResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeComponentStatisticsRequest() (request *DescribeComponentStatisticsRequest) {
-    request = &DescribeComponentStatisticsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeComponentStatistics")
-    
-    
-    return
-}
-
-func NewDescribeComponentStatisticsResponse() (response *DescribeComponentStatisticsResponse) {
-    response = &DescribeComponentStatisticsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeComponentStatistics
-// 本接口 (DescribeComponentStatistics) 用于获取组件统计列表数据。
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeComponentStatistics(request *DescribeComponentStatisticsRequest) (response *DescribeComponentStatisticsResponse, err error) {
-    return c.DescribeComponentStatisticsWithContext(context.Background(), request)
-}
-
-// DescribeComponentStatistics
-// 本接口 (DescribeComponentStatistics) 用于获取组件统计列表数据。
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeComponentStatisticsWithContext(ctx context.Context, request *DescribeComponentStatisticsRequest) (response *DescribeComponentStatisticsResponse, err error) {
-    if request == nil {
-        request = NewDescribeComponentStatisticsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeComponentStatistics require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeComponentStatisticsResponse()
     err = c.Send(request, response)
     return
 }
@@ -10325,8 +10113,9 @@ func NewDescribeDefenceEventDetailRequest() (request *DescribeDefenceEventDetail
 func NewDescribeDefenceEventDetailResponse() (response *DescribeDefenceEventDetailResponse) {
     response = &DescribeDefenceEventDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDefenceEventDetail
@@ -10361,6 +10150,7 @@ func (c *Client) DescribeDefenceEventDetailWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeDefenceEventDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeDefenceEventDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDefenceEventDetail require credential")
@@ -10387,8 +10177,9 @@ func NewDescribeDirectConnectInstallCommandRequest() (request *DescribeDirectCon
 func NewDescribeDirectConnectInstallCommandResponse() (response *DescribeDirectConnectInstallCommandResponse) {
     response = &DescribeDirectConnectInstallCommandResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDirectConnectInstallCommand
@@ -10419,6 +10210,7 @@ func (c *Client) DescribeDirectConnectInstallCommandWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeDirectConnectInstallCommandRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeDirectConnectInstallCommand")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDirectConnectInstallCommand require credential")
@@ -10445,8 +10237,9 @@ func NewDescribeESAggregationsRequest() (request *DescribeESAggregationsRequest)
 func NewDescribeESAggregationsResponse() (response *DescribeESAggregationsResponse) {
     response = &DescribeESAggregationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeESAggregations
@@ -10475,6 +10268,7 @@ func (c *Client) DescribeESAggregationsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeESAggregationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeESAggregations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeESAggregations require credential")
@@ -10483,60 +10277,6 @@ func (c *Client) DescribeESAggregationsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeESAggregationsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeEmergencyResponseListRequest() (request *DescribeEmergencyResponseListRequest) {
-    request = &DescribeEmergencyResponseListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeEmergencyResponseList")
-    
-    
-    return
-}
-
-func NewDescribeEmergencyResponseListResponse() (response *DescribeEmergencyResponseListResponse) {
-    response = &DescribeEmergencyResponseListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeEmergencyResponseList
-// 专家服务-应急响应列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeEmergencyResponseList(request *DescribeEmergencyResponseListRequest) (response *DescribeEmergencyResponseListResponse, err error) {
-    return c.DescribeEmergencyResponseListWithContext(context.Background(), request)
-}
-
-// DescribeEmergencyResponseList
-// 专家服务-应急响应列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeEmergencyResponseListWithContext(ctx context.Context, request *DescribeEmergencyResponseListRequest) (response *DescribeEmergencyResponseListResponse, err error) {
-    if request == nil {
-        request = NewDescribeEmergencyResponseListRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeEmergencyResponseList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeEmergencyResponseListResponse()
     err = c.Send(request, response)
     return
 }
@@ -10555,8 +10295,9 @@ func NewDescribeEmergencyVulListRequest() (request *DescribeEmergencyVulListRequ
 func NewDescribeEmergencyVulListResponse() (response *DescribeEmergencyVulListResponse) {
     response = &DescribeEmergencyVulListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEmergencyVulList
@@ -10587,6 +10328,7 @@ func (c *Client) DescribeEmergencyVulListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeEmergencyVulListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeEmergencyVulList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEmergencyVulList require credential")
@@ -10613,8 +10355,9 @@ func NewDescribeEventByTableRequest() (request *DescribeEventByTableRequest) {
 func NewDescribeEventByTableResponse() (response *DescribeEventByTableResponse) {
     response = &DescribeEventByTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEventByTable
@@ -10645,6 +10388,7 @@ func (c *Client) DescribeEventByTableWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeEventByTableRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeEventByTable")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEventByTable require credential")
@@ -10653,114 +10397,6 @@ func (c *Client) DescribeEventByTableWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeEventByTableResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeExpertServiceListRequest() (request *DescribeExpertServiceListRequest) {
-    request = &DescribeExpertServiceListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeExpertServiceList")
-    
-    
-    return
-}
-
-func NewDescribeExpertServiceListResponse() (response *DescribeExpertServiceListResponse) {
-    response = &DescribeExpertServiceListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeExpertServiceList
-// 专家服务-安全管家列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeExpertServiceList(request *DescribeExpertServiceListRequest) (response *DescribeExpertServiceListResponse, err error) {
-    return c.DescribeExpertServiceListWithContext(context.Background(), request)
-}
-
-// DescribeExpertServiceList
-// 专家服务-安全管家列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeExpertServiceListWithContext(ctx context.Context, request *DescribeExpertServiceListRequest) (response *DescribeExpertServiceListResponse, err error) {
-    if request == nil {
-        request = NewDescribeExpertServiceListRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeExpertServiceList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeExpertServiceListResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeExpertServiceOrderListRequest() (request *DescribeExpertServiceOrderListRequest) {
-    request = &DescribeExpertServiceOrderListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeExpertServiceOrderList")
-    
-    
-    return
-}
-
-func NewDescribeExpertServiceOrderListResponse() (response *DescribeExpertServiceOrderListResponse) {
-    response = &DescribeExpertServiceOrderListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeExpertServiceOrderList
-// 专家服务-专家服务订单列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeExpertServiceOrderList(request *DescribeExpertServiceOrderListRequest) (response *DescribeExpertServiceOrderListResponse, err error) {
-    return c.DescribeExpertServiceOrderListWithContext(context.Background(), request)
-}
-
-// DescribeExpertServiceOrderList
-// 专家服务-专家服务订单列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeExpertServiceOrderListWithContext(ctx context.Context, request *DescribeExpertServiceOrderListRequest) (response *DescribeExpertServiceOrderListResponse, err error) {
-    if request == nil {
-        request = NewDescribeExpertServiceOrderListRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeExpertServiceOrderList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeExpertServiceOrderListResponse()
     err = c.Send(request, response)
     return
 }
@@ -10779,8 +10415,9 @@ func NewDescribeExportMachinesRequest() (request *DescribeExportMachinesRequest)
 func NewDescribeExportMachinesResponse() (response *DescribeExportMachinesResponse) {
     response = &DescribeExportMachinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExportMachines
@@ -10811,6 +10448,7 @@ func (c *Client) DescribeExportMachinesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeExportMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeExportMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeExportMachines require credential")
@@ -10837,8 +10475,9 @@ func NewDescribeFastAnalysisRequest() (request *DescribeFastAnalysisRequest) {
 func NewDescribeFastAnalysisResponse() (response *DescribeFastAnalysisResponse) {
     response = &DescribeFastAnalysisResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFastAnalysis
@@ -10869,6 +10508,7 @@ func (c *Client) DescribeFastAnalysisWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeFastAnalysisRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeFastAnalysis")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFastAnalysis require credential")
@@ -10895,8 +10535,9 @@ func NewDescribeFileTamperEventRuleInfoRequest() (request *DescribeFileTamperEve
 func NewDescribeFileTamperEventRuleInfoResponse() (response *DescribeFileTamperEventRuleInfoResponse) {
     response = &DescribeFileTamperEventRuleInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFileTamperEventRuleInfo
@@ -10931,6 +10572,7 @@ func (c *Client) DescribeFileTamperEventRuleInfoWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeFileTamperEventRuleInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeFileTamperEventRuleInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFileTamperEventRuleInfo require credential")
@@ -10957,8 +10599,9 @@ func NewDescribeFileTamperEventsRequest() (request *DescribeFileTamperEventsRequ
 func NewDescribeFileTamperEventsResponse() (response *DescribeFileTamperEventsResponse) {
     response = &DescribeFileTamperEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFileTamperEvents
@@ -10985,6 +10628,7 @@ func (c *Client) DescribeFileTamperEventsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeFileTamperEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeFileTamperEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFileTamperEvents require credential")
@@ -11011,8 +10655,9 @@ func NewDescribeFileTamperRuleCountRequest() (request *DescribeFileTamperRuleCou
 func NewDescribeFileTamperRuleCountResponse() (response *DescribeFileTamperRuleCountResponse) {
     response = &DescribeFileTamperRuleCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFileTamperRuleCount
@@ -11045,6 +10690,7 @@ func (c *Client) DescribeFileTamperRuleCountWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeFileTamperRuleCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeFileTamperRuleCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFileTamperRuleCount require credential")
@@ -11071,8 +10717,9 @@ func NewDescribeFileTamperRuleInfoRequest() (request *DescribeFileTamperRuleInfo
 func NewDescribeFileTamperRuleInfoResponse() (response *DescribeFileTamperRuleInfoResponse) {
     response = &DescribeFileTamperRuleInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFileTamperRuleInfo
@@ -11107,6 +10754,7 @@ func (c *Client) DescribeFileTamperRuleInfoWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeFileTamperRuleInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeFileTamperRuleInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFileTamperRuleInfo require credential")
@@ -11133,8 +10781,9 @@ func NewDescribeFileTamperRulesRequest() (request *DescribeFileTamperRulesReques
 func NewDescribeFileTamperRulesResponse() (response *DescribeFileTamperRulesResponse) {
     response = &DescribeFileTamperRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFileTamperRules
@@ -11167,6 +10816,7 @@ func (c *Client) DescribeFileTamperRulesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeFileTamperRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeFileTamperRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFileTamperRules require credential")
@@ -11193,8 +10843,9 @@ func NewDescribeGeneralStatRequest() (request *DescribeGeneralStatRequest) {
 func NewDescribeGeneralStatResponse() (response *DescribeGeneralStatResponse) {
     response = &DescribeGeneralStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGeneralStat
@@ -11225,6 +10876,7 @@ func (c *Client) DescribeGeneralStatWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeGeneralStatRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeGeneralStat")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGeneralStat require credential")
@@ -11251,12 +10903,13 @@ func NewDescribeHistoryAccountsRequest() (request *DescribeHistoryAccountsReques
 func NewDescribeHistoryAccountsResponse() (response *DescribeHistoryAccountsResponse) {
     response = &DescribeHistoryAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHistoryAccounts
-// 本接口 (DescribeHistoryAccounts) 用于获取帐号变更历史列表数据。
+// 本接口 (DescribeHistoryAccounts) 用于获取账号变更历史列表数据。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -11271,7 +10924,7 @@ func (c *Client) DescribeHistoryAccounts(request *DescribeHistoryAccountsRequest
 }
 
 // DescribeHistoryAccounts
-// 本接口 (DescribeHistoryAccounts) 用于获取帐号变更历史列表数据。
+// 本接口 (DescribeHistoryAccounts) 用于获取账号变更历史列表数据。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -11285,6 +10938,7 @@ func (c *Client) DescribeHistoryAccountsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeHistoryAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeHistoryAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHistoryAccounts require credential")
@@ -11311,8 +10965,9 @@ func NewDescribeHistoryServiceRequest() (request *DescribeHistoryServiceRequest)
 func NewDescribeHistoryServiceResponse() (response *DescribeHistoryServiceResponse) {
     response = &DescribeHistoryServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHistoryService
@@ -11333,6 +10988,7 @@ func (c *Client) DescribeHistoryServiceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeHistoryServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeHistoryService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHistoryService require credential")
@@ -11359,8 +11015,9 @@ func NewDescribeHostInfoRequest() (request *DescribeHostInfoRequest) {
 func NewDescribeHostInfoResponse() (response *DescribeHostInfoResponse) {
     response = &DescribeHostInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostInfo
@@ -11391,6 +11048,7 @@ func (c *Client) DescribeHostInfoWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeHostInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeHostInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHostInfo require credential")
@@ -11417,12 +11075,13 @@ func NewDescribeHostLoginListRequest() (request *DescribeHostLoginListRequest) {
 func NewDescribeHostLoginListResponse() (response *DescribeHostLoginListResponse) {
     response = &DescribeHostLoginListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostLoginList
-// 获取登录审计列表
+// 获取异常登录列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -11437,7 +11096,7 @@ func (c *Client) DescribeHostLoginList(request *DescribeHostLoginListRequest) (r
 }
 
 // DescribeHostLoginList
-// 获取登录审计列表
+// 获取异常登录列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -11451,6 +11110,7 @@ func (c *Client) DescribeHostLoginListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeHostLoginListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeHostLoginList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHostLoginList require credential")
@@ -11477,8 +11137,9 @@ func NewDescribeHotVulTopRequest() (request *DescribeHotVulTopRequest) {
 func NewDescribeHotVulTopResponse() (response *DescribeHotVulTopResponse) {
     response = &DescribeHotVulTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHotVulTop
@@ -11501,6 +11162,7 @@ func (c *Client) DescribeHotVulTopWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeHotVulTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeHotVulTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHotVulTop require credential")
@@ -11527,8 +11189,9 @@ func NewDescribeIgnoreBaselineRuleRequest() (request *DescribeIgnoreBaselineRule
 func NewDescribeIgnoreBaselineRuleResponse() (response *DescribeIgnoreBaselineRuleResponse) {
     response = &DescribeIgnoreBaselineRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIgnoreBaselineRule
@@ -11559,6 +11222,7 @@ func (c *Client) DescribeIgnoreBaselineRuleWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeIgnoreBaselineRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeIgnoreBaselineRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIgnoreBaselineRule require credential")
@@ -11585,8 +11249,9 @@ func NewDescribeIgnoreHostAndItemConfigRequest() (request *DescribeIgnoreHostAnd
 func NewDescribeIgnoreHostAndItemConfigResponse() (response *DescribeIgnoreHostAndItemConfigResponse) {
     response = &DescribeIgnoreHostAndItemConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIgnoreHostAndItemConfig
@@ -11609,6 +11274,7 @@ func (c *Client) DescribeIgnoreHostAndItemConfigWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeIgnoreHostAndItemConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeIgnoreHostAndItemConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIgnoreHostAndItemConfig require credential")
@@ -11635,8 +11301,9 @@ func NewDescribeIgnoreRuleEffectHostListRequest() (request *DescribeIgnoreRuleEf
 func NewDescribeIgnoreRuleEffectHostListResponse() (response *DescribeIgnoreRuleEffectHostListResponse) {
     response = &DescribeIgnoreRuleEffectHostListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIgnoreRuleEffectHostList
@@ -11669,6 +11336,7 @@ func (c *Client) DescribeIgnoreRuleEffectHostListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeIgnoreRuleEffectHostListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeIgnoreRuleEffectHostList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIgnoreRuleEffectHostList require credential")
@@ -11695,8 +11363,9 @@ func NewDescribeImportMachineInfoRequest() (request *DescribeImportMachineInfoRe
 func NewDescribeImportMachineInfoResponse() (response *DescribeImportMachineInfoResponse) {
     response = &DescribeImportMachineInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImportMachineInfo
@@ -11727,6 +11396,7 @@ func (c *Client) DescribeImportMachineInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeImportMachineInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeImportMachineInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImportMachineInfo require credential")
@@ -11735,56 +11405,6 @@ func (c *Client) DescribeImportMachineInfoWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeImportMachineInfoResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeIndexListRequest() (request *DescribeIndexListRequest) {
-    request = &DescribeIndexListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeIndexList")
-    
-    
-    return
-}
-
-func NewDescribeIndexListResponse() (response *DescribeIndexListResponse) {
-    response = &DescribeIndexListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeIndexList
-// 获取索引列表
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_APISERVERFAIL = "FailedOperation.APIServerFail"
-//  INTERNALERROR = "InternalError"
-func (c *Client) DescribeIndexList(request *DescribeIndexListRequest) (response *DescribeIndexListResponse, err error) {
-    return c.DescribeIndexListWithContext(context.Background(), request)
-}
-
-// DescribeIndexList
-// 获取索引列表
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_APISERVERFAIL = "FailedOperation.APIServerFail"
-//  INTERNALERROR = "InternalError"
-func (c *Client) DescribeIndexListWithContext(ctx context.Context, request *DescribeIndexListRequest) (response *DescribeIndexListResponse, err error) {
-    if request == nil {
-        request = NewDescribeIndexListRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeIndexList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeIndexListResponse()
     err = c.Send(request, response)
     return
 }
@@ -11803,8 +11423,9 @@ func NewDescribeJavaMemShellInfoRequest() (request *DescribeJavaMemShellInfoRequ
 func NewDescribeJavaMemShellInfoResponse() (response *DescribeJavaMemShellInfoResponse) {
     response = &DescribeJavaMemShellInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJavaMemShellInfo
@@ -11839,6 +11460,7 @@ func (c *Client) DescribeJavaMemShellInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeJavaMemShellInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeJavaMemShellInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJavaMemShellInfo require credential")
@@ -11865,8 +11487,9 @@ func NewDescribeJavaMemShellListRequest() (request *DescribeJavaMemShellListRequ
 func NewDescribeJavaMemShellListResponse() (response *DescribeJavaMemShellListResponse) {
     response = &DescribeJavaMemShellListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJavaMemShellList
@@ -11899,6 +11522,7 @@ func (c *Client) DescribeJavaMemShellListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeJavaMemShellListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeJavaMemShellList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJavaMemShellList require credential")
@@ -11925,8 +11549,9 @@ func NewDescribeJavaMemShellPluginInfoRequest() (request *DescribeJavaMemShellPl
 func NewDescribeJavaMemShellPluginInfoResponse() (response *DescribeJavaMemShellPluginInfoResponse) {
     response = &DescribeJavaMemShellPluginInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJavaMemShellPluginInfo
@@ -11959,6 +11584,7 @@ func (c *Client) DescribeJavaMemShellPluginInfoWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeJavaMemShellPluginInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeJavaMemShellPluginInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJavaMemShellPluginInfo require credential")
@@ -11985,8 +11611,9 @@ func NewDescribeJavaMemShellPluginListRequest() (request *DescribeJavaMemShellPl
 func NewDescribeJavaMemShellPluginListResponse() (response *DescribeJavaMemShellPluginListResponse) {
     response = &DescribeJavaMemShellPluginListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJavaMemShellPluginList
@@ -12019,6 +11646,7 @@ func (c *Client) DescribeJavaMemShellPluginListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeJavaMemShellPluginListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeJavaMemShellPluginList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJavaMemShellPluginList require credential")
@@ -12045,8 +11673,9 @@ func NewDescribeLicenseRequest() (request *DescribeLicenseRequest) {
 func NewDescribeLicenseResponse() (response *DescribeLicenseResponse) {
     response = &DescribeLicenseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLicense
@@ -12067,6 +11696,7 @@ func (c *Client) DescribeLicenseWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeLicenseRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLicense")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLicense require credential")
@@ -12093,8 +11723,9 @@ func NewDescribeLicenseBindListRequest() (request *DescribeLicenseBindListReques
 func NewDescribeLicenseBindListResponse() (response *DescribeLicenseBindListResponse) {
     response = &DescribeLicenseBindListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLicenseBindList
@@ -12121,6 +11752,7 @@ func (c *Client) DescribeLicenseBindListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLicenseBindListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLicenseBindList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLicenseBindList require credential")
@@ -12147,8 +11779,9 @@ func NewDescribeLicenseBindScheduleRequest() (request *DescribeLicenseBindSchedu
 func NewDescribeLicenseBindScheduleResponse() (response *DescribeLicenseBindScheduleResponse) {
     response = &DescribeLicenseBindScheduleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLicenseBindSchedule
@@ -12175,6 +11808,7 @@ func (c *Client) DescribeLicenseBindScheduleWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLicenseBindScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLicenseBindSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLicenseBindSchedule require credential")
@@ -12201,8 +11835,9 @@ func NewDescribeLicenseGeneralRequest() (request *DescribeLicenseGeneralRequest)
 func NewDescribeLicenseGeneralResponse() (response *DescribeLicenseGeneralResponse) {
     response = &DescribeLicenseGeneralResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLicenseGeneral
@@ -12223,6 +11858,7 @@ func (c *Client) DescribeLicenseGeneralWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeLicenseGeneralRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLicenseGeneral")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLicenseGeneral require credential")
@@ -12249,8 +11885,9 @@ func NewDescribeLicenseListRequest() (request *DescribeLicenseListRequest) {
 func NewDescribeLicenseListResponse() (response *DescribeLicenseListResponse) {
     response = &DescribeLicenseListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLicenseList
@@ -12275,6 +11912,7 @@ func (c *Client) DescribeLicenseListWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeLicenseListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLicenseList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLicenseList require credential")
@@ -12301,8 +11939,9 @@ func NewDescribeLicenseWhiteConfigRequest() (request *DescribeLicenseWhiteConfig
 func NewDescribeLicenseWhiteConfigResponse() (response *DescribeLicenseWhiteConfigResponse) {
     response = &DescribeLicenseWhiteConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLicenseWhiteConfig
@@ -12329,6 +11968,7 @@ func (c *Client) DescribeLicenseWhiteConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeLicenseWhiteConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLicenseWhiteConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLicenseWhiteConfig require credential")
@@ -12355,8 +11995,9 @@ func NewDescribeLogDeliveryKafkaOptionsRequest() (request *DescribeLogDeliveryKa
 func NewDescribeLogDeliveryKafkaOptionsResponse() (response *DescribeLogDeliveryKafkaOptionsResponse) {
     response = &DescribeLogDeliveryKafkaOptionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogDeliveryKafkaOptions
@@ -12383,6 +12024,7 @@ func (c *Client) DescribeLogDeliveryKafkaOptionsWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeLogDeliveryKafkaOptionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogDeliveryKafkaOptions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogDeliveryKafkaOptions require credential")
@@ -12409,8 +12051,9 @@ func NewDescribeLogExportsRequest() (request *DescribeLogExportsRequest) {
 func NewDescribeLogExportsResponse() (response *DescribeLogExportsResponse) {
     response = &DescribeLogExportsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogExports
@@ -12437,6 +12080,7 @@ func (c *Client) DescribeLogExportsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeLogExportsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogExports")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogExports require credential")
@@ -12463,8 +12107,9 @@ func NewDescribeLogHistogramRequest() (request *DescribeLogHistogramRequest) {
 func NewDescribeLogHistogramResponse() (response *DescribeLogHistogramResponse) {
     response = &DescribeLogHistogramResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogHistogram
@@ -12491,6 +12136,7 @@ func (c *Client) DescribeLogHistogramWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeLogHistogramRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogHistogram")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogHistogram require credential")
@@ -12517,8 +12163,9 @@ func NewDescribeLogIndexRequest() (request *DescribeLogIndexRequest) {
 func NewDescribeLogIndexResponse() (response *DescribeLogIndexResponse) {
     response = &DescribeLogIndexResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogIndex
@@ -12545,6 +12192,7 @@ func (c *Client) DescribeLogIndexWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeLogIndexRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogIndex")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogIndex require credential")
@@ -12571,8 +12219,9 @@ func NewDescribeLogKafkaDeliverInfoRequest() (request *DescribeLogKafkaDeliverIn
 func NewDescribeLogKafkaDeliverInfoResponse() (response *DescribeLogKafkaDeliverInfoResponse) {
     response = &DescribeLogKafkaDeliverInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogKafkaDeliverInfo
@@ -12599,6 +12248,7 @@ func (c *Client) DescribeLogKafkaDeliverInfoWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLogKafkaDeliverInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogKafkaDeliverInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogKafkaDeliverInfo require credential")
@@ -12625,8 +12275,9 @@ func NewDescribeLogStorageConfigRequest() (request *DescribeLogStorageConfigRequ
 func NewDescribeLogStorageConfigResponse() (response *DescribeLogStorageConfigResponse) {
     response = &DescribeLogStorageConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogStorageConfig
@@ -12653,6 +12304,7 @@ func (c *Client) DescribeLogStorageConfigWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeLogStorageConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogStorageConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogStorageConfig require credential")
@@ -12679,8 +12331,9 @@ func NewDescribeLogStorageRecordRequest() (request *DescribeLogStorageRecordRequ
 func NewDescribeLogStorageRecordResponse() (response *DescribeLogStorageRecordResponse) {
     response = &DescribeLogStorageRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogStorageRecord
@@ -12707,6 +12360,7 @@ func (c *Client) DescribeLogStorageRecordWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeLogStorageRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogStorageRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogStorageRecord require credential")
@@ -12733,8 +12387,9 @@ func NewDescribeLogStorageStatisticRequest() (request *DescribeLogStorageStatist
 func NewDescribeLogStorageStatisticResponse() (response *DescribeLogStorageStatisticResponse) {
     response = &DescribeLogStorageStatisticResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogStorageStatistic
@@ -12755,6 +12410,7 @@ func (c *Client) DescribeLogStorageStatisticWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLogStorageStatisticRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogStorageStatistic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogStorageStatistic require credential")
@@ -12781,8 +12437,9 @@ func NewDescribeLogTypeRequest() (request *DescribeLogTypeRequest) {
 func NewDescribeLogTypeResponse() (response *DescribeLogTypeResponse) {
     response = &DescribeLogTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogType
@@ -12803,6 +12460,7 @@ func (c *Client) DescribeLogTypeWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeLogTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLogType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogType require credential")
@@ -12829,8 +12487,9 @@ func NewDescribeLoginWhiteCombinedListRequest() (request *DescribeLoginWhiteComb
 func NewDescribeLoginWhiteCombinedListResponse() (response *DescribeLoginWhiteCombinedListResponse) {
     response = &DescribeLoginWhiteCombinedListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoginWhiteCombinedList
@@ -12863,6 +12522,7 @@ func (c *Client) DescribeLoginWhiteCombinedListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLoginWhiteCombinedListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLoginWhiteCombinedList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoginWhiteCombinedList require credential")
@@ -12889,8 +12549,9 @@ func NewDescribeLoginWhiteHostListRequest() (request *DescribeLoginWhiteHostList
 func NewDescribeLoginWhiteHostListResponse() (response *DescribeLoginWhiteHostListResponse) {
     response = &DescribeLoginWhiteHostListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoginWhiteHostList
@@ -12923,6 +12584,7 @@ func (c *Client) DescribeLoginWhiteHostListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeLoginWhiteHostListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLoginWhiteHostList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoginWhiteHostList require credential")
@@ -12949,8 +12611,9 @@ func NewDescribeLoginWhiteListRequest() (request *DescribeLoginWhiteListRequest)
 func NewDescribeLoginWhiteListResponse() (response *DescribeLoginWhiteListResponse) {
     response = &DescribeLoginWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLoginWhiteList
@@ -12981,6 +12644,7 @@ func (c *Client) DescribeLoginWhiteListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeLoginWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeLoginWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoginWhiteList require credential")
@@ -13007,8 +12671,9 @@ func NewDescribeMachineClearHistoryRequest() (request *DescribeMachineClearHisto
 func NewDescribeMachineClearHistoryResponse() (response *DescribeMachineClearHistoryResponse) {
     response = &DescribeMachineClearHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineClearHistory
@@ -13029,6 +12694,7 @@ func (c *Client) DescribeMachineClearHistoryWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeMachineClearHistoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineClearHistory")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineClearHistory require credential")
@@ -13055,8 +12721,9 @@ func NewDescribeMachineDefenseCntRequest() (request *DescribeMachineDefenseCntRe
 func NewDescribeMachineDefenseCntResponse() (response *DescribeMachineDefenseCntResponse) {
     response = &DescribeMachineDefenseCntResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineDefenseCnt
@@ -13089,6 +12756,7 @@ func (c *Client) DescribeMachineDefenseCntWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeMachineDefenseCntRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineDefenseCnt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineDefenseCnt require credential")
@@ -13115,12 +12783,13 @@ func NewDescribeMachineFileTamperRulesRequest() (request *DescribeMachineFileTam
 func NewDescribeMachineFileTamperRulesResponse() (response *DescribeMachineFileTamperRulesResponse) {
     response = &DescribeMachineFileTamperRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineFileTamperRules
-// 查询主机相关核心文件监控规则列 表   
+// 查询主机相关核心文件监控规则列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -13135,7 +12804,7 @@ func (c *Client) DescribeMachineFileTamperRules(request *DescribeMachineFileTamp
 }
 
 // DescribeMachineFileTamperRules
-// 查询主机相关核心文件监控规则列 表   
+// 查询主机相关核心文件监控规则列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -13149,6 +12818,7 @@ func (c *Client) DescribeMachineFileTamperRulesWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeMachineFileTamperRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineFileTamperRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineFileTamperRules require credential")
@@ -13175,8 +12845,9 @@ func NewDescribeMachineGeneralRequest() (request *DescribeMachineGeneralRequest)
 func NewDescribeMachineGeneralResponse() (response *DescribeMachineGeneralResponse) {
     response = &DescribeMachineGeneralResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineGeneral
@@ -13197,6 +12868,7 @@ func (c *Client) DescribeMachineGeneralWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeMachineGeneralRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineGeneral")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineGeneral require credential")
@@ -13223,8 +12895,9 @@ func NewDescribeMachineInfoRequest() (request *DescribeMachineInfoRequest) {
 func NewDescribeMachineInfoResponse() (response *DescribeMachineInfoResponse) {
     response = &DescribeMachineInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineInfo
@@ -13255,6 +12928,7 @@ func (c *Client) DescribeMachineInfoWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeMachineInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineInfo require credential")
@@ -13281,8 +12955,9 @@ func NewDescribeMachineLicenseDetailRequest() (request *DescribeMachineLicenseDe
 func NewDescribeMachineLicenseDetailResponse() (response *DescribeMachineLicenseDetailResponse) {
     response = &DescribeMachineLicenseDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineLicenseDetail
@@ -13315,6 +12990,7 @@ func (c *Client) DescribeMachineLicenseDetailWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeMachineLicenseDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineLicenseDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineLicenseDetail require credential")
@@ -13341,8 +13017,9 @@ func NewDescribeMachineListRequest() (request *DescribeMachineListRequest) {
 func NewDescribeMachineListResponse() (response *DescribeMachineListResponse) {
     response = &DescribeMachineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineList
@@ -13377,6 +13054,7 @@ func (c *Client) DescribeMachineListWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeMachineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineList require credential")
@@ -13403,8 +13081,9 @@ func NewDescribeMachineOsListRequest() (request *DescribeMachineOsListRequest) {
 func NewDescribeMachineOsListResponse() (response *DescribeMachineOsListResponse) {
     response = &DescribeMachineOsListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineOsList
@@ -13425,6 +13104,7 @@ func (c *Client) DescribeMachineOsListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeMachineOsListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineOsList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineOsList require credential")
@@ -13451,8 +13131,9 @@ func NewDescribeMachineRegionListRequest() (request *DescribeMachineRegionListRe
 func NewDescribeMachineRegionListResponse() (response *DescribeMachineRegionListResponse) {
     response = &DescribeMachineRegionListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineRegionList
@@ -13473,6 +13154,7 @@ func (c *Client) DescribeMachineRegionListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeMachineRegionListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineRegionList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineRegionList require credential")
@@ -13499,8 +13181,9 @@ func NewDescribeMachineRegionsRequest() (request *DescribeMachineRegionsRequest)
 func NewDescribeMachineRegionsResponse() (response *DescribeMachineRegionsResponse) {
     response = &DescribeMachineRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineRegions
@@ -13529,6 +13212,7 @@ func (c *Client) DescribeMachineRegionsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeMachineRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineRegions require credential")
@@ -13555,8 +13239,9 @@ func NewDescribeMachineRiskCntRequest() (request *DescribeMachineRiskCntRequest)
 func NewDescribeMachineRiskCntResponse() (response *DescribeMachineRiskCntResponse) {
     response = &DescribeMachineRiskCntResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineRiskCnt
@@ -13589,6 +13274,7 @@ func (c *Client) DescribeMachineRiskCntWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeMachineRiskCntRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineRiskCnt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineRiskCnt require credential")
@@ -13615,8 +13301,9 @@ func NewDescribeMachineSnapshotRequest() (request *DescribeMachineSnapshotReques
 func NewDescribeMachineSnapshotResponse() (response *DescribeMachineSnapshotResponse) {
     response = &DescribeMachineSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachineSnapshot
@@ -13651,6 +13338,7 @@ func (c *Client) DescribeMachineSnapshotWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeMachineSnapshotRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachineSnapshot")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachineSnapshot require credential")
@@ -13677,8 +13365,9 @@ func NewDescribeMachinesRequest() (request *DescribeMachinesRequest) {
 func NewDescribeMachinesResponse() (response *DescribeMachinesResponse) {
     response = &DescribeMachinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachines
@@ -13711,6 +13400,7 @@ func (c *Client) DescribeMachinesWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachines require credential")
@@ -13737,8 +13427,9 @@ func NewDescribeMachinesSimpleRequest() (request *DescribeMachinesSimpleRequest)
 func NewDescribeMachinesSimpleResponse() (response *DescribeMachinesSimpleResponse) {
     response = &DescribeMachinesSimpleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMachinesSimple
@@ -13773,6 +13464,7 @@ func (c *Client) DescribeMachinesSimpleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeMachinesSimpleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMachinesSimple")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMachinesSimple require credential")
@@ -13799,8 +13491,9 @@ func NewDescribeMalWareListRequest() (request *DescribeMalWareListRequest) {
 func NewDescribeMalWareListResponse() (response *DescribeMalWareListResponse) {
     response = &DescribeMalWareListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalWareList
@@ -13837,6 +13530,7 @@ func (c *Client) DescribeMalWareListWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeMalWareListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalWareList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalWareList require credential")
@@ -13863,8 +13557,9 @@ func NewDescribeMaliciousRequestWhiteListRequest() (request *DescribeMaliciousRe
 func NewDescribeMaliciousRequestWhiteListResponse() (response *DescribeMaliciousRequestWhiteListResponse) {
     response = &DescribeMaliciousRequestWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMaliciousRequestWhiteList
@@ -13897,6 +13592,7 @@ func (c *Client) DescribeMaliciousRequestWhiteListWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeMaliciousRequestWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMaliciousRequestWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMaliciousRequestWhiteList require credential")
@@ -13923,8 +13619,9 @@ func NewDescribeMalwareFileRequest() (request *DescribeMalwareFileRequest) {
 func NewDescribeMalwareFileResponse() (response *DescribeMalwareFileResponse) {
     response = &DescribeMalwareFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalwareFile
@@ -13961,6 +13658,7 @@ func (c *Client) DescribeMalwareFileWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeMalwareFileRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalwareFile")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalwareFile require credential")
@@ -13987,8 +13685,9 @@ func NewDescribeMalwareInfoRequest() (request *DescribeMalwareInfoRequest) {
 func NewDescribeMalwareInfoResponse() (response *DescribeMalwareInfoResponse) {
     response = &DescribeMalwareInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalwareInfo
@@ -14025,6 +13724,7 @@ func (c *Client) DescribeMalwareInfoWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeMalwareInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalwareInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalwareInfo require credential")
@@ -14051,8 +13751,9 @@ func NewDescribeMalwareRiskOverviewRequest() (request *DescribeMalwareRiskOvervi
 func NewDescribeMalwareRiskOverviewResponse() (response *DescribeMalwareRiskOverviewResponse) {
     response = &DescribeMalwareRiskOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalwareRiskOverview
@@ -14073,6 +13774,7 @@ func (c *Client) DescribeMalwareRiskOverviewWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeMalwareRiskOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalwareRiskOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalwareRiskOverview require credential")
@@ -14099,8 +13801,9 @@ func NewDescribeMalwareRiskWarningRequest() (request *DescribeMalwareRiskWarning
 func NewDescribeMalwareRiskWarningResponse() (response *DescribeMalwareRiskWarningResponse) {
     response = &DescribeMalwareRiskWarningResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalwareRiskWarning
@@ -14121,6 +13824,7 @@ func (c *Client) DescribeMalwareRiskWarningWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeMalwareRiskWarningRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalwareRiskWarning")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalwareRiskWarning require credential")
@@ -14147,8 +13851,9 @@ func NewDescribeMalwareTimingScanSettingRequest() (request *DescribeMalwareTimin
 func NewDescribeMalwareTimingScanSettingResponse() (response *DescribeMalwareTimingScanSettingResponse) {
     response = &DescribeMalwareTimingScanSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalwareTimingScanSetting
@@ -14169,6 +13874,7 @@ func (c *Client) DescribeMalwareTimingScanSettingWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeMalwareTimingScanSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalwareTimingScanSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalwareTimingScanSetting require credential")
@@ -14195,8 +13901,9 @@ func NewDescribeMalwareWhiteListRequest() (request *DescribeMalwareWhiteListRequ
 func NewDescribeMalwareWhiteListResponse() (response *DescribeMalwareWhiteListResponse) {
     response = &DescribeMalwareWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalwareWhiteList
@@ -14231,6 +13938,7 @@ func (c *Client) DescribeMalwareWhiteListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeMalwareWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalwareWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalwareWhiteList require credential")
@@ -14257,8 +13965,9 @@ func NewDescribeMalwareWhiteListAffectListRequest() (request *DescribeMalwareWhi
 func NewDescribeMalwareWhiteListAffectListResponse() (response *DescribeMalwareWhiteListAffectListResponse) {
     response = &DescribeMalwareWhiteListAffectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMalwareWhiteListAffectList
@@ -14293,6 +14002,7 @@ func (c *Client) DescribeMalwareWhiteListAffectListWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeMalwareWhiteListAffectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeMalwareWhiteListAffectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMalwareWhiteListAffectList require credential")
@@ -14301,68 +14011,6 @@ func (c *Client) DescribeMalwareWhiteListAffectListWithContext(ctx context.Conte
     request.SetContext(ctx)
     
     response = NewDescribeMalwareWhiteListAffectListResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeMonthInspectionReportRequest() (request *DescribeMonthInspectionReportRequest) {
-    request = &DescribeMonthInspectionReportRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeMonthInspectionReport")
-    
-    
-    return
-}
-
-func NewDescribeMonthInspectionReportResponse() (response *DescribeMonthInspectionReportResponse) {
-    response = &DescribeMonthInspectionReportResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeMonthInspectionReport
-// 专家服务-安全管家月巡检报告下载
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeMonthInspectionReport(request *DescribeMonthInspectionReportRequest) (response *DescribeMonthInspectionReportResponse, err error) {
-    return c.DescribeMonthInspectionReportWithContext(context.Background(), request)
-}
-
-// DescribeMonthInspectionReport
-// 专家服务-安全管家月巡检报告下载
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeMonthInspectionReportWithContext(ctx context.Context, request *DescribeMonthInspectionReportRequest) (response *DescribeMonthInspectionReportResponse, err error) {
-    if request == nil {
-        request = NewDescribeMonthInspectionReportRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeMonthInspectionReport require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeMonthInspectionReportResponse()
     err = c.Send(request, response)
     return
 }
@@ -14381,8 +14029,9 @@ func NewDescribeNetAttackSettingRequest() (request *DescribeNetAttackSettingRequ
 func NewDescribeNetAttackSettingResponse() (response *DescribeNetAttackSettingResponse) {
     response = &DescribeNetAttackSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNetAttackSetting
@@ -14391,11 +14040,11 @@ func NewDescribeNetAttackSettingResponse() (response *DescribeNetAttackSettingRe
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeNetAttackSetting(request *DescribeNetAttackSettingRequest) (response *DescribeNetAttackSettingResponse, err error) {
     return c.DescribeNetAttackSettingWithContext(context.Background(), request)
@@ -14407,16 +14056,17 @@ func (c *Client) DescribeNetAttackSetting(request *DescribeNetAttackSettingReque
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeNetAttackSettingWithContext(ctx context.Context, request *DescribeNetAttackSettingRequest) (response *DescribeNetAttackSettingResponse, err error) {
     if request == nil {
         request = NewDescribeNetAttackSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeNetAttackSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNetAttackSetting require credential")
@@ -14443,8 +14093,9 @@ func NewDescribeNetAttackWhiteListRequest() (request *DescribeNetAttackWhiteList
 func NewDescribeNetAttackWhiteListResponse() (response *DescribeNetAttackWhiteListResponse) {
     response = &DescribeNetAttackWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNetAttackWhiteList
@@ -14479,6 +14130,7 @@ func (c *Client) DescribeNetAttackWhiteListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeNetAttackWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeNetAttackWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNetAttackWhiteList require credential")
@@ -14505,8 +14157,9 @@ func NewDescribeOpenPortStatisticsRequest() (request *DescribeOpenPortStatistics
 func NewDescribeOpenPortStatisticsResponse() (response *DescribeOpenPortStatisticsResponse) {
     response = &DescribeOpenPortStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOpenPortStatistics
@@ -14537,6 +14190,7 @@ func (c *Client) DescribeOpenPortStatisticsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeOpenPortStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeOpenPortStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOpenPortStatistics require credential")
@@ -14563,8 +14217,9 @@ func NewDescribeOverviewStatisticsRequest() (request *DescribeOverviewStatistics
 func NewDescribeOverviewStatisticsResponse() (response *DescribeOverviewStatisticsResponse) {
     response = &DescribeOverviewStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOverviewStatistics
@@ -14591,6 +14246,7 @@ func (c *Client) DescribeOverviewStatisticsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeOverviewStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeOverviewStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOverviewStatistics require credential")
@@ -14617,8 +14273,9 @@ func NewDescribePrivilegeEventInfoRequest() (request *DescribePrivilegeEventInfo
 func NewDescribePrivilegeEventInfoResponse() (response *DescribePrivilegeEventInfoResponse) {
     response = &DescribePrivilegeEventInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrivilegeEventInfo
@@ -14659,6 +14316,7 @@ func (c *Client) DescribePrivilegeEventInfoWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribePrivilegeEventInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribePrivilegeEventInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivilegeEventInfo require credential")
@@ -14685,8 +14343,9 @@ func NewDescribePrivilegeEventsRequest() (request *DescribePrivilegeEventsReques
 func NewDescribePrivilegeEventsResponse() (response *DescribePrivilegeEventsResponse) {
     response = &DescribePrivilegeEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrivilegeEvents
@@ -14723,6 +14382,7 @@ func (c *Client) DescribePrivilegeEventsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribePrivilegeEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribePrivilegeEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivilegeEvents require credential")
@@ -14749,8 +14409,9 @@ func NewDescribePrivilegeRulesRequest() (request *DescribePrivilegeRulesRequest)
 func NewDescribePrivilegeRulesResponse() (response *DescribePrivilegeRulesResponse) {
     response = &DescribePrivilegeRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrivilegeRules
@@ -14787,6 +14448,7 @@ func (c *Client) DescribePrivilegeRulesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribePrivilegeRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribePrivilegeRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivilegeRules require credential")
@@ -14813,8 +14475,9 @@ func NewDescribeProVersionInfoRequest() (request *DescribeProVersionInfoRequest)
 func NewDescribeProVersionInfoResponse() (response *DescribeProVersionInfoResponse) {
     response = &DescribeProVersionInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProVersionInfo
@@ -14835,6 +14498,7 @@ func (c *Client) DescribeProVersionInfoWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeProVersionInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeProVersionInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProVersionInfo require credential")
@@ -14861,8 +14525,9 @@ func NewDescribeProVersionStatusRequest() (request *DescribeProVersionStatusRequ
 func NewDescribeProVersionStatusResponse() (response *DescribeProVersionStatusResponse) {
     response = &DescribeProVersionStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProVersionStatus
@@ -14895,6 +14560,7 @@ func (c *Client) DescribeProVersionStatusWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeProVersionStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeProVersionStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProVersionStatus require credential")
@@ -14921,8 +14587,9 @@ func NewDescribeProcessStatisticsRequest() (request *DescribeProcessStatisticsRe
 func NewDescribeProcessStatisticsResponse() (response *DescribeProcessStatisticsResponse) {
     response = &DescribeProcessStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProcessStatistics
@@ -14953,6 +14620,7 @@ func (c *Client) DescribeProcessStatisticsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeProcessStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeProcessStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProcessStatistics require credential")
@@ -14979,8 +14647,9 @@ func NewDescribeProductStatusRequest() (request *DescribeProductStatusRequest) {
 func NewDescribeProductStatusResponse() (response *DescribeProductStatusResponse) {
     response = &DescribeProductStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProductStatus
@@ -15011,6 +14680,7 @@ func (c *Client) DescribeProductStatusWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeProductStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeProductStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProductStatus require credential")
@@ -15037,8 +14707,9 @@ func NewDescribeProtectDirListRequest() (request *DescribeProtectDirListRequest)
 func NewDescribeProtectDirListResponse() (response *DescribeProtectDirListResponse) {
     response = &DescribeProtectDirListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProtectDirList
@@ -15071,6 +14742,7 @@ func (c *Client) DescribeProtectDirListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeProtectDirListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeProtectDirList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProtectDirList require credential")
@@ -15097,8 +14769,9 @@ func NewDescribeProtectDirRelatedServerRequest() (request *DescribeProtectDirRel
 func NewDescribeProtectDirRelatedServerResponse() (response *DescribeProtectDirRelatedServerResponse) {
     response = &DescribeProtectDirRelatedServerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProtectDirRelatedServer
@@ -15125,6 +14798,7 @@ func (c *Client) DescribeProtectDirRelatedServerWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeProtectDirRelatedServerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeProtectDirRelatedServer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProtectDirRelatedServer require credential")
@@ -15133,60 +14807,6 @@ func (c *Client) DescribeProtectDirRelatedServerWithContext(ctx context.Context,
     request.SetContext(ctx)
     
     response = NewDescribeProtectDirRelatedServerResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeProtectNetListRequest() (request *DescribeProtectNetListRequest) {
-    request = &DescribeProtectNetListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeProtectNetList")
-    
-    
-    return
-}
-
-func NewDescribeProtectNetListResponse() (response *DescribeProtectNetListResponse) {
-    response = &DescribeProtectNetListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeProtectNetList
-// 专家服务-旗舰重保列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeProtectNetList(request *DescribeProtectNetListRequest) (response *DescribeProtectNetListResponse, err error) {
-    return c.DescribeProtectNetListWithContext(context.Background(), request)
-}
-
-// DescribeProtectNetList
-// 专家服务-旗舰重保列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-func (c *Client) DescribeProtectNetListWithContext(ctx context.Context, request *DescribeProtectNetListRequest) (response *DescribeProtectNetListResponse, err error) {
-    if request == nil {
-        request = NewDescribeProtectNetListRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeProtectNetList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeProtectNetListResponse()
     err = c.Send(request, response)
     return
 }
@@ -15205,8 +14825,9 @@ func NewDescribePublicProxyInstallCommandRequest() (request *DescribePublicProxy
 func NewDescribePublicProxyInstallCommandResponse() (response *DescribePublicProxyInstallCommandResponse) {
     response = &DescribePublicProxyInstallCommandResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePublicProxyInstallCommand
@@ -15233,6 +14854,7 @@ func (c *Client) DescribePublicProxyInstallCommandWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribePublicProxyInstallCommandRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribePublicProxyInstallCommand")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePublicProxyInstallCommand require credential")
@@ -15259,8 +14881,9 @@ func NewDescribeRansomDefenseBackupListRequest() (request *DescribeRansomDefense
 func NewDescribeRansomDefenseBackupListResponse() (response *DescribeRansomDefenseBackupListResponse) {
     response = &DescribeRansomDefenseBackupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseBackupList
@@ -15293,6 +14916,7 @@ func (c *Client) DescribeRansomDefenseBackupListWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeRansomDefenseBackupListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseBackupList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseBackupList require credential")
@@ -15319,8 +14943,9 @@ func NewDescribeRansomDefenseEventsListRequest() (request *DescribeRansomDefense
 func NewDescribeRansomDefenseEventsListResponse() (response *DescribeRansomDefenseEventsListResponse) {
     response = &DescribeRansomDefenseEventsListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseEventsList
@@ -15353,6 +14978,7 @@ func (c *Client) DescribeRansomDefenseEventsListWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeRansomDefenseEventsListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseEventsList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseEventsList require credential")
@@ -15379,8 +15005,9 @@ func NewDescribeRansomDefenseMachineListRequest() (request *DescribeRansomDefens
 func NewDescribeRansomDefenseMachineListResponse() (response *DescribeRansomDefenseMachineListResponse) {
     response = &DescribeRansomDefenseMachineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseMachineList
@@ -15413,6 +15040,7 @@ func (c *Client) DescribeRansomDefenseMachineListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeRansomDefenseMachineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseMachineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseMachineList require credential")
@@ -15439,8 +15067,9 @@ func NewDescribeRansomDefenseMachineStrategyInfoRequest() (request *DescribeRans
 func NewDescribeRansomDefenseMachineStrategyInfoResponse() (response *DescribeRansomDefenseMachineStrategyInfoResponse) {
     response = &DescribeRansomDefenseMachineStrategyInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseMachineStrategyInfo
@@ -15463,6 +15092,7 @@ func (c *Client) DescribeRansomDefenseMachineStrategyInfoWithContext(ctx context
     if request == nil {
         request = NewDescribeRansomDefenseMachineStrategyInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseMachineStrategyInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseMachineStrategyInfo require credential")
@@ -15489,8 +15119,9 @@ func NewDescribeRansomDefenseRollBackTaskListRequest() (request *DescribeRansomD
 func NewDescribeRansomDefenseRollBackTaskListResponse() (response *DescribeRansomDefenseRollBackTaskListResponse) {
     response = &DescribeRansomDefenseRollBackTaskListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseRollBackTaskList
@@ -15523,6 +15154,7 @@ func (c *Client) DescribeRansomDefenseRollBackTaskListWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeRansomDefenseRollBackTaskListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseRollBackTaskList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseRollBackTaskList require credential")
@@ -15549,8 +15181,9 @@ func NewDescribeRansomDefenseStateRequest() (request *DescribeRansomDefenseState
 func NewDescribeRansomDefenseStateResponse() (response *DescribeRansomDefenseStateResponse) {
     response = &DescribeRansomDefenseStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseState
@@ -15573,6 +15206,7 @@ func (c *Client) DescribeRansomDefenseStateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeRansomDefenseStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseState require credential")
@@ -15599,8 +15233,9 @@ func NewDescribeRansomDefenseStrategyDetailRequest() (request *DescribeRansomDef
 func NewDescribeRansomDefenseStrategyDetailResponse() (response *DescribeRansomDefenseStrategyDetailResponse) {
     response = &DescribeRansomDefenseStrategyDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseStrategyDetail
@@ -15623,6 +15258,7 @@ func (c *Client) DescribeRansomDefenseStrategyDetailWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeRansomDefenseStrategyDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseStrategyDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseStrategyDetail require credential")
@@ -15649,8 +15285,9 @@ func NewDescribeRansomDefenseStrategyListRequest() (request *DescribeRansomDefen
 func NewDescribeRansomDefenseStrategyListResponse() (response *DescribeRansomDefenseStrategyListResponse) {
     response = &DescribeRansomDefenseStrategyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseStrategyList
@@ -15683,6 +15320,7 @@ func (c *Client) DescribeRansomDefenseStrategyListWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeRansomDefenseStrategyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseStrategyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseStrategyList require credential")
@@ -15709,8 +15347,9 @@ func NewDescribeRansomDefenseStrategyMachinesRequest() (request *DescribeRansomD
 func NewDescribeRansomDefenseStrategyMachinesResponse() (response *DescribeRansomDefenseStrategyMachinesResponse) {
     response = &DescribeRansomDefenseStrategyMachinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseStrategyMachines
@@ -15743,6 +15382,7 @@ func (c *Client) DescribeRansomDefenseStrategyMachinesWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeRansomDefenseStrategyMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseStrategyMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseStrategyMachines require credential")
@@ -15769,8 +15409,9 @@ func NewDescribeRansomDefenseTrendRequest() (request *DescribeRansomDefenseTrend
 func NewDescribeRansomDefenseTrendResponse() (response *DescribeRansomDefenseTrendResponse) {
     response = &DescribeRansomDefenseTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRansomDefenseTrend
@@ -15793,6 +15434,7 @@ func (c *Client) DescribeRansomDefenseTrendWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeRansomDefenseTrendRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRansomDefenseTrend")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRansomDefenseTrend require credential")
@@ -15801,6 +15443,212 @@ func (c *Client) DescribeRansomDefenseTrendWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeRansomDefenseTrendResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRaspMaxCpuRequest() (request *DescribeRaspMaxCpuRequest) {
+    request = &DescribeRaspMaxCpuRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cwp", APIVersion, "DescribeRaspMaxCpu")
+    
+    
+    return
+}
+
+func NewDescribeRaspMaxCpuResponse() (response *DescribeRaspMaxCpuResponse) {
+    response = &DescribeRaspMaxCpuResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRaspMaxCpu
+// 查看漏洞防御最大cpu限制
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeRaspMaxCpu(request *DescribeRaspMaxCpuRequest) (response *DescribeRaspMaxCpuResponse, err error) {
+    return c.DescribeRaspMaxCpuWithContext(context.Background(), request)
+}
+
+// DescribeRaspMaxCpu
+// 查看漏洞防御最大cpu限制
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeRaspMaxCpuWithContext(ctx context.Context, request *DescribeRaspMaxCpuRequest) (response *DescribeRaspMaxCpuResponse, err error) {
+    if request == nil {
+        request = NewDescribeRaspMaxCpuRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRaspMaxCpu")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRaspMaxCpu require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRaspMaxCpuResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRaspRuleVulsRequest() (request *DescribeRaspRuleVulsRequest) {
+    request = &DescribeRaspRuleVulsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cwp", APIVersion, "DescribeRaspRuleVuls")
+    
+    
+    return
+}
+
+func NewDescribeRaspRuleVulsResponse() (response *DescribeRaspRuleVulsResponse) {
+    response = &DescribeRaspRuleVulsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRaspRuleVuls
+// 获取漏洞防御白名单漏洞列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRaspRuleVuls(request *DescribeRaspRuleVulsRequest) (response *DescribeRaspRuleVulsResponse, err error) {
+    return c.DescribeRaspRuleVulsWithContext(context.Background(), request)
+}
+
+// DescribeRaspRuleVuls
+// 获取漏洞防御白名单漏洞列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRaspRuleVulsWithContext(ctx context.Context, request *DescribeRaspRuleVulsRequest) (response *DescribeRaspRuleVulsResponse, err error) {
+    if request == nil {
+        request = NewDescribeRaspRuleVulsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRaspRuleVuls")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRaspRuleVuls require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRaspRuleVulsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRaspRulesRequest() (request *DescribeRaspRulesRequest) {
+    request = &DescribeRaspRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cwp", APIVersion, "DescribeRaspRules")
+    
+    
+    return
+}
+
+func NewDescribeRaspRulesResponse() (response *DescribeRaspRulesResponse) {
+    response = &DescribeRaspRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRaspRules
+// 查询漏洞防御白名单
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRaspRules(request *DescribeRaspRulesRequest) (response *DescribeRaspRulesResponse, err error) {
+    return c.DescribeRaspRulesWithContext(context.Background(), request)
+}
+
+// DescribeRaspRules
+// 查询漏洞防御白名单
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeRaspRulesWithContext(ctx context.Context, request *DescribeRaspRulesRequest) (response *DescribeRaspRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeRaspRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRaspRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRaspRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRaspRulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -15819,8 +15667,9 @@ func NewDescribeRecommendedProtectCpuRequest() (request *DescribeRecommendedProt
 func NewDescribeRecommendedProtectCpuResponse() (response *DescribeRecommendedProtectCpuResponse) {
     response = &DescribeRecommendedProtectCpuResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecommendedProtectCpu
@@ -15828,6 +15677,16 @@ func NewDescribeRecommendedProtectCpuResponse() (response *DescribeRecommendedPr
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeRecommendedProtectCpu(request *DescribeRecommendedProtectCpuRequest) (response *DescribeRecommendedProtectCpuResponse, err error) {
     return c.DescribeRecommendedProtectCpuWithContext(context.Background(), request)
@@ -15838,11 +15697,22 @@ func (c *Client) DescribeRecommendedProtectCpu(request *DescribeRecommendedProte
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeRecommendedProtectCpuWithContext(ctx context.Context, request *DescribeRecommendedProtectCpuRequest) (response *DescribeRecommendedProtectCpuResponse, err error) {
     if request == nil {
         request = NewDescribeRecommendedProtectCpuRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRecommendedProtectCpu")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRecommendedProtectCpu require credential")
@@ -15869,8 +15739,9 @@ func NewDescribeReverseShellEventInfoRequest() (request *DescribeReverseShellEve
 func NewDescribeReverseShellEventInfoResponse() (response *DescribeReverseShellEventInfoResponse) {
     response = &DescribeReverseShellEventInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReverseShellEventInfo
@@ -15911,6 +15782,7 @@ func (c *Client) DescribeReverseShellEventInfoWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeReverseShellEventInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeReverseShellEventInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReverseShellEventInfo require credential")
@@ -15937,8 +15809,9 @@ func NewDescribeReverseShellEventsRequest() (request *DescribeReverseShellEvents
 func NewDescribeReverseShellEventsResponse() (response *DescribeReverseShellEventsResponse) {
     response = &DescribeReverseShellEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReverseShellEvents
@@ -15975,6 +15848,7 @@ func (c *Client) DescribeReverseShellEventsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeReverseShellEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeReverseShellEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReverseShellEvents require credential")
@@ -16001,8 +15875,9 @@ func NewDescribeReverseShellRulesRequest() (request *DescribeReverseShellRulesRe
 func NewDescribeReverseShellRulesResponse() (response *DescribeReverseShellRulesResponse) {
     response = &DescribeReverseShellRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReverseShellRules
@@ -16045,6 +15920,7 @@ func (c *Client) DescribeReverseShellRulesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeReverseShellRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeReverseShellRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReverseShellRules require credential")
@@ -16071,8 +15947,9 @@ func NewDescribeRiskBatchStatusRequest() (request *DescribeRiskBatchStatusReques
 func NewDescribeRiskBatchStatusResponse() (response *DescribeRiskBatchStatusResponse) {
     response = &DescribeRiskBatchStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRiskBatchStatus
@@ -16109,6 +15986,7 @@ func (c *Client) DescribeRiskBatchStatusWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeRiskBatchStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRiskBatchStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRiskBatchStatus require credential")
@@ -16135,8 +16013,9 @@ func NewDescribeRiskDnsEventInfoRequest() (request *DescribeRiskDnsEventInfoRequ
 func NewDescribeRiskDnsEventInfoResponse() (response *DescribeRiskDnsEventInfoResponse) {
     response = &DescribeRiskDnsEventInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRiskDnsEventInfo
@@ -16163,6 +16042,7 @@ func (c *Client) DescribeRiskDnsEventInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeRiskDnsEventInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRiskDnsEventInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRiskDnsEventInfo require credential")
@@ -16189,8 +16069,9 @@ func NewDescribeRiskDnsEventListRequest() (request *DescribeRiskDnsEventListRequ
 func NewDescribeRiskDnsEventListResponse() (response *DescribeRiskDnsEventListResponse) {
     response = &DescribeRiskDnsEventListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRiskDnsEventList
@@ -16215,6 +16096,7 @@ func (c *Client) DescribeRiskDnsEventListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeRiskDnsEventListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRiskDnsEventList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRiskDnsEventList require credential")
@@ -16241,8 +16123,9 @@ func NewDescribeRiskDnsInfoRequest() (request *DescribeRiskDnsInfoRequest) {
 func NewDescribeRiskDnsInfoResponse() (response *DescribeRiskDnsInfoResponse) {
     response = &DescribeRiskDnsInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRiskDnsInfo
@@ -16265,6 +16148,7 @@ func (c *Client) DescribeRiskDnsInfoWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeRiskDnsInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRiskDnsInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRiskDnsInfo require credential")
@@ -16291,8 +16175,9 @@ func NewDescribeRiskDnsListRequest() (request *DescribeRiskDnsListRequest) {
 func NewDescribeRiskDnsListResponse() (response *DescribeRiskDnsListResponse) {
     response = &DescribeRiskDnsListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRiskDnsList
@@ -16325,6 +16210,7 @@ func (c *Client) DescribeRiskDnsListWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeRiskDnsListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRiskDnsList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRiskDnsList require credential")
@@ -16351,8 +16237,9 @@ func NewDescribeRiskDnsPolicyListRequest() (request *DescribeRiskDnsPolicyListRe
 func NewDescribeRiskDnsPolicyListResponse() (response *DescribeRiskDnsPolicyListResponse) {
     response = &DescribeRiskDnsPolicyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRiskDnsPolicyList
@@ -16377,6 +16264,7 @@ func (c *Client) DescribeRiskDnsPolicyListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRiskDnsPolicyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRiskDnsPolicyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRiskDnsPolicyList require credential")
@@ -16403,8 +16291,9 @@ func NewDescribeRiskProcessEventsRequest() (request *DescribeRiskProcessEventsRe
 func NewDescribeRiskProcessEventsResponse() (response *DescribeRiskProcessEventsResponse) {
     response = &DescribeRiskProcessEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRiskProcessEvents
@@ -16429,6 +16318,7 @@ func (c *Client) DescribeRiskProcessEventsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRiskProcessEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeRiskProcessEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRiskProcessEvents require credential")
@@ -16455,8 +16345,9 @@ func NewDescribeSafeInfoRequest() (request *DescribeSafeInfoRequest) {
 func NewDescribeSafeInfoResponse() (response *DescribeSafeInfoResponse) {
     response = &DescribeSafeInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSafeInfo
@@ -16483,6 +16374,7 @@ func (c *Client) DescribeSafeInfoWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeSafeInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSafeInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSafeInfo require credential")
@@ -16509,8 +16401,9 @@ func NewDescribeScanMalwareScheduleRequest() (request *DescribeScanMalwareSchedu
 func NewDescribeScanMalwareScheduleResponse() (response *DescribeScanMalwareScheduleResponse) {
     response = &DescribeScanMalwareScheduleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScanMalwareSchedule
@@ -16543,6 +16436,7 @@ func (c *Client) DescribeScanMalwareScheduleWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeScanMalwareScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScanMalwareSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScanMalwareSchedule require credential")
@@ -16569,8 +16463,9 @@ func NewDescribeScanScheduleRequest() (request *DescribeScanScheduleRequest) {
 func NewDescribeScanScheduleResponse() (response *DescribeScanScheduleResponse) {
     response = &DescribeScanScheduleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScanSchedule
@@ -16603,6 +16498,7 @@ func (c *Client) DescribeScanScheduleWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeScanScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScanSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScanSchedule require credential")
@@ -16629,8 +16525,9 @@ func NewDescribeScanStateRequest() (request *DescribeScanStateRequest) {
 func NewDescribeScanStateResponse() (response *DescribeScanStateResponse) {
     response = &DescribeScanStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScanState
@@ -16667,6 +16564,7 @@ func (c *Client) DescribeScanStateWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeScanStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScanState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScanState require credential")
@@ -16693,8 +16591,9 @@ func NewDescribeScanTaskDetailsRequest() (request *DescribeScanTaskDetailsReques
 func NewDescribeScanTaskDetailsResponse() (response *DescribeScanTaskDetailsResponse) {
     response = &DescribeScanTaskDetailsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScanTaskDetails
@@ -16725,6 +16624,7 @@ func (c *Client) DescribeScanTaskDetailsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeScanTaskDetailsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScanTaskDetails")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScanTaskDetails require credential")
@@ -16751,8 +16651,9 @@ func NewDescribeScanTaskStatusRequest() (request *DescribeScanTaskStatusRequest)
 func NewDescribeScanTaskStatusResponse() (response *DescribeScanTaskStatusResponse) {
     response = &DescribeScanTaskStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScanTaskStatus
@@ -16785,6 +16686,7 @@ func (c *Client) DescribeScanTaskStatusWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeScanTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScanTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScanTaskStatus require credential")
@@ -16811,8 +16713,9 @@ func NewDescribeScanVulSettingRequest() (request *DescribeScanVulSettingRequest)
 func NewDescribeScanVulSettingResponse() (response *DescribeScanVulSettingResponse) {
     response = &DescribeScanVulSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScanVulSetting
@@ -16843,6 +16746,7 @@ func (c *Client) DescribeScanVulSettingWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeScanVulSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScanVulSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScanVulSetting require credential")
@@ -16869,8 +16773,9 @@ func NewDescribeScreenAttackHotspotRequest() (request *DescribeScreenAttackHotsp
 func NewDescribeScreenAttackHotspotResponse() (response *DescribeScreenAttackHotspotResponse) {
     response = &DescribeScreenAttackHotspotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenAttackHotspot
@@ -16897,6 +16802,7 @@ func (c *Client) DescribeScreenAttackHotspotWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeScreenAttackHotspotRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenAttackHotspot")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenAttackHotspot require credential")
@@ -16923,8 +16829,9 @@ func NewDescribeScreenBroadcastsRequest() (request *DescribeScreenBroadcastsRequ
 func NewDescribeScreenBroadcastsResponse() (response *DescribeScreenBroadcastsResponse) {
     response = &DescribeScreenBroadcastsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenBroadcasts
@@ -16955,6 +16862,7 @@ func (c *Client) DescribeScreenBroadcastsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeScreenBroadcastsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenBroadcasts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenBroadcasts require credential")
@@ -16981,8 +16889,9 @@ func NewDescribeScreenDefenseTrendsRequest() (request *DescribeScreenDefenseTren
 func NewDescribeScreenDefenseTrendsResponse() (response *DescribeScreenDefenseTrendsResponse) {
     response = &DescribeScreenDefenseTrendsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenDefenseTrends
@@ -17021,6 +16930,7 @@ func (c *Client) DescribeScreenDefenseTrendsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeScreenDefenseTrendsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenDefenseTrends")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenDefenseTrends require credential")
@@ -17047,8 +16957,9 @@ func NewDescribeScreenEmergentMsgRequest() (request *DescribeScreenEmergentMsgRe
 func NewDescribeScreenEmergentMsgResponse() (response *DescribeScreenEmergentMsgResponse) {
     response = &DescribeScreenEmergentMsgResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenEmergentMsg
@@ -17083,6 +16994,7 @@ func (c *Client) DescribeScreenEmergentMsgWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeScreenEmergentMsgRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenEmergentMsg")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenEmergentMsg require credential")
@@ -17109,8 +17021,9 @@ func NewDescribeScreenEventsCntRequest() (request *DescribeScreenEventsCntReques
 func NewDescribeScreenEventsCntResponse() (response *DescribeScreenEventsCntResponse) {
     response = &DescribeScreenEventsCntResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenEventsCnt
@@ -17137,6 +17050,7 @@ func (c *Client) DescribeScreenEventsCntWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeScreenEventsCntRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenEventsCnt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenEventsCnt require credential")
@@ -17163,8 +17077,9 @@ func NewDescribeScreenGeneralStatRequest() (request *DescribeScreenGeneralStatRe
 func NewDescribeScreenGeneralStatResponse() (response *DescribeScreenGeneralStatResponse) {
     response = &DescribeScreenGeneralStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenGeneralStat
@@ -17197,6 +17112,7 @@ func (c *Client) DescribeScreenGeneralStatWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeScreenGeneralStatRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenGeneralStat")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenGeneralStat require credential")
@@ -17223,8 +17139,9 @@ func NewDescribeScreenHostInvasionRequest() (request *DescribeScreenHostInvasion
 func NewDescribeScreenHostInvasionResponse() (response *DescribeScreenHostInvasionResponse) {
     response = &DescribeScreenHostInvasionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenHostInvasion
@@ -17253,6 +17170,7 @@ func (c *Client) DescribeScreenHostInvasionWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeScreenHostInvasionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenHostInvasion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenHostInvasion require credential")
@@ -17279,8 +17197,9 @@ func NewDescribeScreenMachineRegionsRequest() (request *DescribeScreenMachineReg
 func NewDescribeScreenMachineRegionsResponse() (response *DescribeScreenMachineRegionsResponse) {
     response = &DescribeScreenMachineRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenMachineRegions
@@ -17309,6 +17228,7 @@ func (c *Client) DescribeScreenMachineRegionsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeScreenMachineRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenMachineRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenMachineRegions require credential")
@@ -17335,8 +17255,9 @@ func NewDescribeScreenMachinesRequest() (request *DescribeScreenMachinesRequest)
 func NewDescribeScreenMachinesResponse() (response *DescribeScreenMachinesResponse) {
     response = &DescribeScreenMachinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenMachines
@@ -17365,6 +17286,7 @@ func (c *Client) DescribeScreenMachinesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeScreenMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenMachines require credential")
@@ -17391,8 +17313,9 @@ func NewDescribeScreenProtectionCntRequest() (request *DescribeScreenProtectionC
 func NewDescribeScreenProtectionCntResponse() (response *DescribeScreenProtectionCntResponse) {
     response = &DescribeScreenProtectionCntResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenProtectionCnt
@@ -17427,6 +17350,7 @@ func (c *Client) DescribeScreenProtectionCntWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeScreenProtectionCntRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenProtectionCnt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenProtectionCnt require credential")
@@ -17453,8 +17377,9 @@ func NewDescribeScreenProtectionStatRequest() (request *DescribeScreenProtection
 func NewDescribeScreenProtectionStatResponse() (response *DescribeScreenProtectionStatResponse) {
     response = &DescribeScreenProtectionStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenProtectionStat
@@ -17491,6 +17416,7 @@ func (c *Client) DescribeScreenProtectionStatWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeScreenProtectionStatRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenProtectionStat")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenProtectionStat require credential")
@@ -17517,8 +17443,9 @@ func NewDescribeScreenRiskAssetsTopRequest() (request *DescribeScreenRiskAssetsT
 func NewDescribeScreenRiskAssetsTopResponse() (response *DescribeScreenRiskAssetsTopResponse) {
     response = &DescribeScreenRiskAssetsTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScreenRiskAssetsTop
@@ -17557,6 +17484,7 @@ func (c *Client) DescribeScreenRiskAssetsTopWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeScreenRiskAssetsTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeScreenRiskAssetsTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenRiskAssetsTop require credential")
@@ -17583,8 +17511,9 @@ func NewDescribeSearchLogsRequest() (request *DescribeSearchLogsRequest) {
 func NewDescribeSearchLogsResponse() (response *DescribeSearchLogsResponse) {
     response = &DescribeSearchLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSearchLogs
@@ -17605,6 +17534,7 @@ func (c *Client) DescribeSearchLogsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeSearchLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSearchLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSearchLogs require credential")
@@ -17631,8 +17561,9 @@ func NewDescribeSearchTemplatesRequest() (request *DescribeSearchTemplatesReques
 func NewDescribeSearchTemplatesResponse() (response *DescribeSearchTemplatesResponse) {
     response = &DescribeSearchTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSearchTemplates
@@ -17659,6 +17590,7 @@ func (c *Client) DescribeSearchTemplatesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeSearchTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSearchTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSearchTemplates require credential")
@@ -17685,8 +17617,9 @@ func NewDescribeSecurityBroadcastInfoRequest() (request *DescribeSecurityBroadca
 func NewDescribeSecurityBroadcastInfoResponse() (response *DescribeSecurityBroadcastInfoResponse) {
     response = &DescribeSecurityBroadcastInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityBroadcastInfo
@@ -17719,6 +17652,7 @@ func (c *Client) DescribeSecurityBroadcastInfoWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeSecurityBroadcastInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSecurityBroadcastInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityBroadcastInfo require credential")
@@ -17745,8 +17679,9 @@ func NewDescribeSecurityBroadcastsRequest() (request *DescribeSecurityBroadcasts
 func NewDescribeSecurityBroadcastsResponse() (response *DescribeSecurityBroadcastsResponse) {
     response = &DescribeSecurityBroadcastsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityBroadcasts
@@ -17779,6 +17714,7 @@ func (c *Client) DescribeSecurityBroadcastsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeSecurityBroadcastsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSecurityBroadcasts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityBroadcasts require credential")
@@ -17805,8 +17741,9 @@ func NewDescribeSecurityDynamicsRequest() (request *DescribeSecurityDynamicsRequ
 func NewDescribeSecurityDynamicsResponse() (response *DescribeSecurityDynamicsResponse) {
     response = &DescribeSecurityDynamicsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityDynamics
@@ -17831,6 +17768,7 @@ func (c *Client) DescribeSecurityDynamicsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSecurityDynamicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSecurityDynamics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityDynamics require credential")
@@ -17857,8 +17795,9 @@ func NewDescribeSecurityEventStatRequest() (request *DescribeSecurityEventStatRe
 func NewDescribeSecurityEventStatResponse() (response *DescribeSecurityEventStatResponse) {
     response = &DescribeSecurityEventStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityEventStat
@@ -17881,6 +17820,7 @@ func (c *Client) DescribeSecurityEventStatWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeSecurityEventStatRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSecurityEventStat")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityEventStat require credential")
@@ -17907,8 +17847,9 @@ func NewDescribeSecurityEventsCntRequest() (request *DescribeSecurityEventsCntRe
 func NewDescribeSecurityEventsCntResponse() (response *DescribeSecurityEventsCntResponse) {
     response = &DescribeSecurityEventsCntResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityEventsCnt
@@ -17935,6 +17876,7 @@ func (c *Client) DescribeSecurityEventsCntWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeSecurityEventsCntRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSecurityEventsCnt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityEventsCnt require credential")
@@ -17943,60 +17885,6 @@ func (c *Client) DescribeSecurityEventsCntWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeSecurityEventsCntResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeSecurityProtectionStatRequest() (request *DescribeSecurityProtectionStatRequest) {
-    request = &DescribeSecurityProtectionStatRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "DescribeSecurityProtectionStat")
-    
-    
-    return
-}
-
-func NewDescribeSecurityProtectionStatResponse() (response *DescribeSecurityProtectionStatResponse) {
-    response = &DescribeSecurityProtectionStatResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeSecurityProtectionStat
-// 获取安全防护状态汇总
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_MAINDBFAIL = "InternalError.MainDBFail"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DescribeSecurityProtectionStat(request *DescribeSecurityProtectionStatRequest) (response *DescribeSecurityProtectionStatResponse, err error) {
-    return c.DescribeSecurityProtectionStatWithContext(context.Background(), request)
-}
-
-// DescribeSecurityProtectionStat
-// 获取安全防护状态汇总
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_MAINDBFAIL = "InternalError.MainDBFail"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DescribeSecurityProtectionStatWithContext(ctx context.Context, request *DescribeSecurityProtectionStatRequest) (response *DescribeSecurityProtectionStatResponse, err error) {
-    if request == nil {
-        request = NewDescribeSecurityProtectionStatRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeSecurityProtectionStat require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeSecurityProtectionStatResponse()
     err = c.Send(request, response)
     return
 }
@@ -18015,8 +17903,9 @@ func NewDescribeSecurityTrendsRequest() (request *DescribeSecurityTrendsRequest)
 func NewDescribeSecurityTrendsResponse() (response *DescribeSecurityTrendsResponse) {
     response = &DescribeSecurityTrendsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityTrends
@@ -18049,6 +17938,7 @@ func (c *Client) DescribeSecurityTrendsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeSecurityTrendsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeSecurityTrends")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityTrends require credential")
@@ -18075,8 +17965,9 @@ func NewDescribeServerRelatedDirInfoRequest() (request *DescribeServerRelatedDir
 func NewDescribeServerRelatedDirInfoResponse() (response *DescribeServerRelatedDirInfoResponse) {
     response = &DescribeServerRelatedDirInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeServerRelatedDirInfo
@@ -18103,6 +17994,7 @@ func (c *Client) DescribeServerRelatedDirInfoWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeServerRelatedDirInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeServerRelatedDirInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeServerRelatedDirInfo require credential")
@@ -18129,8 +18021,9 @@ func NewDescribeServersAndRiskAndFirstInfoRequest() (request *DescribeServersAnd
 func NewDescribeServersAndRiskAndFirstInfoResponse() (response *DescribeServersAndRiskAndFirstInfoResponse) {
     response = &DescribeServersAndRiskAndFirstInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeServersAndRiskAndFirstInfo
@@ -18151,6 +18044,7 @@ func (c *Client) DescribeServersAndRiskAndFirstInfoWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeServersAndRiskAndFirstInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeServersAndRiskAndFirstInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeServersAndRiskAndFirstInfo require credential")
@@ -18177,8 +18071,9 @@ func NewDescribeStrategyExistRequest() (request *DescribeStrategyExistRequest) {
 func NewDescribeStrategyExistResponse() (response *DescribeStrategyExistResponse) {
     response = &DescribeStrategyExistResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeStrategyExist
@@ -18209,6 +18104,7 @@ func (c *Client) DescribeStrategyExistWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeStrategyExistRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeStrategyExist")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeStrategyExist require credential")
@@ -18235,8 +18131,9 @@ func NewDescribeTagMachinesRequest() (request *DescribeTagMachinesRequest) {
 func NewDescribeTagMachinesResponse() (response *DescribeTagMachinesResponse) {
     response = &DescribeTagMachinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagMachines
@@ -18267,6 +18164,7 @@ func (c *Client) DescribeTagMachinesWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeTagMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeTagMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagMachines require credential")
@@ -18293,8 +18191,9 @@ func NewDescribeTagsRequest() (request *DescribeTagsRequest) {
 func NewDescribeTagsResponse() (response *DescribeTagsResponse) {
     response = &DescribeTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTags
@@ -18331,6 +18230,7 @@ func (c *Client) DescribeTagsWithContext(ctx context.Context, request *DescribeT
     if request == nil {
         request = NewDescribeTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTags require credential")
@@ -18357,8 +18257,9 @@ func NewDescribeTrialReportRequest() (request *DescribeTrialReportRequest) {
 func NewDescribeTrialReportResponse() (response *DescribeTrialReportResponse) {
     response = &DescribeTrialReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTrialReport
@@ -18395,6 +18296,7 @@ func (c *Client) DescribeTrialReportWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeTrialReportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeTrialReport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTrialReport require credential")
@@ -18421,8 +18323,9 @@ func NewDescribeUndoVulCountsRequest() (request *DescribeUndoVulCountsRequest) {
 func NewDescribeUndoVulCountsResponse() (response *DescribeUndoVulCountsResponse) {
     response = &DescribeUndoVulCountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUndoVulCounts
@@ -18451,6 +18354,7 @@ func (c *Client) DescribeUndoVulCountsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeUndoVulCountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeUndoVulCounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUndoVulCounts require credential")
@@ -18477,8 +18381,9 @@ func NewDescribeUsersConfigRequest() (request *DescribeUsersConfigRequest) {
 func NewDescribeUsersConfigResponse() (response *DescribeUsersConfigResponse) {
     response = &DescribeUsersConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUsersConfig
@@ -18507,6 +18412,7 @@ func (c *Client) DescribeUsersConfigWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeUsersConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeUsersConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUsersConfig require credential")
@@ -18533,8 +18439,9 @@ func NewDescribeUsualLoginPlacesRequest() (request *DescribeUsualLoginPlacesRequ
 func NewDescribeUsualLoginPlacesResponse() (response *DescribeUsualLoginPlacesResponse) {
     response = &DescribeUsualLoginPlacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUsualLoginPlaces
@@ -18569,6 +18476,7 @@ func (c *Client) DescribeUsualLoginPlacesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeUsualLoginPlacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeUsualLoginPlaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUsualLoginPlaces require credential")
@@ -18595,8 +18503,9 @@ func NewDescribeVdbAndPocInfoRequest() (request *DescribeVdbAndPocInfoRequest) {
 func NewDescribeVdbAndPocInfoResponse() (response *DescribeVdbAndPocInfoResponse) {
     response = &DescribeVdbAndPocInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVdbAndPocInfo
@@ -18617,6 +18526,7 @@ func (c *Client) DescribeVdbAndPocInfoWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeVdbAndPocInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVdbAndPocInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVdbAndPocInfo require credential")
@@ -18643,8 +18553,9 @@ func NewDescribeVersionCompareChartRequest() (request *DescribeVersionCompareCha
 func NewDescribeVersionCompareChartResponse() (response *DescribeVersionCompareChartResponse) {
     response = &DescribeVersionCompareChartResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVersionCompareChart
@@ -18665,6 +18576,7 @@ func (c *Client) DescribeVersionCompareChartWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeVersionCompareChartRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVersionCompareChart")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVersionCompareChart require credential")
@@ -18691,8 +18603,9 @@ func NewDescribeVersionStatisticsRequest() (request *DescribeVersionStatisticsRe
 func NewDescribeVersionStatisticsResponse() (response *DescribeVersionStatisticsResponse) {
     response = &DescribeVersionStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVersionStatistics
@@ -18725,6 +18638,7 @@ func (c *Client) DescribeVersionStatisticsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeVersionStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVersionStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVersionStatistics require credential")
@@ -18751,8 +18665,9 @@ func NewDescribeVertexDetailRequest() (request *DescribeVertexDetailRequest) {
 func NewDescribeVertexDetailResponse() (response *DescribeVertexDetailResponse) {
     response = &DescribeVertexDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVertexDetail
@@ -18785,6 +18700,7 @@ func (c *Client) DescribeVertexDetailWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeVertexDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVertexDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVertexDetail require credential")
@@ -18811,8 +18727,9 @@ func NewDescribeVulCountByDatesRequest() (request *DescribeVulCountByDatesReques
 func NewDescribeVulCountByDatesResponse() (response *DescribeVulCountByDatesResponse) {
     response = &DescribeVulCountByDatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulCountByDates
@@ -18843,6 +18760,7 @@ func (c *Client) DescribeVulCountByDatesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeVulCountByDatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulCountByDates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulCountByDates require credential")
@@ -18869,8 +18787,9 @@ func NewDescribeVulCveIdInfoRequest() (request *DescribeVulCveIdInfoRequest) {
 func NewDescribeVulCveIdInfoResponse() (response *DescribeVulCveIdInfoResponse) {
     response = &DescribeVulCveIdInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulCveIdInfo
@@ -18905,6 +18824,7 @@ func (c *Client) DescribeVulCveIdInfoWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeVulCveIdInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulCveIdInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulCveIdInfo require credential")
@@ -18931,8 +18851,9 @@ func NewDescribeVulDefenceEventRequest() (request *DescribeVulDefenceEventReques
 func NewDescribeVulDefenceEventResponse() (response *DescribeVulDefenceEventResponse) {
     response = &DescribeVulDefenceEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulDefenceEvent
@@ -18967,6 +18888,7 @@ func (c *Client) DescribeVulDefenceEventWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeVulDefenceEventRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulDefenceEvent")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulDefenceEvent require credential")
@@ -18993,8 +18915,9 @@ func NewDescribeVulDefenceListRequest() (request *DescribeVulDefenceListRequest)
 func NewDescribeVulDefenceListResponse() (response *DescribeVulDefenceListResponse) {
     response = &DescribeVulDefenceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulDefenceList
@@ -19029,6 +18952,7 @@ func (c *Client) DescribeVulDefenceListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeVulDefenceListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulDefenceList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulDefenceList require credential")
@@ -19055,8 +18979,9 @@ func NewDescribeVulDefenceOverviewRequest() (request *DescribeVulDefenceOverview
 func NewDescribeVulDefenceOverviewResponse() (response *DescribeVulDefenceOverviewResponse) {
     response = &DescribeVulDefenceOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulDefenceOverview
@@ -19091,6 +19016,7 @@ func (c *Client) DescribeVulDefenceOverviewWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeVulDefenceOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulDefenceOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulDefenceOverview require credential")
@@ -19117,8 +19043,9 @@ func NewDescribeVulDefencePluginDetailRequest() (request *DescribeVulDefencePlug
 func NewDescribeVulDefencePluginDetailResponse() (response *DescribeVulDefencePluginDetailResponse) {
     response = &DescribeVulDefencePluginDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulDefencePluginDetail
@@ -19151,6 +19078,7 @@ func (c *Client) DescribeVulDefencePluginDetailWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeVulDefencePluginDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulDefencePluginDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulDefencePluginDetail require credential")
@@ -19177,8 +19105,9 @@ func NewDescribeVulDefencePluginExceptionCountRequest() (request *DescribeVulDef
 func NewDescribeVulDefencePluginExceptionCountResponse() (response *DescribeVulDefencePluginExceptionCountResponse) {
     response = &DescribeVulDefencePluginExceptionCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulDefencePluginExceptionCount
@@ -19211,6 +19140,7 @@ func (c *Client) DescribeVulDefencePluginExceptionCountWithContext(ctx context.C
     if request == nil {
         request = NewDescribeVulDefencePluginExceptionCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulDefencePluginExceptionCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulDefencePluginExceptionCount require credential")
@@ -19237,8 +19167,9 @@ func NewDescribeVulDefencePluginStatusRequest() (request *DescribeVulDefencePlug
 func NewDescribeVulDefencePluginStatusResponse() (response *DescribeVulDefencePluginStatusResponse) {
     response = &DescribeVulDefencePluginStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulDefencePluginStatus
@@ -19271,6 +19202,7 @@ func (c *Client) DescribeVulDefencePluginStatusWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeVulDefencePluginStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulDefencePluginStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulDefencePluginStatus require credential")
@@ -19297,8 +19229,9 @@ func NewDescribeVulDefenceSettingRequest() (request *DescribeVulDefenceSettingRe
 func NewDescribeVulDefenceSettingResponse() (response *DescribeVulDefenceSettingResponse) {
     response = &DescribeVulDefenceSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulDefenceSetting
@@ -19331,6 +19264,7 @@ func (c *Client) DescribeVulDefenceSettingWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeVulDefenceSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulDefenceSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulDefenceSetting require credential")
@@ -19357,8 +19291,9 @@ func NewDescribeVulEffectHostListRequest() (request *DescribeVulEffectHostListRe
 func NewDescribeVulEffectHostListResponse() (response *DescribeVulEffectHostListResponse) {
     response = &DescribeVulEffectHostListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulEffectHostList
@@ -19393,6 +19328,7 @@ func (c *Client) DescribeVulEffectHostListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeVulEffectHostListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulEffectHostList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulEffectHostList require credential")
@@ -19419,8 +19355,9 @@ func NewDescribeVulEffectModulesRequest() (request *DescribeVulEffectModulesRequ
 func NewDescribeVulEffectModulesResponse() (response *DescribeVulEffectModulesResponse) {
     response = &DescribeVulEffectModulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulEffectModules
@@ -19455,6 +19392,7 @@ func (c *Client) DescribeVulEffectModulesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeVulEffectModulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulEffectModules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulEffectModules require credential")
@@ -19481,8 +19419,9 @@ func NewDescribeVulEmergentMsgRequest() (request *DescribeVulEmergentMsgRequest)
 func NewDescribeVulEmergentMsgResponse() (response *DescribeVulEmergentMsgResponse) {
     response = &DescribeVulEmergentMsgResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulEmergentMsg
@@ -19503,6 +19442,7 @@ func (c *Client) DescribeVulEmergentMsgWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeVulEmergentMsgRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulEmergentMsg")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulEmergentMsg require credential")
@@ -19529,8 +19469,9 @@ func NewDescribeVulFixStatusRequest() (request *DescribeVulFixStatusRequest) {
 func NewDescribeVulFixStatusResponse() (response *DescribeVulFixStatusResponse) {
     response = &DescribeVulFixStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulFixStatus
@@ -19567,6 +19508,7 @@ func (c *Client) DescribeVulFixStatusWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeVulFixStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulFixStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulFixStatus require credential")
@@ -19593,8 +19535,9 @@ func NewDescribeVulHostCountScanTimeRequest() (request *DescribeVulHostCountScan
 func NewDescribeVulHostCountScanTimeResponse() (response *DescribeVulHostCountScanTimeResponse) {
     response = &DescribeVulHostCountScanTimeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulHostCountScanTime
@@ -19615,6 +19558,7 @@ func (c *Client) DescribeVulHostCountScanTimeWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeVulHostCountScanTimeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulHostCountScanTime")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulHostCountScanTime require credential")
@@ -19641,8 +19585,9 @@ func NewDescribeVulHostTopRequest() (request *DescribeVulHostTopRequest) {
 func NewDescribeVulHostTopResponse() (response *DescribeVulHostTopResponse) {
     response = &DescribeVulHostTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulHostTop
@@ -19675,6 +19620,7 @@ func (c *Client) DescribeVulHostTopWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeVulHostTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulHostTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulHostTop require credential")
@@ -19701,8 +19647,9 @@ func NewDescribeVulInfoCvssRequest() (request *DescribeVulInfoCvssRequest) {
 func NewDescribeVulInfoCvssResponse() (response *DescribeVulInfoCvssResponse) {
     response = &DescribeVulInfoCvssResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulInfoCvss
@@ -19737,6 +19684,7 @@ func (c *Client) DescribeVulInfoCvssWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeVulInfoCvssRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulInfoCvss")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulInfoCvss require credential")
@@ -19763,8 +19711,9 @@ func NewDescribeVulLabelsRequest() (request *DescribeVulLabelsRequest) {
 func NewDescribeVulLabelsResponse() (response *DescribeVulLabelsResponse) {
     response = &DescribeVulLabelsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulLabels
@@ -19795,6 +19744,7 @@ func (c *Client) DescribeVulLabelsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeVulLabelsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulLabels")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulLabels require credential")
@@ -19821,8 +19771,9 @@ func NewDescribeVulLevelCountRequest() (request *DescribeVulLevelCountRequest) {
 func NewDescribeVulLevelCountResponse() (response *DescribeVulLevelCountResponse) {
     response = &DescribeVulLevelCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulLevelCount
@@ -19843,6 +19794,7 @@ func (c *Client) DescribeVulLevelCountWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeVulLevelCountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulLevelCount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulLevelCount require credential")
@@ -19869,8 +19821,9 @@ func NewDescribeVulListRequest() (request *DescribeVulListRequest) {
 func NewDescribeVulListResponse() (response *DescribeVulListResponse) {
     response = &DescribeVulListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulList
@@ -19901,6 +19854,7 @@ func (c *Client) DescribeVulListWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeVulListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulList require credential")
@@ -19927,8 +19881,9 @@ func NewDescribeVulOverviewRequest() (request *DescribeVulOverviewRequest) {
 func NewDescribeVulOverviewResponse() (response *DescribeVulOverviewResponse) {
     response = &DescribeVulOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulOverview
@@ -19963,6 +19918,7 @@ func (c *Client) DescribeVulOverviewWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeVulOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulOverview require credential")
@@ -19989,8 +19945,9 @@ func NewDescribeVulStoreListRequest() (request *DescribeVulStoreListRequest) {
 func NewDescribeVulStoreListResponse() (response *DescribeVulStoreListResponse) {
     response = &DescribeVulStoreListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulStoreList
@@ -20013,6 +19970,7 @@ func (c *Client) DescribeVulStoreListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeVulStoreListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulStoreList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulStoreList require credential")
@@ -20039,8 +19997,9 @@ func NewDescribeVulTopRequest() (request *DescribeVulTopRequest) {
 func NewDescribeVulTopResponse() (response *DescribeVulTopResponse) {
     response = &DescribeVulTopResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulTop
@@ -20073,6 +20032,7 @@ func (c *Client) DescribeVulTopWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeVulTopRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulTop")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulTop require credential")
@@ -20099,8 +20059,9 @@ func NewDescribeVulTrendRequest() (request *DescribeVulTrendRequest) {
 func NewDescribeVulTrendResponse() (response *DescribeVulTrendResponse) {
     response = &DescribeVulTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVulTrend
@@ -20123,6 +20084,7 @@ func (c *Client) DescribeVulTrendWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeVulTrendRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeVulTrend")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVulTrend require credential")
@@ -20149,8 +20111,9 @@ func NewDescribeWarningHostConfigRequest() (request *DescribeWarningHostConfigRe
 func NewDescribeWarningHostConfigResponse() (response *DescribeWarningHostConfigResponse) {
     response = &DescribeWarningHostConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWarningHostConfig
@@ -20173,6 +20136,7 @@ func (c *Client) DescribeWarningHostConfigWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeWarningHostConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWarningHostConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWarningHostConfig require credential")
@@ -20199,14 +20163,16 @@ func NewDescribeWarningListRequest() (request *DescribeWarningListRequest) {
 func NewDescribeWarningListResponse() (response *DescribeWarningListResponse) {
     response = &DescribeWarningListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWarningList
 // 获取当前用户告警列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWarningList(request *DescribeWarningListRequest) (response *DescribeWarningListResponse, err error) {
     return c.DescribeWarningListWithContext(context.Background(), request)
@@ -20216,11 +20182,13 @@ func (c *Client) DescribeWarningList(request *DescribeWarningListRequest) (respo
 // 获取当前用户告警列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWarningListWithContext(ctx context.Context, request *DescribeWarningListRequest) (response *DescribeWarningListResponse, err error) {
     if request == nil {
         request = NewDescribeWarningListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWarningList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWarningList require credential")
@@ -20247,14 +20215,16 @@ func NewDescribeWebHookPolicyRequest() (request *DescribeWebHookPolicyRequest) {
 func NewDescribeWebHookPolicyResponse() (response *DescribeWebHookPolicyResponse) {
     response = &DescribeWebHookPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebHookPolicy
 // 查询告警策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWebHookPolicy(request *DescribeWebHookPolicyRequest) (response *DescribeWebHookPolicyResponse, err error) {
     return c.DescribeWebHookPolicyWithContext(context.Background(), request)
@@ -20264,11 +20234,13 @@ func (c *Client) DescribeWebHookPolicy(request *DescribeWebHookPolicyRequest) (r
 // 查询告警策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWebHookPolicyWithContext(ctx context.Context, request *DescribeWebHookPolicyRequest) (response *DescribeWebHookPolicyResponse, err error) {
     if request == nil {
         request = NewDescribeWebHookPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebHookPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebHookPolicy require credential")
@@ -20295,14 +20267,16 @@ func NewDescribeWebHookReceiverRequest() (request *DescribeWebHookReceiverReques
 func NewDescribeWebHookReceiverResponse() (response *DescribeWebHookReceiverResponse) {
     response = &DescribeWebHookReceiverResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebHookReceiver
 // 查询告警接收人列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWebHookReceiver(request *DescribeWebHookReceiverRequest) (response *DescribeWebHookReceiverResponse, err error) {
     return c.DescribeWebHookReceiverWithContext(context.Background(), request)
@@ -20312,11 +20286,13 @@ func (c *Client) DescribeWebHookReceiver(request *DescribeWebHookReceiverRequest
 // 查询告警接收人列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWebHookReceiverWithContext(ctx context.Context, request *DescribeWebHookReceiverRequest) (response *DescribeWebHookReceiverResponse, err error) {
     if request == nil {
         request = NewDescribeWebHookReceiverRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebHookReceiver")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebHookReceiver require credential")
@@ -20343,14 +20319,16 @@ func NewDescribeWebHookReceiverUsageRequest() (request *DescribeWebHookReceiverU
 func NewDescribeWebHookReceiverUsageResponse() (response *DescribeWebHookReceiverUsageResponse) {
     response = &DescribeWebHookReceiverUsageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebHookReceiverUsage
 // 查询指定告警接收人的关联策略使用信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWebHookReceiverUsage(request *DescribeWebHookReceiverUsageRequest) (response *DescribeWebHookReceiverUsageResponse, err error) {
     return c.DescribeWebHookReceiverUsageWithContext(context.Background(), request)
@@ -20360,11 +20338,13 @@ func (c *Client) DescribeWebHookReceiverUsage(request *DescribeWebHookReceiverUs
 // 查询指定告警接收人的关联策略使用信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeWebHookReceiverUsageWithContext(ctx context.Context, request *DescribeWebHookReceiverUsageRequest) (response *DescribeWebHookReceiverUsageResponse, err error) {
     if request == nil {
         request = NewDescribeWebHookReceiverUsageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebHookReceiverUsage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebHookReceiverUsage require credential")
@@ -20391,8 +20371,9 @@ func NewDescribeWebHookRuleRequest() (request *DescribeWebHookRuleRequest) {
 func NewDescribeWebHookRuleResponse() (response *DescribeWebHookRuleResponse) {
     response = &DescribeWebHookRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebHookRule
@@ -20415,6 +20396,7 @@ func (c *Client) DescribeWebHookRuleWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeWebHookRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebHookRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebHookRule require credential")
@@ -20441,8 +20423,9 @@ func NewDescribeWebHookRulesRequest() (request *DescribeWebHookRulesRequest) {
 func NewDescribeWebHookRulesResponse() (response *DescribeWebHookRulesResponse) {
     response = &DescribeWebHookRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebHookRules
@@ -20467,6 +20450,7 @@ func (c *Client) DescribeWebHookRulesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeWebHookRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebHookRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebHookRules require credential")
@@ -20493,8 +20477,9 @@ func NewDescribeWebPageEventListRequest() (request *DescribeWebPageEventListRequ
 func NewDescribeWebPageEventListResponse() (response *DescribeWebPageEventListResponse) {
     response = &DescribeWebPageEventListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebPageEventList
@@ -20523,6 +20508,7 @@ func (c *Client) DescribeWebPageEventListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeWebPageEventListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebPageEventList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebPageEventList require credential")
@@ -20549,8 +20535,9 @@ func NewDescribeWebPageGeneralizeRequest() (request *DescribeWebPageGeneralizeRe
 func NewDescribeWebPageGeneralizeResponse() (response *DescribeWebPageGeneralizeResponse) {
     response = &DescribeWebPageGeneralizeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebPageGeneralize
@@ -20571,6 +20558,7 @@ func (c *Client) DescribeWebPageGeneralizeWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeWebPageGeneralizeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebPageGeneralize")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebPageGeneralize require credential")
@@ -20597,8 +20585,9 @@ func NewDescribeWebPageProtectStatRequest() (request *DescribeWebPageProtectStat
 func NewDescribeWebPageProtectStatResponse() (response *DescribeWebPageProtectStatResponse) {
     response = &DescribeWebPageProtectStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebPageProtectStat
@@ -20619,6 +20608,7 @@ func (c *Client) DescribeWebPageProtectStatWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeWebPageProtectStatRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebPageProtectStat")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebPageProtectStat require credential")
@@ -20645,8 +20635,9 @@ func NewDescribeWebPageServiceInfoRequest() (request *DescribeWebPageServiceInfo
 func NewDescribeWebPageServiceInfoResponse() (response *DescribeWebPageServiceInfoResponse) {
     response = &DescribeWebPageServiceInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebPageServiceInfo
@@ -20667,6 +20658,7 @@ func (c *Client) DescribeWebPageServiceInfoWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeWebPageServiceInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DescribeWebPageServiceInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebPageServiceInfo require credential")
@@ -20693,8 +20685,9 @@ func NewDestroyOrderRequest() (request *DestroyOrderRequest) {
 func NewDestroyOrderResponse() (response *DestroyOrderResponse) {
     response = &DestroyOrderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroyOrder
@@ -20717,6 +20710,7 @@ func (c *Client) DestroyOrderWithContext(ctx context.Context, request *DestroyOr
     if request == nil {
         request = NewDestroyOrderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "DestroyOrder")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyOrder require credential")
@@ -20743,8 +20737,9 @@ func NewEditBashRulesRequest() (request *EditBashRulesRequest) {
 func NewEditBashRulesResponse() (response *EditBashRulesResponse) {
     response = &EditBashRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EditBashRules
@@ -20785,6 +20780,7 @@ func (c *Client) EditBashRulesWithContext(ctx context.Context, request *EditBash
     if request == nil {
         request = NewEditBashRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "EditBashRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EditBashRules require credential")
@@ -20811,8 +20807,9 @@ func NewEditPrivilegeRulesRequest() (request *EditPrivilegeRulesRequest) {
 func NewEditPrivilegeRulesResponse() (response *EditPrivilegeRulesResponse) {
     response = &EditPrivilegeRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EditPrivilegeRules
@@ -20855,6 +20852,7 @@ func (c *Client) EditPrivilegeRulesWithContext(ctx context.Context, request *Edi
     if request == nil {
         request = NewEditPrivilegeRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "EditPrivilegeRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EditPrivilegeRules require credential")
@@ -20881,8 +20879,9 @@ func NewEditReverseShellRulesRequest() (request *EditReverseShellRulesRequest) {
 func NewEditReverseShellRulesResponse() (response *EditReverseShellRulesResponse) {
     response = &EditReverseShellRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EditReverseShellRules
@@ -20931,6 +20930,7 @@ func (c *Client) EditReverseShellRulesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewEditReverseShellRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "EditReverseShellRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EditReverseShellRules require credential")
@@ -20957,8 +20957,9 @@ func NewEditTagsRequest() (request *EditTagsRequest) {
 func NewEditTagsResponse() (response *EditTagsResponse) {
     response = &EditTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EditTags
@@ -20995,6 +20996,7 @@ func (c *Client) EditTagsWithContext(ctx context.Context, request *EditTagsReque
     if request == nil {
         request = NewEditTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "EditTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EditTags require credential")
@@ -21021,8 +21023,9 @@ func NewExportAssetAppListRequest() (request *ExportAssetAppListRequest) {
 func NewExportAssetAppListResponse() (response *ExportAssetAppListResponse) {
     response = &ExportAssetAppListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetAppList
@@ -21057,6 +21060,7 @@ func (c *Client) ExportAssetAppListWithContext(ctx context.Context, request *Exp
     if request == nil {
         request = NewExportAssetAppListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetAppList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetAppList require credential")
@@ -21083,8 +21087,9 @@ func NewExportAssetCoreModuleListRequest() (request *ExportAssetCoreModuleListRe
 func NewExportAssetCoreModuleListResponse() (response *ExportAssetCoreModuleListResponse) {
     response = &ExportAssetCoreModuleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetCoreModuleList
@@ -21119,6 +21124,7 @@ func (c *Client) ExportAssetCoreModuleListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewExportAssetCoreModuleListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetCoreModuleList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetCoreModuleList require credential")
@@ -21145,8 +21151,9 @@ func NewExportAssetDatabaseListRequest() (request *ExportAssetDatabaseListReques
 func NewExportAssetDatabaseListResponse() (response *ExportAssetDatabaseListResponse) {
     response = &ExportAssetDatabaseListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetDatabaseList
@@ -21181,6 +21188,7 @@ func (c *Client) ExportAssetDatabaseListWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportAssetDatabaseListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetDatabaseList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetDatabaseList require credential")
@@ -21207,8 +21215,9 @@ func NewExportAssetEnvListRequest() (request *ExportAssetEnvListRequest) {
 func NewExportAssetEnvListResponse() (response *ExportAssetEnvListResponse) {
     response = &ExportAssetEnvListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetEnvList
@@ -21243,6 +21252,7 @@ func (c *Client) ExportAssetEnvListWithContext(ctx context.Context, request *Exp
     if request == nil {
         request = NewExportAssetEnvListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetEnvList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetEnvList require credential")
@@ -21269,8 +21279,9 @@ func NewExportAssetInitServiceListRequest() (request *ExportAssetInitServiceList
 func NewExportAssetInitServiceListResponse() (response *ExportAssetInitServiceListResponse) {
     response = &ExportAssetInitServiceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetInitServiceList
@@ -21305,6 +21316,7 @@ func (c *Client) ExportAssetInitServiceListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewExportAssetInitServiceListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetInitServiceList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetInitServiceList require credential")
@@ -21331,8 +21343,9 @@ func NewExportAssetJarListRequest() (request *ExportAssetJarListRequest) {
 func NewExportAssetJarListResponse() (response *ExportAssetJarListResponse) {
     response = &ExportAssetJarListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetJarList
@@ -21367,6 +21380,7 @@ func (c *Client) ExportAssetJarListWithContext(ctx context.Context, request *Exp
     if request == nil {
         request = NewExportAssetJarListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetJarList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetJarList require credential")
@@ -21393,8 +21407,9 @@ func NewExportAssetMachineDetailRequest() (request *ExportAssetMachineDetailRequ
 func NewExportAssetMachineDetailResponse() (response *ExportAssetMachineDetailResponse) {
     response = &ExportAssetMachineDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetMachineDetail
@@ -21421,6 +21436,7 @@ func (c *Client) ExportAssetMachineDetailWithContext(ctx context.Context, reques
     if request == nil {
         request = NewExportAssetMachineDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetMachineDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetMachineDetail require credential")
@@ -21447,8 +21463,9 @@ func NewExportAssetMachineListRequest() (request *ExportAssetMachineListRequest)
 func NewExportAssetMachineListResponse() (response *ExportAssetMachineListResponse) {
     response = &ExportAssetMachineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetMachineList
@@ -21475,6 +21492,7 @@ func (c *Client) ExportAssetMachineListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewExportAssetMachineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetMachineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetMachineList require credential")
@@ -21501,8 +21519,9 @@ func NewExportAssetPlanTaskListRequest() (request *ExportAssetPlanTaskListReques
 func NewExportAssetPlanTaskListResponse() (response *ExportAssetPlanTaskListResponse) {
     response = &ExportAssetPlanTaskListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetPlanTaskList
@@ -21537,6 +21556,7 @@ func (c *Client) ExportAssetPlanTaskListWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportAssetPlanTaskListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetPlanTaskList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetPlanTaskList require credential")
@@ -21563,8 +21583,9 @@ func NewExportAssetPortInfoListRequest() (request *ExportAssetPortInfoListReques
 func NewExportAssetPortInfoListResponse() (response *ExportAssetPortInfoListResponse) {
     response = &ExportAssetPortInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetPortInfoList
@@ -21591,6 +21612,7 @@ func (c *Client) ExportAssetPortInfoListWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportAssetPortInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetPortInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetPortInfoList require credential")
@@ -21617,8 +21639,9 @@ func NewExportAssetProcessInfoListRequest() (request *ExportAssetProcessInfoList
 func NewExportAssetProcessInfoListResponse() (response *ExportAssetProcessInfoListResponse) {
     response = &ExportAssetProcessInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetProcessInfoList
@@ -21645,6 +21668,7 @@ func (c *Client) ExportAssetProcessInfoListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewExportAssetProcessInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetProcessInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetProcessInfoList require credential")
@@ -21671,8 +21695,9 @@ func NewExportAssetRecentMachineInfoRequest() (request *ExportAssetRecentMachine
 func NewExportAssetRecentMachineInfoResponse() (response *ExportAssetRecentMachineInfoResponse) {
     response = &ExportAssetRecentMachineInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetRecentMachineInfo
@@ -21703,6 +21728,7 @@ func (c *Client) ExportAssetRecentMachineInfoWithContext(ctx context.Context, re
     if request == nil {
         request = NewExportAssetRecentMachineInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetRecentMachineInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetRecentMachineInfo require credential")
@@ -21729,8 +21755,9 @@ func NewExportAssetSystemPackageListRequest() (request *ExportAssetSystemPackage
 func NewExportAssetSystemPackageListResponse() (response *ExportAssetSystemPackageListResponse) {
     response = &ExportAssetSystemPackageListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetSystemPackageList
@@ -21757,6 +21784,7 @@ func (c *Client) ExportAssetSystemPackageListWithContext(ctx context.Context, re
     if request == nil {
         request = NewExportAssetSystemPackageListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetSystemPackageList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetSystemPackageList require credential")
@@ -21783,8 +21811,9 @@ func NewExportAssetUserListRequest() (request *ExportAssetUserListRequest) {
 func NewExportAssetUserListResponse() (response *ExportAssetUserListResponse) {
     response = &ExportAssetUserListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetUserList
@@ -21811,6 +21840,7 @@ func (c *Client) ExportAssetUserListWithContext(ctx context.Context, request *Ex
     if request == nil {
         request = NewExportAssetUserListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetUserList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetUserList require credential")
@@ -21837,8 +21867,9 @@ func NewExportAssetWebAppListRequest() (request *ExportAssetWebAppListRequest) {
 func NewExportAssetWebAppListResponse() (response *ExportAssetWebAppListResponse) {
     response = &ExportAssetWebAppListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetWebAppList
@@ -21865,6 +21896,7 @@ func (c *Client) ExportAssetWebAppListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewExportAssetWebAppListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetWebAppList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetWebAppList require credential")
@@ -21891,8 +21923,9 @@ func NewExportAssetWebFrameListRequest() (request *ExportAssetWebFrameListReques
 func NewExportAssetWebFrameListResponse() (response *ExportAssetWebFrameListResponse) {
     response = &ExportAssetWebFrameListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetWebFrameList
@@ -21919,6 +21952,7 @@ func (c *Client) ExportAssetWebFrameListWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportAssetWebFrameListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetWebFrameList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetWebFrameList require credential")
@@ -21945,8 +21979,9 @@ func NewExportAssetWebLocationListRequest() (request *ExportAssetWebLocationList
 func NewExportAssetWebLocationListResponse() (response *ExportAssetWebLocationListResponse) {
     response = &ExportAssetWebLocationListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetWebLocationList
@@ -21973,6 +22008,7 @@ func (c *Client) ExportAssetWebLocationListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewExportAssetWebLocationListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetWebLocationList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetWebLocationList require credential")
@@ -21999,8 +22035,9 @@ func NewExportAssetWebServiceInfoListRequest() (request *ExportAssetWebServiceIn
 func NewExportAssetWebServiceInfoListResponse() (response *ExportAssetWebServiceInfoListResponse) {
     response = &ExportAssetWebServiceInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAssetWebServiceInfoList
@@ -22033,6 +22070,7 @@ func (c *Client) ExportAssetWebServiceInfoListWithContext(ctx context.Context, r
     if request == nil {
         request = NewExportAssetWebServiceInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAssetWebServiceInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAssetWebServiceInfoList require credential")
@@ -22059,8 +22097,9 @@ func NewExportAttackEventsRequest() (request *ExportAttackEventsRequest) {
 func NewExportAttackEventsResponse() (response *ExportAttackEventsResponse) {
     response = &ExportAttackEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportAttackEvents
@@ -22093,6 +22132,7 @@ func (c *Client) ExportAttackEventsWithContext(ctx context.Context, request *Exp
     if request == nil {
         request = NewExportAttackEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportAttackEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportAttackEvents require credential")
@@ -22101,64 +22141,6 @@ func (c *Client) ExportAttackEventsWithContext(ctx context.Context, request *Exp
     request.SetContext(ctx)
     
     response = NewExportAttackEventsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewExportAttackLogsRequest() (request *ExportAttackLogsRequest) {
-    request = &ExportAttackLogsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "ExportAttackLogs")
-    
-    
-    return
-}
-
-func NewExportAttackLogsResponse() (response *ExportAttackLogsResponse) {
-    response = &ExportAttackLogsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ExportAttackLogs
-// 导出网络攻击日志
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_EXPORT = "FailedOperation.Export"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) ExportAttackLogs(request *ExportAttackLogsRequest) (response *ExportAttackLogsResponse, err error) {
-    return c.ExportAttackLogsWithContext(context.Background(), request)
-}
-
-// ExportAttackLogs
-// 导出网络攻击日志
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_EXPORT = "FailedOperation.Export"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) ExportAttackLogsWithContext(ctx context.Context, request *ExportAttackLogsRequest) (response *ExportAttackLogsResponse, err error) {
-    if request == nil {
-        request = NewExportAttackLogsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ExportAttackLogs require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewExportAttackLogsResponse()
     err = c.Send(request, response)
     return
 }
@@ -22177,8 +22159,9 @@ func NewExportBaselineEffectHostListRequest() (request *ExportBaselineEffectHost
 func NewExportBaselineEffectHostListResponse() (response *ExportBaselineEffectHostListResponse) {
     response = &ExportBaselineEffectHostListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineEffectHostList
@@ -22209,6 +22192,7 @@ func (c *Client) ExportBaselineEffectHostListWithContext(ctx context.Context, re
     if request == nil {
         request = NewExportBaselineEffectHostListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineEffectHostList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineEffectHostList require credential")
@@ -22235,8 +22219,9 @@ func NewExportBaselineFixListRequest() (request *ExportBaselineFixListRequest) {
 func NewExportBaselineFixListResponse() (response *ExportBaselineFixListResponse) {
     response = &ExportBaselineFixListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineFixList
@@ -22259,6 +22244,7 @@ func (c *Client) ExportBaselineFixListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewExportBaselineFixListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineFixList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineFixList require credential")
@@ -22285,8 +22271,9 @@ func NewExportBaselineHostDetectListRequest() (request *ExportBaselineHostDetect
 func NewExportBaselineHostDetectListResponse() (response *ExportBaselineHostDetectListResponse) {
     response = &ExportBaselineHostDetectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineHostDetectList
@@ -22309,6 +22296,7 @@ func (c *Client) ExportBaselineHostDetectListWithContext(ctx context.Context, re
     if request == nil {
         request = NewExportBaselineHostDetectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineHostDetectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineHostDetectList require credential")
@@ -22335,8 +22323,9 @@ func NewExportBaselineItemDetectListRequest() (request *ExportBaselineItemDetect
 func NewExportBaselineItemDetectListResponse() (response *ExportBaselineItemDetectListResponse) {
     response = &ExportBaselineItemDetectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineItemDetectList
@@ -22359,6 +22348,7 @@ func (c *Client) ExportBaselineItemDetectListWithContext(ctx context.Context, re
     if request == nil {
         request = NewExportBaselineItemDetectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineItemDetectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineItemDetectList require credential")
@@ -22385,8 +22375,9 @@ func NewExportBaselineItemListRequest() (request *ExportBaselineItemListRequest)
 func NewExportBaselineItemListResponse() (response *ExportBaselineItemListResponse) {
     response = &ExportBaselineItemListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineItemList
@@ -22409,6 +22400,7 @@ func (c *Client) ExportBaselineItemListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewExportBaselineItemListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineItemList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineItemList require credential")
@@ -22435,8 +22427,9 @@ func NewExportBaselineListRequest() (request *ExportBaselineListRequest) {
 func NewExportBaselineListResponse() (response *ExportBaselineListResponse) {
     response = &ExportBaselineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineList
@@ -22469,6 +22462,7 @@ func (c *Client) ExportBaselineListWithContext(ctx context.Context, request *Exp
     if request == nil {
         request = NewExportBaselineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineList require credential")
@@ -22495,8 +22489,9 @@ func NewExportBaselineRuleDetectListRequest() (request *ExportBaselineRuleDetect
 func NewExportBaselineRuleDetectListResponse() (response *ExportBaselineRuleDetectListResponse) {
     response = &ExportBaselineRuleDetectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineRuleDetectList
@@ -22519,6 +22514,7 @@ func (c *Client) ExportBaselineRuleDetectListWithContext(ctx context.Context, re
     if request == nil {
         request = NewExportBaselineRuleDetectListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineRuleDetectList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineRuleDetectList require credential")
@@ -22545,8 +22541,9 @@ func NewExportBaselineWeakPasswordListRequest() (request *ExportBaselineWeakPass
 func NewExportBaselineWeakPasswordListResponse() (response *ExportBaselineWeakPasswordListResponse) {
     response = &ExportBaselineWeakPasswordListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBaselineWeakPasswordList
@@ -22569,6 +22566,7 @@ func (c *Client) ExportBaselineWeakPasswordListWithContext(ctx context.Context, 
     if request == nil {
         request = NewExportBaselineWeakPasswordListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBaselineWeakPasswordList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBaselineWeakPasswordList require credential")
@@ -22595,8 +22593,9 @@ func NewExportBashEventsRequest() (request *ExportBashEventsRequest) {
 func NewExportBashEventsResponse() (response *ExportBashEventsResponse) {
     response = &ExportBashEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBashEvents
@@ -22625,6 +22624,7 @@ func (c *Client) ExportBashEventsWithContext(ctx context.Context, request *Expor
     if request == nil {
         request = NewExportBashEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBashEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBashEvents require credential")
@@ -22651,8 +22651,9 @@ func NewExportBashEventsNewRequest() (request *ExportBashEventsNewRequest) {
 func NewExportBashEventsNewResponse() (response *ExportBashEventsNewResponse) {
     response = &ExportBashEventsNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBashEventsNew
@@ -22681,6 +22682,7 @@ func (c *Client) ExportBashEventsNewWithContext(ctx context.Context, request *Ex
     if request == nil {
         request = NewExportBashEventsNewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBashEventsNew")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBashEventsNew require credential")
@@ -22707,8 +22709,9 @@ func NewExportBashPoliciesRequest() (request *ExportBashPoliciesRequest) {
 func NewExportBashPoliciesResponse() (response *ExportBashPoliciesResponse) {
     response = &ExportBashPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBashPolicies
@@ -22737,6 +22740,7 @@ func (c *Client) ExportBashPoliciesWithContext(ctx context.Context, request *Exp
     if request == nil {
         request = NewExportBashPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBashPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBashPolicies require credential")
@@ -22763,8 +22767,9 @@ func NewExportBruteAttacksRequest() (request *ExportBruteAttacksRequest) {
 func NewExportBruteAttacksResponse() (response *ExportBruteAttacksResponse) {
     response = &ExportBruteAttacksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportBruteAttacks
@@ -22791,6 +22796,7 @@ func (c *Client) ExportBruteAttacksWithContext(ctx context.Context, request *Exp
     if request == nil {
         request = NewExportBruteAttacksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportBruteAttacks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportBruteAttacks require credential")
@@ -22817,8 +22823,9 @@ func NewExportFileTamperEventsRequest() (request *ExportFileTamperEventsRequest)
 func NewExportFileTamperEventsResponse() (response *ExportFileTamperEventsResponse) {
     response = &ExportFileTamperEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportFileTamperEvents
@@ -22849,6 +22856,7 @@ func (c *Client) ExportFileTamperEventsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewExportFileTamperEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportFileTamperEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportFileTamperEvents require credential")
@@ -22875,8 +22883,9 @@ func NewExportFileTamperRulesRequest() (request *ExportFileTamperRulesRequest) {
 func NewExportFileTamperRulesResponse() (response *ExportFileTamperRulesResponse) {
     response = &ExportFileTamperRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportFileTamperRules
@@ -22907,6 +22916,7 @@ func (c *Client) ExportFileTamperRulesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewExportFileTamperRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportFileTamperRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportFileTamperRules require credential")
@@ -22933,8 +22943,9 @@ func NewExportIgnoreBaselineRuleRequest() (request *ExportIgnoreBaselineRuleRequ
 func NewExportIgnoreBaselineRuleResponse() (response *ExportIgnoreBaselineRuleResponse) {
     response = &ExportIgnoreBaselineRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportIgnoreBaselineRule
@@ -22965,6 +22976,7 @@ func (c *Client) ExportIgnoreBaselineRuleWithContext(ctx context.Context, reques
     if request == nil {
         request = NewExportIgnoreBaselineRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportIgnoreBaselineRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportIgnoreBaselineRule require credential")
@@ -22991,8 +23003,9 @@ func NewExportIgnoreRuleEffectHostListRequest() (request *ExportIgnoreRuleEffect
 func NewExportIgnoreRuleEffectHostListResponse() (response *ExportIgnoreRuleEffectHostListResponse) {
     response = &ExportIgnoreRuleEffectHostListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportIgnoreRuleEffectHostList
@@ -23023,6 +23036,7 @@ func (c *Client) ExportIgnoreRuleEffectHostListWithContext(ctx context.Context, 
     if request == nil {
         request = NewExportIgnoreRuleEffectHostListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportIgnoreRuleEffectHostList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportIgnoreRuleEffectHostList require credential")
@@ -23049,8 +23063,9 @@ func NewExportJavaMemShellPluginsRequest() (request *ExportJavaMemShellPluginsRe
 func NewExportJavaMemShellPluginsResponse() (response *ExportJavaMemShellPluginsResponse) {
     response = &ExportJavaMemShellPluginsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportJavaMemShellPlugins
@@ -23083,6 +23098,7 @@ func (c *Client) ExportJavaMemShellPluginsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewExportJavaMemShellPluginsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportJavaMemShellPlugins")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportJavaMemShellPlugins require credential")
@@ -23109,8 +23125,9 @@ func NewExportJavaMemShellsRequest() (request *ExportJavaMemShellsRequest) {
 func NewExportJavaMemShellsResponse() (response *ExportJavaMemShellsResponse) {
     response = &ExportJavaMemShellsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportJavaMemShells
@@ -23143,6 +23160,7 @@ func (c *Client) ExportJavaMemShellsWithContext(ctx context.Context, request *Ex
     if request == nil {
         request = NewExportJavaMemShellsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportJavaMemShells")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportJavaMemShells require credential")
@@ -23169,8 +23187,9 @@ func NewExportLicenseDetailRequest() (request *ExportLicenseDetailRequest) {
 func NewExportLicenseDetailResponse() (response *ExportLicenseDetailResponse) {
     response = &ExportLicenseDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportLicenseDetail
@@ -23191,6 +23210,7 @@ func (c *Client) ExportLicenseDetailWithContext(ctx context.Context, request *Ex
     if request == nil {
         request = NewExportLicenseDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportLicenseDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportLicenseDetail require credential")
@@ -23217,8 +23237,9 @@ func NewExportMaliciousRequestsRequest() (request *ExportMaliciousRequestsReques
 func NewExportMaliciousRequestsResponse() (response *ExportMaliciousRequestsResponse) {
     response = &ExportMaliciousRequestsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportMaliciousRequests
@@ -23243,6 +23264,7 @@ func (c *Client) ExportMaliciousRequestsWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportMaliciousRequestsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportMaliciousRequests")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportMaliciousRequests require credential")
@@ -23269,8 +23291,9 @@ func NewExportMalwaresRequest() (request *ExportMalwaresRequest) {
 func NewExportMalwaresResponse() (response *ExportMalwaresResponse) {
     response = &ExportMalwaresResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportMalwares
@@ -23303,6 +23326,7 @@ func (c *Client) ExportMalwaresWithContext(ctx context.Context, request *ExportM
     if request == nil {
         request = NewExportMalwaresRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportMalwares")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportMalwares require credential")
@@ -23329,8 +23353,9 @@ func NewExportNonlocalLoginPlacesRequest() (request *ExportNonlocalLoginPlacesRe
 func NewExportNonlocalLoginPlacesResponse() (response *ExportNonlocalLoginPlacesResponse) {
     response = &ExportNonlocalLoginPlacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportNonlocalLoginPlaces
@@ -23359,6 +23384,7 @@ func (c *Client) ExportNonlocalLoginPlacesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewExportNonlocalLoginPlacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportNonlocalLoginPlaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportNonlocalLoginPlaces require credential")
@@ -23385,8 +23411,9 @@ func NewExportPrivilegeEventsRequest() (request *ExportPrivilegeEventsRequest) {
 func NewExportPrivilegeEventsResponse() (response *ExportPrivilegeEventsResponse) {
     response = &ExportPrivilegeEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportPrivilegeEvents
@@ -23413,6 +23440,7 @@ func (c *Client) ExportPrivilegeEventsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewExportPrivilegeEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportPrivilegeEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportPrivilegeEvents require credential")
@@ -23439,8 +23467,9 @@ func NewExportProtectDirListRequest() (request *ExportProtectDirListRequest) {
 func NewExportProtectDirListResponse() (response *ExportProtectDirListResponse) {
     response = &ExportProtectDirListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportProtectDirList
@@ -23473,6 +23502,7 @@ func (c *Client) ExportProtectDirListWithContext(ctx context.Context, request *E
     if request == nil {
         request = NewExportProtectDirListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportProtectDirList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportProtectDirList require credential")
@@ -23499,8 +23529,9 @@ func NewExportRansomDefenseBackupListRequest() (request *ExportRansomDefenseBack
 func NewExportRansomDefenseBackupListResponse() (response *ExportRansomDefenseBackupListResponse) {
     response = &ExportRansomDefenseBackupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRansomDefenseBackupList
@@ -23533,6 +23564,7 @@ func (c *Client) ExportRansomDefenseBackupListWithContext(ctx context.Context, r
     if request == nil {
         request = NewExportRansomDefenseBackupListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRansomDefenseBackupList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRansomDefenseBackupList require credential")
@@ -23559,8 +23591,9 @@ func NewExportRansomDefenseEventsListRequest() (request *ExportRansomDefenseEven
 func NewExportRansomDefenseEventsListResponse() (response *ExportRansomDefenseEventsListResponse) {
     response = &ExportRansomDefenseEventsListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRansomDefenseEventsList
@@ -23593,6 +23626,7 @@ func (c *Client) ExportRansomDefenseEventsListWithContext(ctx context.Context, r
     if request == nil {
         request = NewExportRansomDefenseEventsListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRansomDefenseEventsList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRansomDefenseEventsList require credential")
@@ -23619,8 +23653,9 @@ func NewExportRansomDefenseMachineListRequest() (request *ExportRansomDefenseMac
 func NewExportRansomDefenseMachineListResponse() (response *ExportRansomDefenseMachineListResponse) {
     response = &ExportRansomDefenseMachineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRansomDefenseMachineList
@@ -23653,6 +23688,7 @@ func (c *Client) ExportRansomDefenseMachineListWithContext(ctx context.Context, 
     if request == nil {
         request = NewExportRansomDefenseMachineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRansomDefenseMachineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRansomDefenseMachineList require credential")
@@ -23679,8 +23715,9 @@ func NewExportRansomDefenseStrategyListRequest() (request *ExportRansomDefenseSt
 func NewExportRansomDefenseStrategyListResponse() (response *ExportRansomDefenseStrategyListResponse) {
     response = &ExportRansomDefenseStrategyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRansomDefenseStrategyList
@@ -23713,6 +23750,7 @@ func (c *Client) ExportRansomDefenseStrategyListWithContext(ctx context.Context,
     if request == nil {
         request = NewExportRansomDefenseStrategyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRansomDefenseStrategyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRansomDefenseStrategyList require credential")
@@ -23739,8 +23777,9 @@ func NewExportRansomDefenseStrategyMachinesRequest() (request *ExportRansomDefen
 func NewExportRansomDefenseStrategyMachinesResponse() (response *ExportRansomDefenseStrategyMachinesResponse) {
     response = &ExportRansomDefenseStrategyMachinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRansomDefenseStrategyMachines
@@ -23773,6 +23812,7 @@ func (c *Client) ExportRansomDefenseStrategyMachinesWithContext(ctx context.Cont
     if request == nil {
         request = NewExportRansomDefenseStrategyMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRansomDefenseStrategyMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRansomDefenseStrategyMachines require credential")
@@ -23799,8 +23839,9 @@ func NewExportReverseShellEventsRequest() (request *ExportReverseShellEventsRequ
 func NewExportReverseShellEventsResponse() (response *ExportReverseShellEventsResponse) {
     response = &ExportReverseShellEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportReverseShellEvents
@@ -23835,6 +23876,7 @@ func (c *Client) ExportReverseShellEventsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewExportReverseShellEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportReverseShellEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportReverseShellEvents require credential")
@@ -23861,8 +23903,9 @@ func NewExportRiskDnsEventListRequest() (request *ExportRiskDnsEventListRequest)
 func NewExportRiskDnsEventListResponse() (response *ExportRiskDnsEventListResponse) {
     response = &ExportRiskDnsEventListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRiskDnsEventList
@@ -23885,6 +23928,7 @@ func (c *Client) ExportRiskDnsEventListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewExportRiskDnsEventListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRiskDnsEventList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRiskDnsEventList require credential")
@@ -23911,8 +23955,9 @@ func NewExportRiskDnsPolicyListRequest() (request *ExportRiskDnsPolicyListReques
 func NewExportRiskDnsPolicyListResponse() (response *ExportRiskDnsPolicyListResponse) {
     response = &ExportRiskDnsPolicyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRiskDnsPolicyList
@@ -23933,6 +23978,7 @@ func (c *Client) ExportRiskDnsPolicyListWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportRiskDnsPolicyListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRiskDnsPolicyList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRiskDnsPolicyList require credential")
@@ -23959,8 +24005,9 @@ func NewExportRiskProcessEventsRequest() (request *ExportRiskProcessEventsReques
 func NewExportRiskProcessEventsResponse() (response *ExportRiskProcessEventsResponse) {
     response = &ExportRiskProcessEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportRiskProcessEvents
@@ -23985,6 +24032,7 @@ func (c *Client) ExportRiskProcessEventsWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportRiskProcessEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportRiskProcessEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportRiskProcessEvents require credential")
@@ -24011,8 +24059,9 @@ func NewExportScanTaskDetailsRequest() (request *ExportScanTaskDetailsRequest) {
 func NewExportScanTaskDetailsResponse() (response *ExportScanTaskDetailsResponse) {
     response = &ExportScanTaskDetailsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportScanTaskDetails
@@ -24041,6 +24090,7 @@ func (c *Client) ExportScanTaskDetailsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewExportScanTaskDetailsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportScanTaskDetails")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportScanTaskDetails require credential")
@@ -24067,8 +24117,9 @@ func NewExportSecurityTrendsRequest() (request *ExportSecurityTrendsRequest) {
 func NewExportSecurityTrendsResponse() (response *ExportSecurityTrendsResponse) {
     response = &ExportSecurityTrendsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportSecurityTrends
@@ -24089,6 +24140,7 @@ func (c *Client) ExportSecurityTrendsWithContext(ctx context.Context, request *E
     if request == nil {
         request = NewExportSecurityTrendsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportSecurityTrends")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportSecurityTrends require credential")
@@ -24115,8 +24167,9 @@ func NewExportTasksRequest() (request *ExportTasksRequest) {
 func NewExportTasksResponse() (response *ExportTasksResponse) {
     response = &ExportTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportTasks
@@ -24139,6 +24192,7 @@ func (c *Client) ExportTasksWithContext(ctx context.Context, request *ExportTask
     if request == nil {
         request = NewExportTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportTasks require credential")
@@ -24165,8 +24219,9 @@ func NewExportVulDefenceEventRequest() (request *ExportVulDefenceEventRequest) {
 func NewExportVulDefenceEventResponse() (response *ExportVulDefenceEventResponse) {
     response = &ExportVulDefenceEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulDefenceEvent
@@ -24195,6 +24250,7 @@ func (c *Client) ExportVulDefenceEventWithContext(ctx context.Context, request *
     if request == nil {
         request = NewExportVulDefenceEventRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulDefenceEvent")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulDefenceEvent require credential")
@@ -24221,8 +24277,9 @@ func NewExportVulDefenceListRequest() (request *ExportVulDefenceListRequest) {
 func NewExportVulDefenceListResponse() (response *ExportVulDefenceListResponse) {
     response = &ExportVulDefenceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulDefenceList
@@ -24251,6 +24308,7 @@ func (c *Client) ExportVulDefenceListWithContext(ctx context.Context, request *E
     if request == nil {
         request = NewExportVulDefenceListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulDefenceList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulDefenceList require credential")
@@ -24277,8 +24335,9 @@ func NewExportVulDefencePluginEventRequest() (request *ExportVulDefencePluginEve
 func NewExportVulDefencePluginEventResponse() (response *ExportVulDefencePluginEventResponse) {
     response = &ExportVulDefencePluginEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulDefencePluginEvent
@@ -24307,6 +24366,7 @@ func (c *Client) ExportVulDefencePluginEventWithContext(ctx context.Context, req
     if request == nil {
         request = NewExportVulDefencePluginEventRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulDefencePluginEvent")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulDefencePluginEvent require credential")
@@ -24333,8 +24393,9 @@ func NewExportVulDetectionExcelRequest() (request *ExportVulDetectionExcelReques
 func NewExportVulDetectionExcelResponse() (response *ExportVulDetectionExcelResponse) {
     response = &ExportVulDetectionExcelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulDetectionExcel
@@ -24363,6 +24424,7 @@ func (c *Client) ExportVulDetectionExcelWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportVulDetectionExcelRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulDetectionExcel")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulDetectionExcel require credential")
@@ -24389,8 +24451,9 @@ func NewExportVulDetectionReportRequest() (request *ExportVulDetectionReportRequ
 func NewExportVulDetectionReportResponse() (response *ExportVulDetectionReportResponse) {
     response = &ExportVulDetectionReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulDetectionReport
@@ -24419,6 +24482,7 @@ func (c *Client) ExportVulDetectionReportWithContext(ctx context.Context, reques
     if request == nil {
         request = NewExportVulDetectionReportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulDetectionReport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulDetectionReport require credential")
@@ -24445,8 +24509,9 @@ func NewExportVulEffectHostListRequest() (request *ExportVulEffectHostListReques
 func NewExportVulEffectHostListResponse() (response *ExportVulEffectHostListResponse) {
     response = &ExportVulEffectHostListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulEffectHostList
@@ -24481,6 +24546,7 @@ func (c *Client) ExportVulEffectHostListWithContext(ctx context.Context, request
     if request == nil {
         request = NewExportVulEffectHostListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulEffectHostList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulEffectHostList require credential")
@@ -24507,8 +24573,9 @@ func NewExportVulInfoRequest() (request *ExportVulInfoRequest) {
 func NewExportVulInfoResponse() (response *ExportVulInfoResponse) {
     response = &ExportVulInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulInfo
@@ -24543,6 +24610,7 @@ func (c *Client) ExportVulInfoWithContext(ctx context.Context, request *ExportVu
     if request == nil {
         request = NewExportVulInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulInfo require credential")
@@ -24569,8 +24637,9 @@ func NewExportVulListRequest() (request *ExportVulListRequest) {
 func NewExportVulListResponse() (response *ExportVulListResponse) {
     response = &ExportVulListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportVulList
@@ -24599,6 +24668,7 @@ func (c *Client) ExportVulListWithContext(ctx context.Context, request *ExportVu
     if request == nil {
         request = NewExportVulListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportVulList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportVulList require credential")
@@ -24625,8 +24695,9 @@ func NewExportWebPageEventListRequest() (request *ExportWebPageEventListRequest)
 func NewExportWebPageEventListResponse() (response *ExportWebPageEventListResponse) {
     response = &ExportWebPageEventListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ExportWebPageEventList
@@ -24655,6 +24726,7 @@ func (c *Client) ExportWebPageEventListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewExportWebPageEventListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ExportWebPageEventList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportWebPageEventList require credential")
@@ -24681,8 +24753,9 @@ func NewFixBaselineDetectRequest() (request *FixBaselineDetectRequest) {
 func NewFixBaselineDetectResponse() (response *FixBaselineDetectResponse) {
     response = &FixBaselineDetectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FixBaselineDetect
@@ -24707,6 +24780,7 @@ func (c *Client) FixBaselineDetectWithContext(ctx context.Context, request *FixB
     if request == nil {
         request = NewFixBaselineDetectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "FixBaselineDetect")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FixBaselineDetect require credential")
@@ -24733,8 +24807,9 @@ func NewGetLocalStorageItemRequest() (request *GetLocalStorageItemRequest) {
 func NewGetLocalStorageItemResponse() (response *GetLocalStorageItemResponse) {
     response = &GetLocalStorageItemResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetLocalStorageItem
@@ -24755,6 +24830,7 @@ func (c *Client) GetLocalStorageItemWithContext(ctx context.Context, request *Ge
     if request == nil {
         request = NewGetLocalStorageItemRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "GetLocalStorageItem")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetLocalStorageItem require credential")
@@ -24763,70 +24839,6 @@ func (c *Client) GetLocalStorageItemWithContext(ctx context.Context, request *Ge
     request.SetContext(ctx)
     
     response = NewGetLocalStorageItemResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewIgnoreImpactedHostsRequest() (request *IgnoreImpactedHostsRequest) {
-    request = &IgnoreImpactedHostsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cwp", APIVersion, "IgnoreImpactedHosts")
-    
-    
-    return
-}
-
-func NewIgnoreImpactedHostsResponse() (response *IgnoreImpactedHostsResponse) {
-    response = &IgnoreImpactedHostsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// IgnoreImpactedHosts
-// 本接口 (IgnoreImpactedHosts) 用于忽略漏洞。
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) IgnoreImpactedHosts(request *IgnoreImpactedHostsRequest) (response *IgnoreImpactedHostsResponse, err error) {
-    return c.IgnoreImpactedHostsWithContext(context.Background(), request)
-}
-
-// IgnoreImpactedHosts
-// 本接口 (IgnoreImpactedHosts) 用于忽略漏洞。
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
-//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
-//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) IgnoreImpactedHostsWithContext(ctx context.Context, request *IgnoreImpactedHostsRequest) (response *IgnoreImpactedHostsResponse, err error) {
-    if request == nil {
-        request = NewIgnoreImpactedHostsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("IgnoreImpactedHosts require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewIgnoreImpactedHostsResponse()
     err = c.Send(request, response)
     return
 }
@@ -24845,8 +24857,9 @@ func NewKeysLocalStorageRequest() (request *KeysLocalStorageRequest) {
 func NewKeysLocalStorageResponse() (response *KeysLocalStorageResponse) {
     response = &KeysLocalStorageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // KeysLocalStorage
@@ -24867,6 +24880,7 @@ func (c *Client) KeysLocalStorageWithContext(ctx context.Context, request *KeysL
     if request == nil {
         request = NewKeysLocalStorageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "KeysLocalStorage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("KeysLocalStorage require credential")
@@ -24893,12 +24907,13 @@ func NewModifyAutoOpenProVersionConfigRequest() (request *ModifyAutoOpenProVersi
 func NewModifyAutoOpenProVersionConfigResponse() (response *ModifyAutoOpenProVersionConfigResponse) {
     response = &ModifyAutoOpenProVersionConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAutoOpenProVersionConfig
-//  用于设置新增主机自动开通专业防护配置。
+// 用于设置新增主机自动开通专业防护配置。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -24911,7 +24926,7 @@ func (c *Client) ModifyAutoOpenProVersionConfig(request *ModifyAutoOpenProVersio
 }
 
 // ModifyAutoOpenProVersionConfig
-//  用于设置新增主机自动开通专业防护配置。
+// 用于设置新增主机自动开通专业防护配置。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -24923,6 +24938,7 @@ func (c *Client) ModifyAutoOpenProVersionConfigWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyAutoOpenProVersionConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyAutoOpenProVersionConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAutoOpenProVersionConfig require credential")
@@ -24949,8 +24965,9 @@ func NewModifyBanModeRequest() (request *ModifyBanModeRequest) {
 func NewModifyBanModeResponse() (response *ModifyBanModeResponse) {
     response = &ModifyBanModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBanMode
@@ -24983,6 +25000,7 @@ func (c *Client) ModifyBanModeWithContext(ctx context.Context, request *ModifyBa
     if request == nil {
         request = NewModifyBanModeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBanMode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBanMode require credential")
@@ -25009,8 +25027,9 @@ func NewModifyBanStatusRequest() (request *ModifyBanStatusRequest) {
 func NewModifyBanStatusResponse() (response *ModifyBanStatusResponse) {
     response = &ModifyBanStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBanStatus
@@ -25043,6 +25062,7 @@ func (c *Client) ModifyBanStatusWithContext(ctx context.Context, request *Modify
     if request == nil {
         request = NewModifyBanStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBanStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBanStatus require credential")
@@ -25069,8 +25089,9 @@ func NewModifyBanWhiteListRequest() (request *ModifyBanWhiteListRequest) {
 func NewModifyBanWhiteListResponse() (response *ModifyBanWhiteListResponse) {
     response = &ModifyBanWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBanWhiteList
@@ -25107,6 +25128,7 @@ func (c *Client) ModifyBanWhiteListWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyBanWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBanWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBanWhiteList require credential")
@@ -25133,8 +25155,9 @@ func NewModifyBaselinePolicyRequest() (request *ModifyBaselinePolicyRequest) {
 func NewModifyBaselinePolicyResponse() (response *ModifyBaselinePolicyResponse) {
     response = &ModifyBaselinePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBaselinePolicy
@@ -25159,6 +25182,7 @@ func (c *Client) ModifyBaselinePolicyWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyBaselinePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBaselinePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBaselinePolicy require credential")
@@ -25185,8 +25209,9 @@ func NewModifyBaselinePolicyStateRequest() (request *ModifyBaselinePolicyStateRe
 func NewModifyBaselinePolicyStateResponse() (response *ModifyBaselinePolicyStateResponse) {
     response = &ModifyBaselinePolicyStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBaselinePolicyState
@@ -25209,6 +25234,7 @@ func (c *Client) ModifyBaselinePolicyStateWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyBaselinePolicyStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBaselinePolicyState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBaselinePolicyState require credential")
@@ -25235,8 +25261,9 @@ func NewModifyBaselineRuleRequest() (request *ModifyBaselineRuleRequest) {
 func NewModifyBaselineRuleResponse() (response *ModifyBaselineRuleResponse) {
     response = &ModifyBaselineRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBaselineRule
@@ -25261,6 +25288,7 @@ func (c *Client) ModifyBaselineRuleWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyBaselineRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBaselineRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBaselineRule require credential")
@@ -25287,8 +25315,9 @@ func NewModifyBaselineRuleIgnoreRequest() (request *ModifyBaselineRuleIgnoreRequ
 func NewModifyBaselineRuleIgnoreResponse() (response *ModifyBaselineRuleIgnoreResponse) {
     response = &ModifyBaselineRuleIgnoreResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBaselineRuleIgnore
@@ -25313,6 +25342,7 @@ func (c *Client) ModifyBaselineRuleIgnoreWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyBaselineRuleIgnoreRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBaselineRuleIgnore")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBaselineRuleIgnore require credential")
@@ -25339,8 +25369,9 @@ func NewModifyBaselineWeakPasswordRequest() (request *ModifyBaselineWeakPassword
 func NewModifyBaselineWeakPasswordResponse() (response *ModifyBaselineWeakPasswordResponse) {
     response = &ModifyBaselineWeakPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBaselineWeakPassword
@@ -25363,6 +25394,7 @@ func (c *Client) ModifyBaselineWeakPasswordWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyBaselineWeakPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBaselineWeakPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBaselineWeakPassword require credential")
@@ -25389,8 +25421,9 @@ func NewModifyBashPolicyRequest() (request *ModifyBashPolicyRequest) {
 func NewModifyBashPolicyResponse() (response *ModifyBashPolicyResponse) {
     response = &ModifyBashPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBashPolicy
@@ -25433,6 +25466,7 @@ func (c *Client) ModifyBashPolicyWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyBashPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBashPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBashPolicy require credential")
@@ -25459,8 +25493,9 @@ func NewModifyBashPolicyStatusRequest() (request *ModifyBashPolicyStatusRequest)
 func NewModifyBashPolicyStatusResponse() (response *ModifyBashPolicyStatusResponse) {
     response = &ModifyBashPolicyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBashPolicyStatus
@@ -25503,6 +25538,7 @@ func (c *Client) ModifyBashPolicyStatusWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyBashPolicyStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBashPolicyStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBashPolicyStatus require credential")
@@ -25529,8 +25565,9 @@ func NewModifyBruteAttackRulesRequest() (request *ModifyBruteAttackRulesRequest)
 func NewModifyBruteAttackRulesResponse() (response *ModifyBruteAttackRulesResponse) {
     response = &ModifyBruteAttackRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBruteAttackRules
@@ -25563,6 +25600,7 @@ func (c *Client) ModifyBruteAttackRulesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyBruteAttackRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyBruteAttackRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBruteAttackRules require credential")
@@ -25589,8 +25627,9 @@ func NewModifyEventAttackStatusRequest() (request *ModifyEventAttackStatusReques
 func NewModifyEventAttackStatusResponse() (response *ModifyEventAttackStatusResponse) {
     response = &ModifyEventAttackStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyEventAttackStatus
@@ -25623,6 +25662,7 @@ func (c *Client) ModifyEventAttackStatusWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyEventAttackStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyEventAttackStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyEventAttackStatus require credential")
@@ -25649,8 +25689,9 @@ func NewModifyFileTamperEventsRequest() (request *ModifyFileTamperEventsRequest)
 func NewModifyFileTamperEventsResponse() (response *ModifyFileTamperEventsResponse) {
     response = &ModifyFileTamperEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFileTamperEvents
@@ -25681,6 +25722,7 @@ func (c *Client) ModifyFileTamperEventsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyFileTamperEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyFileTamperEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFileTamperEvents require credential")
@@ -25707,8 +25749,9 @@ func NewModifyFileTamperRuleRequest() (request *ModifyFileTamperRuleRequest) {
 func NewModifyFileTamperRuleResponse() (response *ModifyFileTamperRuleResponse) {
     response = &ModifyFileTamperRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFileTamperRule
@@ -25743,6 +25786,7 @@ func (c *Client) ModifyFileTamperRuleWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyFileTamperRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyFileTamperRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFileTamperRule require credential")
@@ -25769,8 +25813,9 @@ func NewModifyFileTamperRuleStatusRequest() (request *ModifyFileTamperRuleStatus
 func NewModifyFileTamperRuleStatusResponse() (response *ModifyFileTamperRuleStatusResponse) {
     response = &ModifyFileTamperRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFileTamperRuleStatus
@@ -25809,6 +25854,7 @@ func (c *Client) ModifyFileTamperRuleStatusWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyFileTamperRuleStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyFileTamperRuleStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFileTamperRuleStatus require credential")
@@ -25835,8 +25881,9 @@ func NewModifyJavaMemShellPluginSwitchRequest() (request *ModifyJavaMemShellPlug
 func NewModifyJavaMemShellPluginSwitchResponse() (response *ModifyJavaMemShellPluginSwitchResponse) {
     response = &ModifyJavaMemShellPluginSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyJavaMemShellPluginSwitch
@@ -25869,6 +25916,7 @@ func (c *Client) ModifyJavaMemShellPluginSwitchWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyJavaMemShellPluginSwitchRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyJavaMemShellPluginSwitch")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyJavaMemShellPluginSwitch require credential")
@@ -25895,8 +25943,9 @@ func NewModifyJavaMemShellsStatusRequest() (request *ModifyJavaMemShellsStatusRe
 func NewModifyJavaMemShellsStatusResponse() (response *ModifyJavaMemShellsStatusResponse) {
     response = &ModifyJavaMemShellsStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyJavaMemShellsStatus
@@ -25929,6 +25978,7 @@ func (c *Client) ModifyJavaMemShellsStatusWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyJavaMemShellsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyJavaMemShellsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyJavaMemShellsStatus require credential")
@@ -25955,8 +26005,9 @@ func NewModifyLicenseBindsRequest() (request *ModifyLicenseBindsRequest) {
 func NewModifyLicenseBindsResponse() (response *ModifyLicenseBindsResponse) {
     response = &ModifyLicenseBindsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLicenseBinds
@@ -25987,6 +26038,7 @@ func (c *Client) ModifyLicenseBindsWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyLicenseBindsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLicenseBinds")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLicenseBinds require credential")
@@ -26013,19 +26065,15 @@ func NewModifyLicenseOrderRequest() (request *ModifyLicenseOrderRequest) {
 func NewModifyLicenseOrderResponse() (response *ModifyLicenseOrderResponse) {
     response = &ModifyLicenseOrderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLicenseOrder
 // 编辑《主机安全-按量计费》授权订单
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyLicenseOrder(request *ModifyLicenseOrderRequest) (response *ModifyLicenseOrderResponse, err error) {
     return c.ModifyLicenseOrderWithContext(context.Background(), request)
@@ -26035,16 +26083,12 @@ func (c *Client) ModifyLicenseOrder(request *ModifyLicenseOrderRequest) (respons
 // 编辑《主机安全-按量计费》授权订单
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyLicenseOrderWithContext(ctx context.Context, request *ModifyLicenseOrderRequest) (response *ModifyLicenseOrderResponse, err error) {
     if request == nil {
         request = NewModifyLicenseOrderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLicenseOrder")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLicenseOrder require credential")
@@ -26071,8 +26115,9 @@ func NewModifyLicenseUnBindsRequest() (request *ModifyLicenseUnBindsRequest) {
 func NewModifyLicenseUnBindsResponse() (response *ModifyLicenseUnBindsResponse) {
     response = &ModifyLicenseUnBindsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLicenseUnBinds
@@ -26105,6 +26150,7 @@ func (c *Client) ModifyLicenseUnBindsWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyLicenseUnBindsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLicenseUnBinds")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLicenseUnBinds require credential")
@@ -26131,8 +26177,9 @@ func NewModifyLogKafkaAccessRequest() (request *ModifyLogKafkaAccessRequest) {
 func NewModifyLogKafkaAccessResponse() (response *ModifyLogKafkaAccessResponse) {
     response = &ModifyLogKafkaAccessResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLogKafkaAccess
@@ -26165,6 +26212,7 @@ func (c *Client) ModifyLogKafkaAccessWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyLogKafkaAccessRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLogKafkaAccess")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLogKafkaAccess require credential")
@@ -26191,8 +26239,9 @@ func NewModifyLogKafkaDeliverTypeRequest() (request *ModifyLogKafkaDeliverTypeRe
 func NewModifyLogKafkaDeliverTypeResponse() (response *ModifyLogKafkaDeliverTypeResponse) {
     response = &ModifyLogKafkaDeliverTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLogKafkaDeliverType
@@ -26225,6 +26274,7 @@ func (c *Client) ModifyLogKafkaDeliverTypeWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyLogKafkaDeliverTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLogKafkaDeliverType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLogKafkaDeliverType require credential")
@@ -26251,8 +26301,9 @@ func NewModifyLogKafkaStateRequest() (request *ModifyLogKafkaStateRequest) {
 func NewModifyLogKafkaStateResponse() (response *ModifyLogKafkaStateResponse) {
     response = &ModifyLogKafkaStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLogKafkaState
@@ -26285,6 +26336,7 @@ func (c *Client) ModifyLogKafkaStateWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyLogKafkaStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLogKafkaState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLogKafkaState require credential")
@@ -26311,8 +26363,9 @@ func NewModifyLogStorageConfigRequest() (request *ModifyLogStorageConfigRequest)
 func NewModifyLogStorageConfigResponse() (response *ModifyLogStorageConfigResponse) {
     response = &ModifyLogStorageConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLogStorageConfig
@@ -26333,6 +26386,7 @@ func (c *Client) ModifyLogStorageConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyLogStorageConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLogStorageConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLogStorageConfig require credential")
@@ -26359,8 +26413,9 @@ func NewModifyLoginWhiteInfoRequest() (request *ModifyLoginWhiteInfoRequest) {
 func NewModifyLoginWhiteInfoResponse() (response *ModifyLoginWhiteInfoResponse) {
     response = &ModifyLoginWhiteInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLoginWhiteInfo
@@ -26393,6 +26448,7 @@ func (c *Client) ModifyLoginWhiteInfoWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyLoginWhiteInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLoginWhiteInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoginWhiteInfo require credential")
@@ -26419,8 +26475,9 @@ func NewModifyLoginWhiteRecordRequest() (request *ModifyLoginWhiteRecordRequest)
 func NewModifyLoginWhiteRecordResponse() (response *ModifyLoginWhiteRecordResponse) {
     response = &ModifyLoginWhiteRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLoginWhiteRecord
@@ -26455,6 +26512,7 @@ func (c *Client) ModifyLoginWhiteRecordWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyLoginWhiteRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyLoginWhiteRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoginWhiteRecord require credential")
@@ -26481,8 +26539,9 @@ func NewModifyMachineAutoClearConfigRequest() (request *ModifyMachineAutoClearCo
 func NewModifyMachineAutoClearConfigResponse() (response *ModifyMachineAutoClearConfigResponse) {
     response = &ModifyMachineAutoClearConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMachineAutoClearConfig
@@ -26503,6 +26562,7 @@ func (c *Client) ModifyMachineAutoClearConfigWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyMachineAutoClearConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyMachineAutoClearConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMachineAutoClearConfig require credential")
@@ -26529,8 +26589,9 @@ func NewModifyMachineRemarkRequest() (request *ModifyMachineRemarkRequest) {
 func NewModifyMachineRemarkResponse() (response *ModifyMachineRemarkResponse) {
     response = &ModifyMachineRemarkResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMachineRemark
@@ -26561,6 +26622,7 @@ func (c *Client) ModifyMachineRemarkWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyMachineRemarkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyMachineRemark")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMachineRemark require credential")
@@ -26587,8 +26649,9 @@ func NewModifyMaliciousRequestWhiteListRequest() (request *ModifyMaliciousReques
 func NewModifyMaliciousRequestWhiteListResponse() (response *ModifyMaliciousRequestWhiteListResponse) {
     response = &ModifyMaliciousRequestWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMaliciousRequestWhiteList
@@ -26619,6 +26682,7 @@ func (c *Client) ModifyMaliciousRequestWhiteListWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyMaliciousRequestWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyMaliciousRequestWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMaliciousRequestWhiteList require credential")
@@ -26645,8 +26709,9 @@ func NewModifyMalwareTimingScanSettingsRequest() (request *ModifyMalwareTimingSc
 func NewModifyMalwareTimingScanSettingsResponse() (response *ModifyMalwareTimingScanSettingsResponse) {
     response = &ModifyMalwareTimingScanSettingsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMalwareTimingScanSettings
@@ -26689,6 +26754,7 @@ func (c *Client) ModifyMalwareTimingScanSettingsWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyMalwareTimingScanSettingsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyMalwareTimingScanSettings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMalwareTimingScanSettings require credential")
@@ -26715,8 +26781,9 @@ func NewModifyMalwareWhiteListRequest() (request *ModifyMalwareWhiteListRequest)
 func NewModifyMalwareWhiteListResponse() (response *ModifyMalwareWhiteListResponse) {
     response = &ModifyMalwareWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMalwareWhiteList
@@ -26739,6 +26806,7 @@ func (c *Client) ModifyMalwareWhiteListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyMalwareWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyMalwareWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMalwareWhiteList require credential")
@@ -26765,8 +26833,9 @@ func NewModifyNetAttackSettingRequest() (request *ModifyNetAttackSettingRequest)
 func NewModifyNetAttackSettingResponse() (response *ModifyNetAttackSettingResponse) {
     response = &ModifyNetAttackSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNetAttackSetting
@@ -26789,6 +26858,7 @@ func (c *Client) ModifyNetAttackSettingWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyNetAttackSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyNetAttackSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNetAttackSetting require credential")
@@ -26815,8 +26885,9 @@ func NewModifyNetAttackWhiteListRequest() (request *ModifyNetAttackWhiteListRequ
 func NewModifyNetAttackWhiteListResponse() (response *ModifyNetAttackWhiteListResponse) {
     response = &ModifyNetAttackWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNetAttackWhiteList
@@ -26839,6 +26910,7 @@ func (c *Client) ModifyNetAttackWhiteListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyNetAttackWhiteListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyNetAttackWhiteList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNetAttackWhiteList require credential")
@@ -26865,8 +26937,9 @@ func NewModifyOrderAttributeRequest() (request *ModifyOrderAttributeRequest) {
 func NewModifyOrderAttributeResponse() (response *ModifyOrderAttributeResponse) {
     response = &ModifyOrderAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyOrderAttribute
@@ -26897,6 +26970,7 @@ func (c *Client) ModifyOrderAttributeWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyOrderAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyOrderAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyOrderAttribute require credential")
@@ -26923,8 +26997,9 @@ func NewModifyRansomDefenseEventsStatusRequest() (request *ModifyRansomDefenseEv
 func NewModifyRansomDefenseEventsStatusResponse() (response *ModifyRansomDefenseEventsStatusResponse) {
     response = &ModifyRansomDefenseEventsStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRansomDefenseEventsStatus
@@ -26963,6 +27038,7 @@ func (c *Client) ModifyRansomDefenseEventsStatusWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyRansomDefenseEventsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyRansomDefenseEventsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRansomDefenseEventsStatus require credential")
@@ -26989,8 +27065,9 @@ func NewModifyRansomDefenseStrategyStatusRequest() (request *ModifyRansomDefense
 func NewModifyRansomDefenseStrategyStatusResponse() (response *ModifyRansomDefenseStrategyStatusResponse) {
     response = &ModifyRansomDefenseStrategyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRansomDefenseStrategyStatus
@@ -27013,6 +27090,7 @@ func (c *Client) ModifyRansomDefenseStrategyStatusWithContext(ctx context.Contex
     if request == nil {
         request = NewModifyRansomDefenseStrategyStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyRansomDefenseStrategyStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRansomDefenseStrategyStatus require credential")
@@ -27021,6 +27099,224 @@ func (c *Client) ModifyRansomDefenseStrategyStatusWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewModifyRansomDefenseStrategyStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRaspMaxCpuRequest() (request *ModifyRaspMaxCpuRequest) {
+    request = &ModifyRaspMaxCpuRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cwp", APIVersion, "ModifyRaspMaxCpu")
+    
+    
+    return
+}
+
+func NewModifyRaspMaxCpuResponse() (response *ModifyRaspMaxCpuResponse) {
+    response = &ModifyRaspMaxCpuResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRaspMaxCpu
+// 编辑漏洞防御最大cpu配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) ModifyRaspMaxCpu(request *ModifyRaspMaxCpuRequest) (response *ModifyRaspMaxCpuResponse, err error) {
+    return c.ModifyRaspMaxCpuWithContext(context.Background(), request)
+}
+
+// ModifyRaspMaxCpu
+// 编辑漏洞防御最大cpu配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) ModifyRaspMaxCpuWithContext(ctx context.Context, request *ModifyRaspMaxCpuRequest) (response *ModifyRaspMaxCpuResponse, err error) {
+    if request == nil {
+        request = NewModifyRaspMaxCpuRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyRaspMaxCpu")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRaspMaxCpu require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRaspMaxCpuResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRaspRulesRequest() (request *ModifyRaspRulesRequest) {
+    request = &ModifyRaspRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cwp", APIVersion, "ModifyRaspRules")
+    
+    
+    return
+}
+
+func NewModifyRaspRulesResponse() (response *ModifyRaspRulesResponse) {
+    response = &ModifyRaspRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRaspRules
+// 添加漏洞防御白名单
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_IPNOVALID = "InvalidParameter.IpNoValid"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_PORTNOVALID = "InvalidParameter.PortNoValid"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETER_REVERSHELLKEYFIELDALLEMPTY = "InvalidParameter.ReverShellKeyFieldAllEmpty"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyRaspRules(request *ModifyRaspRulesRequest) (response *ModifyRaspRulesResponse, err error) {
+    return c.ModifyRaspRulesWithContext(context.Background(), request)
+}
+
+// ModifyRaspRules
+// 添加漏洞防御白名单
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_IPNOVALID = "InvalidParameter.IpNoValid"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_PORTNOVALID = "InvalidParameter.PortNoValid"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETER_REVERSHELLKEYFIELDALLEMPTY = "InvalidParameter.ReverShellKeyFieldAllEmpty"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyRaspRulesWithContext(ctx context.Context, request *ModifyRaspRulesRequest) (response *ModifyRaspRulesResponse, err error) {
+    if request == nil {
+        request = NewModifyRaspRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyRaspRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRaspRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRaspRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyReverseShellRulesAggregationRequest() (request *ModifyReverseShellRulesAggregationRequest) {
+    request = &ModifyReverseShellRulesAggregationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cwp", APIVersion, "ModifyReverseShellRulesAggregation")
+    
+    
+    return
+}
+
+func NewModifyReverseShellRulesAggregationResponse() (response *ModifyReverseShellRulesAggregationResponse) {
+    response = &ModifyReverseShellRulesAggregationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyReverseShellRulesAggregation
+// 编辑反弹Shell规则（支持多服务器选择）
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_IPNOVALID = "InvalidParameter.IpNoValid"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_PORTNOVALID = "InvalidParameter.PortNoValid"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETER_REVERSHELLKEYFIELDALLEMPTY = "InvalidParameter.ReverShellKeyFieldAllEmpty"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyReverseShellRulesAggregation(request *ModifyReverseShellRulesAggregationRequest) (response *ModifyReverseShellRulesAggregationResponse, err error) {
+    return c.ModifyReverseShellRulesAggregationWithContext(context.Background(), request)
+}
+
+// ModifyReverseShellRulesAggregation
+// 编辑反弹Shell规则（支持多服务器选择）
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+//  INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+//  INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+//  INVALIDPARAMETER_IPNOVALID = "InvalidParameter.IpNoValid"
+//  INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+//  INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+//  INVALIDPARAMETER_PORTNOVALID = "InvalidParameter.PortNoValid"
+//  INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+//  INVALIDPARAMETER_REVERSHELLKEYFIELDALLEMPTY = "InvalidParameter.ReverShellKeyFieldAllEmpty"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyReverseShellRulesAggregationWithContext(ctx context.Context, request *ModifyReverseShellRulesAggregationRequest) (response *ModifyReverseShellRulesAggregationResponse, err error) {
+    if request == nil {
+        request = NewModifyReverseShellRulesAggregationRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyReverseShellRulesAggregation")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyReverseShellRulesAggregation require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyReverseShellRulesAggregationResponse()
     err = c.Send(request, response)
     return
 }
@@ -27039,8 +27335,9 @@ func NewModifyRiskDnsPolicyRequest() (request *ModifyRiskDnsPolicyRequest) {
 func NewModifyRiskDnsPolicyResponse() (response *ModifyRiskDnsPolicyResponse) {
     response = &ModifyRiskDnsPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRiskDnsPolicy
@@ -27065,6 +27362,7 @@ func (c *Client) ModifyRiskDnsPolicyWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyRiskDnsPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyRiskDnsPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRiskDnsPolicy require credential")
@@ -27091,8 +27389,9 @@ func NewModifyRiskDnsPolicyStatusRequest() (request *ModifyRiskDnsPolicyStatusRe
 func NewModifyRiskDnsPolicyStatusResponse() (response *ModifyRiskDnsPolicyStatusResponse) {
     response = &ModifyRiskDnsPolicyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRiskDnsPolicyStatus
@@ -27115,6 +27414,7 @@ func (c *Client) ModifyRiskDnsPolicyStatusWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyRiskDnsPolicyStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyRiskDnsPolicyStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRiskDnsPolicyStatus require credential")
@@ -27141,8 +27441,9 @@ func NewModifyRiskEventsStatusRequest() (request *ModifyRiskEventsStatusRequest)
 func NewModifyRiskEventsStatusResponse() (response *ModifyRiskEventsStatusResponse) {
     response = &ModifyRiskEventsStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRiskEventsStatus
@@ -27181,6 +27482,7 @@ func (c *Client) ModifyRiskEventsStatusWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyRiskEventsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyRiskEventsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRiskEventsStatus require credential")
@@ -27207,8 +27509,9 @@ func NewModifyUsersConfigRequest() (request *ModifyUsersConfigRequest) {
 func NewModifyUsersConfigResponse() (response *ModifyUsersConfigResponse) {
     response = &ModifyUsersConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyUsersConfig
@@ -27247,6 +27550,7 @@ func (c *Client) ModifyUsersConfigWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyUsersConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyUsersConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUsersConfig require credential")
@@ -27273,8 +27577,9 @@ func NewModifyVulDefenceEventStatusRequest() (request *ModifyVulDefenceEventStat
 func NewModifyVulDefenceEventStatusResponse() (response *ModifyVulDefenceEventStatusResponse) {
     response = &ModifyVulDefenceEventStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyVulDefenceEventStatus
@@ -27307,6 +27612,7 @@ func (c *Client) ModifyVulDefenceEventStatusWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyVulDefenceEventStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyVulDefenceEventStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyVulDefenceEventStatus require credential")
@@ -27333,8 +27639,9 @@ func NewModifyVulDefenceSettingRequest() (request *ModifyVulDefenceSettingReques
 func NewModifyVulDefenceSettingResponse() (response *ModifyVulDefenceSettingResponse) {
     response = &ModifyVulDefenceSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyVulDefenceSetting
@@ -27379,6 +27686,7 @@ func (c *Client) ModifyVulDefenceSettingWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyVulDefenceSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyVulDefenceSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyVulDefenceSetting require credential")
@@ -27405,8 +27713,9 @@ func NewModifyWarningHostConfigRequest() (request *ModifyWarningHostConfigReques
 func NewModifyWarningHostConfigResponse() (response *ModifyWarningHostConfigResponse) {
     response = &ModifyWarningHostConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWarningHostConfig
@@ -27439,6 +27748,7 @@ func (c *Client) ModifyWarningHostConfigWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyWarningHostConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWarningHostConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWarningHostConfig require credential")
@@ -27465,8 +27775,9 @@ func NewModifyWarningSettingRequest() (request *ModifyWarningSettingRequest) {
 func NewModifyWarningSettingResponse() (response *ModifyWarningSettingResponse) {
     response = &ModifyWarningSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWarningSetting
@@ -27499,6 +27810,7 @@ func (c *Client) ModifyWarningSettingWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyWarningSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWarningSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWarningSetting require credential")
@@ -27525,8 +27837,9 @@ func NewModifyWebHookPolicyRequest() (request *ModifyWebHookPolicyRequest) {
 func NewModifyWebHookPolicyResponse() (response *ModifyWebHookPolicyResponse) {
     response = &ModifyWebHookPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebHookPolicy
@@ -27559,6 +27872,7 @@ func (c *Client) ModifyWebHookPolicyWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyWebHookPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebHookPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebHookPolicy require credential")
@@ -27585,8 +27899,9 @@ func NewModifyWebHookPolicyStatusRequest() (request *ModifyWebHookPolicyStatusRe
 func NewModifyWebHookPolicyStatusResponse() (response *ModifyWebHookPolicyStatusResponse) {
     response = &ModifyWebHookPolicyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebHookPolicyStatus
@@ -27619,6 +27934,7 @@ func (c *Client) ModifyWebHookPolicyStatusWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyWebHookPolicyStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebHookPolicyStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebHookPolicyStatus require credential")
@@ -27645,8 +27961,9 @@ func NewModifyWebHookReceiverRequest() (request *ModifyWebHookReceiverRequest) {
 func NewModifyWebHookReceiverResponse() (response *ModifyWebHookReceiverResponse) {
     response = &ModifyWebHookReceiverResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebHookReceiver
@@ -27667,6 +27984,7 @@ func (c *Client) ModifyWebHookReceiverWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyWebHookReceiverRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebHookReceiver")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebHookReceiver require credential")
@@ -27693,8 +28011,9 @@ func NewModifyWebHookRuleRequest() (request *ModifyWebHookRuleRequest) {
 func NewModifyWebHookRuleResponse() (response *ModifyWebHookRuleResponse) {
     response = &ModifyWebHookRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebHookRule
@@ -27721,6 +28040,7 @@ func (c *Client) ModifyWebHookRuleWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyWebHookRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebHookRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebHookRule require credential")
@@ -27747,8 +28067,9 @@ func NewModifyWebHookRuleStatusRequest() (request *ModifyWebHookRuleStatusReques
 func NewModifyWebHookRuleStatusResponse() (response *ModifyWebHookRuleStatusResponse) {
     response = &ModifyWebHookRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebHookRuleStatus
@@ -27773,6 +28094,7 @@ func (c *Client) ModifyWebHookRuleStatusWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyWebHookRuleStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebHookRuleStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebHookRuleStatus require credential")
@@ -27799,8 +28121,9 @@ func NewModifyWebPageProtectDirRequest() (request *ModifyWebPageProtectDirReques
 func NewModifyWebPageProtectDirResponse() (response *ModifyWebPageProtectDirResponse) {
     response = &ModifyWebPageProtectDirResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebPageProtectDir
@@ -27847,6 +28170,7 @@ func (c *Client) ModifyWebPageProtectDirWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyWebPageProtectDirRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebPageProtectDir")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebPageProtectDir require credential")
@@ -27873,8 +28197,9 @@ func NewModifyWebPageProtectSettingRequest() (request *ModifyWebPageProtectSetti
 func NewModifyWebPageProtectSettingResponse() (response *ModifyWebPageProtectSettingResponse) {
     response = &ModifyWebPageProtectSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebPageProtectSetting
@@ -27907,6 +28232,7 @@ func (c *Client) ModifyWebPageProtectSettingWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyWebPageProtectSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebPageProtectSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebPageProtectSetting require credential")
@@ -27933,8 +28259,9 @@ func NewModifyWebPageProtectSwitchRequest() (request *ModifyWebPageProtectSwitch
 func NewModifyWebPageProtectSwitchResponse() (response *ModifyWebPageProtectSwitchResponse) {
     response = &ModifyWebPageProtectSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebPageProtectSwitch
@@ -27975,6 +28302,7 @@ func (c *Client) ModifyWebPageProtectSwitchWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyWebPageProtectSwitchRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ModifyWebPageProtectSwitch")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebPageProtectSwitch require credential")
@@ -28001,8 +28329,9 @@ func NewRansomDefenseRollbackRequest() (request *RansomDefenseRollbackRequest) {
 func NewRansomDefenseRollbackResponse() (response *RansomDefenseRollbackResponse) {
     response = &RansomDefenseRollbackResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RansomDefenseRollback
@@ -28027,6 +28356,7 @@ func (c *Client) RansomDefenseRollbackWithContext(ctx context.Context, request *
     if request == nil {
         request = NewRansomDefenseRollbackRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "RansomDefenseRollback")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RansomDefenseRollback require credential")
@@ -28053,8 +28383,9 @@ func NewRecoverMalwaresRequest() (request *RecoverMalwaresRequest) {
 func NewRecoverMalwaresResponse() (response *RecoverMalwaresResponse) {
     response = &RecoverMalwaresResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RecoverMalwares
@@ -28091,6 +28422,7 @@ func (c *Client) RecoverMalwaresWithContext(ctx context.Context, request *Recove
     if request == nil {
         request = NewRecoverMalwaresRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "RecoverMalwares")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RecoverMalwares require credential")
@@ -28117,8 +28449,9 @@ func NewRemoveLocalStorageItemRequest() (request *RemoveLocalStorageItemRequest)
 func NewRemoveLocalStorageItemResponse() (response *RemoveLocalStorageItemResponse) {
     response = &RemoveLocalStorageItemResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveLocalStorageItem
@@ -28139,6 +28472,7 @@ func (c *Client) RemoveLocalStorageItemWithContext(ctx context.Context, request 
     if request == nil {
         request = NewRemoveLocalStorageItemRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "RemoveLocalStorageItem")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveLocalStorageItem require credential")
@@ -28165,8 +28499,9 @@ func NewRemoveMachineRequest() (request *RemoveMachineRequest) {
 func NewRemoveMachineResponse() (response *RemoveMachineResponse) {
     response = &RemoveMachineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveMachine
@@ -28203,6 +28538,7 @@ func (c *Client) RemoveMachineWithContext(ctx context.Context, request *RemoveMa
     if request == nil {
         request = NewRemoveMachineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "RemoveMachine")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveMachine require credential")
@@ -28229,8 +28565,9 @@ func NewRetryCreateSnapshotRequest() (request *RetryCreateSnapshotRequest) {
 func NewRetryCreateSnapshotResponse() (response *RetryCreateSnapshotResponse) {
     response = &RetryCreateSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RetryCreateSnapshot
@@ -28271,6 +28608,7 @@ func (c *Client) RetryCreateSnapshotWithContext(ctx context.Context, request *Re
     if request == nil {
         request = NewRetryCreateSnapshotRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "RetryCreateSnapshot")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RetryCreateSnapshot require credential")
@@ -28297,8 +28635,9 @@ func NewRetryVulFixRequest() (request *RetryVulFixRequest) {
 func NewRetryVulFixResponse() (response *RetryVulFixResponse) {
     response = &RetryVulFixResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RetryVulFix
@@ -28335,6 +28674,7 @@ func (c *Client) RetryVulFixWithContext(ctx context.Context, request *RetryVulFi
     if request == nil {
         request = NewRetryVulFixRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "RetryVulFix")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RetryVulFix require credential")
@@ -28361,8 +28701,9 @@ func NewScanAssetRequest() (request *ScanAssetRequest) {
 func NewScanAssetResponse() (response *ScanAssetResponse) {
     response = &ScanAssetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScanAsset
@@ -28401,6 +28742,7 @@ func (c *Client) ScanAssetWithContext(ctx context.Context, request *ScanAssetReq
     if request == nil {
         request = NewScanAssetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ScanAsset")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScanAsset require credential")
@@ -28427,8 +28769,9 @@ func NewScanBaselineRequest() (request *ScanBaselineRequest) {
 func NewScanBaselineResponse() (response *ScanBaselineResponse) {
     response = &ScanBaselineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScanBaseline
@@ -28471,6 +28814,7 @@ func (c *Client) ScanBaselineWithContext(ctx context.Context, request *ScanBasel
     if request == nil {
         request = NewScanBaselineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ScanBaseline")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScanBaseline require credential")
@@ -28497,8 +28841,9 @@ func NewScanTaskAgainRequest() (request *ScanTaskAgainRequest) {
 func NewScanTaskAgainResponse() (response *ScanTaskAgainResponse) {
     response = &ScanTaskAgainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScanTaskAgain
@@ -28537,6 +28882,7 @@ func (c *Client) ScanTaskAgainWithContext(ctx context.Context, request *ScanTask
     if request == nil {
         request = NewScanTaskAgainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ScanTaskAgain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScanTaskAgain require credential")
@@ -28563,12 +28909,13 @@ func NewScanVulRequest() (request *ScanVulRequest) {
 func NewScanVulResponse() (response *ScanVulResponse) {
     response = &ScanVulResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScanVul
-//  一键检测
+// 漏洞一键检测
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -28588,7 +28935,7 @@ func (c *Client) ScanVul(request *ScanVulRequest) (response *ScanVulResponse, er
 }
 
 // ScanVul
-//  一键检测
+// 漏洞一键检测
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -28607,6 +28954,7 @@ func (c *Client) ScanVulWithContext(ctx context.Context, request *ScanVulRequest
     if request == nil {
         request = NewScanVulRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ScanVul")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScanVul require credential")
@@ -28633,8 +28981,9 @@ func NewScanVulAgainRequest() (request *ScanVulAgainRequest) {
 func NewScanVulAgainResponse() (response *ScanVulAgainResponse) {
     response = &ScanVulAgainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScanVulAgain
@@ -28675,6 +29024,7 @@ func (c *Client) ScanVulAgainWithContext(ctx context.Context, request *ScanVulAg
     if request == nil {
         request = NewScanVulAgainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ScanVulAgain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScanVulAgain require credential")
@@ -28701,8 +29051,9 @@ func NewScanVulSettingRequest() (request *ScanVulSettingRequest) {
 func NewScanVulSettingResponse() (response *ScanVulSettingResponse) {
     response = &ScanVulSettingResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScanVulSetting
@@ -28735,6 +29086,7 @@ func (c *Client) ScanVulSettingWithContext(ctx context.Context, request *ScanVul
     if request == nil {
         request = NewScanVulSettingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "ScanVulSetting")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScanVulSetting require credential")
@@ -28761,8 +29113,9 @@ func NewSearchLogRequest() (request *SearchLogRequest) {
 func NewSearchLogResponse() (response *SearchLogResponse) {
     response = &SearchLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SearchLog
@@ -28795,6 +29148,7 @@ func (c *Client) SearchLogWithContext(ctx context.Context, request *SearchLogReq
     if request == nil {
         request = NewSearchLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SearchLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SearchLog require credential")
@@ -28821,8 +29175,9 @@ func NewSeparateMalwaresRequest() (request *SeparateMalwaresRequest) {
 func NewSeparateMalwaresResponse() (response *SeparateMalwaresResponse) {
     response = &SeparateMalwaresResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SeparateMalwares
@@ -28859,6 +29214,7 @@ func (c *Client) SeparateMalwaresWithContext(ctx context.Context, request *Separ
     if request == nil {
         request = NewSeparateMalwaresRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SeparateMalwares")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SeparateMalwares require credential")
@@ -28885,8 +29241,9 @@ func NewSetBashEventsStatusRequest() (request *SetBashEventsStatusRequest) {
 func NewSetBashEventsStatusResponse() (response *SetBashEventsStatusResponse) {
     response = &SetBashEventsStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetBashEventsStatus
@@ -28919,6 +29276,7 @@ func (c *Client) SetBashEventsStatusWithContext(ctx context.Context, request *Se
     if request == nil {
         request = NewSetBashEventsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SetBashEventsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetBashEventsStatus require credential")
@@ -28945,8 +29303,9 @@ func NewSetLocalStorageExpireRequest() (request *SetLocalStorageExpireRequest) {
 func NewSetLocalStorageExpireResponse() (response *SetLocalStorageExpireResponse) {
     response = &SetLocalStorageExpireResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetLocalStorageExpire
@@ -28967,6 +29326,7 @@ func (c *Client) SetLocalStorageExpireWithContext(ctx context.Context, request *
     if request == nil {
         request = NewSetLocalStorageExpireRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SetLocalStorageExpire")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetLocalStorageExpire require credential")
@@ -28993,8 +29353,9 @@ func NewSetLocalStorageItemRequest() (request *SetLocalStorageItemRequest) {
 func NewSetLocalStorageItemResponse() (response *SetLocalStorageItemResponse) {
     response = &SetLocalStorageItemResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetLocalStorageItem
@@ -29015,6 +29376,7 @@ func (c *Client) SetLocalStorageItemWithContext(ctx context.Context, request *Se
     if request == nil {
         request = NewSetLocalStorageItemRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SetLocalStorageItem")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetLocalStorageItem require credential")
@@ -29041,8 +29403,9 @@ func NewStartBaselineDetectRequest() (request *StartBaselineDetectRequest) {
 func NewStartBaselineDetectResponse() (response *StartBaselineDetectResponse) {
     response = &StartBaselineDetectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartBaselineDetect
@@ -29052,6 +29415,7 @@ func NewStartBaselineDetectResponse() (response *StartBaselineDetectResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) StartBaselineDetect(request *StartBaselineDetectRequest) (response *StartBaselineDetectResponse, err error) {
     return c.StartBaselineDetectWithContext(context.Background(), request)
 }
@@ -29063,10 +29427,12 @@ func (c *Client) StartBaselineDetect(request *StartBaselineDetectRequest) (respo
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) StartBaselineDetectWithContext(ctx context.Context, request *StartBaselineDetectRequest) (response *StartBaselineDetectResponse, err error) {
     if request == nil {
         request = NewStartBaselineDetectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "StartBaselineDetect")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartBaselineDetect require credential")
@@ -29093,8 +29459,9 @@ func NewStopAssetScanRequest() (request *StopAssetScanRequest) {
 func NewStopAssetScanResponse() (response *StopAssetScanResponse) {
     response = &StopAssetScanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopAssetScan
@@ -29131,6 +29498,7 @@ func (c *Client) StopAssetScanWithContext(ctx context.Context, request *StopAsse
     if request == nil {
         request = NewStopAssetScanRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "StopAssetScan")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopAssetScan require credential")
@@ -29157,8 +29525,9 @@ func NewStopBaselineDetectRequest() (request *StopBaselineDetectRequest) {
 func NewStopBaselineDetectResponse() (response *StopBaselineDetectResponse) {
     response = &StopBaselineDetectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopBaselineDetect
@@ -29181,6 +29550,7 @@ func (c *Client) StopBaselineDetectWithContext(ctx context.Context, request *Sto
     if request == nil {
         request = NewStopBaselineDetectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "StopBaselineDetect")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopBaselineDetect require credential")
@@ -29207,8 +29577,9 @@ func NewStopNoticeBanTipsRequest() (request *StopNoticeBanTipsRequest) {
 func NewStopNoticeBanTipsResponse() (response *StopNoticeBanTipsResponse) {
     response = &StopNoticeBanTipsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopNoticeBanTips
@@ -29229,6 +29600,7 @@ func (c *Client) StopNoticeBanTipsWithContext(ctx context.Context, request *Stop
     if request == nil {
         request = NewStopNoticeBanTipsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "StopNoticeBanTips")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopNoticeBanTips require credential")
@@ -29255,8 +29627,9 @@ func NewSwitchBashRulesRequest() (request *SwitchBashRulesRequest) {
 func NewSwitchBashRulesResponse() (response *SwitchBashRulesResponse) {
     response = &SwitchBashRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchBashRules
@@ -29299,6 +29672,7 @@ func (c *Client) SwitchBashRulesWithContext(ctx context.Context, request *Switch
     if request == nil {
         request = NewSwitchBashRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SwitchBashRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchBashRules require credential")
@@ -29325,8 +29699,9 @@ func NewSyncAssetScanRequest() (request *SyncAssetScanRequest) {
 func NewSyncAssetScanResponse() (response *SyncAssetScanResponse) {
     response = &SyncAssetScanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncAssetScan
@@ -29359,6 +29734,7 @@ func (c *Client) SyncAssetScanWithContext(ctx context.Context, request *SyncAsse
     if request == nil {
         request = NewSyncAssetScanRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SyncAssetScan")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SyncAssetScan require credential")
@@ -29385,8 +29761,9 @@ func NewSyncBaselineDetectSummaryRequest() (request *SyncBaselineDetectSummaryRe
 func NewSyncBaselineDetectSummaryResponse() (response *SyncBaselineDetectSummaryResponse) {
     response = &SyncBaselineDetectSummaryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncBaselineDetectSummary
@@ -29409,6 +29786,7 @@ func (c *Client) SyncBaselineDetectSummaryWithContext(ctx context.Context, reque
     if request == nil {
         request = NewSyncBaselineDetectSummaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SyncBaselineDetectSummary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SyncBaselineDetectSummary require credential")
@@ -29435,8 +29813,9 @@ func NewSyncMachinesRequest() (request *SyncMachinesRequest) {
 func NewSyncMachinesResponse() (response *SyncMachinesResponse) {
     response = &SyncMachinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncMachines
@@ -29465,6 +29844,7 @@ func (c *Client) SyncMachinesWithContext(ctx context.Context, request *SyncMachi
     if request == nil {
         request = NewSyncMachinesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "SyncMachines")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SyncMachines require credential")
@@ -29491,8 +29871,9 @@ func NewTestWebHookRuleRequest() (request *TestWebHookRuleRequest) {
 func NewTestWebHookRuleResponse() (response *TestWebHookRuleResponse) {
     response = &TestWebHookRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TestWebHookRule
@@ -29517,6 +29898,7 @@ func (c *Client) TestWebHookRuleWithContext(ctx context.Context, request *TestWe
     if request == nil {
         request = NewTestWebHookRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "TestWebHookRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TestWebHookRule require credential")
@@ -29543,8 +29925,9 @@ func NewTrustMalwaresRequest() (request *TrustMalwaresRequest) {
 func NewTrustMalwaresResponse() (response *TrustMalwaresResponse) {
     response = &TrustMalwaresResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TrustMalwares
@@ -29579,6 +29962,7 @@ func (c *Client) TrustMalwaresWithContext(ctx context.Context, request *TrustMal
     if request == nil {
         request = NewTrustMalwaresRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "TrustMalwares")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TrustMalwares require credential")
@@ -29605,8 +29989,9 @@ func NewUntrustMalwaresRequest() (request *UntrustMalwaresRequest) {
 func NewUntrustMalwaresResponse() (response *UntrustMalwaresResponse) {
     response = &UntrustMalwaresResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UntrustMalwares
@@ -29641,6 +30026,7 @@ func (c *Client) UntrustMalwaresWithContext(ctx context.Context, request *Untrus
     if request == nil {
         request = NewUntrustMalwaresRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "UntrustMalwares")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UntrustMalwares require credential")
@@ -29667,8 +30053,9 @@ func NewUpdateBaselineStrategyRequest() (request *UpdateBaselineStrategyRequest)
 func NewUpdateBaselineStrategyResponse() (response *UpdateBaselineStrategyResponse) {
     response = &UpdateBaselineStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateBaselineStrategy
@@ -29703,6 +30090,7 @@ func (c *Client) UpdateBaselineStrategyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateBaselineStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "UpdateBaselineStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateBaselineStrategy require credential")
@@ -29729,8 +30117,9 @@ func NewUpdateMachineTagsRequest() (request *UpdateMachineTagsRequest) {
 func NewUpdateMachineTagsResponse() (response *UpdateMachineTagsResponse) {
     response = &UpdateMachineTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateMachineTags
@@ -29763,6 +30152,7 @@ func (c *Client) UpdateMachineTagsWithContext(ctx context.Context, request *Upda
     if request == nil {
         request = NewUpdateMachineTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cwp", APIVersion, "UpdateMachineTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateMachineTags require credential")

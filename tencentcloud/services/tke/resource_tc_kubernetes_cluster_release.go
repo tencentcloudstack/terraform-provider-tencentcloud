@@ -245,7 +245,21 @@ func resourceTencentCloudKubernetesClusterReleaseCreate(d *schema.ResourceData, 
 			return tccommon.RetryError(e)
 		}
 
-		if result == nil || result.Status == nil {
+		// get release detail
+		if result == nil {
+			respData, err := service.DescribeKubernetesClusterReleaseById(ctx, clusterId, namespace, name)
+			if err != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if respData == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes cluster release details failed, Response is nil."))
+			}
+
+			return nil
+		}
+
+		if result.Status == nil {
 			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes cluster release failed, Response is nil."))
 		}
 
@@ -253,7 +267,7 @@ func resourceTencentCloudKubernetesClusterReleaseCreate(d *schema.ResourceData, 
 			return nil
 		}
 
-		return resource.RetryableError(fmt.Errorf("cluster release is still install...Status is %s", *result.Status))
+		return resource.RetryableError(fmt.Errorf("Cluster release is still install...Status is %s", *result.Status))
 	})
 
 	if reqErr != nil {

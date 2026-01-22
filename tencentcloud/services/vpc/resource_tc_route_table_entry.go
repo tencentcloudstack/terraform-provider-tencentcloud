@@ -46,7 +46,7 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(ALL_GATE_WAY_TYPES),
-				Description:  "Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `HAVIP`, `NAT`, `NORMAL_CVM`, `EIP`, `LOCAL_GATEWAY`, `INTRANAT` and `USER_CCN`.",
+				Description:  "Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `HAVIP`, `NAT`, `NORMAL_CVM`, `EIP`, `LOCAL_GATEWAY`, `INTRANAT`, `USER_CCN` and `GWLB_ENDPOINT`.",
 			},
 			"next_hub": {
 				Type:        schema.TypeString,
@@ -71,6 +71,11 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "ID of route table entry.",
+			},
+			"route_entry_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "ID of route entry.",
 			},
 		},
 	}
@@ -187,6 +192,7 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 				_ = d.Set("next_hub", v.nextBub)
 				_ = d.Set("route_item_id", v.routeItemId)
 				_ = d.Set("disabled", !v.enabled)
+				_ = d.Set("route_entry_id", v.routeEntryId)
 				return nil
 			}
 		}

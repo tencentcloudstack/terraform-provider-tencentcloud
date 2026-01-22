@@ -22,6 +22,11 @@ resource "tencentcloud_cam_policy" "foo" {
 }
 EOF
   description = "tf_test"
+
+  tags = {
+    createBy = "Terraform"
+    env      = "test"
+  }
 }
 ```
 

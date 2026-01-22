@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cbs_snapshot: fix the issue that cannot setting tags
+```

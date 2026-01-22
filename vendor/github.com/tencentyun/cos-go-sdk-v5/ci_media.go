@@ -51,6 +51,7 @@ type JobOutput struct {
 	BassObject    string          `xml:"BassObject,omitempty"`
 	DrumObject    string          `xml:"DrumObject,omitempty"`
 	StreamExtract []StreamExtract `xml:"StreamExtract,omitempty"`
+	Force         string          `xml:"Force,omitempty"`
 }
 
 // ClipConfig TODO
@@ -138,36 +139,46 @@ type TranscodeProAudio struct {
 
 // TransConfig TODO
 type TransConfig struct {
-	AdjDarMethod          string      `xml:"AdjDarMethod,omitempty"`
-	IsCheckReso           string      `xml:"IsCheckReso,omitempty"`
-	ResoAdjMethod         string      `xml:"ResoAdjMethod,omitempty"`
-	IsCheckVideoBitrate   string      `xml:"IsCheckVideoBitrate,omitempty"`
-	VideoBitrateAdjMethod string      `xml:"VideoBitrateAdjMethod,omitempty"`
-	IsCheckAudioBitrate   string      `xml:"IsCheckAudioBitrate,omitempty"`
-	AudioBitrateAdjMethod string      `xml:"AudioBitrateAdjMethod,omitempty"`
-	DeleteMetadata        string      `xml:"DeleteMetadata,omitempty"`
-	IsHdr2Sdr             string      `xml:"IsHdr2Sdr,omitempty"`
-	HlsEncrypt            *HlsEncrypt `xml:"HlsEncrypt,omitempty"`
+	AdjDarMethod          string        `xml:"AdjDarMethod,omitempty"`
+	IsCheckReso           string        `xml:"IsCheckReso,omitempty"`
+	ResoAdjMethod         string        `xml:"ResoAdjMethod,omitempty"`
+	IsCheckVideoBitrate   string        `xml:"IsCheckVideoBitrate,omitempty"`
+	VideoBitrateAdjMethod string        `xml:"VideoBitrateAdjMethod,omitempty"`
+	IsCheckAudioBitrate   string        `xml:"IsCheckAudioBitrate,omitempty"`
+	AudioBitrateAdjMethod string        `xml:"AudioBitrateAdjMethod,omitempty"`
+	DeleteMetadata        string        `xml:"DeleteMetadata,omitempty"`
+	IsHdr2Sdr             string        `xml:"IsHdr2Sdr,omitempty"`
+	HlsEncrypt            *HlsEncrypt   `xml:"HlsEncrypt,omitempty"`
+	AIGCMetadata          *AIGCMetadata `xml:"AIGCMetadata,omitempty"`
+}
+
+// TargetSubtitle
+type TargetSubtitle struct {
+	Remove string `xml:"Remove,omitempty"`
 }
 
 // Transcode TODO
 type Transcode struct {
-	Container     *Container    `xml:"Container,omitempty"`
-	Video         *Video        `xml:"Video,omitempty"`
-	TimeInterval  *TimeInterval `xml:"TimeInterval,omitempty"`
-	Audio         *Audio        `xml:"Audio,omitempty"`
-	TransConfig   *TransConfig  `xml:"TransConfig,omitempty"`
-	AudioMix      *AudioMix     `xml:"AudioMix,omitempty"`
-	AudioMixArray []AudioMix    `xml:"AudioMixArray,omitempty"`
+	Container     *Container      `xml:"Container,omitempty"`
+	Video         *Video          `xml:"Video,omitempty"`
+	TimeInterval  *TimeInterval   `xml:"TimeInterval,omitempty"`
+	Audio         *Audio          `xml:"Audio,omitempty"`
+	TransConfig   *TransConfig    `xml:"TransConfig,omitempty"`
+	AudioMix      *AudioMix       `xml:"AudioMix,omitempty"`
+	AudioMixArray []AudioMix      `xml:"AudioMixArray,omitempty"`
+	Subtitle      *TargetSubtitle `xml:"Subtitle,omitempty"`
 }
 
 // TranscodePro TODO
 type TranscodePro struct {
-	Container    *Container         `xml:"Container,omitempty"`
-	Video        *TranscodeProVideo `xml:"Video,omitempty"`
-	Audio        *TranscodeProAudio `xml:"Audio,omitempty"`
-	TimeInterval *TimeInterval      `xml:"TimeInterval,omitempty"`
-	TransConfig  *TransConfig       `xml:"TransConfig,omitempty"`
+	Container     *Container         `xml:"Container,omitempty"`
+	Video         *TranscodeProVideo `xml:"Video,omitempty"`
+	Audio         *TranscodeProAudio `xml:"Audio,omitempty"`
+	TimeInterval  *TimeInterval      `xml:"TimeInterval,omitempty"`
+	TransConfig   *TransConfig       `xml:"TransConfig,omitempty"`
+	AudioMix      *AudioMix          `xml:"AudioMix,omitempty"`
+	AudioMixArray []AudioMix         `xml:"AudioMixArray,omitempty"`
+	Subtitle      *TargetSubtitle    `xml:"Subtitle,omitempty"`
 }
 
 // WatermarkSlideConfig TODO
@@ -362,12 +373,13 @@ type HlsEncrypt struct {
 
 // Segment TODO
 type Segment struct {
-	Format         string      `xml:"Format,omitempty"`
-	Duration       string      `xml:"Duration,omitempty"`
-	TranscodeIndex string      `xml:"TranscodeIndex,omitempty"`
-	HlsEncrypt     *HlsEncrypt `xml:"HlsEncrypt,omitempty"`
-	StartTime      string      `xml:"StartTime,omitempty"`
-	EndTime        string      `xml:"EndTime,omitempty"`
+	Format         string        `xml:"Format,omitempty"`
+	Duration       string        `xml:"Duration,omitempty"`
+	TranscodeIndex string        `xml:"TranscodeIndex,omitempty"`
+	HlsEncrypt     *HlsEncrypt   `xml:"HlsEncrypt,omitempty"`
+	StartTime      string        `xml:"StartTime,omitempty"`
+	EndTime        string        `xml:"EndTime,omitempty"`
+	AIGCMetadata   *AIGCMetadata `xml:"AIGCMetadata,omitempty"`
 }
 
 // VideoMontageVideo TODO
@@ -673,6 +685,16 @@ type PicProcess struct {
 	ProcessRule string `xml:"ProcessRule,omitempty"`
 }
 
+type AIGCMetadata struct {
+	Label             string `xml:"Label,omitempty"`
+	ContentProducer   string `xml:"ContentProducer,omitempty"`
+	ProduceID         string `xml:"ProduceID,omitempty"`
+	ReservedCode1     string `xml:"ReservedCode1,omitempty"`
+	ContentPropagator string `xml:"ContentPropagator,omitempty"`
+	PropagateID       string `xml:"PropagateID,omitempty"`
+	ReservedCode2     string `xml:"ReservedCode2,omitempty"`
+}
+
 // PicProcessResult TODO
 type PicProcessResult struct {
 	UploadResult struct {
@@ -691,14 +713,15 @@ type PicProcessResult struct {
 		} `xml:"OriginalInfo"`
 		ProcessResults struct {
 			Object struct {
-				Key      string `xml:"Key"`
-				Location string `xml:"Location"`
-				Format   string `xml:"Format"`
-				Width    int32  `xml:"Width"`
-				Height   int32  `xml:"Height"`
-				Size     int32  `xml:"Size"`
-				Quality  int32  `xml:"Quality"`
-				Etag     string `xml:"Etag"`
+				Key          string        `xml:"Key"`
+				Location     string        `xml:"Location"`
+				Format       string        `xml:"Format"`
+				Width        int32         `xml:"Width"`
+				Height       int32         `xml:"Height"`
+				Size         int32         `xml:"Size"`
+				Quality      int32         `xml:"Quality"`
+				Etag         string        `xml:"Etag"`
+				AIGCMetadata *AIGCMetadata `xml:"AIGCMetadata,omitempty"`
 			} `xml:"Object"`
 		} `xml:"ProcessResults"`
 	} `xml:"UploadResult"`
@@ -1758,7 +1781,7 @@ func (s *CIService) GenerateAVInfo(ctx context.Context, opt *GenerateAVInfoOptio
 
 // GetSnapshotOptions TODO
 type GetSnapshotOptions struct {
-	Time   float32 `url:"time,omitempty"`
+	Time   float32 `url:"time"`
 	Height int     `url:"height,omitempty"`
 	Width  int     `url:"width,omitempty"`
 	Format string  `url:"format,omitempty"`
@@ -1959,12 +1982,20 @@ type ExtFilter struct {
 	AutoContentType []string `xml:"AutoContentType,omitempty"`
 }
 
+// SamplingConfig
+type SamplingConfig struct {
+	State string `xml:"State,omitempty"`
+	Mode  string `xml:"Mode,omitempty"`
+	Ratio string `xml:"Ratio,omitempty"`
+}
+
 // NodeInput TODO
 type NodeInput struct {
-	QueueId      string        `xml:"QueueId,omitempty"`
-	ObjectPrefix string        `xml:"ObjectPrefix,omitempty"`
-	NotifyConfig *NotifyConfig `xml:"NotifyConfig,omitempty" json:"NotifyConfig,omitempty"`
-	ExtFilter    *ExtFilter    `xml:"ExtFilter,omitempty" json:"ExtFilter,omitempty"`
+	QueueId        string          `xml:"QueueId,omitempty"`
+	ObjectPrefix   string          `xml:"ObjectPrefix,omitempty"`
+	NotifyConfig   *NotifyConfig   `xml:"NotifyConfig,omitempty" json:"NotifyConfig,omitempty"`
+	ExtFilter      *ExtFilter      `xml:"ExtFilter,omitempty" json:"ExtFilter,omitempty"`
+	SamplingConfig *SamplingConfig `xml:"SamplingConfig,omitempty" json:"SamplingConfig,omitempty"`
 }
 
 // NodeOutput TODO
@@ -2041,8 +2072,9 @@ type NodeSmartCover struct {
 
 // NodeSegmentConfig TODO
 type NodeSegmentConfig struct {
-	Format   string `xml:"Format,omitempty"`
-	Duration string `xml:"Duration,omitempty"`
+	Format       string        `xml:"Format,omitempty"`
+	Duration     string        `xml:"Duration,omitempty"`
+	AIGCMetadata *AIGCMetadata `xml:"AIGCMetadata,omitempty"`
 }
 
 // NodeStreamPackConfigInfo TODO
@@ -2073,6 +2105,7 @@ type NodeOperation struct {
 	TranscodeConfig      *struct {
 		FreeTranscode string `xml:"FreeTranscode,omitempty" json:"FreeTranscode,omitempty"`
 	} `xml:"TranscodeConfig,omitempty" json:"TranscodeConfig,omitempty"`
+	DocAIGCMetadata *DocAIGCMetadata `xml:"DocAIGCMetadata,omitempty"`
 }
 
 // Node TODO
@@ -3494,6 +3527,7 @@ type InventoryTriggerJobOperationJobParam struct {
 	ImageInspectResult      *ImageInspectResult      `xml:"ImageInspectResult,omitempty"`
 	ImageOCR                *ImageOCRTemplate        `xml:"ImageOCR,omitempty"`
 	Detection               *ImageOCRDetection       `xml:"Detection,omitempty"`
+	DocAIGCMetadata         *DocAIGCMetadata         `xml:"DocAIGCMetadata,omitempty"`
 }
 
 // InventoryTriggerJob TODO
@@ -4254,6 +4288,7 @@ type LiveTanscode struct {
 	// TimeInterval  *TimeInterval `xml:"TimeInterval,omitempty"`
 	// Audio         *Audio        `xml:"Audio,omitempty"`
 	TransConfig *LiveTanscodeTransConfig `xml:"TransConfig,omitempty"`
+	Subtitle    *TargetSubtitle          `xml:"Subtitle,omitempty"`
 }
 
 type GeneratePlayListJobOperation struct {

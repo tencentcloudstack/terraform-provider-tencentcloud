@@ -8,11 +8,11 @@ import (
 	"github.com/pkg/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
+	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func ResourceTencentCloudClbCustomizedConfigAttachment() *schema.Resource {
@@ -69,7 +69,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentCreate(d *schema.ResourceD
 
 	var (
 		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		request  = clb.NewAssociateCustomizedConfigRequest()
+		request  = clbintl.NewAssociateCustomizedConfigRequest()
 		configId string
 	)
 
@@ -80,21 +80,21 @@ func resourceTencentCloudClbCustomizedConfigAttachmentCreate(d *schema.ResourceD
 
 	if v, ok := d.GetOk("bind_list"); ok {
 		for _, item := range v.(*schema.Set).List() {
-			bindItem := clb.BindItem{}
+			bindItem := clbintl.BindItem{}
 			dMap := item.(map[string]interface{})
-			if v, ok := dMap["load_balancer_id"]; ok {
+			if v, ok := dMap["load_balancer_id"]; ok && v.(string) != "" {
 				bindItem.LoadBalancerId = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["listener_id"]; ok {
+			if v, ok := dMap["listener_id"]; ok && v.(string) != "" {
 				bindItem.ListenerId = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["domain"]; ok {
+			if v, ok := dMap["domain"]; ok && v.(string) != "" {
 				bindItem.Domain = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["location_id"]; ok {
+			if v, ok := dMap["location_id"]; ok && v.(string) != "" {
 				bindItem.LocationId = helper.String(v.(string))
 			}
 
@@ -103,7 +103,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentCreate(d *schema.ResourceD
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateCustomizedConfig(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient().AssociateCustomizedConfig(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -113,7 +113,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentCreate(d *schema.ResourceD
 			}
 
 			requestId := *result.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+			retryErr := waitForTaskFinishIntl(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient())
 			if retryErr != nil {
 				return tccommon.RetryError(errors.WithStack(retryErr))
 			}
@@ -196,23 +196,23 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 		remove := olds.Difference(news).List()
 		add := news.Difference(olds).List()
 		if len(remove) > 0 {
-			request := clb.NewDisassociateCustomizedConfigRequest()
+			request := clbintl.NewDisassociateCustomizedConfigRequest()
 			for _, item := range remove {
-				bindItem := clb.BindItem{}
+				bindItem := clbintl.BindItem{}
 				dMap := item.(map[string]interface{})
-				if v, ok := dMap["load_balancer_id"]; ok {
+				if v, ok := dMap["load_balancer_id"]; ok && v.(string) != "" {
 					bindItem.LoadBalancerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["listener_id"]; ok {
+				if v, ok := dMap["listener_id"]; ok && v.(string) != "" {
 					bindItem.ListenerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["domain"]; ok {
+				if v, ok := dMap["domain"]; ok && v.(string) != "" {
 					bindItem.Domain = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["location_id"]; ok {
+				if v, ok := dMap["location_id"]; ok && v.(string) != "" {
 					bindItem.LocationId = helper.String(v.(string))
 				}
 
@@ -221,7 +221,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 
 			request.UconfigId = helper.String(id)
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().DisassociateCustomizedConfig(request)
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient().DisassociateCustomizedConfig(request)
 				if e != nil {
 					return tccommon.RetryError(e)
 				} else {
@@ -231,7 +231,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 					}
 
 					requestId := *result.Response.RequestId
-					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+					retryErr := waitForTaskFinishIntl(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient())
 					if retryErr != nil {
 						return tccommon.RetryError(errors.WithStack(retryErr))
 					}
@@ -247,24 +247,24 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 		}
 
 		if len(add) > 0 {
-			request := clb.NewAssociateCustomizedConfigRequest()
+			request := clbintl.NewAssociateCustomizedConfigRequest()
 			request.UconfigId = helper.String(id)
 			for _, item := range add {
-				bindItem := clb.BindItem{}
+				bindItem := clbintl.BindItem{}
 				dMap := item.(map[string]interface{})
-				if v, ok := dMap["load_balancer_id"]; ok {
+				if v, ok := dMap["load_balancer_id"]; ok && v.(string) != "" {
 					bindItem.LoadBalancerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["listener_id"]; ok {
+				if v, ok := dMap["listener_id"]; ok && v.(string) != "" {
 					bindItem.ListenerId = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["domain"]; ok {
+				if v, ok := dMap["domain"]; ok && v.(string) != "" {
 					bindItem.Domain = helper.String(v.(string))
 				}
 
-				if v, ok := dMap["location_id"]; ok {
+				if v, ok := dMap["location_id"]; ok && v.(string) != "" {
 					bindItem.LocationId = helper.String(v.(string))
 				}
 
@@ -272,7 +272,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 			}
 
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateCustomizedConfig(request)
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient().AssociateCustomizedConfig(request)
 				if e != nil {
 					return tccommon.RetryError(e)
 				} else {
@@ -282,7 +282,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentUpdate(d *schema.ResourceD
 					}
 
 					requestId := *result.Response.RequestId
-					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+					retryErr := waitForTaskFinishIntl(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient())
 					if retryErr != nil {
 						return tccommon.RetryError(errors.WithStack(retryErr))
 					}
@@ -306,14 +306,14 @@ func resourceTencentCloudClbCustomizedConfigAttachmentDelete(d *schema.ResourceD
 
 	var (
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = clb.NewDisassociateCustomizedConfigRequest()
+		request = clbintl.NewDisassociateCustomizedConfigRequest()
 		id      = d.Id()
 	)
 
 	request.UconfigId = helper.String(id)
 	if v, ok := d.GetOk("bind_list"); ok {
 		for _, item := range v.(*schema.Set).List() {
-			bindItem := clb.BindItem{}
+			bindItem := clbintl.BindItem{}
 			dMap := item.(map[string]interface{})
 			if v, ok := dMap["load_balancer_id"]; ok {
 				bindItem.LoadBalancerId = helper.String(v.(string))
@@ -336,7 +336,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentDelete(d *schema.ResourceD
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().DisassociateCustomizedConfig(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient().DisassociateCustomizedConfig(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -346,7 +346,7 @@ func resourceTencentCloudClbCustomizedConfigAttachmentDelete(d *schema.ResourceD
 			}
 
 			requestId := *result.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+			retryErr := waitForTaskFinishIntl(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbIntlClient())
 			if retryErr != nil {
 				return tccommon.RetryError(errors.WithStack(retryErr))
 			}

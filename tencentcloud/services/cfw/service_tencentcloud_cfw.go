@@ -1021,3 +1021,426 @@ func (me *CfwService) DescribeSgRuleById(ctx context.Context, ruleUuid string) (
 	ret = response.Response
 	return
 }
+
+func (me *CfwService) DescribeCfwNatPolicyOrderConfigById(ctx context.Context, uuid string) (natPolicy *cfw.DescAcItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeNatAcRuleRequest()
+	response := cfw.NewDescribeNatAcRuleResponse()
+	request.Limit = common.Uint64Ptr(100)
+	request.Offset = common.Uint64Ptr(0)
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("Id"),
+			Values:       common.StringPtrs([]string{uuid}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeNatAcRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe nat ac rule failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	natPolicy = response.Response.Data[0]
+	return
+}
+
+func (me *CfwService) DescribeCfwNatPolicyOrderConfigs(ctx context.Context) (ret []*cfw.DescAcItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeNatAcRuleRequest()
+	response := cfw.NewDescribeNatAcRuleResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCfwClient().DescribeNatAcRule(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Data == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe nat ac rule failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.Data) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwCcnInstanceRegionStatusByFilter(ctx context.Context, param map[string]interface{}) (ret []*cfw.RegionFwStatus, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = cfw.NewDescribeCcnInstanceRegionStatusRequest()
+		response = cfw.NewDescribeCcnInstanceRegionStatusResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CcnId" {
+			request.CcnId = v.(*string)
+		}
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "RoutingMode" {
+			request.RoutingMode = v.(*uint64)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeCcnInstanceRegionStatus(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ccn instance region status failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.RegionFwStatus
+	return
+}
+
+func (me *CfwService) DescribeCfwCcnAssociatedInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*cfw.CcnAssociatedInstance, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = cfw.NewDescribeCcnAssociatedInstancesRequest()
+		response = cfw.NewDescribeCcnAssociatedInstancesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CcnId" {
+			request.CcnId = v.(*string)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeCcnAssociatedInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ccn associated instances failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.CcnAssociatedInstances
+	return
+}
+
+func (me *CfwService) DescribeCfwCcnVpcFwSwitchByFilter(ctx context.Context, param map[string]interface{}) (ret []*cfw.InterconnectPair, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = cfw.NewDescribeCcnVpcFwSwitchRequest()
+		response = cfw.NewDescribeCcnVpcFwSwitchResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CcnId" {
+			request.CcnId = v.(*string)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeCcnVpcFwSwitch(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ccn vpc fw switch failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.InterconnectPairs
+	return
+}
+
+func (me *CfwService) DescribeCfwClusterVpcFwSwitchById(ctx context.Context, ccnId string) (ret []*cfw.InterconnectPair, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeCcnVpcFwSwitchRequest()
+	response := cfw.NewDescribeCcnVpcFwSwitchResponse()
+	request.CcnId = &ccnId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeCcnVpcFwSwitch(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ccn vpc fw switch failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.InterconnectPairs
+	return
+}
+
+func (me *CfwService) DescribeCfwClusterVpcFwSwitchsById(ctx context.Context, ccnId string) (ret *cfw.ClusterSwitchDetail, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeClusterVpcFwSwitchsRequest()
+	response := cfw.NewDescribeClusterVpcFwSwitchsResponse()
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("InsObj"),
+			OperatorType: common.Int64Ptr(1),
+			Values:       common.StringPtrs([]string{ccnId}),
+		},
+	}
+	request.Offset = common.Uint64Ptr(0)
+	request.Limit = common.Uint64Ptr(20)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeClusterVpcFwSwitchs(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cluster vpc fw switchs failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Data) == 0 {
+		return
+	}
+
+	ret = response.Response.Data[0]
+	return
+}
+
+func (me *CfwService) DescribeCfwVpcSwitchErrorById(ctx context.Context, ccnId, errKey string) (ret *cfw.SwitchError, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cfw.NewDescribeSwitchErrorRequest()
+	response := cfw.NewDescribeSwitchErrorResponse()
+	request.FwType = common.StringPtr("VPC_FW")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeSwitchError(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ccn vpc fw switch error failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range response.Response.Data {
+		if item != nil && item.ErrIns != nil && *item.ErrIns == ccnId {
+			if item.ErrKey != nil && *item.ErrKey == errKey {
+				ret = item
+				break
+			}
+		}
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwIpsModeSwitchById(ctx context.Context) (ret *cfw.DescribeIpsModeSwitchResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeIpsModeSwitchRequest()
+	response := cfw.NewDescribeIpsModeSwitchResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeIpsModeSwitch(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ips mode switch failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}

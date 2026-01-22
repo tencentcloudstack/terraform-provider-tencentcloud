@@ -139,6 +139,12 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 					},
 				},
 			},
+			"encryption": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Encryption-related parameters. This parameter is supported for users with an open access list and from encrypted regions; it cannot be passed in other scenarios. 0 or not passed: No encryption. 1: KMS-CLS cloud product key encryption. Once enabled, it cannot be disabled.\nSupported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangkok, ap-jakarta, eu-frankfurt, ap-seoul, ap-tokyo.",
+			},
 		},
 	}
 }
@@ -254,6 +260,10 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	if v, ok := d.GetOkExists("encryption"); ok {
+		request.Encryption = helper.IntUint64(v.(int))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().CreateTopic(request)
 		if e != nil {
@@ -263,9 +273,8 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil {
-			e = fmt.Errorf("create cls topic failed")
-			return resource.NonRetryableError(e)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create cls topic failed, Response is nil"))
 		}
 
 		response = result
@@ -277,8 +286,11 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	id := *response.Response.TopicId
-	d.SetId(id)
+	if response.Response.TopicId == nil {
+		return fmt.Errorf("TopicId is nil.")
+	}
+
+	d.SetId(*response.Response.TopicId)
 	return resourceTencentCloudClsTopicRead(d, meta)
 }
 
@@ -300,7 +312,7 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 
 	if topic == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `Topic` %s does not exist", id)
+		return fmt.Errorf("resource `tencentcloud_cls_topic` %s does not exist", id)
 	}
 
 	_ = d.Set("logset_id", topic.LogsetId)
@@ -362,6 +374,11 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 
 			_ = d.Set("extends", []interface{}{extendMap})
 		}
+	}
+
+	_ = d.Set("encryption", 0)
+	if topic.KeyId != nil && *topic.KeyId != "" {
+		_ = d.Set("encryption", 1)
 	}
 
 	return nil
@@ -483,6 +500,14 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 				return fmt.Errorf("If `is_web_tracking` is false, Not support set `extends` params.\n.")
 			}
 		}
+		hasChange = true
+	}
+
+	if d.HasChange("encryption") {
+		if v, ok := d.GetOkExists("encryption"); ok {
+			request.Encryption = helper.IntUint64(v.(int))
+		}
+
 		hasChange = true
 	}
 

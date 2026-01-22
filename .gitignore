@@ -21,3 +21,4 @@ terraform_public.txt
 dist/
 gendoc/gendoc
 .vscode/
+.codebuddy/

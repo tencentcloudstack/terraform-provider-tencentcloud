@@ -1,4 +1,4 @@
-Use this data source to query detailed information of cwp machines_simple
+Use this data source to query detailed information of CWP machines simple
 
 Example Usage
 

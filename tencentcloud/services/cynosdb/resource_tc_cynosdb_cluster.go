@@ -206,7 +206,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	if v, ok := d.GetOk("cynos_version"); ok && v != "" {
-		return fmt.Errorf("Setting cynos_version is not supported when creating a cluster")
+		request.CynosVersion = helper.String(v.(string))
 	}
 
 	request.PayMode = &chargeType

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -134,6 +134,11 @@ type AVTemplate struct {
 	ColorSpaceSettings *ColorSpaceSetting `json:"ColorSpaceSettings,omitnil,omitempty" name:"ColorSpaceSettings"`
 }
 
+type AbWatermarkSettingsReq struct {
+
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
 type AdditionalRateSetting struct {
 	// The maximum bit rate in a VBR scenario must be a multiple of 1000 and between 50000 - 40000000.
 	VideoMaxBitrate *uint64 `json:"VideoMaxBitrate,omitnil,omitempty" name:"VideoMaxBitrate"`
@@ -251,7 +256,7 @@ type AudioTemplateInfo struct {
 	// Valid values: 6000, 7000, 8000, 10000, 12000, 14000, 16000, 20000, 24000, 28000, 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 288000, 320000, 384000, 448000, 512000, 576000, 640000, 768000, 896000, 1024000
 	AudioBitrate *uint64 `json:"AudioBitrate,omitnil,omitempty" name:"AudioBitrate"`
 
-	// Audio language code, whose length is always 3 characters.
+	// Audio language code, which length is between 2 and 20.
 	LanguageCode *string `json:"LanguageCode,omitnil,omitempty" name:"LanguageCode"`
 
 	// Audio transcoding special configuration information.
@@ -262,6 +267,9 @@ type AudioTemplateInfo struct {
 
 	// Audio encoding parameters.
 	AudioCodecDetails *AudioCodecDetail `json:"AudioCodecDetails,omitnil,omitempty" name:"AudioCodecDetails"`
+
+	// Audio language description, which maximum length is 100.
+	LanguageDescription *string `json:"LanguageDescription,omitnil,omitempty" name:"LanguageDescription"`
 }
 
 type AudioTrackInfo struct {
@@ -406,7 +414,7 @@ type CreateStreamLiveChannelRequestParams struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -429,6 +437,9 @@ type CreateStreamLiveChannelRequestParams struct {
 
 	// Frame capture templates.
 	FrameCaptureTemplates []*FrameCaptureTemplate `json:"FrameCaptureTemplates,omitnil,omitempty" name:"FrameCaptureTemplates"`
+
+	// General settings.
+	GeneralSettings *GeneralSetting `json:"GeneralSettings,omitnil,omitempty" name:"GeneralSettings"`
 }
 
 type CreateStreamLiveChannelRequest struct {
@@ -452,7 +463,7 @@ type CreateStreamLiveChannelRequest struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -475,6 +486,9 @@ type CreateStreamLiveChannelRequest struct {
 
 	// Frame capture templates.
 	FrameCaptureTemplates []*FrameCaptureTemplate `json:"FrameCaptureTemplates,omitnil,omitempty" name:"FrameCaptureTemplates"`
+
+	// General settings.
+	GeneralSettings *GeneralSetting `json:"GeneralSettings,omitnil,omitempty" name:"GeneralSettings"`
 }
 
 func (r *CreateStreamLiveChannelRequest) ToJsonString() string {
@@ -503,6 +517,7 @@ func (r *CreateStreamLiveChannelRequest) FromJsonString(s string) error {
 	delete(f, "InputAnalysisSettings")
 	delete(f, "Tags")
 	delete(f, "FrameCaptureTemplates")
+	delete(f, "GeneralSettings")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateStreamLiveChannelRequest has unknown keys!", "")
 	}
@@ -765,6 +780,9 @@ type CreateStreamLiveWatermarkRequestParams struct {
 
 	// Watermark text settings. This parameter is valid if `Type` is `TEXT`.
 	TextSettings *CreateTextSettings `json:"TextSettings,omitnil,omitempty" name:"TextSettings"`
+
+	// AB watermark configuration
+	AbWatermarkSettings *AbWatermarkSettingsReq `json:"AbWatermarkSettings,omitnil,omitempty" name:"AbWatermarkSettings"`
 }
 
 type CreateStreamLiveWatermarkRequest struct {
@@ -781,6 +799,9 @@ type CreateStreamLiveWatermarkRequest struct {
 
 	// Watermark text settings. This parameter is valid if `Type` is `TEXT`.
 	TextSettings *CreateTextSettings `json:"TextSettings,omitnil,omitempty" name:"TextSettings"`
+
+	// AB watermark configuration
+	AbWatermarkSettings *AbWatermarkSettingsReq `json:"AbWatermarkSettings,omitnil,omitempty" name:"AbWatermarkSettings"`
 }
 
 func (r *CreateStreamLiveWatermarkRequest) ToJsonString() string {
@@ -799,6 +820,7 @@ func (r *CreateStreamLiveWatermarkRequest) FromJsonString(s string) error {
 	delete(f, "Type")
 	delete(f, "ImageSettings")
 	delete(f, "TextSettings")
+	delete(f, "AbWatermarkSettings")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateStreamLiveWatermarkRequest has unknown keys!", "")
 	}
@@ -1206,7 +1228,7 @@ func (r *DescribeStreamLiveChannelAlertsRequest) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeStreamLiveChannelAlertsResponseParams struct {
-	// Alarm information of the channel’s two pipelines
+	// Alarm information of the channel's two pipelines
 	Infos *ChannelAlertInfos `json:"Infos,omitnil,omitempty" name:"Infos"`
 
 	// The unique request ID, generated by the server, will be returned for every request (if the request fails to reach the server for other reasons, the request will not obtain a RequestId). RequestId is required for locating a problem.
@@ -2314,11 +2336,14 @@ type EventSettingsDestinationResp struct {
 }
 
 type EventSettingsReq struct {
-	// Valid values: `INPUT_SWITCH`, `TIMED_RECORD`, SCTE35_TIME_SIGNAL, SCTE35_SPLICE_INSERT, SCTE35_RETURN_TO_NETWORK. If it is not specified, `INPUT_SWITCH` will be used.
+	// Valid values: `INPUT_SWITCH`, `TIMED_RECORD`, `SCTE35_TIME_SIGNAL`, `SCTE35_SPLICE_INSERT`, `SCTE35_RETURN_TO_NETWORK`,`TIMED_METADATA `,`STATIC_IMAGE_ACTIVATE `,`STATIC_IMAGE_DEACTIVATE `. If it is not specified, `INPUT_SWITCH` will be used.
 	EventType *string `json:"EventType,omitnil,omitempty" name:"EventType"`
 
 	// ID of the input to attach, which is required if `EventType` is `INPUT_SWITCH`
 	InputAttachment *string `json:"InputAttachment,omitnil,omitempty" name:"InputAttachment"`
+
+	// When the type is FIXED_PTS, it is mandatory and defaults to 0
+	PipelineId *int64 `json:"PipelineId,omitnil,omitempty" name:"PipelineId"`
 
 	// Name of the output group to attach. This parameter is required if `EventType` is `TIMED_RECORD`.
 	OutputGroupName *string `json:"OutputGroupName,omitnil,omitempty" name:"OutputGroupName"`
@@ -2340,14 +2365,26 @@ type EventSettingsReq struct {
 
 	// Meta information plan configuration.
 	TimedMetadataSetting *TimedMetadataInfo `json:"TimedMetadataSetting,omitnil,omitempty" name:"TimedMetadataSetting"`
+
+	// Static image activate setting.
+	StaticImageActivateSetting *StaticImageActivateSetting `json:"StaticImageActivateSetting,omitnil,omitempty" name:"StaticImageActivateSetting"`
+
+	// Static image deactivate setting.
+	StaticImageDeactivateSetting *StaticImageDeactivateSetting `json:"StaticImageDeactivateSetting,omitnil,omitempty" name:"StaticImageDeactivateSetting"`
+
+	// Dynamic graphic overlay activate configuration
+	MotionGraphicsActivateSetting *MotionGraphicsActivateSetting `json:"MotionGraphicsActivateSetting,omitnil,omitempty" name:"MotionGraphicsActivateSetting"`
 }
 
 type EventSettingsResp struct {
-	// Valid values: INPUT_SWITCH, TIMED_RECORD, SCTE35_TIME_SIGNAL, SCTE35_SPLICE_INSERT, SCTE35_RETURN_TO_NETWORK.
+	// Valid values: `INPUT_SWITCH`, `TIMED_RECORD`, `SCTE35_TIME_SIGNAL`, `SCTE35_SPLICE_INSERT`, `SCTE35_RETURN_TO_NETWORK`, `STATIC_IMAGE_ACTIVATE`, `STATIC_IMAGE_DEACTIVATE`.
 	EventType *string `json:"EventType,omitnil,omitempty" name:"EventType"`
 
 	// ID of the input attached, which is not empty if `EventType` is `INPUT_SWITCH`
 	InputAttachment *string `json:"InputAttachment,omitnil,omitempty" name:"InputAttachment"`
+
+	// When the type is FIXED_PTS, it is mandatory and defaults to 0
+	PipelineId *int64 `json:"PipelineId,omitnil,omitempty" name:"PipelineId"`
 
 	// Name of the output group attached. This parameter is not empty if `EventType` is `TIMED_RECORD`.
 	OutputGroupName *string `json:"OutputGroupName,omitnil,omitempty" name:"OutputGroupName"`
@@ -2369,6 +2406,15 @@ type EventSettingsResp struct {
 
 	// Meta information plan configuration.
 	TimedMetadataSetting *TimedMetadataInfo `json:"TimedMetadataSetting,omitnil,omitempty" name:"TimedMetadataSetting"`
+
+	// Static image activate setting.
+	StaticImageActivateSetting *StaticImageActivateSetting `json:"StaticImageActivateSetting,omitnil,omitempty" name:"StaticImageActivateSetting"`
+
+	// Static image deactivate setting.
+	StaticImageDeactivateSetting *StaticImageDeactivateSetting `json:"StaticImageDeactivateSetting,omitnil,omitempty" name:"StaticImageDeactivateSetting"`
+
+	// Dynamic graphic overlay activate configuration.
+	MotionGraphicsActivateSetting *MotionGraphicsActivateSetting `json:"MotionGraphicsActivateSetting,omitnil,omitempty" name:"MotionGraphicsActivateSetting"`
 }
 
 type FailOverSettings struct {
@@ -2404,6 +2450,17 @@ type FrameCaptureTemplate struct {
 
 	// Sharpness, an integer between 0 and 100.
 	Sharpness *uint64 `json:"Sharpness,omitnil,omitempty" name:"Sharpness"`
+}
+
+type GeneralSetting struct {
+	// Static graphic overlay configuration.
+	StaticImageSettings *StaticImageSettings `json:"StaticImageSettings,omitnil,omitempty" name:"StaticImageSettings"`
+
+	// Dynamic graphic overlay configuration.
+	MotionGraphicsSettings *MotionGraphicsSetting `json:"MotionGraphicsSettings,omitnil,omitempty" name:"MotionGraphicsSettings"`
+
+	// Thumbnail Configuration.
+	ThumbnailSettings *ThumbnailSettings `json:"ThumbnailSettings,omitnil,omitempty" name:"ThumbnailSettings"`
 }
 
 // Predefined struct for user
@@ -2724,7 +2781,7 @@ type ModifyStreamLiveChannelRequestParams struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -2747,6 +2804,9 @@ type ModifyStreamLiveChannelRequestParams struct {
 
 	// Frame capture templates.
 	FrameCaptureTemplates []*FrameCaptureTemplate `json:"FrameCaptureTemplates,omitnil,omitempty" name:"FrameCaptureTemplates"`
+
+	// General settings.
+	GeneralSettings *GeneralSetting `json:"GeneralSettings,omitnil,omitempty" name:"GeneralSettings"`
 }
 
 type ModifyStreamLiveChannelRequest struct {
@@ -2773,7 +2833,7 @@ type ModifyStreamLiveChannelRequest struct {
 	// Audio/Video transcoding templates. Quantity: [1, 10]
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration, only AVTemplates are valid.
+	// Subtitle template configuration.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -2796,6 +2856,9 @@ type ModifyStreamLiveChannelRequest struct {
 
 	// Frame capture templates.
 	FrameCaptureTemplates []*FrameCaptureTemplate `json:"FrameCaptureTemplates,omitnil,omitempty" name:"FrameCaptureTemplates"`
+
+	// General settings.
+	GeneralSettings *GeneralSetting `json:"GeneralSettings,omitnil,omitempty" name:"GeneralSettings"`
 }
 
 func (r *ModifyStreamLiveChannelRequest) ToJsonString() string {
@@ -2825,6 +2888,7 @@ func (r *ModifyStreamLiveChannelRequest) FromJsonString(s string) error {
 	delete(f, "InputAnalysisSettings")
 	delete(f, "Tags")
 	delete(f, "FrameCaptureTemplates")
+	delete(f, "GeneralSettings")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyStreamLiveChannelRequest has unknown keys!", "")
 	}
@@ -3026,6 +3090,9 @@ type ModifyStreamLiveWatermarkRequestParams struct {
 
 	// Watermark text settings. This parameter is valid if `Type` is `TEXT`.
 	TextSettings *CreateTextSettings `json:"TextSettings,omitnil,omitempty" name:"TextSettings"`
+
+
+	AbWatermarkSettings *AbWatermarkSettingsReq `json:"AbWatermarkSettings,omitnil,omitempty" name:"AbWatermarkSettings"`
 }
 
 type ModifyStreamLiveWatermarkRequest struct {
@@ -3042,6 +3109,8 @@ type ModifyStreamLiveWatermarkRequest struct {
 
 	// Watermark text settings. This parameter is valid if `Type` is `TEXT`.
 	TextSettings *CreateTextSettings `json:"TextSettings,omitnil,omitempty" name:"TextSettings"`
+
+	AbWatermarkSettings *AbWatermarkSettingsReq `json:"AbWatermarkSettings,omitnil,omitempty" name:"AbWatermarkSettings"`
 }
 
 func (r *ModifyStreamLiveWatermarkRequest) ToJsonString() string {
@@ -3060,6 +3129,7 @@ func (r *ModifyStreamLiveWatermarkRequest) FromJsonString(s string) error {
 	delete(f, "Name")
 	delete(f, "ImageSettings")
 	delete(f, "TextSettings")
+	delete(f, "AbWatermarkSettings")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyStreamLiveWatermarkRequest has unknown keys!", "")
 	}
@@ -3086,6 +3156,19 @@ func (r *ModifyStreamLiveWatermarkResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *ModifyStreamLiveWatermarkResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type MotionGraphicsActivateSetting struct {
+	// Duration in ms, valid when MOTION_Graphics_ACTIVATE, required; An integer in the range of 0-86400000, where 0 represents the duration until the end of the live stream.
+	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// The address of HTML5 needs to comply with the format specification of http/https.
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+}
+
+type MotionGraphicsSetting struct {
+	// Whether to enable dynamic graphic overlay, '0' not enabled, '1' enabled; Default 0.
+	MotionGraphicsOverlayEnabled *int64 `json:"MotionGraphicsOverlayEnabled,omitnil,omitempty" name:"MotionGraphicsOverlayEnabled"`
 }
 
 type OutputInfo struct {
@@ -3436,6 +3519,51 @@ func (r *StartStreamLiveChannelResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type StaticImageActivateSetting struct {
+	// The address of the image to be inserted, starting with http or https and ending with .png .PNG .bmp .BMP .tga .TGA.
+	ImageUrl *string `json:"ImageUrl,omitnil,omitempty" name:"ImageUrl"`
+
+	// The layer of the superimposed image, 0-7; the default value is 0, and a higher layer means it is on the top.
+	Layer *int64 `json:"Layer,omitnil,omitempty" name:"Layer"`
+
+	// Opacity, range 0-100; the default value is 100, which means completely opaque.
+	Opacity *int64 `json:"Opacity,omitnil,omitempty" name:"Opacity"`
+
+	// The distance from the left edge in pixels; the default value is 0 and the maximum value is 4096.
+	ImageX *int64 `json:"ImageX,omitnil,omitempty" name:"ImageX"`
+
+	// The distance from the top edge in pixels; the default value is 0 and the maximum value is 2160.
+	ImageY *int64 `json:"ImageY,omitnil,omitempty" name:"ImageY"`
+
+	// The width of the image superimposed on the video frame, in pixels. The default value is empty (not set), which means using the original image size. The minimum value is 1 and the maximum value is 4096.
+	Width *int64 `json:"Width,omitnil,omitempty" name:"Width"`
+
+	// The height of the image superimposed on the video frame, in pixels. The default value is empty (not set), which means the original image size is used. The minimum value is 1 and the maximum value is 2160.
+	Height *int64 `json:"Height,omitnil,omitempty" name:"Height"`
+
+	// Overlay duration, in milliseconds, range 0-86400000; default value 0, 0 means continuous.
+	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// Fade-in duration, in milliseconds, range 0-5000; default value 0, 0 means no fade-in effect.
+	FadeIn *int64 `json:"FadeIn,omitnil,omitempty" name:"FadeIn"`
+
+	// Fade-out duration, in milliseconds, range 0-5000; default value 0, 0 means no fade-out effect.
+	FadeOut *int64 `json:"FadeOut,omitnil,omitempty" name:"FadeOut"`
+}
+
+type StaticImageDeactivateSetting struct {
+	// The overlay level to be canceled, range 0-7, default value 0.
+	Layer *int64 `json:"Layer,omitnil,omitempty" name:"Layer"`
+
+	// Fade-out duration, in milliseconds, range 0-5000; default value 0, 0 means no fade-out effect.
+	FadeOut *int64 `json:"FadeOut,omitnil,omitempty" name:"FadeOut"`
+}
+
+type StaticImageSettings struct {
+	// Whether to enable global static image overlay, 0: Disable, 1: Enable; Default value: 0.
+	GlobalImageOverlayEnabled *int64 `json:"GlobalImageOverlayEnabled,omitnil,omitempty" name:"GlobalImageOverlayEnabled"`
+}
+
 // Predefined struct for user
 type StopStreamLiveChannelRequestParams struct {
 	// Channel ID
@@ -3554,7 +3682,7 @@ type StreamLiveChannelInfo struct {
 	// Note: this field may return `null`, indicating that no valid value was found.
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-
+	// Caption templates.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
 	// Event settings
@@ -3579,6 +3707,9 @@ type StreamLiveChannelInfo struct {
 
 	// Frame capture templates.
 	FrameCaptureTemplates []*FrameCaptureTemplate `json:"FrameCaptureTemplates,omitnil,omitempty" name:"FrameCaptureTemplates"`
+
+	// General settings.
+	GeneralSettings *GeneralSetting `json:"GeneralSettings,omitnil,omitempty" name:"GeneralSettings"`
 }
 
 type StreamLiveOutputGroupsInfo struct {
@@ -3672,10 +3803,10 @@ type SubtitleConf struct {
 	// Optional values: INPUT (source subtitle information), ANALYSIS (intelligent speech recognition to subtitles).
 	CaptionSource *string `json:"CaptionSource,omitnil,omitempty" name:"CaptionSource"`
 
-	// Optional values: 1 Source, 2 Source+Target, 3 Target (original language only, original language + translation language, translation language). Required when CaptionSource selects `ANALYSIS `.
+	// Optional values: 1 Source, 2 Source+Target, 3 Target (original language only, original language + translation language, translation language). Required when CaptionSource selects `ANALYSIS `. When outputting as WebVTT, a single template can only output one language.
 	ContentType *uint64 `json:"ContentType,omitnil,omitempty" name:"ContentType"`
 
-	// Output mode: 1 Burn in, 2 Embedded. Support `2` when CaptionSource selects `INPUT`. Support `1` when CaptionSource selects `ANALYSIS `.
+	// Output mode: 1 Burn in, 2 Embedded, 3 WebVTT. Support `2` when CaptionSource selects `INPUT`. Support `1` and `3` when CaptionSource selects `ANALYSIS `.
 	TargetType *uint64 `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
 	// Original phonetic language.
@@ -3689,11 +3820,23 @@ type SubtitleConf struct {
 	// Font style configuration. Required when CaptionSource selects `ANALYSIS `.
 	FontStyle *SubtitleFontConf `json:"FontStyle,omitnil,omitempty" name:"FontStyle"`
 
-	// There are two modes: STEADY and DYNAMIC, corresponding to steady state and unstable state respectively; the default is STEADY. Required when CaptionSource selects `ANALYSIS `.
+	// There are two modes: STEADY and DYNAMIC, corresponding to steady state and unstable state respectively; the default is STEADY. Required when CaptionSource selects `ANALYSIS `. When the output is WebVTT, only STEADY can be selected.
 	StateEffectMode *string `json:"StateEffectMode,omitnil,omitempty" name:"StateEffectMode"`
 
 	// Steady-state delay time, unit seconds; optional values: 10, 20, default 10. Required when CaptionSource selects `ANALYSIS `.
 	SteadyStateDelayedTime *uint64 `json:"SteadyStateDelayedTime,omitnil,omitempty" name:"SteadyStateDelayedTime"`
+
+	// Audio selector name, required for generating WebVTT subtitles using speech recognition, can be empty.
+	AudioSelectorName *string `json:"AudioSelectorName,omitnil,omitempty" name:"AudioSelectorName"`
+
+	// Format configuration for speech recognition output on WebVTT.
+	WebVTTFontStyle *WebVTTFontStyle `json:"WebVTTFontStyle,omitnil,omitempty" name:"WebVTTFontStyle"`
+
+	// Language code, length 2-20. ISO 639-2 three-digit code is recommend.
+	LanguageCode *string `json:"LanguageCode,omitnil,omitempty" name:"LanguageCode"`
+
+	// Language description, less than 100 characters in length.
+	LanguageDescription *string `json:"LanguageDescription,omitnil,omitempty" name:"LanguageDescription"`
 }
 
 type SubtitleFontConf struct {
@@ -3745,6 +3888,11 @@ type Tag struct {
 	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
 }
 
+type ThumbnailSettings struct {
+	// Generate thumbnail ,0: Disabled ,1: Enabled , Default: 0
+	ThumbnailEnabled *int64 `json:"ThumbnailEnabled,omitnil,omitempty" name:"ThumbnailEnabled"`
+}
+
 type TimeShiftSettingsInfo struct {
 	// Whether to enable time shifting. Valid values: `OPEN`; `CLOSE`
 	// Note: This field may return `null`, indicating that no valid value was found.
@@ -3776,7 +3924,7 @@ type TimedRecordSettings struct {
 }
 
 type TimingSettingsReq struct {
-	// Event trigger type. Valid values: `FIXED_TIME`, `IMMEDIATE`. This parameter is required if `EventType` is `INPUT_SWITCH`.
+	// Event trigger type. Valid values: `FIXED_TIME`, `IMMEDIATE`,`FIXED_PTS `. This parameter is required if `EventType` is `INPUT_SWITCH`.
 	StartType *string `json:"StartType,omitnil,omitempty" name:"StartType"`
 
 	// This parameter is required if `EventType` is `INPUT_SWITCH` and `StartType` is `FIXED_TIME`.
@@ -3790,6 +3938,9 @@ type TimingSettingsReq struct {
 	// This parameter is required if `EventType` is `TIMED_RECORD`.
 	// It specifies the recording end time in UTC format (e.g., `2020-01-01T12:00:00Z`) and must be at least 1 minute later than the recording start time.
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// Effective only when StartType is FIXED_PTS, with a range of 1-8589934592
+	PTS *uint64 `json:"PTS,omitnil,omitempty" name:"PTS"`
 }
 
 type TimingSettingsResp struct {
@@ -3807,6 +3958,9 @@ type TimingSettingsResp struct {
 	// This parameter cannot be empty if `EventType` is `TIMED_RECORD`.
 	// It indicates the end time for recording in UTC format (e.g., `2020-01-01T12:00:00Z`) and must be at least 1 minute later than the start time for recording.
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// Effective only when StartType is FIXED_PTS, with a range of 1-8589934592
+	PTS *uint64 `json:"PTS,omitnil,omitempty" name:"PTS"`
 }
 
 type VideoCodecDetail struct {
@@ -3909,4 +4063,36 @@ type VideoTemplateInfo struct {
 
 	// Color space setting.
 	ColorSpaceSettings *ColorSpaceSetting `json:"ColorSpaceSettings,omitnil,omitempty" name:"ColorSpaceSettings"`
+}
+
+type WebVTTFontStyle struct {
+	// Text color, RGB hexadecimal representation, 6 hexadecimal characters (no # needed).
+	TextColor *string `json:"TextColor,omitnil,omitempty" name:"TextColor"`
+
+	// Background color, RGB hexadecimal representation, 6 hexadecimal characters (no # needed).
+	BackgroundColor *string `json:"BackgroundColor,omitnil,omitempty" name:"BackgroundColor"`
+
+	// Background opacity parameter, a number from 0 to 100, with 0 being the default for full transparency.
+	BackgroundAlpha *int64 `json:"BackgroundAlpha,omitnil,omitempty" name:"BackgroundAlpha"`
+
+	// Font size, in units of vh (1% of height), default value 0 means automatic.
+	FontSize *int64 `json:"FontSize,omitnil,omitempty" name:"FontSize"`
+
+	// The position of the text box, default value AUTO, can be empty; represents the percentage of video height, supports integers from 0 to 100.
+	Line *string `json:"Line,omitnil,omitempty" name:"Line"`
+
+	// The alignment of the text box on the Line. Optional values: START, CENTER, END. Which can be empty.
+	LineAlignment *string `json:"LineAlignment,omitnil,omitempty" name:"LineAlignment"`
+
+	// The text box is positioned in another direction as a percentage of the video's width. It defaults to AUTO and can be empty.
+	Position *string `json:"Position,omitnil,omitempty" name:"Position"`
+
+	// The alignment of the text box on the Position. Optional values are LINE_LEFT, LINE_RIGHT, CENTER, and AUTO. The default value is AUTO, and it can be empty.
+	PositionAlignment *string `json:"PositionAlignment,omitnil,omitempty" name:"PositionAlignment"`
+
+	// Text box size, a percentage of video width/height, with values (0, 100), default AUTO, can be empty.
+	CueSize *string `json:"CueSize,omitnil,omitempty" name:"CueSize"`
+
+	// Text alignment, with possible values  START, CENTER, END, LEFT, and RIGHT; the default value is CENTER, which can be empty.
+	TextAlignment *string `json:"TextAlignment,omitnil,omitempty" name:"TextAlignment"`
 }

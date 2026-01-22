@@ -605,3 +605,80 @@ func (me *MqttService) DescribeMqttTopicsByFilter(ctx context.Context, param map
 
 	return
 }
+
+func (me *MqttService) DescribeMqttMessageEnrichmentRuleById(ctx context.Context, instanceId, ruleId string) (ret *mqttv20240516.MessageEnrichmentRuleItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDescribeMessageEnrichmentRulesRequest()
+	response := mqttv20240516.NewDescribeMessageEnrichmentRulesResponse()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMqttV20240516Client().DescribeMessageEnrichmentRules(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe message enrichment rules failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	// Find the specific rule by rule ID
+	for _, rule := range response.Response.Data {
+		if rule != nil && rule.Id != nil && helper.Int64ToStr(*rule.Id) == ruleId {
+			ret = rule
+			break
+		}
+	}
+
+	return
+}
+
+func (me *MqttService) DeleteMqttMessageEnrichmentRuleById(ctx context.Context, instanceId, ruleId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mqttv20240516.NewDeleteMessageEnrichmentRuleRequest()
+	request.InstanceId = helper.String(instanceId)
+	request.Id = helper.StrToInt64Point(ruleId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMqttV20240516Client().DeleteMessageEnrichmentRuleWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if reqErr != nil {
+		errRet = reqErr
+		return
+	}
+
+	return
+}

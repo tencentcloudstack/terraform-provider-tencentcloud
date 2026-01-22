@@ -1,4 +1,4 @@
-Provides a resource to create a tke kubernetes_log_config
+Provides a resource to create a TKE kubernetes log config
 
 Example Usage
 

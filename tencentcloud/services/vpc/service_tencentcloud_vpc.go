@@ -31,16 +31,18 @@ var eipUnattachLocker = &sync.Mutex{}
 /* For Adun Sake please DO NOT Declare the redundant Type STRUCT!! */
 // VPC basic information
 type VpcBasicInfo struct {
-	vpcId                string
-	name                 string
-	cidr                 string
-	isMulticast          bool
-	isDefault            bool
-	dnsServers           []string
-	createTime           string
-	tags                 []*vpc.Tag
-	assistantCidrs       []string
-	dockerAssistantCidrs []string
+	vpcId                     string
+	name                      string
+	cidr                      string
+	isMulticast               bool
+	isDefault                 bool
+	dnsServers                []string
+	createTime                string
+	tags                      []*vpc.Tag
+	assistantCidrs            []string
+	dockerAssistantCidrs      []string
+	enableRouteVpcPublish     bool
+	enableRouteVpcPublishIpv6 bool
 }
 
 func (info VpcBasicInfo) VpcId() string {
@@ -274,7 +276,7 @@ func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*
 
 // ////////api
 func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
-	isMulticast bool, dnsServers []string, tags map[string]string) (vpcId string, isDefault bool, errRet error) {
+	isMulticast bool, dnsServers []string, tags map[string]string, enableRouteVpcPublish bool, enableRouteVpcPublishIpv6 bool) (vpcId string, isDefault bool, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewCreateVpcRequest()
@@ -307,6 +309,9 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 			request.Tags = append(request.Tags, &tag)
 		}
 	}
+
+	request.EnableRouteVpcPublish = &enableRouteVpcPublish
+	request.EnableRouteVpcPublishIpv6 = &enableRouteVpcPublishIpv6
 
 	var response *vpc.CreateVpcResponse
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -476,6 +481,14 @@ getMoreData:
 			basicInfo.tags = item.TagSet
 		}
 
+		if item.EnableRouteVpcPublish != nil {
+			basicInfo.enableRouteVpcPublish = *item.EnableRouteVpcPublish
+		}
+
+		if item.EnableRouteVpcPublishIpv6 != nil {
+			basicInfo.enableRouteVpcPublishIpv6 = *item.EnableRouteVpcPublishIpv6
+		}
+
 		infos = append(infos, basicInfo)
 	}
 	goto getMoreData
@@ -629,7 +642,7 @@ getMoreData:
 	goto getMoreData
 }
 
-func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string, isMulticast bool, dnsServers []string) (errRet error) {
+func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string, isMulticast bool, dnsServers []string, enableRouteVpcPublish bool, enableRouteVpcPublishIpv6 bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewModifyVpcAttributeRequest()
 	defer func() {
@@ -650,6 +663,9 @@ func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string
 	}
 	var enableMulticast = map[bool]string{true: "true", false: "false"}[isMulticast]
 	request.EnableMulticast = &enableMulticast
+
+	request.EnableRouteVpcPublish = &enableRouteVpcPublish
+	request.EnableRouteVpcPublishIpv6 = &enableRouteVpcPublishIpv6
 
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -8610,6 +8626,209 @@ func (me *VpcService) DescribeVpcPrivateNatGatewayTranslationNatRuleById(ctx con
 
 		ret = append(ret, response.Response.TranslationNatRuleSet...)
 		if len(response.Response.TranslationNatRuleSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcRoutePolicyById(ctx context.Context, routePolicyId string) (ret *vpc.RoutePolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeRoutePoliciesRequest()
+	response := vpc.NewDescribeRoutePoliciesResponse()
+	request.RoutePolicyIds = []*string{&routePolicyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeRoutePolicies(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RoutePolicySet == nil || len(result.Response.RoutePolicySet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc route policies failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.RoutePolicySet[0]
+	return
+}
+
+func (me *VpcService) DescribeVpcRoutePolicyEntriesById(ctx context.Context, routePolicyId string) (ret []*vpc.RoutePolicyEntry, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeRoutePolicyEntriesRequest()
+	response := vpc.NewDescribeRoutePolicyEntriesResponse()
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   common.StringPtr("route-policy-id"),
+			Values: common.StringPtrs([]string{routePolicyId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeRoutePolicyEntries(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RoutePolicyEntrySet == nil || len(result.Response.RoutePolicyEntrySet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc route policy entries failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.RoutePolicyEntrySet
+	return
+}
+
+func (me *VpcService) DescribeVpcRoutePolicyAssociationById(ctx context.Context, routePolicyId, routeTableId string) (ret *vpc.RoutePolicyAssociation, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribeRoutePoliciesRequest()
+	response := vpc.NewDescribeRoutePoliciesResponse()
+	request.RoutePolicyIds = []*string{&routePolicyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseVpcClient().DescribeRoutePolicies(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RoutePolicySet == nil || len(result.Response.RoutePolicySet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc route policies failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	associationSet := response.Response.RoutePolicySet[0].RoutePolicyAssociationSet
+	if associationSet == nil || len(associationSet) == 0 {
+		return
+	}
+
+	for _, item := range associationSet {
+		if item != nil && item.RouteTableId != nil && *item.RouteTableId == routeTableId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcPrivateNatGatewayTranslationAclRuleById(ctx context.Context, natGatewayId, translationDirection, translationType, translationIp, originalIp, aclruleId string) (ret []*vpc.TranslationAclRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := vpc.NewDescribePrivateNatGatewayTranslationAclRulesRequest()
+	response := vpc.NewDescribePrivateNatGatewayTranslationAclRulesResponse()
+	request.NatGatewayId = &natGatewayId
+	request.TranslationDirection = &translationDirection
+	request.TranslationType = &translationType
+	request.TranslationIp = &translationIp
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   common.StringPtr("AclRuleId"),
+			Values: common.StringPtrs([]string{aclruleId}),
+		},
+	}
+	if originalIp != "" {
+		request.OriginalIp = &originalIp
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseVpcClient().DescribePrivateNatGatewayTranslationAclRules(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.TranslationAclRuleSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe private nat gateway translation acl rules failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.TranslationAclRuleSet) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.TranslationAclRuleSet...)
+		if len(response.Response.TranslationAclRuleSet) < int(limit) {
 			break
 		}
 

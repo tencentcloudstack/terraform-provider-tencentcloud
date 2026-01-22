@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_apm_sample_config
+```
+
+```release-note:new-resource
+tencentcloud_apm_application_config
+```
+
+```release-note:new-resource
+tencentcloud_apm_association_config
+```

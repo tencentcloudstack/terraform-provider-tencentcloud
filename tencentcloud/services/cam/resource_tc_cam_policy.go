@@ -18,6 +18,7 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 )
 
 func ResourceTencentCloudCamPolicy() *schema.Resource {
@@ -61,6 +62,11 @@ func ResourceTencentCloudCamPolicy() *schema.Resource {
 				Optional:    true,
 				Description: "Description of the CAM policy.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Instance tag.",
+			},
 			"type": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -100,6 +106,18 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 	request.PolicyDocument = &document
 	if v, ok := d.GetOk("description"); ok {
 		request.Description = helper.String(v.(string))
+	}
+
+	// Add tags to request
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			key := k
+			value := v
+			request.Tags = append(request.Tags, &cam.Tag{
+				Key:   &key,
+				Value: &value,
+			})
+		}
 	}
 
 	var response *cam.CreatePolicyResponse
@@ -150,6 +168,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
 	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamPolicyRead(d, meta)
 }
@@ -193,6 +212,18 @@ func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{})
 	if instance.Response.Description != nil {
 		_ = d.Set("description", *instance.Response.Description)
 	}
+
+	// Read tags from GetPolicy response
+	if len(instance.Response.Tags) > 0 {
+		tags := make(map[string]string)
+		for _, tag := range instance.Response.Tags {
+			if tag.Key != nil && tag.Value != nil {
+				tags[*tag.Key] = *tag.Value
+			}
+		}
+		_ = d.Set("tags", tags)
+	}
+
 	return nil
 }
 
@@ -200,6 +231,7 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 	defer tccommon.LogElapsed("resource.tencentcloud_cam_policy.update")()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	policyId := d.Id()
 	policyIdInt, e := strconv.Atoi(policyId)
@@ -250,6 +282,19 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 		})
 		if err != nil {
 			log.Printf("[CRITAL]%s update CAM policy description failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	// Update tags
+	if d.HasChange("tags") {
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		resourceName := tccommon.BuildTagResourceName("cam", "policy", tcClient.Region, policyId)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
 			return err
 		}
 	}

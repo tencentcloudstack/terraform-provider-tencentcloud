@@ -3079,3 +3079,50 @@ func (me *CynosdbService) DescribeCynosdbAuditServiceById(ctx context.Context, i
 	ret = response.Response.Items[0]
 	return
 }
+
+func (me *CynosdbService) DescribeCynosdbClsDeliveryById(ctx context.Context, instanceId, topicId string) (ret *cynosdb.InstanceCLSDeliveryInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cynosdb.NewDescribeInstanceCLSLogDeliveryRequest()
+	response := cynosdb.NewDescribeInstanceCLSLogDeliveryResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DescribeInstanceCLSLogDelivery(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.InstanceCLSDeliveryInfos == nil || len(result.Response.InstanceCLSDeliveryInfos) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe instance cls log delivery failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if topicId == "" {
+		ret = response.Response.InstanceCLSDeliveryInfos[0]
+	} else {
+		for _, item := range response.Response.InstanceCLSDeliveryInfos {
+			if item != nil && item.TopicId != nil && *item.TopicId == topicId {
+				ret = item
+				return
+			}
+		}
+	}
+
+	return
+}

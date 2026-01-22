@@ -38,17 +38,18 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 The following arguments are supported:
 
 * `available_zone` - (Required, String, ForceNew) The available zone of the Mongodb.
-* `engine_version` - (Required, String, ForceNew) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
+* `engine_version` - (Required, String) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
 - MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.
 - MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.
 - MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.
 - MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.
 - MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.
 - MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.
+- MONGO_80_WT: version of the MongoDB 8.0 WiredTiger storage engine.
 * `instance_name` - (Required, String) Name of the Mongodb instance.
 * `machine_type` - (Required, String, ForceNew) Type of Mongodb instance, and available values include `HIO`(or `GIO` which will be deprecated, represents high IO) and `HIO10G`(or `TGIO` which will be deprecated, represents 10-gigabit high IO).
 * `memory` - (Required, Int) Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
-* `nodes_per_shard` - (Required, Int, ForceNew) Number of nodes per shard, at least 3(one master and two slaves).
+* `nodes_per_shard` - (Required, Int, ForceNew) Number of nodes per shard, at least 3(one master and two slaves). Allow value[3, 5, 7].
 * `shard_quantity` - (Required, Int, ForceNew) Number of sharding.
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.

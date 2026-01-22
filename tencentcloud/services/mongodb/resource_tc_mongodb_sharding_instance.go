@@ -30,11 +30,10 @@ func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			Description:  "Number of sharding.",
 		},
 		"nodes_per_shard": {
-			Type:         schema.TypeInt,
-			Required:     true,
-			ForceNew:     true,
-			ValidateFunc: tccommon.ValidateIntegerInRange(3, 5),
-			Description:  "Number of nodes per shard, at least 3(one master and two slaves).",
+			Type:        schema.TypeInt,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Number of nodes per shard, at least 3(one master and two slaves). Allow value[3, 5, 7].",
 		},
 		"availability_zone_list": {
 			Type:     schema.TypeList,
@@ -432,6 +431,9 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 	if d.HasChange("mongos_node_num") {
 		return fmt.Errorf("setting of the field[mongos_node_num] does not support update")
+	}
+	if d.HasChange("engine_version") {
+		return fmt.Errorf("setting of the field[engine_version] does not support update")
 	}
 
 	if d.HasChange("mongos_cpu") && d.HasChange("mongos_memory") {

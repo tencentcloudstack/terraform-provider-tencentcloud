@@ -1821,7 +1821,7 @@ func (me *TkeService) DescribeClusterNodePoolGlobalConfig(ctx context.Context, c
 }
 
 func (me *TkeService) WaitForAuthenticationOptionsUpdateSuccess(ctx context.Context, id string) (info *tke.ServiceAccountAuthenticationOptions, oidc *tke.OIDCConfigAuthenticationOptions, errRet error) {
-	err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		options, state, config, err := me.DescribeClusterAuthenticationOptions(ctx, id)
 		info = options
 		oidc = config
@@ -1939,7 +1939,7 @@ func (me *TkeService) ModifyDeletionProtection(ctx context.Context, id string, e
 	return
 }
 
-func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId string) (errRet error) {
+func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId string) (requestId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tke.NewAcquireClusterAdminRoleRequest()
 	defer func() {
@@ -1961,6 +1961,10 @@ func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId str
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && response.Response.RequestId != nil {
+		requestId = *response.Response.RequestId
+	}
 
 	return
 }
@@ -3355,24 +3359,30 @@ func (me *TkeService) DescribeKubernetesServerlessNodePoolById(ctx context.Conte
 	}()
 
 	ratelimit.Check(request.GetAction())
-
 	response, err := me.client.UseTkeV20180525Client().DescribeClusterVirtualNodePools(request)
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Describe cluster virtual node pools failed, Response is nil.")
+		return
+	}
 
 	if len(response.Response.NodePoolSet) < 1 {
 		return
 	}
 
 	for _, info := range response.Response.NodePoolSet {
-		if info.NodePoolId != nil && *info.NodePoolId == nodePoolId {
+		if info != nil && info.NodePoolId != nil && *info.NodePoolId == nodePoolId {
 			ret = info
 			break
 		}
 	}
+
 	return
 }
 
@@ -3878,7 +3888,7 @@ func (me *TkeService) DescribeKubernetesClusterReleaseById(ctx context.Context, 
 		}
 
 		if result == nil || result.Response == nil || result.Response.Release == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes releases failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes releases details failed, Response is nil."))
 		}
 
 		response = result
@@ -3891,5 +3901,90 @@ func (me *TkeService) DescribeKubernetesClusterReleaseById(ctx context.Context, 
 	}
 
 	ret = response.Response.Release
+	return
+}
+
+func (me *TkeService) DescribeKubernetesControlPlaneLogById(ctx context.Context, clusterId, clusterType, componentName string) (ret *tke.ComponentLogConfig, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeControlPlaneLogsRequest()
+	response := tke.NewDescribeControlPlaneLogsResponse()
+	request.ClusterId = helper.String(clusterId)
+	request.ClusterType = helper.String(clusterType)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeControlPlaneLogs(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Details == nil || len(result.Response.Details) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes control plane logs failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range response.Response.Details {
+		if item != nil && item.Name != nil && *item.Name == componentName {
+			ret = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *TkeService) DescribeKubernetesUserPermissionsById(ctx context.Context, targetUin string) (ret *tke.DescribeUserPermissionsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeUserPermissionsRequest()
+	response := tke.NewDescribeUserPermissionsResponse()
+	request.TargetUin = &targetUin
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeUserPermissions(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe user permissions failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
 	return
 }

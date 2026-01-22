@@ -94,8 +94,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"engine_version": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
-			Description: "Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.\n- MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.\n- MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.\n- MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.\n- MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.\n- MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.\n- MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.",
+			Description: "Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.\n- MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.\n- MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.\n- MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.\n- MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.\n- MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.\n- MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.\n- MONGO_80_WT: version of the MongoDB 8.0 WiredTiger storage engine.",
 		},
 		"machine_type": {
 			Type:     schema.TypeString,

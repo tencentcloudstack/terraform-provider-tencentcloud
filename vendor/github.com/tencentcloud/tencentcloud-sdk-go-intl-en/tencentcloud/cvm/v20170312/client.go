@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,8 +67,6 @@ func NewAllocateHostsResponse() (response *AllocateHostsResponse) {
 // AllocateHosts
 // This API is used to create CDH instances with specified configuration.
 //
-// * When HostChargeType is PREPAID, the HostChargePrepaid parameter must be specified.
-//
 // error code that may be returned:
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDHOSTID_MALFORMED = "InvalidHostId.Malformed"
@@ -86,8 +84,6 @@ func (c *Client) AllocateHosts(request *AllocateHostsRequest) (response *Allocat
 // AllocateHosts
 // This API is used to create CDH instances with specified configuration.
 //
-// * When HostChargeType is PREPAID, the HostChargePrepaid parameter must be specified.
-//
 // error code that may be returned:
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDHOSTID_MALFORMED = "InvalidHostId.Malformed"
@@ -102,6 +98,7 @@ func (c *Client) AllocateHostsWithContext(ctx context.Context, request *Allocate
     if request == nil {
         request = NewAllocateHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "AllocateHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AllocateHosts require credential")
@@ -227,6 +224,7 @@ func (c *Client) AssociateInstancesKeyPairsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewAssociateInstancesKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "AssociateInstancesKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateInstancesKeyPairs require credential")
@@ -304,6 +302,7 @@ func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request
     if request == nil {
         request = NewAssociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "AssociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateSecurityGroups require credential")
@@ -379,6 +378,7 @@ func (c *Client) ConfigureChcAssistVpcWithContext(ctx context.Context, request *
     if request == nil {
         request = NewConfigureChcAssistVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ConfigureChcAssistVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConfigureChcAssistVpc require credential")
@@ -450,6 +450,7 @@ func (c *Client) ConfigureChcDeployVpcWithContext(ctx context.Context, request *
     if request == nil {
         request = NewConfigureChcDeployVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ConfigureChcDeployVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConfigureChcDeployVpc require credential")
@@ -523,6 +524,7 @@ func (c *Client) ConvertOperatingSystemsWithContext(ctx context.Context, request
     if request == nil {
         request = NewConvertOperatingSystemsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ConvertOperatingSystems")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConvertOperatingSystems require credential")
@@ -578,6 +580,7 @@ func (c *Client) CreateDisasterRecoverGroupWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateDisasterRecoverGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateDisasterRecoverGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDisasterRecoverGroup require credential")
@@ -727,6 +730,7 @@ func (c *Client) CreateImageWithContext(ctx context.Context, request *CreateImag
     if request == nil {
         request = NewCreateImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateImage require credential")
@@ -816,6 +820,7 @@ func (c *Client) CreateKeyPairWithContext(ctx context.Context, request *CreateKe
     if request == nil {
         request = NewCreateKeyPairRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateKeyPair")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateKeyPair require credential")
@@ -1059,6 +1064,7 @@ func (c *Client) CreateLaunchTemplateWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateLaunchTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateLaunchTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLaunchTemplate require credential")
@@ -1258,6 +1264,7 @@ func (c *Client) CreateLaunchTemplateVersionWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateLaunchTemplateVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateLaunchTemplateVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLaunchTemplateVersion require credential")
@@ -1315,6 +1322,7 @@ func (c *Client) DeleteDisasterRecoverGroupsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDeleteDisasterRecoverGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteDisasterRecoverGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDisasterRecoverGroups require credential")
@@ -1396,6 +1404,7 @@ func (c *Client) DeleteImagesWithContext(ctx context.Context, request *DeleteIma
     if request == nil {
         request = NewDeleteImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImages require credential")
@@ -1471,6 +1480,7 @@ func (c *Client) DeleteKeyPairsWithContext(ctx context.Context, request *DeleteK
     if request == nil {
         request = NewDeleteKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteKeyPairs require credential")
@@ -1532,6 +1542,7 @@ func (c *Client) DeleteLaunchTemplateWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteLaunchTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteLaunchTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLaunchTemplate require credential")
@@ -1599,6 +1610,7 @@ func (c *Client) DeleteLaunchTemplateVersionsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDeleteLaunchTemplateVersionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteLaunchTemplateVersions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLaunchTemplateVersions require credential")
@@ -1652,6 +1664,7 @@ func (c *Client) DescribeChcDeniedActionsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeChcDeniedActionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeChcDeniedActions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeChcDeniedActions require credential")
@@ -1739,6 +1752,7 @@ func (c *Client) DescribeChcHostsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeChcHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeChcHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeChcHosts require credential")
@@ -1814,6 +1828,7 @@ func (c *Client) DescribeDisasterRecoverGroupQuotaWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeDisasterRecoverGroupQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeDisasterRecoverGroupQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDisasterRecoverGroupQuota require credential")
@@ -1865,6 +1880,7 @@ func (c *Client) DescribeDisasterRecoverGroupsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeDisasterRecoverGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeDisasterRecoverGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDisasterRecoverGroups require credential")
@@ -1928,6 +1944,7 @@ func (c *Client) DescribeHostsWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHosts require credential")
@@ -1991,6 +2008,7 @@ func (c *Client) DescribeImageFromFamilyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeImageFromFamilyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImageFromFamily")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageFromFamily require credential")
@@ -2054,6 +2072,7 @@ func (c *Client) DescribeImageQuotaWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeImageQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImageQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageQuota require credential")
@@ -2115,6 +2134,7 @@ func (c *Client) DescribeImageSharePermissionWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeImageSharePermissionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImageSharePermission")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageSharePermission require credential")
@@ -2210,6 +2230,7 @@ func (c *Client) DescribeImagesWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImages require credential")
@@ -2293,6 +2314,7 @@ func (c *Client) DescribeImportImageOsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeImportImageOsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImportImageOs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImportImageOs require credential")
@@ -2346,6 +2368,7 @@ func (c *Client) DescribeInstanceFamilyConfigsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceFamilyConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstanceFamilyConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceFamilyConfigs require credential")
@@ -2461,6 +2484,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -2512,6 +2536,7 @@ func (c *Client) DescribeInstancesAttributesWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeInstancesAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesAttributes require credential")
@@ -2575,6 +2600,7 @@ func (c *Client) DescribeInstancesOperationLimitWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeInstancesOperationLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesOperationLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesOperationLimit require credential")
@@ -2650,6 +2676,7 @@ func (c *Client) DescribeInstancesStatusWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeInstancesStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesStatus require credential")
@@ -2713,6 +2740,7 @@ func (c *Client) DescribeInternetChargeTypeConfigsWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeInternetChargeTypeConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInternetChargeTypeConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternetChargeTypeConfigs require credential")
@@ -2792,6 +2820,7 @@ func (c *Client) DescribeKeyPairsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeKeyPairs require credential")
@@ -2875,6 +2904,7 @@ func (c *Client) DescribeLaunchTemplateVersionsWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLaunchTemplateVersionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeLaunchTemplateVersions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLaunchTemplateVersions require credential")
@@ -2944,6 +2974,7 @@ func (c *Client) DescribeLaunchTemplatesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLaunchTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeLaunchTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLaunchTemplates require credential")
@@ -2993,6 +3024,7 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRegions require credential")
@@ -3058,6 +3090,7 @@ func (c *Client) DescribeReservedInstancesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeReservedInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeReservedInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReservedInstances require credential")
@@ -3113,6 +3146,7 @@ func (c *Client) DescribeReservedInstancesConfigInfosWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeReservedInstancesConfigInfosRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeReservedInstancesConfigInfos")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReservedInstancesConfigInfos require credential")
@@ -3178,6 +3212,7 @@ func (c *Client) DescribeReservedInstancesOfferingsWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeReservedInstancesOfferingsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeReservedInstancesOfferings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReservedInstancesOfferings require credential")
@@ -3253,6 +3288,7 @@ func (c *Client) DescribeZoneInstanceConfigInfosWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeZoneInstanceConfigInfosRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeZoneInstanceConfigInfos")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeZoneInstanceConfigInfos require credential")
@@ -3308,6 +3344,7 @@ func (c *Client) DescribeZonesWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeZonesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeZones")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeZones require credential")
@@ -3425,6 +3462,7 @@ func (c *Client) DisassociateInstancesKeyPairsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDisassociateInstancesKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DisassociateInstancesKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateInstancesKeyPairs require credential")
@@ -3494,6 +3532,7 @@ func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDisassociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DisassociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateSecurityGroups require credential")
@@ -3591,6 +3630,7 @@ func (c *Client) EnterRescueModeWithContext(ctx context.Context, request *EnterR
     if request == nil {
         request = NewEnterRescueModeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "EnterRescueMode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnterRescueMode require credential")
@@ -3666,6 +3706,7 @@ func (c *Client) ExitRescueModeWithContext(ctx context.Context, request *ExitRes
     if request == nil {
         request = NewExitRescueModeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ExitRescueMode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExitRescueMode require credential")
@@ -3757,6 +3798,7 @@ func (c *Client) ExportImagesWithContext(ctx context.Context, request *ExportIma
     if request == nil {
         request = NewExportImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ExportImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportImages require credential")
@@ -3832,6 +3874,7 @@ func (c *Client) ImportImageWithContext(ctx context.Context, request *ImportImag
     if request == nil {
         request = NewImportImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ImportImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportImage require credential")
@@ -3919,6 +3962,7 @@ func (c *Client) ImportKeyPairWithContext(ctx context.Context, request *ImportKe
     if request == nil {
         request = NewImportKeyPairRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ImportKeyPair")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportKeyPair require credential")
@@ -3972,6 +4016,7 @@ func (c *Client) InquirePricePurchaseReservedInstancesOfferingWithContext(ctx co
     if request == nil {
         request = NewInquirePricePurchaseReservedInstancesOfferingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquirePricePurchaseReservedInstancesOffering")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePricePurchaseReservedInstancesOffering require credential")
@@ -3980,6 +4025,206 @@ func (c *Client) InquirePricePurchaseReservedInstancesOfferingWithContext(ctx co
     request.SetContext(ctx)
     
     response = NewInquirePricePurchaseReservedInstancesOfferingResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquiryPriceModifyInstancesChargeTypeRequest() (request *InquiryPriceModifyInstancesChargeTypeRequest) {
+    request = &InquiryPriceModifyInstancesChargeTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "InquiryPriceModifyInstancesChargeType")
+    
+    
+    return
+}
+
+func NewInquiryPriceModifyInstancesChargeTypeResponse() (response *InquiryPriceModifyInstancesChargeTypeResponse) {
+    response = &InquiryPriceModifyInstancesChargeTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceModifyInstancesChargeType
+// This API is used to inquire about the price for switching billing modes of instance.
+//
+// 
+//
+// 
+//
+// This API is used to indicate that instances with no charge when shut down, instances of the model families Batch Computing BC1 and Batch Computing BS1, instances of scheduled termination, and spot instances do not support this operation.
+//
+// error code that may be returned:
+//  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
+//  FAILEDOPERATION_INQUIRYPRICEFAILED = "FailedOperation.InquiryPriceFailed"
+//  FAILEDOPERATION_INQUIRYREFUNDPRICEFAILED = "FailedOperation.InquiryRefundPriceFailed"
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+func (c *Client) InquiryPriceModifyInstancesChargeType(request *InquiryPriceModifyInstancesChargeTypeRequest) (response *InquiryPriceModifyInstancesChargeTypeResponse, err error) {
+    return c.InquiryPriceModifyInstancesChargeTypeWithContext(context.Background(), request)
+}
+
+// InquiryPriceModifyInstancesChargeType
+// This API is used to inquire about the price for switching billing modes of instance.
+//
+// 
+//
+// 
+//
+// This API is used to indicate that instances with no charge when shut down, instances of the model families Batch Computing BC1 and Batch Computing BS1, instances of scheduled termination, and spot instances do not support this operation.
+//
+// error code that may be returned:
+//  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
+//  FAILEDOPERATION_INQUIRYPRICEFAILED = "FailedOperation.InquiryPriceFailed"
+//  FAILEDOPERATION_INQUIRYREFUNDPRICEFAILED = "FailedOperation.InquiryRefundPriceFailed"
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+func (c *Client) InquiryPriceModifyInstancesChargeTypeWithContext(ctx context.Context, request *InquiryPriceModifyInstancesChargeTypeRequest) (response *InquiryPriceModifyInstancesChargeTypeResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceModifyInstancesChargeTypeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceModifyInstancesChargeType")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceModifyInstancesChargeType require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceModifyInstancesChargeTypeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquiryPriceRenewInstancesRequest() (request *InquiryPriceRenewInstancesRequest) {
+    request = &InquiryPriceRenewInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "InquiryPriceRenewInstances")
+    
+    
+    return
+}
+
+func NewInquiryPriceRenewInstancesResponse() (response *InquiryPriceRenewInstancesResponse) {
+    response = &InquiryPriceRenewInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InquiryPriceRenewInstances
+// This API is used to inquire about the price for renewing a monthly subscription instance.
+//
+// 
+//
+// This API is used to query the renewal price of monthly subscription instances.
+//
+// error code that may be returned:
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDACCOUNT_UNPAIDORDER = "InvalidAccount.UnpaidOrder"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTSUPPORTEDMIXPRICINGMODEL = "InvalidParameterValue.InstanceNotSupportedMixPricingModel"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
+//  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
+func (c *Client) InquiryPriceRenewInstances(request *InquiryPriceRenewInstancesRequest) (response *InquiryPriceRenewInstancesResponse, err error) {
+    return c.InquiryPriceRenewInstancesWithContext(context.Background(), request)
+}
+
+// InquiryPriceRenewInstances
+// This API is used to inquire about the price for renewing a monthly subscription instance.
+//
+// 
+//
+// This API is used to query the renewal price of monthly subscription instances.
+//
+// error code that may be returned:
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDACCOUNT_UNPAIDORDER = "InvalidAccount.UnpaidOrder"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTSUPPORTEDMIXPRICINGMODEL = "InvalidParameterValue.InstanceNotSupportedMixPricingModel"
+//  INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
+//  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
+func (c *Client) InquiryPriceRenewInstancesWithContext(ctx context.Context, request *InquiryPriceRenewInstancesRequest) (response *InquiryPriceRenewInstancesResponse, err error) {
+    if request == nil {
+        request = NewInquiryPriceRenewInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceRenewInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceRenewInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquiryPriceRenewInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -4034,6 +4279,7 @@ func NewInquiryPriceResetInstanceResponse() (response *InquiryPriceResetInstance
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INVALIDIMAGELICENSETYPEFORRESET = "UnsupportedOperation.InvalidImageLicenseTypeForReset"
 //  UNSUPPORTEDOPERATION_MODIFYENCRYPTIONNOTSUPPORTED = "UnsupportedOperation.ModifyEncryptionNotSupported"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
@@ -4072,6 +4318,7 @@ func (c *Client) InquiryPriceResetInstance(request *InquiryPriceResetInstanceReq
 //  MISSINGPARAMETER_MONITORSERVICE = "MissingParameter.MonitorService"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INVALIDIMAGELICENSETYPEFORRESET = "UnsupportedOperation.InvalidImageLicenseTypeForReset"
 //  UNSUPPORTEDOPERATION_MODIFYENCRYPTIONNOTSUPPORTED = "UnsupportedOperation.ModifyEncryptionNotSupported"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
@@ -4079,6 +4326,7 @@ func (c *Client) InquiryPriceResetInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewInquiryPriceResetInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResetInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResetInstance require credential")
@@ -4176,6 +4424,7 @@ func (c *Client) InquiryPriceResetInstancesInternetMaxBandwidthWithContext(ctx c
     if request == nil {
         request = NewInquiryPriceResetInstancesInternetMaxBandwidthRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResetInstancesInternetMaxBandwidth")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResetInstancesInternetMaxBandwidth require credential")
@@ -4252,6 +4501,7 @@ func NewInquiryPriceResetInstancesTypeResponse() (response *InquiryPriceResetIns
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDRESETINSTANCETYPE = "UnsupportedOperation.InstanceMixedResetInstanceType"
 //  UNSUPPORTEDOPERATION_LOCALDATADISKCHANGEINSTANCEFAMILY = "UnsupportedOperation.LocalDataDiskChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
@@ -4309,6 +4559,7 @@ func (c *Client) InquiryPriceResetInstancesType(request *InquiryPriceResetInstan
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDRESETINSTANCETYPE = "UnsupportedOperation.InstanceMixedResetInstanceType"
 //  UNSUPPORTEDOPERATION_LOCALDATADISKCHANGEINSTANCEFAMILY = "UnsupportedOperation.LocalDataDiskChangeInstanceFamily"
 //  UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 //  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
@@ -4321,6 +4572,7 @@ func (c *Client) InquiryPriceResetInstancesTypeWithContext(ctx context.Context, 
     if request == nil {
         request = NewInquiryPriceResetInstancesTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResetInstancesType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResetInstancesType require credential")
@@ -4416,6 +4668,7 @@ func (c *Client) InquiryPriceResizeInstanceDisksWithContext(ctx context.Context,
     if request == nil {
         request = NewInquiryPriceResizeInstanceDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResizeInstanceDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResizeInstanceDisks require credential")
@@ -4524,6 +4777,7 @@ func NewInquiryPriceRunInstancesResponse() (response *InquiryPriceRunInstancesRe
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
@@ -4614,6 +4868,7 @@ func (c *Client) InquiryPriceRunInstances(request *InquiryPriceRunInstancesReque
 //  RESOURCEUNAVAILABLE_INSTANCETYPE = "ResourceUnavailable.InstanceType"
 //  RESOURCESSOLDOUT_SPECIFIEDINSTANCETYPE = "ResourcesSoldOut.SpecifiedInstanceType"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
@@ -4627,6 +4882,7 @@ func (c *Client) InquiryPriceRunInstancesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewInquiryPriceRunInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceRunInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRunInstances require credential")
@@ -4694,6 +4950,7 @@ func (c *Client) ModifyChcAttributeWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyChcAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyChcAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyChcAttribute require credential")
@@ -4747,6 +5004,7 @@ func (c *Client) ModifyDisasterRecoverGroupAttributeWithContext(ctx context.Cont
     if request == nil {
         request = NewModifyDisasterRecoverGroupAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyDisasterRecoverGroupAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDisasterRecoverGroupAttribute require credential")
@@ -4802,6 +5060,7 @@ func (c *Client) ModifyHostsAttributeWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyHostsAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyHostsAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyHostsAttribute require credential")
@@ -4849,6 +5108,7 @@ func NewModifyImageAttributeResponse() (response *ModifyImageAttributeResponse) 
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFAMILY = "InvalidParameterValue.InvalidImageFamily"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_SHAREDIMAGEMODIFYUNSUPPORTED = "UnsupportedOperation.SharedImageModifyUnsupported"
 func (c *Client) ModifyImageAttribute(request *ModifyImageAttributeRequest) (response *ModifyImageAttributeResponse, err error) {
     return c.ModifyImageAttributeWithContext(context.Background(), request)
 }
@@ -4869,10 +5129,12 @@ func (c *Client) ModifyImageAttribute(request *ModifyImageAttributeRequest) (res
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFAMILY = "InvalidParameterValue.InvalidImageFamily"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_SHAREDIMAGEMODIFYUNSUPPORTED = "UnsupportedOperation.SharedImageModifyUnsupported"
 func (c *Client) ModifyImageAttributeWithContext(ctx context.Context, request *ModifyImageAttributeRequest) (response *ModifyImageAttributeResponse, err error) {
     if request == nil {
         request = NewModifyImageAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyImageAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyImageAttribute require credential")
@@ -4980,6 +5242,7 @@ func (c *Client) ModifyImageSharePermissionWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyImageSharePermissionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyImageSharePermission")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyImageSharePermission require credential")
@@ -5012,19 +5275,21 @@ func NewModifyInstancesAttributeResponse() (response *ModifyInstancesAttributeRe
 }
 
 // ModifyInstancesAttribute
-// The API is used to modify the attributes of an instance. Only the name and the associated security groups can be modified for now.
+// This API is used to modify instance attributes.
 //
 // 
 //
-// * An attribute must be specified in the request.
+// This API is used to modify one attribute of the instance per request. The attribute must be specified.
 //
-// * "Instance name" is a custom name for easier management. Tencent Cloud does not use the name for online support or instance management.
+// The instance name is only for user convenience in management. Tencent Cloud does not use this name as the basis for online support or to perform instance management operations.
 //
-// * Batch operations are supported. Each request can modify up to 100 instances.
+// This API is used to support batch operations. The maximum of 100 batch instances per request is supported.
 //
-// * When you modify the security groups associated with an instance is modified, the original security groups are disassociated.
+// This API is used to modify the security group association. The originally associated security group of the instance will be unbound.
 //
-// * You can use the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) to query the instance operation result. If the 'LatestOperationState' in the response is **SUCCESS**, the operation is successful.
+// * You can query the result of the instance operation by calling the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5). If the latest operation status (LatestOperationState) of the instance is **SUCCESS**, the operation is successful.
+//
+// This API is used to modify the hostname. The instance restarts immediately after hostname modification, and the new hostname takes effect after restart.
 //
 // error code that may be returned:
 //  AUTHFAILURE_CAMROLENAMEAUTHENTICATEFAILED = "AuthFailure.CamRoleNameAuthenticateFailed"
@@ -5066,6 +5331,7 @@ func NewModifyInstancesAttributeResponse() (response *ModifyInstancesAttributeRe
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATED = "UnsupportedOperation.InstanceStateTerminated"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTHIGHDENSITYMODESETTING = "UnsupportedOperation.InstanceTypeNotSupportHighDensityModeSetting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
 //  UNSUPPORTEDOPERATION_INSTANCESENABLEJUMBOWITHOUTREBOOT = "UnsupportedOperation.InstancesEnableJumboWithoutReboot"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCENOTSUPPORTEDPROTECTEDINSTANCE = "UnsupportedOperation.InvalidInstanceNotSupportedProtectedInstance"
@@ -5075,19 +5341,21 @@ func (c *Client) ModifyInstancesAttribute(request *ModifyInstancesAttributeReque
 }
 
 // ModifyInstancesAttribute
-// The API is used to modify the attributes of an instance. Only the name and the associated security groups can be modified for now.
+// This API is used to modify instance attributes.
 //
 // 
 //
-// * An attribute must be specified in the request.
+// This API is used to modify one attribute of the instance per request. The attribute must be specified.
 //
-// * "Instance name" is a custom name for easier management. Tencent Cloud does not use the name for online support or instance management.
+// The instance name is only for user convenience in management. Tencent Cloud does not use this name as the basis for online support or to perform instance management operations.
 //
-// * Batch operations are supported. Each request can modify up to 100 instances.
+// This API is used to support batch operations. The maximum of 100 batch instances per request is supported.
 //
-// * When you modify the security groups associated with an instance is modified, the original security groups are disassociated.
+// This API is used to modify the security group association. The originally associated security group of the instance will be unbound.
 //
-// * You can use the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) to query the instance operation result. If the 'LatestOperationState' in the response is **SUCCESS**, the operation is successful.
+// * You can query the result of the instance operation by calling the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5). If the latest operation status (LatestOperationState) of the instance is **SUCCESS**, the operation is successful.
+//
+// This API is used to modify the hostname. The instance restarts immediately after hostname modification, and the new hostname takes effect after restart.
 //
 // error code that may be returned:
 //  AUTHFAILURE_CAMROLENAMEAUTHENTICATEFAILED = "AuthFailure.CamRoleNameAuthenticateFailed"
@@ -5129,6 +5397,7 @@ func (c *Client) ModifyInstancesAttribute(request *ModifyInstancesAttributeReque
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATED = "UnsupportedOperation.InstanceStateTerminated"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTHIGHDENSITYMODESETTING = "UnsupportedOperation.InstanceTypeNotSupportHighDensityModeSetting"
 //  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
 //  UNSUPPORTEDOPERATION_INSTANCESENABLEJUMBOWITHOUTREBOOT = "UnsupportedOperation.InstancesEnableJumboWithoutReboot"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCENOTSUPPORTEDPROTECTEDINSTANCE = "UnsupportedOperation.InvalidInstanceNotSupportedProtectedInstance"
@@ -5137,6 +5406,7 @@ func (c *Client) ModifyInstancesAttributeWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyInstancesAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesAttribute require credential")
@@ -5145,6 +5415,236 @@ func (c *Client) ModifyInstancesAttributeWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewModifyInstancesAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstancesChargeTypeRequest() (request *ModifyInstancesChargeTypeRequest) {
+    request = &ModifyInstancesChargeTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "ModifyInstancesChargeType")
+    
+    
+    return
+}
+
+func NewModifyInstancesChargeTypeResponse() (response *ModifyInstancesChargeTypeResponse) {
+    response = &ModifyInstancesChargeTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstancesChargeType
+// This API is used to switch the billing mode of an instance.
+//
+// 
+//
+// This API is used to perform operations that do not support instances with no charge when shut down, instances of the model families Batch Compute BC1 and Batch Compute BS1, or instances of scheduled termination.
+//
+// * You can query the result of the instance operation by calling the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5). If the latest operation status (LatestOperationState) of the instance is **SUCCESS**, the operation is successful.
+//
+// error code that may be returned:
+//  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
+//  FAILEDOPERATION_PROMOTIONALPERIORESTRICTION = "FailedOperation.PromotionalPerioRestriction"
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDACCOUNT_UNPAIDORDER = "InvalidAccount.UnpaidOrder"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_INSTANCEQUOTA = "LimitExceeded.InstanceQuota"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  UNSUPPORTEDOPERATION_COMMERCIALIMAGECHANGECHARGETYPE = "UnsupportedOperation.CommercialImageChangeChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
+//  UNSUPPORTEDOPERATION_UNDERWRITEDISCOUNTGREATERTHANPREPAIDDISCOUNT = "UnsupportedOperation.UnderwriteDiscountGreaterThanPrepaidDiscount"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
+func (c *Client) ModifyInstancesChargeType(request *ModifyInstancesChargeTypeRequest) (response *ModifyInstancesChargeTypeResponse, err error) {
+    return c.ModifyInstancesChargeTypeWithContext(context.Background(), request)
+}
+
+// ModifyInstancesChargeType
+// This API is used to switch the billing mode of an instance.
+//
+// 
+//
+// This API is used to perform operations that do not support instances with no charge when shut down, instances of the model families Batch Compute BC1 and Batch Compute BS1, or instances of scheduled termination.
+//
+// * You can query the result of the instance operation by calling the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5). If the latest operation status (LatestOperationState) of the instance is **SUCCESS**, the operation is successful.
+//
+// error code that may be returned:
+//  ACCOUNTQUALIFICATIONRESTRICTIONS = "AccountQualificationRestrictions"
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
+//  FAILEDOPERATION_PROMOTIONALPERIORESTRICTION = "FailedOperation.PromotionalPerioRestriction"
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDACCOUNT_UNPAIDORDER = "InvalidAccount.UnpaidOrder"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEUNDERWRITE = "InvalidParameterValue.InvalidInstanceTypeUnderwrite"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_INSTANCEQUOTA = "LimitExceeded.InstanceQuota"
+//  LIMITEXCEEDED_INSTANCETYPEBANDWIDTH = "LimitExceeded.InstanceTypeBandwidth"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
+//  UNSUPPORTEDOPERATION_COMMERCIALIMAGECHANGECHARGETYPE = "UnsupportedOperation.CommercialImageChangeChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_REDHATINSTANCEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceUnsupported"
+//  UNSUPPORTEDOPERATION_UNDERWRITEDISCOUNTGREATERTHANPREPAIDDISCOUNT = "UnsupportedOperation.UnderwriteDiscountGreaterThanPrepaidDiscount"
+//  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
+func (c *Client) ModifyInstancesChargeTypeWithContext(ctx context.Context, request *ModifyInstancesChargeTypeRequest) (response *ModifyInstancesChargeTypeResponse, err error) {
+    if request == nil {
+        request = NewModifyInstancesChargeTypeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesChargeType")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstancesChargeType require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstancesChargeTypeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstancesDisasterRecoverGroupRequest() (request *ModifyInstancesDisasterRecoverGroupRequest) {
+    request = &ModifyInstancesDisasterRecoverGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "ModifyInstancesDisasterRecoverGroup")
+    
+    
+    return
+}
+
+func NewModifyInstancesDisasterRecoverGroupResponse() (response *ModifyInstancesDisasterRecoverGroupResponse) {
+    response = &ModifyInstancesDisasterRecoverGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstancesDisasterRecoverGroup
+// This API is used to adjust the placement group of an instance.
+//
+// * Currently only basic networks or Virtual Private Cloud (VPC) instances are supported.
+//
+// error code that may be returned:
+//  FAILEDOPERATION_ALREADYINDISASTERRECOVERGROUP = "FailedOperation.AlreadyInDisasterRecoverGroup"
+//  FAILEDOPERATION_DISASTERRECOVERGROUPNOTFOUND = "FailedOperation.DisasterRecoverGroupNotFound"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE_DISASTERRECOVERGROUPIDMALFORMED = "InvalidParameterValue.DisasterRecoverGroupIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_NOTSUPPORTED = "InvalidParameterValue.NotSupported"
+//  LIMITEXCEEDED_DISASTERRECOVERGROUP = "LimitExceeded.DisasterRecoverGroup"
+//  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
+//  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
+//  UNSUPPORTEDOPERATION_CBSREMOTESSDNOTSUPPORT = "UnsupportedOperation.CbsRemoteSsdNotSupport"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_NOVPCNETWORK = "UnsupportedOperation.NoVpcNetwork"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
+//  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
+func (c *Client) ModifyInstancesDisasterRecoverGroup(request *ModifyInstancesDisasterRecoverGroupRequest) (response *ModifyInstancesDisasterRecoverGroupResponse, err error) {
+    return c.ModifyInstancesDisasterRecoverGroupWithContext(context.Background(), request)
+}
+
+// ModifyInstancesDisasterRecoverGroup
+// This API is used to adjust the placement group of an instance.
+//
+// * Currently only basic networks or Virtual Private Cloud (VPC) instances are supported.
+//
+// error code that may be returned:
+//  FAILEDOPERATION_ALREADYINDISASTERRECOVERGROUP = "FailedOperation.AlreadyInDisasterRecoverGroup"
+//  FAILEDOPERATION_DISASTERRECOVERGROUPNOTFOUND = "FailedOperation.DisasterRecoverGroupNotFound"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE_DISASTERRECOVERGROUPIDMALFORMED = "InvalidParameterValue.DisasterRecoverGroupIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_NOTSUPPORTED = "InvalidParameterValue.NotSupported"
+//  LIMITEXCEEDED_DISASTERRECOVERGROUP = "LimitExceeded.DisasterRecoverGroup"
+//  MUTEXOPERATION_TASKRUNNING = "MutexOperation.TaskRunning"
+//  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
+//  UNSUPPORTEDOPERATION_CBSREMOTESSDNOTSUPPORT = "UnsupportedOperation.CbsRemoteSsdNotSupport"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATERESCUEMODE = "UnsupportedOperation.InstanceStateRescueMode"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESHUTDOWN = "UnsupportedOperation.InstanceStateShutdown"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_NOVPCNETWORK = "UnsupportedOperation.NoVpcNetwork"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
+//  UNSUPPORTEDOPERATION_STOPPEDMODESTOPCHARGING = "UnsupportedOperation.StoppedModeStopCharging"
+func (c *Client) ModifyInstancesDisasterRecoverGroupWithContext(ctx context.Context, request *ModifyInstancesDisasterRecoverGroupRequest) (response *ModifyInstancesDisasterRecoverGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyInstancesDisasterRecoverGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesDisasterRecoverGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstancesDisasterRecoverGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstancesDisasterRecoverGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -5228,6 +5728,7 @@ func (c *Client) ModifyInstancesProjectWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyInstancesProjectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesProject")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesProject require credential")
@@ -5343,6 +5844,7 @@ func (c *Client) ModifyInstancesRenewFlagWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyInstancesRenewFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesRenewFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesRenewFlag require credential")
@@ -5486,6 +5988,7 @@ func (c *Client) ModifyInstancesVpcAttributeWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyInstancesVpcAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesVpcAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesVpcAttribute require credential")
@@ -5571,6 +6074,7 @@ func (c *Client) ModifyKeyPairAttributeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyKeyPairAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyKeyPairAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyKeyPairAttribute require credential")
@@ -5638,6 +6142,7 @@ func (c *Client) ModifyLaunchTemplateDefaultVersionWithContext(ctx context.Conte
     if request == nil {
         request = NewModifyLaunchTemplateDefaultVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyLaunchTemplateDefaultVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLaunchTemplateDefaultVersion require credential")
@@ -5701,6 +6206,7 @@ func (c *Client) PurchaseReservedInstancesOfferingWithContext(ctx context.Contex
     if request == nil {
         request = NewPurchaseReservedInstancesOfferingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "PurchaseReservedInstancesOffering")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PurchaseReservedInstancesOffering require credential")
@@ -5832,6 +6338,7 @@ func (c *Client) RebootInstancesWithContext(ctx context.Context, request *Reboot
     if request == nil {
         request = NewRebootInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RebootInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RebootInstances require credential")
@@ -5887,6 +6394,7 @@ func (c *Client) RemoveChcAssistVpcWithContext(ctx context.Context, request *Rem
     if request == nil {
         request = NewRemoveChcAssistVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RemoveChcAssistVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveChcAssistVpc require credential")
@@ -5944,6 +6452,7 @@ func (c *Client) RemoveChcDeployVpcWithContext(ctx context.Context, request *Rem
     if request == nil {
         request = NewRemoveChcDeployVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RemoveChcDeployVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveChcDeployVpc require credential")
@@ -5952,6 +6461,124 @@ func (c *Client) RemoveChcDeployVpcWithContext(ctx context.Context, request *Rem
     request.SetContext(ctx)
     
     response = NewRemoveChcDeployVpcResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRenewInstancesRequest() (request *RenewInstancesRequest) {
+    request = &RenewInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "RenewInstances")
+    
+    
+    return
+}
+
+func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
+    response = &RenewInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RenewInstances
+// This API is used to renew annual and monthly subscription instances.
+//
+// 
+//
+// This API is used to operate on monthly subscription instances only.
+//
+// This API is used to ensure your account balance is sufficient for renewal. You can check the balance via the DescribeAccountBalance API (https://www.tencentcloud.comom/document/product/555/20253?from_cn_redirect=1).
+//
+// * You can query the result of the instance operation by calling the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5). If the latest operation status (LatestOperationState) of the instance is **SUCCESS**, the operation is successful.
+//
+// error code that may be returned:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDACCOUNT_UNPAIDORDER = "InvalidAccount.UnpaidOrder"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTSUPPORTEDMIXPRICINGMODEL = "InvalidParameterValue.InstanceNotSupportedMixPricingModel"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
+func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
+    return c.RenewInstancesWithContext(context.Background(), request)
+}
+
+// RenewInstances
+// This API is used to renew annual and monthly subscription instances.
+//
+// 
+//
+// This API is used to operate on monthly subscription instances only.
+//
+// This API is used to ensure your account balance is sufficient for renewal. You can check the balance via the DescribeAccountBalance API (https://www.tencentcloud.comom/document/product/555/20253?from_cn_redirect=1).
+//
+// * You can query the result of the instance operation by calling the API [DescribeInstances](https://intl.cloud.tencent.com/document/api/213/15728?from_cn_redirect=1#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5). If the latest operation status (LatestOperationState) of the instance is **SUCCESS**, the operation is successful.
+//
+// error code that may be returned:
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
+//  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLEEMR = "FailedOperation.InvalidInstanceApplicationRoleEmr"
+//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
+//  INVALIDACCOUNT_UNPAIDORDER = "InvalidAccount.UnpaidOrder"
+//  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
+//  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTSUPPORTEDMIXPRICINGMODEL = "InvalidParameterValue.InstanceNotSupportedMixPricingModel"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_INSTANCEOPERATIONINPROGRESS = "OperationDenied.InstanceOperationInProgress"
+//  UNSUPPORTEDOPERATION_INSTANCECHARGETYPE = "UnsupportedOperation.InstanceChargeType"
+//  UNSUPPORTEDOPERATION_INSTANCEMIXEDZONETYPE = "UnsupportedOperation.InstanceMixedZoneType"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEBANNING = "UnsupportedOperation.InstanceStateBanning"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEFREEZING = "UnsupportedOperation.InstanceStateFreezing"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEPENDING = "UnsupportedOperation.InstanceStatePending"
+//  UNSUPPORTEDOPERATION_INSTANCESTATEREBOOTING = "UnsupportedOperation.InstanceStateRebooting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTARTING = "UnsupportedOperation.InstanceStateStarting"
+//  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
+//  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
+func (c *Client) RenewInstancesWithContext(ctx context.Context, request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
+    if request == nil {
+        request = NewRenewInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RenewInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenewInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -6056,6 +6683,7 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATED = "UnsupportedOperation.InstanceStateTerminated"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INVALIDIMAGELICENSETYPEFORRESET = "UnsupportedOperation.InvalidImageLicenseTypeForReset"
 //  UNSUPPORTEDOPERATION_KEYPAIRUNSUPPORTEDWINDOWS = "UnsupportedOperation.KeyPairUnsupportedWindows"
 //  UNSUPPORTEDOPERATION_MODIFYENCRYPTIONNOTSUPPORTED = "UnsupportedOperation.ModifyEncryptionNotSupported"
@@ -6146,6 +6774,7 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATED = "UnsupportedOperation.InstanceStateTerminated"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INVALIDIMAGELICENSETYPEFORRESET = "UnsupportedOperation.InvalidImageLicenseTypeForReset"
 //  UNSUPPORTEDOPERATION_KEYPAIRUNSUPPORTEDWINDOWS = "UnsupportedOperation.KeyPairUnsupportedWindows"
 //  UNSUPPORTEDOPERATION_MODIFYENCRYPTIONNOTSUPPORTED = "UnsupportedOperation.ModifyEncryptionNotSupported"
@@ -6155,6 +6784,7 @@ func (c *Client) ResetInstanceWithContext(ctx context.Context, request *ResetIns
     if request == nil {
         request = NewResetInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstance require credential")
@@ -6286,6 +6916,7 @@ func (c *Client) ResetInstancesInternetMaxBandwidthWithContext(ctx context.Conte
     if request == nil {
         request = NewResetInstancesInternetMaxBandwidthRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstancesInternetMaxBandwidth")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstancesInternetMaxBandwidth require credential")
@@ -6415,6 +7046,7 @@ func (c *Client) ResetInstancesPasswordWithContext(ctx context.Context, request 
     if request == nil {
         request = NewResetInstancesPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstancesPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstancesPassword require credential")
@@ -6610,6 +7242,7 @@ func (c *Client) ResetInstancesTypeWithContext(ctx context.Context, request *Res
     if request == nil {
         request = NewResetInstancesTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstancesType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstancesType require credential")
@@ -6743,6 +7376,7 @@ func (c *Client) ResizeInstanceDisksWithContext(ctx context.Context, request *Re
     if request == nil {
         request = NewResizeInstanceDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResizeInstanceDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResizeInstanceDisks require credential")
@@ -6840,12 +7474,15 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
+//  INVALIDPARAMETERVALUE_ELASTICNETWORKNOTEXIST = "InvalidParameterValue.ElasticNetworkNotExist"
+//  INVALIDPARAMETERVALUE_ELASTICNETWORKVPCSUBNETMISMATCH = "InvalidParameterValue.ElasticNetworkVpcSubnetMismatch"
 //  INVALIDPARAMETERVALUE_EXTERNALIPQUOTALIMITED = "InvalidParameterValue.ExternalIpQuotaLimited"
 //  INVALIDPARAMETERVALUE_HPCCLUSTERIDZONEIDNOTMATCH = "InvalidParameterValue.HpcClusterIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_IPADDRESSMALFORMED = "InvalidParameterValue.IPAddressMalformed"
 //  INVALIDPARAMETERVALUE_ILLEGALHOSTNAME = "InvalidParameterValue.IllegalHostName"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTFOUND = "InvalidParameterValue.InstanceTypeNotFound"
+//  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTELASTICNETWORKS = "InvalidParameterValue.InstanceTypeNotSupportElasticNetworks"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTHPCCLUSTER = "InvalidParameterValue.InstanceTypeNotSupportHpcCluster"
 //  INVALIDPARAMETERVALUE_INSTANCETYPEREQUIREDHPCCLUSTER = "InvalidParameterValue.InstanceTypeRequiredHpcCluster"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTOFFERING = "InvalidParameterValue.InsufficientOffering"
@@ -6857,9 +7494,12 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_INVALIDIPFORMAT = "InvalidParameterValue.InvalidIpFormat"
+//  INVALIDPARAMETERVALUE_INVALIDNETWORKINTERFACEID = "InvalidParameterValue.InvalidNetworkInterfaceId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERMINCOUNT = "InvalidParameterValue.InvalidParameterMinCount"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
+//  INVALIDPARAMETERVALUE_INVALIDVPCIDSUBNETIDNOTFOUND = "InvalidParameterValue.InvalidVpcIdSubnetIdNotFound"
 //  INVALIDPARAMETERVALUE_ISPNOTSUPPORTFOREDGEZONE = "InvalidParameterValue.IspNotSupportForEdgeZone"
 //  INVALIDPARAMETERVALUE_ISPVALUEREPEATED = "InvalidParameterValue.IspValueRepeated"
 //  INVALIDPARAMETERVALUE_KEYPAIRNOTFOUND = "InvalidParameterValue.KeyPairNotFound"
@@ -6869,10 +7509,12 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPARAMETERVALUE_LAUNCHTEMPLATEVERSION = "InvalidParameterValue.LaunchTemplateVersion"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
+//  INVALIDPARAMETERVALUE_MUSTENABLEDISRDMA = "InvalidParameterValue.MustEnabledIsRdma"
 //  INVALIDPARAMETERVALUE_NOTCDCSUBNET = "InvalidParameterValue.NotCdcSubnet"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
+//  INVALIDPARAMETERVALUE_SUBNETIDZONEIDNOTMATCH = "InvalidParameterValue.SubnetIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_SUBNETNOTEXIST = "InvalidParameterValue.SubnetNotExist"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
 //  INVALIDPARAMETERVALUE_TAGQUOTALIMITEXCEEDED = "InvalidParameterValue.TagQuotaLimitExceeded"
@@ -6880,6 +7522,7 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
 //  INVALIDPARAMETERVALUE_VPCIDNOTEXIST = "InvalidParameterValue.VpcIdNotExist"
+//  INVALIDPARAMETERVALUE_VPCIDSUBNETIDNOTMATCH = "InvalidParameterValue.VpcIdSubnetIdNotMatch"
 //  INVALIDPARAMETERVALUE_VPCIDZONEIDNOTMATCH = "InvalidParameterValue.VpcIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_VPCNOTSUPPORTIPV6ADDRESS = "InvalidParameterValue.VpcNotSupportIpv6Address"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
@@ -6912,6 +7555,7 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
+//  RESOURCEINSUFFICIENT_INSUFFICIENTOFFERINGMINIMUM = "ResourceInsufficient.InsufficientOfferingMinimum"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
 //  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
@@ -6925,14 +7569,19 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 //  UNSUPPORTEDOPERATION_HIBERNATIONOSVERSION = "UnsupportedOperation.HibernationOsVersion"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTCONFIDENTIALITY = "UnsupportedOperation.InstanceTypeNotSupportConfidentiality"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
 //  UNSUPPORTEDOPERATION_INSTANCESENABLEJUMBOWITHOUTREBOOT = "UnsupportedOperation.InstancesEnableJumboWithoutReboot"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
 //  UNSUPPORTEDOPERATION_KEYPAIRUNSUPPORTEDWINDOWS = "UnsupportedOperation.KeyPairUnsupportedWindows"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDCHARGETYPE = "UnsupportedOperation.MinCountUnsupportedChargeType"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDREGION = "UnsupportedOperation.MinCountUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTIMPORTINSTANCESACTIONTIMER = "UnsupportedOperation.NotSupportImportInstancesActionTimer"
 //  UNSUPPORTEDOPERATION_ONLYFORPREPAIDACCOUNT = "UnsupportedOperation.OnlyForPrepaidAccount"
+//  UNSUPPORTEDOPERATION_PERIODICCONTRACTNOTSUPPORTMANUALRENEW = "UnsupportedOperation.PeriodicContractNotSupportManualRenew"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
 //  UNSUPPORTEDOPERATION_SPOTUNSUPPORTEDREGION = "UnsupportedOperation.SpotUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
@@ -7009,12 +7658,15 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
+//  INVALIDPARAMETERVALUE_ELASTICNETWORKNOTEXIST = "InvalidParameterValue.ElasticNetworkNotExist"
+//  INVALIDPARAMETERVALUE_ELASTICNETWORKVPCSUBNETMISMATCH = "InvalidParameterValue.ElasticNetworkVpcSubnetMismatch"
 //  INVALIDPARAMETERVALUE_EXTERNALIPQUOTALIMITED = "InvalidParameterValue.ExternalIpQuotaLimited"
 //  INVALIDPARAMETERVALUE_HPCCLUSTERIDZONEIDNOTMATCH = "InvalidParameterValue.HpcClusterIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_IPADDRESSMALFORMED = "InvalidParameterValue.IPAddressMalformed"
 //  INVALIDPARAMETERVALUE_ILLEGALHOSTNAME = "InvalidParameterValue.IllegalHostName"
 //  INVALIDPARAMETERVALUE_INCORRECTFORMAT = "InvalidParameterValue.IncorrectFormat"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTFOUND = "InvalidParameterValue.InstanceTypeNotFound"
+//  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTELASTICNETWORKS = "InvalidParameterValue.InstanceTypeNotSupportElasticNetworks"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTHPCCLUSTER = "InvalidParameterValue.InstanceTypeNotSupportHpcCluster"
 //  INVALIDPARAMETERVALUE_INSTANCETYPEREQUIREDHPCCLUSTER = "InvalidParameterValue.InstanceTypeRequiredHpcCluster"
 //  INVALIDPARAMETERVALUE_INSUFFICIENTOFFERING = "InvalidParameterValue.InsufficientOffering"
@@ -7026,9 +7678,12 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_INVALIDIPFORMAT = "InvalidParameterValue.InvalidIpFormat"
+//  INVALIDPARAMETERVALUE_INVALIDNETWORKINTERFACEID = "InvalidParameterValue.InvalidNetworkInterfaceId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERMINCOUNT = "InvalidParameterValue.InvalidParameterMinCount"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
+//  INVALIDPARAMETERVALUE_INVALIDVPCIDSUBNETIDNOTFOUND = "InvalidParameterValue.InvalidVpcIdSubnetIdNotFound"
 //  INVALIDPARAMETERVALUE_ISPNOTSUPPORTFOREDGEZONE = "InvalidParameterValue.IspNotSupportForEdgeZone"
 //  INVALIDPARAMETERVALUE_ISPVALUEREPEATED = "InvalidParameterValue.IspValueRepeated"
 //  INVALIDPARAMETERVALUE_KEYPAIRNOTFOUND = "InvalidParameterValue.KeyPairNotFound"
@@ -7038,10 +7693,12 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPARAMETERVALUE_LAUNCHTEMPLATEVERSION = "InvalidParameterValue.LaunchTemplateVersion"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MUSTDHCPENABLEDVPC = "InvalidParameterValue.MustDhcpEnabledVpc"
+//  INVALIDPARAMETERVALUE_MUSTENABLEDISRDMA = "InvalidParameterValue.MustEnabledIsRdma"
 //  INVALIDPARAMETERVALUE_NOTCDCSUBNET = "InvalidParameterValue.NotCdcSubnet"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
 //  INVALIDPARAMETERVALUE_SUBNETIDMALFORMED = "InvalidParameterValue.SubnetIdMalformed"
+//  INVALIDPARAMETERVALUE_SUBNETIDZONEIDNOTMATCH = "InvalidParameterValue.SubnetIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_SUBNETNOTEXIST = "InvalidParameterValue.SubnetNotExist"
 //  INVALIDPARAMETERVALUE_TAGKEYNOTFOUND = "InvalidParameterValue.TagKeyNotFound"
 //  INVALIDPARAMETERVALUE_TAGQUOTALIMITEXCEEDED = "InvalidParameterValue.TagQuotaLimitExceeded"
@@ -7049,6 +7706,7 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
 //  INVALIDPARAMETERVALUE_VPCIDNOTEXIST = "InvalidParameterValue.VpcIdNotExist"
+//  INVALIDPARAMETERVALUE_VPCIDSUBNETIDNOTMATCH = "InvalidParameterValue.VpcIdSubnetIdNotMatch"
 //  INVALIDPARAMETERVALUE_VPCIDZONEIDNOTMATCH = "InvalidParameterValue.VpcIdZoneIdNotMatch"
 //  INVALIDPARAMETERVALUE_VPCNOTSUPPORTIPV6ADDRESS = "InvalidParameterValue.VpcNotSupportIpv6Address"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
@@ -7081,6 +7739,7 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
+//  RESOURCEINSUFFICIENT_INSUFFICIENTOFFERINGMINIMUM = "ResourceInsufficient.InsufficientOfferingMinimum"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
 //  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
@@ -7094,14 +7753,19 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 //  UNSUPPORTEDOPERATION_HIBERNATIONOSVERSION = "UnsupportedOperation.HibernationOsVersion"
 //  UNSUPPORTEDOPERATION_INSTANCESTATEISOLATING = "UnsupportedOperation.InstanceStateIsolating"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTCONFIDENTIALITY = "UnsupportedOperation.InstanceTypeNotSupportConfidentiality"
+//  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTGRIDLICENCE = "UnsupportedOperation.InstanceTypeNotSupportGridLicence"
 //  UNSUPPORTEDOPERATION_INSTANCETYPENOTSUPPORTJUMBOFRAME = "UnsupportedOperation.InstanceTypeNotSupportJumboFrame"
 //  UNSUPPORTEDOPERATION_INSTANCESENABLEJUMBOWITHOUTREBOOT = "UnsupportedOperation.InstancesEnableJumboWithoutReboot"
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
 //  UNSUPPORTEDOPERATION_KEYPAIRUNSUPPORTEDWINDOWS = "UnsupportedOperation.KeyPairUnsupportedWindows"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDCHARGETYPE = "UnsupportedOperation.MinCountUnsupportedChargeType"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDREGION = "UnsupportedOperation.MinCountUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTIMPORTINSTANCESACTIONTIMER = "UnsupportedOperation.NotSupportImportInstancesActionTimer"
 //  UNSUPPORTEDOPERATION_ONLYFORPREPAIDACCOUNT = "UnsupportedOperation.OnlyForPrepaidAccount"
+//  UNSUPPORTEDOPERATION_PERIODICCONTRACTNOTSUPPORTMANUALRENEW = "UnsupportedOperation.PeriodicContractNotSupportManualRenew"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
 //  UNSUPPORTEDOPERATION_SPOTUNSUPPORTEDREGION = "UnsupportedOperation.SpotUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
@@ -7112,6 +7776,7 @@ func (c *Client) RunInstancesWithContext(ctx context.Context, request *RunInstan
     if request == nil {
         request = NewRunInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RunInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RunInstances require credential")
@@ -7231,6 +7896,7 @@ func (c *Client) StartInstancesWithContext(ctx context.Context, request *StartIn
     if request == nil {
         request = NewStartInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "StartInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartInstances require credential")
@@ -7368,6 +8034,7 @@ func (c *Client) StopInstancesWithContext(ctx context.Context, request *StopInst
     if request == nil {
         request = NewStopInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "StopInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopInstances require credential")
@@ -7469,6 +8136,7 @@ func (c *Client) SyncImagesWithContext(ctx context.Context, request *SyncImagesR
     if request == nil {
         request = NewSyncImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "SyncImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SyncImages require credential")
@@ -7624,6 +8292,7 @@ func (c *Client) TerminateInstancesWithContext(ctx context.Context, request *Ter
     if request == nil {
         request = NewTerminateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "TerminateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateInstances require credential")

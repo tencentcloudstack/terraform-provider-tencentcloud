@@ -651,33 +651,55 @@ func (me *PostgresqlService) DescribePostgresqlInstanceHAConfigById(ctx context.
 func (me *PostgresqlService) DescribePostgresqlInstances(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.DBInstance, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewDescribeDBInstancesRequest()
+	response := postgresql.NewDescribeDBInstancesResponse()
+	request.Filters = filter
+
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
-	var offset, limit uint64 = 0, 10
+	var offset, limit uint64 = 0, 100
 
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		request.Filters = filter
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UsePostgresqlClient().DescribeDBInstances(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UsePostgresqlClient().DescribeDBInstances(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.DBInstanceSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db instances failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		if response == nil || response.Response == nil {
-			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+
+		if len(response.Response.DBInstanceSet) < 1 {
+			break
 		}
+
 		instanceList = append(instanceList, response.Response.DBInstanceSet...)
 		if len(response.Response.DBInstanceSet) < int(limit) {
 			return
 		}
+
 		offset += limit
 	}
+
+	return
 }
 
 func (me *PostgresqlService) ModifyPostgresqlInstanceName(ctx context.Context, instanceId string, name string) (errRet error) {
@@ -862,6 +884,10 @@ func (me *PostgresqlService) DescribeRootUser(ctx context.Context, instanceId st
 
 		if errRet != nil {
 			return nil, errRet
+		}
+
+		if len(response.Response.Details) < 1 {
+			break
 		}
 
 		tmpList = append(tmpList, response.Response.Details...)
@@ -1194,6 +1220,7 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context
 	logId := tccommon.GetLogId(ctx)
 
 	request := postgresql.NewDescribeParameterTemplateAttributesRequest()
+	response := postgresql.NewDescribeParameterTemplateAttributesResponse()
 	request.TemplateId = &templateId
 
 	defer func() {
@@ -1202,14 +1229,27 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DescribeParameterTemplateAttributes(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePostgresqlClient().DescribeParameterTemplateAttributes(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe parameter template attributes failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ParameterTemplate = response.Response
 	return
@@ -1217,7 +1257,6 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context
 
 func (me *PostgresqlService) DeletePostgresqlParameterTemplateById(ctx context.Context, templateId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
-
 	request := postgresql.NewDeleteParameterTemplateRequest()
 	request.TemplateId = &templateId
 
@@ -1227,14 +1266,22 @@ func (me *PostgresqlService) DeletePostgresqlParameterTemplateById(ctx context.C
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DeleteParameterTemplate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePostgresqlClient().DeleteParameterTemplate(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

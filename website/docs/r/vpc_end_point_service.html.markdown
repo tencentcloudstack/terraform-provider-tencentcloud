@@ -31,7 +31,7 @@ The following arguments are supported:
 * `end_point_service_name` - (Required, String) Name of end point service.
 * `service_instance_id` - (Required, String) Id of service instance, like lb-xxx.
 * `vpc_id` - (Required, String) ID of vpc instance.
-* `service_type` - (Optional, String) Type of service instance, like `CLB`, `CDB`, `CRS`, default is `CLB`.
+* `service_type` - (Optional, String) Type of service instance, like `CLB`, `CDB`, `CRS`, `GWLB`. default is `CLB`.
 
 ## Attributes Reference
 

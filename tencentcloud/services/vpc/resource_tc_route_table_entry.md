@@ -1,4 +1,4 @@
-Provides a resource to create an entry of a routing table.
+Provides a resource to create a Route table entry.
 
 ~> **NOTE:** When setting the route item switch, do not use it together with resource `tencentcloud_route_table_entry_config`.
 
@@ -47,7 +47,7 @@ output "item_id" {
 
 Import
 
-Route table entry can be imported using the id, e.g.
+Route table entry can be imported using the routeEntryId.routeTableId, e.g.
 
 ```
 $ terraform import tencentcloud_route_table_entry.example 3065857.rtb-b050fg94

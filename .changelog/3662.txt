@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_antiddos_bgp_instances
+```
+
+```release-note:new-resource
+tencentcloud_antiddos_bgp_instance
+```

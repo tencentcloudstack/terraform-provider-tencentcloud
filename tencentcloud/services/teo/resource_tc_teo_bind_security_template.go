@@ -22,6 +22,9 @@ func ResourceTencentCloudTeoBindSecurityTemplate() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(3 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -127,7 +130,7 @@ func resourceTencentCloudTeoBindSecurityTemplateCreate(d *schema.ResourceData, m
 		Pending:    []string{},
 		Refresh:    resourceTeoBindSecurityTemplateCreateStateRefreshFunc_0_0(ctx, zoneId, templateId, entity),
 		Target:     []string{"online"},
-		Timeout:    180 * time.Second,
+		Timeout:    d.Timeout(schema.TimeoutCreate),
 	}).WaitForStateContext(ctx); err != nil {
 		return err
 	}

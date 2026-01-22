@@ -25,6 +25,5 @@ resource "tencentcloud_wedata_resource_group" "example" {
   vpc_id             = "vpc-ds5rpnxh"
   subnet             = "subnet-fz7rw5zq"
   resource_region    = "ap-beijing-fsi"
-  description        = "description."
 }
 ```

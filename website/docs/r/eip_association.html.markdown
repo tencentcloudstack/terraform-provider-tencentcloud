@@ -130,7 +130,9 @@ resource "tencentcloud_eip_association" "example" {
 The following arguments are supported:
 
 * `eip_id` - (Required, String, ForceNew) The ID of EIP.
-* `instance_id` - (Optional, String, ForceNew) The CVM, SaaS WAF or CLB instance id going to bind with the EIP. This field is conflict with `network_interface_id` and `private_ip fields`.
+* `instance_id` - (Optional, String, ForceNew) The ID of the target resource to associate with the Elastic IP (EIP). Supported targets include a CVM instance, SaaS WAF instance, CLB instance, or a VPC endpoint.
+Limitation (GWLB VPC endpoint): Only an EIP in the bound state can be associated with a GWLB-type VPC endpoint through this field, enabling more advanced networking scenarios.
+Mutual exclusivity: This field conflicts with `network_interface_id` and `private_ip`. Only one association target can be specified per request.
 * `network_interface_id` - (Optional, String, ForceNew) Indicates the network interface id like `eni-xxxxxx`. This field is conflict with `instance_id`.
 * `private_ip` - (Optional, String, ForceNew) Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.
 

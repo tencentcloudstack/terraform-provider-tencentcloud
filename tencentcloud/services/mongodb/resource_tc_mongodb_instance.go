@@ -674,6 +674,41 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	d.Partial(false)
 
+	if d.HasChange("engine_version") {
+		request := mongodb.NewUpgradeDbInstanceVersionRequest()
+		response := mongodb.NewUpgradeDbInstanceVersionResponse()
+		request.InstanceId = &instanceId
+		if v, ok := d.GetOk("engine_version"); ok {
+			request.MongoVersion = helper.String(v.(string))
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().UpgradeDbInstanceVersionWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.FlowId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Upgrade engine version failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s upgrade engine version failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		flowIdStr := helper.UInt64ToStr(*response.Response.FlowId)
+		if err := mongodbService.DescribeAsyncRequestInfo(ctx, flowIdStr, 20*tccommon.ReadRetryTimeout); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
 

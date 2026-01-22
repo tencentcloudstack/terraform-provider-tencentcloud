@@ -10,6 +10,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
@@ -921,7 +922,15 @@ func (me *TeoService) ModifyZoneStatus(ctx context.Context, zoneId string, pause
 }
 
 func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId, domainName, operate string) error {
-	err := resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	d := tccommon.ResourceDataFromContext(ctx)
+	var timeout time.Duration
+
+	if d.IsNewResource() {
+		timeout = d.Timeout(schema.TimeoutCreate)
+	} else {
+		timeout = d.Timeout(schema.TimeoutUpdate)
+	}
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		instance, errRet := me.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
@@ -2223,6 +2232,277 @@ func (me *TeoService) DescribeTeoOriginAclByFilter(ctx context.Context, param ma
 		errRet = err
 		return
 	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TeoService) DescribeTeoWebSecurityTemplateById(ctx context.Context, zoneId, templateId string) (ret *teov20220901.SecurityPolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeWebSecurityTemplateRequest()
+	request.ZoneId = &zoneId
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	ret = response.Response.SecurityPolicy
+	return
+}
+
+func (me *TeoService) DescribeTeoWebSecurityTemplateNameById(ctx context.Context, zoneId string, templateId string) (templateName string, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = teo.NewDescribeWebSecurityTemplatesRequest()
+		response = teo.NewDescribeWebSecurityTemplatesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneIds = []*string{&zoneId}
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplates(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.SecurityPolicyTemplates == nil {
+		return
+	}
+
+	for _, template := range response.Response.SecurityPolicyTemplates {
+		if template.TemplateId != nil && *template.TemplateId == templateId {
+			if template.TemplateName != nil {
+				templateName = *template.TemplateName
+			}
+			break
+		}
+	}
+
+	return
+}
+
+func (me *TeoService) DescribeTeoEnvironmentsByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.EnvInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewDescribeEnvironmentsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeEnvironments(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.EnvInfos) < 1 {
+		return
+	}
+
+	ret = response.Response.EnvInfos
+	return
+}
+
+func (me *TeoService) DescribeTeoConfigGroupVersionDetailByFilter(ctx context.Context, param map[string]interface{}) (ret *teov20220901.DescribeConfigGroupVersionDetailResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewDescribeConfigGroupVersionDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "VersionId" {
+			request.VersionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeConfigGroupVersionDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TeoService) DescribeTeoConfigGroupVersionsByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.ConfigGroupVersionInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewDescribeConfigGroupVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*teov20220901.AdvancedFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTeoV20220901Client().DescribeConfigGroupVersions(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ConfigGroupVersionInfos) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.ConfigGroupVersionInfos...)
+		if len(response.Response.ConfigGroupVersionInfos) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TeoService) DescribeTeoDeployConfigVersionHistoryByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.DeployRecord, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewDescribeDeployHistoryRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "EnvId" {
+			request.EnvId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*teov20220901.AdvancedFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeDeployHistory(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Records) < 1 {
+		return
+	}
+
+	ret = response.Response.Records
+	return
+}
+
+func (me *TeoService) DescribeTeoConfigGroupVersionById(ctx context.Context, zoneId, groupId, versionId string) (ret *teov20220901.DescribeConfigGroupVersionDetailResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeConfigGroupVersionDetailRequest()
+	request.ZoneId = &zoneId
+	request.VersionId = &versionId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeConfigGroupVersionDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ret = response.Response
 	return

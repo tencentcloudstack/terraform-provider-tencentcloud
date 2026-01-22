@@ -436,10 +436,142 @@ resource "tencentcloud_cos_bucket" "bucket_with_replication" {
   versioning_enable = true
   replica_role      = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
-    id                 = "test-rep1"
-    status             = "Enabled"
-    prefix             = "dist"
-    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    id       = "rule1"
+    status   = "Enabled"
+    priority = 1
+    prefix   = "/prefix"
+    filter {
+      and {
+        tag {
+          key   = "tagKey1"
+          value = "tagValue1"
+        }
+
+        tag {
+          key   = "tagKey2"
+          value = "tagValue2"
+        }
+      }
+    }
+    destination_bucket                = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    destination_storage_class         = "Standard"
+    destination_encryption_kms_key_id = "4f14a617-7c7d-11ef-9a62-525400d3a886"
+    delete_marker_replication {
+      status = "Disabled"
+    }
+
+    source_selection_criteria {
+      sse_kms_encrypted_objects {
+        status = "Enabled"
+      }
+    }
+  }
+
+  replica_rules {
+    id                                = "rule2"
+    status                            = "Enabled"
+    priority                          = 2
+    destination_bucket                = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    destination_storage_class         = "Standard"
+    destination_encryption_kms_key_id = "4f14a617-7c7d-11ef-9a62-525400d3a886"
+    delete_marker_replication {
+      status = "Enabled"
+    }
+
+    source_selection_criteria {
+      sse_kms_encrypted_objects {
+        status = "Enabled"
+      }
+    }
+  }
+}
+```
+
+### Using intelligent tiering, Only enable intelligent tiering
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket                               = "bucket-intelligent-tiering-${local.app_id}"
+  acl                                  = "private"
+  enable_intelligent_tiering           = true
+  intelligent_tiering_days             = 30
+  intelligent_tiering_request_frequent = 1
+}
+```
+
+### Using intelligent tiering and configure the intelligent tiered storage archiving and deep archiving rules list.
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket                               = "bucket-intelligent-tiering-${local.app_id}"
+  acl                                  = "private"
+  enable_intelligent_tiering           = true
+  intelligent_tiering_days             = 30
+  intelligent_tiering_request_frequent = 1
+  intelligent_tiering_archiving_rule_list {
+    rule_id = "rule1"
+    status  = "Enabled"
+
+    tiering {
+      access_tier = "ARCHIVE_ACCESS"
+      days        = 91
+    }
+
+    tiering {
+      access_tier = "DEEP_ARCHIVE_ACCESS"
+      days        = 180
+    }
+  }
+
+  intelligent_tiering_archiving_rule_list {
+    rule_id = "rule2"
+    status  = "Enabled"
+
+    filter {
+      prefix = "/prefix"
+      tag {
+        key   = "tagKey"
+        value = "tagValue"
+      }
+    }
+
+    tiering {
+      access_tier = "ARCHIVE_ACCESS"
+      days        = 91
+    }
+  }
+}
+```
+
+### Using object lock config
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket = "bucket-intelligent-tiering-${local.app_id}"
+  acl    = "private"
+  object_lock_configuration {
+    enabled = true
+    rule {
+      days = 30
+    }
   }
 }
 ```
@@ -474,6 +606,7 @@ The following arguments are supported:
 * `enable_intelligent_tiering` - (Optional, Bool) Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.
 * `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `SM4`.
 * `force_clean` - (Optional, Bool) Force cleanup all objects before delete bucket.
+* `intelligent_tiering_archiving_rule_list` - (Optional, List) List of intelligent tiered storage, archiving, and deep archiving rules. NOTE: only `enable_intelligent_tiering` is true can configure this argument.
 * `intelligent_tiering_days` - (Optional, Int) Specifies the limit of days for standard-tier data to low-frequency data in an intelligent tiered storage configuration, with optional days of 30, 60, 90. Default value is 30.
 * `intelligent_tiering_request_frequent` - (Optional, Int) Specify the access limit for converting standard layer data into low-frequency layer data in the configuration. The default value is once, which can be used in combination with the number of days to achieve the conversion effect. For example, if the parameter is set to 1 and the number of access days is 30, it means that objects with less than one visit in 30 consecutive days will be reduced from the standard layer to the low frequency layer.
 * `kms_id` - (Optional, String) The KMS Master Key ID. This value is valid only when `encryption_algorithm` is set to KMS. Set kms id to the specified value. If not specified, the default kms id is used.
@@ -482,6 +615,7 @@ The following arguments are supported:
 * `log_prefix` - (Optional, String) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
 * `log_target_bucket` - (Optional, String) The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.
 * `multi_az` - (Optional, Bool, ForceNew) Indicates whether to create a bucket of multi available zone.
+* `object_lock_configuration` - (Optional, List) Object locking configuration. Once enabled, this feature cannot be disabled.
 * `origin_domain_rules` - (Optional, List) Bucket Origin Domain settings.
 * `origin_pull_rules` - (Optional, List) Bucket Origin-Pull settings.
 * `replica_role` - (Optional, String) Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.
@@ -494,6 +628,16 @@ The `abort_incomplete_multipart_upload` object of `lifecycle_rules` supports the
 
 * `days_after_initiation` - (Required, Int) Specifies the number of days after the multipart upload starts that the upload must be completed. The maximum value is 3650.
 
+The `and` object of `filter` supports the following:
+
+* `prefix` - (Optional, String) Filter objects by prefix; you can specify at most one prefix.
+* `tag` - (Optional, List) When filtering objects for analysis, you can use object tags (multiple tags are supported) as filtering criteria.
+
+The `and` object of `filter` supports the following:
+
+* `prefix` - (Optional, String) Filter objects by prefix; you can specify at most one prefix.
+* `tag` - (Optional, List) When filtering objects to be copied, you can use object tags (multiple tags are supported) as filtering criteria, with a maximum of 10 tags allowed. After adding tags as filtering criteria, the `delete_marker_replication.status` option must be set to false.
+
 The `cors_rules` object supports the following:
 
 * `allowed_headers` - (Required, List) Specifies which headers are allowed.
@@ -502,11 +646,33 @@ The `cors_rules` object supports the following:
 * `expose_headers` - (Optional, List) Specifies expose header in the response.
 * `max_age_seconds` - (Optional, Int) Specifies time in seconds that browser can cache the response for a preflight request.
 
+The `delete_marker_replication` object of `replica_rules` supports the following:
+
+* `status` - (Optional, String) Whether to synchronously delete the tag, supports Disabled or Enabled. The default value is Enabled, meaning the tag will be deleted synchronously.
+
 The `expiration` object of `lifecycle_rules` supports the following:
 
 * `date` - (Optional, String) Specifies the date after which you want the corresponding action to take effect.
 * `days` - (Optional, Int) Specifies the number of days after object creation when the specific rule action takes effect.
 * `delete_marker` - (Optional, Bool) Indicates whether the delete marker of an expired object will be removed.
+
+The `filter` object of `intelligent_tiering_archiving_rule_list` supports the following:
+
+* `and` - (Optional, List) For filtering conditions, if both prefix and object tag conditions are required simultaneously, they need to be wrapped with an `And` operator.
+* `prefix` - (Optional, String) Filter objects by prefix; you can specify at most one prefix.
+* `tag` - (Optional, List) When filtering objects for analysis, you can use object tags (multiple tags are supported) as filtering criteria.
+
+The `filter` object of `replica_rules` supports the following:
+
+* `and` - (Optional, List) When filtering objects to be copied, if both prefix and object tag conditions are required simultaneously, or if multiple object tag conditions are needed, they must be enclosed in an `And` statement.
+* `prefix` - (Optional, String) Filter objects by prefix; you can specify at most one prefix.
+
+The `intelligent_tiering_archiving_rule_list` object supports the following:
+
+* `rule_id` - (Required, String) The name of the intelligent tiering rule name list task, with the ID set to a non-default string, indicates that this rule is a conversion rule for archive and deep archive tiers.
+* `status` - (Required, String) Indicates whether the intelligent tiering rule is enabled. Possible values: Enabled, Disabled. When the ID is `default`, only `Enabled` is supported.
+* `tiering` - (Required, List) Specifies configuration information related to data transformation in the intelligent tiered storage configuration.
+* `filter` - (Optional, List) Specifies configuration information related to data transformation in the intelligent tiered storage configuration.
 
 The `lifecycle_rules` object supports the following:
 
@@ -526,6 +692,11 @@ The `non_current_transition` object of `lifecycle_rules` supports the following:
 
 * `storage_class` - (Required, String) Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
 * `non_current_days` - (Optional, Int) Number of days after non current object creation when the specific rule action takes effect.
+
+The `object_lock_configuration` object supports the following:
+
+* `enabled` - (Required, Bool) Enable object lock configuration.
+* `rule` - (Optional, List) Object locking configuration.
 
 The `origin_domain_rules` object supports the following:
 
@@ -550,14 +721,23 @@ The `origin_pull_rules` object supports the following:
 The `replica_rules` object supports the following:
 
 * `destination_bucket` - (Required, String) Destination bucket identifier, format: `qcs::cos:<region>::<bucketname-appid>`. NOTE: destination bucket must enable versioning.
-* `status` - (Required, String) Status identifier, available values: `Enabled`, `Disabled`.
-* `destination_storage_class` - (Optional, String) Storage class of destination, available values: `STANDARD`, `INTELLIGENT_TIERING`, `STANDARD_IA`. default is following current class of destination.
+* `delete_marker_replication` - (Optional, List) Synchronized deletion marker.
+* `destination_encryption_kms_key_id` - (Optional, String) This field must be included when `source_selection_criteria.sse_kms_encrypted_objects.status` is set to Enabled. It is used to specify the KMS key used for KMS-encrypted objects copied to the destination bucket.
+* `destination_storage_class` - (Optional, String) Storage class of destination, available values: `Standard`, `Intelligent_Tiering`, `Standard_IA`. default is following current class of destination.
+* `filter` - (Optional, List) Filter the objects to be copied. The bucket feature will copy objects that match the prefixes and tags specified in the Filter settings.
 * `id` - (Optional, String) Name of a specific rule.
 * `prefix` - (Optional, String) Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.
+* `priority` - (Optional, Int) Execution priority, used to handle scenarios where the target storage buckets are the same and multiple replication rules match the same object. Note: Supports setting positive integers in the range of 1-1000. The Priority values of different rules cannot be duplicated. Storage bucket replication rules must either all have Priority set or all not have Priority set. When all rules have Priority set, overlapping prefixes are allowed for different rules when the target storage buckets are the same. When different rules match the same object, the rule with the smallest Priority value will be triggered first. When none of the rules have Priority set, overlapping prefixes are not allowed for different rules.
+* `source_selection_criteria` - (Optional, List) This is used to specify additional conditions for objects supported by bucket replication rules. Currently, only the option to replicate KMS-encrypted objects is supported.
+* `status` - (Optional, String) Status identifier, available values: `Enabled`, `Disabled`.
 
 The `routing_rules` object of `website` supports the following:
 
 * `rules` - (Required, List) Routing rule list.
+
+The `rule` object of `object_lock_configuration` supports the following:
+
+* `days` - (Required, Int) Object lock default duration (range: 1-36500).
 
 The `rules` object of `routing_rules` supports the following:
 
@@ -566,6 +746,29 @@ The `rules` object of `routing_rules` supports the following:
 * `redirect_protocol` - (Optional, String) Specifies the target protocol for the routing rule. Only HTTPS is supported.
 * `redirect_replace_key_prefix` - (Optional, String) Specifies the object key prefix to replace the original prefix in the request. You can set this parameter only if the condition is KeyPrefixEquals.
 * `redirect_replace_key` - (Optional, String) Specifies the target object key to replace the original object key in the request.
+
+The `source_selection_criteria` object of `replica_rules` supports the following:
+
+* `sse_kms_encrypted_objects` - (Optional, List) Choose whether to copy the KMS-encrypted objects.
+
+The `sse_kms_encrypted_objects` object of `source_selection_criteria` supports the following:
+
+* `status` - (Optional, String) Choose whether to copy KMS encrypted objects; supported values are Enabled and Disabled.
+
+The `tag` object of `and` supports the following:
+
+* `key` - (Required, String) Tag key.
+* `value` - (Required, String) Tag value.
+
+The `tag` object of `filter` supports the following:
+
+* `key` - (Required, String) Tag key.
+* `value` - (Required, String) Tag value.
+
+The `tiering` object of `intelligent_tiering_archiving_rule_list` supports the following:
+
+* `access_tier` - (Required, String) When `rule_id` is not `default`, this parameter is used to specify the archiving or deep archiving tier.  The possible value are: ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS.
+* `days` - (Required, Int) When the `rule_id` is not set to default, this specifies the number of days after which data is transitioned to the archive or deep archive tier in the intelligent tiering storage configuration. The archive tier (ARCHIVE_ACCESS) supports a range of 91 to 730 days. The deep archive tier (DEEP_ARCHIVE_ACCESS) supports a range of 180 to 730 days. Within the same rule, the number of days for the deep archive tier must be greater than the number of days for the archive tier.
 
 The `transition` object of `lifecycle_rules` supports the following:
 

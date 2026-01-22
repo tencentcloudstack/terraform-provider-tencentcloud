@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,15 @@ const (
 	// 账号工厂必选基线项未配置
 	FAILEDOPERATION_AFREQUIREDITEMNOTSELECT = "FailedOperation.AFRequiredItemNotSelect"
 
+	// 联系人邮箱未验证。
+	FAILEDOPERATION_ACCOUNTFACTORYCONTACTEMAILNOTVERIFY = "FailedOperation.AccountFactoryContactEmailNotVerify"
+
+	// 联系人手机未验证。
+	FAILEDOPERATION_ACCOUNTFACTORYCONTACTPHONENOTVERIFY = "FailedOperation.AccountFactoryContactPhoneNotVerify"
+
+	// 账号工厂基线项的依赖项未配置
+	FAILEDOPERATION_ACCOUNTFACTORYDEPENDONITEMNOTCONFIG = "FailedOperation.AccountFactoryDependOnItemNotConfig"
+
 	// 账号工厂批量应用基线的账号数量超过限制
 	FAILEDOPERATION_ACCOUNTFACTORYMEMBERUINNUMEXCEED = "FailedOperation.AccountFactoryMemberUinNumExceed"
 
@@ -37,6 +46,12 @@ const (
 
 	// 远程调用失败
 	FAILEDOPERATION_REMOTECALLERROR = "FailedOperation.RemoteCallError"
+
+	// 基线项预设标签数量超过最大数量
+	INVALIDPARAMETER_ACCOUNTFACTORYTAGEXCEEDMAXNUM = "InvalidParameter.AccountFactoryTagExceedMaxNum"
+
+	// 入参校验错误
+	INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 
 	// 用户基线配置数据不存在
 	RESOURCENOTFOUND_ACCOUNTFACTORYBASELINENOTEXIST = "ResourceNotFound.AccountFactoryBaselineNotExist"

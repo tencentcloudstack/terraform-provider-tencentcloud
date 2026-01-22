@@ -14,6 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
 	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
@@ -23,6 +24,7 @@ import (
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bhv20230418 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh/v20230418"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
@@ -103,6 +105,7 @@ import (
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
+	vcubev20220410 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -138,6 +141,7 @@ type TencentCloudClient struct {
 	cvmv20170312Conn    *cvmv20170312.Client
 	cvmIntlConn         *cvmintl.Client
 	clbConn             *clb.Client
+	clbIntlConn         *clbintl.Client
 	dayuConn            *dayu.Client
 	dcConn              *dc.Client
 	tagConn             *tag.Client
@@ -243,6 +247,8 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	bhv20230418Conn             *bhv20230418.Client
+	vcubev20220410Conn          *vcubev20220410.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -581,6 +587,25 @@ func (me *TencentCloudClient) UseClbClient(iacExtInfo ...IacExtInfo) *clb.Client
 	me.clbConn.WithHttpTransport(&logRoundTripper)
 
 	return me.clbConn
+}
+
+// UseClbClient returns clb Intl client for service
+func (me *TencentCloudClient) UseClbIntlClient(iacExtInfo ...IacExtInfo) *clbintl.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.clbIntlConn != nil {
+		me.clbIntlConn.WithHttpTransport(&logRoundTripper)
+		return me.clbIntlConn
+	}
+
+	cpf := me.NewClientIntlProfile(300)
+	me.clbIntlConn, _ = clbintl.NewClient(me.Credential, me.Region, cpf)
+	me.clbIntlConn.WithHttpTransport(&logRoundTripper)
+
+	return me.clbIntlConn
 }
 
 // UseCvmClient returns cvm client for service
@@ -1643,7 +1668,6 @@ func (me *TencentCloudClient) UseWedataV20250806Client() *wedatav20250806.Client
 		return me.wedatav20250806Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.wedatav20250806Conn, _ = wedatav20250806.NewClient(me.Credential, me.Region, cpf)
 	me.wedatav20250806Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1708,6 +1732,19 @@ func (me *TencentCloudClient) UseDasbClient() *dasb.Client {
 	me.dasbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dasbConn
+}
+
+// UseBhV20230418Client return BH client for service
+func (me *TencentCloudClient) UseBhV20230418Client() *bhv20230418.Client {
+	if me.bhv20230418Conn != nil {
+		return me.bhv20230418Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.bhv20230418Conn, _ = bhv20230418.NewClient(me.Credential, me.Region, cpf)
+	me.bhv20230418Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.bhv20230418Conn
 }
 
 // UseTrocketClient returns trocket client for service
@@ -2112,7 +2149,6 @@ func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
 		return me.billingv20180709Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.billingv20180709Conn, _ = billing.NewClient(me.Credential, me.Region, cpf)
 	me.billingv20180709Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -2125,9 +2161,20 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 		return me.igtmv20231024Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.igtmv20231024Conn, _ = igtmv20231024.NewClient(me.Credential, me.Region, cpf)
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
+}
+
+// UseVcubeV20220410Client return VCUBE client for service
+func (me *TencentCloudClient) UseVcubeV20220410Client() *vcubev20220410.Client {
+	if me.vcubev20220410Conn != nil {
+		return me.vcubev20220410Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.vcubev20220410Conn, _ = vcubev20220410.NewClient(me.Credential, me.Region, cpf)
+	me.vcubev20220410Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.vcubev20220410Conn
 }

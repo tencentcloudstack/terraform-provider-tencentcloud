@@ -63,11 +63,13 @@ func ResourceTencentCloudIdentityCenterExternalSamlIdentityProvider() *schema.Re
 				Computed:    true,
 				Description: "X509 certificate in PEM format. If this parameter is specified, all existing certificates will be replaced.",
 			},
+
 			"acs_url": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Acs url.",
 			},
+
 			"certificate_ids": {
 				Type: schema.TypeList,
 				Elem: &schema.Schema{
@@ -76,11 +78,13 @@ func ResourceTencentCloudIdentityCenterExternalSamlIdentityProvider() *schema.Re
 				Computed:    true,
 				Description: "Certificate ids.",
 			},
+
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Create time.",
 			},
+
 			"update_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -97,6 +101,7 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderCreate(d *sch
 	var (
 		zoneId string
 	)
+
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
 	}
@@ -110,15 +115,12 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderRead(d *schem
 	defer tccommon.LogElapsed("resource.tencentcloud_identity_center_external_saml_identity_provider.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	zoneId := d.Id()
-
-	_ = d.Set("zone_id", zoneId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		zoneId  = d.Id()
+	)
 
 	respData, err := service.DescribeIdentityCenterExternalSamlIdentityProviderById(ctx, zoneId)
 	if err != nil {
@@ -126,10 +128,13 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderRead(d *schem
 	}
 
 	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_identity_center_external_saml_identity_provider` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `identity_center_external_saml_identity_provider` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	_ = d.Set("zone_id", zoneId)
+
 	if respData.EntityId != nil {
 		_ = d.Set("entity_id", respData.EntityId)
 	}
@@ -152,10 +157,11 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderRead(d *schem
 	}
 
 	if respData1 == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `identity_center_external_saml_identity_provider` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
+
 	if respData1.EntityId != nil {
 		_ = d.Set("entity_id", respData1.EntityId)
 	}
@@ -184,7 +190,6 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderRead(d *schem
 		_ = d.Set("update_time", respData1.UpdateTime)
 	}
 
-	_ = zoneId
 	return nil
 }
 
@@ -192,14 +197,38 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderUpdate(d *sch
 	defer tccommon.LogElapsed("resource.tencentcloud_identity_center_external_saml_identity_provider.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId  = tccommon.GetLogId(tccommon.ContextNil)
+		ctx    = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		zoneId = d.Id()
+	)
 
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	if d.HasChange("encoded_metadata_document") {
+		request := organization.NewSetExternalSAMLIdentityProviderRequest()
+		if v, ok := d.GetOk("encoded_metadata_document"); ok {
+			request.EncodedMetadataDocument = helper.String(v.(string))
+		}
 
-	zoneId := d.Id()
+		request.ZoneId = &zoneId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().SetExternalSAMLIdentityProviderWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update identity center external saml identity provider failed, reason:%+v", logId, err)
+			return err
+		}
+	}
 
 	needChange := false
-	mutableArgs := []string{"encoded_metadata_document", "sso_status", "entity_id", "login_url", "x509_certificate"}
+	mutableArgs := []string{"entity_id", "login_url", "x509_certificate"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -209,19 +238,6 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderUpdate(d *sch
 
 	if needChange {
 		request := organization.NewSetExternalSAMLIdentityProviderRequest()
-
-		if v, ok := d.GetOk("zone_id"); ok {
-			request.ZoneId = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("encoded_metadata_document"); ok {
-			request.EncodedMetadataDocument = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("sso_status"); ok {
-			request.SSOStatus = helper.String(v.(string))
-		}
-
 		if v, ok := d.GetOk("entity_id"); ok {
 			request.EntityId = helper.String(v.(string))
 		}
@@ -234,6 +250,8 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderUpdate(d *sch
 			request.X509Certificate = helper.String(v.(string))
 		}
 
+		request.ZoneId = &zoneId
+		request.EncodedMetadataDocument = helper.String("")
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().SetExternalSAMLIdentityProviderWithContext(ctx, request)
 			if e != nil {
@@ -241,15 +259,40 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderUpdate(d *sch
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update identity center external saml identity provider failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
-	_ = zoneId
+	if d.HasChange("sso_status") {
+		request := organization.NewSetExternalSAMLIdentityProviderRequest()
+		if v, ok := d.GetOk("sso_status"); ok {
+			request.SSOStatus = helper.String(v.(string))
+		}
+
+		request.ZoneId = &zoneId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().SetExternalSAMLIdentityProviderWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update identity center external saml identity provider failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	return resourceTencentCloudIdentityCenterExternalSamlIdentityProviderRead(d, meta)
 }
 
@@ -257,15 +300,18 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderDelete(d *sch
 	defer tccommon.LogElapsed("resource.tencentcloud_identity_center_external_saml_identity_provider.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		zoneId  = d.Id()
+	)
 
-	zoneId := d.Id()
 	respData1, err := service.DescribeIdentityCenterExternalSamlIdentityProviderById1(ctx, zoneId)
 	if err != nil {
 		return err
 	}
+
 	if respData1.SSOStatus != nil && *respData1.SSOStatus == "Enabled" {
 		request := organization.NewSetExternalSAMLIdentityProviderRequest()
 		request.ZoneId = helper.String(zoneId)
@@ -277,22 +323,18 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderDelete(d *sch
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update identity center external saml identity provider failed, reason:%+v", logId, err)
 			return err
 		}
 	}
-	var (
-		request  = organization.NewClearExternalSAMLIdentityProviderRequest()
-		response = organization.NewClearExternalSAMLIdentityProviderResponse()
-	)
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		request.ZoneId = helper.String(v.(string))
-	}
-
+	request := organization.NewClearExternalSAMLIdentityProviderRequest()
+	request.ZoneId = &zoneId
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().ClearExternalSAMLIdentityProviderWithContext(ctx, request)
 		if e != nil {
@@ -300,15 +342,14 @@ func resourceTencentCloudIdentityCenterExternalSamlIdentityProviderDelete(d *sch
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete identity center external saml identity provider failed, reason:%+v", logId, err)
 		return err
 	}
 
-	_ = response
-	_ = zoneId
 	return nil
 }

@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
+	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -1161,6 +1162,24 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	return
 }
 
+func waitForTaskFinishIntl(requestId string, meta *clbintl.Client) (err error) {
+	taskQueryRequest := clbintl.NewDescribeTaskStatusRequest()
+	taskQueryRequest.TaskId = &requestId
+	err = resource.Retry(4*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		taskResponse, e := meta.DescribeTaskStatus(taskQueryRequest)
+		if e != nil {
+			return resource.NonRetryableError(errors.WithStack(e))
+		}
+		if *taskResponse.Response.Status == int64(CLB_TASK_EXPANDING) {
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(expanding), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		} else if *taskResponse.Response.Status == int64(CLB_TASK_FAIL) {
+			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(failed), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		}
+		return nil
+	})
+	return
+}
+
 func waitForTaskFinishGetID(requestId string, meta *clb.Client) (clbID string, err error) {
 	request := clb.NewDescribeTaskStatusRequest()
 	request.TaskId = &requestId
@@ -1227,7 +1246,7 @@ func clbNewTarget(instanceId, eniIp, port, weight interface{}) *clb.Target {
 }
 
 func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string, port uint64,
-	targetGroupInstances []*clb.TargetGroupInstance) (targetGroupId string, err error) {
+	targetGroupInstances []*clb.TargetGroupInstance, targetGroupType string, protocol string) (targetGroupId string, err error) {
 	var response *clb.CreateTargetGroupResponse
 
 	request := clb.NewCreateTargetGroupRequest()
@@ -1236,6 +1255,14 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 	request.Port = &port
 	if vpcId != "" {
 		request.VpcId = &vpcId
+	}
+
+	if targetGroupType != "" {
+		request.Type = &targetGroupType
+	}
+
+	if protocol != "" {
+		request.Protocol = &protocol
 	}
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -1782,6 +1809,27 @@ func (me *ClbService) DescribeLbCustomizedConfigById(ctx context.Context, config
 	request.ConfigType = helper.String(configType)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeCustomizedConfigList(request)
+	if err != nil {
+		errRet = errors.WithStack(err)
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ConfigList) < 1 {
+		return
+	}
+	customizedConfig = response.Response.ConfigList[0]
+	return
+}
+
+func (me *ClbService) DescribeLbIntlCustomizedConfigById(ctx context.Context, configId, configType string) (customizedConfig *clbintl.ConfigListItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := clbintl.NewDescribeCustomizedConfigListRequest()
+	request.UconfigIds = []*string{&configId}
+	request.ConfigType = helper.String(configType)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbIntlClient().DescribeCustomizedConfigList(request)
 	if err != nil {
 		errRet = errors.WithStack(err)
 		return
@@ -2562,9 +2610,10 @@ func waitTaskReady(ctx context.Context, client *clb.Client, reqeustId string) er
 	return nil
 }
 
-func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx context.Context, configId string) (bindList []*clb.BindDetailItem, errRet error) {
+func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx context.Context, configId string) (bindList []*clbintl.BindDetailItem, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	request := clb.NewDescribeCustomizedConfigAssociateListRequest()
+	request := clbintl.NewDescribeCustomizedConfigAssociateListRequest()
+	response := clbintl.NewDescribeCustomizedConfigAssociateListResponse()
 	request.UconfigId = helper.String(configId)
 
 	var (
@@ -2575,16 +2624,29 @@ func (me *ClbService) DescribeDescribeCustomizedConfigAssociateListById(ctx cont
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClbClient().DescribeCustomizedConfigAssociateList(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, err := me.client.UseClbIntlClient().DescribeCustomizedConfigAssociateList(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.BindList == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe customized config associate list failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.BindList) < 1 {
+		if len(response.Response.BindList) < 1 {
 			break
 		}
 

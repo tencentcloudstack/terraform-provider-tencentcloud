@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -120,6 +120,7 @@ func (c *Client) CreateEndPointWithContext(ctx context.Context, request *CreateE
     if request == nil {
         request = NewCreateEndPointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreateEndPoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEndPoint require credential")
@@ -213,6 +214,7 @@ func (c *Client) CreateEndPointAndEndPointServiceWithContext(ctx context.Context
     if request == nil {
         request = NewCreateEndPointAndEndPointServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreateEndPointAndEndPointService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEndPointAndEndPointService require credential")
@@ -300,6 +302,7 @@ func (c *Client) CreateExtendEndpointWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateExtendEndpointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreateExtendEndpoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateExtendEndpoint require credential")
@@ -373,6 +376,7 @@ func (c *Client) CreateForwardRuleWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateForwardRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreateForwardRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateForwardRule require credential")
@@ -466,6 +470,7 @@ func (c *Client) CreatePrivateDNSAccountWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreatePrivateDNSAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreatePrivateDNSAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePrivateDNSAccount require credential")
@@ -589,6 +594,7 @@ func (c *Client) CreatePrivateZoneWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreatePrivateZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreatePrivateZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePrivateZone require credential")
@@ -722,6 +728,7 @@ func (c *Client) CreatePrivateZoneRecordWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreatePrivateZoneRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreatePrivateZoneRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePrivateZoneRecord require credential")
@@ -797,6 +804,7 @@ func (c *Client) DeleteEndPointWithContext(ctx context.Context, request *DeleteE
     if request == nil {
         request = NewDeleteEndPointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeleteEndPoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteEndPoint require credential")
@@ -876,6 +884,7 @@ func (c *Client) DeleteForwardRuleWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteForwardRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeleteForwardRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteForwardRule require credential")
@@ -975,6 +984,7 @@ func (c *Client) DeletePrivateZoneRecordWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeletePrivateZoneRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeletePrivateZoneRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePrivateZoneRecord require credential")
@@ -1066,6 +1076,7 @@ func (c *Client) DescribeAccountVpcListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeAccountVpcListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeAccountVpcList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccountVpcList require credential")
@@ -1149,6 +1160,7 @@ func (c *Client) DescribeAuditLogWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeAuditLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeAuditLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditLog require credential")
@@ -1238,6 +1250,7 @@ func (c *Client) DescribeDashboardWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDashboardRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeDashboard")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDashboard require credential")
@@ -1323,6 +1336,7 @@ func (c *Client) DescribeEndPointListWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeEndPointListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeEndPointList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEndPointList require credential")
@@ -1386,6 +1400,7 @@ func (c *Client) DescribeEndPointRegionWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeEndPointRegionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeEndPointRegion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEndPointRegion require credential")
@@ -1471,6 +1486,7 @@ func (c *Client) DescribeExtendEndpointListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeExtendEndpointListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeExtendEndpointList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeExtendEndpointList require credential")
@@ -1536,6 +1552,7 @@ func (c *Client) DescribeForwardRuleWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeForwardRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeForwardRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeForwardRule require credential")
@@ -1605,6 +1622,7 @@ func (c *Client) DescribeForwardRuleListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeForwardRuleListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeForwardRuleList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeForwardRuleList require credential")
@@ -1692,6 +1710,7 @@ func (c *Client) DescribePrivateDNSAccountListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribePrivateDNSAccountListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateDNSAccountList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateDNSAccountList require credential")
@@ -1779,6 +1798,7 @@ func (c *Client) DescribePrivateZoneListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribePrivateZoneListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateZoneList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateZoneList require credential")
@@ -1850,6 +1870,7 @@ func (c *Client) DescribePrivateZoneRecordListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribePrivateZoneRecordListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateZoneRecordList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateZoneRecordList require credential")
@@ -1935,6 +1956,7 @@ func (c *Client) DescribePrivateZoneServiceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribePrivateZoneServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateZoneService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateZoneService require credential")
@@ -1996,6 +2018,7 @@ func (c *Client) DescribeQuotaUsageWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeQuotaUsageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeQuotaUsage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeQuotaUsage require credential")
@@ -2069,6 +2092,7 @@ func (c *Client) DescribeRecordWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRecord require credential")
@@ -2122,6 +2146,7 @@ func (c *Client) DescribeRequestDataWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeRequestDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeRequestData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRequestData require credential")
@@ -2203,6 +2228,7 @@ func (c *Client) ModifyForwardRuleWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyForwardRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyForwardRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyForwardRule require credential")
@@ -2304,6 +2330,7 @@ func (c *Client) ModifyPrivateZoneWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyPrivateZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyPrivateZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPrivateZone require credential")
@@ -2443,6 +2470,7 @@ func (c *Client) ModifyPrivateZoneRecordWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyPrivateZoneRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyPrivateZoneRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPrivateZoneRecord require credential")
@@ -2552,6 +2580,7 @@ func (c *Client) ModifyPrivateZoneVpcWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyPrivateZoneVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyPrivateZoneVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPrivateZoneVpc require credential")
@@ -2619,6 +2648,7 @@ func (c *Client) ModifyRecordsStatusWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyRecordsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyRecordsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRecordsStatus require credential")
@@ -2706,6 +2736,7 @@ func (c *Client) SubscribePrivateZoneServiceWithContext(ctx context.Context, req
     if request == nil {
         request = NewSubscribePrivateZoneServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "SubscribePrivateZoneService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SubscribePrivateZoneService require credential")

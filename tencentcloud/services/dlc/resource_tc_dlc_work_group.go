@@ -43,6 +43,13 @@ func ResourceTencentCloudDlcWorkGroup() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Collection of IDs of users to be bound to working groups.",
 			},
+
+			// computed
+			"work_group_id": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Working group ID.",
+			},
 		},
 	}
 }
@@ -134,6 +141,10 @@ func resourceTencentCloudDlcWorkGroupRead(d *schema.ResourceData, meta interface
 		}
 
 		_ = d.Set("user_ids", userIds)
+	}
+
+	if workGroup.WorkGroupId != nil {
+		_ = d.Set("work_group_id", workGroup.WorkGroupId)
 	}
 
 	return nil
