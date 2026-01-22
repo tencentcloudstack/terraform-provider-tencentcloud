@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
-	// 证书已过期，暂不支持下发过期证书。
+	// 边缘HTTPS证书已过期，暂不支持下发过期证书。
 	FAILEDOPERATION_CERTIFICATEHASEXPIRED = "FailedOperation.CertificateHasExpired"
 
-	// 证书不存在。
+	// 边缘HTTPS证书不存在。
 	FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 
 	// 配置文件Condition表达式语法错误。
@@ -38,11 +38,17 @@ const (
 	// 配置文件Condition表达式值的项不能为空。
 	FAILEDOPERATION_CONFIGCONDITIONVALUEEMPTYERROR = "FailedOperation.ConfigConditionValueEmptyError"
 
+	// 配置文件不允许重复的关键字。
+	FAILEDOPERATION_CONFIGDUPLICATEKEYERROR = "FailedOperation.ConfigDuplicateKeyError"
+
 	// 配置文件存在类型不匹配的字段。
 	FAILEDOPERATION_CONFIGFIELDTYPEERROR = "FailedOperation.ConfigFieldTypeError"
 
 	// 配置文件存在语法错误。
 	FAILEDOPERATION_CONFIGFORMATERROR = "FailedOperation.ConfigFormatError"
+
+	// 版本管理配置文件JSON格式错误
+	FAILEDOPERATION_CONFIGJSONFORMATERROR = "FailedOperation.ConfigJSONFormatError"
 
 	// 配置文件内容格式错误，无法解析。
 	FAILEDOPERATION_CONFIGMALFORMEDCONTENT = "FailedOperation.ConfigMalformedContent"
@@ -50,8 +56,14 @@ const (
 	// 配置文件参数校验错误。
 	FAILEDOPERATION_CONFIGPARAMVALIDATEERRORS = "FailedOperation.ConfigParamValidateErrors"
 
+	// 时间格式解析错误
+	FAILEDOPERATION_CONFIGTIMEPARSINGERROR = "FailedOperation.ConfigTimeParsingError"
+
 	// 配置文件无法识别的字段：存在拼写错误，或者该字段所在的层级出错。
 	FAILEDOPERATION_CONFIGUNKNOWNFIELD = "FailedOperation.ConfigUnknownField"
+
+	// 不支持的配置项Action
+	FAILEDOPERATION_CONFIGUNSUPPORTEDACTION = "FailedOperation.ConfigUnsupportedAction"
 
 	// 当前不支持该配置文件版本。
 	FAILEDOPERATION_CONFIGUNSUPPORTEDFORMATVERSION = "FailedOperation.ConfigUnsupportedFormatVersion"
@@ -64,6 +76,15 @@ const (
 
 	// 创建自定义推送任务认证失败, 请检查推送地址是否正确。
 	FAILEDOPERATION_CREATELOGTOPICTASKAUTHFAILURE = "FailedOperation.CreateLogTopicTaskAuthFailure"
+
+	// 创建预热回源限速配置失败，请稍后重试或提交工单。
+	FAILEDOPERATION_CREATEPREFETCHORIGINLIMITFAILED = "FailedOperation.CreatePrefetchOriginLimitFailed"
+
+	// 边缘客户端证书已过期，暂不支持下发过期证书。
+	FAILEDOPERATION_EDGECLIENTCERTIFICATEHASEXPIRED = "FailedOperation.EdgeClientCertificateHasExpired"
+
+	// 调用 DNSPod 失败，请稍后重试，若无法解决，请提交工单。
+	FAILEDOPERATION_FAILEDTOCALLDNSPOD = "FailedOperation.FailedToCallDNSPod"
 
 	// 有其他任务正在部署中，请稍后重试。
 	FAILEDOPERATION_FUNCTIONDEPLOYING = "FailedOperation.FunctionDeploying"
@@ -80,6 +101,18 @@ const (
 	// 操作失败。
 	FAILEDOPERATION_MODIFYFAILED = "FailedOperation.ModifyFailed"
 
+	// 超出配置数量限制，无法创建更多，请删除不必要配置或申请提升配置数量。
+	FAILEDOPERATION_PREFETCHORIGINLIMITCOUNTEXCEEDED = "FailedOperation.PrefetchOriginLimitCountExceeded"
+
+	// 未找到对应预热回源限速配置，请确认是否存在配置后重试。
+	FAILEDOPERATION_PREFETCHORIGINLIMITNOTFOUND = "FailedOperation.PrefetchOriginLimitNotFound"
+
+	// 该产品即将下架，操作被拒绝。
+	FAILEDOPERATION_PRODUCTDISCONTINUED = "FailedOperation.ProductDiscontinued"
+
+	// 没有开通本产品，请开通后再尝试。
+	FAILEDOPERATION_PRODUCTNOTACTIVATED = "FailedOperation.ProductNotActivated"
+
 	// 实时日志认证失败
 	FAILEDOPERATION_REALTIMELOGAUTHFAILURE = "FailedOperation.RealtimeLogAuthFailure"
 
@@ -89,8 +122,17 @@ const (
 	// 该站点下函数规则操作冲突。
 	FAILEDOPERATION_RULEOPERATIONCONFLICT = "FailedOperation.RuleOperationConflict"
 
+	// 该站点下的模板数量超过最大数量限制。
+	FAILEDOPERATION_TEMPLATEOVERLIMIT = "FailedOperation.TemplateOverLimit"
+
 	// 未知的配置组类型。
 	FAILEDOPERATION_UNKNOWNCONFIGGROUPTYPE = "FailedOperation.UnknownConfigGroupType"
+
+	// 回源客户端证书已过期，暂不支持下发过期证书。
+	FAILEDOPERATION_UPSTREAMCLIENTCERTIFICATEHASEXPIRED = "FailedOperation.UpstreamClientCertificateHasExpired"
+
+	// 源站 CA 证书已过期，暂不支持下发过期证书。
+	FAILEDOPERATION_UPSTREAMVERIFYCUSTOMCACERTIFICATEHASEXPIRED = "FailedOperation.UpstreamVerifyCustomCACertificateHasExpired"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -106,9 +148,6 @@ const (
 
 	// 获取配置失败。
 	INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
-
-	// 调用 DNSPod 失败，请稍后重试，若无法解决，请联系智能客服或提交工单。
-	INTERNALERROR_FAILEDTOCALLDNSPOD = "InternalError.FailedToCallDNSPod"
 
 	// 上传链接生成失败。
 	INTERNALERROR_FAILEDTOGENERATEURL = "InternalError.FailedToGenerateUrl"
@@ -131,6 +170,9 @@ const (
 	// 未知错误。
 	INTERNALERROR_UNKNOWERROR = "InternalError.UnknowError"
 
+	// 无效的过滤器
+	INVALIDFILTER = "InvalidFilter"
+
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
@@ -139,6 +181,9 @@ const (
 
 	// 操作频繁，请稍后重试。
 	INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+
+	// 别称域名不支持配无私钥证书。
+	INVALIDPARAMETER_ALIASDOMAINNOTSUPPORTKEYLESS = "InvalidParameter.AliasDomainNotSupportKeyless"
 
 	// 别称域名不支持配置国密证书。
 	INVALIDPARAMETER_ALIASDOMAINNOTSUPPORTSMCERT = "InvalidParameter.AliasDomainNotSupportSMCert"
@@ -155,17 +200,20 @@ const (
 	// 查询字符串规则超过了限制。
 	INVALIDPARAMETER_CACHEKEYQUERYSTRINGTOOMANYVALUE = "InvalidParameter.CacheKeyQueryStringTooManyValue"
 
-	// HTTPS证书和域名不匹配。
+	// 无效的边缘HTTPS证书配置，证书与域名不匹配。
 	INVALIDPARAMETER_CERTNOTMATCHDOMAIN = "InvalidParameter.CertNotMatchDomain"
 
 	// 内部错误。
 	INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
 
-	// HTTPS证书即将过期。
+	// 边缘HTTPS证书即将过期。
 	INVALIDPARAMETER_CERTTOEXPIRE = "InvalidParameter.CertToExpire"
 
-	// 证书错误。
+	// 无效的边缘HTTPS证书配置，密钥长度不符合最短要求RSA>=2048,DSA>=2048,DH>=2048,EC>=225。
 	INVALIDPARAMETER_CERTTOOSHORTKEYSIZE = "InvalidParameter.CertTooShortKeySize"
+
+	// 待变更域名未绑定证书或 keyless 服务端，请先绑定后再操作。
+	INVALIDPARAMETER_CERTIFICATECONFLICTWITHKEYLESSSERVER = "InvalidParameter.CertificateConflictWithKeylessServer"
 
 	// IPv6 访问与客户端 IP 地理位置功能冲突。
 	INVALIDPARAMETER_CLIENTIPCOUNTRYCONFLICTSWITHIPV6 = "InvalidParameter.ClientIpCountryConflictsWithIpv6"
@@ -182,6 +230,9 @@ const (
 	// 函数内容超过大小限制。
 	INVALIDPARAMETER_CONTENTEXCEEDSLIMIT = "InvalidParameter.ContentExceedsLimit"
 
+	// 域名加速区域，无法支持该预热回源限速区域配置，请调整后重新提交。
+	INVALIDPARAMETER_DOMAINAREANOTSUPPORTPREFETCHORIGINLIMITAREA = "InvalidParameter.DomainAreaNotSupportPrefetchOriginLimitArea"
+
 	// 域名不存在或不属于该账号。
 	INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
 
@@ -190,6 +241,9 @@ const (
 
 	// 重复规则。
 	INVALIDPARAMETER_DUPLICATERULE = "InvalidParameter.DuplicateRule"
+
+	// 无效的边缘客户端证书配置。
+	INVALIDPARAMETER_EDGECLIENTCERTCHECKERROR = "InvalidParameter.EdgeClientCertCheckError"
 
 	// 操作不支持条件。
 	INVALIDPARAMETER_ERRACTIONUNSUPPORTTARGET = "InvalidParameter.ErrActionUnsupportTarget"
@@ -281,6 +335,9 @@ const (
 	// 函数名称和本账号下其他函数冲突。
 	INVALIDPARAMETER_FUNCTIONNAMECONFLICT = "InvalidParameter.FunctionNameConflict"
 
+	// GroupBy参数超过数量限制。
+	INVALIDPARAMETER_GROUPBYLIMITEXCEEDED = "InvalidParameter.GroupByLimitExceeded"
+
 	// 开启 Grpc 协议支持需要同时开启 HTTP/2 协议支持。
 	INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
 
@@ -359,7 +416,7 @@ const (
 	// 无效的节点缓存时间。
 	INVALIDPARAMETER_INVALIDCACHETIME = "InvalidParameter.InvalidCacheTime"
 
-	// 证书信息错误。
+	// 无效的边缘HTTPS证书信息。
 	INVALIDPARAMETER_INVALIDCERTINFO = "InvalidParameter.InvalidCertInfo"
 
 	// 无效的客户端IP地理位置配置，HeaderName由1-100个字母或数字组成的，不能以"-"开头或结尾。
@@ -376,6 +433,9 @@ const (
 
 	// 无效的回源配置，源站类型为对象存储时，源站地址必须为对象存储域名。
 	INVALIDPARAMETER_INVALIDCOSDOMAIN = "InvalidParameter.InvalidCosDomain"
+
+	// 域名非法，请检查入参中是否传入不存在的域名。
+	INVALIDPARAMETER_INVALIDDOMAINS = "InvalidParameter.InvalidDomains"
 
 	// 无效的智能加速。
 	INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
@@ -398,7 +458,7 @@ const (
 	// 无效的HTTPS。
 	INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
 
-	// 无效的HTTPS证书。
+	// 无效的边缘HTTPS证书配置，证书内容无效。
 	INVALIDPARAMETER_INVALIDHTTPSCERTINFO = "InvalidParameter.InvalidHttpsCertInfo"
 
 	// 加密套件与TLS版本不匹配。
@@ -470,6 +530,9 @@ const (
 	// 请指定PrivateAccess参数值为on/off。
 	INVALIDPARAMETER_INVALIDPRIVATEACCESSSWITCH = "InvalidParameter.InvalidPrivateAccessSwitch"
 
+	// 四层代理非法，请检查入参中是否传入不存在的代理。
+	INVALIDPARAMETER_INVALIDPROXIES = "InvalidParameter.InvalidProxies"
+
 	// 套餐包不支持Quic配置。
 	INVALIDPARAMETER_INVALIDQUICBILLING = "InvalidParameter.InvalidQuicBilling"
 
@@ -502,6 +565,9 @@ const (
 
 	// 无效的响应头header。
 	INVALIDPARAMETER_INVALIDRESPONSEHEADERVALUE = "InvalidParameter.InvalidResponseHeaderValue"
+
+	// 无效的规则引擎配置。
+	INVALIDPARAMETER_INVALIDRULEENGINE = "InvalidParameter.InvalidRuleEngine"
 
 	// 无效的规则引擎操作。
 	INVALIDPARAMETER_INVALIDRULEENGINEACTION = "InvalidParameter.InvalidRuleEngineAction"
@@ -560,6 +626,27 @@ const (
 	// 修改源站操作中负载均衡实例Id必填。
 	INVALIDPARAMETER_LOADBALANCEINSTANCEIDISREQUIRED = "InvalidParameter.LoadBalanceInstanceIdIsRequired"
 
+	// 引用负载均衡的4层代理服务正在部署中，请稍后再编辑。
+	INVALIDPARAMETER_LOADBALANCERBINDL4NOTINSTABLESTATUS = "InvalidParameter.LoadBalancerBindL4NotInStableStatus"
+
+	// 引用负载均衡的7层域名服务正在部署中，请稍后再编辑。
+	INVALIDPARAMETER_LOADBALANCERBINDL7NOTINSTABLESTATUS = "InvalidParameter.LoadBalancerBindL7NotInStableStatus"
+
+	// 负载均衡器绑定的源站组无效。
+	INVALIDPARAMETER_LOADBALANCERBINDORIGINGROUPINVALID = "InvalidParameter.LoadBalancerBindOriginGroupInvalid"
+
+	// 同一站点下的负载均衡名称不可以重复。
+	INVALIDPARAMETER_LOADBALANCERNAMEREPEATED = "InvalidParameter.LoadBalancerNameRepeated"
+
+	// 负载均衡实例存在被四层实例引用，不允许删除。
+	INVALIDPARAMETER_LOADBALANCERUSEDINL4PROXY = "InvalidParameter.LoadBalancerUsedInL4Proxy"
+
+	// 负载均衡实例存在被七层域名引用，不允许删除。
+	INVALIDPARAMETER_LOADBALANCERUSEDINL7DOMAIN = "InvalidParameter.LoadBalancerUsedInL7Domain"
+
+	// 负载均衡实例存在被规则引擎引用，不允许删除。
+	INVALIDPARAMETER_LOADBALANCERUSEDINRULEENGINE = "InvalidParameter.LoadBalancerUsedInRuleEngine"
+
 	// 修改参数缺失。
 	INVALIDPARAMETER_MODIFYPARAMETERSMISSING = "InvalidParameter.ModifyParametersMissing"
 
@@ -571,6 +658,9 @@ const (
 
 	// 域名处于直接回源架构，需要保持智能加速功能的开启。
 	INVALIDPARAMETER_OCDIRECTORIGINREQUIRESSMARTROUTING = "InvalidParameter.OCDirectOriginRequiresSmartRouting"
+
+	// 源站组类型与负载均衡器类型不匹配。
+	INVALIDPARAMETER_ORIGINGROUPTYPECANNOTMATCHLBTYPE = "InvalidParameter.OriginGroupTypeCanNotMatchLBType"
 
 	// 源站是内网IP。
 	INVALIDPARAMETER_ORIGINISINNERIP = "InvalidParameter.OriginIsInnerIp"
@@ -607,6 +697,18 @@ const (
 
 	// 最大上传大小超出限制
 	INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+
+	// 预热回源限速区域参数无效，请调整区域后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITAREAINVALID = "InvalidParameter.PrefetchOriginLimitAreaInvalid"
+
+	// 预热回源限速带宽值过大，请调整后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITBANDWIDTHTOOLARGE = "InvalidParameter.PrefetchOriginLimitBandwidthTooLarge"
+
+	// 预热回源限速带宽值过小，请调整后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITBANDWIDTHTOOSMALL = "InvalidParameter.PrefetchOriginLimitBandwidthTooSmall"
+
+	// 预热回源限速控制开关参数无效，请调整区域后重新提交。
+	INVALIDPARAMETER_PREFETCHORIGINLIMITENABLEDINVALID = "InvalidParameter.PrefetchOriginLimitEnabledInvalid"
 
 	// 实例名称重复。
 	INVALIDPARAMETER_PROXYNAMEDUPLICATING = "InvalidParameter.ProxyNameDuplicating"
@@ -659,6 +761,9 @@ const (
 	// 配置项参数错误。
 	INVALIDPARAMETER_SETTINGINVALIDPARAM = "InvalidParameter.SettingInvalidParam"
 
+	// 一些绑定的源站组不存在。
+	INVALIDPARAMETER_SOMEORIGINGROUPNOTEXIST = "InvalidParameter.SomeOriginGroupNotExist"
+
 	// Shield Space 未绑定源站，请先绑定源站后重试。
 	INVALIDPARAMETER_SPACENOTBINDORIGIN = "InvalidParameter.SpaceNotBindOrigin"
 
@@ -686,6 +791,18 @@ const (
 	// 文件上传链接存在问题。
 	INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
 
+	// 无效的回源客户端证书配置。
+	INVALIDPARAMETER_UPSTREAMCLIENTCERTCHECKERROR = "InvalidParameter.UpstreamClientCertCheckError"
+
+	// 无效的源站证书校验配置。
+	INVALIDPARAMETER_UPSTREAMVERIFYCERTCHECKERROR = "InvalidParameter.UpstreamVerifyCertCheckError"
+
+	// 无效的源站证书校验配置，证书内容为空。
+	INVALIDPARAMETER_UPSTREAMVERIFYCUSTOMCACERTNOINFO = "InvalidParameter.UpstreamVerifyCustomCACertNoInfo"
+
+	// 站点加速区域，无法支持该预热回源限速区域配置，请调整后重新提交。
+	INVALIDPARAMETER_ZONEAREANOTSUPPORTPREFETCHORIGINLIMITAREA = "InvalidParameter.ZoneAreaNotSupportPrefetchOriginLimitArea"
+
 	// 站点已被绑定。
 	INVALIDPARAMETER_ZONEHASBEENBOUND = "InvalidParameter.ZoneHasBeenBound"
 
@@ -707,11 +824,38 @@ const (
 	// 该站点域名已被禁用。
 	INVALIDPARAMETERVALUE_ACCESSBLACKLIST = "InvalidParameterValue.AccessBlacklist"
 
+	// 别称域名暂不支持配置边缘双向认证。
+	INVALIDPARAMETERVALUE_ALIASDOMAINNOTSUPPORTEDGEMTLS = "InvalidParameterValue.AliasDomainNotSupportEdgeMTLS"
+
+	// 别称域名暂不支持配置回源双向认证。
+	INVALIDPARAMETERVALUE_ALIASDOMAINNOTSUPPORTUPSTREAMMTLS = "InvalidParameterValue.AliasDomainNotSupportUpstreamMTLS"
+
+	// 别称域名暂不支持配置源站证书校验。
+	INVALIDPARAMETERVALUE_ALIASDOMAINNOTSUPPORTUPSTREAMVERIFY = "InvalidParameterValue.AliasDomainNotSupportUpstreamVerify"
+
 	// 边缘双向认证配置中的客户端证书必须是CA证书。
 	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYCLIENTMUSTCA = "InvalidParameterValue.CertificateVerifyClientMustCa"
 
 	// 边缘双向认证配置至少需要配置一本证书。
 	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYCLIENTNEEDCERT = "InvalidParameterValue.CertificateVerifyClientNeedCert"
+
+	// 当前回源双向认证的证书仅支持 RSA或 ECC 算法证书，暂不支持国密 SM2 算法证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMCLIENTMUSTRSAORECC = "InvalidParameterValue.CertificateVerifyUpstreamClientMustRSAorECC"
+
+	// 回源双向认证的证书类型不正确，不支持配置为 CA 证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMCLIENTMUSTSVR = "InvalidParameterValue.CertificateVerifyUpstreamClientMustSVR"
+
+	// 回源双向认证配置至少需要配置一本证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMCLIENTNEEDCERT = "InvalidParameterValue.CertificateVerifyUpstreamClientNeedCert"
+
+	// 源站证书校验的证书类型不正确，仅支持 CA 证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMVERIFYCUSTOMCAMUSTCA = "InvalidParameterValue.CertificateVerifyUpstreamVerifyCustomCAMustCA"
+
+	// 当前源站证书校验的证书仅支持 RSA或 ECC 算法证书，暂不支持国密 SM2 算法证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMVERIFYCUSTOMCAMUSTRSAORECC = "InvalidParameterValue.CertificateVerifyUpstreamVerifyCustomCAMustRSAorECC"
+
+	// 源站证书校验配置至少需要配置一本证书。
+	INVALIDPARAMETERVALUE_CERTIFICATEVERIFYUPSTREAMVERIFYCUSTOMCANEEDCERT = "InvalidParameterValue.CertificateVerifyUpstreamVerifyCustomCANeedCert"
 
 	// 边缘双向认证配置中的客户端 CA 证书最多允许配置20本。
 	INVALIDPARAMETERVALUE_CLIENTCERTINFOQUOTALIMIT = "InvalidParameterValue.ClientCertInfoQuotaLimit"
@@ -721,6 +865,9 @@ const (
 
 	// DNS 记录与 DNSSEC 功能冲突。
 	INVALIDPARAMETERVALUE_CONFLICTWITHDNSSEC = "InvalidParameterValue.ConflictWithDNSSEC"
+
+	// DNS 记录与 加速域名 记录冲突。
+	INVALIDPARAMETERVALUE_CONFLICTWITHDOMAIN = "InvalidParameterValue.ConflictWithDomain"
 
 	// DNS 记录与 NS 记录冲突。
 	INVALIDPARAMETERVALUE_CONFLICTWITHNSRECORD = "InvalidParameterValue.ConflictWithNSRecord"
@@ -761,6 +908,9 @@ const (
 	// 加速域名状态不符合要求。
 	INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
 
+	// 无效的 keyless 服务端 Id。
+	INVALIDPARAMETERVALUE_INVALIDKEYLESSSERVERID = "InvalidParameterValue.InvalidKeylessServerId"
+
 	// DNS 代理域名源站错误。
 	INVALIDPARAMETERVALUE_INVALIDPROXYORIGIN = "InvalidParameterValue.InvalidProxyOrigin"
 
@@ -779,6 +929,9 @@ const (
 	// 值不在指定范围。
 	INVALIDPARAMETERVALUE_NOTWITHINRANGE = "InvalidParameterValue.NotWithinRange"
 
+	// OC互转开启不支持开启源站证书校验
+	INVALIDPARAMETERVALUE_OCDIRECTORIGINDOMAINNOTSUPPORTUPSTREAMVERIFY = "InvalidParameterValue.OCDirectOriginDomainNotSupportUpstreamVerify"
+
 	// 指定的源站组不存在。
 	INVALIDPARAMETERVALUE_ORIGINGROUPNOTEXISTS = "InvalidParameterValue.OriginGroupNotExists"
 
@@ -788,20 +941,35 @@ const (
 	// 不符合指定的正则表达式。
 	INVALIDPARAMETERVALUE_REGEXMISMATCH = "InvalidParameterValue.RegExMismatch"
 
-	// 已开启双向认证，客户端使用 RSA 或者 ECC 算法证书时，HTTPS 证书必须也配置有相同算法证书。
+	// 已开启边缘双向认证，客户端使用 RSA 或者 ECC 算法证书时，边缘 HTTPS 证书必须也配置有相同算法证书。
 	INVALIDPARAMETERVALUE_SERVERCERTINFONEEDCONTAINRSAORECC = "InvalidParameterValue.ServerCertInfoNeedContainRSAorECC"
 
-	// 已开启双向认证，客户端使用国密算法 CA 证书时，HTTPS 证书必须也配置有国密证书。
+	// 已开启边缘双向认证，客户端使用国密算法 CA 证书时，边缘 HTTPS 证书必须也配置有国密证书。
 	INVALIDPARAMETERVALUE_SERVERCERTINFONEEDCONTAINSM2 = "InvalidParameterValue.ServerCertInfoNeedContainSM2"
 
 	// 请输入合法的共享 CNAME 前缀，最大支持50个字符。
 	INVALIDPARAMETERVALUE_SHAREDCNAMEPREFIXNOTMATCH = "InvalidParameterValue.SharedCNAMEPrefixNotMatch"
 
+	// 输入模板中包含不是自定义模板类型的模板。
+	INVALIDPARAMETERVALUE_TEMPLATENOTCUSTOM = "InvalidParameterValue.TemplateNotCustom"
+
+	// 模板中包含不存在的模板，请检查模板 id 是否正确。
+	INVALIDPARAMETERVALUE_TEMPLATENOTFOUND = "InvalidParameterValue.TemplateNotFound"
+
 	// 暂不支持当前域名后缀接入，如您需要使用请联系我们。
 	INVALIDPARAMETERVALUE_TOPLEVELDOMAINNOTSUPPORT = "InvalidParameterValue.TopLevelDomainNotSupport"
 
+	// 试用套餐的自定义页面不允许引用。
+	INVALIDPARAMETERVALUE_TRIALPLANRESPONSEPAGE = "InvalidParameterValue.TrialPlanResponsePage"
+
 	// 配置项错误。
 	INVALIDPARAMETERVALUE_UNRECOGNIZABLEVALUE = "InvalidParameterValue.UnrecognizableValue"
+
+	// 回源双向认证配置中的客户端证书最多允许配置1本。
+	INVALIDPARAMETERVALUE_UPSTREAMCLIENTCERTINFOQUOTALIMIT = "InvalidParameterValue.UpstreamClientCertInfoQuotaLimit"
+
+	// 源站证书校验配置中的 CA 证书最多允许配置1本。
+	INVALIDPARAMETERVALUE_UPSTREAMVERIFYCUSTOMCACERTINFOQUOTALIMIT = "InvalidParameterValue.UpstreamVerifyCustomCACertInfoQuotaLimit"
 
 	// 站点名称格式不正确，请输入正确的域名格式。
 	INVALIDPARAMETERVALUE_ZONENAMEINVALID = "InvalidParameterValue.ZoneNameInvalid"
@@ -811,6 +979,12 @@ const (
 
 	// 站点不支持以子域名接入，请以二级域名作为站点接入。
 	INVALIDPARAMETERVALUE_ZONENAMENOTSUPPORTSUBDOMAIN = "InvalidParameterValue.ZoneNameNotSupportSubDomain"
+
+	// 没有对应的站点，请确保站点信息填写正确。
+	INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+
+	// 站点已停用，请检查当前站点状态。
+	INVALIDPARAMETERVALUE_ZONEPAUSED = "InvalidParameterValue.ZonePaused"
 
 	// 该同名站点标识已被占用，请重新输入。
 	INVALIDPARAMETERVALUE_ZONESAMEASNAME = "InvalidParameterValue.ZoneSameAsName"
@@ -829,6 +1003,9 @@ const (
 
 	// 函数数量达到限制。
 	LIMITEXCEEDED_FUNCTIONLIMITEXCEEDED = "LimitExceeded.FunctionLimitExceeded"
+
+	// 负载均衡数量超过限制。
+	LIMITEXCEEDED_LOADBALANCINGCOUNTLIMITEXCEEDED = "LimitExceeded.LoadBalancingCountLimitExceeded"
 
 	// 计费套餐不支持。
 	LIMITEXCEEDED_PACKNOTALLOW = "LimitExceeded.PackNotAllow"
@@ -871,6 +1048,9 @@ const (
 
 	// 引用源站组的7层域名服务正在部署中，请稍后再编辑。
 	OPERATIONDENIED_ACCELERATIONDOMAINSTATUSNOTINONLINE = "OperationDenied.AccelerationDomainStatusNotInOnline"
+
+	// 当前仅无私钥证书模式允许证书私钥为空。
+	OPERATIONDENIED_CERTIFICATEPRIVATEKEYISEMPTY = "OperationDenied.CertificatePrivateKeyIsEmpty"
 
 	// 合规封禁中。
 	OPERATIONDENIED_COMPLIANCEFORBIDDEN = "OperationDenied.ComplianceForbidden"
@@ -917,6 +1097,18 @@ const (
 	// 站点处于停用状态，请开启后重试。
 	OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
 
+	// 待变更域名边缘双向认证证书不一致，请确认变更域名证书一致后重试。
+	OPERATIONDENIED_HOSTSCLIENTCERTIFICATEINCONSISTENCY = "OperationDenied.HostsClientCertificateInconsistency"
+
+	// 待变更域名 keyless 服务端不一致，请确认变更域名 keyless 服务端一致后重试。
+	OPERATIONDENIED_HOSTSKEYLESSSERVERINCONSISTENCY = "OperationDenied.HostsKeylessServerInconsistency"
+
+	// 待变更域名回源双向认证证书不一致，请确认变更域名证书一致后重试。
+	OPERATIONDENIED_HOSTSUPSTREAMCERTIFICATEINCONSISTENCY = "OperationDenied.HostsUpstreamCertificateInconsistency"
+
+	// 待变更域名源站证书校验配置不一致，请确认变更域名配置一致后重试。
+	OPERATIONDENIED_HOSTSUPSTREAMCERTIFICATEVERIFYINCONSISTENCY = "OperationDenied.HostsUpstreamCertificateVerifyInconsistency"
+
 	// 开启高防时必须保证安全是开启状态。
 	OPERATIONDENIED_INVALIDADVANCEDDEFENSESECURITYTYPE = "OperationDenied.InvalidAdvancedDefenseSecurityType"
 
@@ -928,6 +1120,12 @@ const (
 
 	// ipv6功能和固定ip无法同时开启。
 	OPERATIONDENIED_IPV6STATICIPCONFLICT = "OperationDenied.Ipv6StaticIpConflict"
+
+	// 待变更域名存在不同的证书或 keyless 服务端，请确认边缘 HTTPS 证书或 keyless 服务端一致后重试。
+	OPERATIONDENIED_KEYLESSCERTSWITCHTOFREECERTCONFLICT = "OperationDenied.KeylessCertSwitchToFreeCertConflict"
+
+	// 当前无私钥证书模式要求证书私钥为空。
+	OPERATIONDENIED_KEYLESSMODECERTIFICATEPRIVATEKEYNEEDEMPTY = "OperationDenied.KeylessModeCertificatePrivateKeyNeedEmpty"
 
 	// 四层实例资源售卖火爆，已售罄，正在加紧补货中，当前无法新增四层代理，请您耐心等待。
 	OPERATIONDENIED_L4LACKOFRESOURCES = "OperationDenied.L4LackOfResources"
@@ -956,6 +1154,9 @@ const (
 	// 存在加速域名处于部署中状态，暂不支持停用站点。
 	OPERATIONDENIED_L7HOSTINPROCESSSTATUS = "OperationDenied.L7HostInProcessStatus"
 
+	// 回源白名单已经是最新版本，无需更新。
+	OPERATIONDENIED_LATESTVERSIONNOW = "OperationDenied.LatestVersionNow"
+
 	// 绑定负载均衡有处于非运行中的状态，禁止操作。
 	OPERATIONDENIED_LOADBALANCESTATUSNOTINONLINE = "OperationDenied.LoadBalanceStatusNotInOnline"
 
@@ -977,6 +1178,15 @@ const (
 	// 无域名接入站点不支持除切换为CNAME接入类型以外的任何修改动作。
 	OPERATIONDENIED_NODOMAINACCESSZONEONLYSUPPORTMODIFYTYPE = "OperationDenied.NoDomainAccessZoneOnlySupportModifyType"
 
+	// 当前无私钥证书功能仅针对白名单用户开放。
+	OPERATIONDENIED_NOTINKEYLESSWHITELIST = "OperationDenied.NotInKeylessWhiteList"
+
+	// 不在预热回源限速配置白名单中，请提交工单。
+	OPERATIONDENIED_NOTINPREFETCHORIGINLIMITWHITELIST = "OperationDenied.NotInPrefetchOriginLimitWhiteList"
+
+	// 当前回源双向认证功能仅针对白名单用户开放。
+	OPERATIONDENIED_NOTINUPSTREAMMTLSWHITELIST = "OperationDenied.NotInUpstreamMTLSWhiteList"
+
 	// 用户不在版本管理的白名单内。
 	OPERATIONDENIED_NOTINVERSIONCONTROLWHITELIST = "OperationDenied.NotInVersionControlWhiteList"
 
@@ -991,6 +1201,9 @@ const (
 
 	// 规则引擎使用中，无法删除。
 	OPERATIONDENIED_ORIGINGROUPRULEENGINEUSED = "OperationDenied.OriginGroupRuleEngineUsed"
+
+	// 当前主账号不具备回源数据查询接口权限，请联系售后服务。
+	OPERATIONDENIED_ORIGINPULLDATANOTSUPPORTED = "OperationDenied.OriginPullDataNotSupported"
 
 	// 归属权校验未通过，请先完成站点归属权校验。
 	OPERATIONDENIED_OWNERSHIPVERIFICATIONNOTPASSED = "OperationDenied.OwnershipVerificationNotPassed"
@@ -1025,6 +1238,9 @@ const (
 	// 当前有互相排斥的请求操作并行发起，请稍后重试。
 	OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
 
+	// 高级防护资源售卖火爆，已售罄，正在加紧补货中，当前无法开启高级防护，请您耐心等待。
+	OPERATIONDENIED_SECURITYLACKOFRESOURCES = "OperationDenied.SecurityLackOfResources"
+
 	// 绑定在共享 CNAME 中的域名不允许变更 中国大陆网络优化（国际加速）访问，如果您需要单独变更，请先将域名从共享 CNAME 中解绑。
 	OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDACCELERATEMAINLAND = "OperationDenied.SharedCNAMEUnsupportedAccelerateMainland"
 
@@ -1033,6 +1249,18 @@ const (
 
 	// 该实例地域无法开启固定IP。
 	OPERATIONDENIED_STATICIPAREACONFLICT = "OperationDenied.StaticIpAreaConflict"
+
+	// 当前并不支持关闭回源双向认证，如需关闭，请通过将边缘 HTTPS 证书更改为不配置来关闭。
+	OPERATIONDENIED_UNSUPPORTTOCLOSEUPSTREAMMTLS = "OperationDenied.UnSupportToCloseUpstreamMTLS"
+
+	// 套餐不支持。
+	OPERATIONDENIED_UNSUPPORTEDPLAN = "OperationDenied.UnsupportedPlan"
+
+	// 请先更新IP白名单。
+	OPERATIONDENIED_UPDATEIPWHITELISTFIRST = "OperationDenied.UpdateIPWhitelistFirst"
+
+	// 如需启用回源双向认证，请先配置边缘 HTTPS 证书。
+	OPERATIONDENIED_USEUPSTREAMMTLSNEEDOPENHTTPS = "OperationDenied.UseUpstreamMTLSNeedOpenHttps"
 
 	// 存在使用中的测试版本，请将测试版本发布现网或者回滚测试版本再重试。
 	OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
@@ -1060,6 +1288,9 @@ const (
 
 	// 当前已存在相同的别称域名，不支持重复添加
 	RESOURCEINUSE_ALIASNAME = "ResourceInUse.AliasName"
+
+	// 该域名已作为加速域名存在，不支持重复接入。
+	RESOURCEINUSE_ALREADYEXISTSASANACCELERATIONDOMAIN = "ResourceInUse.AlreadyExistsAsAnAccelerationDomain"
 
 	// 资源被本账号Cname接入占用。
 	RESOURCEINUSE_CNAME = "ResourceInUse.Cname"
@@ -1096,6 +1327,9 @@ const (
 
 	// 资源被其他账号NS接入占用。
 	RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+
+	// 预热回源限速配置已存在，无法重复创建，请检查是否已创建对应配置。
+	RESOURCEINUSE_PREFETCHORIGINLIMITALREADYEXISTS = "ResourceInUse.PrefetchOriginLimitAlreadyExists"
 
 	// 资源被本账号和其他账号同时Cname接入占用。
 	RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"

@@ -4,18 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dlc_suspend_resume_data_engine"
 sidebar_current: "docs-tencentcloud-resource-dlc_suspend_resume_data_engine"
 description: |-
-  Provides a resource to create a dlc suspend_resume_data_engine
+  Provides a resource to create a DLC suspend resume data engine
 ---
 
 # tencentcloud_dlc_suspend_resume_data_engine
 
-Provides a resource to create a dlc suspend_resume_data_engine
+Provides a resource to create a DLC suspend resume data engine
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_suspend_resume_data_engine" "suspend_resume_data_engine" {
-  data_engine_name = "example-iac"
+resource "tencentcloud_dlc_suspend_resume_data_engine" "example" {
+  data_engine_name = "tf-example"
   operate          = "suspend"
 }
 ```
@@ -24,8 +24,8 @@ resource "tencentcloud_dlc_suspend_resume_data_engine" "suspend_resume_data_engi
 
 The following arguments are supported:
 
-* `data_engine_name` - (Required, String, ForceNew) Engine name.
-* `operate` - (Required, String, ForceNew) Engine operate tye: suspend/resume.
+* `data_engine_name` - (Required, String, ForceNew) The name of a virtual cluster.
+* `operate` - (Required, String, ForceNew) The operation type: `suspend` or `resume`.
 
 ## Attributes Reference
 
@@ -34,12 +34,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-dlc suspend_resume_data_engine can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_suspend_resume_data_engine.suspend_resume_data_engine suspend_resume_data_engine_id
-```
 

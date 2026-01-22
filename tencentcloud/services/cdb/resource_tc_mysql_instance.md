@@ -1,8 +1,8 @@
-Provides a mysql instance resource to create master database instances.
+Provides a MySQL instance resource to create master database instances.
 
 ~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
-~> **NOTE:** The value of parameter `parameters` can be used with tencentcloud_mysql_parameter_list to obtain.
+~> **NOTE:** The value of parameter `parameters` can be used with `tencentcloud_mysql_parameter_list` to obtain.
 
 Example Usage
 
@@ -32,6 +32,7 @@ resource "tencentcloud_security_group" "security_group" {
 }
 
 resource "tencentcloud_mysql_instance" "example" {
+  device_type       = "BASIC_V2"
   internet_service  = 1
   engine_version    = "5.7"
   charge_type       = "POSTPAID"
@@ -54,6 +55,11 @@ resource "tencentcloud_mysql_instance" "example" {
   parameters = {
     character_set_server = "utf8"
     max_connections      = "1000"
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
   }
 }
 ```
@@ -85,6 +91,11 @@ resource "tencentcloud_mysql_instance" "example" {
   parameters = {
     character_set_server = "utf8"
     max_connections      = "1000"
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
   }
 }
 ```
@@ -118,6 +129,60 @@ resource "tencentcloud_mysql_instance" "example" {
     character_set_server = "utf8"
     max_connections      = "1000"
   }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+```
+
+Create instance by custom cluster_topology
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  instance_name     = "tf-example"
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord@123"
+  slave_deploy_mode = 1
+  slave_sync_mode   = 1
+  device_type       = "CLOUD_NATIVE_CLUSTER"
+  availability_zone = "ap-guangzhou-6"
+  cpu               = 2
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = "vpc-i5yyodl9"
+  subnet_id         = "subnet-hhi88a58"
+  intranet_port     = 3306
+  security_groups   = ["sg-e6a8xxib"]
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+  tags = {
+    createBy = "Terraform"
+  }
+
+  cluster_topology {
+    read_write_node {
+      zone = "ap-guangzhou-6"
+    }
+
+    read_only_nodes {
+      is_random_zone = true
+    }
+
+    read_only_nodes {
+      zone = "ap-guangzhou-7"
+    }
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
 }
 ```
 
@@ -126,5 +191,5 @@ Import
 MySQL instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mysql_instance.foo cdb-12345678
+$ terraform import tencentcloud_mysql_instance.example cdb-12345678
 ```

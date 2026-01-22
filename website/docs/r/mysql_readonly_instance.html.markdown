@@ -91,12 +91,19 @@ The following arguments are supported:
 * `volume_size` - (Required, Int) Disk size (in GB).
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. NOTES: Only supported prepaid instance.
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
+* `cluster_topology` - (Optional, List) Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.
 * `cpu` - (Optional, Int) CPU cores.
-* `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
+* `device_type` - (Optional, String) Specify device type, available values:
+	- `UNIVERSAL` (default): universal instance,
+	- `EXCLUSIVE`: exclusive instance,
+	- `BASIC_V2`: ONTKE single-node instance,
+	- `CLOUD_NATIVE_CLUSTER`: cluster version standard type,
+	- `CLOUD_NATIVE_CLUSTER_EXCLUSIVE`: cluster version enhanced type.
+If it is not specified, it defaults to a universal instance.
 * `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
 * `force_delete` - (Optional, Bool) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `intranet_port` - (Optional, Int) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.
-* `master_region` - (Optional, String) The zone information of the primary instance is required when you purchase a disaster recovery instance.
+* `master_region` - (Optional, String) The region information of the master instance. This field is required when purchasing a cross-region subscription.
 * `param_template_id` - (Optional, Int) Specify parameter template id.
 * `pay_type` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
 * `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
@@ -109,6 +116,22 @@ The following arguments are supported:
 * `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.
 * `wait_switch` - (Optional, Int) Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.
 * `zone` - (Optional, String) Zone information, this parameter defaults to, the system automatically selects an Availability Zone.
+
+The `cluster_topology` object supports the following:
+
+* `read_only_nodes` - (Optional, Set) RO Node Topology.
+* `read_write_node` - (Optional, List) RW Node Topology.
+
+The `read_only_nodes` object of `cluster_topology` supports the following:
+
+* `is_random_zone` - (Optional, Bool) Whether to distribute in random availability zones. Enter `true` to specify a random availability zone. Otherwise, use the availability zone specified by Zone.
+* `node_id` - (Optional, String) When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.
+* `zone` - (Optional, String) Specifies the availability zone where the node is distributed.
+
+The `read_write_node` object of `cluster_topology` supports the following:
+
+* `zone` - (Required, String) The availability zone where the RW node is located.
+* `node_id` - (Optional, String) When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.
 
 ## Attributes Reference
 

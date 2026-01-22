@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,6 +65,9 @@ const (
 	// 查询主实例详情失败。
 	FAILEDOPERATION_GETOSSINFOERROR = "FailedOperation.GetOssInfoError"
 
+	// 请求查询实例信息失败
+	FAILEDOPERATION_INSTANCEQUERYERROR = "FailedOperation.InstanceQueryError"
+
 	// 账号余额不足。
 	FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 
@@ -124,6 +127,9 @@ const (
 
 	// 安全组查询实例失败。
 	INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+
+	// 查询实例错误
+	INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
 
 	// 操作外网失败。
 	INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
@@ -260,8 +266,17 @@ const (
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
+	// 审计日志文件数超过最大限制数
+	OPERATIONDENIED_AUDITFILEOVERQUOTAERROR = "OperationDenied.AuditFileOverQuotaError"
+
+	// 实例{{1}}审计日志关闭状态，暂无法操作。
+	OPERATIONDENIED_AUDITLOGCLOSEDERROR = "OperationDenied.AuditLogClosedError"
+
 	// 审计规则不存在
 	OPERATIONDENIED_AUDITPOLICYNOTEXISTERROR = "OperationDenied.AuditPolicyNotExistError"
+
+	// 审计状态异常
+	OPERATIONDENIED_AUDITSTATUSERROR = "OperationDenied.AuditStatusError"
 
 	// 权限校验失败。
 	OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -271,6 +286,9 @@ const (
 
 	// 集群当前状态不允许该操作。
 	OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+
+	// 功能{{1}}暂不支持
+	OPERATIONDENIED_FEATURENOTSUPPORTERROR = "OperationDenied.FeatureNotSupportError"
 
 	// 获取proxy失败
 	OPERATIONDENIED_GETPROXYGROUPFAILEDERROR = "OperationDenied.GetProxyGroupFailedError"
@@ -287,6 +305,21 @@ const (
 	// 账号余额不足。
 	OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
 
+	// 不是{{1}}的回档集群
+	OPERATIONDENIED_ISNOTROLLBACKCLUSTERERROR = "OperationDenied.IsNotRollbackClusterError"
+
+	// 响应大小超限制:{{1}}， 请减少查询数量。
+	OPERATIONDENIED_LENGTHOVERLIMIT = "OperationDenied.LengthOverLimit"
+
+	// 非{{1}}天内{{2}}的克隆集群。
+	OPERATIONDENIED_LIMITDAYFORAUDITREPLAYERROR = "OperationDenied.LimitDayForAuditReplayError"
+
+	// 您没有权限操作该资源（进行该操作）。
+	OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+
+	// 暂停状态的serverless不允许修改多可用区。
+	OPERATIONDENIED_PAUSEDSLSNOTALLOWMODIFYSLAVE = "OperationDenied.PausedSlsNotAllowModifySlave"
+
 	// proxy节点支持的可创建的连接数量不匹配,可支持的创建连接数{{1}},当前连接数{{2}}
 	OPERATIONDENIED_PROXYCONNECTCOUNTCHECKERROR = "OperationDenied.ProxyConnectCountCheckError"
 
@@ -298,6 +331,9 @@ const (
 
 	// 可用区不存在
 	OPERATIONDENIED_PROXYSALEZONECHECKERROR = "OperationDenied.ProxySaleZoneCheckError"
+
+	// proxy库存不足
+	OPERATIONDENIED_PROXYSTOCKCHECKERROR = "OperationDenied.ProxyStockCheckError"
 
 	// 代理版本检查失败
 	OPERATIONDENIED_PROXYVERSIONCHECKERROR = "OperationDenied.ProxyVersionCheckError"

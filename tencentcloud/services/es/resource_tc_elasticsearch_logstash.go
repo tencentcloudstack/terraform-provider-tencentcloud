@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	elasticsearch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
+	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -35,7 +36,7 @@ func ResourceTencentCloudElasticsearchLogstash() *schema.Resource {
 			"zone": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Available zone.",
+				Description: "Available zone. Create multi zone instance, parameter zone need input '-', details input to multi_zone_infos.",
 			},
 
 			"logstash_version": {
@@ -53,7 +54,7 @@ func ResourceTencentCloudElasticsearchLogstash() *schema.Resource {
 			"subnet_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Subnet id.",
+				Description: "Subnet id. Create multi zone instance, parameter subnet_id need input '-', details input to multi_zone_infos.",
 			},
 
 			"node_num": {
@@ -172,6 +173,39 @@ func ResourceTencentCloudElasticsearchLogstash() *schema.Resource {
 					},
 				},
 			},
+			"deploy_mode": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      ES_DEPLOY_MODE_SINGLE_REGION,
+				ValidateFunc: tccommon.ValidateAllowedIntValue(ES_DEPLOY_MODE),
+				Description:  "Deployment mode, 0: single availability zone, 1: multiple availability zones.",
+			},
+			"multi_zone_infos": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "Details of availability zones when deploying multiple availability zones.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"availability_zone": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Availability zone.",
+						},
+						"subnet_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Subnet id.",
+						},
+						"hidden": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Computed:    true,
+							Description: "Whether it is a hidden availability zone.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -277,6 +311,30 @@ func resourceTencentCloudElasticsearchLogstashCreate(d *schema.ResourceData, met
 		request.OperationDuration = &operationDuration
 	}
 
+	if v, ok := d.GetOk("deploy_mode"); ok {
+		deployMode := v.(int)
+		request.DeployMode = helper.IntUint64(deployMode)
+		if deployMode == ES_DEPLOY_MODE_MULTI_REGION {
+			if v, ok := d.GetOk("multi_zone_infos"); ok {
+				infos := v.([]interface{})
+				request.MultiZoneInfo = make([]*es.ZoneDetail, 0, len(infos))
+				for _, item := range infos {
+					value := item.(map[string]interface{})
+					info := es.ZoneDetail{
+						Zone:     helper.String(value["availability_zone"].(string)),
+						SubnetId: helper.String(value["subnet_id"].(string)),
+					}
+					if v, ok := value["hidden"].(bool); ok {
+						info.Hidden = helper.Bool(v)
+					}
+					request.MultiZoneInfo = append(request.MultiZoneInfo, &info)
+				}
+			} else {
+				return fmt.Errorf("elasticsearch multi_zone_infos can not be empty when deploy mode is %d", deployMode)
+			}
+		}
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEsClient().CreateLogstashInstance(request)
 		if e != nil {
@@ -339,10 +397,6 @@ func resourceTencentCloudElasticsearchLogstashRead(d *schema.ResourceData, meta 
 
 	if logstash.InstanceName != nil {
 		_ = d.Set("instance_name", logstash.InstanceName)
-	}
-
-	if logstash.Zone != nil {
-		_ = d.Set("zone", logstash.Zone)
 	}
 
 	if logstash.LogstashVersion != nil {
@@ -418,7 +472,27 @@ func resourceTencentCloudElasticsearchLogstashRead(d *schema.ResourceData, meta 
 
 		_ = d.Set("operation_duration", []interface{}{operationDurationMap})
 	}
+	if logstash.DeployMode != nil {
+		_ = d.Set("deploy_mode", logstash.DeployMode)
+	}
 
+	multiZoneInfos := make([]map[string]interface{}, 0, len(logstash.MultiZoneInfo))
+	for _, item := range logstash.MultiZoneInfo {
+		info := make(map[string]interface{}, 2)
+		info["availability_zone"] = item.Zone
+		info["subnet_id"] = item.SubnetId
+		info["hidden"] = item.Hidden
+		multiZoneInfos = append(multiZoneInfos, info)
+	}
+	_ = d.Set("multi_zone_infos", multiZoneInfos)
+
+	if len(multiZoneInfos) > 0 {
+		_ = d.Set("zone", "-")
+	} else {
+		if logstash.Zone != nil {
+			_ = d.Set("zone", logstash.Zone)
+		}
+	}
 	return nil
 }
 
@@ -446,7 +520,7 @@ func resourceTencentCloudElasticsearchLogstashUpdate(d *schema.ResourceData, met
 
 	request.InstanceId = &instanceId
 
-	immutableArgs := []string{"zone", "logstash_version", "vpc_id", "subnet_id", "charge_type", "charge_period", "time_unit", "auto_voucher", "voucher_ids", "renew_flag", "disk_type", "license_type"}
+	immutableArgs := []string{"zone", "logstash_version", "vpc_id", "subnet_id", "charge_type", "charge_period", "time_unit", "auto_voucher", "voucher_ids", "renew_flag", "disk_type", "license_type", "deploy_mode", "multi_zone_infos"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

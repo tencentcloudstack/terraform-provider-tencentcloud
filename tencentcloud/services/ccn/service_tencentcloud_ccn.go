@@ -7,6 +7,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -19,17 +20,18 @@ import (
 
 // Ccn basic information
 type CcnBasicInfo struct {
-	ccnId             string
-	name              string
-	description       string
-	state             string
-	qos               string
-	chargeType        string
-	bandWithLimitType string
-	instanceCount     int64
-	createTime        string
-	ecmpFlag          bool
-	overlapFlag       bool
+	ccnId                string
+	name                 string
+	description          string
+	state                string
+	qos                  string
+	chargeType           string
+	bandWithLimitType    string
+	instanceMeteringType string
+	instanceCount        int64
+	createTime           string
+	ecmpFlag             bool
+	overlapFlag          bool
 }
 
 type CcnInstanceBind struct {
@@ -208,6 +210,9 @@ getMoreData:
 		basicInfo.state = *item.State
 		basicInfo.chargeType = *item.InstanceChargeType
 		basicInfo.bandWithLimitType = *item.BandwidthLimitType
+		if item.InstanceMeteringType != nil {
+			basicInfo.instanceMeteringType = *item.InstanceMeteringType
+		}
 		basicInfo.ecmpFlag = *item.RouteECMPFlag
 		basicInfo.overlapFlag = *item.RouteOverlapFlag
 
@@ -269,7 +274,7 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, ccnI
 }
 
 func (me *VpcService) CreateCcn(ctx context.Context, name, description,
-	qos, chargeType, bandWithLimitType string) (basicInfo CcnBasicInfo, errRet error) {
+	qos, chargeType, bandWithLimitType, instanceMeteringType string) (basicInfo CcnBasicInfo, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewCreateCcnRequest()
@@ -279,6 +284,9 @@ func (me *VpcService) CreateCcn(ctx context.Context, name, description,
 	request.QosLevel = &qos
 	request.InstanceChargeType = &chargeType
 	request.BandwidthLimitType = &bandWithLimitType
+	if instanceMeteringType != "" {
+		request.InstanceMeteringType = &instanceMeteringType
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateCcn(request)
 
@@ -425,6 +433,79 @@ func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, ccnId,
 			return
 		}
 	}
+	return
+}
+
+func (me *VpcService) DescribeCcnAttachedInstanceByFilter(ctx context.Context, ccnId, instanceType, instanceRegion, instanceId string) (info *vpc.CcnAttachedInstance, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = vpc.NewDescribeCcnAttachedInstancesRequest()
+		response = vpc.NewDescribeCcnAttachedInstancesResponse()
+		result   []*vpc.CcnAttachedInstance
+		limit    uint64 = 20
+		offset   uint64 = 0
+	)
+
+	request.CcnId = &ccnId
+	request.Filters = []*vpc.Filter{
+		{
+			Name:   helper.String("instance-type"),
+			Values: helper.Strings([]string{instanceType}),
+		},
+
+		{
+			Name:   helper.String("instance-region"),
+			Values: helper.Strings([]string{instanceRegion}),
+		},
+
+		{
+			Name:   helper.String("instance-id"),
+			Values: helper.Strings([]string{instanceId}),
+		},
+	}
+
+	for {
+		request.Limit = &limit
+		request.Offset = &offset
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseVpcClient().DescribeCcnAttachedInstancesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe attach ccn instance failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
+
+		result = append(result, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(result) != 1 {
+		return
+	}
+
+	info = result[0]
 	return
 }
 

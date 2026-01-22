@@ -28,14 +28,9 @@ func DataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 				Description: "ID of the postgresql instance to be query.",
 			},
 			"project_id": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Project ID of the postgresql instance to be query.",
-			},
-			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "Project ID of the postgresql instance to be query.",
 			},
 			"instance_list": {
 				Type:        schema.TypeList,
@@ -67,6 +62,16 @@ func DataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Version of the postgresql database engine.",
+						},
+						"db_kernel_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "PostgreSQL kernel version number.",
+						},
+						"db_major_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "PostgreSQL major version number.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -146,6 +151,11 @@ func DataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 					},
 				},
 			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
 		},
 	}
 }
@@ -153,18 +163,21 @@ func DataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_postgresql_instances.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	filter := make([]*postgresql.Filter, 0)
 	if v, ok := d.GetOk("name"); ok {
 		filter = append(filter, &postgresql.Filter{Name: helper.String("db-instance-name"), Values: []*string{helper.String(v.(string))}})
 	}
+
 	if v, ok := d.GetOk("id"); ok {
 		filter = append(filter, &postgresql.Filter{Name: helper.String("db-instance-id"), Values: []*string{helper.String(v.(string))}})
 	}
+
 	if v, ok := d.GetOk("project_id"); ok {
 		filter = append(filter, &postgresql.Filter{Name: helper.String("db-project-id"), Values: []*string{helper.String(v.(string))}})
 	}
@@ -196,6 +209,14 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		listItem["vpc_id"] = v.VpcId
 		listItem["subnet_id"] = v.SubnetId
 		listItem["engine_version"] = v.DBVersion
+		if v.DBKernelVersion != nil {
+			listItem["db_kernel_version"] = v.DBKernelVersion
+		}
+
+		if v.DBMajorVersion != nil {
+			listItem["db_major_version"] = v.DBMajorVersion
+		}
+
 		listItem["public_access_switch"] = false
 		listItem["charset"] = v.DBCharset
 		listItem["public_access_host"] = ""

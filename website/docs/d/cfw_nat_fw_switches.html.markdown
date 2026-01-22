@@ -4,16 +4,16 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfw_nat_fw_switches"
 sidebar_current: "docs-tencentcloud-datasource-cfw_nat_fw_switches"
 description: |-
-  Use this data source to query detailed information of cfw nat_fw_switches
+  Use this data source to query detailed information of CFW nat fw switches
 ---
 
 # tencentcloud_cfw_nat_fw_switches
 
-Use this data source to query detailed information of cfw nat_fw_switches
+Use this data source to query detailed information of CFW nat fw switches
 
 ## Example Usage
 
-### Query Nat instance'switch by instance id
+### Query Nat instance'switch by instance ID
 
 ```hcl
 data "tencentcloud_cfw_nat_fw_switches" "example" {
@@ -21,12 +21,12 @@ data "tencentcloud_cfw_nat_fw_switches" "example" {
 }
 ```
 
-### Or filter by switch status
+### Or filter by switch enable status
 
 ```hcl
 data "tencentcloud_cfw_nat_fw_switches" "example" {
   nat_ins_id = "cfwnat-18d2ba18"
-  status     = 1
+  enable     = 1
 }
 ```
 
@@ -34,9 +34,10 @@ data "tencentcloud_cfw_nat_fw_switches" "example" {
 
 The following arguments are supported:
 
+* `enable` - (Optional, Int) Switch enable status, 1 open; 0 close.
 * `nat_ins_id` - (Optional, String) Filter the NAT firewall instance to which the NAT firewall subnet switch belongs.
 * `result_output_file` - (Optional, String) Used to save results.
-* `status` - (Optional, Int) Switch status, 1 open; 0 close.
+* `status` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.82.37. Please use `enable` instead. Switch status, 1 open; 0 close.
 
 ## Attributes Reference
 

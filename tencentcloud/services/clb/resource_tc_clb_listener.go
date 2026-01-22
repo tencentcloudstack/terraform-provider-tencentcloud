@@ -181,20 +181,46 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Description:  "Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.",
 			},
 			"certificate_ssl_mode": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"multi_cert_info"},
+				ValidateFunc:  tccommon.ValidateAllowedStringValue(CERT_SSL_MODE),
+				Description:   "Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.",
 			},
 			"certificate_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "ID of the server certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"multi_cert_info"},
+				Description:   "ID of the server certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.",
 			},
 			"certificate_ca_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "ID of the client certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when the ssl mode is `MUTUAL`.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"multi_cert_info"},
+				Description:   "ID of the client certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when the ssl mode is `MUTUAL`.",
+			},
+			"multi_cert_info": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      1,
+				ConflictsWith: []string{"certificate_ssl_mode", "certificate_id", "certificate_ca_id"},
+				Description:   "Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ssl_mode": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CERT_SSL_MODE),
+							Description:  "Authentication type. Values: UNIDIRECTIONAL (one-way authentication), MUTUAL (two-way authentication).",
+						},
+						"cert_id_list": {
+							Type:        schema.TypeSet,
+							Required:    true,
+							Description: "List of server certificate ID.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+					},
+				},
 			},
 			"session_expire_time": {
 				Type:         schema.TypeInt,
@@ -249,6 +275,54 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Enable H2C switch for intranet HTTP listener.",
 			},
+			"snat_enable": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "Whether to enable SNAT.",
+			},
+			"deregister_target_rst": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "Whether to send the TCP RST packet to the client when unbinding a real server. This parameter is applicable to TCP listeners only.",
+			},
+			"idle_connect_timeout": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Optional:    true,
+				Description: "Connection idle timeout period (in seconds). It's only available to TCP listeners. Value range: 300-900 for shared and dedicated instances; 300-2000 for LCU-supported CLB instances. It defaults to 900. To set a period longer than 2000 seconds (up to 3600 seconds). Please submit a work order for processing.",
+			},
+			"reschedule_target_zero_weight": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "The rescheduling function, with a weight of 0 as a switch, triggers rescheduling when the weight of the backend server is set to 0. Only supported by TCP/UDP listeners.",
+			},
+			"reschedule_unhealthy": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "Rescheduling function, health check exception switch. Enabling this switch triggers rescheduling when a backend server fails a health check. Supported only by TCP/UDP listeners.",
+			},
+			"reschedule_expand_target": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "The rescheduling function, a switch for scaling backend services, triggers rescheduling when backend servers are added or removed. Only supported by TCP/UDP listeners.",
+			},
+			"reschedule_start_time": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Optional:    true,
+				Description: "Reschedule the trigger start time, with a value ranging from 0 to 3600 seconds. Only supported by TCP/UDP listeners.",
+			},
+			"reschedule_interval": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Optional:    true,
+				Description: "Rescheduled trigger duration, ranging from 0 to 3600 seconds. Supported only by TCP/UDP listeners.",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -301,6 +375,20 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
 		}
 	}
+
+	multiCertificateSetFlag, multiCertInput, certErr := checkMultiCertificateInputPara(ctx, d, meta)
+	if certErr != nil {
+		return certErr
+	}
+
+	if multiCertificateSetFlag {
+		request.MultiCertInfo = multiCertInput
+	} else {
+		if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
+		}
+	}
+
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
 		if v == CLB_LISTENER_SCHEDULER_IP_HASH {
@@ -337,7 +425,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			if vv {
 				vvv = 1
 			} else {
-				if !certificateSetFlag {
+				if !certificateSetFlag && !multiCertificateSetFlag {
 					return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS")
 				}
 			}
@@ -361,6 +449,38 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		request.H2cSwitch = helper.Bool(v.(bool))
 	}
 
+	if v, ok := d.GetOkExists("snat_enable"); ok {
+		request.SnatEnable = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("deregister_target_rst"); ok {
+		request.DeregisterTargetRst = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("idle_connect_timeout"); ok {
+		request.IdleConnectTimeout = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_target_zero_weight"); ok {
+		request.RescheduleTargetZeroWeight = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_unhealthy"); ok {
+		request.RescheduleUnhealthy = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_expand_target"); ok {
+		request.RescheduleExpandTarget = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_start_time"); ok {
+		request.RescheduleStartTime = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("reschedule_interval"); ok {
+		request.RescheduleInterval = helper.IntInt64(v.(int))
+	}
+
 	var response *clb.CreateListenerResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().CreateListener(request)
@@ -369,12 +489,18 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result == nil || result.Response == nil || result.Response.RequestId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Create CLB listener failed, Response si nil."))
+			}
+
 			requestId := *result.Response.RequestId
 			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 			if retryErr != nil {
 				return resource.NonRetryableError(errors.WithStack(retryErr))
 			}
 		}
+
 		response = result
 		return nil
 	})
@@ -382,7 +508,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s create CLB listener failed, reason:%+v", logId, err)
 		return err
 	}
-	if len(response.Response.ListenerIds) < 1 {
+	if response.Response.ListenerIds == nil || len(response.Response.ListenerIds) < 1 {
 		return fmt.Errorf("[CHECK][CLB listener][Create] check: Response error, listener id is null")
 	}
 	listenerId := *response.Response.ListenerIds[0]
@@ -511,10 +637,32 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	}
 
 	if instance.Certificate != nil {
-		_ = d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
-		_ = d.Set("certificate_id", instance.Certificate.CertId)
-		if instance.Certificate.CertCaId != nil {
-			_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
+		// check single cert or multi cert
+		if instance.Certificate.ExtCertIds != nil && len(instance.Certificate.ExtCertIds) > 0 {
+			multiCertInfo := make([]map[string]interface{}, 0, 1)
+			multiCert := make(map[string]interface{}, 0)
+			certIds := make([]string, 0)
+			if instance.Certificate.SSLMode != nil {
+				multiCert["ssl_mode"] = *instance.Certificate.SSLMode
+			}
+
+			if instance.Certificate.CertId != nil {
+				certIds = append(certIds, *instance.Certificate.CertId)
+			}
+
+			for _, item := range instance.Certificate.ExtCertIds {
+				certIds = append(certIds, *item)
+			}
+
+			multiCert["cert_id_list"] = certIds
+			multiCertInfo = append(multiCertInfo, multiCert)
+			_ = d.Set("multi_cert_info", multiCertInfo)
+		} else {
+			_ = d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
+			_ = d.Set("certificate_id", instance.Certificate.CertId)
+			if instance.Certificate.CertCaId != nil {
+				_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
+			}
 		}
 	}
 
@@ -529,26 +677,56 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("end_port", instance.EndPort)
 	}
 
-	var clbIns *clb.LoadBalancer
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := clbService.DescribeLoadBalancerById(ctx, clbId)
-		if e != nil {
-			return tccommon.RetryError(e)
+	if instance.AttrFlags != nil && len(instance.AttrFlags) > 0 {
+		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "H2cSwitch") {
+			_ = d.Set("h2c_switch", true)
+		} else {
+			_ = d.Set("h2c_switch", false)
 		}
 
-		clbIns = result
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s read CLB instance failed, reason:%+v", logId, err)
-		return err
-	}
-
-	if clbIns.AttributeFlags != nil && len(clbIns.AttributeFlags) != 0 {
-		_ = d.Set("h2c_switch", true)
+		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "SnatEnable") {
+			_ = d.Set("snat_enable", true)
+		} else {
+			_ = d.Set("snat_enable", false)
+		}
 	} else {
 		_ = d.Set("h2c_switch", false)
+		_ = d.Set("snat_enable", false)
+	}
+
+	if instance.DeregisterTargetRst != nil {
+		_ = d.Set("deregister_target_rst", instance.DeregisterTargetRst)
+	}
+
+	if instance.IdleConnectTimeout != nil {
+		_ = d.Set("idle_connect_timeout", instance.IdleConnectTimeout)
+	}
+
+	_ = d.Set("reschedule_target_zero_weight", false)
+	_ = d.Set("reschedule_unhealthy", false)
+	_ = d.Set("reschedule_expand_target", false)
+	if instance.AttrFlags != nil {
+		for _, item := range instance.AttrFlags {
+			if item != nil && *item == "RescheduleTargetZeroWeight" {
+				_ = d.Set("reschedule_target_zero_weight", true)
+			}
+
+			if item != nil && *item == "RescheduleUnhealthy" {
+				_ = d.Set("reschedule_unhealthy", true)
+			}
+
+			if item != nil && *item == "RescheduleExpandTarget" {
+				_ = d.Set("reschedule_expand_target", true)
+			}
+		}
+	}
+
+	if instance.RescheduleStartTime != nil {
+		_ = d.Set("reschedule_start_time", instance.RescheduleStartTime)
+	}
+
+	if instance.RescheduleInterval != nil {
+		_ = d.Set("reschedule_interval", instance.RescheduleInterval)
 	}
 
 	return nil
@@ -578,6 +756,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	request.LoadBalancerId = helper.String(clbId)
 
 	if d.HasChange("listener_name") {
+		changed = true
 		listenerName = d.Get("listener_name").(string)
 		request.ListenerName = helper.String(listenerName)
 	}
@@ -626,6 +805,16 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		request.Certificate = certificateInput
 	}
 
+	multiCertificateSetFlag, multiCertInput, certErr := checkMultiCertificateInputPara(ctx, d, meta)
+	if certErr != nil {
+		return certErr
+	}
+
+	if multiCertificateSetFlag {
+		changed = true
+		request.MultiCertInfo = multiCertInput
+	}
+
 	if d.HasChange("target_type") {
 		changed = true
 		targetType := d.Get("target_type").(string)
@@ -644,6 +833,62 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		request.KeepaliveEnable = helper.IntInt64(keepaliveEnable)
 	}
 
+	if d.HasChange("snat_enable") {
+		changed = true
+		if v, ok := d.GetOkExists("snat_enable"); ok {
+			request.SnatEnable = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("deregister_target_rst") {
+		changed = true
+		if v, ok := d.GetOkExists("deregister_target_rst"); ok {
+			request.DeregisterTargetRst = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("idle_connect_timeout") {
+		changed = true
+		if v, ok := d.GetOkExists("idle_connect_timeout"); ok {
+			request.IdleConnectTimeout = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("reschedule_target_zero_weight") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_target_zero_weight"); ok {
+			request.RescheduleTargetZeroWeight = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("reschedule_unhealthy") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_unhealthy"); ok {
+			request.RescheduleUnhealthy = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("reschedule_expand_target") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_expand_target"); ok {
+			request.RescheduleExpandTarget = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("reschedule_start_time") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_start_time"); ok {
+			request.RescheduleStartTime = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("reschedule_interval") {
+		changed = true
+		if v, ok := d.GetOkExists("reschedule_interval"); ok {
+			request.RescheduleInterval = helper.IntInt64(v.(int))
+		}
+	}
+
 	if changed {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyListener(request)
@@ -652,6 +897,11 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+				if response == nil || response.Response == nil || response.Response.RequestId == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify CLB listener failed, Response si nil."))
+				}
+
 				requestId := *response.Response.RequestId
 				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 				if retryErr != nil {

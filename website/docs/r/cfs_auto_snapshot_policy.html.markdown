@@ -4,45 +4,45 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfs_auto_snapshot_policy"
 sidebar_current: "docs-tencentcloud-resource-cfs_auto_snapshot_policy"
 description: |-
-  Provides a resource to create a cfs auto_snapshot_policy
+  Provides a resource to create a cfs auto snapshot policy
 ---
 
 # tencentcloud_cfs_auto_snapshot_policy
 
-Provides a resource to create a cfs auto_snapshot_policy
+Provides a resource to create a cfs auto snapshot policy
 
 ## Example Usage
 
-### use day of week
+### Use day of week
 
 ```hcl
-resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
+resource "tencentcloud_cfs_auto_snapshot_policy" "example" {
+  policy_name = "tf-example"
   day_of_week = "1,2"
   hour        = "2,3"
-  policy_name = "policy_name"
   alive_days  = 7
 }
 ```
 
-### use day of month
+### Use day of month
 
 ```hcl
-resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
-  hour         = "2,3"
-  policy_name  = "policy_name"
-  alive_days   = 7
+resource "tencentcloud_cfs_auto_snapshot_policy" "example" {
+  policy_name  = "tf-example"
   day_of_month = "2,3,4"
+  hour         = "2,3"
+  alive_days   = 7
 }
 ```
 
-### use interval days
+### Use interval days
 
 ```hcl
-resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
-  hour          = "2,3"
+resource "tencentcloud_cfs_auto_snapshot_policy" "example" {
   policy_name   = "policy_name"
-  alive_days    = 7
   interval_days = 1
+  hour          = "2,3"
+  alive_days    = 7
 }
 ```
 
@@ -67,9 +67,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cfs auto_snapshot_policy can be imported using the id, e.g.
+cfs auto snapshot policy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfs_auto_snapshot_policy.auto_snapshot_policy auto_snapshot_policy_id
+terraform import tencentcloud_cfs_auto_snapshot_policy.example asp-f8q793kj
 ```
 

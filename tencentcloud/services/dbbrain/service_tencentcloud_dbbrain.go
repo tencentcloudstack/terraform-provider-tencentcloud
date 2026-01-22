@@ -274,8 +274,9 @@ func (me *DbbrainService) DeleteDbbrainSecurityAuditLogExportTaskById(ctx contex
 
 func (me *DbbrainService) DescribeDbbrainDiagEventsByFilter(ctx context.Context, param map[string]interface{}) (diagEvents []*dbbrain.DiagHistoryEventItem, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = dbbrain.NewDescribeDBDiagEventsRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = dbbrain.NewDescribeDBDiagEventsRequest()
+		response = dbbrain.NewDescribeDBDiagEventsResponse()
 	)
 
 	defer func() {
@@ -288,6 +289,9 @@ func (me *DbbrainService) DescribeDbbrainDiagEventsByFilter(ctx context.Context,
 		if k == "instance_ids" {
 			request.InstanceIds = v.([]*string)
 		}
+		if k == "product" {
+			request.Product = v.(*string)
+		}
 		if k == "start_time" {
 			request.StartTime = v.(*string)
 		}
@@ -299,25 +303,40 @@ func (me *DbbrainService) DescribeDbbrainDiagEventsByFilter(ctx context.Context,
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
-
 	var (
 		offset int64 = 0
-		limit  int64 = 20
+		limit  int64 = 50
 	)
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseDbbrainClient().DescribeDBDiagEvents(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseDbbrainClient().DescribeDBDiagEvents(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Items == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db diag events failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Items) < 1 {
+		if len(response.Response.Items) < 1 {
 			break
 		}
+
 		diagEvents = append(diagEvents, response.Response.Items...)
 		if len(response.Response.Items) < int(limit) {
 			break

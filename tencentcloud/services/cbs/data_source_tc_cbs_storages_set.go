@@ -155,6 +155,11 @@ func DataSourceTencentCloudCbsStoragesSet() *schema.Resource {
 							Computed:    true,
 							Description: "ID of the CVM instance that be mounted by this CBS.",
 						},
+						"kms_key_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Kms key ID.",
+						},
 						"encrypt": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -286,6 +291,7 @@ func dataSourceTencentCloudCbsStoragesSetRead(d *schema.ResourceData, meta inter
 			"storage_size":           storage.DiskSize,
 			"attached":               storage.Attached,
 			"instance_id":            storage.InstanceId,
+			"kms_key_id":             storage.KmsKeyId,
 			"encrypt":                storage.Encrypt,
 			"create_time":            storage.CreateTime,
 			"status":                 storage.DiskState,

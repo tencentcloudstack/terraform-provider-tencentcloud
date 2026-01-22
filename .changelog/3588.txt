@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_apm_instance: Support `token` and `public_collector_url` fields.
+```

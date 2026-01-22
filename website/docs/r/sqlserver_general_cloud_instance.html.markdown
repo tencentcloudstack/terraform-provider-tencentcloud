@@ -74,8 +74,12 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Automatic renewal flag: 0-normal renewal 1-automatic renewal, the default is 1 automatic renewal. Valid only when purchasing a prepaid instance. Valid only when the 'instance_charge_type' parameter value is 'PREPAID'.
 * `collation` - (Optional, String) System character set collation, default: Chinese_PRC_CI_AS.
 * `db_version` - (Optional, String) sqlserver version, currently all supported versions are: 2008R2 (SQL Server 2008 R2 Enterprise), 2012SP3 (SQL Server 2012 Enterprise), 201202 (SQL Server 2012 Standard), 2014SP2 (SQL Server 2014 Enterprise), 201402 (SQL Server 2014 Standard), 2016SP1 (SQL Server 2016 Enterprise), 201602 (SQL Server 2016 Standard), 2017 (SQL Server 2017 Enterprise), 201702 (SQL Server 2017 Standard), 2019 (SQL Server 2019 Enterprise), 201902 (SQL Server 2019 Standard). Each region supports different versions for sale, and the version information that can be sold in each region can be pulled through the DescribeProductConfig interface. If left blank, the default version is 2008R2.
+* `disk_encrypt_flag` - (Optional, Int) Disk encryption identification, 0-not encrypted, 1-encrypted.
+* `dr_zones` - (Optional, Set: [`String`]) The standby node availability area is empty by default. When MultiNodes = true, the primary node and standby node availability areas cannot all be the same. The minimum number of standby availability areas set is 2, and the maximum number is no more than 5.
 * `ha_type` - (Optional, String, **Deprecated**) It has been deprecated from version 1.81.2. Upgrade the high-availability architecture of sqlserver, upgrade from mirror disaster recovery to always on cluster disaster recovery, only support 2017 and above and support always on high-availability instances, do not support downgrading to mirror disaster recovery, CLUSTER-upgrade to always on capacity Disaster, if not filled, the high-availability architecture will not be modified.
 * `instance_charge_type` - (Optional, String) Payment mode, the value supports PREPAID (prepaid), POSTPAID (postpaid).
+* `multi_nodes` - (Optional, Bool) Whether it is a multi-node architecture instance, the default value is false. When MultiNodes = true, the parameter MultiZones must be true.
+* `multi_zones` - (Optional, Bool) Whether to deploy across availability zones, the default value is false.
 * `period` - (Optional, Int) Purchase instance period, the default value is 1, which means one month. The value cannot exceed 48. Valid only when the 'instance_charge_type' parameter value is 'PREPAID'.
 * `project_id` - (Optional, Int) project ID.
 * `resource_tags` - (Optional, List) A collection of tags bound to the new instance.
@@ -97,7 +101,8 @@ The `resource_tags` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `dns_pod_domain` - Internet address domain name.
+* `tgw_wan_vport` - External port number.
 
 
 ## Import

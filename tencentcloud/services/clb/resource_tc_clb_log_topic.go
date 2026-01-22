@@ -7,9 +7,13 @@ import (
 	"sync"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svccls "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 )
 
 var clsActionMu = &sync.Mutex{}
@@ -18,6 +22,7 @@ func ResourceTencentCloudClbLogTopic() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbInstanceTopicCreate,
 		Read:   resourceTencentCloudClbInstanceTopicRead,
+		Update: resourceTencentCloudClbInstanceTopicUpdate,
 		Delete: resourceTencentCloudClbInstanceTopicDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -36,18 +41,13 @@ func ResourceTencentCloudClbLogTopic() *schema.Resource {
 				ForceNew:    true,
 				Description: "Log topic of CLB instance.",
 			},
-			//"partition_count": {
-			//	Type:         schema.TypeInt,
-			//	Optional:     true,
-			//	ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
-			//	Description:  "Topic partition count of CLB instance.(Default 1).",
-			//},
-			//compute
 			"status": {
 				Type:        schema.TypeBool,
+				Optional:    true,
 				Computed:    true,
-				Description: "The status of log topic.",
+				Description: "The status of log topic. true: enable; false: disable. Default is true.",
 			},
+			//compute
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -88,7 +88,32 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 		log.Printf("[CRITAL]%s create clb topic failed, reason:%+v", logId, err)
 		return err
 	}
-	d.SetId(*resp.Response.TopicId)
+
+	topicId := *resp.Response.TopicId
+	d.SetId(topicId)
+
+	if v, ok := d.GetOkExists("status"); ok {
+		if !v.(bool) {
+			request := cls.NewModifyTopicRequest()
+			request.TopicId = &topicId
+			request.Status = helper.Bool(false)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudClbInstanceTopicRead(d, meta)
 }
 
@@ -113,7 +138,39 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 	_ = d.Set("create_time", res.CreateTime)
 	_ = d.Set("status", res.Status)
 	return nil
+}
 
+func resourceTencentCloudClbInstanceTopicUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_clb_log_topic.update")()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		topicId = d.Id()
+	)
+
+	if d.HasChange("status") {
+		if v, ok := d.GetOkExists("status"); ok {
+			request := cls.NewModifyTopicRequest()
+			request.TopicId = &topicId
+			request.Status = helper.Bool(v.(bool))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return resourceTencentCloudClbInstanceTopicRead(d, meta)
 }
 
 func resourceTencentCloudClbInstanceTopicDelete(d *schema.ResourceData, meta interface{}) error {

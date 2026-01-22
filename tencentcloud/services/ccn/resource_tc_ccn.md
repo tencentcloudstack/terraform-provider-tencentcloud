@@ -1,25 +1,29 @@
 Provides a resource to create a CCN instance.
 
+~> **NOTE:** `route_overlap_flag` currently does not support setting to `false`.
+
 Example Usage
 
-Create a prepaid CCN
+Create a PREPAID CCN
 
 ```hcl
 resource "tencentcloud_ccn" "example" {
-  name                 = "tf-example"
-  description          = "desc."
-  qos                  = "AG"
-  charge_type          = "PREPAID"
-  bandwidth_limit_type = "INTER_REGION_LIMIT"
-  route_ecmp_flag      = true
-  route_overlap_flag   = true
+  name                   = "tf-example"
+  description            = "desc."
+  qos                    = "AG"
+  charge_type            = "PREPAID"
+  bandwidth_limit_type   = "INTER_REGION_LIMIT"
+  instance_metering_type = "BANDWIDTH"
+  route_ecmp_flag        = true
+  route_overlap_flag     = true
+
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
 
-Create a post-paid regional export speed limit type CCN
+Create a POSTPAID regional export speed limit type CCN
 
 ```hcl
 resource "tencentcloud_ccn" "example" {
@@ -29,14 +33,14 @@ resource "tencentcloud_ccn" "example" {
   charge_type          = "POSTPAID"
   bandwidth_limit_type = "OUTER_REGION_LIMIT"
   route_ecmp_flag      = false
-  route_overlap_flag   = false
+  route_overlap_flag   = true
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
 
-Create a post-paid inter-regional rate limit type CNN
+Create a POSTPAID inter-regional rate limit type CNN
 
 ```hcl
 resource "tencentcloud_ccn" "example" {

@@ -200,6 +200,10 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 		request.VoucherIds = helper.InterfacesStringsPoint(v)
 	}
 
+	if v, ok := d.GetOk("time_zone"); ok {
+		request.TimeZone = helper.String(v.(string))
+	}
+
 	var instanceId string
 	var outErr, inErr error
 
@@ -299,6 +303,10 @@ func resourceTencentCloudSqlserverReadonlyInstanceRead(d *schema.ResourceData, m
 		}
 	}
 
+	if instance.TimeZone != nil {
+		_ = d.Set("time_zone", instance.TimeZone)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "sqlserver", "instance", tcClient.Region, d.Id())
@@ -315,6 +323,13 @@ func resourceTencentCloudSqlserverReadonlyInstanceUpdate(d *schema.ResourceData,
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	immutableArgs := []string{"time_zone"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	//basic info update
 	if err := sqlServerAllInstanceRoleUpdate(ctx, d, meta); err != nil {

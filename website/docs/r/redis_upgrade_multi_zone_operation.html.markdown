@@ -4,17 +4,17 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_redis_upgrade_multi_zone_operation"
 sidebar_current: "docs-tencentcloud-resource-redis_upgrade_multi_zone_operation"
 description: |-
-  Provides a resource to create a redis upgrade_multi_zone_operation
+  Provides a resource to create a redis upgrade multi zone operation
 ---
 
 # tencentcloud_redis_upgrade_multi_zone_operation
 
-Provides a resource to create a redis upgrade_multi_zone_operation
+Provides a resource to create a redis upgrade multi zone operation
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_redis_upgrade_multi_zone_operation" "upgrade_multi_zone_operation" {
+resource "tencentcloud_redis_upgrade_multi_zone_operation" "example" {
   instance_id                    = "crs-c1nl9rpv"
   upgrade_proxy_and_redis_server = true
 }

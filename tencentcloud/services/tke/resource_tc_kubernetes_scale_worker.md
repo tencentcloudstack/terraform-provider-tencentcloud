@@ -112,6 +112,38 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
 }
 ```
 
+Create scale worker for CDC cluster
+
+```hcl
+resource "tencentcloud_kubernetes_scale_worker" "example" {
+  cluster_id = "cls-0o0dpx1a"
+
+  worker_config {
+    count                = 2
+    instance_charge_type = "CDCPAID"
+    instance_name        = "tke_worker_demo"
+    availability_zone    = "ap-guangzhou-4"
+    instance_type        = "S5.MEDIUM2"
+    subnet_id            = "subnet-muu9a0gk"
+    system_disk_type     = "CLOUD_SSD"
+    system_disk_size     = 50
+    internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+    security_group_ids   = ["sg-4z20n68d"]
+
+    data_disk {
+      disk_type = "CLOUD_SSD"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "Password@123"
+    cdc_id                    = "cluster-262n63e8"
+  }
+}
+```
+
 Import
 
 tke scale worker can be imported, e.g.

@@ -11,47 +11,49 @@ description: |-
 
 Provides a resource to create a monitor tmpExporterIntegration
 
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version `1.81.182`. Please use `tencentcloud_monitor_tmp_exporter_integration_v2` instead.
+
 ~> **NOTE:** If you only want to upgrade the exporter version with same config, you can set `version` under `instanceSpec` with any value to trigger the change.
 
 ## Example Usage
 
-### Use blackbox-exporter
+### Use qcloud-exporter
 
 ```hcl
-resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration" {
-  instance_id = "prom-dko9d0nu"
-  kind        = "blackbox-exporter"
-  content     = "{\"name\":\"test\",\"kind\":\"blackbox-exporter\",\"spec\":{\"instanceSpec\":{\"module\":\"http_get\",\"urls\":[\"xx\"]}}}"
-  kube_type   = 1
-  cluster_id  = "cls-bmuaukfu"
+resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
+  instance_id = "prom-gzg3f1em"
+  kind        = "qcloud-exporter"
+  content     = "{\"name\":\"test\",\"kind\":\"qcloud-exporter\",\"spec\":{\"scrapeSpec\":{\"interval\":\"1m\",\"timeout\":\"1m\",\"relabelConfigs\":\"#metricRelabelings:\\n#- action: labeldrop\\n#  regex: tmp_test_label\\n\"},\"instanceSpec\":{\"region\":\"Guangzhou\",\"role\":\"CM_QCSLinkedRoleInTMP\",\"useRole\":true,\"authProvider\":{\"method\":1,\"presetRole\":\"CM_QCSLinkedRoleInTMP\"},\"rateLimit\":1000,\"delaySeconds\":0,\"rangeSeconds\":0,\"reload_interval_minutes\":10,\"uin\":\"100023201586\",\"tag_key_operation\":\"ToUnderLineAndLower\"},\"exporterSpec\":{\"cvm\":false,\"cbs\":true,\"imageRegistry\":\"ccr.ccs.tencentyun.com\",\"cpu\":\"0.25\",\"memory\":\"0.5Gi\"}},\"status\":{}}"
+  cluster_id  = "cls-csxm4phu"
+  kube_type   = 3
 }
 ```
 
 ### Use es-exporter
 
 ```hcl
-resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationEs" {
-  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id
+resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
+  instance_id = "prom-gzg3f1em"
   kind        = "es-exporter"
   content = jsonencode({
     "name" : "ex-exporter-example",
     "kind" : "es-exporter",
     "spec" : {
       "instanceSpec" : {
-        "url" : "http://127.0.0.1:9123",
+        "user" : "root",
+        "password" : "Password@123"
+        "url" : "http://127.0.0.1:8080",
         "labels" : {
-          "instance" : "es-abcd"
-        },
-        "version" : "1.70.1",
-        "user" : "fugiat Duis minim",
-        "password" : "exercitation cillum velit"
+          "labelKey" : "labelValue"
+        }
       },
       "exporterSpec" : {
         "all" : true,
-        "indicesSettings" : false,
-        "snapshots" : false,
         "indices" : true,
-        "shards" : false
+        "indicesSettings" : true,
+        "shards" : true,
+        "snapshots" : true,
+        "clusterSettings" : true
       }
     }
   })
@@ -64,31 +66,31 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
 
 ```hcl
 resource "tencentcloud_vpc" "vpc" {
-  name       = "tf-eks-vpc"
+  name       = "vpc"
   cidr_block = "10.2.0.0/16"
 }
 
-resource "tencentcloud_subnet" "sub" {
+resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
-  name              = "tf-as-subnet"
+  name              = "subnet"
   cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = "ap-guangzhou-6"
 }
 
-resource "tencentcloud_monitor_tmp_instance" "tmpInstance" {
-  instance_name       = "tf-test-tmp"
+resource "tencentcloud_monitor_tmp_instance" "example" {
+  instance_name       = "tf-example"
   vpc_id              = tencentcloud_vpc.vpc.id
-  subnet_id           = tencentcloud_subnet.sub.id
+  subnet_id           = tencentcloud_subnet.subnet.id
   data_retention_time = 15
-  zone                = "ap-guangzhou-3"
+  zone                = "ap-guangzhou-6"
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 
 # Integration Center: CVM Scrape Job
-resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration" {
-  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id
+resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
+  instance_id = tencentcloud_monitor_tmp_instance.example.id
   kind        = "cvm-http-sd-exporter"
   content = jsonencode({
     "kind" : "cvm-http-sd-exporter",
@@ -117,8 +119,8 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       EOT
     }
   })
-  kube_type  = 3
   cluster_id = ""
+  kube_type  = 3
 }
 ```
 

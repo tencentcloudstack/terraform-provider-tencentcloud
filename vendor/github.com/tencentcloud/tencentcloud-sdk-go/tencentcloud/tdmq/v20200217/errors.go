@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@ const (
 
 	// 调用交易服务发生异常。
 	FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
+
+	// 第三方云服务异常，请稍后重试
+	FAILEDOPERATION_CLOUDSERVICE = "FailedOperation.CloudService"
 
 	// CMQ 后台服务错误。
 	FAILEDOPERATION_CMQBACKENDERROR = "FailedOperation.CmqBackendError"
@@ -62,6 +65,9 @@ const (
 	// 删除集群失败。
 	FAILEDOPERATION_DELETECLUSTER = "FailedOperation.DeleteCluster"
 
+	// 群集删除保护已打开，删除群集失败。
+	FAILEDOPERATION_DELETECLUSTERPROTECTION = "FailedOperation.DeleteClusterProtection"
+
 	// 删除环境角色失败。
 	FAILEDOPERATION_DELETEENVIRONMENTROLES = "FailedOperation.DeleteEnvironmentRoles"
 
@@ -83,14 +89,29 @@ const (
 	// 查询订阅数据失败。
 	FAILEDOPERATION_DESCRIBESUBSCRIPTION = "FailedOperation.DescribeSubscription"
 
+	// 参数异常，下单失败
+	FAILEDOPERATION_GENERATEDEALSANDPAYERROR = "FailedOperation.GenerateDealsAndPayError"
+
 	// 获取环境属性失败。
 	FAILEDOPERATION_GETENVIRONMENTATTRIBUTESFAILED = "FailedOperation.GetEnvironmentAttributesFailed"
 
 	// 获取主题分区数失败。
 	FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
 
+	// 实例已开启删除保护功能，如需进行删除操作，请关闭删除保护。
+	FAILEDOPERATION_INSTANCECANNOTDELETE = "FailedOperation.InstanceCanNotDelete"
+
 	// 实例尚未就绪，请稍后再试。
 	FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
+
+	// 存量公网禁止修改
+	FAILEDOPERATION_INVALIDEXISTPUBLICACCESSPOINTERROR = "FailedOperation.InvalidExistPublicAccessPointError"
+
+	// 参数不合法
+	FAILEDOPERATION_INVALIDWHITELISTERROR = "FailedOperation.InvalidWhiteListError"
+
+	// 当前集群不支持设置该参数
+	FAILEDOPERATION_ISOLATECONSUMERENABLE = "FailedOperation.IsolateConsumerEnable"
 
 	// 最大消息超过1MB。
 	FAILEDOPERATION_MAXMESSAGESIZEERROR = "FailedOperation.MaxMessageSizeError"
@@ -98,8 +119,20 @@ const (
 	// 上传的msgID错误。
 	FAILEDOPERATION_MESSAGEIDERROR = "FailedOperation.MessageIDError"
 
+	// 修改集群失败
+	FAILEDOPERATION_MODIFYCLUSTER = "FailedOperation.ModifyCluster"
+
 	// 必须先清除关联命名空间才能继续操作。
 	FAILEDOPERATION_NAMESPACEINUSE = "FailedOperation.NamespaceInUse"
+
+	// 删除资源不存在
+	FAILEDOPERATION_ONLINEREFUNDRESOURCENOTEXIT = "FailedOperation.OnlineRefundResourceNotExit"
+
+	// 任务进行中，请稍后重试
+	FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
+
+	// 产品信息不存在
+	FAILEDOPERATION_PRODUCTNOTEXIST = "FailedOperation.ProductNotExist"
 
 	// PulsarAdminClient错误。
 	FAILEDOPERATION_PULSARADMINERROR = "FailedOperation.PulsarAdminError"
@@ -109,6 +142,12 @@ const (
 
 	// 接收消息超时，请重试。
 	FAILEDOPERATION_RECEIVETIMEOUT = "FailedOperation.ReceiveTimeout"
+
+	// 跨地域复制校验不通过
+	FAILEDOPERATION_REPLICATIONDESTCHECKFAILEDERROR = "FailedOperation.ReplicationDestCheckFailedError"
+
+	// 跨地域复制检验不通过
+	FAILEDOPERATION_REPLICATIONSOURCECHECKFAILEDERROR = "FailedOperation.ReplicationSourceCheckFailedError"
 
 	// 消息回溯设置失败。
 	FAILEDOPERATION_RESETMSGSUBOFFSETBYTIMESTAMPFAILED = "FailedOperation.ResetMsgSubOffsetByTimestampFailed"
@@ -121,6 +160,9 @@ const (
 
 	// 消息发送超时。
 	FAILEDOPERATION_SENDMESSAGETIMEOUTERROR = "FailedOperation.SendMessageTimeoutError"
+
+	// 发送消息失败
+	FAILEDOPERATION_SENDMSG = "FailedOperation.SendMsg"
 
 	// 发送消息失败。
 	FAILEDOPERATION_SENDMSGFAILED = "FailedOperation.SendMsgFailed"
@@ -188,8 +230,14 @@ const (
 	// 没有获取到正确的 token。
 	INVALIDPARAMETER_TOKENNOTFOUND = "InvalidParameter.TokenNotFound"
 
+	// 无效的 vpc 信息或者子网信息
+	INVALIDPARAMETER_VPC = "InvalidParameter.Vpc"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// AckTime参数错误
+	INVALIDPARAMETERVALUE_ACKTIME = "InvalidParameterValue.AckTime"
 
 	// 至少需要提供一个参数。
 	INVALIDPARAMETERVALUE_ATLEASTONE = "InvalidParameterValue.AtLeastOne"
@@ -218,6 +266,9 @@ const (
 	// 实例下环境数量超过限制。
 	LIMITEXCEEDED_ENVIRONMENTS = "LimitExceeded.Environments"
 
+	// 消息轨迹查询时间周期太长
+	LIMITEXCEEDED_MSGTIME = "LimitExceeded.MsgTime"
+
 	// 实例下命名空间数量超过限额。
 	LIMITEXCEEDED_NAMESPACES = "LimitExceeded.Namespaces"
 
@@ -238,6 +289,9 @@ const (
 
 	// 必要参数没有传递。
 	MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+
+	// 标签信息缺失
+	MISSINGPARAMETER_TAG = "MissingParameter.Tag"
 
 	// 订阅仍在消费中。
 	OPERATIONDENIED_CONSUMERRUNNING = "OperationDenied.ConsumerRunning"
@@ -281,6 +335,9 @@ const (
 	// 集群不存在。
 	RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 
+	// 链路不存在
+	RESOURCENOTFOUND_DISASTERREPLICATELINK = "ResourceNotFound.DisasterReplicateLink"
+
 	// 环境不存在。
 	RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
 
@@ -301,6 +358,9 @@ const (
 
 	// 命名空间不存在。
 	RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+
+	// 命名空间不存在。
+	RESOURCENOTFOUND_NAMSPACE = "ResourceNotFound.Namspace"
 
 	// 角色不存在。
 	RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
@@ -332,9 +392,15 @@ const (
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
 
+	// Policy 参数错误
+	UNKNOWNPARAMETER_POLICY = "UnknownParameter.Policy"
+
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
 	// 该实例不支持降配操作。
 	UNSUPPORTEDOPERATION_INSTANCEDOWNGRADE = "UnsupportedOperation.InstanceDowngrade"
+
+	// 当前集群不支持Unack 操作
+	UNSUPPORTEDOPERATION_TOPICUNACK = "UnsupportedOperation.TopicUnack"
 )

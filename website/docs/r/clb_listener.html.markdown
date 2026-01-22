@@ -16,9 +16,9 @@ Provides a resource to create a CLB listener.
 ### HTTP Listener
 
 ```hcl
-resource "tencentcloud_clb_listener" "HTTP_listener" {
-  clb_id        = "lb-0lh5au7v"
-  listener_name = "test_listener"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id        = "lb-qck8thny"
+  listener_name = "tf-example"
   port          = 80
   protocol      = "HTTP"
 }
@@ -27,9 +27,9 @@ resource "tencentcloud_clb_listener" "HTTP_listener" {
 ### TCP/UDP Listener
 
 ```hcl
-resource "tencentcloud_clb_listener" "TCP_listener" {
-  clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 80
   protocol                   = "TCP"
   health_check_switch        = true
@@ -41,18 +41,21 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
   scheduler                  = "WRR"
   health_check_port          = 200
   health_check_type          = "HTTP"
+  health_check_http_path     = "/"
   health_check_http_code     = 2
   health_check_http_version  = "HTTP/1.0"
   health_check_http_method   = "GET"
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
 ### TCP/UDP Listener with tcp health check
 
 ```hcl
-resource "tencentcloud_clb_listener" "listener_tcp" {
-  clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -64,15 +67,17 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   scheduler                  = "WRR"
   health_check_type          = "TCP"
   health_check_port          = 200
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
 ### TCP/UDP Listener with http health check
 
 ```hcl
-resource "tencentcloud_clb_listener" "listener_tcp" {
-  clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -88,15 +93,17 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_http_version  = "HTTP/1.1"
   health_check_http_method   = "HEAD"
   health_check_http_path     = "/"
+  deregister_target_rst      = false
+  idle_connect_timeout       = 900
 }
 ```
 
 ### TCP/UDP Listener with customer health check
 
 ```hcl
-resource "tencentcloud_clb_listener" "listener_tcp" {
-  clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "example" {
+  clb_id                     = "lb-qck8thny"
+  listener_name              = "tf-example"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -114,12 +121,12 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 }
 ```
 
-### HTTPS Listener
+### HTTPS Listener with sigle certificate
 
 ```hcl
-resource "tencentcloud_clb_listener" "HTTPS_listener" {
+resource "tencentcloud_clb_listener" "example" {
   clb_id               = "lb-0lh5au7v"
-  listener_name        = "test_listener"
+  listener_name        = "tf-example"
   port                 = "80"
   protocol             = "HTTPS"
   certificate_ssl_mode = "MUTUAL"
@@ -129,12 +136,32 @@ resource "tencentcloud_clb_listener" "HTTPS_listener" {
 }
 ```
 
+### HTTPS Listener with multi certificates
+
+```hcl
+resource "tencentcloud_clb_listener" "example" {
+  clb_id        = "lb-l6cp6jt4"
+  listener_name = "tf-example"
+  port          = "80"
+  protocol      = "HTTPS"
+  sni_switch    = true
+
+  multi_cert_info {
+    ssl_mode = "UNIDIRECTIONAL"
+    cert_id_list = [
+      "LCYouprI",
+      "JVO1alRN"
+    ]
+  }
+}
+```
+
 ### TCP SSL Listener
 
 ```hcl
-resource "tencentcloud_clb_listener" "TCPSSL_listener" {
+resource "tencentcloud_clb_listener" "example" {
   clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
+  listener_name              = "tf-example"
   port                       = "80"
   protocol                   = "TCP_SSL"
   certificate_ssl_mode       = "MUTUAL"
@@ -153,17 +180,17 @@ resource "tencentcloud_clb_listener" "TCPSSL_listener" {
 ### Port Range Listener
 
 ```hcl
-resource "tencentcloud_clb_instance" "clb_basic" {
-  network_type = "OPEN"
+resource "tencentcloud_clb_instance" "example" {
   clb_name     = "tf-listener-test"
+  network_type = "OPEN"
 }
 
-resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id              = tencentcloud_clb_instance.clb_basic.id
+resource "tencentcloud_clb_listener" "example" {
+  clb_id              = tencentcloud_clb_instance.example.id
+  listener_name       = "tf-example"
   port                = 1
   end_port            = 6
   protocol            = "TCP"
-  listener_name       = "listener_basic"
   session_expire_time = 30
   scheduler           = "WRR"
   target_type         = "NODE"
@@ -180,6 +207,7 @@ The following arguments are supported:
 * `certificate_ca_id` - (Optional, String) ID of the client certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when the ssl mode is `MUTUAL`.
 * `certificate_id` - (Optional, String) ID of the server certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.
 * `certificate_ssl_mode` - (Optional, String) Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.
+* `deregister_target_rst` - (Optional, Bool) Whether to send the TCP RST packet to the client when unbinding a real server. This parameter is applicable to TCP listeners only.
 * `end_port` - (Optional, Int, ForceNew) This parameter is used to specify the end port and is required when creating a port range listener. Only one member can be passed in when inputting the `Ports` parameter, which is used to specify the start port. If you want to try the port range feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).
 * `h2c_switch` - (Optional, Bool, ForceNew) Enable H2C switch for intranet HTTP listener.
 * `health_check_context_type` - (Optional, String) Health check protocol. When the value of `health_check_type` of the health check protocol is `CUSTOM`, this field is required, which represents the input format of the health check. Valid values: `HEX`, `TEXT`.
@@ -198,13 +226,26 @@ The following arguments are supported:
 * `health_check_type` - (Optional, String) Protocol used for health check. Valid values: `CUSTOM`, `TCP`, `HTTP`,`HTTPS`, `PING`, `GRPC`.
 * `health_check_unhealth_num` - (Optional, Int) Unhealthy threshold of health check, and the default is `3`. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is [2-10]. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `health_source_ip_type` - (Optional, Int) Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.
+* `idle_connect_timeout` - (Optional, Int) Connection idle timeout period (in seconds). It's only available to TCP listeners. Value range: 300-900 for shared and dedicated instances; 300-2000 for LCU-supported CLB instances. It defaults to 900. To set a period longer than 2000 seconds (up to 3600 seconds). Please submit a work order for processing.
 * `keepalive_enable` - (Optional, Int) Whether to enable a persistent connection. This parameter is applicable only to HTTP and HTTPS listeners. Valid values: 0 (disable; default value) and 1 (enable).
+* `multi_cert_info` - (Optional, List) Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.
 * `port` - (Optional, Int, ForceNew) Port of the CLB listener.
+* `reschedule_expand_target` - (Optional, Bool) The rescheduling function, a switch for scaling backend services, triggers rescheduling when backend servers are added or removed. Only supported by TCP/UDP listeners.
+* `reschedule_interval` - (Optional, Int) Rescheduled trigger duration, ranging from 0 to 3600 seconds. Supported only by TCP/UDP listeners.
+* `reschedule_start_time` - (Optional, Int) Reschedule the trigger start time, with a value ranging from 0 to 3600 seconds. Only supported by TCP/UDP listeners.
+* `reschedule_target_zero_weight` - (Optional, Bool) The rescheduling function, with a weight of 0 as a switch, triggers rescheduling when the weight of the backend server is set to 0. Only supported by TCP/UDP listeners.
+* `reschedule_unhealthy` - (Optional, Bool) Rescheduling function, health check exception switch. Enabling this switch triggers rescheduling when a backend server fails a health check. Supported only by TCP/UDP listeners.
 * `scheduler` - (Optional, String) Scheduling method of the CLB listener, and available values are 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of `HTTP` and `HTTPS` protocol additionally supports the `IP Hash` method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `session_expire_time` - (Optional, Int) Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `session_type` - (Optional, String) Session persistence type. Valid values: `NORMAL`: the default session persistence type; `QUIC_CID`: session persistence by QUIC connection ID. The `QUIC_CID` value can only be configured in UDP listeners. If this field is not specified, the default session persistence type will be used.
+* `snat_enable` - (Optional, Bool) Whether to enable SNAT.
 * `sni_switch` - (Optional, Bool, ForceNew) Indicates whether SNI is enabled, and only supported with protocol `HTTPS`. If enabled, you can set a certificate for each rule in `tencentcloud_clb_listener_rule`, otherwise all rules have a certificate.
 * `target_type` - (Optional, String) Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group. NOTES: TCP/UDP/TCP_SSL listener must configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
+
+The `multi_cert_info` object supports the following:
+
+* `cert_id_list` - (Required, Set) List of server certificate ID.
+* `ssl_mode` - (Required, String) Authentication type. Values: UNIDIRECTIONAL (one-way authentication), MUTUAL (two-way authentication).
 
 ## Attributes Reference
 
@@ -216,9 +257,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-CLB listener can be imported using the id (version >= 1.47.0), e.g.
+CLB listener can be imported using the clbId#listenerId (version >= 1.47.0), e.g.
 
 ```
-$ terraform import tencentcloud_clb_listener.foo lb-7a0t6zqb#lbl-hh141sn9
+$ terraform import tencentcloud_clb_listener.example lb-7a0t6zqb#lbl-hh141sn9
 ```
 

@@ -17,29 +17,26 @@ func ResourceTencentCloudDlcRollbackDataEngineImageOperation() *schema.Resource 
 		Create: resourceTencentCloudDlcRollbackDataEngineImageCreateOperation,
 		Read:   resourceTencentCloudDlcRollbackDataEngineImageReadOperation,
 		Delete: resourceTencentCloudDlcRollbackDataEngineImageDeleteOperation,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"data_engine_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Engine unique id.",
+				Description: "Engine ID.",
 			},
 
 			"from_record_id": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Log record id before rollback.",
+				Description: "FromRecordId parameters returned by the API for checking the availability of rolling back.",
 			},
 
 			"to_record_id": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Log record id after rollback.",
+				Description: "ToRecordId parameters returned by the API for checking the availability of rolling back.",
 			},
 		},
 	}
@@ -49,12 +46,12 @@ func resourceTencentCloudDlcRollbackDataEngineImageCreateOperation(d *schema.Res
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_rollback_data_engine_image_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
 		request      = dlc.NewRollbackDataEngineImageRequest()
 		dataEngineId string
 	)
+
 	if v, ok := d.GetOk("data_engine_id"); ok {
 		dataEngineId = v.(string)
 		request.DataEngineId = helper.String(v.(string))
@@ -75,15 +72,16 @@ func resourceTencentCloudDlcRollbackDataEngineImageCreateOperation(d *schema.Res
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s operate dlc rollbackDataEngineImage failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(dataEngineId)
-
 	return resourceTencentCloudDlcRollbackDataEngineImageReadOperation(d, meta)
 }
 

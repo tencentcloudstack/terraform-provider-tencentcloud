@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
+	cynosdbv20190107 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -2668,7 +2669,7 @@ func (me *CynosdbService) DeleteCynosdbResourcePackageById(ctx context.Context, 
 	return
 }
 
-func (me *CynosdbService) DescribeCynosdbClusterSlaveZoneById(ctx context.Context, clusterId string) (clusterSlaveZone *cynosdb.CynosdbClusterDetail, errRet error) {
+func (me *CynosdbService) DescribeCynosdbClusterById(ctx context.Context, clusterId string) (cluster *cynosdb.CynosdbClusterDetail, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cynosdb.NewDescribeClusterDetailRequest()
@@ -2689,7 +2690,7 @@ func (me *CynosdbService) DescribeCynosdbClusterSlaveZoneById(ctx context.Contex
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	clusterSlaveZone = response.Response.Detail
+	cluster = response.Response.Detail
 	return
 }
 
@@ -2899,6 +2900,229 @@ func (me *CynosdbService) DescribeCynosdbUpgradeProxyVersionById(ctx context.Con
 	}
 
 	upgradeProxyGroup = response.Response.ProxyGroupInfos[0].ProxyGroup
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbBackupConfigById(ctx context.Context, clusterId string) (ret *cynosdb.DescribeBackupConfigResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cynosdb.NewDescribeBackupConfigRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeBackupConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *CynosdbService) UpgradeClusterVersion(ctx context.Context, clusterId, cynosVersion string) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewUpgradeClusterVersionRequest()
+	response := cynosdb.NewUpgradeClusterVersionResponse()
+
+	request.ClusterId = &clusterId
+	request.CynosVersion = &cynosVersion
+	request.UpgradeType = helper.String(CYNOSDB_UPGRADE_IMMEDIATE)
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseCynosdbClient().UpgradeClusterVersion(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return tccommon.RetryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+	if response != nil && response.Response != nil {
+		flowId = *response.Response.FlowId
+	}
+
+	return
+}
+
+func (me *CynosdbService) DescribeSSLStatus(ctx context.Context, clusterId, instanceId string) (ret *cynosdb.DescribeSSLStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cynosdb.NewDescribeSSLStatusRequest()
+	request.ClusterId = &clusterId
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCynosdbClient().DescribeSSLStatus(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		ret = response.Response
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) taskStateRefreshFunc(taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		request := cynosdb.NewDescribeTasksRequest()
+		request.Filters = []*cynosdb.QueryFilter{
+			{
+				ExactMatch: helper.Bool(true),
+				Names:      helper.Strings([]string{"TaskId"}),
+				Values:     helper.Strings([]string{taskId}),
+			},
+		}
+
+		ratelimit.Check(request.GetAction())
+		object, err := me.client.UseCynosdbClient().DescribeTasks(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if object == nil || object.Response == nil || len(object.Response.TaskList) == 0 || object.Response.TaskList[0].Status == nil {
+			return nil, "", nil
+		}
+
+		return object, *object.Response.TaskList[0].Status, nil
+	}
+}
+
+func (me *CynosdbService) DescribeCynosdbClusterTransparentEncryptById(ctx context.Context, clusterId string) (ret *cynosdb.DescribeClusterTransparentEncryptInfoResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cynosdb.NewDescribeClusterTransparentEncryptInfoRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeClusterTransparentEncryptInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbAuditServiceById(ctx context.Context, instanceId string) (ret *cynosdb.InstanceAuditStatus, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewDescribeAuditInstanceListRequest()
+	response := cynosdb.NewDescribeAuditInstanceListResponse()
+	request.Offset = helper.Uint64(0)
+	request.Limit = helper.Uint64(1)
+	request.Filters = []*cynosdbv20190107.AuditInstanceFilters{
+		{
+			Name:       helper.String("InstanceId"),
+			ExactMatch: helper.Bool(true),
+			Values:     helper.Strings([]string{instanceId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DescribeAuditInstanceList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Items == nil || len(result.Response.Items) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe audit instance list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Items[0]
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbClsDeliveryById(ctx context.Context, instanceId, topicId string) (ret *cynosdb.InstanceCLSDeliveryInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cynosdb.NewDescribeInstanceCLSLogDeliveryRequest()
+	response := cynosdb.NewDescribeInstanceCLSLogDeliveryResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DescribeInstanceCLSLogDelivery(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.InstanceCLSDeliveryInfos == nil || len(result.Response.InstanceCLSDeliveryInfos) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe instance cls log delivery failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if topicId == "" {
+		ret = response.Response.InstanceCLSDeliveryInfos[0]
+	} else {
+		for _, item := range response.Response.InstanceCLSDeliveryInfos {
+			if item != nil && item.TopicId != nil && *item.TopicId == topicId {
+				ret = item
+				return
+			}
+		}
+	}
 
 	return
 }

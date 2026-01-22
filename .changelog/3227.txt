@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_instance: support `user_data` and `user_data_raw` update
+```
+
+```release-note:enhancement
+resource/tencentcloud_reserved_instance: update cvm sdk
+```

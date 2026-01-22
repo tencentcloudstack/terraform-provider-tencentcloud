@@ -116,12 +116,23 @@ resource "tencentcloud_eip_association" "example" {
 }
 ```
 
+### Bind elastic public IP By WAF(SaaS)
+
+```hcl
+resource "tencentcloud_eip_association" "example" {
+  eip_id      = "eip-4stgtfb8"
+  instance_id = "waf_2opxlbky67yub3gm"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `eip_id` - (Required, String, ForceNew) The ID of EIP.
-* `instance_id` - (Optional, String, ForceNew) The CVM or CLB instance id going to bind with the EIP. This field is conflict with `network_interface_id` and `private_ip fields`.
+* `instance_id` - (Optional, String, ForceNew) The ID of the target resource to associate with the Elastic IP (EIP). Supported targets include a CVM instance, SaaS WAF instance, CLB instance, or a VPC endpoint.
+Limitation (GWLB VPC endpoint): Only an EIP in the bound state can be associated with a GWLB-type VPC endpoint through this field, enabling more advanced networking scenarios.
+Mutual exclusivity: This field conflicts with `network_interface_id` and `private_ip`. Only one association target can be specified per request.
 * `network_interface_id` - (Optional, String, ForceNew) Indicates the network interface id like `eni-xxxxxx`. This field is conflict with `instance_id`.
 * `private_ip` - (Optional, String, ForceNew) Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.
 
@@ -130,7 +141,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `cdc_id` - ID of the dedicated cluster.
 
 
 ## Import
@@ -138,6 +149,6 @@ In addition to all arguments above, the following attributes are exported:
 Eip association can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_eip_association.bar eip-41s6jwy4::ins-34jwj3
+$ terraform import tencentcloud_eip_association.example eip-41s6jwy4::ins-0cxjwrog
 ```
 

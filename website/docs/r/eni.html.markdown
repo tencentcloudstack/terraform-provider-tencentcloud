@@ -57,7 +57,7 @@ resource "tencentcloud_eni" "example" {
   subnet_id   = tencentcloud_subnet.subnet.id
   description = "eni desc."
   ipv4_count  = 1
-  security_groups = [
+  orderly_security_groups = [
     tencentcloud_security_group.example1.id,
     tencentcloud_security_group.example2.id
   ]
@@ -74,7 +74,8 @@ The following arguments are supported:
 * `description` - (Optional, String) Description of the ENI, maximum length 60.
 * `ipv4_count` - (Optional, Int) The number of intranet IPv4s. When it is greater than 1, there is only one primary intranet IP. The others are auxiliary intranet IPs, which conflict with `ipv4s`.
 * `ipv4s` - (Optional, Set) Applying for intranet IPv4s collection, conflict with `ipv4_count`. When there are multiple ipv4s, can only be one primary IP, and the maximum length of the array is 30. Each element contains the following attributes:
-* `security_groups` - (Optional, Set: [`String`]) A set of security group IDs.
+* `orderly_security_groups` - (Optional, List: [`String`]) List of security group IDs.
+* `security_groups` - (Optional, Set: [`String`], **Deprecated**) It has been deprecated from version 1.82.15. Use `orderly_security_groups` instead. A set of security group IDs.
 * `tags` - (Optional, Map) Tags of the ENI.
 
 The `ipv4s` object supports the following:
@@ -104,6 +105,6 @@ In addition to all arguments above, the following attributes are exported:
 ENI can be imported using the id, e.g.
 
 ```
-  $ terraform import tencentcloud_eni.foo eni-qka182br
+  $ terraform import tencentcloud_eni.example eni-qka182br
 ```
 

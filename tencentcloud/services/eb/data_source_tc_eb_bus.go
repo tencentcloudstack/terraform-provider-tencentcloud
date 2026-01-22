@@ -19,7 +19,7 @@ func DataSourceTencentCloudEbBus() *schema.Resource {
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "According to which field to sort the returned results, the following fields are supported: AddTime (creation time), ModTime (modification time).",
+				Description: "According to which field to sort the returned results, the following fields are supported: `created_at` (creation time), `updated_at` (modification time).",
 			},
 
 			"order": {
@@ -177,7 +177,7 @@ func dataSourceTencentCloudEbBusRead(d *schema.ResourceData, meta interface{}) e
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["filters"] = tmpSet
+		paramMap["Filters"] = tmpSet
 	}
 
 	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
@@ -247,7 +247,7 @@ func dataSourceTencentCloudEbBusRead(d *schema.ResourceData, meta interface{}) e
 					connectionBriefsList = append(connectionBriefsList, connectionBriefsMap)
 				}
 
-				eventBusMap["connection_briefs"] = []interface{}{connectionBriefsList}
+				eventBusMap["connection_briefs"] = connectionBriefsList
 			}
 
 			if eventBus.TargetBriefs != nil {
@@ -266,7 +266,7 @@ func dataSourceTencentCloudEbBusRead(d *schema.ResourceData, meta interface{}) e
 					targetBriefsList = append(targetBriefsList, targetBriefsMap)
 				}
 
-				eventBusMap["target_briefs"] = []interface{}{targetBriefsList}
+				eventBusMap["target_briefs"] = targetBriefsList
 			}
 
 			ids = append(ids, *eventBus.EventBusId)

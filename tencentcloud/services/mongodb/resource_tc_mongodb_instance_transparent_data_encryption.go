@@ -156,7 +156,9 @@ func resourceTencentCloudMongodbInstanceTransparentDataEncryptionRead(d *schema.
 	if err != nil {
 		return err
 	}
+	_ = d.Set("instance_id", d.Id())
 	_ = d.Set("transparent_data_encryption_status", response.Response.TransparentDataEncryptionStatus)
+	var kmsRegion string
 	if response.Response != nil && len(response.Response.KeyInfoList) > 0 {
 		kmsInfoList := make([]map[string]interface{}, 0)
 		for _, kmsInfoDetail := range response.Response.KeyInfoList {
@@ -168,8 +170,12 @@ func resourceTencentCloudMongodbInstanceTransparentDataEncryptionRead(d *schema.
 			kmsInfoDetailMap["key_usage"] = kmsInfoDetail.KeyUsage
 			kmsInfoDetailMap["key_origin"] = kmsInfoDetail.KeyOrigin
 			kmsInfoList = append(kmsInfoList, kmsInfoDetailMap)
+			if kmsInfoDetail.KmsRegion != nil {
+				kmsRegion = *kmsInfoDetail.KmsRegion
+			}
 		}
 		_ = d.Set("key_info_list", kmsInfoList)
+		_ = d.Set("kms_region", kmsRegion)
 	}
 
 	return nil

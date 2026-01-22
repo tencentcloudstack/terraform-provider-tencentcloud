@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,8 +59,9 @@ func NewBatchDeleteImagePersonalRequest() (request *BatchDeleteImagePersonalRequ
 func NewBatchDeleteImagePersonalResponse() (response *BatchDeleteImagePersonalResponse) {
     response = &BatchDeleteImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteImagePersonal
@@ -87,6 +88,7 @@ func (c *Client) BatchDeleteImagePersonalWithContext(ctx context.Context, reques
     if request == nil {
         request = NewBatchDeleteImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "BatchDeleteImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchDeleteImagePersonal require credential")
@@ -113,8 +115,9 @@ func NewBatchDeleteRepositoryPersonalRequest() (request *BatchDeleteRepositoryPe
 func NewBatchDeleteRepositoryPersonalResponse() (response *BatchDeleteRepositoryPersonalResponse) {
     response = &BatchDeleteRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteRepositoryPersonal
@@ -141,6 +144,7 @@ func (c *Client) BatchDeleteRepositoryPersonalWithContext(ctx context.Context, r
     if request == nil {
         request = NewBatchDeleteRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "BatchDeleteRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchDeleteRepositoryPersonal require credential")
@@ -167,14 +171,16 @@ func NewCheckInstanceRequest() (request *CheckInstanceRequest) {
 func NewCheckInstanceResponse() (response *CheckInstanceResponse) {
     response = &CheckInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckInstance
 // 用于校验企业版实例信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -198,6 +204,7 @@ func (c *Client) CheckInstance(request *CheckInstanceRequest) (response *CheckIn
 // 用于校验企业版实例信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -217,6 +224,7 @@ func (c *Client) CheckInstanceWithContext(ctx context.Context, request *CheckIns
     if request == nil {
         request = NewCheckInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CheckInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckInstance require credential")
@@ -243,14 +251,16 @@ func NewCheckInstanceNameRequest() (request *CheckInstanceNameRequest) {
 func NewCheckInstanceNameResponse() (response *CheckInstanceNameResponse) {
     response = &CheckInstanceNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckInstanceName
 // 检查待创建的实例名称是否符合规范
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -274,6 +284,7 @@ func (c *Client) CheckInstanceName(request *CheckInstanceNameRequest) (response 
 // 检查待创建的实例名称是否符合规范
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -293,6 +304,7 @@ func (c *Client) CheckInstanceNameWithContext(ctx context.Context, request *Chec
     if request == nil {
         request = NewCheckInstanceNameRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CheckInstanceName")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckInstanceName require credential")
@@ -319,8 +331,9 @@ func NewCreateApplicationTriggerPersonalRequest() (request *CreateApplicationTri
 func NewCreateApplicationTriggerPersonalResponse() (response *CreateApplicationTriggerPersonalResponse) {
     response = &CreateApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateApplicationTriggerPersonal
@@ -353,6 +366,7 @@ func (c *Client) CreateApplicationTriggerPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewCreateApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateApplicationTriggerPersonal require credential")
@@ -361,66 +375,6 @@ func (c *Client) CreateApplicationTriggerPersonalWithContext(ctx context.Context
     request.SetContext(ctx)
     
     response = NewCreateApplicationTriggerPersonalResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateCustomAccountRequest() (request *CreateCustomAccountRequest) {
-    request = &CreateCustomAccountRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateCustomAccount")
-    
-    
-    return
-}
-
-func NewCreateCustomAccountResponse() (response *CreateCustomAccountResponse) {
-    response = &CreateCustomAccountResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// CreateCustomAccount
-// 创建自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateCustomAccount(request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
-    return c.CreateCustomAccountWithContext(context.Background(), request)
-}
-
-// CreateCustomAccount
-// 创建自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateCustomAccountWithContext(ctx context.Context, request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
-    if request == nil {
-        request = NewCreateCustomAccountRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateCustomAccount require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateCustomAccountResponse()
     err = c.Send(request, response)
     return
 }
@@ -439,8 +393,9 @@ func NewCreateImageAccelerationServiceRequest() (request *CreateImageAcceleratio
 func NewCreateImageAccelerationServiceResponse() (response *CreateImageAccelerationServiceResponse) {
     response = &CreateImageAccelerationServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateImageAccelerationService
@@ -475,6 +430,7 @@ func (c *Client) CreateImageAccelerationServiceWithContext(ctx context.Context, 
     if request == nil {
         request = NewCreateImageAccelerationServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateImageAccelerationService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateImageAccelerationService require credential")
@@ -501,8 +457,9 @@ func NewCreateImmutableTagRulesRequest() (request *CreateImmutableTagRulesReques
 func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResponse) {
     response = &CreateImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateImmutableTagRules
@@ -516,6 +473,7 @@ func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResp
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest) (response *CreateImmutableTagRulesResponse, err error) {
     return c.CreateImmutableTagRulesWithContext(context.Background(), request)
 }
@@ -531,10 +489,12 @@ func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateImmutableTagRulesWithContext(ctx context.Context, request *CreateImmutableTagRulesRequest) (response *CreateImmutableTagRulesResponse, err error) {
     if request == nil {
         request = NewCreateImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateImmutableTagRules require credential")
@@ -561,8 +521,9 @@ func NewCreateInstanceRequest() (request *CreateInstanceRequest) {
 func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
     response = &CreateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstance
@@ -627,6 +588,7 @@ func (c *Client) CreateInstanceWithContext(ctx context.Context, request *CreateI
     if request == nil {
         request = NewCreateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstance require credential")
@@ -653,8 +615,9 @@ func NewCreateInstanceCustomizedDomainRequest() (request *CreateInstanceCustomiz
 func NewCreateInstanceCustomizedDomainResponse() (response *CreateInstanceCustomizedDomainResponse) {
     response = &CreateInstanceCustomizedDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstanceCustomizedDomain
@@ -673,6 +636,7 @@ func NewCreateInstanceCustomizedDomainResponse() (response *CreateInstanceCustom
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceCustomizedDomain(request *CreateInstanceCustomizedDomainRequest) (response *CreateInstanceCustomizedDomainResponse, err error) {
@@ -695,12 +659,14 @@ func (c *Client) CreateInstanceCustomizedDomain(request *CreateInstanceCustomize
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceCustomizedDomainWithContext(ctx context.Context, request *CreateInstanceCustomizedDomainRequest) (response *CreateInstanceCustomizedDomainResponse, err error) {
     if request == nil {
         request = NewCreateInstanceCustomizedDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInstanceCustomizedDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceCustomizedDomain require credential")
@@ -727,8 +693,9 @@ func NewCreateInstanceTokenRequest() (request *CreateInstanceTokenRequest) {
 func NewCreateInstanceTokenResponse() (response *CreateInstanceTokenResponse) {
     response = &CreateInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstanceToken
@@ -763,6 +730,7 @@ func (c *Client) CreateInstanceTokenWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceToken require credential")
@@ -789,8 +757,9 @@ func NewCreateInternalEndpointDnsRequest() (request *CreateInternalEndpointDnsRe
 func NewCreateInternalEndpointDnsResponse() (response *CreateInternalEndpointDnsResponse) {
     response = &CreateInternalEndpointDnsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInternalEndpointDns
@@ -845,6 +814,7 @@ func (c *Client) CreateInternalEndpointDnsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateInternalEndpointDnsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateInternalEndpointDns")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInternalEndpointDns require credential")
@@ -871,8 +841,9 @@ func NewCreateMultipleSecurityPolicyRequest() (request *CreateMultipleSecurityPo
 func NewCreateMultipleSecurityPolicyResponse() (response *CreateMultipleSecurityPolicyResponse) {
     response = &CreateMultipleSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateMultipleSecurityPolicy
@@ -915,6 +886,7 @@ func (c *Client) CreateMultipleSecurityPolicyWithContext(ctx context.Context, re
     if request == nil {
         request = NewCreateMultipleSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateMultipleSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateMultipleSecurityPolicy require credential")
@@ -941,8 +913,9 @@ func NewCreateNamespaceRequest() (request *CreateNamespaceRequest) {
 func NewCreateNamespaceResponse() (response *CreateNamespaceResponse) {
     response = &CreateNamespaceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNamespace
@@ -997,6 +970,7 @@ func (c *Client) CreateNamespaceWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNamespace require credential")
@@ -1023,8 +997,9 @@ func NewCreateNamespacePersonalRequest() (request *CreateNamespacePersonalReques
 func NewCreateNamespacePersonalResponse() (response *CreateNamespacePersonalResponse) {
     response = &CreateNamespacePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateNamespacePersonal
@@ -1059,6 +1034,7 @@ func (c *Client) CreateNamespacePersonalWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateNamespacePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateNamespacePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNamespacePersonal require credential")
@@ -1085,8 +1061,9 @@ func NewCreateReplicationInstanceRequest() (request *CreateReplicationInstanceRe
 func NewCreateReplicationInstanceResponse() (response *CreateReplicationInstanceResponse) {
     response = &CreateReplicationInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateReplicationInstance
@@ -1135,6 +1112,7 @@ func (c *Client) CreateReplicationInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateReplicationInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateReplicationInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateReplicationInstance require credential")
@@ -1161,14 +1139,16 @@ func NewCreateRepositoryRequest() (request *CreateRepositoryRequest) {
 func NewCreateRepositoryResponse() (response *CreateRepositoryResponse) {
     response = &CreateRepositoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRepository
 // 用于企业版创建镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1188,6 +1168,7 @@ func (c *Client) CreateRepository(request *CreateRepositoryRequest) (response *C
 // 用于企业版创建镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1203,6 +1184,7 @@ func (c *Client) CreateRepositoryWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateRepositoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateRepository")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRepository require credential")
@@ -1229,8 +1211,9 @@ func NewCreateRepositoryPersonalRequest() (request *CreateRepositoryPersonalRequ
 func NewCreateRepositoryPersonalResponse() (response *CreateRepositoryPersonalResponse) {
     response = &CreateRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRepositoryPersonal
@@ -1259,6 +1242,7 @@ func (c *Client) CreateRepositoryPersonalWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRepositoryPersonal require credential")
@@ -1285,8 +1269,9 @@ func NewCreateSecurityPolicyRequest() (request *CreateSecurityPolicyRequest) {
 func NewCreateSecurityPolicyResponse() (response *CreateSecurityPolicyResponse) {
     response = &CreateSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSecurityPolicy
@@ -1321,6 +1306,7 @@ func (c *Client) CreateSecurityPolicyWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSecurityPolicy require credential")
@@ -1347,12 +1333,13 @@ func NewCreateServiceAccountRequest() (request *CreateServiceAccountRequest) {
 func NewCreateServiceAccountResponse() (response *CreateServiceAccountResponse) {
     response = &CreateServiceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateServiceAccount
-// 创建自定义账户
+// 创建服务级账户
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1367,7 +1354,7 @@ func (c *Client) CreateServiceAccount(request *CreateServiceAccountRequest) (res
 }
 
 // CreateServiceAccount
-// 创建自定义账户
+// 创建服务级账户
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1381,6 +1368,7 @@ func (c *Client) CreateServiceAccountWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateServiceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateServiceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateServiceAccount require credential")
@@ -1407,14 +1395,16 @@ func NewCreateSignatureRequest() (request *CreateSignatureRequest) {
 func NewCreateSignatureResponse() (response *CreateSignatureResponse) {
     response = &CreateSignatureResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSignature
 // 为一个镜像版本创建签名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1435,6 +1425,7 @@ func (c *Client) CreateSignature(request *CreateSignatureRequest) (response *Cre
 // 为一个镜像版本创建签名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -1451,6 +1442,7 @@ func (c *Client) CreateSignatureWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateSignatureRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateSignature")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSignature require credential")
@@ -1477,14 +1469,16 @@ func NewCreateSignaturePolicyRequest() (request *CreateSignaturePolicyRequest) {
 func NewCreateSignaturePolicyResponse() (response *CreateSignaturePolicyResponse) {
     response = &CreateSignaturePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSignaturePolicy
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -1496,6 +1490,7 @@ func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (r
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -1503,6 +1498,7 @@ func (c *Client) CreateSignaturePolicyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateSignaturePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateSignaturePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSignaturePolicy require credential")
@@ -1529,8 +1525,9 @@ func NewCreateTagRetentionExecutionRequest() (request *CreateTagRetentionExecuti
 func NewCreateTagRetentionExecutionResponse() (response *CreateTagRetentionExecutionResponse) {
     response = &CreateTagRetentionExecutionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTagRetentionExecution
@@ -1573,6 +1570,7 @@ func (c *Client) CreateTagRetentionExecutionWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateTagRetentionExecutionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateTagRetentionExecution")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTagRetentionExecution require credential")
@@ -1599,20 +1597,23 @@ func NewCreateTagRetentionRuleRequest() (request *CreateTagRetentionRuleRequest)
 func NewCreateTagRetentionRuleResponse() (response *CreateTagRetentionRuleResponse) {
     response = &CreateTagRetentionRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTagRetentionRule
 // 创建版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
 //  INTERNALERROR_ERRNOTEXIST = "InternalError.ErrNotExist"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -1628,12 +1629,14 @@ func (c *Client) CreateTagRetentionRule(request *CreateTagRetentionRuleRequest) 
 // 创建版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
 //  INTERNALERROR_ERRNOTEXIST = "InternalError.ErrNotExist"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -1645,6 +1648,7 @@ func (c *Client) CreateTagRetentionRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateTagRetentionRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateTagRetentionRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTagRetentionRule require credential")
@@ -1671,8 +1675,9 @@ func NewCreateUserPersonalRequest() (request *CreateUserPersonalRequest) {
 func NewCreateUserPersonalResponse() (response *CreateUserPersonalResponse) {
     response = &CreateUserPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateUserPersonal
@@ -1697,6 +1702,7 @@ func (c *Client) CreateUserPersonalWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateUserPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateUserPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUserPersonal require credential")
@@ -1723,8 +1729,9 @@ func NewCreateWebhookTriggerRequest() (request *CreateWebhookTriggerRequest) {
 func NewCreateWebhookTriggerResponse() (response *CreateWebhookTriggerResponse) {
     response = &CreateWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateWebhookTrigger
@@ -1757,6 +1764,7 @@ func (c *Client) CreateWebhookTriggerWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "CreateWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateWebhookTrigger require credential")
@@ -1783,8 +1791,9 @@ func NewDeleteApplicationTriggerPersonalRequest() (request *DeleteApplicationTri
 func NewDeleteApplicationTriggerPersonalResponse() (response *DeleteApplicationTriggerPersonalResponse) {
     response = &DeleteApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteApplicationTriggerPersonal
@@ -1809,6 +1818,7 @@ func (c *Client) DeleteApplicationTriggerPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewDeleteApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteApplicationTriggerPersonal require credential")
@@ -1817,62 +1827,6 @@ func (c *Client) DeleteApplicationTriggerPersonalWithContext(ctx context.Context
     request.SetContext(ctx)
     
     response = NewDeleteApplicationTriggerPersonalResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDeleteCustomAccountRequest() (request *DeleteCustomAccountRequest) {
-    request = &DeleteCustomAccountRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteCustomAccount")
-    
-    
-    return
-}
-
-func NewDeleteCustomAccountResponse() (response *DeleteCustomAccountResponse) {
-    response = &DeleteCustomAccountResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DeleteCustomAccount
-// 删除自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DeleteCustomAccount(request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
-    return c.DeleteCustomAccountWithContext(context.Background(), request)
-}
-
-// DeleteCustomAccount
-// 删除自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) DeleteCustomAccountWithContext(ctx context.Context, request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
-    if request == nil {
-        request = NewDeleteCustomAccountRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteCustomAccount require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteCustomAccountResponse()
     err = c.Send(request, response)
     return
 }
@@ -1891,14 +1845,16 @@ func NewDeleteImageRequest() (request *DeleteImageRequest) {
 func NewDeleteImageResponse() (response *DeleteImageResponse) {
     response = &DeleteImageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImage
 // 删除指定镜像
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -1918,6 +1874,7 @@ func (c *Client) DeleteImage(request *DeleteImageRequest) (response *DeleteImage
 // 删除指定镜像
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -1933,6 +1890,7 @@ func (c *Client) DeleteImageWithContext(ctx context.Context, request *DeleteImag
     if request == nil {
         request = NewDeleteImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImage require credential")
@@ -1959,8 +1917,9 @@ func NewDeleteImageAccelerateServiceRequest() (request *DeleteImageAccelerateSer
 func NewDeleteImageAccelerateServiceResponse() (response *DeleteImageAccelerateServiceResponse) {
     response = &DeleteImageAccelerateServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImageAccelerateService
@@ -1993,6 +1952,7 @@ func (c *Client) DeleteImageAccelerateServiceWithContext(ctx context.Context, re
     if request == nil {
         request = NewDeleteImageAccelerateServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImageAccelerateService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImageAccelerateService require credential")
@@ -2019,8 +1979,9 @@ func NewDeleteImageLifecycleGlobalPersonalRequest() (request *DeleteImageLifecyc
 func NewDeleteImageLifecycleGlobalPersonalResponse() (response *DeleteImageLifecycleGlobalPersonalResponse) {
     response = &DeleteImageLifecycleGlobalPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImageLifecycleGlobalPersonal
@@ -2041,6 +2002,7 @@ func (c *Client) DeleteImageLifecycleGlobalPersonalWithContext(ctx context.Conte
     if request == nil {
         request = NewDeleteImageLifecycleGlobalPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImageLifecycleGlobalPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImageLifecycleGlobalPersonal require credential")
@@ -2067,8 +2029,9 @@ func NewDeleteImagePersonalRequest() (request *DeleteImagePersonalRequest) {
 func NewDeleteImagePersonalResponse() (response *DeleteImagePersonalResponse) {
     response = &DeleteImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImagePersonal
@@ -2095,6 +2058,7 @@ func (c *Client) DeleteImagePersonalWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImagePersonal require credential")
@@ -2121,8 +2085,9 @@ func NewDeleteImmutableTagRulesRequest() (request *DeleteImmutableTagRulesReques
 func NewDeleteImmutableTagRulesResponse() (response *DeleteImmutableTagRulesResponse) {
     response = &DeleteImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImmutableTagRules
@@ -2134,6 +2099,7 @@ func NewDeleteImmutableTagRulesResponse() (response *DeleteImmutableTagRulesResp
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteImmutableTagRules(request *DeleteImmutableTagRulesRequest) (response *DeleteImmutableTagRulesResponse, err error) {
     return c.DeleteImmutableTagRulesWithContext(context.Background(), request)
 }
@@ -2147,10 +2113,12 @@ func (c *Client) DeleteImmutableTagRules(request *DeleteImmutableTagRulesRequest
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteImmutableTagRulesWithContext(ctx context.Context, request *DeleteImmutableTagRulesRequest) (response *DeleteImmutableTagRulesResponse, err error) {
     if request == nil {
         request = NewDeleteImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImmutableTagRules require credential")
@@ -2177,19 +2145,22 @@ func NewDeleteInstanceRequest() (request *DeleteInstanceRequest) {
 func NewDeleteInstanceResponse() (response *DeleteInstanceResponse) {
     response = &DeleteInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstance
 // 删除镜像仓库企业版实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADEFAILED = "FailedOperation.TradeFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2202,11 +2173,13 @@ func (c *Client) DeleteInstance(request *DeleteInstanceRequest) (response *Delet
 // 删除镜像仓库企业版实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADEFAILED = "FailedOperation.TradeFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2215,6 +2188,7 @@ func (c *Client) DeleteInstanceWithContext(ctx context.Context, request *DeleteI
     if request == nil {
         request = NewDeleteInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstance require credential")
@@ -2241,14 +2215,16 @@ func NewDeleteInstanceCustomizedDomainRequest() (request *DeleteInstanceCustomiz
 func NewDeleteInstanceCustomizedDomainResponse() (response *DeleteInstanceCustomizedDomainResponse) {
     response = &DeleteInstanceCustomizedDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstanceCustomizedDomain
 // 删除自定义域名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -2270,6 +2246,7 @@ func (c *Client) DeleteInstanceCustomizedDomain(request *DeleteInstanceCustomize
 // 删除自定义域名
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -2287,6 +2264,7 @@ func (c *Client) DeleteInstanceCustomizedDomainWithContext(ctx context.Context, 
     if request == nil {
         request = NewDeleteInstanceCustomizedDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInstanceCustomizedDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstanceCustomizedDomain require credential")
@@ -2313,8 +2291,9 @@ func NewDeleteInstanceTokenRequest() (request *DeleteInstanceTokenRequest) {
 func NewDeleteInstanceTokenResponse() (response *DeleteInstanceTokenResponse) {
     response = &DeleteInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstanceToken
@@ -2347,6 +2326,7 @@ func (c *Client) DeleteInstanceTokenWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstanceToken require credential")
@@ -2373,8 +2353,9 @@ func NewDeleteInternalEndpointDnsRequest() (request *DeleteInternalEndpointDnsRe
 func NewDeleteInternalEndpointDnsResponse() (response *DeleteInternalEndpointDnsResponse) {
     response = &DeleteInternalEndpointDnsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInternalEndpointDns
@@ -2421,6 +2402,7 @@ func (c *Client) DeleteInternalEndpointDnsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteInternalEndpointDnsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteInternalEndpointDns")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInternalEndpointDns require credential")
@@ -2447,8 +2429,9 @@ func NewDeleteMultipleSecurityPolicyRequest() (request *DeleteMultipleSecurityPo
 func NewDeleteMultipleSecurityPolicyResponse() (response *DeleteMultipleSecurityPolicyResponse) {
     response = &DeleteMultipleSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteMultipleSecurityPolicy
@@ -2481,6 +2464,7 @@ func (c *Client) DeleteMultipleSecurityPolicyWithContext(ctx context.Context, re
     if request == nil {
         request = NewDeleteMultipleSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteMultipleSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMultipleSecurityPolicy require credential")
@@ -2507,8 +2491,9 @@ func NewDeleteNamespaceRequest() (request *DeleteNamespaceRequest) {
 func NewDeleteNamespaceResponse() (response *DeleteNamespaceResponse) {
     response = &DeleteNamespaceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNamespace
@@ -2516,10 +2501,12 @@ func NewDeleteNamespaceResponse() (response *DeleteNamespaceResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_ERRORTCRRESOURCECONFLICT = "FailedOperation.ErrorTcrResourceConflict"
 //  FAILEDOPERATION_ERRORTCRUNAUTHORIZED = "FailedOperation.ErrorTcrUnauthorized"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -2541,10 +2528,12 @@ func (c *Client) DeleteNamespace(request *DeleteNamespaceRequest) (response *Del
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_ERRORTCRRESOURCECONFLICT = "FailedOperation.ErrorTcrResourceConflict"
 //  FAILEDOPERATION_ERRORTCRUNAUTHORIZED = "FailedOperation.ErrorTcrUnauthorized"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -2561,6 +2550,7 @@ func (c *Client) DeleteNamespaceWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNamespace require credential")
@@ -2587,8 +2577,9 @@ func NewDeleteNamespacePersonalRequest() (request *DeleteNamespacePersonalReques
 func NewDeleteNamespacePersonalResponse() (response *DeleteNamespacePersonalResponse) {
     response = &DeleteNamespacePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteNamespacePersonal
@@ -2617,6 +2608,7 @@ func (c *Client) DeleteNamespacePersonalWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteNamespacePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteNamespacePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNamespacePersonal require credential")
@@ -2643,8 +2635,9 @@ func NewDeleteReplicationInstanceRequest() (request *DeleteReplicationInstanceRe
 func NewDeleteReplicationInstanceResponse() (response *DeleteReplicationInstanceResponse) {
     response = &DeleteReplicationInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteReplicationInstance
@@ -2681,6 +2674,7 @@ func (c *Client) DeleteReplicationInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteReplicationInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteReplicationInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteReplicationInstance require credential")
@@ -2689,6 +2683,80 @@ func (c *Client) DeleteReplicationInstanceWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDeleteReplicationInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteReplicationRuleRequest() (request *DeleteReplicationRuleRequest) {
+    request = &DeleteReplicationRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DeleteReplicationRule")
+    
+    
+    return
+}
+
+func NewDeleteReplicationRuleResponse() (response *DeleteReplicationRuleResponse) {
+    response = &DeleteReplicationRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteReplicationRule
+// 删除实例同步规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteReplicationRule(request *DeleteReplicationRuleRequest) (response *DeleteReplicationRuleResponse, err error) {
+    return c.DeleteReplicationRuleWithContext(context.Background(), request)
+}
+
+// DeleteReplicationRule
+// 删除实例同步规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteReplicationRuleWithContext(ctx context.Context, request *DeleteReplicationRuleRequest) (response *DeleteReplicationRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteReplicationRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteReplicationRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteReplicationRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteReplicationRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -2707,14 +2775,16 @@ func NewDeleteRepositoryRequest() (request *DeleteRepositoryRequest) {
 func NewDeleteRepositoryResponse() (response *DeleteRepositoryResponse) {
     response = &DeleteRepositoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRepository
 // 删除镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2734,6 +2804,7 @@ func (c *Client) DeleteRepository(request *DeleteRepositoryRequest) (response *D
 // 删除镜像仓库
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2749,6 +2820,7 @@ func (c *Client) DeleteRepositoryWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteRepositoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteRepository")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRepository require credential")
@@ -2775,8 +2847,9 @@ func NewDeleteRepositoryPersonalRequest() (request *DeleteRepositoryPersonalRequ
 func NewDeleteRepositoryPersonalResponse() (response *DeleteRepositoryPersonalResponse) {
     response = &DeleteRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRepositoryPersonal
@@ -2803,6 +2876,7 @@ func (c *Client) DeleteRepositoryPersonalWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRepositoryPersonal require credential")
@@ -2829,14 +2903,17 @@ func NewDeleteRepositoryTagsRequest() (request *DeleteRepositoryTagsRequest) {
 func NewDeleteRepositoryTagsResponse() (response *DeleteRepositoryTagsResponse) {
     response = &DeleteRepositoryTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRepositoryTags
 // 用于企业版批量删除Repository Tag
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2856,6 +2933,8 @@ func (c *Client) DeleteRepositoryTags(request *DeleteRepositoryTagsRequest) (res
 // 用于企业版批量删除Repository Tag
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -2871,6 +2950,7 @@ func (c *Client) DeleteRepositoryTagsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteRepositoryTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteRepositoryTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRepositoryTags require credential")
@@ -2897,8 +2977,9 @@ func NewDeleteSecurityPolicyRequest() (request *DeleteSecurityPolicyRequest) {
 func NewDeleteSecurityPolicyResponse() (response *DeleteSecurityPolicyResponse) {
     response = &DeleteSecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSecurityPolicy
@@ -2941,6 +3022,7 @@ func (c *Client) DeleteSecurityPolicyWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteSecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteSecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSecurityPolicy require credential")
@@ -2967,8 +3049,9 @@ func NewDeleteServiceAccountRequest() (request *DeleteServiceAccountRequest) {
 func NewDeleteServiceAccountResponse() (response *DeleteServiceAccountResponse) {
     response = &DeleteServiceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteServiceAccount
@@ -2997,6 +3080,7 @@ func (c *Client) DeleteServiceAccountWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteServiceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteServiceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteServiceAccount require credential")
@@ -3023,8 +3107,9 @@ func NewDeleteSignaturePolicyRequest() (request *DeleteSignaturePolicyRequest) {
 func NewDeleteSignaturePolicyResponse() (response *DeleteSignaturePolicyResponse) {
     response = &DeleteSignaturePolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSignaturePolicy
@@ -3075,6 +3160,7 @@ func (c *Client) DeleteSignaturePolicyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteSignaturePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteSignaturePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSignaturePolicy require credential")
@@ -3101,14 +3187,16 @@ func NewDeleteTagRetentionRuleRequest() (request *DeleteTagRetentionRuleRequest)
 func NewDeleteTagRetentionRuleResponse() (response *DeleteTagRetentionRuleResponse) {
     response = &DeleteTagRetentionRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTagRetentionRule
 // 删除版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -3130,6 +3218,7 @@ func (c *Client) DeleteTagRetentionRule(request *DeleteTagRetentionRuleRequest) 
 // 删除版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -3147,6 +3236,7 @@ func (c *Client) DeleteTagRetentionRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteTagRetentionRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteTagRetentionRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTagRetentionRule require credential")
@@ -3173,22 +3263,24 @@ func NewDeleteWebhookTriggerRequest() (request *DeleteWebhookTriggerRequest) {
 func NewDeleteWebhookTriggerResponse() (response *DeleteWebhookTriggerResponse) {
     response = &DeleteWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWebhookTrigger
 // 删除触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
-//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
     return c.DeleteWebhookTriggerWithContext(context.Background(), request)
 }
@@ -3197,18 +3289,20 @@ func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (res
 // 删除触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
-//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWebhookTriggerWithContext(ctx context.Context, request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
     if request == nil {
         request = NewDeleteWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DeleteWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWebhookTrigger require credential")
@@ -3235,8 +3329,9 @@ func NewDescribeApplicationTriggerLogPersonalRequest() (request *DescribeApplica
 func NewDescribeApplicationTriggerLogPersonalResponse() (response *DescribeApplicationTriggerLogPersonalResponse) {
     response = &DescribeApplicationTriggerLogPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeApplicationTriggerLogPersonal
@@ -3259,6 +3354,7 @@ func (c *Client) DescribeApplicationTriggerLogPersonalWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeApplicationTriggerLogPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeApplicationTriggerLogPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeApplicationTriggerLogPersonal require credential")
@@ -3285,8 +3381,9 @@ func NewDescribeApplicationTriggerPersonalRequest() (request *DescribeApplicatio
 func NewDescribeApplicationTriggerPersonalResponse() (response *DescribeApplicationTriggerPersonalResponse) {
     response = &DescribeApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeApplicationTriggerPersonal
@@ -3311,6 +3408,7 @@ func (c *Client) DescribeApplicationTriggerPersonalWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeApplicationTriggerPersonal require credential")
@@ -3337,8 +3435,9 @@ func NewDescribeChartDownloadInfoRequest() (request *DescribeChartDownloadInfoRe
 func NewDescribeChartDownloadInfoResponse() (response *DescribeChartDownloadInfoResponse) {
     response = &DescribeChartDownloadInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeChartDownloadInfo
@@ -3365,6 +3464,7 @@ func (c *Client) DescribeChartDownloadInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeChartDownloadInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeChartDownloadInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeChartDownloadInfo require credential")
@@ -3373,64 +3473,6 @@ func (c *Client) DescribeChartDownloadInfoWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeChartDownloadInfoResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeCustomAccountsRequest() (request *DescribeCustomAccountsRequest) {
-    request = &DescribeCustomAccountsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeCustomAccounts")
-    
-    
-    return
-}
-
-func NewDescribeCustomAccountsResponse() (response *DescribeCustomAccountsResponse) {
-    response = &DescribeCustomAccountsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeCustomAccounts
-// 查询自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeCustomAccounts(request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
-    return c.DescribeCustomAccountsWithContext(context.Background(), request)
-}
-
-// DescribeCustomAccounts
-// 查询自定义账号
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeCustomAccountsWithContext(ctx context.Context, request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
-    if request == nil {
-        request = NewDescribeCustomAccountsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCustomAccounts require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeCustomAccountsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3449,8 +3491,9 @@ func NewDescribeExternalEndpointStatusRequest() (request *DescribeExternalEndpoi
 func NewDescribeExternalEndpointStatusResponse() (response *DescribeExternalEndpointStatusResponse) {
     response = &DescribeExternalEndpointStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExternalEndpointStatus
@@ -3493,6 +3536,7 @@ func (c *Client) DescribeExternalEndpointStatusWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeExternalEndpointStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeExternalEndpointStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeExternalEndpointStatus require credential")
@@ -3519,8 +3563,9 @@ func NewDescribeFavorRepositoryPersonalRequest() (request *DescribeFavorReposito
 func NewDescribeFavorRepositoryPersonalResponse() (response *DescribeFavorRepositoryPersonalResponse) {
     response = &DescribeFavorRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFavorRepositoryPersonal
@@ -3543,6 +3588,7 @@ func (c *Client) DescribeFavorRepositoryPersonalWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeFavorRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeFavorRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFavorRepositoryPersonal require credential")
@@ -3569,8 +3615,9 @@ func NewDescribeGCJobsRequest() (request *DescribeGCJobsRequest) {
 func NewDescribeGCJobsResponse() (response *DescribeGCJobsResponse) {
     response = &DescribeGCJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGCJobs
@@ -3605,6 +3652,7 @@ func (c *Client) DescribeGCJobsWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeGCJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeGCJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGCJobs require credential")
@@ -3631,8 +3679,9 @@ func NewDescribeImageAccelerateServiceRequest() (request *DescribeImageAccelerat
 func NewDescribeImageAccelerateServiceResponse() (response *DescribeImageAccelerateServiceResponse) {
     response = &DescribeImageAccelerateServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageAccelerateService
@@ -3665,6 +3714,7 @@ func (c *Client) DescribeImageAccelerateServiceWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeImageAccelerateServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageAccelerateService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageAccelerateService require credential")
@@ -3691,8 +3741,9 @@ func NewDescribeImageFilterPersonalRequest() (request *DescribeImageFilterPerson
 func NewDescribeImageFilterPersonalResponse() (response *DescribeImageFilterPersonalResponse) {
     response = &DescribeImageFilterPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageFilterPersonal
@@ -3719,6 +3770,7 @@ func (c *Client) DescribeImageFilterPersonalWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeImageFilterPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageFilterPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageFilterPersonal require credential")
@@ -3745,8 +3797,9 @@ func NewDescribeImageLifecycleGlobalPersonalRequest() (request *DescribeImageLif
 func NewDescribeImageLifecycleGlobalPersonalResponse() (response *DescribeImageLifecycleGlobalPersonalResponse) {
     response = &DescribeImageLifecycleGlobalPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageLifecycleGlobalPersonal
@@ -3767,6 +3820,7 @@ func (c *Client) DescribeImageLifecycleGlobalPersonalWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeImageLifecycleGlobalPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageLifecycleGlobalPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageLifecycleGlobalPersonal require credential")
@@ -3793,8 +3847,9 @@ func NewDescribeImageLifecyclePersonalRequest() (request *DescribeImageLifecycle
 func NewDescribeImageLifecyclePersonalResponse() (response *DescribeImageLifecyclePersonalResponse) {
     response = &DescribeImageLifecyclePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageLifecyclePersonal
@@ -3817,6 +3872,7 @@ func (c *Client) DescribeImageLifecyclePersonalWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeImageLifecyclePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageLifecyclePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageLifecyclePersonal require credential")
@@ -3843,15 +3899,19 @@ func NewDescribeImageManifestsRequest() (request *DescribeImageManifestsRequest)
 func NewDescribeImageManifestsResponse() (response *DescribeImageManifestsResponse) {
     response = &DescribeImageManifestsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageManifests
 // 查询容器镜像Manifest信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -3871,7 +3931,10 @@ func (c *Client) DescribeImageManifests(request *DescribeImageManifestsRequest) 
 // 查询容器镜像Manifest信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -3887,6 +3950,7 @@ func (c *Client) DescribeImageManifestsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeImageManifestsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImageManifests")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageManifests require credential")
@@ -3913,8 +3977,9 @@ func NewDescribeImagePersonalRequest() (request *DescribeImagePersonalRequest) {
 func NewDescribeImagePersonalResponse() (response *DescribeImagePersonalResponse) {
     response = &DescribeImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImagePersonal
@@ -3941,6 +4006,7 @@ func (c *Client) DescribeImagePersonalWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImagePersonal require credential")
@@ -3967,15 +4033,20 @@ func NewDescribeImagesRequest() (request *DescribeImagesRequest) {
 func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
     response = &DescribeImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImages
 // 查询镜像版本列表或指定容器镜像信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -3986,6 +4057,7 @@ func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *DescribeImagesResponse, err error) {
     return c.DescribeImagesWithContext(context.Background(), request)
 }
@@ -3994,7 +4066,11 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 // 查询镜像版本列表或指定容器镜像信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -4005,10 +4081,12 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImagesWithContext(ctx context.Context, request *DescribeImagesRequest) (response *DescribeImagesResponse, err error) {
     if request == nil {
         request = NewDescribeImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImages require credential")
@@ -4035,8 +4113,9 @@ func NewDescribeImmutableTagRulesRequest() (request *DescribeImmutableTagRulesRe
 func NewDescribeImmutableTagRulesResponse() (response *DescribeImmutableTagRulesResponse) {
     response = &DescribeImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImmutableTagRules
@@ -4073,6 +4152,7 @@ func (c *Client) DescribeImmutableTagRulesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImmutableTagRules require credential")
@@ -4099,12 +4179,13 @@ func NewDescribeInstanceAllNamespacesRequest() (request *DescribeInstanceAllName
 func NewDescribeInstanceAllNamespacesResponse() (response *DescribeInstanceAllNamespacesResponse) {
     response = &DescribeInstanceAllNamespacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceAllNamespaces
-// 查询所有实例命名空间列表
+// 查询所有有实例命名空间列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
@@ -4127,7 +4208,7 @@ func (c *Client) DescribeInstanceAllNamespaces(request *DescribeInstanceAllNames
 }
 
 // DescribeInstanceAllNamespaces
-// 查询所有实例命名空间列表
+// 查询所有有实例命名空间列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
@@ -4149,6 +4230,7 @@ func (c *Client) DescribeInstanceAllNamespacesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceAllNamespacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceAllNamespaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceAllNamespaces require credential")
@@ -4175,8 +4257,9 @@ func NewDescribeInstanceCustomizedDomainRequest() (request *DescribeInstanceCust
 func NewDescribeInstanceCustomizedDomainResponse() (response *DescribeInstanceCustomizedDomainResponse) {
     response = &DescribeInstanceCustomizedDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceCustomizedDomain
@@ -4219,6 +4302,7 @@ func (c *Client) DescribeInstanceCustomizedDomainWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeInstanceCustomizedDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceCustomizedDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceCustomizedDomain require credential")
@@ -4245,8 +4329,9 @@ func NewDescribeInstanceStatusRequest() (request *DescribeInstanceStatusRequest)
 func NewDescribeInstanceStatusResponse() (response *DescribeInstanceStatusResponse) {
     response = &DescribeInstanceStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceStatus
@@ -4279,6 +4364,7 @@ func (c *Client) DescribeInstanceStatusWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceStatus require credential")
@@ -4305,8 +4391,9 @@ func NewDescribeInstanceTokenRequest() (request *DescribeInstanceTokenRequest) {
 func NewDescribeInstanceTokenResponse() (response *DescribeInstanceTokenResponse) {
     response = &DescribeInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceToken
@@ -4337,6 +4424,7 @@ func (c *Client) DescribeInstanceTokenWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceToken require credential")
@@ -4363,8 +4451,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -4403,6 +4492,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -4429,8 +4519,9 @@ func NewDescribeInternalEndpointDnsStatusRequest() (request *DescribeInternalEnd
 func NewDescribeInternalEndpointDnsStatusResponse() (response *DescribeInternalEndpointDnsStatusResponse) {
     response = &DescribeInternalEndpointDnsStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternalEndpointDnsStatus
@@ -4471,6 +4562,7 @@ func (c *Client) DescribeInternalEndpointDnsStatusWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeInternalEndpointDnsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInternalEndpointDnsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternalEndpointDnsStatus require credential")
@@ -4497,8 +4589,9 @@ func NewDescribeInternalEndpointsRequest() (request *DescribeInternalEndpointsRe
 func NewDescribeInternalEndpointsResponse() (response *DescribeInternalEndpointsResponse) {
     response = &DescribeInternalEndpointsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternalEndpoints
@@ -4531,6 +4624,7 @@ func (c *Client) DescribeInternalEndpointsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeInternalEndpointsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeInternalEndpoints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternalEndpoints require credential")
@@ -4557,8 +4651,9 @@ func NewDescribeNamespacePersonalRequest() (request *DescribeNamespacePersonalRe
 func NewDescribeNamespacePersonalResponse() (response *DescribeNamespacePersonalResponse) {
     response = &DescribeNamespacePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNamespacePersonal
@@ -4583,6 +4678,7 @@ func (c *Client) DescribeNamespacePersonalWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeNamespacePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeNamespacePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNamespacePersonal require credential")
@@ -4609,8 +4705,9 @@ func NewDescribeNamespacesRequest() (request *DescribeNamespacesRequest) {
 func NewDescribeNamespacesResponse() (response *DescribeNamespacesResponse) {
     response = &DescribeNamespacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeNamespaces
@@ -4669,6 +4766,7 @@ func (c *Client) DescribeNamespacesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeNamespacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeNamespaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNamespaces require credential")
@@ -4695,14 +4793,16 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
 func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
     response = &DescribeRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRegions
 // 用于在TCR中获取可用区域
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4716,6 +4816,7 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
 // 用于在TCR中获取可用区域
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -4725,6 +4826,7 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRegions require credential")
@@ -4751,8 +4853,9 @@ func NewDescribeReplicationInstanceCreateTasksRequest() (request *DescribeReplic
 func NewDescribeReplicationInstanceCreateTasksResponse() (response *DescribeReplicationInstanceCreateTasksResponse) {
     response = &DescribeReplicationInstanceCreateTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReplicationInstanceCreateTasks
@@ -4785,6 +4888,7 @@ func (c *Client) DescribeReplicationInstanceCreateTasksWithContext(ctx context.C
     if request == nil {
         request = NewDescribeReplicationInstanceCreateTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationInstanceCreateTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationInstanceCreateTasks require credential")
@@ -4811,8 +4915,9 @@ func NewDescribeReplicationInstanceSyncStatusRequest() (request *DescribeReplica
 func NewDescribeReplicationInstanceSyncStatusResponse() (response *DescribeReplicationInstanceSyncStatusResponse) {
     response = &DescribeReplicationInstanceSyncStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReplicationInstanceSyncStatus
@@ -4845,6 +4950,7 @@ func (c *Client) DescribeReplicationInstanceSyncStatusWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeReplicationInstanceSyncStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationInstanceSyncStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationInstanceSyncStatus require credential")
@@ -4871,8 +4977,9 @@ func NewDescribeReplicationInstancesRequest() (request *DescribeReplicationInsta
 func NewDescribeReplicationInstancesResponse() (response *DescribeReplicationInstancesResponse) {
     response = &DescribeReplicationInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReplicationInstances
@@ -4909,6 +5016,7 @@ func (c *Client) DescribeReplicationInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeReplicationInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationInstances require credential")
@@ -4917,6 +5025,62 @@ func (c *Client) DescribeReplicationInstancesWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDescribeReplicationInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeReplicationPoliciesRequest() (request *DescribeReplicationPoliciesRequest) {
+    request = &DescribeReplicationPoliciesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationPolicies")
+    
+    
+    return
+}
+
+func NewDescribeReplicationPoliciesResponse() (response *DescribeReplicationPoliciesResponse) {
+    response = &DescribeReplicationPoliciesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeReplicationPolicies
+// 获取实例同步规则列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeReplicationPolicies(request *DescribeReplicationPoliciesRequest) (response *DescribeReplicationPoliciesResponse, err error) {
+    return c.DescribeReplicationPoliciesWithContext(context.Background(), request)
+}
+
+// DescribeReplicationPolicies
+// 获取实例同步规则列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeReplicationPoliciesWithContext(ctx context.Context, request *DescribeReplicationPoliciesRequest) (response *DescribeReplicationPoliciesResponse, err error) {
+    if request == nil {
+        request = NewDescribeReplicationPoliciesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeReplicationPolicies")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeReplicationPolicies require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeReplicationPoliciesResponse()
     err = c.Send(request, response)
     return
 }
@@ -4935,16 +5099,20 @@ func NewDescribeRepositoriesRequest() (request *DescribeRepositoriesRequest) {
 func NewDescribeRepositoriesResponse() (response *DescribeRepositoriesResponse) {
     response = &DescribeRepositoriesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositories
 // 查询镜像仓库列表或指定镜像仓库信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -4964,8 +5132,11 @@ func (c *Client) DescribeRepositories(request *DescribeRepositoriesRequest) (res
 // 查询镜像仓库列表或指定镜像仓库信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
 //  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
@@ -4981,6 +5152,7 @@ func (c *Client) DescribeRepositoriesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeRepositoriesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositories")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositories require credential")
@@ -5007,8 +5179,9 @@ func NewDescribeRepositoryFilterPersonalRequest() (request *DescribeRepositoryFi
 func NewDescribeRepositoryFilterPersonalResponse() (response *DescribeRepositoryFilterPersonalResponse) {
     response = &DescribeRepositoryFilterPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositoryFilterPersonal
@@ -5033,6 +5206,7 @@ func (c *Client) DescribeRepositoryFilterPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeRepositoryFilterPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositoryFilterPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositoryFilterPersonal require credential")
@@ -5059,8 +5233,9 @@ func NewDescribeRepositoryOwnerPersonalRequest() (request *DescribeRepositoryOwn
 func NewDescribeRepositoryOwnerPersonalResponse() (response *DescribeRepositoryOwnerPersonalResponse) {
     response = &DescribeRepositoryOwnerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositoryOwnerPersonal
@@ -5087,6 +5262,7 @@ func (c *Client) DescribeRepositoryOwnerPersonalWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeRepositoryOwnerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositoryOwnerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositoryOwnerPersonal require credential")
@@ -5113,8 +5289,9 @@ func NewDescribeRepositoryPersonalRequest() (request *DescribeRepositoryPersonal
 func NewDescribeRepositoryPersonalResponse() (response *DescribeRepositoryPersonalResponse) {
     response = &DescribeRepositoryPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRepositoryPersonal
@@ -5139,6 +5316,7 @@ func (c *Client) DescribeRepositoryPersonalWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeRepositoryPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeRepositoryPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRepositoryPersonal require credential")
@@ -5165,8 +5343,9 @@ func NewDescribeSecurityPoliciesRequest() (request *DescribeSecurityPoliciesRequ
 func NewDescribeSecurityPoliciesResponse() (response *DescribeSecurityPoliciesResponse) {
     response = &DescribeSecurityPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecurityPolicies
@@ -5211,6 +5390,7 @@ func (c *Client) DescribeSecurityPoliciesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSecurityPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeSecurityPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecurityPolicies require credential")
@@ -5237,8 +5417,9 @@ func NewDescribeServiceAccountsRequest() (request *DescribeServiceAccountsReques
 func NewDescribeServiceAccountsResponse() (response *DescribeServiceAccountsResponse) {
     response = &DescribeServiceAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeServiceAccounts
@@ -5269,6 +5450,7 @@ func (c *Client) DescribeServiceAccountsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeServiceAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeServiceAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeServiceAccounts require credential")
@@ -5295,14 +5477,16 @@ func NewDescribeTagRetentionExecutionRequest() (request *DescribeTagRetentionExe
 func NewDescribeTagRetentionExecutionResponse() (response *DescribeTagRetentionExecutionResponse) {
     response = &DescribeTagRetentionExecutionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagRetentionExecution
 // 查询版本保留执行记录
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5310,6 +5494,7 @@ func NewDescribeTagRetentionExecutionResponse() (response *DescribeTagRetentionE
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -5323,6 +5508,7 @@ func (c *Client) DescribeTagRetentionExecution(request *DescribeTagRetentionExec
 // 查询版本保留执行记录
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5330,6 +5516,7 @@ func (c *Client) DescribeTagRetentionExecution(request *DescribeTagRetentionExec
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -5339,6 +5526,7 @@ func (c *Client) DescribeTagRetentionExecutionWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeTagRetentionExecutionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeTagRetentionExecution")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagRetentionExecution require credential")
@@ -5365,14 +5553,16 @@ func NewDescribeTagRetentionExecutionTaskRequest() (request *DescribeTagRetentio
 func NewDescribeTagRetentionExecutionTaskResponse() (response *DescribeTagRetentionExecutionTaskResponse) {
     response = &DescribeTagRetentionExecutionTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagRetentionExecutionTask
 // 查询版本保留执行任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5393,6 +5583,7 @@ func (c *Client) DescribeTagRetentionExecutionTask(request *DescribeTagRetention
 // 查询版本保留执行任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5409,6 +5600,7 @@ func (c *Client) DescribeTagRetentionExecutionTaskWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeTagRetentionExecutionTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeTagRetentionExecutionTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagRetentionExecutionTask require credential")
@@ -5435,14 +5627,16 @@ func NewDescribeTagRetentionRulesRequest() (request *DescribeTagRetentionRulesRe
 func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRulesResponse) {
     response = &DescribeTagRetentionRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagRetentionRules
-// 查询版本保留规则
+// 查询镜像版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -5463,9 +5657,10 @@ func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesReq
 }
 
 // DescribeTagRetentionRules
-// 查询版本保留规则
+// 查询镜像版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -5485,6 +5680,7 @@ func (c *Client) DescribeTagRetentionRulesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeTagRetentionRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeTagRetentionRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagRetentionRules require credential")
@@ -5511,8 +5707,9 @@ func NewDescribeUserQuotaPersonalRequest() (request *DescribeUserQuotaPersonalRe
 func NewDescribeUserQuotaPersonalResponse() (response *DescribeUserQuotaPersonalResponse) {
     response = &DescribeUserQuotaPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserQuotaPersonal
@@ -5533,6 +5730,7 @@ func (c *Client) DescribeUserQuotaPersonalWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeUserQuotaPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeUserQuotaPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUserQuotaPersonal require credential")
@@ -5559,14 +5757,16 @@ func NewDescribeWebhookTriggerRequest() (request *DescribeWebhookTriggerRequest)
 func NewDescribeWebhookTriggerResponse() (response *DescribeWebhookTriggerResponse) {
     response = &DescribeWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebhookTrigger
 // 查询触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5575,6 +5775,7 @@ func NewDescribeWebhookTriggerResponse() (response *DescribeWebhookTriggerRespon
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) (response *DescribeWebhookTriggerResponse, err error) {
     return c.DescribeWebhookTriggerWithContext(context.Background(), request)
 }
@@ -5583,6 +5784,7 @@ func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) 
 // 查询触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5591,10 +5793,12 @@ func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) 
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTriggerWithContext(ctx context.Context, request *DescribeWebhookTriggerRequest) (response *DescribeWebhookTriggerResponse, err error) {
     if request == nil {
         request = NewDescribeWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebhookTrigger require credential")
@@ -5621,14 +5825,16 @@ func NewDescribeWebhookTriggerLogRequest() (request *DescribeWebhookTriggerLogRe
 func NewDescribeWebhookTriggerLogResponse() (response *DescribeWebhookTriggerLogResponse) {
     response = &DescribeWebhookTriggerLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWebhookTriggerLog
 // 获取触发器日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5636,6 +5842,7 @@ func NewDescribeWebhookTriggerLogResponse() (response *DescribeWebhookTriggerLog
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogRequest) (response *DescribeWebhookTriggerLogResponse, err error) {
     return c.DescribeWebhookTriggerLogWithContext(context.Background(), request)
 }
@@ -5644,6 +5851,7 @@ func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogReq
 // 获取触发器日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -5651,10 +5859,12 @@ func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogReq
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeWebhookTriggerLogWithContext(ctx context.Context, request *DescribeWebhookTriggerLogRequest) (response *DescribeWebhookTriggerLogResponse, err error) {
     if request == nil {
         request = NewDescribeWebhookTriggerLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DescribeWebhookTriggerLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWebhookTriggerLog require credential")
@@ -5681,14 +5891,16 @@ func NewDownloadHelmChartRequest() (request *DownloadHelmChartRequest) {
 func NewDownloadHelmChartResponse() (response *DownloadHelmChartResponse) {
     response = &DownloadHelmChartResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DownloadHelmChart
 // 用于在TCR中下载helm chart
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5701,6 +5913,7 @@ func (c *Client) DownloadHelmChart(request *DownloadHelmChartRequest) (response 
 // 用于在TCR中下载helm chart
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5709,6 +5922,7 @@ func (c *Client) DownloadHelmChartWithContext(ctx context.Context, request *Down
     if request == nil {
         request = NewDownloadHelmChartRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DownloadHelmChart")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DownloadHelmChart require credential")
@@ -5717,6 +5931,82 @@ func (c *Client) DownloadHelmChartWithContext(ctx context.Context, request *Down
     request.SetContext(ctx)
     
     response = NewDownloadHelmChartResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDuplicateImageRequest() (request *DuplicateImageRequest) {
+    request = &DuplicateImageRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DuplicateImage")
+    
+    
+    return
+}
+
+func NewDuplicateImageResponse() (response *DuplicateImageResponse) {
+    response = &DuplicateImageResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DuplicateImage
+// 用于在企业版镜像仓库中复制镜像版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DuplicateImage(request *DuplicateImageRequest) (response *DuplicateImageResponse, err error) {
+    return c.DuplicateImageWithContext(context.Background(), request)
+}
+
+// DuplicateImage
+// 用于在企业版镜像仓库中复制镜像版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
+//  FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
+//  FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DuplicateImageWithContext(ctx context.Context, request *DuplicateImageRequest) (response *DuplicateImageResponse, err error) {
+    if request == nil {
+        request = NewDuplicateImageRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DuplicateImage")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DuplicateImage require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDuplicateImageResponse()
     err = c.Send(request, response)
     return
 }
@@ -5735,8 +6025,9 @@ func NewDuplicateImagePersonalRequest() (request *DuplicateImagePersonalRequest)
 func NewDuplicateImagePersonalResponse() (response *DuplicateImagePersonalResponse) {
     response = &DuplicateImagePersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DuplicateImagePersonal
@@ -5763,6 +6054,7 @@ func (c *Client) DuplicateImagePersonalWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDuplicateImagePersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "DuplicateImagePersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DuplicateImagePersonal require credential")
@@ -5789,8 +6081,9 @@ func NewManageExternalEndpointRequest() (request *ManageExternalEndpointRequest)
 func NewManageExternalEndpointResponse() (response *ManageExternalEndpointResponse) {
     response = &ManageExternalEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageExternalEndpoint
@@ -5823,6 +6116,7 @@ func (c *Client) ManageExternalEndpointWithContext(ctx context.Context, request 
     if request == nil {
         request = NewManageExternalEndpointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageExternalEndpoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageExternalEndpoint require credential")
@@ -5849,8 +6143,9 @@ func NewManageImageLifecycleGlobalPersonalRequest() (request *ManageImageLifecyc
 func NewManageImageLifecycleGlobalPersonalResponse() (response *ManageImageLifecycleGlobalPersonalResponse) {
     response = &ManageImageLifecycleGlobalPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageImageLifecycleGlobalPersonal
@@ -5871,6 +6166,7 @@ func (c *Client) ManageImageLifecycleGlobalPersonalWithContext(ctx context.Conte
     if request == nil {
         request = NewManageImageLifecycleGlobalPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageImageLifecycleGlobalPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageImageLifecycleGlobalPersonal require credential")
@@ -5897,8 +6193,9 @@ func NewManageInternalEndpointRequest() (request *ManageInternalEndpointRequest)
 func NewManageInternalEndpointResponse() (response *ManageInternalEndpointResponse) {
     response = &ManageInternalEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageInternalEndpoint
@@ -5916,6 +6213,7 @@ func NewManageInternalEndpointResponse() (response *ManageInternalEndpointRespon
 //  RESOURCEINSUFFICIENT_ERRORVPCDNSSTATUS = "ResourceInsufficient.ErrorVpcDnsStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) (response *ManageInternalEndpointResponse, err error) {
@@ -5937,12 +6235,14 @@ func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) 
 //  RESOURCEINSUFFICIENT_ERRORVPCDNSSTATUS = "ResourceInsufficient.ErrorVpcDnsStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageInternalEndpointWithContext(ctx context.Context, request *ManageInternalEndpointRequest) (response *ManageInternalEndpointResponse, err error) {
     if request == nil {
         request = NewManageInternalEndpointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageInternalEndpoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageInternalEndpoint require credential")
@@ -5969,8 +6269,9 @@ func NewManageReplicationRequest() (request *ManageReplicationRequest) {
 func NewManageReplicationResponse() (response *ManageReplicationResponse) {
     response = &ManageReplicationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ManageReplication
@@ -6017,6 +6318,7 @@ func (c *Client) ManageReplicationWithContext(ctx context.Context, request *Mana
     if request == nil {
         request = NewManageReplicationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ManageReplication")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageReplication require credential")
@@ -6043,8 +6345,9 @@ func NewModifyApplicationTriggerPersonalRequest() (request *ModifyApplicationTri
 func NewModifyApplicationTriggerPersonalResponse() (response *ModifyApplicationTriggerPersonalResponse) {
     response = &ModifyApplicationTriggerPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApplicationTriggerPersonal
@@ -6073,6 +6376,7 @@ func (c *Client) ModifyApplicationTriggerPersonalWithContext(ctx context.Context
     if request == nil {
         request = NewModifyApplicationTriggerPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyApplicationTriggerPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyApplicationTriggerPersonal require credential")
@@ -6081,62 +6385,6 @@ func (c *Client) ModifyApplicationTriggerPersonalWithContext(ctx context.Context
     request.SetContext(ctx)
     
     response = NewModifyApplicationTriggerPersonalResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewModifyCustomAccountRequest() (request *ModifyCustomAccountRequest) {
-    request = &ModifyCustomAccountRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyCustomAccount")
-    
-    
-    return
-}
-
-func NewModifyCustomAccountResponse() (response *ModifyCustomAccountResponse) {
-    response = &ModifyCustomAccountResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyCustomAccount
-// 更新自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) ModifyCustomAccount(request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
-    return c.ModifyCustomAccountWithContext(context.Background(), request)
-}
-
-// ModifyCustomAccount
-// 更新自定义账户
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) ModifyCustomAccountWithContext(ctx context.Context, request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
-    if request == nil {
-        request = NewModifyCustomAccountRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyCustomAccount require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyCustomAccountResponse()
     err = c.Send(request, response)
     return
 }
@@ -6155,8 +6403,9 @@ func NewModifyImmutableTagRulesRequest() (request *ModifyImmutableTagRulesReques
 func NewModifyImmutableTagRulesResponse() (response *ModifyImmutableTagRulesResponse) {
     response = &ModifyImmutableTagRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyImmutableTagRules
@@ -6187,6 +6436,7 @@ func (c *Client) ModifyImmutableTagRulesWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyImmutableTagRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyImmutableTagRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyImmutableTagRules require credential")
@@ -6213,8 +6463,9 @@ func NewModifyInstanceRequest() (request *ModifyInstanceRequest) {
 func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
     response = &ModifyInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstance
@@ -6253,6 +6504,7 @@ func (c *Client) ModifyInstanceWithContext(ctx context.Context, request *ModifyI
     if request == nil {
         request = NewModifyInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstance require credential")
@@ -6279,8 +6531,9 @@ func NewModifyInstanceTokenRequest() (request *ModifyInstanceTokenRequest) {
 func NewModifyInstanceTokenResponse() (response *ModifyInstanceTokenResponse) {
     response = &ModifyInstanceTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceToken
@@ -6313,6 +6566,7 @@ func (c *Client) ModifyInstanceTokenWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyInstanceTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyInstanceToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceToken require credential")
@@ -6339,14 +6593,16 @@ func NewModifyNamespaceRequest() (request *ModifyNamespaceRequest) {
 func NewModifyNamespaceResponse() (response *ModifyNamespaceResponse) {
     response = &ModifyNamespaceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNamespace
 // 更新命名空间信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6367,6 +6623,7 @@ func (c *Client) ModifyNamespace(request *ModifyNamespaceRequest) (response *Mod
 // 更新命名空间信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6383,6 +6640,7 @@ func (c *Client) ModifyNamespaceWithContext(ctx context.Context, request *Modify
     if request == nil {
         request = NewModifyNamespaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyNamespace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNamespace require credential")
@@ -6409,14 +6667,16 @@ func NewModifyRepositoryRequest() (request *ModifyRepositoryRequest) {
 func NewModifyRepositoryResponse() (response *ModifyRepositoryResponse) {
     response = &ModifyRepositoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRepository
 // 更新镜像仓库信息，可修改仓库描述信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6435,6 +6695,7 @@ func (c *Client) ModifyRepository(request *ModifyRepositoryRequest) (response *M
 // 更新镜像仓库信息，可修改仓库描述信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -6449,6 +6710,7 @@ func (c *Client) ModifyRepositoryWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyRepositoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyRepository")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRepository require credential")
@@ -6475,8 +6737,9 @@ func NewModifyRepositoryAccessPersonalRequest() (request *ModifyRepositoryAccess
 func NewModifyRepositoryAccessPersonalResponse() (response *ModifyRepositoryAccessPersonalResponse) {
     response = &ModifyRepositoryAccessPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRepositoryAccessPersonal
@@ -6503,6 +6766,7 @@ func (c *Client) ModifyRepositoryAccessPersonalWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyRepositoryAccessPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyRepositoryAccessPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRepositoryAccessPersonal require credential")
@@ -6529,8 +6793,9 @@ func NewModifyRepositoryInfoPersonalRequest() (request *ModifyRepositoryInfoPers
 func NewModifyRepositoryInfoPersonalResponse() (response *ModifyRepositoryInfoPersonalResponse) {
     response = &ModifyRepositoryInfoPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRepositoryInfoPersonal
@@ -6557,6 +6822,7 @@ func (c *Client) ModifyRepositoryInfoPersonalWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyRepositoryInfoPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyRepositoryInfoPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRepositoryInfoPersonal require credential")
@@ -6583,8 +6849,9 @@ func NewModifySecurityPolicyRequest() (request *ModifySecurityPolicyRequest) {
 func NewModifySecurityPolicyResponse() (response *ModifySecurityPolicyResponse) {
     response = &ModifySecurityPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySecurityPolicy
@@ -6617,6 +6884,7 @@ func (c *Client) ModifySecurityPolicyWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifySecurityPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifySecurityPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifySecurityPolicy require credential")
@@ -6643,8 +6911,9 @@ func NewModifyServiceAccountRequest() (request *ModifyServiceAccountRequest) {
 func NewModifyServiceAccountResponse() (response *ModifyServiceAccountResponse) {
     response = &ModifyServiceAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyServiceAccount
@@ -6673,6 +6942,7 @@ func (c *Client) ModifyServiceAccountWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyServiceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyServiceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyServiceAccount require credential")
@@ -6681,6 +6951,64 @@ func (c *Client) ModifyServiceAccountWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyServiceAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyServiceAccountPasswordRequest() (request *ModifyServiceAccountPasswordRequest) {
+    request = &ModifyServiceAccountPasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "ModifyServiceAccountPassword")
+    
+    
+    return
+}
+
+func NewModifyServiceAccountPasswordResponse() (response *ModifyServiceAccountPasswordResponse) {
+    response = &ModifyServiceAccountPasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyServiceAccountPassword
+// 更新服务级账号密码
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyServiceAccountPassword(request *ModifyServiceAccountPasswordRequest) (response *ModifyServiceAccountPasswordResponse, err error) {
+    return c.ModifyServiceAccountPasswordWithContext(context.Background(), request)
+}
+
+// ModifyServiceAccountPassword
+// 更新服务级账号密码
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyServiceAccountPasswordWithContext(ctx context.Context, request *ModifyServiceAccountPasswordRequest) (response *ModifyServiceAccountPasswordResponse, err error) {
+    if request == nil {
+        request = NewModifyServiceAccountPasswordRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyServiceAccountPassword")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyServiceAccountPassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyServiceAccountPasswordResponse()
     err = c.Send(request, response)
     return
 }
@@ -6699,14 +7027,16 @@ func NewModifyTagRetentionRuleRequest() (request *ModifyTagRetentionRuleRequest)
 func NewModifyTagRetentionRuleResponse() (response *ModifyTagRetentionRuleResponse) {
     response = &ModifyTagRetentionRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTagRetentionRule
 // 更新版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -6728,6 +7058,7 @@ func (c *Client) ModifyTagRetentionRule(request *ModifyTagRetentionRuleRequest) 
 // 更新版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -6745,6 +7076,7 @@ func (c *Client) ModifyTagRetentionRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyTagRetentionRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyTagRetentionRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTagRetentionRule require credential")
@@ -6771,8 +7103,9 @@ func NewModifyUserPasswordPersonalRequest() (request *ModifyUserPasswordPersonal
 func NewModifyUserPasswordPersonalResponse() (response *ModifyUserPasswordPersonalResponse) {
     response = &ModifyUserPasswordPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyUserPasswordPersonal
@@ -6797,6 +7130,7 @@ func (c *Client) ModifyUserPasswordPersonalWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyUserPasswordPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyUserPasswordPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUserPasswordPersonal require credential")
@@ -6823,14 +7157,16 @@ func NewModifyWebhookTriggerRequest() (request *ModifyWebhookTriggerRequest) {
 func NewModifyWebhookTriggerResponse() (response *ModifyWebhookTriggerResponse) {
     response = &ModifyWebhookTriggerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWebhookTrigger
 // 更新触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -6838,6 +7174,7 @@ func NewModifyWebhookTriggerResponse() (response *ModifyWebhookTriggerResponse) 
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (response *ModifyWebhookTriggerResponse, err error) {
     return c.ModifyWebhookTriggerWithContext(context.Background(), request)
 }
@@ -6846,6 +7183,7 @@ func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (res
 // 更新触发器
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
@@ -6853,10 +7191,12 @@ func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (res
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyWebhookTriggerWithContext(ctx context.Context, request *ModifyWebhookTriggerRequest) (response *ModifyWebhookTriggerResponse, err error) {
     if request == nil {
         request = NewModifyWebhookTriggerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ModifyWebhookTrigger")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWebhookTrigger require credential")
@@ -6883,8 +7223,9 @@ func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
 func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
     response = &RenewInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewInstance
@@ -6933,6 +7274,7 @@ func (c *Client) RenewInstanceWithContext(ctx context.Context, request *RenewIns
     if request == nil {
         request = NewRenewInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "RenewInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewInstance require credential")
@@ -6959,8 +7301,9 @@ func NewValidateNamespaceExistPersonalRequest() (request *ValidateNamespaceExist
 func NewValidateNamespaceExistPersonalResponse() (response *ValidateNamespaceExistPersonalResponse) {
     response = &ValidateNamespaceExistPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ValidateNamespaceExistPersonal
@@ -6983,6 +7326,7 @@ func (c *Client) ValidateNamespaceExistPersonalWithContext(ctx context.Context, 
     if request == nil {
         request = NewValidateNamespaceExistPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ValidateNamespaceExistPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ValidateNamespaceExistPersonal require credential")
@@ -7009,8 +7353,9 @@ func NewValidateRepositoryExistPersonalRequest() (request *ValidateRepositoryExi
 func NewValidateRepositoryExistPersonalResponse() (response *ValidateRepositoryExistPersonalResponse) {
     response = &ValidateRepositoryExistPersonalResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ValidateRepositoryExistPersonal
@@ -7035,6 +7380,7 @@ func (c *Client) ValidateRepositoryExistPersonalWithContext(ctx context.Context,
     if request == nil {
         request = NewValidateRepositoryExistPersonalRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tcr", APIVersion, "ValidateRepositoryExistPersonal")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ValidateRepositoryExistPersonal require credential")

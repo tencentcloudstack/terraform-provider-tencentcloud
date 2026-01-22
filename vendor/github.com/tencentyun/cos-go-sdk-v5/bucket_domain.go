@@ -30,23 +30,41 @@ func (s *BucketService) PutDomain(ctx context.Context, opt *BucketPutDomainOptio
 	return resp, err
 }
 
-func (s *BucketService) GetDomain(ctx context.Context) (*BucketGetDomainResult, *Response, error) {
+type BucketGetDomainOptions struct {
+	XOptionHeader *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+}
+
+func (s *BucketService) GetDomain(ctx context.Context, opt ...*BucketGetDomainOptions) (*BucketGetDomainResult, *Response, error) {
+	var gopt *BucketGetDomainOptions
+	if len(opt) > 0 {
+		gopt = opt[0]
+	}
 	var res BucketGetDomainResult
 	sendOpt := &sendOptions{
-		baseURL: s.client.BaseURL.BucketURL,
-		uri:     "/?domain",
-		method:  http.MethodGet,
-		result:  &res,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/?domain",
+		method:    http.MethodGet,
+		result:    &res,
+		optHeader: gopt,
 	}
 	resp, err := s.client.doRetry(ctx, sendOpt)
 	return &res, resp, err
 }
 
-func (s *BucketService) DeleteDomain(ctx context.Context) (*Response, error) {
+type BucketDeleteDomainOptions struct {
+	XOptionHeader *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+}
+
+func (s *BucketService) DeleteDomain(ctx context.Context, opt ...*BucketDeleteDomainOptions) (*Response, error) {
+	var dopt *BucketDeleteDomainOptions
+	if len(opt) > 0 {
+		dopt = opt[0]
+	}
 	sendOpt := &sendOptions{
-		baseURL: s.client.BaseURL.BucketURL,
-		uri:     "/?domain",
-		method:  http.MethodDelete,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/?domain",
+		method:    http.MethodDelete,
+		optHeader: dopt,
 	}
 	resp, err := s.client.doRetry(ctx, sendOpt)
 	return resp, err
@@ -63,6 +81,7 @@ type BucketDomainCertificateInfo struct {
 	CustomCert *BucketDomainCustomCert `xml:"CustomCert,omitempty"`
 }
 type BucketDomainCustomCert struct {
+	CertId     string `xml:"CertId,omitempty"`
 	Cert       string `xml:"Cert,omitempty"`
 	PrivateKey string `xml:"PrivateKey,omitempty"`
 }
@@ -79,8 +98,15 @@ func (s *BucketService) PutDomainCertificate(ctx context.Context, opt *BucketPut
 }
 
 type BucketGetDomainCertificateResult struct {
-	XMLName xml.Name `xml:"DomainCertificate"`
-	Status  string   `xml:"Status,omitempty"`
+	XMLName         xml.Name                        `xml:"DomainCertificate"`
+	Status          string                          `xml:"Status,omitempty"`
+	CertificateInfo *GetBucketDomainCertificateInfo `xml:"CertificateInfo"`
+}
+
+type GetBucketDomainCertificateInfo struct {
+	CertId         string `xml:"CertId"`
+	ValidityBegin  int64  `xml:"ValidityBegin"`
+	ValidityExpire int64  `xml:"ValidityExpire"`
 }
 
 type BucketGetDomainCertificateOptions struct {

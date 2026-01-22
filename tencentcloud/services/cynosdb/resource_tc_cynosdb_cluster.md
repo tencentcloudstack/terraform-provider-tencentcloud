@@ -1,5 +1,7 @@
 Provide a resource to create a CynosDB cluster.
 
+~> **NOTE:** params `instance_count` and `instance_init_infos` only choose one. If neither parameter is set, the CynosDB cluster is created with parameter `instance_count` set to `2` by default(one RW instance + one Ro instance). If you only need to create a master instance, explicitly set the `instance_count` field to `1`, or configure the RW instance information in the `instance_init_infos` field.
+
 Example Usage
 
 Create a single availability zone NORMAL CynosDB cluster
@@ -51,7 +53,7 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   instance_cpu_core            = 2
   instance_memory_size         = 4
   force_delete                 = false
-  instance_maintain_weekdays   = [
+  instance_maintain_weekdays = [
     "Fri",
     "Mon",
     "Sat",
@@ -94,6 +96,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     instance_count = 1
     device_type    = "exclusive"
   }
+
+  cynos_version = "2.1.14.001"
 
   tags = {
     createBy = "terraform"
@@ -198,5 +202,5 @@ Import
 CynosDB cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
+terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
 ```

@@ -14,14 +14,19 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
+	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
+	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bhv20230418 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh/v20230418"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
+	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -59,6 +64,8 @@ import (
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
+	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -66,6 +73,7 @@ import (
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
+	mqtt "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt/v20240516"
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -97,10 +105,12 @@ import (
 	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
+	vcubev20220410 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+	wedatav20250806 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20250806"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 	cos "github.com/tencentyun/cos-go-sdk-v5"
 )
@@ -121,89 +131,92 @@ type TencentCloudClient struct {
 	Domain     string
 	CosDomain  string
 
-	cosConn            *s3.S3
-	tencentCosConn     *cos.Client
-	mysqlConn          *cdb.Client
-	redisConn          *redis.Client
-	asConn             *as.Client
-	vpcConn            *vpc.Client
-	cbsConn            *cbs.Client
-	cvmv20170312Conn   *cvmv20170312.Client
-	clbConn            *clb.Client
-	dayuConn           *dayu.Client
-	dcConn             *dc.Client
-	tagConn            *tag.Client
-	mongodbConn        *mongodb.Client
-	tkev20180525Conn   *tkev20180525.Client
-	tdmqConn           *tdmq.Client
-	tcrConn            *tcr.Client
-	camConn            *cam.Client
-	stsConn            *sts.Client
-	gaapConn           *gaap.Client
-	sslConn            *ssl.Client
-	cfsConn            *cfs.Client
-	scfConn            *scf.Client
-	tcaplusConn        *tcaplusdb.Client
-	cdnConn            *cdn.Client
-	monitorConn        *monitor.Client
-	esConn             *es.Client
-	sqlserverConn      *sqlserver.Client
-	postgreConn        *postgre.Client
-	ckafkaConn         *ckafka.Client
-	auditConn          *audit.Client
-	cynosConn          *cynosdb.Client
-	vodConn            *vod.Client
-	apiGatewayConn     *apigateway.Client
-	sslCertificateConn *sslCertificate.Client
-	kmsConn            *kms.Client
-	ssmConn            *ssm.Client
-	apiConn            *api.Client
-	emrConn            *emr.Client
-	clsConn            *cls.Client
-	dnsPodConn         *dnspod.Client
-	privateDnsConn     *privatedns.Client
-	antiddosConn       *antiddos.Client
-	domainConn         *domain.Client
-	lighthouseConn     *lighthouse.Client
-	temConn            *tem.Client
-	teoConn            *teo.Client
-	tcmConn            *tcm.Client
-	cssConn            *css.Client
-	sesConn            *ses.Client
-	dcdbConn           *dcdb.Client
-	smsConn            *sms.Client
-	catConn            *cat.Client
-	mariadbConn        *mariadb.Client
-	rumConn            *rum.Client
-	ptsConn            *pts.Client
-	tatConn            *tat.Client
-	organizationConn   *organization.Client
-	tdcpgConn          *tdcpg.Client
-	dbbrainConn        *dbbrain.Client
-	dtsConn            *dts.Client
-	ciConn             *cos.Client
-	cosBatchConn       *cos.Client
-	tsfConn            *tsf.Client
-	mpsConn            *mps.Client
-	cwpConn            *cwp.Client
-	chdfsConn          *chdfs.Client
-	mdlConn            *mdl.Client
-	apmConn            *apm.Client
-	ciamConn           *ciam.Client
-	tseConn            *tse.Client
-	cdwchConn          *cdwch.Client
-	ebConn             *eb.Client
-	dlcConn            *dlc.Client
-	wedataConn         *wedata.Client
-	wafConn            *waf.Client
-	cfwConn            *cfw.Client
-	oceanusConn        *oceanus.Client
-	dasbConn           *dasb.Client
-	trocketConn        *trocket.Client
-	biConn             *bi.Client
-	cdwpgConn          *cdwpg.Client
-	csipConn           *csip.Client
-	regionConn         *region.Client
+	cosConn             *s3.S3
+	tencentCosConn      *cos.Client
+	mysqlConn           *cdb.Client
+	redisConn           *redis.Client
+	asConn              *as.Client
+	vpcConn             *vpc.Client
+	cbsConn             *cbs.Client
+	cvmv20170312Conn    *cvmv20170312.Client
+	cvmIntlConn         *cvmintl.Client
+	clbConn             *clb.Client
+	clbIntlConn         *clbintl.Client
+	dayuConn            *dayu.Client
+	dcConn              *dc.Client
+	tagConn             *tag.Client
+	mongodbConn         *mongodb.Client
+	tkev20180525Conn    *tkev20180525.Client
+	tdmqConn            *tdmq.Client
+	tcrConn             *tcr.Client
+	camConn             *cam.Client
+	stsConn             *sts.Client
+	gaapConn            *gaap.Client
+	sslConn             *ssl.Client
+	cfsConn             *cfs.Client
+	scfConn             *scf.Client
+	tcaplusConn         *tcaplusdb.Client
+	cdnConn             *cdn.Client
+	monitorConn         *monitor.Client
+	esConn              *es.Client
+	sqlserverConn       *sqlserver.Client
+	postgreConn         *postgre.Client
+	ckafkaConn          *ckafka.Client
+	auditConn           *audit.Client
+	cynosConn           *cynosdb.Client
+	vodConn             *vod.Client
+	apiGatewayConn      *apigateway.Client
+	sslCertificateConn  *sslCertificate.Client
+	kmsConn             *kms.Client
+	ssmConn             *ssm.Client
+	apiConn             *api.Client
+	emrConn             *emr.Client
+	clsConn             *cls.Client
+	dnsPodConn          *dnspod.Client
+	privateDnsConn      *privatedns.Client
+	antiddosConn        *antiddos.Client
+	domainConn          *domain.Client
+	lighthouseConn      *lighthouse.Client
+	temConn             *tem.Client
+	teoConn             *teo.Client
+	tcmConn             *tcm.Client
+	cssConn             *css.Client
+	sesConn             *ses.Client
+	dcdbConn            *dcdb.Client
+	smsConn             *sms.Client
+	catConn             *cat.Client
+	mariadbConn         *mariadb.Client
+	rumConn             *rum.Client
+	ptsConn             *pts.Client
+	tatConn             *tat.Client
+	organizationConn    *organization.Client
+	tdcpgConn           *tdcpg.Client
+	dbbrainConn         *dbbrain.Client
+	dtsConn             *dts.Client
+	ciConn              *cos.Client
+	cosBatchConn        *cos.Client
+	tsfConn             *tsf.Client
+	mpsConn             *mps.Client
+	cwpConn             *cwp.Client
+	chdfsConn           *chdfs.Client
+	mdlConn             *mdl.Client
+	apmConn             *apm.Client
+	ciamConn            *ciam.Client
+	tseConn             *tse.Client
+	cdwchConn           *cdwch.Client
+	ebConn              *eb.Client
+	dlcConn             *dlc.Client
+	wedataConn          *wedata.Client
+	wedatav20250806Conn *wedatav20250806.Client
+	wafConn             *waf.Client
+	cfwConn             *cfw.Client
+	oceanusConn         *oceanus.Client
+	dasbConn            *dasb.Client
+	trocketConn         *trocket.Client
+	biConn              *bi.Client
+	cdwpgConn           *cdwpg.Client
+	csipConn            *csip.Client
+	regionConn          *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tkev20220501Conn  *tkev20220501.Client
@@ -212,20 +225,30 @@ type TencentCloudClient struct {
 	controlcenterConn *controlcenter.Client
 	thpcConn          *thpc.Client
 	//omit nil client
-	omitNilConn             *common.Client
-	emrv20190103Conn        *emr.Client
-	teov20220901Conn        *teo.Client
-	sslv20191205Conn        *sslCertificate.Client
-	postgresv20170312Conn   *postgre.Client
-	cfwv20190904Conn        *cfw.Client
-	ccnv20170312Conn        *vpc.Client
-	tcssv20201101Conn       *tcss.Client
-	cloudauditv20190319Conn *audit.Client
-	privatednsv20201028Conn *privatedns.Client
-	wafv20180125Conn        *waf.Client
-	camv20190116Conn        *cam.Client
-	clsv20201016Conn        *cls.Client
-	monitor20180724Conn     *monitor.Client
+	omitNilConn                 *common.Client
+	emrv20190103Conn            *emr.Client
+	teov20220901Conn            *teo.Client
+	sslv20191205Conn            *sslCertificate.Client
+	postgresv20170312Conn       *postgre.Client
+	cfwv20190904Conn            *cfw.Client
+	ccnv20170312Conn            *vpc.Client
+	tcssv20201101Conn           *tcss.Client
+	cloudauditv20190319Conn     *audit.Client
+	privatednsv20201028Conn     *privatedns.Client
+	privatednsIntlv20201028Conn *privatednsIntl.Client
+	wafv20180125Conn            *waf.Client
+	camv20190116Conn            *cam.Client
+	clsv20201016Conn            *cls.Client
+	postgresqlv20170312Conn     *postgre.Client
+	monitor20180724Conn         *monitor.Client
+	cdcv20201214Conn            *cdc.Client
+	mqttv20240516Conn           *mqtt.Client
+	cdwpgv20201230Conn          *cdwpg.Client
+	gwlbv20240906Conn           *gwlb.Client
+	billingv20180709Conn        *billing.Client
+	igtmv20231024Conn           *igtmv20231024.Client
+	bhv20230418Conn             *bhv20230418.Client
+	vcubev20220410Conn          *vcubev20220410.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -334,12 +357,17 @@ func (me *TencentCloudClient) UseTencentCosClientNew(bucket string, cdcId ...str
 }
 
 // UseTencentCosClient tencent cloud own client for service instead of aws
-func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
+func (me *TencentCloudClient) UseTencentCosClient(bucket string, clientTimeout ...time.Duration) *cos.Client {
 	cosUrl := fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region)
 	if me.CosDomain != "" {
 		parsedURL, _ := url.Parse(me.CosDomain)
 		parsedURL.Host = bucket + "." + parsedURL.Host
 		cosUrl = parsedURL.String()
+	}
+
+	tmpTimeout := 100 * time.Second
+	if len(clientTimeout) > 0 {
+		tmpTimeout = clientTimeout[0]
 	}
 
 	u, _ := url.Parse(cosUrl)
@@ -353,7 +381,7 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 	}
 
 	me.tencentCosConn = cos.NewClient(baseUrl, &http.Client{
-		Timeout: 100 * time.Second,
+		Timeout: tmpTimeout,
 		Transport: &cos.AuthorizationTransport{
 			SecretID:     me.Credential.SecretId,
 			SecretKey:    me.Credential.SecretKey,
@@ -561,6 +589,25 @@ func (me *TencentCloudClient) UseClbClient(iacExtInfo ...IacExtInfo) *clb.Client
 	return me.clbConn
 }
 
+// UseClbClient returns clb Intl client for service
+func (me *TencentCloudClient) UseClbIntlClient(iacExtInfo ...IacExtInfo) *clbintl.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.clbIntlConn != nil {
+		me.clbIntlConn.WithHttpTransport(&logRoundTripper)
+		return me.clbIntlConn
+	}
+
+	cpf := me.NewClientIntlProfile(300)
+	me.clbIntlConn, _ = clbintl.NewClient(me.Credential, me.Region, cpf)
+	me.clbIntlConn.WithHttpTransport(&logRoundTripper)
+
+	return me.clbIntlConn
+}
+
 // UseCvmClient returns cvm client for service
 func (me *TencentCloudClient) UseCvmClient(iacExtInfo ...IacExtInfo) *cvmv20170312.Client {
 	var logRoundTripper LogRoundTripper
@@ -579,6 +626,19 @@ func (me *TencentCloudClient) UseCvmClient(iacExtInfo ...IacExtInfo) *cvmv201703
 	me.cvmv20170312Conn.WithHttpTransport(&logRoundTripper)
 
 	return me.cvmv20170312Conn
+}
+
+// UseCvmIntlClient returns cvm intl client for service
+func (me *TencentCloudClient) UseCvmIntlClient(iacExtInfo ...IacExtInfo) *cvmintl.Client {
+	if me.cvmIntlConn != nil {
+		return me.cvmIntlConn
+	}
+
+	cpf := me.NewClientIntlProfile(300)
+	me.cvmIntlConn, _ = cvmintl.NewClient(me.Credential, me.Region, cpf)
+	me.cvmIntlConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cvmIntlConn
 }
 
 // UseCvmV20170312Client returns cvm client for service
@@ -626,7 +686,6 @@ func (me *TencentCloudClient) UseTkeClient(iacExtInfo ...IacExtInfo) *tkev201805
 		return me.tkev20180525Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.tkev20180525Conn, _ = tkev20180525.NewClient(me.Credential, me.Region, cpf)
 	me.tkev20180525Conn.WithHttpTransport(&logRoundTripper)
 
@@ -645,7 +704,6 @@ func (me *TencentCloudClient) UseTkeV20180525Client(iacExtInfo ...IacExtInfo) *t
 		return me.tkev20180525Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.tkev20180525Conn, _ = tkev20180525.NewClient(me.Credential, me.Region, cpf)
 	me.tkev20180525Conn.WithHttpTransport(&logRoundTripper)
 
@@ -827,6 +885,14 @@ func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 	return me.monitorConn
 }
 
+func (me *TencentCloudClient) UseMonitorClientRegion(region string) *monitor.Client {
+	cpf := me.NewClientProfile(300)
+	monitorConn, _ := monitor.NewClient(me.Credential, region, cpf)
+	monitorConn.WithHttpTransport(&LogRoundTripper{})
+
+	return monitorConn
+}
+
 // UseEsClient returns es client for service
 func (me *TencentCloudClient) UseEsClient(iacExtInfo ...IacExtInfo) *es.Client {
 	var logRoundTripper LogRoundTripper
@@ -840,7 +906,6 @@ func (me *TencentCloudClient) UseEsClient(iacExtInfo ...IacExtInfo) *es.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.esConn, _ = es.NewClient(me.Credential, me.Region, cpf)
 	me.esConn.WithHttpTransport(&logRoundTripper)
 
@@ -1326,7 +1391,6 @@ func (me *TencentCloudClient) UseDbbrainClient() *dbbrain.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.dbbrainConn, _ = dbbrain.NewClient(me.Credential, me.Region, cpf)
 	me.dbbrainConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1443,7 +1507,6 @@ func (me *TencentCloudClient) UseTsfClient() *tsf.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.tsfConn, _ = tsf.NewClient(me.Credential, me.Region, cpf)
 	me.tsfConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1457,7 +1520,6 @@ func (me *TencentCloudClient) UseMpsClient() *mps.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.mpsConn, _ = mps.NewClient(me.Credential, me.Region, cpf)
 	me.mpsConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1484,7 +1546,6 @@ func (me *TencentCloudClient) UseChdfsClient() *chdfs.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.chdfsConn, _ = chdfs.NewClient(me.Credential, me.Region, cpf)
 	me.chdfsConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1498,7 +1559,6 @@ func (me *TencentCloudClient) UseMdlClient() *mdl.Client {
 	}
 
 	cpf := me.NewClientIntlProfile(300)
-	cpf.Language = "zh-CN"
 	me.mdlConn, _ = mdl.NewClient(me.Credential, me.Region, cpf)
 	me.mdlConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1512,7 +1572,6 @@ func (me *TencentCloudClient) UseApmClient() *apm.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.apmConn, _ = apm.NewClient(me.Credential, me.Region, cpf)
 	me.apmConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1526,7 +1585,6 @@ func (me *TencentCloudClient) UseCiamClient() *ciam.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.ciamConn, _ = ciam.NewClient(me.Credential, me.Region, cpf)
 	me.ciamConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1546,7 +1604,6 @@ func (me *TencentCloudClient) UseTseClient(iacExtInfo ...IacExtInfo) *tse.Client
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.tseConn, _ = tse.NewClient(me.Credential, me.Region, cpf)
 	me.tseConn.WithHttpTransport(&logRoundTripper)
 
@@ -1560,7 +1617,6 @@ func (me *TencentCloudClient) UseCdwchClient() *cdwch.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.cdwchConn, _ = cdwch.NewClient(me.Credential, me.Region, cpf)
 	me.cdwchConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1574,7 +1630,6 @@ func (me *TencentCloudClient) UseEbClient() *eb.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.ebConn, _ = eb.NewClient(me.Credential, me.Region, cpf)
 	me.ebConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1588,7 +1643,6 @@ func (me *TencentCloudClient) UseDlcClient() *dlc.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.dlcConn, _ = dlc.NewClient(me.Credential, me.Region, cpf)
 	me.dlcConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1602,11 +1656,22 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.wedataConn, _ = wedata.NewClient(me.Credential, me.Region, cpf)
 	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.wedataConn
+}
+
+// UseWedataV20250806Client return WEDATA client for service
+func (me *TencentCloudClient) UseWedataV20250806Client() *wedatav20250806.Client {
+	if me.wedatav20250806Conn != nil {
+		return me.wedatav20250806Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.wedatav20250806Conn, _ = wedatav20250806.NewClient(me.Credential, me.Region, cpf)
+	me.wedatav20250806Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.wedatav20250806Conn
 }
 
 func (me *TencentCloudClient) UseWafClient(iacExtInfo ...IacExtInfo) *waf.Client {
@@ -1621,7 +1686,6 @@ func (me *TencentCloudClient) UseWafClient(iacExtInfo ...IacExtInfo) *waf.Client
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.wafConn, _ = waf.NewClient(me.Credential, me.Region, cpf)
 	me.wafConn.WithHttpTransport(&logRoundTripper)
 
@@ -1640,7 +1704,6 @@ func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.cfwConn, _ = cfw.NewClient(me.Credential, me.Region, cpf)
 	me.cfwConn.WithHttpTransport(&logRoundTripper)
 
@@ -1653,7 +1716,6 @@ func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.oceanusConn, _ = oceanus.NewClient(me.Credential, me.Region, cpf)
 	me.oceanusConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1666,11 +1728,23 @@ func (me *TencentCloudClient) UseDasbClient() *dasb.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.dasbConn, _ = dasb.NewClient(me.Credential, me.Region, cpf)
 	me.dasbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dasbConn
+}
+
+// UseBhV20230418Client return BH client for service
+func (me *TencentCloudClient) UseBhV20230418Client() *bhv20230418.Client {
+	if me.bhv20230418Conn != nil {
+		return me.bhv20230418Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.bhv20230418Conn, _ = bhv20230418.NewClient(me.Credential, me.Region, cpf)
+	me.bhv20230418Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.bhv20230418Conn
 }
 
 // UseTrocketClient returns trocket client for service
@@ -1680,7 +1754,6 @@ func (me *TencentCloudClient) UseTrocketClient() *trocket.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.trocketConn, _ = trocket.NewClient(me.Credential, me.Region, cpf)
 	me.trocketConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1694,7 +1767,6 @@ func (me *TencentCloudClient) UseBiClient() *bi.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.biConn, _ = bi.NewClient(me.Credential, me.Region, cpf)
 	me.biConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1708,7 +1780,6 @@ func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.cdwpgConn, _ = cdwpg.NewClient(me.Credential, me.Region, cpf)
 	me.cdwpgConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1722,7 +1793,6 @@ func (me *TencentCloudClient) UseCsipClient() *csip.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.csipConn, _ = csip.NewClient(me.Credential, me.Region, cpf)
 	me.csipConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1736,7 +1806,6 @@ func (me *TencentCloudClient) UseRegionClient() *region.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.regionConn, _ = region.NewClient(me.Credential, me.Region, cpf)
 	me.regionConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1815,7 +1884,6 @@ func (me *TencentCloudClient) UseCdwdorisV20211228Client() *cdwdoris.Client {
 		return me.cdwdorisConn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.cdwdorisConn, _ = cdwdoris.NewClient(me.Credential, me.Region, cpf)
 	me.cdwdorisConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1828,7 +1896,6 @@ func (me *TencentCloudClient) UseControlcenterV20230110Client() *controlcenter.C
 		return me.controlcenterConn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.controlcenterConn, _ = controlcenter.NewClient(me.Credential, me.Region, cpf)
 	me.controlcenterConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1841,7 +1908,6 @@ func (me *TencentCloudClient) UseThpcV20230321Client() *thpc.Client {
 		return me.thpcConn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.thpcConn, _ = thpc.NewClient(me.Credential, me.Region, cpf)
 	me.thpcConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1854,7 +1920,6 @@ func (me *TencentCloudClient) UseEmrV20190103Client() *emr.Client {
 		return me.emrv20190103Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.emrv20190103Conn, _ = emr.NewClient(me.Credential, me.Region, cpf)
 	me.emrv20190103Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1867,7 +1932,6 @@ func (me *TencentCloudClient) UseTeoV20220901Client() *teo.Client {
 		return me.teov20220901Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.teov20220901Conn, _ = teo.NewClient(me.Credential, me.Region, cpf)
 	me.teov20220901Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1880,7 +1944,6 @@ func (me *TencentCloudClient) UseSslV20191205Client() *sslCertificate.Client {
 		return me.sslv20191205Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.sslv20191205Conn, _ = sslCertificate.NewClient(me.Credential, me.Region, cpf)
 	me.sslv20191205Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1893,7 +1956,6 @@ func (me *TencentCloudClient) UsePostgresV20170312Client() *postgre.Client {
 		return me.postgresv20170312Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.postgresv20170312Conn, _ = postgre.NewClient(me.Credential, me.Region, cpf)
 	me.postgresv20170312Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1906,7 +1968,6 @@ func (me *TencentCloudClient) UseCfwV20190904Client() *cfw.Client {
 		return me.cfwv20190904Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.cfwv20190904Conn, _ = cfw.NewClient(me.Credential, me.Region, cpf)
 	me.cfwv20190904Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1919,7 +1980,6 @@ func (me *TencentCloudClient) UseCcnV20170312Client() *vpc.Client {
 		return me.ccnv20170312Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.ccnv20170312Conn, _ = vpc.NewClient(me.Credential, me.Region, cpf)
 	me.ccnv20170312Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1932,7 +1992,6 @@ func (me *TencentCloudClient) UseTcssV20201101Client() *tcss.Client {
 		return me.tcssv20201101Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.tcssv20201101Conn, _ = tcss.NewClient(me.Credential, me.Region, cpf)
 	me.tcssv20201101Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1945,7 +2004,6 @@ func (me *TencentCloudClient) UseCloudauditV20190319Client() *audit.Client {
 		return me.cloudauditv20190319Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.cloudauditv20190319Conn, _ = audit.NewClient(me.Credential, me.Region, cpf)
 	me.cloudauditv20190319Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1958,11 +2016,22 @@ func (me *TencentCloudClient) UsePrivatednsV20201028Client() *privatedns.Client 
 		return me.privatednsv20201028Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.privatednsv20201028Conn, _ = privatedns.NewClient(me.Credential, me.Region, cpf)
 	me.privatednsv20201028Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.privatednsv20201028Conn
+}
+
+// UsePrivatednsV20201028Client return PRIVATEDNS Intl client for service
+func (me *TencentCloudClient) UsePrivatednsIntlV20201028Client() *privatednsIntl.Client {
+	if me.privatednsIntlv20201028Conn != nil {
+		return me.privatednsIntlv20201028Conn
+	}
+	cpf := me.NewClientIntlProfile(300)
+	me.privatednsIntlv20201028Conn, _ = privatednsIntl.NewClient(me.Credential, me.Region, cpf)
+	me.privatednsIntlv20201028Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.privatednsIntlv20201028Conn
 }
 
 // UseWafV20180125Client return WAF client for service
@@ -1971,7 +2040,6 @@ func (me *TencentCloudClient) UseWafV20180125Client() *waf.Client {
 		return me.wafv20180125Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.wafv20180125Conn, _ = waf.NewClient(me.Credential, me.Region, cpf)
 	me.wafv20180125Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1984,7 +2052,6 @@ func (me *TencentCloudClient) UseCamV20190116Client() *cam.Client {
 		return me.camv20190116Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.camv20190116Conn, _ = cam.NewClient(me.Credential, me.Region, cpf)
 	me.camv20190116Conn.WithHttpTransport(&LogRoundTripper{})
 
@@ -1997,11 +2064,22 @@ func (me *TencentCloudClient) UseClsV20201016Client() *cls.Client {
 		return me.clsv20201016Conn
 	}
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.clsv20201016Conn, _ = cls.NewClient(me.Credential, me.Region, cpf)
 	me.clsv20201016Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.clsv20201016Conn
+}
+
+// UsePostgresqlV20170312Client return POSTGRESQL client for service
+func (me *TencentCloudClient) UsePostgresqlV20170312Client() *postgre.Client {
+	if me.postgresqlv20170312Conn != nil {
+		return me.postgresqlv20170312Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.postgresqlv20170312Conn, _ = postgre.NewClient(me.Credential, me.Region, cpf)
+	me.postgresqlv20170312Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.postgresqlv20170312Conn
 }
 
 // UseMonitorV20180724Client returns MONITOR client for service
@@ -2011,9 +2089,92 @@ func (me *TencentCloudClient) UseMonitorV20180724Client() *monitor.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
-	cpf.Language = "zh-CN"
 	me.monitor20180724Conn, _ = monitor.NewClient(me.Credential, me.Region, cpf)
 	me.monitor20180724Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.monitor20180724Conn
+}
+
+// UseCdcV20201214Client return CDC client for service
+func (me *TencentCloudClient) UseCdcV20201214Client() *cdc.Client {
+	if me.cdcv20201214Conn != nil {
+		return me.cdcv20201214Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.cdcv20201214Conn, _ = cdc.NewClient(me.Credential, me.Region, cpf)
+	me.cdcv20201214Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdcv20201214Conn
+}
+
+// UseMqttV20240516Client return MQTT client for service
+func (me *TencentCloudClient) UseMqttV20240516Client() *mqtt.Client {
+	if me.mqttv20240516Conn != nil {
+		return me.mqttv20240516Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.mqttv20240516Conn, _ = mqtt.NewClient(me.Credential, me.Region, cpf)
+	me.mqttv20240516Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mqttv20240516Conn
+}
+
+// UseCdwpgV20201230Client return CDWPG client for service
+func (me *TencentCloudClient) UseCdwpgV20201230Client() *cdwpg.Client {
+	if me.cdwpgv20201230Conn != nil {
+		return me.cdwpgv20201230Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.cdwpgv20201230Conn, _ = cdwpg.NewClient(me.Credential, me.Region, cpf)
+	me.cdwpgv20201230Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdwpgv20201230Conn
+}
+
+// UseGwlbV20240906Client return GWLB client for service
+func (me *TencentCloudClient) UseGwlbV20240906Client() *gwlb.Client {
+	if me.gwlbv20240906Conn != nil {
+		return me.gwlbv20240906Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.gwlbv20240906Conn, _ = gwlb.NewClient(me.Credential, me.Region, cpf)
+	me.gwlbv20240906Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.gwlbv20240906Conn
+}
+
+// UseBillingV20180709Client return BILLING client for service
+func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
+	if me.billingv20180709Conn != nil {
+		return me.billingv20180709Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.billingv20180709Conn, _ = billing.NewClient(me.Credential, me.Region, cpf)
+	me.billingv20180709Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.billingv20180709Conn
+}
+
+// UseIgtmV20231024Client return IGTM client for service
+func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
+	if me.igtmv20231024Conn != nil {
+		return me.igtmv20231024Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.igtmv20231024Conn, _ = igtmv20231024.NewClient(me.Credential, me.Region, cpf)
+	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.igtmv20231024Conn
+}
+
+// UseVcubeV20220410Client return VCUBE client for service
+func (me *TencentCloudClient) UseVcubeV20220410Client() *vcubev20220410.Client {
+	if me.vcubev20220410Conn != nil {
+		return me.vcubev20220410Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.vcubev20220410Conn, _ = vcubev20220410.NewClient(me.Credential, me.Region, cpf)
+	me.vcubev20220410Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.vcubev20220410Conn
 }

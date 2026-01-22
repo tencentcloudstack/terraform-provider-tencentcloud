@@ -1,0 +1,7 @@
+```release-note:enhancement
+datasource/tencentcloud_gaap_proxy_detail: support `is_auto_scale_proxy`
+```
+
+```release-note:enhancement
+datasource/tencentcloud_gaap_proxies: support `is_auto_scale_proxy`
+```

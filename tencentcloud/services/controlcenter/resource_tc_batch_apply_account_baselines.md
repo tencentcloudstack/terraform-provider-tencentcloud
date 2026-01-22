@@ -1,4 +1,4 @@
-Provides a resource to create a controlcenter batch apply account baselines
+Provides a resource to create a Controlcenter batch apply account baselines
 
 Example Usage
 

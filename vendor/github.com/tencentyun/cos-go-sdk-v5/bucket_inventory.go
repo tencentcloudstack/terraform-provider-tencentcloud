@@ -35,7 +35,8 @@ type BucketInventoryOptionalFields struct {
 
 // BucketInventorySchedule ...
 type BucketInventorySchedule struct {
-	Frequency string `xml:"Frequency"`
+	Frequency   string `xml:"Frequency,omitempty"`
+	MonthlyDate int    `xml:"MonthlyDate,omitempty"`
 }
 
 // BucketInventoryEncryption ...
@@ -149,6 +150,6 @@ func (s *BucketService) PostInventory(ctx context.Context, id string, opt *Bucke
 		method:  http.MethodPost,
 		body:    opt,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 	return resp, err
 }

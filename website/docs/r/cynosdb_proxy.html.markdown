@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cynosdb_proxy"
 sidebar_current: "docs-tencentcloud-resource-cynosdb_proxy"
 description: |-
-  Provides a resource to create a cynosdb proxy
+  Provides a resource to create a CynosDB proxy
 ---
 
 # tencentcloud_cynosdb_proxy
 
-Provides a resource to create a cynosdb proxy
+Provides a resource to create a CynosDB proxy
 
 ## Example Usage
 
@@ -61,5 +61,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `proxy_group_id` - Proxy Group Id.
 * `ro_instances` - Read only instance list.
+* `vip` - Internal IP address.
 
 

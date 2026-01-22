@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cbs_snapshot: update code and support `tags`
+```

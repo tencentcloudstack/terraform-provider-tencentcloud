@@ -157,7 +157,8 @@ func resourceTencentCloudDtsMigrateServiceCreate(d *schema.ResourceData, meta in
 
 	jobId = *response.Response.JobIds[0]
 	// wait created
-	if err = service.PollingMigrateJobStatusUntil(ctx, jobId, DTSJobStatus, []string{"created"}); err != nil {
+	_, err = service.PollingMigrateJobStatusUntil(ctx, jobId, DTSJobStatus, []string{"created"})
+	if err != nil {
 		return err
 	}
 

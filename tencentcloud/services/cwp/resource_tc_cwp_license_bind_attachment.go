@@ -133,9 +133,8 @@ func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, 
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil {
-			e = fmt.Errorf("cwp licenseBindAttachment not exists")
-			return resource.NonRetryableError(e)
+		if result == nil || result.Response == nil || result.Response.TaskId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create cwp license binds failed, Response is nil."))
 		}
 
 		response = result
@@ -157,9 +156,12 @@ func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, 
 			return tccommon.RetryError(e)
 		}
 
-		if result == nil {
-			e = fmt.Errorf("license bind schedule failed")
-			return resource.NonRetryableError(e)
+		if result == nil || result.Response == nil || result.Response.List == nil || len(result.Response.List) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe license bind schedule failed, Response is nil."))
+		}
+
+		if result.Response.List[0].Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Status is nil."))
 		}
 
 		if *result.Response.List[0].Status == 1 {
@@ -205,8 +207,8 @@ func resourceTencentCloudCwpLicenseBindAttachmentRead(d *schema.ResourceData, me
 	}
 
 	if licenseBindAttachment == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cwp_license_bind_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CwpLicenseBindAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 

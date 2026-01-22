@@ -24,11 +24,11 @@ resource "tencentcloud_vpc_acl" "example" {
   name   = "tf-example"
   ingress = [
     "ACCEPT#192.168.1.0/24#800#TCP",
-    "ACCEPT#192.168.1.0/24#800-900#TCP",
+    "ACCEPT#192.168.1.0/24#800-900#TCP#DESCRIPTION",
   ]
   egress = [
     "ACCEPT#192.168.1.0/24#800#TCP",
-    "ACCEPT#192.168.1.0/24#800-900#TCP",
+    "ACCEPT#192.168.1.0/24#800-900#TCP#DESCRIPTION",
   ]
 }
 ```
@@ -39,8 +39,8 @@ The following arguments are supported:
 
 * `name` - (Required, String) Name of the network ACL.
 * `vpc_id` - (Required, String) ID of the VPC instance.
-* `egress` - (Optional, List: [`String`]) Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.
-* `ingress` - (Optional, List: [`String`]) Ingress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.
+* `egress` - (Optional, List: [`String`]) Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]#[description]. The available value of `action` is `ACCEPT` and `DROP`. The `cidr_ip` must be an IP address network or segment. The `port` valid format is `80`, `80-90` or `ALL`. The available value of `protocol` is `TCP`, `UDP`, `ICMP` and `ALL`. When `protocol` is `ICMP` or `ALL`, the `port` must be `ALL`. The `description` content must be in uppercase.
+* `ingress` - (Optional, List: [`String`]) Ingress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]#[description]. The available value of `action` is `ACCEPT` and `DROP`. The `cidr_ip` must be an IP address network or segment. The `port` valid format is `80`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When `protocol` is `ICMP` or `ALL`, the 'port' must be `ALL`. The `description` content must be in uppercase.
 * `tags` - (Optional, Map) Tags of the vpc acl.
 
 ## Attributes Reference
@@ -56,6 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 Vpc ACL can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_vpc_acl.default acl-id
+$ terraform import tencentcloud_vpc_acl.example acl-mijp2oyu
 ```
 

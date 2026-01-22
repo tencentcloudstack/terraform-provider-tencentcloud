@@ -47,6 +47,11 @@ func ResourceTencentCloudVpnCustomerGateway() *schema.Resource {
 				Optional:    true,
 				Description: "A list of tags used to associate different resources.",
 			},
+			"bgp_asn": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "BGP ASN. Value range: 1 - 4294967295. Using BGP requires configuring ASN. 139341, 45090, and 58835 are not available.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -59,13 +64,25 @@ func ResourceTencentCloudVpnCustomerGateway() *schema.Resource {
 func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request  = vpc.NewCreateCustomerGatewayRequest()
+		response = vpc.NewCreateCustomerGatewayResponse()
+	)
 
-	request := vpc.NewCreateCustomerGatewayRequest()
-	request.CustomerGatewayName = helper.String(d.Get("name").(string))
-	request.IpAddress = helper.String(d.Get("public_ip_address").(string))
-	var response *vpc.CreateCustomerGatewayResponse
+	if v, ok := d.GetOk("name"); ok {
+		request.CustomerGatewayName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("public_ip_address"); ok {
+		request.IpAddress = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("bgp_asn"); ok {
+		request.BgpAsn = helper.IntInt64(v.(int))
+	}
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().CreateCustomerGateway(request)
 		if e != nil {
@@ -73,19 +90,27 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return tccommon.RetryError(e)
 		}
+
+		if result == nil || result.Response == nil || result.Response.CustomerGateway == nil {
+			return resource.RetryableError(fmt.Errorf("Create VPN customer gateway failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
-	if response.Response.CustomerGateway == nil {
+	if response.Response.CustomerGateway.CustomerGatewayId == nil {
 		return fmt.Errorf("VPN customer gateway id is nil")
 	}
+
 	customerGatewayId := *response.Response.CustomerGateway.CustomerGatewayId
 	d.SetId(customerGatewayId)
+
 	// must wait for finishing creating customer gateway
 	statRequest := vpc.NewDescribeCustomerGatewaysRequest()
 	statRequest.CustomerGatewayIds = []*string{response.Response.CustomerGateway.CustomerGatewayId}
@@ -96,14 +121,20 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return tccommon.RetryError(e)
 		} else {
+			if result == nil || result.Response == nil || result.Response.CustomerGatewaySet == nil {
+				return resource.NonRetryableError(fmt.Errorf("response is nil"))
+			}
+
 			//if not, quit
 			if len(result.Response.CustomerGatewaySet) != 1 {
 				return resource.NonRetryableError(fmt.Errorf("creating error"))
 			}
+
 			//else consider created, cos there is no status of gateway
 			return nil
 		}
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
@@ -112,10 +143,8 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := tccommon.BuildTagResourceName("vpc", "cgw", region, customerGatewayId)
-
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -128,11 +157,13 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request           = vpc.NewDescribeCustomerGatewaysRequest()
+		customerGatewayId = d.Id()
+	)
 
-	customerGatewayId := d.Id()
-	request := vpc.NewDescribeCustomerGatewaysRequest()
 	request.CustomerGatewayIds = []*string{&customerGatewayId}
 	var response *vpc.DescribeCustomerGatewaysResponse
 	var iacExtInfo connectivity.IacExtInfo
@@ -154,23 +185,41 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 				return tccommon.RetryError(e)
 			}
 		}
+
+		if result == nil || result.Response == nil || result.Response.CustomerGatewaySet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Read VPN customer gateway failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
 	if response == nil || response.Response == nil || len(response.Response.CustomerGatewaySet) < 1 {
 		d.SetId("")
 		return nil
 	}
 
 	gateway := response.Response.CustomerGatewaySet[0]
+	if gateway.CustomerGatewayName != nil {
+		_ = d.Set("name", gateway.CustomerGatewayName)
+	}
 
-	_ = d.Set("name", *gateway.CustomerGatewayName)
-	_ = d.Set("public_ip_address", *gateway.IpAddress)
-	_ = d.Set("create_time", *gateway.CreatedTime)
+	if gateway.IpAddress != nil {
+		_ = d.Set("public_ip_address", gateway.IpAddress)
+	}
+
+	if gateway.BgpAsn != nil && *gateway.BgpAsn != 0 {
+		_ = d.Set("bgp_asn", gateway.BgpAsn)
+	}
+
+	if gateway.CreatedTime != nil {
+		_ = d.Set("create_time", gateway.CreatedTime)
+	}
 
 	//tags
 	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
@@ -179,6 +228,7 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 	if err != nil {
 		return err
 	}
+
 	_ = d.Set("tags", tags)
 
 	return nil
@@ -187,15 +237,24 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		customerGatewayId = d.Id()
+	)
 
 	d.Partial(true)
-	customerGatewayId := d.Id()
-	request := vpc.NewModifyCustomerGatewayAttributeRequest()
-	request.CustomerGatewayId = &customerGatewayId
-	if d.HasChange("name") {
-		request.CustomerGatewayName = helper.String(d.Get("name").(string))
+	if d.HasChange("name") || d.HasChange("bgp_asn") {
+		request := vpc.NewModifyCustomerGatewayAttributeRequest()
+		request.CustomerGatewayId = &customerGatewayId
+		if v, ok := d.GetOk("name"); ok {
+			request.CustomerGatewayName = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("bgp_asn"); ok {
+			request.BgpAsn = helper.IntUint64(v.(int))
+		}
+
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCustomerGatewayAttribute(request)
 			if e != nil {
@@ -203,8 +262,10 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 					logId, request.GetAction(), request.ToJsonString(), e.Error())
 				return tccommon.RetryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify VPN customer gateway failed, reason:%s\n", logId, err.Error())
 			return err
@@ -223,6 +284,7 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 			return err
 		}
 	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudVpnCustomerGatewayRead(d, meta)
@@ -230,7 +292,6 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 
 func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_vpn_customer_gateway.delete")()
-
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	customerGatewayId := d.Id()
@@ -259,6 +320,10 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 				logId, tRequest.GetAction(), tRequest.ToJsonString(), e.Error())
 			return tccommon.RetryError(e)
 		} else {
+			if result == nil || result.Response == nil || result.Response.VpnConnectionSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Read VPN connections failed, Response is nil."))
+			}
+
 			if len(result.Response.VpnConnectionSet) == 0 {
 				return nil
 			} else {
@@ -306,6 +371,10 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 				return tccommon.RetryError(e)
 			}
 		} else {
+			if result == nil || result.Response == nil || result.Response.CustomerGatewaySet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Read VPN customer gateways failed, Response is nil."))
+			}
+
 			//if not, quit
 			if len(result.Response.CustomerGatewaySet) == 0 {
 				return nil

@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cdwdoris_instance: update doc
+```
+
+```release-note:enhancement
+data-source/tencentcloud_cdwdoris_instances: update doc
+```

@@ -1,8 +1,8 @@
-Use this data source to query detailed information of cfw nat_fw_switches
+Use this data source to query detailed information of CFW nat fw switches
 
 Example Usage
 
-Query Nat instance'switch by instance id
+Query Nat instance'switch by instance ID
 
 ```hcl
 data "tencentcloud_cfw_nat_fw_switches" "example" {
@@ -10,11 +10,11 @@ data "tencentcloud_cfw_nat_fw_switches" "example" {
 }
 ```
 
-Or filter by switch status
+Or filter by switch enable status
 
 ```hcl
 data "tencentcloud_cfw_nat_fw_switches" "example" {
   nat_ins_id = "cfwnat-18d2ba18"
-  status     = 1
+  enable     = 1
 }
 ```

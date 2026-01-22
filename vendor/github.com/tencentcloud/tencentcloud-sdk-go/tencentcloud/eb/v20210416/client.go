@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,8 +59,9 @@ func NewCheckRuleRequest() (request *CheckRuleRequest) {
 func NewCheckRuleResponse() (response *CheckRuleResponse) {
     response = &CheckRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckRule
@@ -70,6 +71,7 @@ func NewCheckRuleResponse() (response *CheckRuleResponse) {
 //  FAILEDOPERATION_ERRORFILTER = "FailedOperation.ErrorFilter"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INTERNALERROR_UNKNOWNINTERNALERROR = "InternalError.UnknownInternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERRULE = "InvalidParameterValue.InvalidFilterRule"
 //  INVALIDPARAMETERVALUE_INVALIDPATTERN = "InvalidParameterValue.InvalidPattern"
@@ -84,6 +86,7 @@ func (c *Client) CheckRule(request *CheckRuleRequest) (response *CheckRuleRespon
 //  FAILEDOPERATION_ERRORFILTER = "FailedOperation.ErrorFilter"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INTERNALERROR_UNKNOWNINTERNALERROR = "InternalError.UnknownInternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERRULE = "InvalidParameterValue.InvalidFilterRule"
 //  INVALIDPARAMETERVALUE_INVALIDPATTERN = "InvalidParameterValue.InvalidPattern"
@@ -91,6 +94,7 @@ func (c *Client) CheckRuleWithContext(ctx context.Context, request *CheckRuleReq
     if request == nil {
         request = NewCheckRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "CheckRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckRule require credential")
@@ -117,8 +121,9 @@ func NewCheckTransformationRequest() (request *CheckTransformationRequest) {
 func NewCheckTransformationResponse() (response *CheckTransformationResponse) {
     response = &CheckTransformationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckTransformation
@@ -128,6 +133,7 @@ func NewCheckTransformationResponse() (response *CheckTransformationResponse) {
 //  FAILEDOPERATION_ERRORFILTER = "FailedOperation.ErrorFilter"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INTERNALERROR_UNKNOWNINTERNALERROR = "InternalError.UnknownInternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERRULE = "InvalidParameterValue.InvalidFilterRule"
 //  INVALIDPARAMETERVALUE_INVALIDPATTERN = "InvalidParameterValue.InvalidPattern"
@@ -142,6 +148,7 @@ func (c *Client) CheckTransformation(request *CheckTransformationRequest) (respo
 //  FAILEDOPERATION_ERRORFILTER = "FailedOperation.ErrorFilter"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INTERNALERROR_UNKNOWNINTERNALERROR = "InternalError.UnknownInternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERRULE = "InvalidParameterValue.InvalidFilterRule"
 //  INVALIDPARAMETERVALUE_INVALIDPATTERN = "InvalidParameterValue.InvalidPattern"
@@ -149,6 +156,7 @@ func (c *Client) CheckTransformationWithContext(ctx context.Context, request *Ch
     if request == nil {
         request = NewCheckTransformationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "CheckTransformation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckTransformation require credential")
@@ -175,8 +183,9 @@ func NewCreateConnectionRequest() (request *CreateConnectionRequest) {
 func NewCreateConnectionResponse() (response *CreateConnectionResponse) {
     response = &CreateConnectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateConnection
@@ -243,6 +252,7 @@ func (c *Client) CreateConnectionWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateConnectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "CreateConnection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateConnection require credential")
@@ -269,8 +279,9 @@ func NewCreateEventBusRequest() (request *CreateEventBusRequest) {
 func NewCreateEventBusResponse() (response *CreateEventBusResponse) {
     response = &CreateEventBusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEventBus
@@ -293,6 +304,7 @@ func NewCreateEventBusResponse() (response *CreateEventBusResponse) {
 //  OPERATIONDENIED_EVENTBUSRESOURCEISLOCKED = "OperationDenied.EventBusResourceIsLocked"
 //  RESOURCEINUSE_DEFAULTEVENTBUS = "ResourceInUse.DefaultEventBus"
 //  RESOURCEINUSE_EVENTBUS = "ResourceInUse.EventBus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
 //  RESOURCEUNAVAILABLE_TARGET = "ResourceUnavailable.Target"
@@ -320,6 +332,7 @@ func (c *Client) CreateEventBus(request *CreateEventBusRequest) (response *Creat
 //  OPERATIONDENIED_EVENTBUSRESOURCEISLOCKED = "OperationDenied.EventBusResourceIsLocked"
 //  RESOURCEINUSE_DEFAULTEVENTBUS = "ResourceInUse.DefaultEventBus"
 //  RESOURCEINUSE_EVENTBUS = "ResourceInUse.EventBus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
 //  RESOURCEUNAVAILABLE_TARGET = "ResourceUnavailable.Target"
@@ -327,6 +340,7 @@ func (c *Client) CreateEventBusWithContext(ctx context.Context, request *CreateE
     if request == nil {
         request = NewCreateEventBusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "CreateEventBus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEventBus require credential")
@@ -353,8 +367,9 @@ func NewCreateRuleRequest() (request *CreateRuleRequest) {
 func NewCreateRuleResponse() (response *CreateRuleResponse) {
     response = &CreateRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRule
@@ -370,6 +385,7 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 //  INVALIDPARAMETERVALUE_TAGS = "InvalidParameterValue.Tags"
 //  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
 //  LIMITEXCEEDED_RULE = "LimitExceeded.Rule"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
 func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleResponse, err error) {
@@ -389,12 +405,14 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 //  INVALIDPARAMETERVALUE_TAGS = "InvalidParameterValue.Tags"
 //  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
 //  LIMITEXCEEDED_RULE = "LimitExceeded.Rule"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
 func (c *Client) CreateRuleWithContext(ctx context.Context, request *CreateRuleRequest) (response *CreateRuleResponse, err error) {
     if request == nil {
         request = NewCreateRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "CreateRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRule require credential")
@@ -421,8 +439,9 @@ func NewCreateTargetRequest() (request *CreateTargetRequest) {
 func NewCreateTargetResponse() (response *CreateTargetResponse) {
     response = &CreateTargetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTarget
@@ -529,6 +548,7 @@ func (c *Client) CreateTargetWithContext(ctx context.Context, request *CreateTar
     if request == nil {
         request = NewCreateTargetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "CreateTarget")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTarget require credential")
@@ -555,8 +575,9 @@ func NewCreateTransformationRequest() (request *CreateTransformationRequest) {
 func NewCreateTransformationResponse() (response *CreateTransformationResponse) {
     response = &CreateTransformationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTransformation
@@ -581,6 +602,7 @@ func (c *Client) CreateTransformationWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateTransformationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "CreateTransformation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTransformation require credential")
@@ -607,8 +629,9 @@ func NewDeleteConnectionRequest() (request *DeleteConnectionRequest) {
 func NewDeleteConnectionResponse() (response *DeleteConnectionResponse) {
     response = &DeleteConnectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteConnection
@@ -621,6 +644,7 @@ func NewDeleteConnectionResponse() (response *DeleteConnectionResponse) {
 //  INVALIDPARAMETERVALUE_CONNECTIONDESCRIPTION = "InvalidParameterValue.ConnectionDescription"
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  OPERATIONDENIED_EVENTBUSRESOURCEISLOCKED = "OperationDenied.EventBusResourceIsLocked"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CONNECTION = "ResourceNotFound.Connection"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
@@ -640,6 +664,7 @@ func (c *Client) DeleteConnection(request *DeleteConnectionRequest) (response *D
 //  INVALIDPARAMETERVALUE_CONNECTIONDESCRIPTION = "InvalidParameterValue.ConnectionDescription"
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  OPERATIONDENIED_EVENTBUSRESOURCEISLOCKED = "OperationDenied.EventBusResourceIsLocked"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CONNECTION = "ResourceNotFound.Connection"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
@@ -649,6 +674,7 @@ func (c *Client) DeleteConnectionWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteConnectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "DeleteConnection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteConnection require credential")
@@ -675,8 +701,9 @@ func NewDeleteEventBusRequest() (request *DeleteEventBusRequest) {
 func NewDeleteEventBusResponse() (response *DeleteEventBusResponse) {
     response = &DeleteEventBusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEventBus
@@ -688,6 +715,7 @@ func NewDeleteEventBusResponse() (response *DeleteEventBusResponse) {
 //  OPERATIONDENIED_EVENTBUSRESOURCEISLOCKED = "OperationDenied.EventBusResourceIsLocked"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
 //  RESOURCEINUSE_EVENTBUS = "ResourceInUse.EventBus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
 func (c *Client) DeleteEventBus(request *DeleteEventBusRequest) (response *DeleteEventBusResponse, err error) {
@@ -703,12 +731,14 @@ func (c *Client) DeleteEventBus(request *DeleteEventBusRequest) (response *Delet
 //  OPERATIONDENIED_EVENTBUSRESOURCEISLOCKED = "OperationDenied.EventBusResourceIsLocked"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
 //  RESOURCEINUSE_EVENTBUS = "ResourceInUse.EventBus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
 func (c *Client) DeleteEventBusWithContext(ctx context.Context, request *DeleteEventBusRequest) (response *DeleteEventBusResponse, err error) {
     if request == nil {
         request = NewDeleteEventBusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "DeleteEventBus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteEventBus require credential")
@@ -735,8 +765,9 @@ func NewDeleteRuleRequest() (request *DeleteRuleRequest) {
 func NewDeleteRuleResponse() (response *DeleteRuleResponse) {
     response = &DeleteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRule
@@ -748,6 +779,7 @@ func NewDeleteRuleResponse() (response *DeleteRuleResponse) {
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  RESOURCEINUSE_RULE = "ResourceInUse.Rule"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
@@ -764,6 +796,7 @@ func (c *Client) DeleteRule(request *DeleteRuleRequest) (response *DeleteRuleRes
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  RESOURCEINUSE_RULE = "ResourceInUse.Rule"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 //  RESOURCENOTFOUND_TAG = "ResourceNotFound.Tag"
@@ -771,6 +804,7 @@ func (c *Client) DeleteRuleWithContext(ctx context.Context, request *DeleteRuleR
     if request == nil {
         request = NewDeleteRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "DeleteRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRule require credential")
@@ -797,8 +831,9 @@ func NewDeleteTargetRequest() (request *DeleteTargetRequest) {
 func NewDeleteTargetResponse() (response *DeleteTargetResponse) {
     response = &DeleteTargetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTarget
@@ -851,6 +886,7 @@ func (c *Client) DeleteTargetWithContext(ctx context.Context, request *DeleteTar
     if request == nil {
         request = NewDeleteTargetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "DeleteTarget")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTarget require credential")
@@ -877,8 +913,9 @@ func NewDeleteTransformationRequest() (request *DeleteTransformationRequest) {
 func NewDeleteTransformationResponse() (response *DeleteTransformationResponse) {
     response = &DeleteTransformationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTransformation
@@ -903,6 +940,7 @@ func (c *Client) DeleteTransformationWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteTransformationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "DeleteTransformation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTransformation require credential")
@@ -929,30 +967,34 @@ func NewDescribeLogTagValueRequest() (request *DescribeLogTagValueRequest) {
 func NewDescribeLogTagValueResponse() (response *DescribeLogTagValueResponse) {
     response = &DescribeLogTagValueResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogTagValue
-// 查询日志索引维度值
+// 前置条件：需开启事件存储；事件查询维度值
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeLogTagValue(request *DescribeLogTagValueRequest) (response *DescribeLogTagValueResponse, err error) {
     return c.DescribeLogTagValueWithContext(context.Background(), request)
 }
 
 // DescribeLogTagValue
-// 查询日志索引维度值
+// 前置条件：需开启事件存储；事件查询维度值
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeLogTagValueWithContext(ctx context.Context, request *DescribeLogTagValueRequest) (response *DescribeLogTagValueResponse, err error) {
     if request == nil {
         request = NewDescribeLogTagValueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "DescribeLogTagValue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogTagValue require credential")
@@ -979,8 +1021,9 @@ func NewGetEventBusRequest() (request *GetEventBusRequest) {
 func NewGetEventBusResponse() (response *GetEventBusResponse) {
     response = &GetEventBusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetEventBus
@@ -1005,6 +1048,7 @@ func (c *Client) GetEventBusWithContext(ctx context.Context, request *GetEventBu
     if request == nil {
         request = NewGetEventBusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "GetEventBus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetEventBus require credential")
@@ -1031,8 +1075,9 @@ func NewGetPlatformEventTemplateRequest() (request *GetPlatformEventTemplateRequ
 func NewGetPlatformEventTemplateResponse() (response *GetPlatformEventTemplateResponse) {
     response = &GetPlatformEventTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetPlatformEventTemplate
@@ -1055,6 +1100,7 @@ func (c *Client) GetPlatformEventTemplateWithContext(ctx context.Context, reques
     if request == nil {
         request = NewGetPlatformEventTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "GetPlatformEventTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetPlatformEventTemplate require credential")
@@ -1081,8 +1127,9 @@ func NewGetRuleRequest() (request *GetRuleRequest) {
 func NewGetRuleResponse() (response *GetRuleResponse) {
     response = &GetRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetRule
@@ -1113,6 +1160,7 @@ func (c *Client) GetRuleWithContext(ctx context.Context, request *GetRuleRequest
     if request == nil {
         request = NewGetRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "GetRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRule require credential")
@@ -1139,8 +1187,9 @@ func NewGetTransformationRequest() (request *GetTransformationRequest) {
 func NewGetTransformationResponse() (response *GetTransformationResponse) {
     response = &GetTransformationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetTransformation
@@ -1150,6 +1199,7 @@ func NewGetTransformationResponse() (response *GetTransformationResponse) {
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  INVALIDPARAMETERVALUE_TRANSFORMATIONID = "InvalidParameterValue.TransformationID"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TRANSFORMATION = "ResourceNotFound.Transformation"
 func (c *Client) GetTransformation(request *GetTransformationRequest) (response *GetTransformationResponse, err error) {
     return c.GetTransformationWithContext(context.Background(), request)
@@ -1162,11 +1212,13 @@ func (c *Client) GetTransformation(request *GetTransformationRequest) (response 
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  INVALIDPARAMETERVALUE_TRANSFORMATIONID = "InvalidParameterValue.TransformationID"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TRANSFORMATION = "ResourceNotFound.Transformation"
 func (c *Client) GetTransformationWithContext(ctx context.Context, request *GetTransformationRequest) (response *GetTransformationResponse, err error) {
     if request == nil {
         request = NewGetTransformationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "GetTransformation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetTransformation require credential")
@@ -1193,8 +1245,9 @@ func NewListConnectionsRequest() (request *ListConnectionsRequest) {
 func NewListConnectionsResponse() (response *ListConnectionsResponse) {
     response = &ListConnectionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListConnections
@@ -1227,6 +1280,7 @@ func (c *Client) ListConnectionsWithContext(ctx context.Context, request *ListCo
     if request == nil {
         request = NewListConnectionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "ListConnections")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListConnections require credential")
@@ -1253,8 +1307,9 @@ func NewListEventBusesRequest() (request *ListEventBusesRequest) {
 func NewListEventBusesResponse() (response *ListEventBusesResponse) {
     response = &ListEventBusesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListEventBuses
@@ -1287,6 +1342,7 @@ func (c *Client) ListEventBusesWithContext(ctx context.Context, request *ListEve
     if request == nil {
         request = NewListEventBusesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "ListEventBuses")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListEventBuses require credential")
@@ -1313,8 +1369,9 @@ func NewListPlatformEventNamesRequest() (request *ListPlatformEventNamesRequest)
 func NewListPlatformEventNamesResponse() (response *ListPlatformEventNamesResponse) {
     response = &ListPlatformEventNamesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListPlatformEventNames
@@ -1335,6 +1392,7 @@ func (c *Client) ListPlatformEventNamesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewListPlatformEventNamesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "ListPlatformEventNames")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPlatformEventNames require credential")
@@ -1361,8 +1419,9 @@ func NewListPlatformEventPatternsRequest() (request *ListPlatformEventPatternsRe
 func NewListPlatformEventPatternsResponse() (response *ListPlatformEventPatternsResponse) {
     response = &ListPlatformEventPatternsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListPlatformEventPatterns
@@ -1385,6 +1444,7 @@ func (c *Client) ListPlatformEventPatternsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewListPlatformEventPatternsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "ListPlatformEventPatterns")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPlatformEventPatterns require credential")
@@ -1411,8 +1471,9 @@ func NewListPlatformProductsRequest() (request *ListPlatformProductsRequest) {
 func NewListPlatformProductsResponse() (response *ListPlatformProductsResponse) {
     response = &ListPlatformProductsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListPlatformProducts
@@ -1435,6 +1496,7 @@ func (c *Client) ListPlatformProductsWithContext(ctx context.Context, request *L
     if request == nil {
         request = NewListPlatformProductsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "ListPlatformProducts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPlatformProducts require credential")
@@ -1461,8 +1523,9 @@ func NewListRulesRequest() (request *ListRulesRequest) {
 func NewListRulesResponse() (response *ListRulesResponse) {
     response = &ListRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListRules
@@ -1495,6 +1558,7 @@ func (c *Client) ListRulesWithContext(ctx context.Context, request *ListRulesReq
     if request == nil {
         request = NewListRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "ListRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListRules require credential")
@@ -1521,8 +1585,9 @@ func NewListTargetsRequest() (request *ListTargetsRequest) {
 func NewListTargetsResponse() (response *ListTargetsResponse) {
     response = &ListTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListTargets
@@ -1561,6 +1626,7 @@ func (c *Client) ListTargetsWithContext(ctx context.Context, request *ListTarget
     if request == nil {
         request = NewListTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "ListTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListTargets require credential")
@@ -1587,8 +1653,9 @@ func NewPublishEventRequest() (request *PublishEventRequest) {
 func NewPublishEventResponse() (response *PublishEventResponse) {
     response = &PublishEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PublishEvent
@@ -1625,6 +1692,7 @@ func (c *Client) PublishEventWithContext(ctx context.Context, request *PublishEv
     if request == nil {
         request = NewPublishEventRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "PublishEvent")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PublishEvent require credential")
@@ -1651,8 +1719,9 @@ func NewPutEventsRequest() (request *PutEventsRequest) {
 func NewPutEventsResponse() (response *PutEventsResponse) {
     response = &PutEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PutEvents
@@ -1693,6 +1762,7 @@ func (c *Client) PutEventsWithContext(ctx context.Context, request *PutEventsReq
     if request == nil {
         request = NewPutEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "PutEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PutEvents require credential")
@@ -1719,30 +1789,34 @@ func NewSearchLogRequest() (request *SearchLogRequest) {
 func NewSearchLogResponse() (response *SearchLogResponse) {
     response = &SearchLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SearchLog
-// 日志检索
+// 前置条件：开启事件存储；查询历史推送事件
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SearchLog(request *SearchLogRequest) (response *SearchLogResponse, err error) {
     return c.SearchLogWithContext(context.Background(), request)
 }
 
 // SearchLog
-// 日志检索
+// 前置条件：开启事件存储；查询历史推送事件
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SearchLogWithContext(ctx context.Context, request *SearchLogRequest) (response *SearchLogResponse, err error) {
     if request == nil {
         request = NewSearchLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "SearchLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SearchLog require credential")
@@ -1769,8 +1843,9 @@ func NewUpdateConnectionRequest() (request *UpdateConnectionRequest) {
 func NewUpdateConnectionResponse() (response *UpdateConnectionResponse) {
     response = &UpdateConnectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateConnection
@@ -1801,6 +1876,7 @@ func (c *Client) UpdateConnectionWithContext(ctx context.Context, request *Updat
     if request == nil {
         request = NewUpdateConnectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "UpdateConnection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateConnection require credential")
@@ -1827,8 +1903,9 @@ func NewUpdateEventBusRequest() (request *UpdateEventBusRequest) {
 func NewUpdateEventBusResponse() (response *UpdateEventBusResponse) {
     response = &UpdateEventBusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateEventBus
@@ -1842,6 +1919,7 @@ func NewUpdateEventBusResponse() (response *UpdateEventBusResponse) {
 //  INVALIDPARAMETERVALUE_EVENTTRACECONFIG = "InvalidParameterValue.EventTraceConfig"
 //  OPERATIONDENIED_DEFAULTCLSRESOURCEUNSUPPORTED = "OperationDenied.DefaultCLSResourceUnsupported"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) UpdateEventBus(request *UpdateEventBusRequest) (response *UpdateEventBusResponse, err error) {
     return c.UpdateEventBusWithContext(context.Background(), request)
@@ -1858,11 +1936,13 @@ func (c *Client) UpdateEventBus(request *UpdateEventBusRequest) (response *Updat
 //  INVALIDPARAMETERVALUE_EVENTTRACECONFIG = "InvalidParameterValue.EventTraceConfig"
 //  OPERATIONDENIED_DEFAULTCLSRESOURCEUNSUPPORTED = "OperationDenied.DefaultCLSResourceUnsupported"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) UpdateEventBusWithContext(ctx context.Context, request *UpdateEventBusRequest) (response *UpdateEventBusResponse, err error) {
     if request == nil {
         request = NewUpdateEventBusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "UpdateEventBus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateEventBus require credential")
@@ -1889,8 +1969,9 @@ func NewUpdateRuleRequest() (request *UpdateRuleRequest) {
 func NewUpdateRuleResponse() (response *UpdateRuleResponse) {
     response = &UpdateRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateRule
@@ -1906,6 +1987,7 @@ func NewUpdateRuleResponse() (response *UpdateRuleResponse) {
 //  INVALIDPARAMETERVALUE_RULENAME = "InvalidParameterValue.RuleName"
 //  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 func (c *Client) UpdateRule(request *UpdateRuleRequest) (response *UpdateRuleResponse, err error) {
@@ -1925,12 +2007,14 @@ func (c *Client) UpdateRule(request *UpdateRuleRequest) (response *UpdateRuleRes
 //  INVALIDPARAMETERVALUE_RULENAME = "InvalidParameterValue.RuleName"
 //  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 func (c *Client) UpdateRuleWithContext(ctx context.Context, request *UpdateRuleRequest) (response *UpdateRuleResponse, err error) {
     if request == nil {
         request = NewUpdateRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "UpdateRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRule require credential")
@@ -1957,8 +2041,9 @@ func NewUpdateTargetRequest() (request *UpdateTargetRequest) {
 func NewUpdateTargetResponse() (response *UpdateTargetResponse) {
     response = &UpdateTargetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateTarget
@@ -1978,6 +2063,7 @@ func NewUpdateTargetResponse() (response *UpdateTargetResponse) {
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  INVALIDPARAMETERVALUE_TARGETID = "InvalidParameterValue.TargetId"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 //  RESOURCENOTFOUND_TARGET = "ResourceNotFound.Target"
@@ -2002,6 +2088,7 @@ func (c *Client) UpdateTarget(request *UpdateTargetRequest) (response *UpdateTar
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  INVALIDPARAMETERVALUE_TARGETID = "InvalidParameterValue.TargetId"
 //  OPERATIONDENIED_RESOURCEIMMUTABLE = "OperationDenied.ResourceImmutable"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 //  RESOURCENOTFOUND_TARGET = "ResourceNotFound.Target"
@@ -2009,6 +2096,7 @@ func (c *Client) UpdateTargetWithContext(ctx context.Context, request *UpdateTar
     if request == nil {
         request = NewUpdateTargetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "UpdateTarget")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateTarget require credential")
@@ -2035,8 +2123,9 @@ func NewUpdateTransformationRequest() (request *UpdateTransformationRequest) {
 func NewUpdateTransformationResponse() (response *UpdateTransformationResponse) {
     response = &UpdateTransformationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateTransformation
@@ -2059,6 +2148,7 @@ func (c *Client) UpdateTransformationWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUpdateTransformationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "eb", APIVersion, "UpdateTransformation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateTransformation require credential")

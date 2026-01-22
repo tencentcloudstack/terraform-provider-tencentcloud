@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_serverless_hbase_instances
+```
+
+```release-note:enhancement
+resource/tencentcloud_serverless_hbase_instance: fixed a delay in status updates
+```

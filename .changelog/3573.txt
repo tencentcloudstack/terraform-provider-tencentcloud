@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_dlc_standard_engine_resource_group_config_info
+```
+
+```release-note:new-resource
+tencentcloud_dlc_datasource_house_attachment
+```
+
+```release-note:enhancement
+resource/tencentcloud_dlc_standard_engine_resource_group: support `running_state`
+```

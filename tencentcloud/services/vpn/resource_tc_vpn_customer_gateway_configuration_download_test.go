@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudVpnCustomerGatewayConfigurationDownloadResource_basic -v -timeout=0
 func TestAccTencentCloudVpnCustomerGatewayConfigurationDownloadResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -26,7 +27,7 @@ func TestAccTencentCloudVpnCustomerGatewayConfigurationDownloadResource_basic(t 
 const testAccVpcVpnCustomerGatewayConfigurationDownload = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test_download"
-  public_ip_address = "1.3.3.3"
+  public_ip_address = "10.3.1.18"
 
 }
 
@@ -75,9 +76,6 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "test"
   }
-  enable_health_check = true
-  health_check_local_ip = "192.168.0.2"
-  health_check_remote_ip = "3.3.3.2"
 }
 
 resource "tencentcloud_vpn_customer_gateway_configuration_download" "vpn_customer_gateway_configuration_download" {

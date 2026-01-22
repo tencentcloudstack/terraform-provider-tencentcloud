@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -70,6 +70,8 @@ func NewAddUserResponse() (response *AddUserResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+//  FAILEDOPERATION_FORBIDADD = "FailedOperation.ForbidAdd"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_SUBUSERFULL = "InvalidParameter.SubUserFull"
@@ -86,6 +88,8 @@ func (c *Client) AddUser(request *AddUserRequest) (response *AddUserResponse, er
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+//  FAILEDOPERATION_FORBIDADD = "FailedOperation.ForbidAdd"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_SUBUSERFULL = "InvalidParameter.SubUserFull"
@@ -96,6 +100,7 @@ func (c *Client) AddUserWithContext(ctx context.Context, request *AddUserRequest
     if request == nil {
         request = NewAddUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AddUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddUser require credential")
@@ -157,6 +162,7 @@ func (c *Client) AddUserToGroupWithContext(ctx context.Context, request *AddUser
     if request == nil {
         request = NewAddUserToGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AddUserToGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddUserToGroup require credential")
@@ -226,6 +232,7 @@ func (c *Client) AttachGroupPolicyWithContext(ctx context.Context, request *Atta
     if request == nil {
         request = NewAttachGroupPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AttachGroupPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachGroupPolicy require credential")
@@ -289,6 +296,7 @@ func (c *Client) AttachRolePolicyWithContext(ctx context.Context, request *Attac
     if request == nil {
         request = NewAttachRolePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AttachRolePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachRolePolicy require credential")
@@ -356,6 +364,7 @@ func (c *Client) AttachUserPolicyWithContext(ctx context.Context, request *Attac
     if request == nil {
         request = NewAttachUserPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "AttachUserPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachUserPolicy require credential")
@@ -413,6 +422,7 @@ func (c *Client) BuildDataFlowAuthTokenWithContext(ctx context.Context, request 
     if request == nil {
         request = NewBuildDataFlowAuthTokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "BuildDataFlowAuthToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BuildDataFlowAuthToken require credential")
@@ -462,6 +472,7 @@ func (c *Client) ConsumeCustomMFATokenWithContext(ctx context.Context, request *
     if request == nil {
         request = NewConsumeCustomMFATokenRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ConsumeCustomMFAToken")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConsumeCustomMFAToken require credential")
@@ -523,6 +534,7 @@ func (c *Client) CreateAccessKeyWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateAccessKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateAccessKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAccessKey require credential")
@@ -578,6 +590,7 @@ func (c *Client) CreateGroupWithContext(ctx context.Context, request *CreateGrou
     if request == nil {
         request = NewCreateGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateGroup require credential")
@@ -639,6 +652,7 @@ func (c *Client) CreateMessageReceiverWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateMessageReceiverRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateMessageReceiver")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateMessageReceiver require credential")
@@ -700,6 +714,7 @@ func (c *Client) CreateOIDCConfigWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOIDCConfig require credential")
@@ -817,6 +832,7 @@ func (c *Client) CreatePolicyWithContext(ctx context.Context, request *CreatePol
     if request == nil {
         request = NewCreatePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreatePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePolicy require credential")
@@ -888,6 +904,8 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -935,6 +953,8 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -942,6 +962,7 @@ func (c *Client) CreatePolicyVersionWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreatePolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreatePolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePolicyVersion require credential")
@@ -1037,6 +1058,7 @@ func (c *Client) CreateRoleWithContext(ctx context.Context, request *CreateRoleR
     if request == nil {
         request = NewCreateRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRole require credential")
@@ -1094,6 +1116,7 @@ func (c *Client) CreateSAMLProviderWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSAMLProvider require credential")
@@ -1173,6 +1196,7 @@ func (c *Client) CreateServiceLinkedRoleWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateServiceLinkedRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateServiceLinkedRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateServiceLinkedRole require credential")
@@ -1181,6 +1205,72 @@ func (c *Client) CreateServiceLinkedRoleWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewCreateServiceLinkedRoleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSubAccountLoginIpPolicyRequest() (request *CreateSubAccountLoginIpPolicyRequest) {
+    request = &CreateSubAccountLoginIpPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "CreateSubAccountLoginIpPolicy")
+    
+    
+    return
+}
+
+func NewCreateSubAccountLoginIpPolicyResponse() (response *CreateSubAccountLoginIpPolicyResponse) {
+    response = &CreateSubAccountLoginIpPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateSubAccountLoginIpPolicy
+// 增加子账号登录IP策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ASSISTAPPROVERFULL = "FailedOperation.AssistApproverFull"
+//  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
+//  INVALIDPARAMETER_ASSITAPPROVERTYPEERROR = "InvalidParameter.AssitApproverTypeError"
+//  INVALIDPARAMETER_EFFECTERROR = "InvalidParameter.EffectError"
+//  INVALIDPARAMETER_IPILLEGAL = "InvalidParameter.IPIllegal"
+//  INVALIDPARAMETER_IPRANGEOVERLAPPING = "InvalidParameter.IPRangeOverlapping"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SUBUSERPHONENOTEXSIT = "InvalidParameter.SubUserPhoneNotExsit"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+func (c *Client) CreateSubAccountLoginIpPolicy(request *CreateSubAccountLoginIpPolicyRequest) (response *CreateSubAccountLoginIpPolicyResponse, err error) {
+    return c.CreateSubAccountLoginIpPolicyWithContext(context.Background(), request)
+}
+
+// CreateSubAccountLoginIpPolicy
+// 增加子账号登录IP策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ASSISTAPPROVERFULL = "FailedOperation.AssistApproverFull"
+//  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
+//  INVALIDPARAMETER_ASSITAPPROVERTYPEERROR = "InvalidParameter.AssitApproverTypeError"
+//  INVALIDPARAMETER_EFFECTERROR = "InvalidParameter.EffectError"
+//  INVALIDPARAMETER_IPILLEGAL = "InvalidParameter.IPIllegal"
+//  INVALIDPARAMETER_IPRANGEOVERLAPPING = "InvalidParameter.IPRangeOverlapping"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SUBUSERPHONENOTEXSIT = "InvalidParameter.SubUserPhoneNotExsit"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+func (c *Client) CreateSubAccountLoginIpPolicyWithContext(ctx context.Context, request *CreateSubAccountLoginIpPolicyRequest) (response *CreateSubAccountLoginIpPolicyResponse, err error) {
+    if request == nil {
+        request = NewCreateSubAccountLoginIpPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateSubAccountLoginIpPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSubAccountLoginIpPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSubAccountLoginIpPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -1234,6 +1324,7 @@ func (c *Client) CreateUserOIDCConfigWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateUserOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateUserOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUserOIDCConfig require credential")
@@ -1285,6 +1376,7 @@ func (c *Client) CreateUserSAMLConfigWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateUserSAMLConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "CreateUserSAMLConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUserSAMLConfig require credential")
@@ -1352,6 +1444,7 @@ func (c *Client) DeleteAccessKeyWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteAccessKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteAccessKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAccessKey require credential")
@@ -1403,6 +1496,7 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     if request == nil {
         request = NewDeleteGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteGroup require credential")
@@ -1454,6 +1548,7 @@ func (c *Client) DeleteMessageReceiverWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteMessageReceiverRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteMessageReceiver")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteMessageReceiver require credential")
@@ -1505,6 +1600,7 @@ func (c *Client) DeleteOIDCConfigWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOIDCConfig require credential")
@@ -1568,6 +1664,7 @@ func (c *Client) DeletePolicyWithContext(ctx context.Context, request *DeletePol
     if request == nil {
         request = NewDeletePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeletePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePolicy require credential")
@@ -1626,6 +1723,7 @@ func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -1661,6 +1759,7 @@ func (c *Client) DeletePolicyVersion(request *DeletePolicyVersionRequest) (respo
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -1669,6 +1768,7 @@ func (c *Client) DeletePolicyVersionWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeletePolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeletePolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePolicyVersion require credential")
@@ -1728,6 +1828,7 @@ func (c *Client) DeleteRoleWithContext(ctx context.Context, request *DeleteRoleR
     if request == nil {
         request = NewDeleteRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRole require credential")
@@ -1791,6 +1892,7 @@ func (c *Client) DeleteRolePermissionsBoundaryWithContext(ctx context.Context, r
     if request == nil {
         request = NewDeleteRolePermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteRolePermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRolePermissionsBoundary require credential")
@@ -1844,6 +1946,7 @@ func (c *Client) DeleteSAMLProviderWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSAMLProvider require credential")
@@ -1897,6 +2000,7 @@ func (c *Client) DeleteServiceLinkedRoleWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteServiceLinkedRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteServiceLinkedRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteServiceLinkedRole require credential")
@@ -1958,6 +2062,7 @@ func (c *Client) DeleteUserWithContext(ctx context.Context, request *DeleteUserR
     if request == nil {
         request = NewDeleteUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUser require credential")
@@ -2017,6 +2122,7 @@ func (c *Client) DeleteUserPermissionsBoundaryWithContext(ctx context.Context, r
     if request == nil {
         request = NewDeleteUserPermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DeleteUserPermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUserPermissionsBoundary require credential")
@@ -2070,6 +2176,7 @@ func (c *Client) DescribeOIDCConfigWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOIDCConfig require credential")
@@ -2123,6 +2230,7 @@ func (c *Client) DescribeRoleListWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeRoleListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeRoleList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRoleList require credential")
@@ -2176,6 +2284,7 @@ func (c *Client) DescribeSafeAuthFlagWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeSafeAuthFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSafeAuthFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSafeAuthFlag require credential")
@@ -2229,6 +2338,7 @@ func (c *Client) DescribeSafeAuthFlagCollWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSafeAuthFlagCollRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSafeAuthFlagColl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSafeAuthFlagColl require credential")
@@ -2282,6 +2392,7 @@ func (c *Client) DescribeSafeAuthFlagIntlWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSafeAuthFlagIntlRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSafeAuthFlagIntl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSafeAuthFlagIntl require credential")
@@ -2335,6 +2446,7 @@ func (c *Client) DescribeSubAccountsWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeSubAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeSubAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSubAccounts require credential")
@@ -2384,6 +2496,7 @@ func (c *Client) DescribeUserOIDCConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeUserOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeUserOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUserOIDCConfig require credential")
@@ -2441,6 +2554,7 @@ func (c *Client) DescribeUserSAMLConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeUserSAMLConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DescribeUserSAMLConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUserSAMLConfig require credential")
@@ -2504,6 +2618,7 @@ func (c *Client) DetachGroupPolicyWithContext(ctx context.Context, request *Deta
     if request == nil {
         request = NewDetachGroupPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DetachGroupPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachGroupPolicy require credential")
@@ -2561,6 +2676,7 @@ func (c *Client) DetachRolePolicyWithContext(ctx context.Context, request *Detac
     if request == nil {
         request = NewDetachRolePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DetachRolePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachRolePolicy require credential")
@@ -2626,6 +2742,7 @@ func (c *Client) DetachUserPolicyWithContext(ctx context.Context, request *Detac
     if request == nil {
         request = NewDetachUserPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DetachUserPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachUserPolicy require credential")
@@ -2675,6 +2792,7 @@ func (c *Client) DisableUserSSOWithContext(ctx context.Context, request *Disable
     if request == nil {
         request = NewDisableUserSSORequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "DisableUserSSO")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableUserSSO require credential")
@@ -2724,6 +2842,7 @@ func (c *Client) GetAccountSummaryWithContext(ctx context.Context, request *GetA
     if request == nil {
         request = NewGetAccountSummaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetAccountSummary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetAccountSummary require credential")
@@ -2773,6 +2892,7 @@ func (c *Client) GetCustomMFATokenInfoWithContext(ctx context.Context, request *
     if request == nil {
         request = NewGetCustomMFATokenInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetCustomMFATokenInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetCustomMFATokenInfo require credential")
@@ -2824,6 +2944,7 @@ func (c *Client) GetGroupWithContext(ctx context.Context, request *GetGroupReque
     if request == nil {
         request = NewGetGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetGroup require credential")
@@ -2879,6 +3000,7 @@ func (c *Client) GetPolicyWithContext(ctx context.Context, request *GetPolicyReq
     if request == nil {
         request = NewGetPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetPolicy require credential")
@@ -2936,6 +3058,7 @@ func (c *Client) GetPolicyVersionWithContext(ctx context.Context, request *GetPo
     if request == nil {
         request = NewGetPolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetPolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetPolicyVersion require credential")
@@ -2989,6 +3112,7 @@ func (c *Client) GetRoleWithContext(ctx context.Context, request *GetRoleRequest
     if request == nil {
         request = NewGetRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRole require credential")
@@ -3044,6 +3168,7 @@ func (c *Client) GetRolePermissionBoundaryWithContext(ctx context.Context, reque
     if request == nil {
         request = NewGetRolePermissionBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetRolePermissionBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRolePermissionBoundary require credential")
@@ -3095,6 +3220,7 @@ func (c *Client) GetSAMLProviderWithContext(ctx context.Context, request *GetSAM
     if request == nil {
         request = NewGetSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetSAMLProvider require credential")
@@ -3146,6 +3272,7 @@ func (c *Client) GetSecurityLastUsedWithContext(ctx context.Context, request *Ge
     if request == nil {
         request = NewGetSecurityLastUsedRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetSecurityLastUsed")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetSecurityLastUsed require credential")
@@ -3199,6 +3326,7 @@ func (c *Client) GetServiceLinkedRoleDeletionStatusWithContext(ctx context.Conte
     if request == nil {
         request = NewGetServiceLinkedRoleDeletionStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetServiceLinkedRoleDeletionStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetServiceLinkedRoleDeletionStatus require credential")
@@ -3252,6 +3380,7 @@ func (c *Client) GetUserWithContext(ctx context.Context, request *GetUserRequest
     if request == nil {
         request = NewGetUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUser require credential")
@@ -3303,6 +3432,7 @@ func (c *Client) GetUserAppIdWithContext(ctx context.Context, request *GetUserAp
     if request == nil {
         request = NewGetUserAppIdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetUserAppId")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUserAppId require credential")
@@ -3358,6 +3488,7 @@ func (c *Client) GetUserPermissionBoundaryWithContext(ctx context.Context, reque
     if request == nil {
         request = NewGetUserPermissionBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "GetUserPermissionBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUserPermissionBoundary require credential")
@@ -3423,6 +3554,7 @@ func (c *Client) ListAccessKeysWithContext(ctx context.Context, request *ListAcc
     if request == nil {
         request = NewListAccessKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAccessKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAccessKeys require credential")
@@ -3476,6 +3608,7 @@ func (c *Client) ListAttachedGroupPoliciesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewListAttachedGroupPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedGroupPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedGroupPolicies require credential")
@@ -3527,6 +3660,7 @@ func (c *Client) ListAttachedRolePoliciesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewListAttachedRolePoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedRolePolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedRolePolicies require credential")
@@ -3580,6 +3714,7 @@ func (c *Client) ListAttachedUserAllPoliciesWithContext(ctx context.Context, req
     if request == nil {
         request = NewListAttachedUserAllPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedUserAllPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedUserAllPolicies require credential")
@@ -3631,6 +3766,7 @@ func (c *Client) ListAttachedUserPoliciesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewListAttachedUserPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListAttachedUserPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAttachedUserPolicies require credential")
@@ -3680,6 +3816,7 @@ func (c *Client) ListCollaboratorsWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListCollaboratorsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListCollaborators")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListCollaborators require credential")
@@ -3735,6 +3872,7 @@ func (c *Client) ListEntitiesForPolicyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewListEntitiesForPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListEntitiesForPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListEntitiesForPolicy require credential")
@@ -3784,6 +3922,7 @@ func (c *Client) ListGroupsWithContext(ctx context.Context, request *ListGroupsR
     if request == nil {
         request = NewListGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListGroups require credential")
@@ -3837,6 +3976,7 @@ func (c *Client) ListGroupsForUserWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListGroupsForUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListGroupsForUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListGroupsForUser require credential")
@@ -3902,6 +4042,7 @@ func (c *Client) ListPoliciesWithContext(ctx context.Context, request *ListPolic
     if request == nil {
         request = NewListPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPolicies require credential")
@@ -3957,6 +4098,7 @@ func (c *Client) ListPoliciesGrantingServiceAccessWithContext(ctx context.Contex
     if request == nil {
         request = NewListPoliciesGrantingServiceAccessRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListPoliciesGrantingServiceAccess")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPoliciesGrantingServiceAccess require credential")
@@ -4012,6 +4154,7 @@ func (c *Client) ListPolicyVersionsWithContext(ctx context.Context, request *Lis
     if request == nil {
         request = NewListPolicyVersionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListPolicyVersions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPolicyVersions require credential")
@@ -4067,6 +4210,7 @@ func (c *Client) ListReceiverWithContext(ctx context.Context, request *ListRecei
     if request == nil {
         request = NewListReceiverRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListReceiver")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListReceiver require credential")
@@ -4122,6 +4266,7 @@ func (c *Client) ListSAMLProvidersWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListSAMLProvidersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListSAMLProviders")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListSAMLProviders require credential")
@@ -4171,6 +4316,7 @@ func (c *Client) ListUsersWithContext(ctx context.Context, request *ListUsersReq
     if request == nil {
         request = NewListUsersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListUsers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListUsers require credential")
@@ -4222,6 +4368,7 @@ func (c *Client) ListUsersForGroupWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListUsersForGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListUsersForGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListUsersForGroup require credential")
@@ -4273,6 +4420,7 @@ func (c *Client) ListWeChatWorkSubAccountsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewListWeChatWorkSubAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "ListWeChatWorkSubAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListWeChatWorkSubAccounts require credential")
@@ -4338,6 +4486,7 @@ func (c *Client) PutRolePermissionsBoundaryWithContext(ctx context.Context, requ
     if request == nil {
         request = NewPutRolePermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "PutRolePermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PutRolePermissionsBoundary require credential")
@@ -4401,6 +4550,7 @@ func (c *Client) PutUserPermissionsBoundaryWithContext(ctx context.Context, requ
     if request == nil {
         request = NewPutUserPermissionsBoundaryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "PutUserPermissionsBoundary")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PutUserPermissionsBoundary require credential")
@@ -4456,6 +4606,7 @@ func (c *Client) RemoveUserFromGroupWithContext(ctx context.Context, request *Re
     if request == nil {
         request = NewRemoveUserFromGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "RemoveUserFromGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveUserFromGroup require credential")
@@ -4527,6 +4678,7 @@ func NewSetDefaultPolicyVersionResponse() (response *SetDefaultPolicyVersionResp
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -4575,6 +4727,7 @@ func (c *Client) SetDefaultPolicyVersion(request *SetDefaultPolicyVersionRequest
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -4583,6 +4736,7 @@ func (c *Client) SetDefaultPolicyVersionWithContext(ctx context.Context, request
     if request == nil {
         request = NewSetDefaultPolicyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "SetDefaultPolicyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetDefaultPolicyVersion require credential")
@@ -4644,6 +4798,7 @@ func (c *Client) SetMfaFlagWithContext(ctx context.Context, request *SetMfaFlagR
     if request == nil {
         request = NewSetMfaFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "SetMfaFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetMfaFlag require credential")
@@ -4709,6 +4864,7 @@ func (c *Client) TagRoleWithContext(ctx context.Context, request *TagRoleRequest
     if request == nil {
         request = NewTagRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "TagRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TagRole require credential")
@@ -4774,6 +4930,7 @@ func (c *Client) UntagRoleWithContext(ctx context.Context, request *UntagRoleReq
     if request == nil {
         request = NewUntagRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UntagRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UntagRole require credential")
@@ -4837,6 +4994,7 @@ func (c *Client) UpdateAccessKeyWithContext(ctx context.Context, request *Update
     if request == nil {
         request = NewUpdateAccessKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateAccessKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateAccessKey require credential")
@@ -4922,6 +5080,7 @@ func (c *Client) UpdateAssumeRolePolicyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateAssumeRolePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateAssumeRolePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateAssumeRolePolicy require credential")
@@ -4979,6 +5138,7 @@ func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGrou
     if request == nil {
         request = NewUpdateGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateGroup require credential")
@@ -5042,6 +5202,7 @@ func (c *Client) UpdateOIDCConfigWithContext(ctx context.Context, request *Updat
     if request == nil {
         request = NewUpdateOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateOIDCConfig require credential")
@@ -5113,6 +5274,7 @@ func NewUpdatePolicyResponse() (response *UpdatePolicyResponse) {
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -5161,6 +5323,7 @@ func (c *Client) UpdatePolicy(request *UpdatePolicyRequest) (response *UpdatePol
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
+//  OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCENOTFOUND_POLICYIDNOTFOUND = "ResourceNotFound.PolicyIdNotFound"
@@ -5169,6 +5332,7 @@ func (c *Client) UpdatePolicyWithContext(ctx context.Context, request *UpdatePol
     if request == nil {
         request = NewUpdatePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdatePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdatePolicy require credential")
@@ -5222,6 +5386,7 @@ func (c *Client) UpdateRoleConsoleLoginWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateRoleConsoleLoginRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateRoleConsoleLogin")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRoleConsoleLogin require credential")
@@ -5277,6 +5442,7 @@ func (c *Client) UpdateRoleDescriptionWithContext(ctx context.Context, request *
     if request == nil {
         request = NewUpdateRoleDescriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateRoleDescription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRoleDescription require credential")
@@ -5330,6 +5496,7 @@ func (c *Client) UpdateRoleSessionDurationWithContext(ctx context.Context, reque
     if request == nil {
         request = NewUpdateRoleSessionDurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateRoleSessionDuration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRoleSessionDuration require credential")
@@ -5383,6 +5550,7 @@ func (c *Client) UpdateSAMLProviderWithContext(ctx context.Context, request *Upd
     if request == nil {
         request = NewUpdateSAMLProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateSAMLProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateSAMLProvider require credential")
@@ -5420,7 +5588,9 @@ func NewUpdateUserResponse() (response *UpdateUserResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
 //  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -5434,7 +5604,9 @@ func (c *Client) UpdateUser(request *UpdateUserRequest) (response *UpdateUserRes
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
 //  FAILEDOPERATION_UNMODIFIABLE = "FailedOperation.Unmodifiable"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
 //  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -5442,6 +5614,7 @@ func (c *Client) UpdateUserWithContext(ctx context.Context, request *UpdateUserR
     if request == nil {
         request = NewUpdateUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUser require credential")
@@ -5505,6 +5678,7 @@ func (c *Client) UpdateUserOIDCConfigWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUpdateUserOIDCConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateUserOIDCConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUserOIDCConfig require credential")
@@ -5556,6 +5730,7 @@ func (c *Client) UpdateUserSAMLConfigWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUpdateUserSAMLConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cam", APIVersion, "UpdateUserSAMLConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUserSAMLConfig require credential")

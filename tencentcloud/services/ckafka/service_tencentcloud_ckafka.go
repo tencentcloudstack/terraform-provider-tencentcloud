@@ -152,49 +152,72 @@ func (me *CkafkaService) OperateStatusCheck(ctx context.Context, result *ckafka.
 
 func (me *CkafkaService) DescribeUserByUserId(ctx context.Context, userId string) (userInfo *ckafka.User, has bool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-
 	items := strings.Split(userId, tccommon.FILED_SP)
 	if len(items) != 2 {
 		errRet = fmt.Errorf("id of resource.tencentcloud_ckafka_user is wrong")
 		return
 	}
-	instanceId, user := items[0], items[1]
 
+	instanceId, user := items[0], items[1]
 	if _, has, _ = me.DescribeInstanceById(ctx, instanceId); !has {
 		return
 	}
 
 	request := ckafka.NewDescribeUserRequest()
+	response := ckafka.NewDescribeUserResponse()
 	request.InstanceId = &instanceId
 	request.SearchWord = &user
 
-	var response *ckafka.DescribeUserResponse
-	var err error
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		response, err = me.client.UseCkafkaClient().DescribeUser(request)
-		if err != nil {
-			return tccommon.RetryError(err)
-		}
-		return nil
-	})
+	var (
+		userInfoList []*ckafka.User
+		offset       int64 = 0
+		limit        int64 = 100
+	)
 
-	if err != nil {
-		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCkafkaClient().DescribeUser(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe user failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return
+		}
+
+		if response.Response.Result == nil || response.Response.Result.Users == nil {
+			break
+		}
+
+		userInfoList = append(userInfoList, response.Response.Result.Users...)
+		if len(response.Response.Result.Users) < int(limit) {
+			break
+		}
+
+		offset += limit
 	}
 
-	if response != nil && response.Response != nil && response.Response.Result != nil && response.Response.Result.Users != nil {
-		if len(response.Response.Result.Users) < 1 {
-			has = false
-			return
-		} else if len(response.Response.Result.Users) > 1 {
-			errRet = fmt.Errorf("[CRITAL]%s dumplicated users found", logId)
+	for _, item := range userInfoList {
+		if *item.Name == user {
+			userInfo = item
+			has = true
 			return
 		}
-
-		userInfo = response.Response.Result.Users[0]
-		has = true
-		return
 	}
 
 	return
@@ -1806,4 +1829,33 @@ func (me *CkafkaService) CkafkaRouteStateRefreshFunc(flowId int64, failStates []
 		status := strconv.FormatInt(*object.Response.Result.Status, 10)
 		return object, status, nil
 	}
+}
+
+func (me *CkafkaService) DescribeCkafkaVersionByFilter(ctx context.Context, instanceId string) (instanceVersion *ckafka.InstanceVersion, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ckafka.NewDescribeCkafkaVersionRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeCkafkaVersionWithContext(ctx, request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	instanceVersion = response.Response.Result
+	return
 }

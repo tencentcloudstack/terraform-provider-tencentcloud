@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -98,6 +98,7 @@ func (c *Client) AcceptJoinShareUnitInvitationWithContext(ctx context.Context, r
     if request == nil {
         request = NewAcceptJoinShareUnitInvitationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AcceptJoinShareUnitInvitation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AcceptJoinShareUnitInvitation require credential")
@@ -135,6 +136,8 @@ func NewAddExternalSAMLIdPCertificateResponse() (response *AddExternalSAMLIdPCer
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONERROR = "FailedOperation.DBOperationError"
 //  FAILEDOPERATION_X509CERTIFICATEALREADYEXIST = "FailedOperation.X509CertificateAlreadyExist"
+//  FAILEDOPERATION_X509CERTIFICATELIMITEXCEEDED = "FailedOperation.X509CertificateLimitExceeded"
+//  FAILEDOPERATION_X509CERTIFICATEMINIMUMREQUIRED = "FailedOperation.X509CertificateMinimumRequired"
 //  FAILEDOPERATION_X509CERTIFICATEPARSINGFAILED = "FailedOperation.X509CertificateParsingFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_X509CERTIFICATEFORMATERROR = "InvalidParameterValue.X509CertificateFormatError"
@@ -148,6 +151,8 @@ func (c *Client) AddExternalSAMLIdPCertificate(request *AddExternalSAMLIdPCertif
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONERROR = "FailedOperation.DBOperationError"
 //  FAILEDOPERATION_X509CERTIFICATEALREADYEXIST = "FailedOperation.X509CertificateAlreadyExist"
+//  FAILEDOPERATION_X509CERTIFICATELIMITEXCEEDED = "FailedOperation.X509CertificateLimitExceeded"
+//  FAILEDOPERATION_X509CERTIFICATEMINIMUMREQUIRED = "FailedOperation.X509CertificateMinimumRequired"
 //  FAILEDOPERATION_X509CERTIFICATEPARSINGFAILED = "FailedOperation.X509CertificateParsingFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_X509CERTIFICATEFORMATERROR = "InvalidParameterValue.X509CertificateFormatError"
@@ -155,6 +160,7 @@ func (c *Client) AddExternalSAMLIdPCertificateWithContext(ctx context.Context, r
     if request == nil {
         request = NewAddExternalSAMLIdPCertificateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddExternalSAMLIdPCertificate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddExternalSAMLIdPCertificate require credential")
@@ -224,6 +230,7 @@ func (c *Client) AddOrganizationMemberEmailWithContext(ctx context.Context, requ
     if request == nil {
         request = NewAddOrganizationMemberEmailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddOrganizationMemberEmail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddOrganizationMemberEmail require credential")
@@ -293,6 +300,7 @@ func (c *Client) AddOrganizationNodeWithContext(ctx context.Context, request *Ad
     if request == nil {
         request = NewAddOrganizationNodeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddOrganizationNode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddOrganizationNode require credential")
@@ -362,6 +370,7 @@ func (c *Client) AddPermissionPolicyToRoleConfigurationWithContext(ctx context.C
     if request == nil {
         request = NewAddPermissionPolicyToRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddPermissionPolicyToRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddPermissionPolicyToRoleConfiguration require credential")
@@ -429,6 +438,7 @@ func (c *Client) AddShareUnitWithContext(ctx context.Context, request *AddShareU
     if request == nil {
         request = NewAddShareUnitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddShareUnit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddShareUnit require credential")
@@ -498,6 +508,7 @@ func (c *Client) AddShareUnitMembersWithContext(ctx context.Context, request *Ad
     if request == nil {
         request = NewAddShareUnitMembersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddShareUnitMembers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddShareUnitMembers require credential")
@@ -571,6 +582,7 @@ func (c *Client) AddShareUnitResourcesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewAddShareUnitResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddShareUnitResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddShareUnitResources require credential")
@@ -642,6 +654,7 @@ func (c *Client) AddUserToGroupWithContext(ctx context.Context, request *AddUser
     if request == nil {
         request = NewAddUserToGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddUserToGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddUserToGroup require credential")
@@ -709,6 +722,7 @@ func (c *Client) AttachPolicyWithContext(ctx context.Context, request *AttachPol
     if request == nil {
         request = NewAttachPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AttachPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachPolicy require credential")
@@ -774,6 +788,7 @@ func (c *Client) BindOrganizationMemberAuthAccountWithContext(ctx context.Contex
     if request == nil {
         request = NewBindOrganizationMemberAuthAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "BindOrganizationMemberAuthAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BindOrganizationMemberAuthAccount require credential")
@@ -782,6 +797,68 @@ func (c *Client) BindOrganizationMemberAuthAccountWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewBindOrganizationMemberAuthAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewBindOrganizationPolicySubAccountRequest() (request *BindOrganizationPolicySubAccountRequest) {
+    request = &BindOrganizationPolicySubAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "BindOrganizationPolicySubAccount")
+    
+    
+    return
+}
+
+func NewBindOrganizationPolicySubAccountResponse() (response *BindOrganizationPolicySubAccountResponse) {
+    response = &BindOrganizationPolicySubAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// BindOrganizationPolicySubAccount
+// 绑定成员访问授权策略和组织管理员子账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATEPOLICY = "FailedOperation.OperatePolicy"
+//  FAILEDOPERATION_SUBACCOUNTNOTEXIST = "FailedOperation.SubAccountNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERPOLICYNOTEXIST = "ResourceNotFound.MemberPolicyNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) BindOrganizationPolicySubAccount(request *BindOrganizationPolicySubAccountRequest) (response *BindOrganizationPolicySubAccountResponse, err error) {
+    return c.BindOrganizationPolicySubAccountWithContext(context.Background(), request)
+}
+
+// BindOrganizationPolicySubAccount
+// 绑定成员访问授权策略和组织管理员子账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATEPOLICY = "FailedOperation.OperatePolicy"
+//  FAILEDOPERATION_SUBACCOUNTNOTEXIST = "FailedOperation.SubAccountNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERPOLICYNOTEXIST = "ResourceNotFound.MemberPolicyNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) BindOrganizationPolicySubAccountWithContext(ctx context.Context, request *BindOrganizationPolicySubAccountRequest) (response *BindOrganizationPolicySubAccountResponse, err error) {
+    if request == nil {
+        request = NewBindOrganizationPolicySubAccountRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "BindOrganizationPolicySubAccount")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BindOrganizationPolicySubAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBindOrganizationPolicySubAccountResponse()
     err = c.Send(request, response)
     return
 }
@@ -835,6 +912,7 @@ func (c *Client) CancelOrganizationMemberAuthAccountWithContext(ctx context.Cont
     if request == nil {
         request = NewCancelOrganizationMemberAuthAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CancelOrganizationMemberAuthAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelOrganizationMemberAuthAccount require credential")
@@ -843,6 +921,66 @@ func (c *Client) CancelOrganizationMemberAuthAccountWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewCancelOrganizationMemberAuthAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCancelOrganizationPolicySubAccountRequest() (request *CancelOrganizationPolicySubAccountRequest) {
+    request = &CancelOrganizationPolicySubAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "CancelOrganizationPolicySubAccount")
+    
+    
+    return
+}
+
+func NewCancelOrganizationPolicySubAccountResponse() (response *CancelOrganizationPolicySubAccountResponse) {
+    response = &CancelOrganizationPolicySubAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CancelOrganizationPolicySubAccount
+// 解绑成员访问授权策略和组织管理员子账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATEPOLICY = "FailedOperation.OperatePolicy"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERPOLICYNOTEXIST = "ResourceNotFound.MemberPolicyNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CancelOrganizationPolicySubAccount(request *CancelOrganizationPolicySubAccountRequest) (response *CancelOrganizationPolicySubAccountResponse, err error) {
+    return c.CancelOrganizationPolicySubAccountWithContext(context.Background(), request)
+}
+
+// CancelOrganizationPolicySubAccount
+// 解绑成员访问授权策略和组织管理员子账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATEPOLICY = "FailedOperation.OperatePolicy"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERPOLICYNOTEXIST = "ResourceNotFound.MemberPolicyNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CancelOrganizationPolicySubAccountWithContext(ctx context.Context, request *CancelOrganizationPolicySubAccountRequest) (response *CancelOrganizationPolicySubAccountResponse, err error) {
+    if request == nil {
+        request = NewCancelOrganizationPolicySubAccountRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CancelOrganizationPolicySubAccount")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CancelOrganizationPolicySubAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCancelOrganizationPolicySubAccountResponse()
     err = c.Send(request, response)
     return
 }
@@ -890,6 +1028,7 @@ func (c *Client) CheckAccountDeleteWithContext(ctx context.Context, request *Che
     if request == nil {
         request = NewCheckAccountDeleteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CheckAccountDelete")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckAccountDelete require credential")
@@ -945,6 +1084,7 @@ func (c *Client) ClearExternalSAMLIdentityProviderWithContext(ctx context.Contex
     if request == nil {
         request = NewClearExternalSAMLIdentityProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ClearExternalSAMLIdentityProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ClearExternalSAMLIdentityProvider require credential")
@@ -1002,6 +1142,7 @@ func (c *Client) CreateGroupWithContext(ctx context.Context, request *CreateGrou
     if request == nil {
         request = NewCreateGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateGroup require credential")
@@ -1063,6 +1204,7 @@ func (c *Client) CreateOrgServiceAssignWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateOrgServiceAssignRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateOrgServiceAssign")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOrgServiceAssign require credential")
@@ -1124,6 +1266,7 @@ func (c *Client) CreateOrganizationWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateOrganizationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateOrganization")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOrganization require credential")
@@ -1185,6 +1328,7 @@ func (c *Client) CreateOrganizationIdentityWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateOrganizationIdentityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateOrganizationIdentity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOrganizationIdentity require credential")
@@ -1320,6 +1464,7 @@ func (c *Client) CreateOrganizationMemberWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateOrganizationMemberRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateOrganizationMember")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOrganizationMember require credential")
@@ -1383,6 +1528,7 @@ func (c *Client) CreateOrganizationMemberAuthIdentityWithContext(ctx context.Con
     if request == nil {
         request = NewCreateOrganizationMemberAuthIdentityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateOrganizationMemberAuthIdentity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOrganizationMemberAuthIdentity require credential")
@@ -1446,6 +1592,7 @@ func (c *Client) CreateOrganizationMemberPolicyWithContext(ctx context.Context, 
     if request == nil {
         request = NewCreateOrganizationMemberPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateOrganizationMemberPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOrganizationMemberPolicy require credential")
@@ -1509,6 +1656,7 @@ func (c *Client) CreateOrganizationMembersPolicyWithContext(ctx context.Context,
     if request == nil {
         request = NewCreateOrganizationMembersPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateOrganizationMembersPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateOrganizationMembersPolicy require credential")
@@ -1630,6 +1778,7 @@ func (c *Client) CreatePolicyWithContext(ctx context.Context, request *CreatePol
     if request == nil {
         request = NewCreatePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreatePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePolicy require credential")
@@ -1695,6 +1844,7 @@ func (c *Client) CreateRoleAssignmentWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateRoleAssignmentRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateRoleAssignment")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRoleAssignment require credential")
@@ -1754,6 +1904,7 @@ func (c *Client) CreateRoleConfigurationWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRoleConfiguration require credential")
@@ -1807,6 +1958,7 @@ func (c *Client) CreateSCIMCredentialWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateSCIMCredentialRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateSCIMCredential")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSCIMCredential require credential")
@@ -1868,6 +2020,7 @@ func (c *Client) CreateUserWithContext(ctx context.Context, request *CreateUserR
     if request == nil {
         request = NewCreateUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUser require credential")
@@ -1927,6 +2080,7 @@ func (c *Client) CreateUserSyncProvisioningWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateUserSyncProvisioningRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "CreateUserSyncProvisioning")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateUserSyncProvisioning require credential")
@@ -1962,6 +2116,7 @@ func NewDeleteAccountResponse() (response *DeleteAccountResponse) {
 // 删除成员账号
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MEMBERACCOUNTDEREGISTERPENDING = "FailedOperation.MemberAccountDeregisterPending"
 //  FAILEDOPERATION_MEMBERSHARERESOURCE = "FailedOperation.MemberShareResource"
 //  FAILEDOPERATION_ORGANIZATIONAUTHMANAGENOTALLOWDELETE = "FailedOperation.OrganizationAuthManageNotAllowDelete"
 //  INTERNALERROR = "InternalError"
@@ -1980,6 +2135,7 @@ func (c *Client) DeleteAccount(request *DeleteAccountRequest) (response *DeleteA
 // 删除成员账号
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MEMBERACCOUNTDEREGISTERPENDING = "FailedOperation.MemberAccountDeregisterPending"
 //  FAILEDOPERATION_MEMBERSHARERESOURCE = "FailedOperation.MemberShareResource"
 //  FAILEDOPERATION_ORGANIZATIONAUTHMANAGENOTALLOWDELETE = "FailedOperation.OrganizationAuthManageNotAllowDelete"
 //  INTERNALERROR = "InternalError"
@@ -1994,6 +2150,7 @@ func (c *Client) DeleteAccountWithContext(ctx context.Context, request *DeleteAc
     if request == nil {
         request = NewDeleteAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAccount require credential")
@@ -2057,6 +2214,7 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     if request == nil {
         request = NewDeleteGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteGroup require credential")
@@ -2118,6 +2276,7 @@ func (c *Client) DeleteOrgServiceAssignWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteOrgServiceAssignRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteOrgServiceAssign")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOrgServiceAssign require credential")
@@ -2155,6 +2314,7 @@ func NewDeleteOrganizationResponse() (response *DeleteOrganizationResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_MEMBEREXISTDELEGATEPAYERNOTALLOWDELETE = "FailedOperation.MemberExistDelegatePayerNotAllowDelete"
 //  FAILEDOPERATION_MEMBERISDELEGATEPAYERNOTALLOWDELETE = "FailedOperation.MemberIsDelegatePayerNotAllowDelete"
+//  FAILEDOPERATION_ORGMEMBERPOLICYEXIST = "FailedOperation.OrgMemberPolicyExist"
 //  FAILEDOPERATION_ORGANIZATIONNOTEMPTY = "FailedOperation.OrganizationNotEmpty"
 //  FAILEDOPERATION_ORGANIZATIONPOLICYISNOTDISABLED = "FailedOperation.OrganizationPolicyIsNotDisabled"
 //  FAILEDOPERATION_QUITSHAREUINT = "FailedOperation.QuitShareUint"
@@ -2173,6 +2333,7 @@ func (c *Client) DeleteOrganization(request *DeleteOrganizationRequest) (respons
 // 可能返回的错误码:
 //  FAILEDOPERATION_MEMBEREXISTDELEGATEPAYERNOTALLOWDELETE = "FailedOperation.MemberExistDelegatePayerNotAllowDelete"
 //  FAILEDOPERATION_MEMBERISDELEGATEPAYERNOTALLOWDELETE = "FailedOperation.MemberIsDelegatePayerNotAllowDelete"
+//  FAILEDOPERATION_ORGMEMBERPOLICYEXIST = "FailedOperation.OrgMemberPolicyExist"
 //  FAILEDOPERATION_ORGANIZATIONNOTEMPTY = "FailedOperation.OrganizationNotEmpty"
 //  FAILEDOPERATION_ORGANIZATIONPOLICYISNOTDISABLED = "FailedOperation.OrganizationPolicyIsNotDisabled"
 //  FAILEDOPERATION_QUITSHAREUINT = "FailedOperation.QuitShareUint"
@@ -2185,6 +2346,7 @@ func (c *Client) DeleteOrganizationWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteOrganizationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteOrganization")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOrganization require credential")
@@ -2242,6 +2404,7 @@ func (c *Client) DeleteOrganizationIdentityWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteOrganizationIdentityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteOrganizationIdentity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOrganizationIdentity require credential")
@@ -2301,6 +2464,7 @@ func (c *Client) DeleteOrganizationMemberAuthIdentityWithContext(ctx context.Con
     if request == nil {
         request = NewDeleteOrganizationMemberAuthIdentityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteOrganizationMemberAuthIdentity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOrganizationMemberAuthIdentity require credential")
@@ -2378,6 +2542,7 @@ func (c *Client) DeleteOrganizationMembersWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteOrganizationMembersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteOrganizationMembers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOrganizationMembers require credential")
@@ -2435,6 +2600,7 @@ func (c *Client) DeleteOrganizationMembersPolicyWithContext(ctx context.Context,
     if request == nil {
         request = NewDeleteOrganizationMembersPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteOrganizationMembersPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOrganizationMembersPolicy require credential")
@@ -2496,6 +2662,7 @@ func (c *Client) DeleteOrganizationNodesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteOrganizationNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteOrganizationNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteOrganizationNodes require credential")
@@ -2563,6 +2730,7 @@ func (c *Client) DeletePolicyWithContext(ctx context.Context, request *DeletePol
     if request == nil {
         request = NewDeletePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeletePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePolicy require credential")
@@ -2616,6 +2784,7 @@ func (c *Client) DeleteRoleAssignmentWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteRoleAssignmentRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteRoleAssignment")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRoleAssignment require credential")
@@ -2675,6 +2844,7 @@ func (c *Client) DeleteRoleConfigurationWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRoleConfiguration require credential")
@@ -2730,6 +2900,7 @@ func (c *Client) DeleteSCIMCredentialWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteSCIMCredentialRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteSCIMCredential")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSCIMCredential require credential")
@@ -2791,6 +2962,7 @@ func (c *Client) DeleteShareUnitWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteShareUnitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteShareUnit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteShareUnit require credential")
@@ -2862,6 +3034,7 @@ func (c *Client) DeleteShareUnitMembersWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteShareUnitMembersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteShareUnitMembers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteShareUnitMembers require credential")
@@ -2933,6 +3106,7 @@ func (c *Client) DeleteShareUnitResourcesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteShareUnitResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteShareUnitResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteShareUnitResources require credential")
@@ -2996,6 +3170,7 @@ func (c *Client) DeleteUserWithContext(ctx context.Context, request *DeleteUserR
     if request == nil {
         request = NewDeleteUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUser require credential")
@@ -3051,6 +3226,7 @@ func (c *Client) DeleteUserSyncProvisioningWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteUserSyncProvisioningRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteUserSyncProvisioning")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUserSyncProvisioning require credential")
@@ -3112,6 +3288,7 @@ func (c *Client) DescribeEffectivePolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeEffectivePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeEffectivePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEffectivePolicy require credential")
@@ -3163,6 +3340,7 @@ func (c *Client) DescribeIdentityCenterWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeIdentityCenterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeIdentityCenter")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIdentityCenter require credential")
@@ -3218,6 +3396,7 @@ func (c *Client) DescribeOrganizationWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeOrganizationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganization")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganization require credential")
@@ -3271,6 +3450,7 @@ func (c *Client) DescribeOrganizationAuthNodeWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeOrganizationAuthNodeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationAuthNode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationAuthNode require credential")
@@ -3322,6 +3502,7 @@ func (c *Client) DescribeOrganizationFinancialByMemberWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeOrganizationFinancialByMemberRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationFinancialByMember")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationFinancialByMember require credential")
@@ -3373,6 +3554,7 @@ func (c *Client) DescribeOrganizationFinancialByMonthWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeOrganizationFinancialByMonthRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationFinancialByMonth")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationFinancialByMonth require credential")
@@ -3424,6 +3606,7 @@ func (c *Client) DescribeOrganizationFinancialByProductWithContext(ctx context.C
     if request == nil {
         request = NewDescribeOrganizationFinancialByProductRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationFinancialByProduct")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationFinancialByProduct require credential")
@@ -3477,6 +3660,7 @@ func (c *Client) DescribeOrganizationMemberAuthAccountsWithContext(ctx context.C
     if request == nil {
         request = NewDescribeOrganizationMemberAuthAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationMemberAuthAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationMemberAuthAccounts require credential")
@@ -3530,6 +3714,7 @@ func (c *Client) DescribeOrganizationMemberAuthIdentitiesWithContext(ctx context
     if request == nil {
         request = NewDescribeOrganizationMemberAuthIdentitiesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationMemberAuthIdentities")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationMemberAuthIdentities require credential")
@@ -3609,6 +3794,7 @@ func (c *Client) DescribeOrganizationMemberEmailBindWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeOrganizationMemberEmailBindRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationMemberEmailBind")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationMemberEmailBind require credential")
@@ -3664,6 +3850,7 @@ func (c *Client) DescribeOrganizationMemberPoliciesWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeOrganizationMemberPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationMemberPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationMemberPolicies require credential")
@@ -3723,6 +3910,7 @@ func (c *Client) DescribeOrganizationMembersWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeOrganizationMembersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationMembers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationMembers require credential")
@@ -3731,6 +3919,60 @@ func (c *Client) DescribeOrganizationMembersWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDescribeOrganizationMembersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOrganizationMembersAuthPolicyRequest() (request *DescribeOrganizationMembersAuthPolicyRequest) {
+    request = &DescribeOrganizationMembersAuthPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "DescribeOrganizationMembersAuthPolicy")
+    
+    
+    return
+}
+
+func NewDescribeOrganizationMembersAuthPolicyResponse() (response *DescribeOrganizationMembersAuthPolicyResponse) {
+    response = &DescribeOrganizationMembersAuthPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOrganizationMembersAuthPolicy
+// 查询组织成员访问策略列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+func (c *Client) DescribeOrganizationMembersAuthPolicy(request *DescribeOrganizationMembersAuthPolicyRequest) (response *DescribeOrganizationMembersAuthPolicyResponse, err error) {
+    return c.DescribeOrganizationMembersAuthPolicyWithContext(context.Background(), request)
+}
+
+// DescribeOrganizationMembersAuthPolicy
+// 查询组织成员访问策略列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+func (c *Client) DescribeOrganizationMembersAuthPolicyWithContext(ctx context.Context, request *DescribeOrganizationMembersAuthPolicyRequest) (response *DescribeOrganizationMembersAuthPolicyResponse, err error) {
+    if request == nil {
+        request = NewDescribeOrganizationMembersAuthPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationMembersAuthPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOrganizationMembersAuthPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOrganizationMembersAuthPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -3776,6 +4018,7 @@ func (c *Client) DescribeOrganizationNodesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeOrganizationNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeOrganizationNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrganizationNodes require credential")
@@ -3849,6 +4092,7 @@ func (c *Client) DescribePolicyWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePolicy require credential")
@@ -3960,6 +4204,7 @@ func (c *Client) DescribePolicyConfigWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribePolicyConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribePolicyConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePolicyConfig require credential")
@@ -3968,6 +4213,64 @@ func (c *Client) DescribePolicyConfigWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribePolicyConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceToShareMemberRequest() (request *DescribeResourceToShareMemberRequest) {
+    request = &DescribeResourceToShareMemberRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "DescribeResourceToShareMember")
+    
+    
+    return
+}
+
+func NewDescribeResourceToShareMemberResponse() (response *DescribeResourceToShareMemberResponse) {
+    response = &DescribeResourceToShareMemberResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceToShareMember
+// 获取与我共享的资源列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeResourceToShareMember(request *DescribeResourceToShareMemberRequest) (response *DescribeResourceToShareMemberResponse, err error) {
+    return c.DescribeResourceToShareMemberWithContext(context.Background(), request)
+}
+
+// DescribeResourceToShareMember
+// 获取与我共享的资源列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeResourceToShareMemberWithContext(ctx context.Context, request *DescribeResourceToShareMemberRequest) (response *DescribeResourceToShareMemberResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceToShareMemberRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeResourceToShareMember")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceToShareMember require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceToShareMemberResponse()
     err = c.Send(request, response)
     return
 }
@@ -4017,6 +4320,7 @@ func (c *Client) DescribeShareAreasWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeShareAreasRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeShareAreas")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeShareAreas require credential")
@@ -4076,6 +4380,7 @@ func (c *Client) DescribeShareUnitMembersWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeShareUnitMembersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeShareUnitMembers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeShareUnitMembers require credential")
@@ -4135,6 +4440,7 @@ func (c *Client) DescribeShareUnitResourcesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeShareUnitResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeShareUnitResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeShareUnitResources require credential")
@@ -4196,6 +4502,7 @@ func (c *Client) DescribeShareUnitsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeShareUnitsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeShareUnits")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeShareUnits require credential")
@@ -4261,6 +4568,7 @@ func (c *Client) DetachPolicyWithContext(ctx context.Context, request *DetachPol
     if request == nil {
         request = NewDetachPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DetachPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachPolicy require credential")
@@ -4318,6 +4626,7 @@ func (c *Client) DisablePolicyTypeWithContext(ctx context.Context, request *Disa
     if request == nil {
         request = NewDisablePolicyTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DisablePolicyType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisablePolicyType require credential")
@@ -4377,6 +4686,7 @@ func (c *Client) DismantleRoleConfigurationWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDismantleRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DismantleRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DismantleRoleConfiguration require credential")
@@ -4436,6 +4746,7 @@ func (c *Client) EnablePolicyTypeWithContext(ctx context.Context, request *Enabl
     if request == nil {
         request = NewEnablePolicyTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "EnablePolicyType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnablePolicyType require credential")
@@ -4489,6 +4800,7 @@ func (c *Client) GetExternalSAMLIdentityProviderWithContext(ctx context.Context,
     if request == nil {
         request = NewGetExternalSAMLIdentityProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetExternalSAMLIdentityProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetExternalSAMLIdentityProvider require credential")
@@ -4542,6 +4854,7 @@ func (c *Client) GetGroupWithContext(ctx context.Context, request *GetGroupReque
     if request == nil {
         request = NewGetGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetGroup require credential")
@@ -4595,6 +4908,7 @@ func (c *Client) GetProvisioningTaskStatusWithContext(ctx context.Context, reque
     if request == nil {
         request = NewGetProvisioningTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetProvisioningTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetProvisioningTaskStatus require credential")
@@ -4650,6 +4964,7 @@ func (c *Client) GetRoleConfigurationWithContext(ctx context.Context, request *G
     if request == nil {
         request = NewGetRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRoleConfiguration require credential")
@@ -4703,6 +5018,7 @@ func (c *Client) GetSCIMSynchronizationStatusWithContext(ctx context.Context, re
     if request == nil {
         request = NewGetSCIMSynchronizationStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetSCIMSynchronizationStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetSCIMSynchronizationStatus require credential")
@@ -4756,6 +5072,7 @@ func (c *Client) GetTaskStatusWithContext(ctx context.Context, request *GetTaskS
     if request == nil {
         request = NewGetTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetTaskStatus require credential")
@@ -4809,6 +5126,7 @@ func (c *Client) GetUserWithContext(ctx context.Context, request *GetUserRequest
     if request == nil {
         request = NewGetUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUser require credential")
@@ -4862,6 +5180,7 @@ func (c *Client) GetUserSyncProvisioningWithContext(ctx context.Context, request
     if request == nil {
         request = NewGetUserSyncProvisioningRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetUserSyncProvisioning")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetUserSyncProvisioning require credential")
@@ -4917,6 +5236,7 @@ func (c *Client) GetZoneSAMLServiceProviderInfoWithContext(ctx context.Context, 
     if request == nil {
         request = NewGetZoneSAMLServiceProviderInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetZoneSAMLServiceProviderInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetZoneSAMLServiceProviderInfo require credential")
@@ -4968,6 +5288,7 @@ func (c *Client) GetZoneStatisticsWithContext(ctx context.Context, request *GetZ
     if request == nil {
         request = NewGetZoneStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetZoneStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetZoneStatistics require credential")
@@ -5115,6 +5436,7 @@ func (c *Client) InviteOrganizationMemberWithContext(ctx context.Context, reques
     if request == nil {
         request = NewInviteOrganizationMemberRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "InviteOrganizationMember")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InviteOrganizationMember require credential")
@@ -5166,6 +5488,7 @@ func (c *Client) ListExternalSAMLIdPCertificatesWithContext(ctx context.Context,
     if request == nil {
         request = NewListExternalSAMLIdPCertificatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListExternalSAMLIdPCertificates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListExternalSAMLIdPCertificates require credential")
@@ -5219,6 +5542,7 @@ func (c *Client) ListGroupMembersWithContext(ctx context.Context, request *ListG
     if request == nil {
         request = NewListGroupMembersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListGroupMembers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListGroupMembers require credential")
@@ -5274,6 +5598,7 @@ func (c *Client) ListGroupsWithContext(ctx context.Context, request *ListGroupsR
     if request == nil {
         request = NewListGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListGroups require credential")
@@ -5327,6 +5652,7 @@ func (c *Client) ListJoinedGroupsForUserWithContext(ctx context.Context, request
     if request == nil {
         request = NewListJoinedGroupsForUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListJoinedGroupsForUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListJoinedGroupsForUser require credential")
@@ -5380,6 +5706,7 @@ func (c *Client) ListNonCompliantResourceWithContext(ctx context.Context, reques
     if request == nil {
         request = NewListNonCompliantResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListNonCompliantResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListNonCompliantResource require credential")
@@ -5435,6 +5762,7 @@ func (c *Client) ListOrgServiceAssignMemberWithContext(ctx context.Context, requ
     if request == nil {
         request = NewListOrgServiceAssignMemberRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListOrgServiceAssignMember")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListOrgServiceAssignMember require credential")
@@ -5488,6 +5816,7 @@ func (c *Client) ListOrganizationIdentityWithContext(ctx context.Context, reques
     if request == nil {
         request = NewListOrganizationIdentityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListOrganizationIdentity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListOrganizationIdentity require credential")
@@ -5541,6 +5870,7 @@ func (c *Client) ListOrganizationServiceWithContext(ctx context.Context, request
     if request == nil {
         request = NewListOrganizationServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListOrganizationService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListOrganizationService require credential")
@@ -5594,6 +5924,7 @@ func (c *Client) ListPermissionPoliciesInRoleConfigurationWithContext(ctx contex
     if request == nil {
         request = NewListPermissionPoliciesInRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListPermissionPoliciesInRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPermissionPoliciesInRoleConfiguration require credential")
@@ -5707,6 +6038,7 @@ func (c *Client) ListPoliciesWithContext(ctx context.Context, request *ListPolic
     if request == nil {
         request = NewListPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPolicies require credential")
@@ -5818,6 +6150,7 @@ func (c *Client) ListPoliciesForTargetWithContext(ctx context.Context, request *
     if request == nil {
         request = NewListPoliciesForTargetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListPoliciesForTarget")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListPoliciesForTarget require credential")
@@ -5873,6 +6206,7 @@ func (c *Client) ListRoleAssignmentsWithContext(ctx context.Context, request *Li
     if request == nil {
         request = NewListRoleAssignmentsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListRoleAssignments")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListRoleAssignments require credential")
@@ -5928,6 +6262,7 @@ func (c *Client) ListRoleConfigurationProvisioningsWithContext(ctx context.Conte
     if request == nil {
         request = NewListRoleConfigurationProvisioningsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListRoleConfigurationProvisionings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListRoleConfigurationProvisionings require credential")
@@ -5985,6 +6320,7 @@ func (c *Client) ListRoleConfigurationsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewListRoleConfigurationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListRoleConfigurations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListRoleConfigurations require credential")
@@ -6038,6 +6374,7 @@ func (c *Client) ListSCIMCredentialsWithContext(ctx context.Context, request *Li
     if request == nil {
         request = NewListSCIMCredentialsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListSCIMCredentials")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListSCIMCredentials require credential")
@@ -6145,6 +6482,7 @@ func (c *Client) ListTargetsForPolicyWithContext(ctx context.Context, request *L
     if request == nil {
         request = NewListTargetsForPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListTargetsForPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListTargetsForPolicy require credential")
@@ -6198,6 +6536,7 @@ func (c *Client) ListTasksWithContext(ctx context.Context, request *ListTasksReq
     if request == nil {
         request = NewListTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListTasks require credential")
@@ -6251,6 +6590,7 @@ func (c *Client) ListUserSyncProvisioningsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewListUserSyncProvisioningsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListUserSyncProvisionings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListUserSyncProvisionings require credential")
@@ -6306,6 +6646,7 @@ func (c *Client) ListUsersWithContext(ctx context.Context, request *ListUsersReq
     if request == nil {
         request = NewListUsersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ListUsers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListUsers require credential")
@@ -6365,6 +6706,7 @@ func (c *Client) MoveOrganizationNodeMembersWithContext(ctx context.Context, req
     if request == nil {
         request = NewMoveOrganizationNodeMembersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "MoveOrganizationNodeMembers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("MoveOrganizationNodeMembers require credential")
@@ -6428,6 +6770,7 @@ func (c *Client) OpenIdentityCenterWithContext(ctx context.Context, request *Ope
     if request == nil {
         request = NewOpenIdentityCenterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "OpenIdentityCenter")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenIdentityCenter require credential")
@@ -6489,6 +6832,7 @@ func (c *Client) ProvisionRoleConfigurationWithContext(ctx context.Context, requ
     if request == nil {
         request = NewProvisionRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "ProvisionRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ProvisionRoleConfiguration require credential")
@@ -6570,6 +6914,7 @@ func (c *Client) QuitOrganizationWithContext(ctx context.Context, request *QuitO
     if request == nil {
         request = NewQuitOrganizationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "QuitOrganization")
     
     if c.GetCredential() == nil {
         return nil, errors.New("QuitOrganization require credential")
@@ -6629,6 +6974,7 @@ func (c *Client) RejectJoinShareUnitInvitationWithContext(ctx context.Context, r
     if request == nil {
         request = NewRejectJoinShareUnitInvitationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "RejectJoinShareUnitInvitation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RejectJoinShareUnitInvitation require credential")
@@ -6665,6 +7011,8 @@ func NewRemoveExternalSAMLIdPCertificateResponse() (response *RemoveExternalSAML
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONERROR = "FailedOperation.DBOperationError"
+//  FAILEDOPERATION_X509CERTIFICATELIMITEXCEEDED = "FailedOperation.X509CertificateLimitExceeded"
+//  FAILEDOPERATION_X509CERTIFICATEMINIMUMREQUIRED = "FailedOperation.X509CertificateMinimumRequired"
 //  INTERNALERROR = "InternalError"
 //  RESOURCENOTFOUND_X509CERTIFICATENOTFOUND = "ResourceNotFound.X509CertificateNotFound"
 func (c *Client) RemoveExternalSAMLIdPCertificate(request *RemoveExternalSAMLIdPCertificateRequest) (response *RemoveExternalSAMLIdPCertificateResponse, err error) {
@@ -6676,12 +7024,15 @@ func (c *Client) RemoveExternalSAMLIdPCertificate(request *RemoveExternalSAMLIdP
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBOPERATIONERROR = "FailedOperation.DBOperationError"
+//  FAILEDOPERATION_X509CERTIFICATELIMITEXCEEDED = "FailedOperation.X509CertificateLimitExceeded"
+//  FAILEDOPERATION_X509CERTIFICATEMINIMUMREQUIRED = "FailedOperation.X509CertificateMinimumRequired"
 //  INTERNALERROR = "InternalError"
 //  RESOURCENOTFOUND_X509CERTIFICATENOTFOUND = "ResourceNotFound.X509CertificateNotFound"
 func (c *Client) RemoveExternalSAMLIdPCertificateWithContext(ctx context.Context, request *RemoveExternalSAMLIdPCertificateRequest) (response *RemoveExternalSAMLIdPCertificateResponse, err error) {
     if request == nil {
         request = NewRemoveExternalSAMLIdPCertificateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "RemoveExternalSAMLIdPCertificate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveExternalSAMLIdPCertificate require credential")
@@ -6741,6 +7092,7 @@ func (c *Client) RemovePermissionPolicyFromRoleConfigurationWithContext(ctx cont
     if request == nil {
         request = NewRemovePermissionPolicyFromRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "RemovePermissionPolicyFromRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemovePermissionPolicyFromRoleConfiguration require credential")
@@ -6804,6 +7156,7 @@ func (c *Client) RemoveUserFromGroupWithContext(ctx context.Context, request *Re
     if request == nil {
         request = NewRemoveUserFromGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "RemoveUserFromGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveUserFromGroup require credential")
@@ -6867,6 +7220,7 @@ func (c *Client) SendOrgMemberAccountBindEmailWithContext(ctx context.Context, r
     if request == nil {
         request = NewSendOrgMemberAccountBindEmailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "SendOrgMemberAccountBindEmail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SendOrgMemberAccountBindEmail require credential")
@@ -6934,6 +7288,7 @@ func (c *Client) SetExternalSAMLIdentityProviderWithContext(ctx context.Context,
     if request == nil {
         request = NewSetExternalSAMLIdentityProviderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "SetExternalSAMLIdentityProvider")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetExternalSAMLIdentityProvider require credential")
@@ -6995,6 +7350,7 @@ func (c *Client) UpdateCustomPolicyForRoleConfigurationWithContext(ctx context.C
     if request == nil {
         request = NewUpdateCustomPolicyForRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateCustomPolicyForRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateCustomPolicyForRoleConfiguration require credential")
@@ -7054,6 +7410,7 @@ func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGrou
     if request == nil {
         request = NewUpdateGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateGroup require credential")
@@ -7113,6 +7470,7 @@ func (c *Client) UpdateOrganizationIdentityWithContext(ctx context.Context, requ
     if request == nil {
         request = NewUpdateOrganizationIdentityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateOrganizationIdentity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateOrganizationIdentity require credential")
@@ -7222,6 +7580,7 @@ func (c *Client) UpdateOrganizationMemberWithContext(ctx context.Context, reques
     if request == nil {
         request = NewUpdateOrganizationMemberRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateOrganizationMember")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateOrganizationMember require credential")
@@ -7289,6 +7648,7 @@ func (c *Client) UpdateOrganizationMemberEmailBindWithContext(ctx context.Contex
     if request == nil {
         request = NewUpdateOrganizationMemberEmailBindRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateOrganizationMemberEmailBind")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateOrganizationMemberEmailBind require credential")
@@ -7297,6 +7657,70 @@ func (c *Client) UpdateOrganizationMemberEmailBindWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewUpdateOrganizationMemberEmailBindResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateOrganizationMembersPolicyRequest() (request *UpdateOrganizationMembersPolicyRequest) {
+    request = &UpdateOrganizationMembersPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "UpdateOrganizationMembersPolicy")
+    
+    
+    return
+}
+
+func NewUpdateOrganizationMembersPolicyResponse() (response *UpdateOrganizationMembersPolicyResponse) {
+    response = &UpdateOrganizationMembersPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateOrganizationMembersPolicy
+// 修改组织成员访问策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATEPOLICY = "FailedOperation.OperatePolicy"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERIDENTITYNOTEXIST = "ResourceNotFound.MemberIdentityNotExist"
+//  RESOURCENOTFOUND_MEMBERPOLICYNOTEXIST = "ResourceNotFound.MemberPolicyNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONMEMBERNOTEXIST = "ResourceNotFound.OrganizationMemberNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateOrganizationMembersPolicy(request *UpdateOrganizationMembersPolicyRequest) (response *UpdateOrganizationMembersPolicyResponse, err error) {
+    return c.UpdateOrganizationMembersPolicyWithContext(context.Background(), request)
+}
+
+// UpdateOrganizationMembersPolicy
+// 修改组织成员访问策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATEPOLICY = "FailedOperation.OperatePolicy"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERIDENTITYNOTEXIST = "ResourceNotFound.MemberIdentityNotExist"
+//  RESOURCENOTFOUND_MEMBERPOLICYNOTEXIST = "ResourceNotFound.MemberPolicyNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONMEMBERNOTEXIST = "ResourceNotFound.OrganizationMemberNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateOrganizationMembersPolicyWithContext(ctx context.Context, request *UpdateOrganizationMembersPolicyRequest) (response *UpdateOrganizationMembersPolicyResponse, err error) {
+    if request == nil {
+        request = NewUpdateOrganizationMembersPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateOrganizationMembersPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateOrganizationMembersPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateOrganizationMembersPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -7342,6 +7766,7 @@ func (c *Client) UpdateOrganizationNodeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateOrganizationNodeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateOrganizationNode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateOrganizationNode require credential")
@@ -7471,6 +7896,7 @@ func (c *Client) UpdatePolicyWithContext(ctx context.Context, request *UpdatePol
     if request == nil {
         request = NewUpdatePolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdatePolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdatePolicy require credential")
@@ -7526,6 +7952,7 @@ func (c *Client) UpdateRoleConfigurationWithContext(ctx context.Context, request
     if request == nil {
         request = NewUpdateRoleConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateRoleConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRoleConfiguration require credential")
@@ -7583,6 +8010,7 @@ func (c *Client) UpdateSCIMCredentialStatusWithContext(ctx context.Context, requ
     if request == nil {
         request = NewUpdateSCIMCredentialStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateSCIMCredentialStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateSCIMCredentialStatus require credential")
@@ -7638,6 +8066,7 @@ func (c *Client) UpdateSCIMSynchronizationStatusWithContext(ctx context.Context,
     if request == nil {
         request = NewUpdateSCIMSynchronizationStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateSCIMSynchronizationStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateSCIMSynchronizationStatus require credential")
@@ -7701,6 +8130,7 @@ func (c *Client) UpdateShareUnitWithContext(ctx context.Context, request *Update
     if request == nil {
         request = NewUpdateShareUnitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateShareUnit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateShareUnit require credential")
@@ -7741,6 +8171,7 @@ func NewUpdateUserResponse() (response *UpdateUserResponse) {
 //  FAILEDOPERATION_SYNCHRONIZEDUSERNOTUPDATE = "FailedOperation.SynchronizedUserNotUpdate"
 //  FAILEDOPERATION_ZONEIDNOTEXIST = "FailedOperation.ZoneIdNotExist"
 //  INVALIDPARAMETER_EMAILALREADYEXISTS = "InvalidParameter.EmailAlreadyExists"
+//  INVALIDPARAMETER_USERTYPEERROR = "InvalidParameter.UserTypeError"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) UpdateUser(request *UpdateUserRequest) (response *UpdateUserResponse, err error) {
     return c.UpdateUserWithContext(context.Background(), request)
@@ -7755,11 +8186,13 @@ func (c *Client) UpdateUser(request *UpdateUserRequest) (response *UpdateUserRes
 //  FAILEDOPERATION_SYNCHRONIZEDUSERNOTUPDATE = "FailedOperation.SynchronizedUserNotUpdate"
 //  FAILEDOPERATION_ZONEIDNOTEXIST = "FailedOperation.ZoneIdNotExist"
 //  INVALIDPARAMETER_EMAILALREADYEXISTS = "InvalidParameter.EmailAlreadyExists"
+//  INVALIDPARAMETER_USERTYPEERROR = "InvalidParameter.UserTypeError"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) UpdateUserWithContext(ctx context.Context, request *UpdateUserRequest) (response *UpdateUserResponse, err error) {
     if request == nil {
         request = NewUpdateUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUser require credential")
@@ -7817,6 +8250,7 @@ func (c *Client) UpdateUserStatusWithContext(ctx context.Context, request *Updat
     if request == nil {
         request = NewUpdateUserStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateUserStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUserStatus require credential")
@@ -7870,6 +8304,7 @@ func (c *Client) UpdateUserSyncProvisioningWithContext(ctx context.Context, requ
     if request == nil {
         request = NewUpdateUserSyncProvisioningRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateUserSyncProvisioning")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUserSyncProvisioning require credential")
@@ -7925,6 +8360,7 @@ func (c *Client) UpdateZoneWithContext(ctx context.Context, request *UpdateZoneR
     if request == nil {
         request = NewUpdateZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateZone require credential")

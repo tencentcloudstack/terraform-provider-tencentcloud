@@ -35,7 +35,7 @@ func ResourceTencentCloudWafAntiFake() *schema.Resource {
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Name.",
+				Description: "Rule Name.",
 			},
 			"uri": {
 				Required:    true,
@@ -47,17 +47,17 @@ func ResourceTencentCloudWafAntiFake() *schema.Resource {
 				Type:         schema.TypeInt,
 				Default:      ANTI_FAKE_URL_STATUS_1,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(ANTI_FAKE_URL_STATUS),
-				Description:  "status. 0: Turn off rules and log switches, 1: Turn on the rule switch and Turn off the log switch; 2: Turn off the rule switch and turn on the log switch;3: Turn on the log switch.",
+				Description:  "Status. 0: Turn off rules and log switches, 1: Turn on the rule switch and Turn off the log switch; 2: Turn off the rule switch and turn on the log switch; 3: Turn on the rule switch and turn on the log switch.",
 			},
 			"rule_id": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "rule id.",
+				Description: "Rule ID.",
 			},
 			"protocol": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "protocol.",
+				Description: "Protocol.",
 			},
 		},
 	}

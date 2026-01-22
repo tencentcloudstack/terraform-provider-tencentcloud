@@ -93,7 +93,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Node tags.",
 				Elem: &schema.Resource{
@@ -101,10 +101,10 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 						"resource_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The resource type bound to the label.",
+							Description: "The resource type bound to the label. `cluster`: related to clusters; `machine`: related to node pools.",
 						},
 						"tags": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "Tag pair list.",
 							Elem: &schema.Resource{
@@ -232,6 +232,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 						"instance_types": {
 							Type:        schema.TypeList,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Model list.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -653,14 +654,14 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			tagsMap := item.(map[string]interface{})
 			tagSpecification := tke2.TagSpecification{}
 			if v, ok := tagsMap["resource_type"]; ok {
 				tagSpecification.ResourceType = helper.String(v.(string))
 			}
 			if v, ok := tagsMap["tags"]; ok {
-				for _, item := range v.([]interface{}) {
+				for _, item := range v.(*schema.Set).List() {
 					tagsMap := item.(map[string]interface{})
 					tag := tke2.Tag{}
 					if v, ok := tagsMap["key"]; ok {
@@ -1468,14 +1469,14 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 		}
 
 		if v, ok := d.GetOk("tags"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				tagsMap := item.(map[string]interface{})
 				tagSpecification := tke2.TagSpecification{}
 				if v, ok := tagsMap["resource_type"]; ok {
 					tagSpecification.ResourceType = helper.String(v.(string))
 				}
 				if v, ok := tagsMap["tags"]; ok {
-					for _, item := range v.([]interface{}) {
+					for _, item := range v.(*schema.Set).List() {
 						tagsMap := item.(map[string]interface{})
 						tag := tke2.Tag{}
 						if v, ok := tagsMap["key"]; ok {
@@ -1575,19 +1576,28 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 			if v, ok := nativeMap["auto_repair"]; ok {
 				updateNativeNodePoolParam.AutoRepair = helper.Bool(v.(bool))
 			}
+
+			var instanceChargeType string
 			if v, ok := nativeMap["instance_charge_type"]; ok {
 				updateNativeNodePoolParam.InstanceChargeType = helper.String(v.(string))
+				instanceChargeType = v.(string)
 			}
-			if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
-				instanceChargePrepaid := tke2.InstanceChargePrepaid{}
-				if v, ok := instanceChargePrepaidMap["period"]; ok {
-					instanceChargePrepaid.Period = helper.IntUint64(v.(int))
+
+			if instanceChargeType == "PREPAID" {
+				if instanceChargePrepaidMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["instance_charge_prepaid"]); ok {
+					instanceChargePrepaid := tke2.InstanceChargePrepaid{}
+					if v, ok := instanceChargePrepaidMap["period"]; ok {
+						instanceChargePrepaid.Period = helper.IntUint64(v.(int))
+					}
+
+					if v, ok := instanceChargePrepaidMap["renew_flag"]; ok {
+						instanceChargePrepaid.RenewFlag = helper.String(v.(string))
+					}
+
+					updateNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 				}
-				if v, ok := instanceChargePrepaidMap["renew_flag"]; ok {
-					instanceChargePrepaid.RenewFlag = helper.String(v.(string))
-				}
-				updateNativeNodePoolParam.InstanceChargePrepaid = &instanceChargePrepaid
 			}
+
 			if systemDiskMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["system_disk"]); ok {
 				disk := tke2.Disk{}
 				if v, ok := systemDiskMap["disk_type"]; ok {

@@ -1,0 +1,12 @@
+```release-note:new-resource
+tencentcloud_wedata_submit_trigger_task
+```
+
+```release-note:new-resource
+tencentcloud_wedata_kill_trigger_workflow_run
+```
+
+
+```release-note:new-resource
+tencentcloud_wedata_rerun_trigger_workflow_run_async
+```

@@ -1,4 +1,4 @@
-Provides a resource to create a cdwdoris user
+Provides a resource to create a CDWDoris user
 
 Example Usage
 

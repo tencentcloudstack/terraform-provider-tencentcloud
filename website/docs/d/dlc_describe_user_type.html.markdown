@@ -4,18 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dlc_describe_user_type"
 sidebar_current: "docs-tencentcloud-datasource-dlc_describe_user_type"
 description: |-
-  Use this data source to query detailed information of dlc describe_user_type
+  Use this data source to query detailed information of DLC describe user type
 ---
 
 # tencentcloud_dlc_describe_user_type
 
-Use this data source to query detailed information of dlc describe_user_type
+Use this data source to query detailed information of DLC describe user type
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_dlc_describe_user_type" "describe_user_type" {
-  user_id = "127382378"
+data "tencentcloud_dlc_describe_user_type" "example" {
+  user_id = "100021240183"
 }
 ```
 
@@ -24,12 +24,12 @@ data "tencentcloud_dlc_describe_user_type" "describe_user_type" {
 The following arguments are supported:
 
 * `result_output_file` - (Optional, String) Used to save results.
-* `user_id` - (Optional, String) User id (uin), if left blank, it defaults to the caller's sub-uin.
+* `user_id` - (Optional, String) User ID (UIN). If it is not specified, it will be the sub-UIN of the caller by default.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `user_type` - User type, only support: ADMIN: ddministrator/COMMON: ordinary user.
+* `user_type` - Types of users. ADMIN: administrators; COMMON: general users.
 
 

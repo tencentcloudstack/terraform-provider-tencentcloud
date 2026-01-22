@@ -4,17 +4,17 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dlc_upgrade_data_engine_image_operation"
 sidebar_current: "docs-tencentcloud-resource-dlc_upgrade_data_engine_image_operation"
 description: |-
-  Provides a resource to create a dlc upgrade_data_engine_image_operation
+  Provides a resource to create a DLC upgrade data engine image operation
 ---
 
 # tencentcloud_dlc_upgrade_data_engine_image_operation
 
-Provides a resource to create a dlc upgrade_data_engine_image_operation
+Provides a resource to create a DLC upgrade data engine image operation
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_upgrade_data_engine_image_operation" "upgrade_data_engine_image_operation" {
+resource "tencentcloud_dlc_upgrade_data_engine_image_operation" "example" {
   data_engine_id = "DataEngine-g5ds87d8"
 }
 ```
@@ -23,7 +23,7 @@ resource "tencentcloud_dlc_upgrade_data_engine_image_operation" "upgrade_data_en
 
 The following arguments are supported:
 
-* `data_engine_id` - (Required, String, ForceNew) Engine unique id.
+* `data_engine_id` - (Required, String, ForceNew) Engine ID.
 
 ## Attributes Reference
 

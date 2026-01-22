@@ -5,7 +5,6 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 
@@ -133,54 +132,43 @@ func dataSourceTencentCloudPrivateDnsRecordsRead(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("data_source.tencentcloud_private_dns_records.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = PrivateDnsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	zoneId := d.Get("zone_id").(string)
 	filterList := make([]*privatedns.Filter, 0)
-
 	if v, ok := d.GetOk("filters"); ok {
 		filters := v.([]interface{})
-
 		for _, item := range filters {
 			filter := privatedns.Filter{}
 			filterMap := item.(map[string]interface{})
-
 			if v, ok := filterMap["name"]; ok {
 				filter.Name = helper.String(v.(string))
 			}
+
 			if v, ok := filterMap["values"]; ok {
 				valuesSet := v.(*schema.Set).List()
 				filter.Values = helper.InterfacesStringsPoint(valuesSet)
 			}
+
 			filterList = append(filterList, &filter)
 		}
 	}
 
-	service := PrivateDnsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	var recordSet []*privatedns.PrivateZoneRecord
-
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, filterList)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		recordSet = result
-		return nil
-	})
+	recordSet, err := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, filterList)
 	if err != nil {
 		return err
 	}
 
 	ids := make([]string, 0, len(recordSet))
 	tmpList := make([]map[string]interface{}, 0, len(recordSet))
-
 	if recordSet != nil {
 		for _, privateZoneRecord := range recordSet {
 			privateZoneRecordMap := map[string]interface{}{}
-
 			if privateZoneRecord.RecordId != nil {
 				privateZoneRecordMap["record_id"] = privateZoneRecord.RecordId
 			}
@@ -247,5 +235,6 @@ func dataSourceTencentCloudPrivateDnsRecordsRead(d *schema.ResourceData, meta in
 			return e
 		}
 	}
+
 	return nil
 }

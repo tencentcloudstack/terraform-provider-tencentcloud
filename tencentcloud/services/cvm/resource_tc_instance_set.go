@@ -63,7 +63,7 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 				Optional:     true,
 				Default:      "Terraform-CVM-Instance",
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 128),
-				Description:  "The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.",
+				Description:  "The name of the instance. The max length of instance_name is 128, and default value is `Terraform-CVM-Instance`.",
 			},
 			"instance_type": {
 				Type:         schema.TypeString,
@@ -75,7 +75,7 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 			"hostname": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.",
+				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifications may lead to the reinstallation of the instance's operating system..",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -177,26 +177,26 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"disable_monitor_service": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			// login
 			"key_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+				Description: "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifying will cause the instance reset.",
+				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"keep_image_login": {
 				Type:     schema.TypeBool,
@@ -210,7 +210,7 @@ func ResourceTencentCloudInstanceSet() *schema.Resource {
 					}
 				},
 				ConflictsWith: []string{"key_name", "password"},
-				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.",
+				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"user_data": {
 				Type:          schema.TypeString,

@@ -4,22 +4,21 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dlc_add_users_to_work_group_attachment"
 sidebar_current: "docs-tencentcloud-resource-dlc_add_users_to_work_group_attachment"
 description: |-
-  Provides a resource to create a dlc add_users_to_work_group_attachment
+  Provides a resource to create a DLC add users to work group attachment
 ---
 
 # tencentcloud_dlc_add_users_to_work_group_attachment
 
-Provides a resource to create a dlc add_users_to_work_group_attachment
+Provides a resource to create a DLC add users to work group attachment
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_add_users_to_work_group_attachment" "add_users_to_work_group_attachment" {
+resource "tencentcloud_dlc_add_users_to_work_group_attachment" "example" {
   add_info {
-    work_group_id = 23184
-    user_ids      = [100032676511]
+    work_group_id = 70220
+    user_ids      = ["100032717595", "100030773831"]
   }
-}
 }
 ```
 
@@ -27,12 +26,12 @@ resource "tencentcloud_dlc_add_users_to_work_group_attachment" "add_users_to_wor
 
 The following arguments are supported:
 
-* `add_info` - (Required, List, ForceNew) Work group and user information to operate on.
+* `add_info` - (Required, List, ForceNew) Information about working groups and users to be operated.
 
 The `add_info` object supports the following:
 
-* `user_ids` - (Required, Set) User id set, matched with CAM side uin.
-* `work_group_id` - (Required, Int) Work group id.
+* `user_ids` - (Required, Set, ForceNew) User ID which matches the Uin on the CAM side.
+* `work_group_id` - (Required, Int, ForceNew) Working group ID.
 
 ## Attributes Reference
 
@@ -44,9 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-dlc add_users_to_work_group_attachment can be imported using the id, e.g.
+DLC add users to work group attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dlc_add_users_to_work_group_attachment.add_users_to_work_group_attachment add_users_to_work_group_attachment_id
+terraform import tencentcloud_dlc_add_users_to_work_group_attachment.example '70220#100032717595|100030773831'
 ```
 

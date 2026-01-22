@@ -4,25 +4,25 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_redis_backup_download_restriction"
 sidebar_current: "docs-tencentcloud-resource-redis_backup_download_restriction"
 description: |-
-  Provides a resource to create a redis backup_download_restriction
+  Provides a resource to create a redis backup download restriction
 ---
 
 # tencentcloud_redis_backup_download_restriction
 
-Provides a resource to create a redis backup_download_restriction
+Provides a resource to create a redis backup download restriction
 
 ## Example Usage
 
 ### Modify the network information and address of the current region backup file download
 
 ```hcl
-resource "tencentcloud_redis_backup_download_restriction" "foo" {
+resource "tencentcloud_redis_backup_download_restriction" "example" {
   limit_type            = "Customize"
   vpc_comparison_symbol = "In"
   ip_comparison_symbol  = "In"
   limit_vpc {
     region   = "ap-guangzhou"
-    vpc_list = [var.vpc_id]
+    vpc_list = ["vpc-pu8wqojl"]
   }
   limit_ip = ["10.1.1.12", "10.1.1.13"]
 }
@@ -53,9 +53,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-redis backup_download_restriction can be imported using the region, e.g.
+redis backup download restriction can be imported using the region, e.g.
 
 ```
-terraform import tencentcloud_redis_backup_download_restriction.foo ap-guangzhou
+terraform import tencentcloud_redis_backup_download_restriction.example ap-guangzhou
 ```
 

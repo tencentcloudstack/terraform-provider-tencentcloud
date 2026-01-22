@@ -29,17 +29,17 @@ resource "tencentcloud_waf_anti_fake" "example" {
 The following arguments are supported:
 
 * `domain` - (Required, String) Domain.
-* `name` - (Required, String) Name.
+* `name` - (Required, String) Rule Name.
 * `uri` - (Required, String) Uri.
-* `status` - (Optional, Int) status. 0: Turn off rules and log switches, 1: Turn on the rule switch and Turn off the log switch; 2: Turn off the rule switch and turn on the log switch;3: Turn on the log switch.
+* `status` - (Optional, Int) Status. 0: Turn off rules and log switches, 1: Turn on the rule switch and Turn off the log switch; 2: Turn off the rule switch and turn on the log switch; 3: Turn on the rule switch and turn on the log switch.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `protocol` - protocol.
-* `rule_id` - rule id.
+* `protocol` - Protocol.
+* `rule_id` - Rule ID.
 
 
 ## Import

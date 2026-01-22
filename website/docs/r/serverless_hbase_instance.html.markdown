@@ -46,7 +46,7 @@ The following arguments are supported:
 * `zone_settings` - (Required, List) Detailed configuration of the instance availability zone, currently supports multiple availability zones, the number of availability zones can only be 1 or 3, including zone name, VPC information, and number of nodes. The total number of nodes across all zones must be greater than or equal to 3 and less than or equal to 50.
 * `auto_renew_flag` - (Optional, Int) AutoRenewFlag, Value range: 0: indicates NOTIFY_AND_MANUAL_RENEW; 1: indicates NOTIFY_AND_AUTO_RENEW; 2: indicates DISABLE_NOTIFY_AND_MANUAL_RENEW.
 * `node_type` - (Optional, String) Instance node type, can be filled in as 4C16G, 8C32G, 16C64G, 32C128G, case insensitive.
-* `tags` - (Optional, List) List of tags to bind to the instance.
+* `tags` - (Optional, Set) List of tags to bind to the instance.
 * `time_span` - (Optional, Int) Time span.
 * `time_unit` - (Optional, String) Time unit, fill in m which means month.
 

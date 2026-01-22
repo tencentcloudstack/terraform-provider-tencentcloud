@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcr_service_account"
 sidebar_current: "docs-tencentcloud-resource-tcr_service_account"
 description: |-
-  Provides a resource to create a tcr service account.
+  Provides a resource to create a TCR service account.
 ---
 
 # tencentcloud_tcr_service_account
 
-Provides a resource to create a tcr service account.
+Provides a resource to create a TCR service account.
 
 ## Example Usage
 
@@ -17,29 +17,26 @@ Provides a resource to create a tcr service account.
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr-instance"
-  instance_type = "basic"
+  name          = "tf-example"
+  instance_type = "standard"
   delete_bucket = true
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 
 resource "tencentcloud_tcr_namespace" "example" {
   instance_id    = tencentcloud_tcr_instance.example.id
-  name           = "tf_test_tcr_namespace"
+  name           = "tf-example"
   is_public      = true
   is_auto_scan   = true
   is_prevent_vul = true
   severity       = "medium"
-  cve_whitelist_items {
-    cve_id = "tf_example_cve_id"
-  }
 }
 
 resource "tencentcloud_tcr_service_account" "example" {
   registry_id = tencentcloud_tcr_instance.example.id
-  name        = "tf_example_account"
+  name        = "tf-example"
   permissions {
     resource = tencentcloud_tcr_namespace.example.name
     actions  = ["tcr:PushRepository", "tcr:PullRepository"]
@@ -47,8 +44,9 @@ resource "tencentcloud_tcr_service_account" "example" {
   description = "tf example for tcr custom account"
   duration    = 10
   disable     = false
+  password    = "Password123"
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```
@@ -58,7 +56,7 @@ resource "tencentcloud_tcr_service_account" "example" {
 ```hcl
 resource "tencentcloud_tcr_service_account" "example" {
   registry_id = tencentcloud_tcr_instance.example.id
-  name        = "tf_example_account"
+  name        = "tf-example"
   permissions {
     resource = tencentcloud_tcr_namespace.example.name
     actions  = ["tcr:PushRepository", "tcr:PullRepository"]
@@ -67,7 +65,7 @@ resource "tencentcloud_tcr_service_account" "example" {
   expires_at  = 1676897989000 //time stamp
   disable     = false
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```
@@ -83,6 +81,7 @@ The following arguments are supported:
 * `disable` - (Optional, Bool) whether to disable Service accounts.
 * `duration` - (Optional, Int) expiration date (unit: day), calculated from the current time, priority is higher than ExpiresAt Service account description.
 * `expires_at` - (Optional, Int) Service account expiration time (time stamp, unit: milliseconds).
+* `password` - (Optional, String) Password of the service account.
 * `tags` - (Optional, Map) Tag description list.
 
 The `permissions` object supports the following:
@@ -95,14 +94,14 @@ The `permissions` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `password` - Password of the service account.
+
 
 
 ## Import
 
-tcr service_account can be imported using the id, e.g.
+TCR service account can be imported using the registryId#accountName, e.g.
 
 ```
-terraform import tencentcloud_tcr_service_account.service_account registry_id#account_name
+terraform import tencentcloud_tcr_service_account.example tcr-ixgt2l0z#tf-example
 ```
 

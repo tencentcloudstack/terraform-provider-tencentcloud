@@ -57,8 +57,20 @@ func (me *RedisService) fullZoneId() (errRet error) {
 		return
 	}
 	request := region.NewDescribeZonesRequest()
+	response := region.NewDescribeZonesResponse()
 	request.Product = helper.String("redis")
-	response, err := me.client.UseRegionClient().DescribeZones(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseRegionClient().DescribeZones(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -101,14 +113,27 @@ func (me *RedisService) getZoneName(id int64) (name string, errRet error) {
 func (me *RedisService) DescribeRedisZoneConfig(ctx context.Context) (sellConfigures []*redis.RegionConf, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := redis.NewDescribeProductInfoRequest()
+	response := redis.NewDescribeProductInfoResponse()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DescribeProductInfo(request)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeProductInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
@@ -269,6 +294,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 
 	logId := tccommon.GetLogId(ctx)
 	request := redis.NewCreateInstancesRequest()
+	response := redis.NewCreateInstancesResponse()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -355,8 +381,19 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	if redisClusterId != "" {
 		request.RedisClusterId = &redisClusterId
 	}
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().CreateInstances(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().CreateInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
@@ -584,13 +621,19 @@ func (me *RedisService) ModifyInstanceName(ctx context.Context, redisId string, 
 	request.InstanceName = &name
 	request.Operation = &op
 	request.InstanceId = &redisId
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().ModifyInstance(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	}
-	errRet = err
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().ModifyInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
 	return
 }
 
@@ -608,19 +651,26 @@ func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId str
 	request.ProjectId = &projectId
 	request.Operation = &op
 	request.InstanceId = &redisId
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().ModifyInstance(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	}
-	errRet = err
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().ModifyInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
 	return
 }
 
 func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redisId string) (sg []string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := redis.NewDescribeInstanceSecurityGroupRequest()
+	response := redis.NewDescribeInstanceSecurityGroupResponse()
 	request.InstanceIds = []*string{&redisId}
 	defer func() {
 		if errRet != nil {
@@ -628,12 +678,20 @@ func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redis
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DescribeInstanceSecurityGroup(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstanceSecurityGroup(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
@@ -698,19 +756,26 @@ func (me *RedisService) ModifyDBInstanceSecurityGroups(ctx context.Context, prod
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().ModifyDBInstanceSecurityGroups(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	}
-	errRet = err
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().ModifyDBInstanceSecurityGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
 	return
 }
 
 func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId string) (taskId int64, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := redis.NewDestroyPostpaidInstanceRequest()
+	response := redis.NewDestroyPostpaidInstanceResponse()
 	request.InstanceId = &redisId
 	defer func() {
 		if errRet != nil {
@@ -718,12 +783,21 @@ func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId str
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DestroyPostpaidInstance(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	} else {
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DestroyPostpaidInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
 		errRet = err
 		return
 	}
@@ -836,6 +910,7 @@ func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, ta
 	logId := tccommon.GetLogId(ctx)
 	var uintTaskId = uint64(taskId)
 	request := redis.NewDescribeTaskInfoRequest()
+	response := redis.NewDescribeTaskInfoResponse()
 	request.TaskId = &uintTaskId
 
 	defer func() {
@@ -844,8 +919,19 @@ func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, ta
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DescribeTaskInfo(request)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeTaskInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
@@ -907,14 +993,19 @@ func (me *RedisService) ModifyAutoBackupConfig(ctx context.Context, redisId stri
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().ModifyAutoBackupConfig(request)
-	errRet = err
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	}
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().ModifyAutoBackupConfig(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
 	return
 }
 
@@ -1027,6 +1118,7 @@ func (me *RedisService) ApplyParamsTemplate(ctx context.Context, request *redis.
 func (me *RedisService) DescribeParamTemplateInfo(ctx context.Context, templateId string) (info *redis.DescribeParamTemplateInfoResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := redis.NewDescribeParamTemplateInfoRequest()
+	response := redis.NewDescribeParamTemplateInfoResponse()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -1036,8 +1128,18 @@ func (me *RedisService) DescribeParamTemplateInfo(ctx context.Context, templateI
 
 	request.TemplateId = &templateId
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DescribeParamTemplateInfo(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeParamTemplateInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
@@ -1045,10 +1147,6 @@ func (me *RedisService) DescribeParamTemplateInfo(ctx context.Context, templateI
 	}
 
 	info = response.Response
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	return
 }
 
@@ -1091,16 +1189,22 @@ func (me *RedisService) ModifyParamTemplate(ctx context.Context, request *redis.
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().ModifyParamTemplate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().ModifyParamTemplate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -1114,16 +1218,22 @@ func (me *RedisService) DeleteParamTemplate(ctx context.Context, request *redis.
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DeleteParamTemplate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DeleteParamTemplate(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -1132,6 +1242,7 @@ func (me *RedisService) DescribeRedisAccountById(ctx context.Context, instanceId
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeInstanceAccountRequest()
+	response := redis.NewDescribeInstanceAccountResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -1147,16 +1258,24 @@ func (me *RedisService) DescribeRedisAccountById(ctx context.Context, instanceId
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseRedisClient().DescribeInstanceAccount(request)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseRedisClient().DescribeInstanceAccount(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.Accounts) < 1 {
 			break
@@ -1180,6 +1299,7 @@ func (me *RedisService) DeleteRedisAccountById(ctx context.Context, instanceId, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDeleteInstanceAccountRequest()
+	response := redis.NewDeleteInstanceAccountResponse()
 	request.InstanceId = &instanceId
 	request.AccountName = &accountName
 
@@ -1189,16 +1309,25 @@ func (me *RedisService) DeleteRedisAccountById(ctx context.Context, instanceId, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DeleteInstanceAccount(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DeleteInstanceAccount(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	taskId = *response.Response.TaskId
 
+	taskId = *response.Response.TaskId
 	return
 }
 
@@ -1223,6 +1352,7 @@ func (me *RedisService) DescribeRedisInstanceById(ctx context.Context, instanceI
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeInstancesRequest()
+	response := redis.NewDescribeInstancesResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -1231,9 +1361,19 @@ func (me *RedisService) DescribeRedisInstanceById(ctx context.Context, instanceI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeInstances(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
@@ -1252,6 +1392,7 @@ func (me *RedisService) DescribeRedisParamById(ctx context.Context, instanceId s
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeInstanceParamsRequest()
+	response := redis.NewDescribeInstanceParamsResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -1260,14 +1401,23 @@ func (me *RedisService) DescribeRedisParamById(ctx context.Context, instanceId s
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstanceParams(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeInstanceParams(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	param := response.Response
 	instanceParams := make(map[string]interface{})
@@ -1307,6 +1457,7 @@ func (me *RedisService) DescribeRedisSslById(ctx context.Context, instanceId str
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeSSLStatusRequest()
+	response := redis.NewDescribeSSLStatusResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -1315,14 +1466,23 @@ func (me *RedisService) DescribeRedisSslById(ctx context.Context, instanceId str
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeSSLStatus(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeSSLStatus(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ssl = response.Response
 	return
@@ -1332,6 +1492,7 @@ func (me *RedisService) DescribeRedisMaintenanceWindowById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeMaintenanceWindowRequest()
+	response := redis.NewDescribeMaintenanceWindowResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -1340,14 +1501,23 @@ func (me *RedisService) DescribeRedisMaintenanceWindowById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeMaintenanceWindow(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeMaintenanceWindow(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	maintenanceWindow = response.Response
 	return
@@ -1555,8 +1725,9 @@ func (me *RedisService) DescribeRedisInstanceShardsByFilter(ctx context.Context,
 
 func (me *RedisService) DescribeRedisInstanceZoneInfoByFilter(ctx context.Context, param map[string]interface{}) (instanceZoneInfo []*redis.ReplicaGroup, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = redis.NewDescribeInstanceZoneInfoRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = redis.NewDescribeInstanceZoneInfoRequest()
+		response = redis.NewDescribeInstanceZoneInfoResponse()
 	)
 
 	defer func() {
@@ -1571,13 +1742,23 @@ func (me *RedisService) DescribeRedisInstanceZoneInfoByFilter(ctx context.Contex
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DescribeInstanceZoneInfo(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstanceZoneInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.ReplicaGroups) < 1 {
 		return
@@ -1717,6 +1898,7 @@ func (me *RedisService) DescribeRedisReplicateInstanceById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeReplicationGroupRequest()
+	response := redis.NewDescribeReplicationGroupResponse()
 	request.GroupId = &groupId
 
 	defer func() {
@@ -1733,12 +1915,24 @@ func (me *RedisService) DescribeRedisReplicateInstanceById(ctx context.Context, 
 	)
 	request.Offset = &offset
 	request.Limit = &limit
-	response, err := me.client.UseRedisClient().DescribeReplicationGroup(request)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeReplicationGroup(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.Groups) < 1 {
 		return
@@ -1753,6 +1947,7 @@ func (me *RedisService) DescribeRedisBackupDownloadRestrictionById(ctx context.C
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeBackupDownloadRestrictionRequest()
+	response := redis.NewDescribeBackupDownloadRestrictionResponse()
 
 	defer func() {
 		if errRet != nil {
@@ -1760,14 +1955,23 @@ func (me *RedisService) DescribeRedisBackupDownloadRestrictionById(ctx context.C
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeBackupDownloadRestriction(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeBackupDownloadRestriction(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	backupDownloadRestriction = response.Response
 	return
@@ -1807,6 +2011,7 @@ func (me *RedisService) DescribeBandwidthRangeById(ctx context.Context, instance
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeBandwidthRangeRequest()
+	response := redis.NewDescribeBandwidthRangeResponse()
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -1815,14 +2020,23 @@ func (me *RedisService) DescribeBandwidthRangeById(ctx context.Context, instance
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeBandwidthRange(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeBandwidthRange(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	connectionConfig = response.Response
 	return
@@ -1832,6 +2046,7 @@ func (me *RedisService) DeleteRedisReplicateAttachmentById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewRemoveReplicationInstanceRequest()
+	response := redis.NewRemoveReplicationInstanceResponse()
 	request.InstanceId = &instanceId
 	request.GroupId = &groupId
 	request.SyncType = helper.Bool(false)
@@ -1842,14 +2057,23 @@ func (me *RedisService) DeleteRedisReplicateAttachmentById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().RemoveReplicationInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().RemoveReplicationInstance(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	taskId := *response.Response.TaskId
 
@@ -1884,6 +2108,7 @@ func (me *RedisService) DescribeRedisSecurityGroupAttachmentById(ctx context.Con
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeDBSecurityGroupsRequest()
+	response := redis.NewDescribeDBSecurityGroupsResponse()
 	request.Product = &product
 	request.InstanceId = &instanceId
 
@@ -1893,14 +2118,23 @@ func (me *RedisService) DescribeRedisSecurityGroupAttachmentById(ctx context.Con
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeDBSecurityGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeDBSecurityGroups(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Groups) < 1 {
 		return
@@ -1930,14 +2164,22 @@ func (me *RedisService) DeleteRedisSecurityGroupAttachmentById(ctx context.Conte
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DisassociateSecurityGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DisassociateSecurityGroups(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -2005,6 +2247,7 @@ func (me *RedisService) DescribeRedisLogDeliveryById(ctx context.Context, instan
 	logId := tccommon.GetLogId(ctx)
 
 	request := redis.NewDescribeInstanceLogDeliveryRequest()
+	response := redis.NewDescribeInstanceLogDeliveryResponse()
 	request.InstanceId = helper.String(instanceId)
 
 	defer func() {
@@ -2013,14 +2256,23 @@ func (me *RedisService) DescribeRedisLogDeliveryById(ctx context.Context, instan
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstanceLogDelivery(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseRedisClient().DescribeInstanceLogDelivery(request)
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response.Response == nil {
 		return

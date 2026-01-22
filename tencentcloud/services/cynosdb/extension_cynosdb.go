@@ -12,6 +12,7 @@ const (
 	CYNOSDB_CHARGE_TYPE_POSTPAID = svcpostgresql.COMMON_PAYTYPE_POSTPAID
 	CYNOSDB_CHARGE_TYPE_PREPAID  = svcpostgresql.COMMON_PAYTYPE_PREPAID
 	CYNOSDB_SERVERLESS           = "SERVERLESS"
+	CYNOSDB_NORMAL               = "NORMAL"
 
 	CYNOSDB_STATUS_RUNNING  = "running"
 	CYNOSDB_STATUS_OFFLINE  = "offlined"
@@ -26,8 +27,9 @@ const (
 	CYNOSDB_DEFAULT_OFFSET = 0
 	CYNOSDB_MAX_LIMIT      = 100
 
-	CYNOSDB_INSGRP_HA = "ha"
-	CYNOSDB_INSGRP_RO = "ro"
+	CYNOSDB_INSGRP_HA       = "ha"
+	CYNOSDB_INSGRP_RO       = "ro"
+	CYNOSDB_INSGRP_SINGLERO = "singleRo"
 
 	// 0-成功，1-失败，2-处理中
 	CYNOSDB_FLOW_STATUS_SUCCESSFUL = "0"
@@ -183,6 +185,13 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Required:    true,
 			Sensitive:   true,
 			Description: "Password of `root` account.",
+		},
+		"instance_count": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "The number of instances, the range is (0,16], the default value is 2 (i.e. one RW instance + one Ro instance), the passed n means 1 RW instance + n-1 Ro instances (with the same specifications), if you need a more accurate cluster composition, please use InstanceInitInfos.",
 		},
 		// payment
 		"charge_type": {
@@ -444,6 +453,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"db_mode": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.",
 		},
 		"min_cpu": {
@@ -469,6 +479,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"slave_zone": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Multi zone Addresses of the CynosDB Cluster.",
 		},
 		"serverless_status_flag": {
@@ -481,6 +492,12 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Serverless cluster status. NOTE: This is a readonly attribute, to modify, please set `serverless_status_flag`.",
+		},
+		"cynos_version": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Kernel minor version, like `3.1.16.002`.",
 		},
 	}
 

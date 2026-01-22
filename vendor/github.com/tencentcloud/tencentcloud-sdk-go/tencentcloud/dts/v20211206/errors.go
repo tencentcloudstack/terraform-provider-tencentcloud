@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,6 +47,12 @@ const (
 	// 当前状态冲突，不能执行该操作。
 	FAILEDOPERATION_STATUSINCONFLICT = "FailedOperation.StatusInConflict"
 
+	// 当前状态不允许操作。
+	FAILEDOPERATION_STATUSINCONFLICTERROR = "FailedOperation.StatusInConflictError"
+
+	// 用户没有实名认证。
+	FAILEDOPERATION_USERNOTAUTHED = "FailedOperation.UserNotAuthed"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
@@ -64,6 +70,9 @@ const (
 
 	// 迁移任务冲突。
 	INTERNALERROR_DUPLICATEJOB = "InternalError.DuplicateJob"
+
+	// http请求出错。
+	INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
 
 	// 内部错误。
 	INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
@@ -107,6 +116,9 @@ const (
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// 业务参数错误。
+	INVALIDPARAMETERVALUE_BIZINVALIDPARAMETERVALUEERROR = "InvalidParameterValue.BizInvalidParameterValueError"
+
 	// 数据转换错误。
 	INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 
@@ -140,8 +152,14 @@ const (
 	// 用户余额不足。
 	OPERATIONDENIED_NOTENOUGHMONEYERROR = "OperationDenied.NotEnoughMoneyError"
 
+	// 该操作不能执行。
+	OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+
 	// 操作被拒绝。
 	OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
 	// 请求次数超限。
 	REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDEDERROR = "RequestLimitExceeded.RequestLimitExceededError"

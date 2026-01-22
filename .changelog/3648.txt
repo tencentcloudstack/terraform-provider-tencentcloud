@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_vpn_ssl_server: mark `ssl_vpn_protocol`, `integrity_algorithm`, `encrypt_algorithm`, `compress` as computed
+```

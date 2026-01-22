@@ -46,7 +46,7 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(ALL_GATE_WAY_TYPES),
-				Description:  "Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `HAVIP`, `NAT`, `NORMAL_CVM`, `EIP` and `LOCAL_GATEWAY`.",
+				Description:  "Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `HAVIP`, `NAT`, `NORMAL_CVM`, `EIP`, `LOCAL_GATEWAY`, `INTRANAT`, `USER_CCN` and `GWLB_ENDPOINT`.",
 			},
 			"next_hub": {
 				Type:        schema.TypeString,
@@ -58,6 +58,7 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 			"disabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether the entry is disabled, default is `false`.",
 			},
 			"description": {
@@ -71,6 +72,11 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 				Computed:    true,
 				Description: "ID of route table entry.",
 			},
+			"route_entry_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "ID of route entry.",
+			},
 		},
 	}
 }
@@ -78,10 +84,11 @@ func ResourceTencentCloudVpcRouteEntry() *schema.Resource {
 func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_route_table_entry.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	var (
 		description          = ""
@@ -95,20 +102,24 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 	if temp, ok := d.GetOk("description"); ok {
 		description = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("route_table_id"); ok {
 		routeTableId = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("destination_cidr_block"); ok {
 		destinationCidrBlock = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("next_type"); ok {
 		nextType = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("next_hub"); ok {
 		nextHub = temp.(string)
 	}
 
-	if temp, ok := d.GetOk("disabled"); ok {
+	if temp, ok := d.GetOkExists("disabled"); ok {
 		disabled = temp.(bool)
 	}
 
@@ -122,7 +133,6 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 
 	// route cannot disable on create
 	entryId, err := service.CreateRoutes(ctx, routeTableId, destinationCidrBlock, nextType, nextHub, description, true)
-
 	if err != nil {
 		return err
 	}
@@ -146,15 +156,17 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_route_table_entry.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	items := strings.Split(d.Id(), ".")
 	if len(items) != 2 {
 		return fmt.Errorf("entry id be destroyed, we can not get route table id")
 	}
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeRouteTable(ctx, items[1])
 		if e != nil {
@@ -180,23 +192,31 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 				_ = d.Set("next_hub", v.nextBub)
 				_ = d.Set("route_item_id", v.routeItemId)
 				_ = d.Set("disabled", !v.enabled)
+				_ = d.Set("route_entry_id", v.routeEntryId)
 				return nil
 			}
 		}
+
 		d.SetId("")
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceTencentCloudVpcRouteEntryUpdate(d *schema.ResourceData, meta interface{}) error {
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	service := VpcService{client}
+	defer tccommon.LogElapsed("resource.tencentcloud_route_table_entry.update")()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		client  = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		service = VpcService{client}
+	)
 
 	items := strings.Split(d.Id(), ".")
 	if len(items) != 2 {
@@ -216,16 +236,18 @@ func resourceTencentCloudVpcRouteEntryUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 	}
+
 	return resourceTencentCloudVpcRouteEntryRead(d, meta)
 }
 
 func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_route_table_entry.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	items := strings.Split(d.Id(), ".")
 	if len(items) != 2 {
@@ -245,8 +267,10 @@ func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interf
 					return nil
 				}
 			}
+
 			return resource.RetryableError(err)
 		}
+
 		return nil
 	})
 

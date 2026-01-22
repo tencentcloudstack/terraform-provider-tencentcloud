@@ -29,20 +29,20 @@ resource "tencentcloud_eb_event_bus" "foo" {
   description    = "event bus desc"
   enable_store   = false
   save_days      = 1
-  tags = {
+  tags           = {
     "createdBy" = "terraform"
   }
 }
 
 resource "tencentcloud_eb_event_rule" "foo" {
-  event_bus_id = tencentcloud_eb_event_bus.foo.id
-  rule_name    = "tf-event_rule"
-  description  = "event rule desc"
-  enable       = true
+  event_bus_id  = tencentcloud_eb_event_bus.foo.id
+  rule_name     = "tf-event_rule"
+  description   = "event rule desc"
+  enable        = true
   event_pattern = jsonencode(
     {
       source = "apigw.cloud.tencent"
-      type = [
+      type   = [
         "connector:apigw",
       ]
     }
@@ -53,19 +53,17 @@ resource "tencentcloud_eb_event_rule" "foo" {
 }
 
 resource "tencentcloud_eb_event_target" "scf_target" {
-    event_bus_id = tencentcloud_eb_event_bus.foo.id
-    rule_id      = tencentcloud_eb_event_rule.foo.rule_id
-    type         = "scf"
+  event_bus_id = tencentcloud_eb_event_bus.foo.id
+  rule_id      = tencentcloud_eb_event_rule.foo.rule_id
+  type         = "scf"
 
-    target_description {
-        resource_description = "qcs::scf:${var.zone}:uin/${data.tencentcloud_cam_users.foo.user_list.0.uin}:namespace/${var.namespace}/function/${var.function}/${var.function_version}"
-
-        scf_params {
-            batch_event_count     = 1
-            batch_timeout         = 1
-            enable_batch_delivery = true
-        }
-    }
+  target_description {
+    resource_description = "qcs::scf:${var.zone}:uin/${data.tencentcloud_cam_users.foo.user_list.0.uin}:namespace/${var.namespace}/function/${var.function}/${var.function_version}"
+  }
+  
+  batch_event_count     = 2
+  batch_timeout         = 2
+  enable_batch_delivery = true
 }
 ```
 

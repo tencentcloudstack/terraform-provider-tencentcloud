@@ -2,6 +2,8 @@ Provides a COS resource to create a COS bucket and set its attributes.
 
 ~> **NOTE:** The following capabilities do not support cdc scenarios: `multi_az`, `website`, and bucket replication `replica_role`.
 
+~> **NOTE:** If `chdfs_ofs` is `true`, cannot set `acl_body`, `acl`, `origin_pull_rules`, `origin_domain_rules`, `website`, `encryption_algorithm`, `kms_id`, `versioning_enable`, `acceleration_enable` at the same time. For more information, please refer to `https://www.tencentcloud.com/document/product/436/43305`.
+
 Example Usage
 
 Private Bucket
@@ -69,7 +71,7 @@ resource "tencentcloud_kms_key" "example" {
 resource "tencentcloud_cos_bucket" "bucket_basic" {
   bucket               = "tf-bucket-cdc-${local.app_id}"
   acl                  = "private"
-  encryption_algorithm = "KMS" #cos/kms for cdc cos
+  encryption_algorithm = "KMS"
   kms_id               = tencentcloud_kms_key.example.id
   versioning_enable    = true
   acceleration_enable  = false
@@ -237,6 +239,19 @@ resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
     index_document           = "index.html"
     error_document           = "error.html"
     redirect_all_requests_to = "https"
+    routing_rules {
+      rules {
+        condition_error_code        = "404"
+        redirect_protocol           = "https"
+        redirect_replace_key_prefix = "/test"
+      }
+
+      rules {
+        condition_prefix            = "/test"
+        redirect_protocol           = "https"
+        redirect_replace_key        = "key"
+      }
+    }
   }
 }
 
@@ -264,6 +279,31 @@ resource "tencentcloud_cos_bucket" "bucket_with_cors" {
     allowed_headers = ["*"]
     max_age_seconds = 300
     expose_headers  = ["Etag"]
+  }
+}
+```
+
+Using Origin pull
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id    = data.tencentcloud_user_info.info.app_id
+  uin       = data.tencentcloud_user_info.info.uin
+  owner_uin = data.tencentcloud_user_info.info.owner_uin
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket = "tf-bucket-basic10-${local.app_id}"
+  acl    = "public-read"
+  origin_pull_rules {
+    priority            = 1
+    back_to_source_mode = "Redirect"
+    http_redirect_code  = "301"
+    protocol            = "FOLLOW"
+    host                = "1.1.1.1"
+    follow_query_string = true
   }
 }
 ```
@@ -385,14 +425,161 @@ resource "tencentcloud_cos_bucket" "bucket_with_replication" {
   versioning_enable = true
   replica_role      = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
-    id                 = "test-rep1"
-    status             = "Enabled"
-    prefix             = "dist"
-    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    id       = "rule1"
+    status   = "Enabled"
+    priority = 1
+    prefix   = "/prefix"
+    filter {
+      and {
+        tag {
+          key   = "tagKey1"
+          value = "tagValue1"
+        }
+
+        tag {
+          key   = "tagKey2"
+          value = "tagValue2"
+        }
+      }
+    }
+    destination_bucket                = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    destination_storage_class         = "Standard"
+    destination_encryption_kms_key_id = "4f14a617-7c7d-11ef-9a62-525400d3a886"
+    delete_marker_replication {
+      status = "Disabled"
+    }
+
+    source_selection_criteria {
+      sse_kms_encrypted_objects {
+        status = "Enabled"
+      }
+    }
+  }
+
+  replica_rules {
+    id                                = "rule2"
+    status                            = "Enabled"
+    priority                          = 2
+    destination_bucket                = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
+    destination_storage_class         = "Standard"
+    destination_encryption_kms_key_id = "4f14a617-7c7d-11ef-9a62-525400d3a886"
+    delete_marker_replication {
+      status = "Enabled"
+    }
+
+    source_selection_criteria {
+      sse_kms_encrypted_objects {
+        status = "Enabled"
+      }
+    }
   }
 }
 ```
 
+Using intelligent tiering, Only enable intelligent tiering
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket                               = "bucket-intelligent-tiering-${local.app_id}"
+  acl                                  = "private"
+  enable_intelligent_tiering           = true
+  intelligent_tiering_days             = 30
+  intelligent_tiering_request_frequent = 1
+}
+```
+
+Using intelligent tiering and configure the intelligent tiered storage archiving and deep archiving rules list.
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket                               = "bucket-intelligent-tiering-${local.app_id}"
+  acl                                  = "private"
+  enable_intelligent_tiering           = true
+  intelligent_tiering_days             = 30
+  intelligent_tiering_request_frequent = 1
+  intelligent_tiering_archiving_rule_list {
+    rule_id = "rule1"
+    status  = "Enabled"
+
+    tiering {
+      access_tier = "ARCHIVE_ACCESS"
+      days        = 91
+    }
+
+    tiering {
+      access_tier = "DEEP_ARCHIVE_ACCESS"
+      days        = 180
+    }
+  }
+
+  intelligent_tiering_archiving_rule_list {
+    rule_id = "rule2"
+    status  = "Enabled"
+
+    filter {
+      prefix = "/prefix"
+      tag {
+        key   = "tagKey"
+        value = "tagValue"
+      }
+    }
+
+    tiering {
+      access_tier = "ARCHIVE_ACCESS"
+      days        = 91
+    }
+  }
+}
+```
+
+Using object lock config
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket = "bucket-intelligent-tiering-${local.app_id}"
+  acl    = "private"
+  object_lock_configuration {
+    enabled = true
+    rule {
+      days = 30
+    }
+  }
+}
+```
+
+Using OFS
+
+```hcl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "example" {
+  bucket    = "private-ofs-bucket-${local.app_id}"
+  acl       = "private"
+  chdfs_ofs = true
+}
+```
 Import
 
 COS bucket can be imported, e.g.

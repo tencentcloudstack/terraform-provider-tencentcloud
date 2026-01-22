@@ -57,21 +57,21 @@ func ResourceTencentCloudCkafkaUser() *schema.Resource {
 func resourceTencentCloudCkafkaUserCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ckafka_user.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ckafkaService = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	instanceId := d.Get("instance_id").(string)
 	accountName := d.Get("account_name").(string)
 	password := d.Get("password").(string)
 
-	ckafkaService := CkafkaService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
 	if err := ckafkaService.CreateUser(ctx, instanceId, accountName, password); err != nil {
 		return fmt.Errorf("[CRITAL]%s create ckafka user failed, reason:%+v", logId, err)
 	}
-	d.SetId(instanceId + tccommon.FILED_SP + accountName)
 
+	d.SetId(strings.Join([]string{instanceId, accountName}, tccommon.FILED_SP))
 	return resourceTencentCloudCkafkaUserRead(d, meta)
 }
 
@@ -79,21 +79,23 @@ func resourceTencentCloudCkafkaUserRead(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_ckafka_user.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	ckafkaService := CkafkaService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ckafkaService = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		id            = d.Id()
+	)
 
-	id := d.Id()
 	info, has, err := ckafkaService.DescribeUserByUserId(ctx, id)
 	if err != nil {
 		return err
 	}
+
 	if !has {
 		d.SetId("")
 		return nil
 	}
+
 	items := strings.Split(id, tccommon.FILED_SP)
 	_ = d.Set("instance_id", items[0])
 	_ = d.Set("account_name", info.Name)
@@ -106,20 +108,23 @@ func resourceTencentCloudCkafkaUserRead(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudCkafkaUserUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ckafka_user.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	ckafkaService := CkafkaService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ckafkaService = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	instanceId := d.Get("instance_id").(string)
-	user := d.Get("account_name").(string)
 	if d.HasChange("password") {
+		idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+		if len(idSplit) != 2 {
+			return fmt.Errorf("id is broken, id is %s", d.Id())
+		}
+
+		instanceId, user := idSplit[0], idSplit[1]
 		old, new := d.GetChange("password")
 		if err := ckafkaService.ModifyPassword(ctx, instanceId, user, old.(string), new.(string)); err != nil {
 			return err
 		}
-
 	}
 
 	return resourceTencentCloudCkafkaUserRead(d, meta)
@@ -128,14 +133,15 @@ func resourceTencentCloudCkafkaUserUpdate(d *schema.ResourceData, meta interface
 func resourceTencentCloudCkafkaUserDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_ckafka_user.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	ckafkaService := CkafkaService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ckafkaService = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	if err := ckafkaService.DeleteUser(ctx, d.Id()); err != nil {
 		return err
 	}
+
 	return nil
 }

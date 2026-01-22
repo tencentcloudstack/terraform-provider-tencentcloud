@@ -42,7 +42,7 @@ func ResourceTencentCloudEipAssociation() *schema.Resource {
 					"private_ip",
 				},
 				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 25),
-				Description:  "The CVM or CLB instance id going to bind with the EIP. This field is conflict with `network_interface_id` and `private_ip fields`.",
+				Description:  "The ID of the target resource to associate with the Elastic IP (EIP). Supported targets include a CVM instance, SaaS WAF instance, CLB instance, or a VPC endpoint.\nLimitation (GWLB VPC endpoint): Only an EIP in the bound state can be associated with a GWLB-type VPC endpoint through this field, enabling more advanced networking scenarios.\nMutual exclusivity: This field conflicts with `network_interface_id` and `private_ip`. Only one association target can be specified per request.",
 			},
 			"network_interface_id": {
 				Type:         schema.TypeString,
@@ -65,6 +65,13 @@ func ResourceTencentCloudEipAssociation() *schema.Resource {
 					"instance_id",
 				},
 				Description: "Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.",
+			},
+
+			// computed
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ID of the dedicated cluster.",
 			},
 		},
 	}

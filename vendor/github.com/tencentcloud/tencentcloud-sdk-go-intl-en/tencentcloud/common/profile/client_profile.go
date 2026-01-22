@@ -20,26 +20,46 @@ func ExponentialBackoff(index int) time.Duration {
 
 type ClientProfile struct {
 	HttpProfile *HttpProfile
-	// Valid choices: HmacSHA1, HmacSHA256, TC3-HMAC-SHA256.
-	// Default value is TC3-HMAC-SHA256.
-	SignMethod      string
+	// SignMethod specifies the signing algorithm used for request signatures.
+	// Valid options: "HmacSHA1", "HmacSHA256", "TC3-HMAC-SHA256".
+	// Default value is "TC3-HMAC-SHA256".
+	SignMethod string
+
+	// UnsignedPayload indicates whether the payload is unsigned.
 	UnsignedPayload bool
-	// Valid choices: zh-CN, en-US.
-	// Default value is zh-CN.
+
+	// Language specifies the language of the client profile.
+	// Valid options: "zh-CN" (Chinese), "en-US" (English).
+	// Default value is "zh-CN".
 	Language string
-	Debug    bool
-	// define Whether to enable Regional auto switch
+
+	// Debug enables or disables debug output for client operations.
+	Debug bool
+
+	// DisableRegionBreaker determines whether to enable the Regional auto switch.
+	// The SDK uses ap-guangzhou.tencentcloudapi.com as the default backup endpoint.
+	// You can override this by specifying the BackupEndpoint.
 	DisableRegionBreaker bool
 
-	// Deprecated. Use BackupEndpoint instead.
+	// BackupEndPoint specifies an alternative endpoint to use by region breaker.
+	// Deprecated: Use BackupEndpoint instead.
 	BackupEndPoint string
 	BackupEndpoint string
 
-	// define how to retry request
-	NetworkFailureMaxRetries       int
-	NetworkFailureRetryDuration    DurationFunc
-	RateLimitExceededMaxRetries    int
+	// NetworkFailureMaxRetries defines the maximum number of retries when a network failure occurs.
+	NetworkFailureMaxRetries int
+	// NetworkFailureRetryDuration is a function that determines the retry duration between network failure retries.
+	NetworkFailureRetryDuration DurationFunc
+
+	// RateLimitExceededMaxRetries defines the maximum number of retries when rate limit is exceeded.
+	RateLimitExceededMaxRetries int
+	// RateLimitExceededRetryDuration is a function that determines the retry duration between rate limit exceeded retries.
 	RateLimitExceededRetryDuration DurationFunc
+
+	// Configure this client to retry or not when a connectivity problem is encountered.
+	// This differs from NetworkFailureMaxRetries that it will retry regardless of any request.
+	// NetworkFailureMaxRetries only retry request with field "ClientToken".
+	UnsafeRetryOnConnectionFailure bool
 }
 
 func NewClientProfile() *ClientProfile {
@@ -47,7 +67,7 @@ func NewClientProfile() *ClientProfile {
 		HttpProfile:     NewHttpProfile(),
 		SignMethod:      "TC3-HMAC-SHA256",
 		UnsignedPayload: false,
-		Language:        "zh-CN",
+		Language:        "en-US",
 		Debug:           false,
 		// now is true, will become to false in future
 		DisableRegionBreaker: true,

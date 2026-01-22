@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_bh_asset_sync_job_operation: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_bh_device: update doc
+```

@@ -129,10 +129,24 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *test
 		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessOpen,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_instance.es_kibana", "es_public_url"),
+				),
+			},
+			{
 				Config: testAccElasticsearchInstanceKibanaPublicAccessClose,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "CLOSE"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
 				),
 			},
 			{
@@ -140,6 +154,186 @@ func TestAccTencentCloudElasticsearchInstanceResource_kibanaPublicAccess(t *test
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudElasticsearchInstanceResource_kibanaPrivateAccess(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "OPEN"),
+					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_url"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessDefault,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "CLOSE"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPrivateAccessUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_public_access", "CLOSE"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_access", "OPEN"),
+					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_instance.es_kibana", "kibana_private_url"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudElasticsearchInstanceResource_publicAccess(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstancePublicAccessDefault,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.0", "127.0.0.1"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "public_access", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "es_public_acl.0.white_ip_list.0", "127.0.0.2"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudElasticsearchInstanceResource_https(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessHttps,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "protocol", "https"),
+				),
+			},
+		},
+	})
+}
+func TestAccTencentCloudElasticsearchInstanceResource_httpTohttps(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessHttp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceKibanaPublicAccessHttps,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_kibana"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_kibana", "protocol", "https"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudElasticsearchInstanceResource_nodeInfoList(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceNodeInfoList,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_node_info_list"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_node_info_list", "node_info_list.#", "1"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceNodeInfoListUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_node_info_list"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_node_info_list", "node_info_list.#", "2"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudElasticsearchInstanceResource_nodeInfoListIO(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceNodeInfoListIO,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.es_node_info_list"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.es_node_info_list", "node_info_list.#", "2"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudElasticsearchInstanceResource_MultiZoneInfo(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckElasticsearchInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccElasticsearchInstanceMultiZoneInfo,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mode", "0"),
+				),
+			},
+			{
+				Config: testAccElasticsearchInstanceMultiZoneInfoUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.#", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "deploy_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "multi_zone_infos.#", "2"),
 				),
 			},
 		},
@@ -291,6 +485,12 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	license_type         = "basic"
 	basic_security_type  = 2
 	kibana_public_access = "CLOSE"
+	public_access = "CLOSE"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
   
 	node_info_list {
 	  node_num  = 2
@@ -310,10 +510,389 @@ resource "tencentcloud_elasticsearch_instance" "es_kibana" {
 	license_type         = "basic"
 	basic_security_type  = 2
 	kibana_public_access = "OPEN"
+	public_access = "OPEN"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
   
 	node_info_list {
 	  node_num  = 2
 	  node_type = "ES.S1.MEDIUM4"
 	}
   }
+`
+
+const testAccElasticsearchInstanceKibanaPrivateAccessDefault = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_public_access = "OPEN"
+	kibana_private_access = "CLOSE"
+	public_access = "CLOSE"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPrivateAccessUpdate = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	kibana_public_access = "CLOSE"
+	kibana_private_access = "OPEN"
+	public_access = "OPEN"
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstancePublicAccessDefault = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	es_acl {
+	  white_list = [
+		"127.0.0.1"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.1"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPublicAccessUpdate = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.2"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+const testAccElasticsearchInstanceKibanaPublicAccessHttp = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.2"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceKibanaPublicAccessHttps = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_kibana" {
+	instance_name        = "tf-ci-test-kibana"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	protocol = "https"
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.2"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.S1.MEDIUM4"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceNodeInfoListIO = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_node_info_list" {
+	instance_name        = "tf-ci-test-node"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	protocol = "https"
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.2"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.I1.4XLARGE64"
+	  type      = "hotData"
+	}
+
+	node_info_list {
+	  node_num  = 3
+	  node_type = "ES.S1.MEDIUM4"
+	  disk_size = 50
+	  type      = "dedicatedMaster"
+	  disk_type = "CLOUD_SSD"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceNodeInfoList = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_node_info_list" {
+	instance_name        = "tf-ci-test-node"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	protocol = "https"
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.2"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 2
+	  node_type = "ES.I1.4XLARGE64"
+	  type      = "hotData"
+	}
+
+	node_info_list {
+	  node_num  = 3
+	  node_type = "ES.S1.MEDIUM4"
+	  disk_size = 50
+	  type      = "dedicatedMaster"
+	  disk_type = "CLOUD_SSD"
+	}
+  }
+`
+
+const testAccElasticsearchInstanceNodeInfoListUpdate = tcacctest.DefaultEsVariables + `
+resource "tencentcloud_elasticsearch_instance" "es_node_info_list" {
+	instance_name        = "tf-ci-test-node"
+	availability_zone    = var.availability_zone
+	version              = "7.10.1"
+	vpc_id               = var.vpc_id
+	subnet_id            = var.subnet_id
+	password             = "Test1234"
+	license_type         = "basic"
+	basic_security_type  = 2
+	public_access = "OPEN"
+	protocol = "https"
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	}
+	es_public_acl {
+	  white_ip_list = [
+		"127.0.0.2"
+	  ]
+	}
+  
+	node_info_list {
+	  node_num  = 3
+	  node_type = "ES.S1.MEDIUM8"
+	  disk_size = 100
+	  type      = "hotData"
+	  disk_type = "CLOUD_SSD"
+	}
+	node_info_list {
+	  node_num  = 3
+	  node_type = "ES.S1.MEDIUM8"
+	  disk_type = "CLOUD_SSD"
+	  type      = "dedicatedMaster"
+	  disk_size = 50
+  	}
+  }
+`
+const testAccElasticsearchInstanceMultiZoneInfo = `
+resource "tencentcloud_elasticsearch_instance" "foo" {
+  instance_name       = "tf-ci-test"
+  availability_zone   = "ap-guangzhou-3"
+  version             = "7.10.1"
+  vpc_id              = "vpc-axrsmmrv"
+  subnet_id           = "subnet-j5vja918"
+  password            = "Test1234"
+  license_type        = "basic"
+  basic_security_type = 2
+
+  node_info_list {
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM4"
+    disk_size = 50
+    type      = "hotData"
+    disk_type = "CLOUD_SSD"
+  }
+  node_info_list {
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    # disk_type = "CLOUD_SSD"
+    type      = "dedicatedMaster"
+    disk_size = 50
+  }
+  es_acl {
+    white_list = [
+      "127.0.0.2"
+    ]
+    black_list = [
+      "1.1.1.1"
+    ]
+  }
+}
+`
+
+const testAccElasticsearchInstanceMultiZoneInfoUpdate = `
+resource "tencentcloud_elasticsearch_instance" "foo" {
+  instance_name       = "tf-ci-test"
+  availability_zone   = "ap-guangzhou-3"
+  version             = "7.10.1"
+  vpc_id              = "vpc-axrsmmrv"
+  subnet_id           = "subnet-j5vja918"
+  password            = "Test1234"
+  license_type        = "basic"
+  basic_security_type = 2
+
+  node_info_list {
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM4"
+    disk_size = 50
+    type      = "warmData"
+    disk_type = "CLOUD_PREMIUM"
+  }
+  node_info_list {
+    node_num  = 6
+    node_type = "ES.S1.MEDIUM4"
+    disk_size = 50
+    type      = "hotData"
+    disk_type = "CLOUD_SSD"
+  }
+  node_info_list {
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    # disk_type = "CLOUD_SSD"
+    type      = "dedicatedMaster"
+    disk_size = 50
+  }
+  es_acl {
+    white_list = [
+      "127.0.0.2"
+    ]
+    black_list = [
+      "1.1.1.1"
+    ]
+  }
+  deploy_mode = 1
+  multi_zone_infos {
+    availability_zone = "ap-guangzhou-3"
+    subnet_id         = "subnet-j5vja918"
+  }
+  multi_zone_infos {
+    availability_zone = "ap-guangzhou-4"
+    subnet_id         = "subnet-oi7ya2j6"
+  }
+}
 `

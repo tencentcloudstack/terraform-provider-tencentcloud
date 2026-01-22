@@ -127,7 +127,6 @@ func ResourceTencentCloudCvmLaunchTemplateVersion() *schema.Resource {
 						},
 						"disk_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
 							Computed:    true,
 							ForceNew:    true,
 							Description: "System disk ID. System disks whose type is LOCAL_BASIC or LOCAL_SSD do not have an ID and do not support this parameter. It is only used as a response parameter for APIs such as DescribeInstances, and cannot be used as a request parameter for APIs such as RunInstances.",
@@ -173,7 +172,6 @@ func ResourceTencentCloudCvmLaunchTemplateVersion() *schema.Resource {
 						},
 						"disk_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
 							Computed:    true,
 							ForceNew:    true,
 							Description: "System disk ID. System disks whose type is LOCAL_BASIC or LOCAL_SSD do not have an ID and do not support this parameter. It is only used as a response parameter for APIs such as DescribeInstances, and cannot be used as a request parameter for APIs such as RunInstances.",
@@ -469,7 +467,7 @@ func ResourceTencentCloudCvmLaunchTemplateVersion() *schema.Resource {
 				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "Scheduled tasks.",
+				Description: "Scheduled tasks. You can use this parameter to specify scheduled tasks for the instance. Only scheduled termination is supported.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"timer_action": {
@@ -781,9 +779,6 @@ func resourceTencentCloudCvmLaunchTemplateVersionCreate(d *schema.ResourceData, 
 		if v, ok := dMap["disk_type"]; ok {
 			systemDisk.DiskType = helper.String(v.(string))
 		}
-		if v, ok := dMap["disk_id"]; ok {
-			systemDisk.DiskId = helper.String(v.(string))
-		}
 		if v, ok := dMap["disk_size"]; ok {
 			systemDisk.DiskSize = helper.IntInt64(v.(int))
 		}
@@ -802,9 +797,6 @@ func resourceTencentCloudCvmLaunchTemplateVersionCreate(d *schema.ResourceData, 
 			}
 			if v, ok := dMap["disk_type"]; ok {
 				dataDisk.DiskType = helper.String(v.(string))
-			}
-			if v, ok := dMap["disk_id"]; ok {
-				dataDisk.DiskId = helper.String(v.(string))
 			}
 			if v, ok := dMap["delete_with_instance"]; ok {
 				dataDisk.DeleteWithInstance = helper.Bool(v.(bool))
@@ -854,8 +846,8 @@ func resourceTencentCloudCvmLaunchTemplateVersionCreate(d *schema.ResourceData, 
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "internet_accessible"); ok {
 		internetAccessible := cvm.InternetAccessible{}
-		if v, ok := dMap["internet_charge_type"]; ok {
-			internetAccessible.InternetChargeType = helper.String(v.(string))
+		if v, ok := dMap["internet_charge_type"].(string); ok && v != "" {
+			internetAccessible.InternetChargeType = helper.String(v)
 		}
 		if v, ok := dMap["internet_max_bandwidth_out"]; ok {
 			internetAccessible.InternetMaxBandwidthOut = helper.IntInt64(v.(int))
@@ -863,8 +855,8 @@ func resourceTencentCloudCvmLaunchTemplateVersionCreate(d *schema.ResourceData, 
 		if v, ok := dMap["public_ip_assigned"]; ok {
 			internetAccessible.PublicIpAssigned = helper.Bool(v.(bool))
 		}
-		if v, ok := dMap["bandwidth_package_id"]; ok {
-			internetAccessible.BandwidthPackageId = helper.String(v.(string))
+		if v, ok := dMap["bandwidth_package_id"].(string); ok && v != "" {
+			internetAccessible.BandwidthPackageId = helper.String(v)
 		}
 		request.InternetAccessible = &internetAccessible
 	}
@@ -879,8 +871,8 @@ func resourceTencentCloudCvmLaunchTemplateVersionCreate(d *schema.ResourceData, 
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "login_settings"); ok {
 		loginSettings := cvm.LoginSettings{}
-		if v, ok := dMap["password"]; ok {
-			loginSettings.Password = helper.String(v.(string))
+		if v, ok := dMap["password"].(string); ok && v != "" {
+			loginSettings.Password = helper.String(v)
 		}
 		if v, ok := dMap["key_ids"]; ok {
 			keyIdsSet := v.(*schema.Set).List()
@@ -889,8 +881,8 @@ func resourceTencentCloudCvmLaunchTemplateVersionCreate(d *schema.ResourceData, 
 				loginSettings.KeyIds = append(loginSettings.KeyIds, &keyIds)
 			}
 		}
-		if v, ok := dMap["keep_image_login"]; ok {
-			loginSettings.KeepImageLogin = helper.String(v.(string))
+		if v, ok := dMap["keep_image_login"].(string); ok && v != "" {
+			loginSettings.KeepImageLogin = helper.String(v)
 		}
 		request.LoginSettings = &loginSettings
 	}

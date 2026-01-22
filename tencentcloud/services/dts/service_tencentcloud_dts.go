@@ -612,9 +612,13 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 		return
 	}
 
-	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"isolated"})
+	stop, err := me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"isolated", "notBilled"})
 	if err != nil {
 		return err
+	}
+
+	if stop {
+		return nil
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -631,7 +635,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 		return err
 	}
 
-	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"offlined"})
+	_, err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"offlined"})
 	if err != nil {
 		return err
 	}
@@ -642,10 +646,10 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 	return
 }
 
-func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, statusType string, targetStatus []string) error {
+func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, statusType string, targetStatus []string) (stop bool, err error) {
 	logId := tccommon.GetLogId(ctx)
 
-	err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ret, err := me.DescribeDtsMigrateJobById(ctx, jobId)
 		if err != nil {
 			return tccommon.RetryError(err)
@@ -656,6 +660,11 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 				status := *ret.Status
 				for _, target := range targetStatus {
 					if strings.Contains(target, status) {
+						if status == "notBilled" {
+							stop = true
+							return nil
+						}
+
 						return nil
 					}
 				}
@@ -667,6 +676,11 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 				status := *ret.TradeInfo.TradeStatus
 				for _, target := range targetStatus {
 					if strings.Contains(target, status) {
+						if status == "notBilled" {
+							stop = true
+							return nil
+						}
+
 						return nil
 					}
 				}
@@ -678,9 +692,9 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 		return nil
 	})
 	if err != nil {
-		return err
+		return stop, err
 	}
-	return nil
+	return stop, nil
 }
 
 func (me *DtsService) DescribeDtsMigrateServiceById(ctx context.Context, jobId string) (migrateService *dts.DescribeMigrationDetailResponseParams, errRet error) {

@@ -91,7 +91,7 @@ func testAccTencentCloudEbEventBusDestroy(s *terraform.State) error {
 
 		securityGroup, err := service.DescribeEbEventBusById(ctx, rs.Primary.ID)
 		if err != nil {
-			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound.EventBus" {
+			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound" {
 				return nil
 			}
 			return err

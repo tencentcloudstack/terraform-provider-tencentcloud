@@ -20,9 +20,9 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 		Read:   resourceTencentCloudDtsSyncJobRead,
 		Create: resourceTencentCloudDtsSyncJobCreate,
 		Delete: resourceTencentCloudDtsSyncJobDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"pay_mode": {
 				Type:        schema.TypeString,
@@ -281,6 +281,14 @@ func resourceTencentCloudDtsSyncJobRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("tags", tagsList)
 	}
 
+	if syncJob.AutoRenew != nil {
+		_ = d.Set("auto_renew", syncJob.AutoRenew)
+	}
+
+	if syncJob.InstanceClass != nil {
+		_ = d.Set("instance_class", syncJob.InstanceClass)
+	}
+
 	if syncJob.JobName != nil {
 		_ = d.Set("job_name", syncJob.JobName)
 	}
@@ -307,10 +315,19 @@ func resourceTencentCloudDtsSyncJobDelete(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Isolated", "Stopped"}, 2*tccommon.ReadRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Isolated", "Stopped", "NotBilledByInternational", "NotBilled"}, 2*tccommon.ReadRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
+	}
+
+	syncConfig, e := service.DescribeDtsSyncConfigById(ctx, syncJobId)
+	if e != nil {
+		return e
+	}
+
+	if syncConfig != nil && syncConfig.TradeStatus != nil && (*syncConfig.TradeStatus == "NotBilledByInternational" || *syncConfig.TradeStatus == "NotBilled") {
+		return nil
 	}
 
 	if err := service.DestroyDtsSyncJobById(ctx, syncJobId); err != nil {

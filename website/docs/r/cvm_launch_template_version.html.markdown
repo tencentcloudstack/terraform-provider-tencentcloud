@@ -34,7 +34,7 @@ The following arguments are supported:
 
 * `launch_template_id` - (Required, String, ForceNew) Instance launch template ID. This parameter is used as a basis for creating new template versions.
 * `placement` - (Required, List, ForceNew) Location of the instance. You can use this parameter to specify the attributes of the instance, such as its availability zone, project, and CDH (for dedicated CVMs).
-* `action_timer` - (Optional, List, ForceNew) Scheduled tasks.
+* `action_timer` - (Optional, List, ForceNew) Scheduled tasks. You can use this parameter to specify scheduled tasks for the instance. Only scheduled termination is supported.
 * `cam_role_name` - (Optional, String, ForceNew) The role name of CAM.
 * `client_token` - (Optional, String, ForceNew) A unique string supplied by the client to ensure that the request is idempotent. Its maximum length is 64 ASCII characters. If this parameter is not specified, the idem-potency of the request cannot be guaranteed.
 * `data_disks` - (Optional, List, ForceNew) The configuration information of instance data disks. If this parameter is not specified, no data disk will be purchased by default.
@@ -76,7 +76,6 @@ The `data_disks` object supports the following:
 * `disk_size` - (Required, Int, ForceNew) Data disk size (in GB). The minimum adjustment increment is 10 GB. The value range varies by data disk type.
 * `cdc_id` - (Optional, String, ForceNew) ID of the dedicated cluster to which the instance belongs.
 * `delete_with_instance` - (Optional, Bool, ForceNew) Whether to terminate the data disk when its CVM is terminated. Default value: `true`.
-* `disk_id` - (Optional, String, ForceNew) System disk ID. System disks whose type is LOCAL_BASIC or LOCAL_SSD do not have an ID and do not support this parameter. It is only used as a response parameter for APIs such as DescribeInstances, and cannot be used as a request parameter for APIs such as RunInstances.
 * `disk_type` - (Optional, String, ForceNew) The type of data disk.
 * `encrypt` - (Optional, Bool, ForceNew) Specifies whether the data disk is encrypted.
 * `kms_key_id` - (Optional, String, ForceNew) ID of the custom CMK in the format of UUID or `kms-abcd1234`.
@@ -147,7 +146,6 @@ The `storage_block_attr` object of `externals` supports the following:
 The `system_disk` object supports the following:
 
 * `cdc_id` - (Optional, String, ForceNew) ID of the dedicated cluster to which the instance belongs.
-* `disk_id` - (Optional, String, ForceNew) System disk ID. System disks whose type is LOCAL_BASIC or LOCAL_SSD do not have an ID and do not support this parameter. It is only used as a response parameter for APIs such as DescribeInstances, and cannot be used as a request parameter for APIs such as RunInstances.
 * `disk_size` - (Optional, Int, ForceNew) System disk size; unit: GB; default value: 50 GB.
 * `disk_type` - (Optional, String, ForceNew) The type of system disk. Default value: the type of hard disk currently in stock.
 

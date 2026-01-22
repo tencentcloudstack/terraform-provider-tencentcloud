@@ -1,21 +1,38 @@
-Provides a resource to create a cam tag_role
+Provides a resource to create a CAM tag role
 
 Example Usage
 
+Create by role_id
+
 ```hcl
-resource "tencentcloud_cam_tag_role_attachment" "tag_role" {
+resource "tencentcloud_cam_tag_role_attachment" "example" {
+  role_id = "4611686018441060141"
+
   tags {
-    key = "test1"
-    value = "test1"
+    key   = "tagKey"
+    value = "tagValue"
   }
-  role_id = "test-cam-tag"
+}
+```
+
+Create by role_name
+
+```hcl
+resource "tencentcloud_cam_tag_role_attachment" "example" {
+  role_name = "tf-example"
+
+  tags {
+    key   = "tagKey"
+    value = "tagValue"
+  }
 }
 ```
 
 Import
 
-cam tag_role can be imported using the id, e.g.
+CAM tag role can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cam_tag_role_attachment.tag_role tag_role_id
+# Please use role_name#role_id
+terraform import tencentcloud_cam_tag_role_attachment.example tf-example#4611686018441060141
 ```

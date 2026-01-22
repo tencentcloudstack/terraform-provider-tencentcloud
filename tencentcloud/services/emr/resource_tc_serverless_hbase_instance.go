@@ -13,6 +13,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 )
 
 func ResourceTencentCloudServerlessHbaseInstance() *schema.Resource {
@@ -52,6 +53,7 @@ func ResourceTencentCloudServerlessHbaseInstance() *schema.Resource {
 			"node_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Instance node type, can be filled in as 4C16G, 8C32G, 16C64G, 32C128G, case insensitive.",
 			},
 
@@ -96,7 +98,7 @@ func ResourceTencentCloudServerlessHbaseInstance() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of tags to bind to the instance.",
 				Elem: &schema.Resource{
@@ -193,7 +195,10 @@ func resourceTencentCloudServerlessHbaseInstanceCreate(d *schema.ResourceData, m
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
+		for idx, item := range v.(*schema.Set).List() {
+			if item == nil {
+				return fmt.Errorf("tags element with index %d is nil", idx+1)
+			}
 			tagsMap := item.(map[string]interface{})
 			tag := emr.Tag{}
 			if v, ok := tagsMap["tag_key"]; ok {
@@ -364,6 +369,9 @@ func resourceTencentCloudServerlessHbaseInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("auto_renew_flag", respData.AutoRenewFlag)
 	}
 
+	if respData.NodeType != nil {
+		_ = d.Set("node_type", respData.NodeType)
+	}
 	_ = instanceId
 	return nil
 }
@@ -376,7 +384,7 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"instance_name", "pay_mode", "disk_type", "disk_size", "node_type", "tags", "time_span", "time_unit", "auto_renew_flag"}
+	immutableArgs := []string{"pay_mode", "disk_type", "disk_size", "node_type", "time_span", "time_unit", "auto_renew_flag"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -384,6 +392,51 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 	}
 	instanceId := d.Id()
 
+	if d.HasChange("instance_name") {
+		if v, ok := d.GetOk("instance_name"); ok {
+			request := emr.NewModifySLInstanceBasicRequest()
+			request.InstanceId = helper.String(instanceId)
+			request.ClusterName = helper.String(v.(string))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifySLInstanceBasic(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update serverless hbase instance_name failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		oldMap := make(map[string]interface{})
+		newMap := make(map[string]interface{})
+
+		for _, o := range oldValue.(*schema.Set).List() {
+			oMap := o.(map[string]interface{})
+			oldMap[oMap["tag_key"].(string)] = oMap["tag_value"].(string)
+		}
+		for _, n := range newValue.(*schema.Set).List() {
+			nMap := n.(map[string]interface{})
+			newMap[nMap["tag_key"].(string)] = nMap["tag_value"].(string)
+		}
+
+		replaceTags, deleteTags := svctag.DiffTags(oldMap, newMap)
+
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		resourceName := tccommon.BuildTagResourceName("emr", "emr-serverless-instance", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+	}
 	needChange := false
 	if d.HasChange("zone_settings") {
 		for idx, zoneSetting := range d.Get("zone_settings").([]interface{}) {
@@ -431,6 +484,7 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 				log.Printf("[CRITAL]%s update serverless hbase instance failed, reason:%+v", logId, err)
 				return err
 			}
+
 			emrService := EMRService{
 				client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 			}

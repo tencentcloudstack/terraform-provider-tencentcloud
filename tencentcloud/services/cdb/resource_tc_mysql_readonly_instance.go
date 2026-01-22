@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -12,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -33,7 +35,7 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Optional:    true,
-			Description: "The zone information of the primary instance is required when you purchase a disaster recovery instance.",
+			Description: "The region information of the master instance. This field is required when purchasing a cross-region subscription.",
 		},
 		"slave_deploy_mode": {
 			Type:         schema.TypeInt,
@@ -64,8 +66,9 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 
 		Importer: &schema.ResourceImporter{
 			State: helper.ImportWithDefaultValue(map[string]interface{}{
-				"prepaid_period": 1,
-				"force_delete":   false,
+				"prepaid_period":    1,
+				"force_delete":      false,
+				"slave_deploy_mode": 0,
 			}),
 		},
 		Schema: readonlyInstanceInfo,
@@ -287,7 +290,20 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		tagService := svctag.NewTagService(tcClient)
 		resourceName := tccommon.BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
 		log.Printf("[DEBUG]Mysql instance create, resourceName:%s\n", resourceName)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+				if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkErr.Code == "FailedOperation" && strings.Contains(sdkErr.Message, "repeat commit: lock:resourceTag") {
+						return resource.RetryableError(err)
+					}
+					return resource.NonRetryableError(err)
+				}
+				return resource.NonRetryableError(err)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create mysql  tag fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
 	}
@@ -409,6 +425,9 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	if roGroup != nil && roGroup.RoGroupId != nil {
 		_ = d.Set("ro_group_id", *roGroup.RoGroupId)
 	}
+
+	// set no used fields to default value to fix diff
+	_ = d.Set("slave_deploy_mode", 0)
 
 	return nil
 }

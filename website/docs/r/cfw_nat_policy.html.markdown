@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfw_nat_policy"
 sidebar_current: "docs-tencentcloud-resource-cfw_nat_policy"
 description: |-
-  Provides a resource to create a cfw nat_policy
+  Provides a resource to create a CFW nat policy
 ---
 
 # tencentcloud_cfw_nat_policy
 
-Provides a resource to create a cfw nat_policy
+Provides a resource to create a CFW nat policy
 
 ## Example Usage
 
@@ -25,6 +25,7 @@ resource "tencentcloud_cfw_nat_policy" "example" {
   direction      = 1
   enable         = "true"
   description    = "policy description."
+  scope          = "ALL"
 }
 ```
 
@@ -42,21 +43,24 @@ The following arguments are supported:
 * `target_type` - (Required, String) Access purpose type: For inbound rules, the type can be net, instance, tag, template, group; for outbound rules, it can be net, location, vendor, template.
 * `description` - (Optional, String) Description.
 * `enable` - (Optional, String) Rule status, true means enabled, false means disabled. Default is true.
+* `param_template_id` - (Optional, String) Parameter template id. Note: This field may return null, indicating that no valid value can be obtained.
+* `scope` - (Optional, String) Scope of effective rules. ALL: Global effectiveness; ap-guangzhou: Effective territory; cfwnat-xxx: Effectiveness based on instance dimension.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `param_template_id` - Parameter template id. Note: This field may return null, indicating that no valid value can be obtained.
+* `internal_uuid` - Internal ID.
+* `order_index` - Execution order.
 * `uuid` - The unique id corresponding to the rule, no need to fill in when creating the rule.
 
 
 ## Import
 
-cfw nat_policy can be imported using the id, e.g.
+CFW nat policy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfw_nat_policy.example nat_policy_id
+terraform import tencentcloud_cfw_nat_policy.example 134123
 ```
 

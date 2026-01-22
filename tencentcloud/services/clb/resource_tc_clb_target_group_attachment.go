@@ -3,20 +3,23 @@ package clb
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
+	"github.com/pkg/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func ResourceTencentCloudClbTargetGroupAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbTargetGroupAttachmentCreate,
 		Read:   resourceTencentCloudClbTargetGroupAttachmentRead,
-		Update: resourceTencentCloudClbTargetGroupAttachmentUpdate,
 		Delete: resourceTencentCloudClbTargetGroupAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -28,23 +31,17 @@ func ResourceTencentCloudClbTargetGroupAttachment() *schema.Resource {
 				Required:    true,
 				Description: "ID of the CLB.",
 			},
-			"listener_id": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
-				Required:    true,
-				Description: "ID of the CLB listener.",
-			},
-			"targrt_group_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "ID of the CLB target group.",
-				Deprecated:  "It has been deprecated from version 1.47.1. Use `target_group_id` instead.",
-			},
 			"target_group_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
-				Optional:    true,
+				Required:    true,
 				Description: "ID of the CLB target group.",
+			},
+			"listener_id": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "ID of the CLB listener.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
@@ -59,36 +56,37 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 	defer tccommon.LogElapsed("resource.tencentcloud_clb_target_group_attachment.create")()
 
 	var (
-		clbService = ClbService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
+		clbService    = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		logId         = tccommon.GetLogId(tccommon.ContextNil)
 		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		locationId    string
-		listenerId    = d.Get("listener_id").(string)
-		clbId         = d.Get("clb_id").(string)
+		request       = clb.NewAssociateTargetGroupsRequest()
+		targetInfos   []*clb.TargetGroupInfo
+		instance      *clb.LoadBalancer
+		clbId         string
+		listenerId    string
 		targetGroupId string
-
-		targetInfos []*clb.TargetGroupInfo
-		instance    *clb.LoadBalancer
-		has         bool
-		err         error
+		locationId    string
 	)
-	if v, ok := d.GetOk("rule_id"); ok {
-		locationId = v.(string)
-	}
-	vTarget, eHas := d.GetOk("target_group_id")
-	vTargrt, rHas := d.GetOk("targrt_group_id")
 
-	if eHas || rHas {
-		if rHas {
-			targetGroupId = vTargrt.(string)
-		}
-		if eHas {
-			targetGroupId = vTarget.(string)
-		}
-	} else {
-		return fmt.Errorf("'target_group_id' or 'targrt_group_id' at least set one, please use 'target_group_id'")
+	targetGroupAssociation := clb.TargetGroupAssociation{}
+	if v, ok := d.GetOk("clb_id"); ok {
+		targetGroupAssociation.LoadBalancerId = helper.String(v.(string))
+		clbId = v.(string)
+	}
+
+	if v, ok := d.GetOk("listener_id"); ok {
+		targetGroupAssociation.ListenerId = helper.String(v.(string))
+		listenerId = v.(string)
+	}
+
+	if v, ok := d.GetOk("target_group_id"); ok {
+		targetGroupAssociation.TargetGroupId = helper.String(v.(string))
+		targetGroupId = v.(string)
+	}
+
+	if v, ok := d.GetOk("rule_id"); ok {
+		targetGroupAssociation.LocationId = helper.String(v.(string))
+		locationId = v.(string)
 	}
 
 	//check listenerId
@@ -96,6 +94,7 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 	if checkErr != nil {
 		return checkErr
 	}
+
 	//check ruleId
 	checkErr = RuleIdCheck(locationId)
 	if checkErr != nil {
@@ -103,43 +102,75 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 	}
 
 	//check target group
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		instance, err = clbService.DescribeLoadBalancerById(ctx, clbId)
-		if err != nil {
-			return tccommon.RetryError(err, tccommon.InternalError)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := clbService.DescribeLoadBalancerById(ctx, clbId)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
 		}
+
+		if result == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeLoadBalancers response is nil."))
+		}
+
+		instance = result
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		targetInfos, err = clbService.DescribeTargetGroups(ctx, targetGroupId, nil)
-		if err != nil {
-			return tccommon.RetryError(err, tccommon.InternalError)
+		result, e := clbService.DescribeTargetGroups(ctx, targetGroupId, nil)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
 		}
+
+		if result == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeTargetGroups response is nil."))
+		}
+
+		targetInfos = result
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if len(targetInfos) > 0 && (*targetInfos[0].VpcId != *instance.TargetRegionInfo.VpcId) {
 		return fmt.Errorf("CLB instance needs to be in the same VPC as the backend target group")
 	}
 
-	err = clbService.AssociateTargetGroups(ctx, listenerId, clbId, targetGroupId, locationId)
-	if err != nil {
-		return err
-	}
+	request.Associations = []*clb.TargetGroupAssociation{&targetGroupAssociation}
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().AssociateTargetGroups(request)
+		if e != nil {
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation.ResourceInOperating" {
+					return resource.RetryableError(e)
+				}
+			}
 
-	// wait status
-	has, err = clbService.DescribeAssociateTargetGroups(ctx, []string{targetGroupId, listenerId, clbId, locationId})
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil || result.Response.RequestId == nil {
+				return resource.NonRetryableError(fmt.Errorf("AssociateTargetGroups response is nil."))
+			}
+
+			requestId := *result.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+			if retryErr != nil {
+				return tccommon.RetryError(errors.WithStack(retryErr))
+			}
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		return err
-	}
-	if !has {
-		return fmt.Errorf("AssociateTargetGroups faild, targetGroupId = %s, listenerId = %s, clbId = %s, ruleId = %s",
-			targetGroupId, listenerId, clbId, locationId)
 	}
 
 	d.SetId(strings.Join([]string{targetGroupId, listenerId, clbId, locationId}, tccommon.FILED_SP))
@@ -152,13 +183,11 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		clbService = ClbService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		id    = d.Id()
-		has   bool
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		clbService = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		id         = d.Id()
+		has        bool
 	)
 
 	ids := strings.Split(id, tccommon.FILED_SP)
@@ -170,6 +199,7 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 	if err != nil {
 		return err
 	}
+
 	if !has {
 		d.SetId("")
 		return nil
@@ -185,20 +215,14 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 	return nil
 }
 
-func resourceTencentCloudClbTargetGroupAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_clb_target_group_attachment.update")()
-	return resourceTencentCloudClbTargetGroupAttachmentRead(d, meta)
-}
-
 func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_clb_target_group_attachment.delete")()
 
 	var (
-		clbService = ClbService{
-			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-		}
 		logId       = tccommon.GetLogId(tccommon.ContextNil)
 		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		clbService  = ClbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request     = clb.NewDisassociateTargetGroupsRequest()
 		id          = d.Id()
 		targetInfos []*clb.TargetGroupInfo
 		err         error
@@ -209,7 +233,41 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 		return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 	}
 
-	if err := clbService.DisassociateTargetGroups(ctx, ids[0], ids[1], ids[2], ids[3]); err != nil {
+	request.Associations = []*clb.TargetGroupAssociation{
+		{
+			TargetGroupId:  &ids[0],
+			ListenerId:     &ids[1],
+			LoadBalancerId: &ids[2],
+			LocationId:     &ids[3],
+		},
+	}
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().DisassociateTargetGroups(request)
+		if e != nil {
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation.ResourceInOperating" {
+					return resource.RetryableError(e)
+				}
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil || result.Response.RequestId == nil {
+				return resource.NonRetryableError(fmt.Errorf("DisassociateTargetGroups response is nil."))
+			}
+
+			requestId := *result.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+			if retryErr != nil {
+				return tccommon.RetryError(errors.WithStack(retryErr))
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
 		return err
 	}
 
@@ -219,6 +277,7 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 		if err != nil {
 			return tccommon.RetryError(err, tccommon.InternalError)
 		}
+
 		for _, info := range targetInfos {
 			for _, rule := range info.AssociatedRule {
 				var originLocationId string
@@ -227,6 +286,7 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 				if rule.LocationId != nil {
 					originLocationId = *rule.LocationId
 				}
+
 				if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
 					*rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *rule.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 					if originListenerId == ids[1] && originClbId == ids[2] {
@@ -242,8 +302,10 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 
 			}
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}

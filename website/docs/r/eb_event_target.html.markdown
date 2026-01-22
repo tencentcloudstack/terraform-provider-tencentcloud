@@ -70,13 +70,11 @@ resource "tencentcloud_eb_event_target" "scf_target" {
 
   target_description {
     resource_description = "qcs::scf:${var.zone}:uin/${data.tencentcloud_cam_users.foo.user_list.0.uin}:namespace/${var.namespace}/function/${var.function}/${var.function_version}"
-
-    scf_params {
-      batch_event_count     = 1
-      batch_timeout         = 1
-      enable_batch_delivery = true
-    }
   }
+
+  batch_event_count     = 2
+  batch_timeout         = 2
+  enable_batch_delivery = true
 }
 ```
 
@@ -115,6 +113,9 @@ The following arguments are supported:
 * `rule_id` - (Required, String) event rule id.
 * `target_description` - (Required, List) target description.
 * `type` - (Required, String) target type.
+* `batch_event_count` - (Optional, Int) Maximum number of events for batch delivery.
+* `batch_timeout` - (Optional, Int) Maximum waiting time for batch delivery.
+* `enable_batch_delivery` - (Optional, Bool) Enable batch delivery.
 
 The `ckafka_target_params` object of `target_description` supports the following:
 
@@ -137,9 +138,9 @@ The `retry_policy` object of `ckafka_target_params` supports the following:
 
 The `scf_params` object of `target_description` supports the following:
 
-* `batch_event_count` - (Optional, Int) Maximum number of events for batch delivery.
-* `batch_timeout` - (Optional, Int) Maximum waiting time for bulk delivery.
-* `enable_batch_delivery` - (Optional, Bool) Enable batch delivery.
+* `batch_event_count` - (Optional, Int) Maximum number of events for batch delivery. This parameter is no longer effective, please use the batch_event_count parameter at the outer level.
+* `batch_timeout` - (Optional, Int) Maximum waiting time for batch delivery. This parameter is no longer effective, please use the batch_timeout parameter at the outer level.
+* `enable_batch_delivery` - (Optional, Bool) Enable batch delivery. This parameter is no longer effective, please use the enable_batch_delivery parameter at the outer level.
 
 The `target_description` object supports the following:
 

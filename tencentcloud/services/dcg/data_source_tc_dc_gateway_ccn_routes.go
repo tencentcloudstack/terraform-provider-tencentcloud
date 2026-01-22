@@ -18,6 +18,16 @@ func DataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
 				Required:    true,
 				Description: "ID of the DCG to be queried.",
 			},
+			"ccn_route_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Cloud networking routing learning type, optional values: BGP - Automatic Learning; STATIC - User configured. Default is STATIC.",
+			},
+			"address_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Address type, supports: IPv4, IPv6. Default is IPv4.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -69,10 +79,24 @@ func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta i
 	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
-		id = d.Get("dcg_id").(string)
+		id           string
+		ccnRouteType string
+		addressType  string
 	)
 
-	var infos, err = service.DescribeDirectConnectGatewayCcnRoutes(ctx, id)
+	if v, ok := d.GetOk("dcg_id"); ok {
+		id = v.(string)
+	}
+
+	if v, ok := d.GetOk("ccn_route_type"); ok {
+		ccnRouteType = v.(string)
+	}
+
+	if v, ok := d.GetOk("address_type"); ok {
+		addressType = v.(string)
+	}
+
+	var infos, err = service.DescribeDirectConnectGatewayCcnRoutes(ctx, id, ccnRouteType, addressType)
 	if err != nil {
 		return err
 	}

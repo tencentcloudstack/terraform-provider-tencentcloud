@@ -156,6 +156,11 @@ func DataSourceTencentCloudCbsStorages() *schema.Resource {
 							Computed:    true,
 							Description: "ID of the CVM instance that be mounted by this CBS.",
 						},
+						"kms_key_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Kms key ID.",
+						},
 						"encrypt": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -240,7 +245,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 		params["disk-charge-type"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 
-	if v, ok := d.GetOk("portable"); ok {
+	if v, ok := d.GetOkExists("portable"); ok {
 		if v.(bool) {
 			params["portable"] = "TRUE"
 		} else {
@@ -288,6 +293,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 				"storage_size":           storage.DiskSize,
 				"attached":               storage.Attached,
 				"instance_id":            storage.InstanceId,
+				"kms_key_id":             storage.KmsKeyId,
 				"encrypt":                storage.Encrypt,
 				"create_time":            storage.CreateTime,
 				"status":                 storage.DiskState,

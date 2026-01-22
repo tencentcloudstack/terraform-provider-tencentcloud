@@ -1,18 +1,18 @@
-Provides a resource to create a dlc work_group
+Provides a resource to create a DLC work group
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_work_group" "work_group" {
-  work_group_name        = "tf-demo"
-  work_group_description = "dlc workgroup test"
+resource "tencentcloud_dlc_work_group" "example" {
+  work_group_name        = "tf-example"
+  work_group_description = "DLC workgroup demo"
 }
 ```
 
 Import
 
-dlc work_group can be imported using the id, e.g.
+DLC work group can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dlc_work_group.work_group work_group_id
+terraform import tencentcloud_dlc_work_group.example 135
 ```

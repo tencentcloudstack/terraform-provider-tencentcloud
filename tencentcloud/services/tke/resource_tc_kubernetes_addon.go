@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -23,6 +25,11 @@ func ResourceTencentCloudKubernetesAddon() *schema.Resource {
 		Delete: resourceTencentCloudKubernetesAddonDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(3 * time.Minute),
+			Update: schema.DefaultTimeout(3 * time.Minute),
+			Delete: schema.DefaultTimeout(3 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
@@ -42,7 +49,8 @@ func ResourceTencentCloudKubernetesAddon() *schema.Resource {
 			"addon_version": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Version of addon.",
+				Computed:    true,
+				Description: "Version of addon. If no set, the latest version will be installed by default.",
 			},
 
 			"raw_values": {
@@ -119,8 +127,44 @@ func resourceTencentCloudKubernetesAddonCreate(d *schema.ResourceData, meta inte
 	}
 
 	_ = response
-
 	d.SetId(strings.Join([]string{clusterId, addonName}, tccommon.FILED_SP))
+
+	// wait
+	waitRequest := tke.NewDescribeAddonRequest()
+	waitRequest.ClusterId = &clusterId
+	waitRequest.AddonName = &addonName
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeAddonWithContext(ctx, waitRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes addon failed, Response is nil."))
+		}
+
+		if result.Response.Addons == nil || len(result.Response.Addons) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("Addons is nil."))
+		}
+
+		addon := result.Response.Addons[0]
+		if addon.Phase == nil {
+			return resource.NonRetryableError(fmt.Errorf("Phase is nil."))
+		}
+
+		if *addon.Phase == "Succeeded" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("create kubernetes addon status is %s", *addon.Phase))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe kubernetes addon failed, reason:%+v", logId, err)
+		return err
+	}
 
 	return resourceTencentCloudKubernetesAddonRead(d, meta)
 }
@@ -232,6 +276,43 @@ func resourceTencentCloudKubernetesAddonUpdate(d *schema.ResourceData, meta inte
 			log.Printf("[CRITAL]%s update kubernetes addon failed, reason:%+v", logId, err)
 			return err
 		}
+
+		// wait
+		waitRequest := tke.NewDescribeAddonRequest()
+		waitRequest.ClusterId = &clusterId
+		waitRequest.AddonName = &addonName
+		err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeAddonWithContext(ctx, waitRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes addon failed, Response is nil."))
+			}
+
+			if result.Response.Addons == nil || len(result.Response.Addons) < 1 {
+				return resource.NonRetryableError(fmt.Errorf("Addons is nil."))
+			}
+
+			addon := result.Response.Addons[0]
+			if addon.Phase == nil {
+				return resource.NonRetryableError(fmt.Errorf("Phase is nil."))
+			}
+
+			if *addon.Phase == "Succeeded" {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("create kubernetes addon status is %s", *addon.Phase))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe kubernetes addon failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	_ = addonName
@@ -277,5 +358,33 @@ func resourceTencentCloudKubernetesAddonDelete(d *schema.ResourceData, meta inte
 
 	_ = response
 	_ = addonName
+
+	// wait
+	waitRequest := tke.NewDescribeAddonRequest()
+	waitRequest.ClusterId = &clusterId
+	waitRequest.AddonName = &addonName
+	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeAddonWithContext(ctx, waitRequest)
+		if e != nil {
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitRequest.GetAction(), waitRequest.ToJsonString(), result.ToJsonString())
+		}
+
+		return resource.RetryableError(fmt.Errorf("deleting kubernetes addon. retry..."))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe kubernetes addon failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return nil
 }

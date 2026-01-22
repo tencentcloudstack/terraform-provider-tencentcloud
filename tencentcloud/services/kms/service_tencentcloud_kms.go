@@ -62,6 +62,9 @@ func (me *KmsService) DescribeKeysByFilter(ctx context.Context, param map[string
 				request.TagFilters = append(request.TagFilters, &tag)
 			}
 		}
+		if k == "hsm_cluster_id" {
+			request.HsmClusterId = helper.String(v.(string))
+		}
 	}
 	var offset uint64 = 0
 	var pageSize = uint64(KMS_PAGE_LIMIT)
@@ -109,7 +112,7 @@ func (me *KmsService) DescribeKeyById(ctx context.Context, keyId string) (key *k
 	return
 }
 
-func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, description, keyUsage string) (keyId string, errRet error) {
+func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, description, keyUsage, hsmClusterId string) (keyId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := kms.NewCreateKeyRequest()
 	request.Type = helper.Uint64(keyType)
@@ -120,6 +123,9 @@ func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, desc
 	if keyUsage != "" {
 		request.KeyUsage = helper.String(keyUsage)
 	}
+	if hsmClusterId != "" {
+		request.HsmClusterId = helper.String(hsmClusterId)
+	}
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseKmsClient().CreateKey(request)
@@ -127,8 +133,19 @@ func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, desc
 		errRet = errors.WithStack(err)
 		return
 	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Create key failed, Response is nil.")
+		return
+	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.KeyId == nil {
+		errRet = fmt.Errorf("KeyId is nil.")
+		return
+	}
 
 	keyId = *response.Response.KeyId
 	return
@@ -842,5 +859,33 @@ func (me *KmsService) DescribeKmsListAlgorithmsByFilter(ctx context.Context) (li
 	}
 
 	listAlgorithms = response.Response
+	return
+}
+
+func (me *KmsService) DescribeKmsServiceStatusByFilter(ctx context.Context, param map[string]interface{}) (ret *kms.GetServiceStatusResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = kms.NewGetServiceStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseKmsClient().GetServiceStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
 	return
 }

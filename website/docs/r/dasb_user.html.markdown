@@ -31,7 +31,7 @@ resource "tencentcloud_dasb_user" "example" {
 The following arguments are supported:
 
 * `real_name` - (Required, String) Real name, maximum length 20 characters, cannot contain blank characters.
-* `user_name` - (Required, String) Username, 3-20 characters, must start with an English letter and cannot contain characters other than letters, numbers, '.', '_', '-'.
+* `user_name` - (Required, String) Username, 3-20 characters, must start with an English letter and cannot contain characters other than `letters`, `numbers`, `.`, `_`, `-`.
 * `auth_type` - (Optional, Int) Authentication method, 0 - local, 1 - LDAP, 2 - OAuth. If not passed, the default is 0.
 * `department_id` - (Optional, String) Department ID, such as: 1.2.3.
 * `email` - (Optional, String) Email. Please provide at least one of `phone` or `email`.

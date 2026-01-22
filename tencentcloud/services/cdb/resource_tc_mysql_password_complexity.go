@@ -31,7 +31,7 @@ func ResourceTencentCloudMysqlPasswordComplexity() *schema.Resource {
 			"param_list": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "List of parameters to be modified. Every element is a combination of `Name` (parameter name) and `CurrentValue` (new value). Valid values for `Name` of version 8.0: `validate_password.policy`, `validate_password.lengt`, `validate_password.mixed_case_coun`, `validate_password.number_coun`, `validate_password.special_char_count`. Valid values for `Name` of version 5.6 and 5.7: `validate_password_polic`, `validate_password_lengt` `validate_password_mixed_case_coun`, `validate_password_number_coun`, `validate_password_special_char_coun`.",
+				Description: "List of parameters to be modified. Every element is a combination of `Name` (parameter name) and `CurrentValue` (new value). Valid values for `Name` of version 8.0: `validate_password.policy`, `validate_password.length`, `validate_password.mixed_case_count`, `validate_password.number_count`, `validate_password.special_char_count`. Valid values for `Name` of version 5.6 and 5.7: `validate_password_policy`, `validate_password_length` `validate_password_mixed_case_count`, `validate_password_number_count`, `validate_password_special_char_count`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {

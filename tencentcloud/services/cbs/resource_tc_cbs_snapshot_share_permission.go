@@ -3,8 +3,10 @@ package cbs
 import (
 	"context"
 
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -69,14 +71,21 @@ func resourceTencentCloudCbsSnapshotSharePermissionRead(d *schema.ResourceData, 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
 	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
 	snapshotId := d.Id()
+	snapshotSharePermissions := []*cbs.SharePermission{}
 
-	snapshotSharePermissions, err := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		snapshotSharePermissions = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -99,6 +108,7 @@ func resourceTencentCloudCbsSnapshotSharePermissionUpdate(d *schema.ResourceData
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
 	if d.HasChange("account_ids") {
 		old, new := d.GetChange("account_ids")
 		oldSet := old.(*schema.Set)
@@ -111,6 +121,7 @@ func resourceTencentCloudCbsSnapshotSharePermissionUpdate(d *schema.ResourceData
 				return addError
 			}
 		}
+
 		if len(remove) > 0 {
 			removeError := service.ModifySnapshotsSharePermission(ctx, snapshotId, SNAPSHOT_SHARE_PERMISSION_CANCEL, helper.InterfacesStrings(remove))
 			if removeError != nil {
@@ -128,10 +139,20 @@ func resourceTencentCloudCbsSnapshotSharePermissionDelete(d *schema.ResourceData
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
 	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	snapshotId := d.Id()
-	snapshotSharePermissions, err := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
+	snapshotSharePermissions := []*cbs.SharePermission{}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		snapshotSharePermissions = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -140,6 +161,7 @@ func resourceTencentCloudCbsSnapshotSharePermissionDelete(d *schema.ResourceData
 	for _, snapshotSharePermission := range snapshotSharePermissions {
 		accountIds = append(accountIds, *snapshotSharePermission.AccountId)
 	}
+
 	if err := service.ModifySnapshotsSharePermission(ctx, snapshotId, SNAPSHOT_SHARE_PERMISSION_CANCEL, accountIds); err != nil {
 		return err
 	}

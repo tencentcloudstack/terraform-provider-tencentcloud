@@ -2,7 +2,6 @@ package cls
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -37,7 +36,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 			"path": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Log collection path containing the filename.",
+				Description: "Log collection path containing the filename. Required for document collection.",
 			},
 			"log_type": {
 				Type:     schema.TypeString,
@@ -110,7 +109,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 						"un_match_log_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Unmatched log key.",
+							Description: "Unmatched log key. Required when UnMatchUpLoadSwitch is true.",
 						},
 						"backtracking": {
 							Type:        schema.TypeInt,
@@ -120,7 +119,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 						"is_gbk": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "GBK encoding. Default 0.",
+							Description: "GBK encoding. Default 0. Note: - Currently, when the value is 0, it means UTF-8 encoding.",
 						},
 						"json_standard": {
 							Type:        schema.TypeInt,
@@ -130,22 +129,22 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 						"protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "syslog protocol, tcp or udp.",
+							Description: "syslog protocol, tcp or udp. The value can be tcp or udp. It is effective only when LogType is service_syslog. Other types do not need to be filled in.",
 						},
 						"address": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "syslog system log collection specifies the address and port that the collector listens to.",
+							Description: "syslog system log collection specifies the address and port that the collector listens to. This parameter is only valid when LogType is service_syslog. It does not need to be filled in for other types.",
 						},
 						"parse_protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "parse protocol.",
+							Description: "parse protocol. This parameter is only valid when LogType is service_syslog. It does not need to be filled in for other types.",
 						},
 						"metadata_type": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "metadata type.",
+							Description: "metadata type. 0: Do not use metadata information; 1: Use machine group metadata; 2: Use user-defined metadata; 3: Use collection configuration path. Note: COS import does not support this field.",
 						},
 						"path_regex": {
 							Type:        schema.TypeString,
@@ -155,7 +154,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 						"meta_tags": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "metadata tags.",
+							Description: "metadata tags. Note: - Required when MetadataType is 2. - COS import does not support this field.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
@@ -196,7 +195,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 			"user_define_rule": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Custom collection rule, which is a serialized JSON string.",
+				Description: "Custom collection rule, which is a serialized JSON string. Required when LogType is user_define_log.",
 			},
 		},
 	}
@@ -224,27 +223,23 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("log_type"); ok {
 		request.LogType = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("extract_rule"); ok {
-		extractRules := make([]*cls.ExtractRuleInfo, 0, 10)
-		if len(v.([]interface{})) != 1 {
-			return fmt.Errorf("need only one extract rule.")
-		}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "extract_rule"); ok {
 		extractRule := cls.ExtractRuleInfo{}
-		dMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := dMap["time_key"]; ok {
-			extractRule.TimeKey = helper.String(v.(string))
+		if v, ok := dMap["time_key"].(string); ok && v != "" {
+			extractRule.TimeKey = helper.String(v)
 		}
-		if v, ok := dMap["time_format"]; ok {
-			extractRule.TimeFormat = helper.String(v.(string))
+		if v, ok := dMap["time_format"].(string); ok && v != "" {
+			extractRule.TimeFormat = helper.String(v)
 		}
-		if v, ok := dMap["delimiter"]; ok {
-			extractRule.Delimiter = helper.String(v.(string))
+		if v, ok := dMap["delimiter"].(string); ok && v != "" {
+			extractRule.Delimiter = helper.String(v)
 		}
-		if v, ok := dMap["log_regex"]; ok {
-			extractRule.LogRegex = helper.String(v.(string))
+		if v, ok := dMap["log_regex"].(string); ok && v != "" {
+			extractRule.LogRegex = helper.String(v)
 		}
-		if v, ok := dMap["begin_regex"]; ok {
-			extractRule.BeginRegex = helper.String(v.(string))
+		if v, ok := dMap["begin_regex"].(string); ok && v != "" {
+			extractRule.BeginRegex = helper.String(v)
 		}
 		if v, ok := dMap["keys"]; ok {
 			keys := v.(*schema.Set).List()
@@ -270,8 +265,8 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 		if v, ok := dMap["un_match_up_load_switch"]; ok {
 			extractRule.UnMatchUpLoadSwitch = helper.Bool(v.(bool))
 		}
-		if v, ok := dMap["un_match_log_key"]; ok {
-			extractRule.UnMatchLogKey = helper.String(v.(string))
+		if v, ok := dMap["un_match_log_key"].(string); ok && v != "" {
+			extractRule.UnMatchLogKey = helper.String(v)
 		}
 		if v, ok := dMap["backtracking"]; ok {
 			extractRule.Backtracking = helper.IntInt64(v.(int))
@@ -282,20 +277,20 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 		if v, ok := dMap["json_standard"]; ok {
 			extractRule.JsonStandard = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["protocol"]; ok {
-			extractRule.Protocol = helper.String(v.(string))
+		if v, ok := dMap["protocol"].(string); ok && v != "" {
+			extractRule.Protocol = helper.String(v)
 		}
-		if v, ok := dMap["address"]; ok {
-			extractRule.Address = helper.String(v.(string))
+		if v, ok := dMap["address"].(string); ok && v != "" {
+			extractRule.Address = helper.String(v)
 		}
-		if v, ok := dMap["parse_protocol"]; ok {
-			extractRule.ParseProtocol = helper.String(v.(string))
+		if v, ok := dMap["parse_protocol"].(string); ok && v != "" {
+			extractRule.ParseProtocol = helper.String(v)
 		}
 		if v, ok := dMap["metadata_type"]; ok {
 			extractRule.MetadataType = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["path_regex"]; ok {
-			extractRule.PathRegex = helper.String(v.(string))
+		if v, ok := dMap["path_regex"].(string); ok && v != "" {
+			extractRule.PathRegex = helper.String(v)
 		}
 		if v, ok := dMap["meta_tags"]; ok {
 			for _, item := range v.([]interface{}) {
@@ -310,19 +305,18 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 				extractRule.MetaTags = append(extractRule.MetaTags, &metaTagInfo)
 			}
 		}
-		extractRules = append(extractRules, &extractRule)
-		request.ExtractRule = extractRules[0]
+		request.ExtractRule = &extractRule
 	}
 	if v, ok := d.GetOk("exclude_paths"); ok {
 		excludePaths := make([]*cls.ExcludePathInfo, 0, 10)
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			excludePath := cls.ExcludePathInfo{}
-			if v, ok := dMap["type"]; ok {
-				excludePath.Type = helper.String(v.(string))
+			if v, ok := dMap["type"].(string); ok && v != "" {
+				excludePath.Type = helper.String(v)
 			}
-			if v, ok := dMap["value"]; ok {
-				excludePath.Value = helper.String(v.(string))
+			if v, ok := dMap["value"].(string); ok && v != "" {
+				excludePath.Value = helper.String(v)
 			}
 			excludePaths = append(excludePaths, &excludePath)
 		}
@@ -553,27 +547,22 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 		if v, ok := d.GetOk("log_type"); ok {
 			request.LogType = helper.String(v.(string))
 		}
-		if v, ok := d.GetOk("extract_rule"); ok {
-			extractRules := make([]*cls.ExtractRuleInfo, 0, 10)
-			if len(v.([]interface{})) != 1 {
-				return fmt.Errorf("need only one extract rule.")
-			}
+		if dMap, ok := helper.InterfacesHeadMap(d, "extract_rule"); ok {
 			extractRule := cls.ExtractRuleInfo{}
-			dMap := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := dMap["time_key"]; ok {
-				extractRule.TimeKey = helper.String(v.(string))
+			if v, ok := dMap["time_key"].(string); ok && v != "" {
+				extractRule.TimeKey = helper.String(v)
 			}
-			if v, ok := dMap["time_format"]; ok {
-				extractRule.TimeFormat = helper.String(v.(string))
+			if v, ok := dMap["time_format"].(string); ok && v != "" {
+				extractRule.TimeFormat = helper.String(v)
 			}
-			if v, ok := dMap["delimiter"]; ok {
-				extractRule.Delimiter = helper.String(v.(string))
+			if v, ok := dMap["delimiter"].(string); ok && v != "" {
+				extractRule.Delimiter = helper.String(v)
 			}
-			if v, ok := dMap["log_regex"]; ok {
-				extractRule.LogRegex = helper.String(v.(string))
+			if v, ok := dMap["log_regex"].(string); ok && v != "" {
+				extractRule.LogRegex = helper.String(v)
 			}
-			if v, ok := dMap["begin_regex"]; ok {
-				extractRule.BeginRegex = helper.String(v.(string))
+			if v, ok := dMap["begin_regex"].(string); ok && v != "" {
+				extractRule.BeginRegex = helper.String(v)
 			}
 			if v, ok := dMap["keys"]; ok {
 				keys := v.(*schema.Set).List()
@@ -599,8 +588,8 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			if v, ok := dMap["un_match_up_load_switch"]; ok {
 				extractRule.UnMatchUpLoadSwitch = helper.Bool(v.(bool))
 			}
-			if v, ok := dMap["un_match_log_key"]; ok {
-				extractRule.UnMatchLogKey = helper.String(v.(string))
+			if v, ok := dMap["un_match_log_key"].(string); ok && v != "" {
+				extractRule.UnMatchLogKey = helper.String(v)
 			}
 			if v, ok := dMap["backtracking"]; ok {
 				extractRule.Backtracking = helper.IntInt64(v.(int))
@@ -611,20 +600,20 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			if v, ok := dMap["json_standard"]; ok {
 				extractRule.JsonStandard = helper.IntInt64(v.(int))
 			}
-			if v, ok := dMap["protocol"]; ok {
-				extractRule.Protocol = helper.String(v.(string))
+			if v, ok := dMap["protocol"].(string); ok && v != "" {
+				extractRule.Protocol = helper.String(v)
 			}
-			if v, ok := dMap["address"]; ok {
-				extractRule.Address = helper.String(v.(string))
+			if v, ok := dMap["address"].(string); ok && v != "" {
+				extractRule.Address = helper.String(v)
 			}
-			if v, ok := dMap["parse_protocol"]; ok {
-				extractRule.ParseProtocol = helper.String(v.(string))
+			if v, ok := dMap["parse_protocol"].(string); ok && v != "" {
+				extractRule.ParseProtocol = helper.String(v)
 			}
 			if v, ok := dMap["metadata_type"]; ok {
 				extractRule.MetadataType = helper.IntInt64(v.(int))
 			}
-			if v, ok := dMap["path_regex"]; ok {
-				extractRule.PathRegex = helper.String(v.(string))
+			if v, ok := dMap["path_regex"].(string); ok && v != "" {
+				extractRule.PathRegex = helper.String(v)
 			}
 			if v, ok := dMap["meta_tags"]; ok {
 				for _, item := range v.([]interface{}) {
@@ -639,8 +628,7 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 					extractRule.MetaTags = append(extractRule.MetaTags, &metaTagInfo)
 				}
 			}
-			extractRules = append(extractRules, &extractRule)
-			request.ExtractRule = extractRules[0]
+			request.ExtractRule = &extractRule
 		}
 	}
 	if d.HasChange("exclude_paths") {
@@ -649,11 +637,11 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			for _, item := range v.([]interface{}) {
 				dMap := item.(map[string]interface{})
 				excludePath := cls.ExcludePathInfo{}
-				if v, ok := dMap["type"]; ok {
-					excludePath.Type = helper.String(v.(string))
+				if v, ok := dMap["type"].(string); ok && v != "" {
+					excludePath.Type = helper.String(v)
 				}
-				if v, ok := dMap["value"]; ok {
-					excludePath.Value = helper.String(v.(string))
+				if v, ok := dMap["value"].(string); ok && v != "" {
+					excludePath.Value = helper.String(v)
 				}
 				excludePaths = append(excludePaths, &excludePath)
 			}

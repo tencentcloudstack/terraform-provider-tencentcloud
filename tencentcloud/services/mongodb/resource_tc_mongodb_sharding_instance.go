@@ -13,6 +13,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -29,11 +30,10 @@ func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			Description:  "Number of sharding.",
 		},
 		"nodes_per_shard": {
-			Type:         schema.TypeInt,
-			Required:     true,
-			ForceNew:     true,
-			ValidateFunc: tccommon.ValidateIntegerInRange(3, 5),
-			Description:  "Number of nodes per shard, at least 3(one master and two slaves).",
+			Type:        schema.TypeInt,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Number of nodes per shard, at least 3(one master and two slaves). Allow value[3, 5, 7].",
 		},
 		"availability_zone_list": {
 			Type:     schema.TypeList,
@@ -429,38 +429,81 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
 		return fmt.Errorf("setting of the field[availability_zone_list, hidden_zone] does not support update")
 	}
-	if d.HasChange("mongos_cpu") || d.HasChange("mongos_memory") || d.HasChange("mongos_node_num") {
-		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_num] does not support update")
+	if d.HasChange("mongos_node_num") {
+		return fmt.Errorf("setting of the field[mongos_node_num] does not support update")
+	}
+	if d.HasChange("engine_version") {
+		return fmt.Errorf("setting of the field[engine_version] does not support update")
+	}
+
+	if d.HasChange("mongos_cpu") && d.HasChange("mongos_memory") {
+		if v, ok := d.GetOk("mongos_memory"); ok {
+			dealId, err := mongodbService.ModifyMongosMemory(ctx, instanceId, v.(int))
+			if err != nil {
+				return err
+			}
+			if dealId == "" {
+				return fmt.Errorf("deal id is empty")
+			}
+
+			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
+				if err != nil {
+					if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+						if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
+							return resource.RetryableError(err)
+						}
+					}
+					return resource.NonRetryableError(err)
+				}
+
+				if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS {
+					return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
+				}
+				return nil
+			})
+			if errUpdate != nil {
+				return errUpdate
+			}
+		}
 	}
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
-		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, nil)
+		params := make(map[string]interface{})
+
+		var inMaintenance int
+		if v, ok := d.GetOkExists("in_maintenance"); ok {
+			inMaintenance = v.(int)
+			params["in_maintenance"] = v.(int)
+		}
+		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
 			return err
 		}
 
 		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
-		errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
-			if e != nil {
-				return resource.NonRetryableError(e)
-			}
-			if !has {
-				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
-			}
+		if inMaintenance == 0 {
+			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+				if !has {
+					return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
+				}
 
-			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
-			volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
-			if memory != int(memoryDes) || volume != int(volumeDes) {
-				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+				memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
+				volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
+				if memory != int(memoryDes) || volume != int(volumeDes) {
+					return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+				}
+				return nil
+			})
+			if errUpdate != nil {
+				return errUpdate
 			}
-			return nil
-		})
-		if errUpdate != nil {
-			return errUpdate
 		}
-
 	}
 
 	if d.HasChange("instance_name") {

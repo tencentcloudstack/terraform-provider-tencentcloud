@@ -65,7 +65,8 @@ func resourceTencentCloudVpcEnableEndPointConnectCreate(d *schema.ResourceData, 
 		endPointIdSet := v.(*schema.Set).List()
 		for i := range endPointIdSet {
 			endPointId = endPointIdSet[i].(string)
-			request.EndPointId = append(request.EndPointId, &endPointId)
+			endpoint := endPointIdSet[i].(string)
+			request.EndPointId = append(request.EndPointId, &endpoint)
 		}
 	}
 

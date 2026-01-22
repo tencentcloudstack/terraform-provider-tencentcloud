@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_mongodb_instance_ssl
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: remove the validation of `password`
+```

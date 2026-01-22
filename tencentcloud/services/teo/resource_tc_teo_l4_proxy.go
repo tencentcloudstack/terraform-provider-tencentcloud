@@ -163,6 +163,10 @@ func resourceTencentCloudTeoL4ProxyCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
+	if response == nil || response.Response == nil {
+		return fmt.Errorf("create teo l4 proxy failed, empty response")
+	}
+
 	proxyId = *response.Response.ProxyId
 
 	if err := resourceTencentCloudTeoL4ProxyCreatePostHandleResponse0(ctx, response); err != nil {

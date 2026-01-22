@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a cls cloud product log task
 
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.81.188. Please use `tencentcloud_cls_cloud_product_log_task_v2` instead.
+
 ~> **NOTE:** Using this resource will create new `logset` and `topic`
 
 ## Example Usage

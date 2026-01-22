@@ -17,8 +17,8 @@ import (
 
 func ResourceTencentCloudOrganizationOrgMember() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudOrganizationOrgMemberRead,
 		Create: resourceTencentCloudOrganizationOrgMemberCreate,
+		Read:   resourceTencentCloudOrganizationOrgMemberRead,
 		Update: resourceTencentCloudOrganizationOrgMemberUpdate,
 		Delete: resourceTencentCloudOrganizationOrgMemberDelete,
 		Importer: &schema.ResourceImporter{
@@ -70,6 +70,26 @@ func ResourceTencentCloudOrganizationOrgMember() *schema.Resource {
 				Description: "The uin which is payment account on behalf.When `PermissionIds` contains 7, is required.",
 			},
 
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
+
+			"force_delete_account": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether to force delete the member account when deleting the organization member. It is only applicable to member accounts of the creation type, not to member accounts of the invitation type. Default is false.",
+			},
+
+			"is_modify_nick_name": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Whether to synchronize organization member names to their account nicknames. Values: 1 - Sync, 0 - Do not sync. This parameter takes effect only when the name field is being modified.",
+			},
+
+			// computed
 			"node_name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -131,11 +151,6 @@ func ResourceTencentCloudOrganizationOrgMember() *schema.Resource {
 				Computed:    true,
 				Description: "The member name which is payment account on behalf.",
 			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -144,9 +159,8 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = organization.NewCreateOrganizationMemberRequest()
 		response *organization.CreateOrganizationMemberResponse
 		uin      int64
@@ -169,7 +183,7 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		}
 	}
 
-	if v, _ := d.GetOk("node_id"); v != nil {
+	if v, ok := d.GetOkExists("node_id"); ok {
 		request.NodeId = helper.IntInt64(v.(int))
 	}
 
@@ -177,7 +191,7 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		request.Remark = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("record_id"); v != nil {
+	if v, ok := d.GetOkExists("record_id"); ok {
 		request.RecordId = helper.IntInt64(v.(int))
 	}
 
@@ -201,9 +215,13 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create organization orgMember failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -213,8 +231,11 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	uin = *response.Response.Uin
+	if response.Response.Uin == nil {
+		return fmt.Errorf("Uin is nil.")
+	}
 
+	uin = *response.Response.Uin
 	d.SetId(helper.Int64ToStr(uin))
 	return resourceTencentCloudOrganizationOrgMemberRead(d, meta)
 }
@@ -223,22 +244,21 @@ func resourceTencentCloudOrganizationOrgMemberRead(d *schema.ResourceData, meta 
 	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	orgMemberId := d.Id()
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service     = OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		orgMemberId = d.Id()
+	)
 
 	orgMember, err := service.DescribeOrganizationOrgMember(ctx, orgMemberId)
-
 	if err != nil {
 		return err
 	}
 
 	if orgMember == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `orgMember` %s does not exist", orgMemberId)
+		return fmt.Errorf("resource `tencentcloud_organization_org_member` %s does not exist", orgMemberId)
 	}
 
 	if orgMember.Name != nil {
@@ -256,6 +276,7 @@ func resourceTencentCloudOrganizationOrgMemberRead(d *schema.ResourceData, meta 
 				orgPermissionIds = append(orgPermissionIds, *orgPermission.Id)
 			}
 		}
+
 		_ = d.Set("permission_ids", orgPermissionIds)
 	}
 
@@ -290,12 +311,14 @@ func resourceTencentCloudOrganizationOrgMemberRead(d *schema.ResourceData, meta 
 			if orgPermission.Id != nil {
 				orgPermissionMap["id"] = orgPermission.Id
 			}
+
 			if orgPermission.Name != nil {
 				orgPermissionMap["name"] = orgPermission.Name
 			}
 
 			orgPermissionList = append(orgPermissionList, orgPermissionMap)
 		}
+
 		_ = d.Set("org_permission", orgPermissionList)
 	}
 
@@ -320,6 +343,7 @@ func resourceTencentCloudOrganizationOrgMemberRead(d *schema.ResourceData, meta 
 		for _, tag := range orgMember.Tags {
 			tags[*tag.TagKey] = *tag.TagValue
 		}
+
 		_ = d.Set("tags", tags)
 	}
 
@@ -330,103 +354,123 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	request := organization.NewMoveOrganizationNodeMembersRequest()
-	updateRequest := organization.NewUpdateOrganizationMemberRequest()
-
-	orgMemberId := d.Id()
-
-	request.MemberUin = []*int64{helper.Int64(helper.StrToInt64(orgMemberId))}
-	updateRequest.MemberUin = helper.Uint64(helper.StrToUInt64(orgMemberId))
-	if d.HasChange("node_id") {
-		if v, _ := d.GetOk("node_id"); v != nil {
-			request.NodeId = helper.IntInt64(v.(int))
-		}
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().MoveOrganizationNodeMembers(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s create organization orgMember failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
-	if d.HasChange("name") {
-		if v, _ := d.GetOk("name"); v != nil {
-			updateRequest.Name = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("remark") {
-		if v, _ := d.GetOk("remark"); v != nil {
-			updateRequest.Remark = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("policy_type") {
-		if v, _ := d.GetOk("policy_type"); v != nil {
-			updateRequest.PolicyType = helper.String(v.(string))
-		}
-		if v, _ := d.GetOk("permission_ids"); v != nil {
-			ids := v.(*schema.Set).List()
-			for i := range ids {
-				id := ids[i].(int)
-				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.IntUint64(id))
-			}
-		}
-	}
-
-	if d.HasChange("permission_ids") {
-		if v, _ := d.GetOk("permission_ids"); v != nil {
-			ids := v.(*schema.Set).List()
-			for i := range ids {
-				id := ids[i].(int)
-				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.IntUint64(id))
-			}
-		}
-		if v, _ := d.GetOk("policy_type"); v != nil {
-			updateRequest.PolicyType = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("is_allow_quit") {
-		if v, _ := d.GetOk("is_allow_quit"); v != nil {
-			updateRequest.IsAllowQuit = helper.String(v.(string))
-		}
-	}
+	var (
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		orgMemberId = d.Id()
+		needChange  bool
+	)
 
 	if d.HasChange("record_id") {
 		return fmt.Errorf("`record_id` do not support change now.")
 	}
 
-	if d.HasChange("pay_uin") {
-		if v, _ := d.GetOk("pay_uin"); v != nil {
-			updateRequest.PayUin = helper.String(v.(string))
+	if d.HasChange("node_id") {
+		request := organization.NewMoveOrganizationNodeMembersRequest()
+		if v, ok := d.GetOkExists("node_id"); ok {
+			request.NodeId = helper.IntInt64(v.(int))
+		}
+
+		request.MemberUin = []*int64{helper.Int64(helper.StrToInt64(orgMemberId))}
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().MoveOrganizationNodeMembers(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s move organization node members failed, reason:%+v", logId, err)
+			return err
 		}
 	}
 
-	UpdateErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().UpdateOrganizationMember(updateRequest)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, updateRequest.GetAction(), updateRequest.ToJsonString(), result.ToJsonString())
+	mutableArgs := []string{"name", "remark", "policy_type", "permission_ids", "is_allow_quit", "pay_uin"}
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
 		}
-		return nil
-	})
-	if UpdateErr != nil {
-		log.Printf("[CRITAL]%s update organization orgMember failed, reason:%+v", logId, UpdateErr)
-		return UpdateErr
+	}
+
+	if needChange {
+		request := organization.NewUpdateOrganizationMemberRequest()
+		if d.HasChange("name") {
+			if v, ok := d.GetOk("name"); ok {
+				request.Name = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOkExists("is_modify_nick_name"); ok {
+				request.IsModifyNickName = helper.IntUint64(v.(int))
+			}
+		}
+
+		if d.HasChange("remark") {
+			if v, ok := d.GetOk("remark"); ok {
+				request.Remark = helper.String(v.(string))
+			}
+		}
+
+		if d.HasChange("policy_type") {
+			if v, ok := d.GetOk("policy_type"); ok {
+				request.PolicyType = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("permission_ids"); ok {
+				ids := v.(*schema.Set).List()
+				for i := range ids {
+					id := ids[i].(int)
+					request.PermissionIds = append(request.PermissionIds, helper.IntUint64(id))
+				}
+			}
+		}
+
+		if d.HasChange("permission_ids") {
+			if v, ok := d.GetOk("permission_ids"); ok {
+				ids := v.(*schema.Set).List()
+				for i := range ids {
+					id := ids[i].(int)
+					request.PermissionIds = append(request.PermissionIds, helper.IntUint64(id))
+				}
+			}
+
+			if v, ok := d.GetOk("policy_type"); ok {
+				request.PolicyType = helper.String(v.(string))
+			}
+		}
+
+		if d.HasChange("is_allow_quit") {
+			if v, ok := d.GetOk("is_allow_quit"); ok {
+				request.IsAllowQuit = helper.String(v.(string))
+			}
+		}
+
+		if d.HasChange("pay_uin") {
+			if v, ok := d.GetOk("pay_uin"); ok {
+				request.PayUin = helper.String(v.(string))
+			}
+		}
+
+		request.MemberUin = helper.Uint64(helper.StrToUInt64(orgMemberId))
+		UpdateErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().UpdateOrganizationMember(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if UpdateErr != nil {
+			log.Printf("[CRITAL]%s update organization member failed, reason:%+v", logId, UpdateErr)
+			return UpdateErr
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -439,6 +483,7 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 			return err
 		}
 	}
+
 	return resourceTencentCloudOrganizationOrgMemberRead(d, meta)
 }
 
@@ -446,15 +491,26 @@ func resourceTencentCloudOrganizationOrgMemberDelete(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_organization_org_member.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		orgMemberId        = d.Id()
+		forceDeleteAccount bool
+	)
 
-	service := OrganizationService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	if v, ok := d.GetOkExists("force_delete_account"); ok {
+		forceDeleteAccount = v.(bool)
+	}
 
-	orgMemberId := d.Id()
-
-	if err := service.DeleteOrganizationOrgMemberById(ctx, orgMemberId); err != nil {
-		return err
+	if forceDeleteAccount {
+		if err := service.DeleteOrganizationAccountById(ctx, orgMemberId); err != nil {
+			return err
+		}
+	} else {
+		if err := service.DeleteOrganizationOrgMemberById(ctx, orgMemberId); err != nil {
+			return err
+		}
 	}
 
 	return nil

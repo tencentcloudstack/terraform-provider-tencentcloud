@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@ const (
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
+	// 无效的过滤器
+	INVALIDFILTER = "InvalidFilter"
+
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
@@ -52,6 +55,9 @@ const (
 
 	// 子网不属于zone。
 	INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+
+	// 主题名已存在
+	INVALIDPARAMETERVALUE_TOPICNAMEALREADYEXIST = "InvalidParameterValue.TopicNameAlreadyExist"
 
 	// 无效的 Vpc Id。
 	INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
@@ -98,6 +104,9 @@ const (
 	// Broker 磁盘资源异常
 	RESOURCEUNAVAILABLE_KAFKASTORAGEERROR = "ResourceUnavailable.KafkaStorageError"
 
+	// 资源售罄。
+	RESOURCESSOLDOUT = "ResourcesSoldOut"
+
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
@@ -109,6 +118,9 @@ const (
 
 	// 批量删除实例限制。
 	UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+
+	// 创建Topic成功后，60s后才能删除该Topic
+	UNSUPPORTEDOPERATION_FREQUENCYTOPICDELETEOPERATE = "UnsupportedOperation.FrequencyTopicDeleteOperate"
 
 	// Oss拒绝该操作。
 	UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"

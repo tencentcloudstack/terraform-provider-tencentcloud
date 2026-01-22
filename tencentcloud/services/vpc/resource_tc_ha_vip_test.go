@@ -119,6 +119,44 @@ func TestAccTencentCloudHaVip_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudHaVip_checkAssociate(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckHaVipDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccHaVipConfigCheckAssociate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckHaVipExists("tencentcloud_ha_vip.havip"),
+					resource.TestCheckResourceAttr("tencentcloud_ha_vip.havip", "name", "terraform_test"),
+					resource.TestCheckResourceAttr("tencentcloud_ha_vip.havip", "check_associate", "true"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudHaVip_notCheckAssociate(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckHaVipDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccHaVipConfigNotCheckAssociate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckHaVipExists("tencentcloud_ha_vip.havip"),
+					resource.TestCheckResourceAttr("tencentcloud_ha_vip.havip", "name", "terraform_test"),
+					resource.TestCheckResourceAttr("tencentcloud_ha_vip.havip", "check_associate", "false"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudHaVip_assigned(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -246,5 +284,25 @@ resource "tencentcloud_ha_vip" "havip" {
   vpc_id    = var.vpc_id
   subnet_id = var.subnet_id
   vip       = "172.16.0.137"
+}
+`
+
+const testAccHaVipConfigCheckAssociate = `
+resource "tencentcloud_ha_vip" "havip" {
+  name            = "terraform_test"
+  vpc_id          = "vpc-axrsmmrv"
+  subnet_id       = "subnet-kxaxknmg"
+  vip             = "172.16.144.10"
+  check_associate = true
+}
+`
+
+const testAccHaVipConfigNotCheckAssociate = `
+resource "tencentcloud_ha_vip" "havip" {
+  name            = "terraform_test"
+  vpc_id          = "vpc-axrsmmrv"
+  subnet_id       = "subnet-kxaxknmg"
+  vip             = "172.16.144.10"
+  check_associate = false
 }
 `

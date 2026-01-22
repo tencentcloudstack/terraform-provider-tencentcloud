@@ -1,4 +1,4 @@
-Use this data source to query detailed information of private dns dns end points
+Use this data source to query detailed information of Private Dns end points
 
 Example Usage
 

@@ -90,8 +90,8 @@ func resourceTencentCloudDnspodDomainInstanceCreate(d *schema.ResourceData, meta
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
 	}
-	if v, ok := d.GetOk("group_id"); ok {
-		groupId = v.(uint64)
+	if v, ok := d.GetOkExists("group_id"); ok {
+		groupId = *helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOk("is_mark"); ok {
 		isMark = v.(string)
@@ -156,13 +156,27 @@ func resourceTencentCloudDnspodDomainInstanceRead(d *schema.ResourceData, meta i
 		response = result
 		info := response.Response.DomainInfo
 
-		d.SetId(*response.Response.DomainInfo.Domain)
-
 		_ = d.Set("domain_id", info.DomainId)
 		_ = d.Set("domain", info.Domain)
 		_ = d.Set("create_time", info.CreatedOn)
 		_ = d.Set("is_mark", info.IsMark)
 		_ = d.Set("slave_dns", info.SlaveDNS)
+
+		if info.Status != nil {
+			if *info.Status == "pause" {
+				_ = d.Set("status", DNSPOD_DOMAIN_STATUS_DISABLE)
+			} else {
+				_ = d.Set("status", info.Status)
+			}
+		}
+
+		if info.Remark != nil {
+			_ = d.Set("remark", info.Remark)
+		}
+
+		if info.GroupId != nil {
+			_ = d.Set("group_id", info.GroupId)
+		}
 
 		return nil
 	})

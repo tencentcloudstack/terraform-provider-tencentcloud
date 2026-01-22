@@ -13,6 +13,8 @@ Provides a resource to create a postgresql clone db instance
 
 ## Example Usage
 
+### Clone db instance by recovery_target_time
+
 ```hcl
 resource "tencentcloud_postgresql_clone_db_instance" "example" {
   db_instance_id       = "postgres-evsqpyap"
@@ -39,12 +41,12 @@ resource "tencentcloud_postgresql_clone_db_instance" "example" {
 
   tag_list {
     tag_key   = "createBy"
-    tag_value = "terraform"
+    tag_value = "Terraform"
   }
 }
 ```
 
-
+### Clone db instance by backup_set_id
 
 ```hcl
 data "tencentcloud_postgresql_base_backups" "base_backups" {
@@ -82,7 +84,7 @@ resource "tencentcloud_postgresql_clone_db_instance" "example" {
 
   tag_list {
     tag_key   = "createBy"
-    tag_value = "terraform"
+    tag_value = "Terraform"
   }
 }
 ```
@@ -117,7 +119,7 @@ resource "tencentcloud_postgresql_clone_db_instance" "example" {
 
   tag_list {
     tag_key   = "createBy"
-    tag_value = "terraform"
+    tag_value = "Terraform"
   }
 }
 ```
@@ -163,16 +165,16 @@ Default value for the read-only instance: Async.
 
 The `db_node_set` object supports the following:
 
-* `role` - (Required, String) Node type. Valid values:
+* `role` - (Required, String, ForceNew) Node type. Valid values:
 `Primary`;
 `Standby`.
-* `zone` - (Required, String) AZ where the node resides, such as ap-guangzhou-1.
-* `dedicated_cluster_id` - (Optional, String) Dedicated cluster ID.
+* `zone` - (Required, String, ForceNew) AZ where the node resides, such as ap-guangzhou-1.
+* `dedicated_cluster_id` - (Optional, String, ForceNew) Dedicated cluster ID.
 
 The `tag_list` object supports the following:
 
-* `tag_key` - (Required, String) Tag key.
-* `tag_value` - (Required, String) Tag value.
+* `tag_key` - (Required, String, ForceNew) Tag key.
+* `tag_value` - (Required, String, ForceNew) Tag value.
 
 ## Attributes Reference
 

@@ -12,7 +12,9 @@ resource "tencentcloud_as_start_instance_refresh" "example" {
       batch_number = 1
       batch_pause  = "AUTOMATIC"
       max_surge    = 1
+      fail_process = "AUTO_PAUSE"
     }
+    check_instance_target_health_timeout = 1800
   }
 
   timeouts {

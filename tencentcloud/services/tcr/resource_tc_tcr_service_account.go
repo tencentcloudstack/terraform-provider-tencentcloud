@@ -87,7 +87,9 @@ func ResourceTencentCloudTcrServiceAccount() *schema.Resource {
 			},
 
 			"password": {
+				Optional:    true,
 				Computed:    true,
+				Sensitive:   true,
 				Type:        schema.TypeString,
 				Description: "Password of the service account.",
 			},
@@ -105,14 +107,14 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("resource.tencentcloud_tcr_service_account.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = tcr.NewCreateServiceAccountRequest()
 		response   = tcr.NewCreateServiceAccountResponse()
 		registryId string
 		name       string
 	)
+
 	if v, ok := d.GetOk("registry_id"); ok {
 		request.RegistryId = helper.String(v.(string))
 		registryId = v.(string)
@@ -130,6 +132,7 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 			if v, ok := dMap["resource"]; ok {
 				permission.Resource = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["actions"]; ok {
 				actionsSet := v.(*schema.Set).List()
 				for i := range actionsSet {
@@ -139,6 +142,7 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 					}
 				}
 			}
+
 			request.Permissions = append(request.Permissions, &permission)
 		}
 	}
@@ -166,12 +170,22 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create tcr ServiceAccount failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create tcr ServiceAccount failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.Name == nil {
+		return fmt.Errorf("Name is nil.")
 	}
 
 	if !strings.Contains(*response.Response.Name, name) {
@@ -180,9 +194,9 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 
 	d.SetId(strings.Join([]string{registryId, name}, tccommon.FILED_SP))
 
-	pw := response.Response.Password
-	if pw != nil {
-		_ = d.Set("password", *pw)
+	var deafultPwd string
+	if response.Response.Password != nil {
+		deafultPwd = *response.Response.Password
 	}
 
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -195,6 +209,19 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 		}
 	}
 
+	// set custom password OR set default password
+	if v, ok := d.GetOk("password"); ok && v.(string) != "" {
+		service := TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		password, err := service.ModifyServiceAccountPassword(ctx, registryId, name, v.(string))
+		if err != nil {
+			return err
+		}
+
+		_ = d.Set("password", password)
+	} else {
+		_ = d.Set("password", deafultPwd)
+	}
+
 	return resourceTencentCloudTcrServiceAccountRead(d, meta)
 }
 
@@ -202,16 +229,17 @@ func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_tcr_service_account.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	registryId := idSplit[0]
 	name := idSplit[1]
 
@@ -221,8 +249,8 @@ func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta inte
 	}
 
 	if ServiceAccount == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_tcr_service_account` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TcrServiceAccount` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -233,7 +261,6 @@ func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta inte
 		permissionsList := []interface{}{}
 		for _, permission := range ServiceAccount.Permissions {
 			permissionsMap := map[string]interface{}{}
-
 			if permission.Resource != nil {
 				permissionsMap["resource"] = permission.Resource
 			}
@@ -246,7 +273,6 @@ func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta inte
 		}
 
 		_ = d.Set("permissions", permissionsList)
-
 	}
 
 	if ServiceAccount.Description != nil {
@@ -276,29 +302,38 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("resource.tencentcloud_tcr_service_account.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := tcr.NewModifyServiceAccountRequest()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	registryId := idSplit[0]
 	name := idSplit[1]
 
-	request.RegistryId = &registryId
-	request.Name = helper.String(TCR_NAME_PREFIX + name)
-
 	immutableArgs := []string{"registry_id", "name"}
-
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if d.HasChange("permissions") {
+	needChange := false
+	mutableArgs := []string{"permissions", "description", "duration", "expires_at", "disable"}
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
+	}
+
+	if needChange {
+		request := tcr.NewModifyServiceAccountRequest()
 		if v, ok := d.GetOk("permissions"); ok {
 			for _, item := range v.([]interface{}) {
 				permission := tcr.Permission{}
@@ -306,6 +341,7 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 				if v, ok := dMap["resource"]; ok {
 					permission.Resource = helper.String(v.(string))
 				}
+
 				if v, ok := dMap["actions"]; ok {
 					actionsSet := v.(*schema.Set).List()
 					for i := range actionsSet {
@@ -318,44 +354,40 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 				request.Permissions = append(request.Permissions, &permission)
 			}
 		}
-	}
 
-	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("duration") {
 		if v, ok := d.GetOkExists("duration"); ok {
 			request.Duration = helper.IntInt64(v.(int))
 		}
-	}
 
-	if d.HasChange("expires_at") {
 		if v, ok := d.GetOkExists("expires_at"); ok {
 			request.ExpiresAt = helper.IntInt64(v.(int))
 		}
-	}
 
-	if d.HasChange("disable") {
 		if v, ok := d.GetOkExists("disable"); ok {
 			request.Disable = helper.Bool(v.(bool))
 		}
-	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTCRClient().ModifyServiceAccount(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		request.RegistryId = &registryId
+		request.Name = helper.String(TCR_NAME_PREFIX + name)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTCRClient().ModifyServiceAccount(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update tcr ServiceAccount failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update tcr ServiceAccount failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if d.HasChange("tags") {
@@ -370,6 +402,17 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
+	if d.HasChange("password") {
+		if v, ok := d.GetOk("password"); ok {
+			password, err := service.ModifyServiceAccountPassword(ctx, registryId, name, v.(string))
+			if err != nil {
+				return err
+			}
+
+			_ = d.Set("password", password)
+		}
+	}
+
 	return resourceTencentCloudTcrServiceAccountRead(d, meta)
 }
 
@@ -377,14 +420,17 @@ func resourceTencentCloudTcrServiceAccountDelete(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("resource.tencentcloud_tcr_service_account.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	service := TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	registryId := idSplit[0]
 	name := TCR_NAME_PREFIX + idSplit[1]
 

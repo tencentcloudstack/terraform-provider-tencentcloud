@@ -17,22 +17,19 @@ func ResourceTencentCloudDlcModifyUserTypOperation() *schema.Resource {
 		Create: resourceTencentCloudDlcModifyUserTypOperationCreate,
 		Read:   resourceTencentCloudDlcModifyUserTypOperationRead,
 		Delete: resourceTencentCloudDlcModifyUserTypOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"user_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "User id (uin), if left blank, it defaults to the caller's sub-uin.",
+				Description: "User ID.",
 			},
 
 			"user_type": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "User type, only support: ADMIN: ddministrator/COMMON: ordinary user.",
+				Description: "Types that users modify. ADMIN: administrators; COMMON: general users.",
 			},
 		},
 	}
@@ -42,12 +39,12 @@ func resourceTencentCloudDlcModifyUserTypOperationCreate(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_modify_user_typ_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = dlc.NewModifyUserTypeRequest()
 		userId  string
 	)
+
 	if v, ok := d.GetOk("user_id"); ok {
 		userId = v.(string)
 		request.UserId = helper.String(v.(string))
@@ -64,15 +61,16 @@ func resourceTencentCloudDlcModifyUserTypOperationCreate(d *schema.ResourceData,
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s operate dlc modifyUserTypOperation failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate dlc modify user type failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(userId)
-
 	return resourceTencentCloudDlcModifyUserTypOperationRead(d, meta)
 }
 

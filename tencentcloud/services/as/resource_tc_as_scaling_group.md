@@ -1,5 +1,7 @@
 Provides a resource to create a group of AS (Auto scaling) instances.
 
+~> **NOTE:** If the resource management rule `forward_balancer_id` is used, resource `tencentcloud_as_load_balancer` management cannot be used simultaneously under the same auto scaling group id
+
 Example Usage
 
 Create a basic Scaling Group
@@ -92,6 +94,7 @@ resource "tencentcloud_as_scaling_group" "example" {
   replace_load_balancer_unhealthy         = false
   replace_mode                            = "RECREATE"
   desired_capacity_sync_with_max_min_size = false
+  priority_scale_in_unhealthy             = true
   termination_policies                    = ["NEWEST_INSTANCE"]
   retry_policy                            = "INCREMENTAL_INTERVALS"
 

@@ -59,8 +59,9 @@ func NewArchiveKeyRequest() (request *ArchiveKeyRequest) {
 func NewArchiveKeyResponse() (response *ArchiveKeyResponse) {
     response = &ArchiveKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ArchiveKey
@@ -123,8 +124,9 @@ func NewAsymmetricRsaDecryptRequest() (request *AsymmetricRsaDecryptRequest) {
 func NewAsymmetricRsaDecryptResponse() (response *AsymmetricRsaDecryptResponse) {
     response = &AsymmetricRsaDecryptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AsymmetricRsaDecrypt
@@ -185,8 +187,9 @@ func NewAsymmetricSm2DecryptRequest() (request *AsymmetricSm2DecryptRequest) {
 func NewAsymmetricSm2DecryptResponse() (response *AsymmetricSm2DecryptResponse) {
     response = &AsymmetricSm2DecryptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AsymmetricSm2Decrypt
@@ -249,8 +252,9 @@ func NewBindCloudResourceRequest() (request *BindCloudResourceRequest) {
 func NewBindCloudResourceResponse() (response *BindCloudResourceResponse) {
     response = &BindCloudResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindCloudResource
@@ -309,8 +313,9 @@ func NewCancelKeyArchiveRequest() (request *CancelKeyArchiveRequest) {
 func NewCancelKeyArchiveResponse() (response *CancelKeyArchiveResponse) {
     response = &CancelKeyArchiveResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelKeyArchive
@@ -371,8 +376,9 @@ func NewCancelKeyDeletionRequest() (request *CancelKeyDeletionRequest) {
 func NewCancelKeyDeletionResponse() (response *CancelKeyDeletionResponse) {
     response = &CancelKeyDeletionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelKeyDeletion
@@ -429,8 +435,9 @@ func NewCreateKeyRequest() (request *CreateKeyRequest) {
 func NewCreateKeyResponse() (response *CreateKeyResponse) {
     response = &CreateKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateKey
@@ -503,8 +510,9 @@ func NewCreateWhiteBoxKeyRequest() (request *CreateWhiteBoxKeyRequest) {
 func NewCreateWhiteBoxKeyResponse() (response *CreateWhiteBoxKeyResponse) {
     response = &CreateWhiteBoxKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateWhiteBoxKey
@@ -567,8 +575,9 @@ func NewDecryptRequest() (request *DecryptRequest) {
 func NewDecryptResponse() (response *DecryptResponse) {
     response = &DecryptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // Decrypt
@@ -627,8 +636,9 @@ func NewDeleteImportedKeyMaterialRequest() (request *DeleteImportedKeyMaterialRe
 func NewDeleteImportedKeyMaterialResponse() (response *DeleteImportedKeyMaterialResponse) {
     response = &DeleteImportedKeyMaterialResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImportedKeyMaterial
@@ -689,8 +699,9 @@ func NewDeleteWhiteBoxKeyRequest() (request *DeleteWhiteBoxKeyRequest) {
 func NewDeleteWhiteBoxKeyResponse() (response *DeleteWhiteBoxKeyResponse) {
     response = &DeleteWhiteBoxKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWhiteBoxKey
@@ -747,8 +758,9 @@ func NewDescribeKeyRequest() (request *DescribeKeyRequest) {
 func NewDescribeKeyResponse() (response *DescribeKeyResponse) {
     response = &DescribeKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeKey
@@ -803,8 +815,9 @@ func NewDescribeKeysRequest() (request *DescribeKeysRequest) {
 func NewDescribeKeysResponse() (response *DescribeKeysResponse) {
     response = &DescribeKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeKeys
@@ -861,8 +874,9 @@ func NewDescribeWhiteBoxDecryptKeyRequest() (request *DescribeWhiteBoxDecryptKey
 func NewDescribeWhiteBoxDecryptKeyResponse() (response *DescribeWhiteBoxDecryptKeyResponse) {
     response = &DescribeWhiteBoxDecryptKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWhiteBoxDecryptKey
@@ -917,8 +931,9 @@ func NewDescribeWhiteBoxDeviceFingerprintsRequest() (request *DescribeWhiteBoxDe
 func NewDescribeWhiteBoxDeviceFingerprintsResponse() (response *DescribeWhiteBoxDeviceFingerprintsResponse) {
     response = &DescribeWhiteBoxDeviceFingerprintsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWhiteBoxDeviceFingerprints
@@ -973,8 +988,9 @@ func NewDescribeWhiteBoxKeyRequest() (request *DescribeWhiteBoxKeyRequest) {
 func NewDescribeWhiteBoxKeyResponse() (response *DescribeWhiteBoxKeyResponse) {
     response = &DescribeWhiteBoxKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWhiteBoxKey
@@ -1029,8 +1045,9 @@ func NewDescribeWhiteBoxKeyDetailsRequest() (request *DescribeWhiteBoxKeyDetails
 func NewDescribeWhiteBoxKeyDetailsResponse() (response *DescribeWhiteBoxKeyDetailsResponse) {
     response = &DescribeWhiteBoxKeyDetailsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWhiteBoxKeyDetails
@@ -1083,8 +1100,9 @@ func NewDescribeWhiteBoxServiceStatusRequest() (request *DescribeWhiteBoxService
 func NewDescribeWhiteBoxServiceStatusResponse() (response *DescribeWhiteBoxServiceStatusResponse) {
     response = &DescribeWhiteBoxServiceStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWhiteBoxServiceStatus
@@ -1135,8 +1153,9 @@ func NewDisableKeyRequest() (request *DisableKeyRequest) {
 func NewDisableKeyResponse() (response *DisableKeyResponse) {
     response = &DisableKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableKey
@@ -1197,8 +1216,9 @@ func NewDisableKeyRotationRequest() (request *DisableKeyRotationRequest) {
 func NewDisableKeyRotationResponse() (response *DisableKeyRotationResponse) {
     response = &DisableKeyRotationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableKeyRotation
@@ -1253,8 +1273,9 @@ func NewDisableKeysRequest() (request *DisableKeysRequest) {
 func NewDisableKeysResponse() (response *DisableKeysResponse) {
     response = &DisableKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableKeys
@@ -1317,8 +1338,9 @@ func NewDisableWhiteBoxKeyRequest() (request *DisableWhiteBoxKeyRequest) {
 func NewDisableWhiteBoxKeyResponse() (response *DisableWhiteBoxKeyResponse) {
     response = &DisableWhiteBoxKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableWhiteBoxKey
@@ -1373,8 +1395,9 @@ func NewDisableWhiteBoxKeysRequest() (request *DisableWhiteBoxKeysRequest) {
 func NewDisableWhiteBoxKeysResponse() (response *DisableWhiteBoxKeysResponse) {
     response = &DisableWhiteBoxKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableWhiteBoxKeys
@@ -1433,8 +1456,9 @@ func NewEnableKeyRequest() (request *EnableKeyRequest) {
 func NewEnableKeyResponse() (response *EnableKeyResponse) {
     response = &EnableKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableKey
@@ -1493,8 +1517,9 @@ func NewEnableKeyRotationRequest() (request *EnableKeyRotationRequest) {
 func NewEnableKeyRotationResponse() (response *EnableKeyRotationResponse) {
     response = &EnableKeyRotationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableKeyRotation
@@ -1557,8 +1582,9 @@ func NewEnableKeysRequest() (request *EnableKeysRequest) {
 func NewEnableKeysResponse() (response *EnableKeysResponse) {
     response = &EnableKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableKeys
@@ -1619,8 +1645,9 @@ func NewEnableWhiteBoxKeyRequest() (request *EnableWhiteBoxKeyRequest) {
 func NewEnableWhiteBoxKeyResponse() (response *EnableWhiteBoxKeyResponse) {
     response = &EnableWhiteBoxKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableWhiteBoxKey
@@ -1675,8 +1702,9 @@ func NewEnableWhiteBoxKeysRequest() (request *EnableWhiteBoxKeysRequest) {
 func NewEnableWhiteBoxKeysResponse() (response *EnableWhiteBoxKeysResponse) {
     response = &EnableWhiteBoxKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableWhiteBoxKeys
@@ -1735,8 +1763,9 @@ func NewEncryptRequest() (request *EncryptRequest) {
 func NewEncryptResponse() (response *EncryptResponse) {
     response = &EncryptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // Encrypt
@@ -1797,8 +1826,9 @@ func NewEncryptByWhiteBoxRequest() (request *EncryptByWhiteBoxRequest) {
 func NewEncryptByWhiteBoxResponse() (response *EncryptByWhiteBoxResponse) {
     response = &EncryptByWhiteBoxResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EncryptByWhiteBox
@@ -1857,8 +1887,9 @@ func NewGenerateDataKeyRequest() (request *GenerateDataKeyRequest) {
 func NewGenerateDataKeyResponse() (response *GenerateDataKeyResponse) {
     response = &GenerateDataKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GenerateDataKey
@@ -1919,8 +1950,9 @@ func NewGenerateRandomRequest() (request *GenerateRandomRequest) {
 func NewGenerateRandomResponse() (response *GenerateRandomResponse) {
     response = &GenerateRandomResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GenerateRandom
@@ -1971,8 +2003,9 @@ func NewGetKeyRotationStatusRequest() (request *GetKeyRotationStatusRequest) {
 func NewGetKeyRotationStatusResponse() (response *GetKeyRotationStatusResponse) {
     response = &GetKeyRotationStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetKeyRotationStatus
@@ -2027,8 +2060,9 @@ func NewGetParametersForImportRequest() (request *GetParametersForImportRequest)
 func NewGetParametersForImportResponse() (response *GetParametersForImportResponse) {
     response = &GetParametersForImportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetParametersForImport
@@ -2085,8 +2119,9 @@ func NewGetPublicKeyRequest() (request *GetPublicKeyRequest) {
 func NewGetPublicKeyResponse() (response *GetPublicKeyResponse) {
     response = &GetPublicKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetPublicKey
@@ -2143,8 +2178,9 @@ func NewGetRegionsRequest() (request *GetRegionsRequest) {
 func NewGetRegionsResponse() (response *GetRegionsResponse) {
     response = &GetRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetRegions
@@ -2191,8 +2227,9 @@ func NewGetServiceStatusRequest() (request *GetServiceStatusRequest) {
 func NewGetServiceStatusResponse() (response *GetServiceStatusResponse) {
     response = &GetServiceStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetServiceStatus
@@ -2201,6 +2238,7 @@ func NewGetServiceStatusResponse() (response *GetServiceStatusResponse) {
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) GetServiceStatus(request *GetServiceStatusRequest) (response *GetServiceStatusResponse, err error) {
     return c.GetServiceStatusWithContext(context.Background(), request)
 }
@@ -2211,6 +2249,7 @@ func (c *Client) GetServiceStatus(request *GetServiceStatusRequest) (response *G
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) GetServiceStatusWithContext(ctx context.Context, request *GetServiceStatusRequest) (response *GetServiceStatusResponse, err error) {
     if request == nil {
         request = NewGetServiceStatusRequest()
@@ -2241,8 +2280,9 @@ func NewImportKeyMaterialRequest() (request *ImportKeyMaterialRequest) {
 func NewImportKeyMaterialResponse() (response *ImportKeyMaterialResponse) {
     response = &ImportKeyMaterialResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ImportKeyMaterial
@@ -2311,8 +2351,9 @@ func NewListAlgorithmsRequest() (request *ListAlgorithmsRequest) {
 func NewListAlgorithmsResponse() (response *ListAlgorithmsResponse) {
     response = &ListAlgorithmsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListAlgorithms
@@ -2361,8 +2402,9 @@ func NewListKeyDetailRequest() (request *ListKeyDetailRequest) {
 func NewListKeyDetailResponse() (response *ListKeyDetailResponse) {
     response = &ListKeyDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListKeyDetail
@@ -2415,8 +2457,9 @@ func NewListKeysRequest() (request *ListKeysRequest) {
 func NewListKeysResponse() (response *ListKeysResponse) {
     response = &ListKeysResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListKeys
@@ -2469,8 +2512,9 @@ func NewOverwriteWhiteBoxDeviceFingerprintsRequest() (request *OverwriteWhiteBox
 func NewOverwriteWhiteBoxDeviceFingerprintsResponse() (response *OverwriteWhiteBoxDeviceFingerprintsResponse) {
     response = &OverwriteWhiteBoxDeviceFingerprintsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OverwriteWhiteBoxDeviceFingerprints
@@ -2515,6 +2559,250 @@ func (c *Client) OverwriteWhiteBoxDeviceFingerprintsWithContext(ctx context.Cont
     return
 }
 
+func NewPostQuantumCryptoDecryptRequest() (request *PostQuantumCryptoDecryptRequest) {
+    request = &PostQuantumCryptoDecryptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "PostQuantumCryptoDecrypt")
+    
+    
+    return
+}
+
+func NewPostQuantumCryptoDecryptResponse() (response *PostQuantumCryptoDecryptResponse) {
+    response = &PostQuantumCryptoDecryptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// PostQuantumCryptoDecrypt
+// 本接口使用后量子密码算法密钥，解密密文，并得到明文数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDCIPHERTEXT = "InvalidParameterValue.InvalidCiphertext"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) PostQuantumCryptoDecrypt(request *PostQuantumCryptoDecryptRequest) (response *PostQuantumCryptoDecryptResponse, err error) {
+    return c.PostQuantumCryptoDecryptWithContext(context.Background(), request)
+}
+
+// PostQuantumCryptoDecrypt
+// 本接口使用后量子密码算法密钥，解密密文，并得到明文数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDCIPHERTEXT = "InvalidParameterValue.InvalidCiphertext"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) PostQuantumCryptoDecryptWithContext(ctx context.Context, request *PostQuantumCryptoDecryptRequest) (response *PostQuantumCryptoDecryptResponse, err error) {
+    if request == nil {
+        request = NewPostQuantumCryptoDecryptRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PostQuantumCryptoDecrypt require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPostQuantumCryptoDecryptResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewPostQuantumCryptoEncryptRequest() (request *PostQuantumCryptoEncryptRequest) {
+    request = &PostQuantumCryptoEncryptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "PostQuantumCryptoEncrypt")
+    
+    
+    return
+}
+
+func NewPostQuantumCryptoEncryptResponse() (response *PostQuantumCryptoEncryptResponse) {
+    response = &PostQuantumCryptoEncryptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// PostQuantumCryptoEncrypt
+// 本接口使用后量子密码算法密钥，可加密最多为4KB任意数据，可用于加密数据库密码，RSA Key，或其它较小的敏感信息。对于应用的数据加密，使用GenerateDataKey生成的DataKey进行本地数据的加解密操作。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDPLAINTEXT = "InvalidParameterValue.InvalidPlaintext"
+//  RESOURCEUNAVAILABLE_CMKARCHIVED = "ResourceUnavailable.CmkArchived"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) PostQuantumCryptoEncrypt(request *PostQuantumCryptoEncryptRequest) (response *PostQuantumCryptoEncryptResponse, err error) {
+    return c.PostQuantumCryptoEncryptWithContext(context.Background(), request)
+}
+
+// PostQuantumCryptoEncrypt
+// 本接口使用后量子密码算法密钥，可加密最多为4KB任意数据，可用于加密数据库密码，RSA Key，或其它较小的敏感信息。对于应用的数据加密，使用GenerateDataKey生成的DataKey进行本地数据的加解密操作。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDPLAINTEXT = "InvalidParameterValue.InvalidPlaintext"
+//  RESOURCEUNAVAILABLE_CMKARCHIVED = "ResourceUnavailable.CmkArchived"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) PostQuantumCryptoEncryptWithContext(ctx context.Context, request *PostQuantumCryptoEncryptRequest) (response *PostQuantumCryptoEncryptResponse, err error) {
+    if request == nil {
+        request = NewPostQuantumCryptoEncryptRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PostQuantumCryptoEncrypt require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPostQuantumCryptoEncryptResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewPostQuantumCryptoSignRequest() (request *PostQuantumCryptoSignRequest) {
+    request = &PostQuantumCryptoSignRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "PostQuantumCryptoSign")
+    
+    
+    return
+}
+
+func NewPostQuantumCryptoSignResponse() (response *PostQuantumCryptoSignResponse) {
+    response = &PostQuantumCryptoSignResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// PostQuantumCryptoSign
+// 使用后量子密码算法签名验签密钥进行签名。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+func (c *Client) PostQuantumCryptoSign(request *PostQuantumCryptoSignRequest) (response *PostQuantumCryptoSignResponse, err error) {
+    return c.PostQuantumCryptoSignWithContext(context.Background(), request)
+}
+
+// PostQuantumCryptoSign
+// 使用后量子密码算法签名验签密钥进行签名。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+func (c *Client) PostQuantumCryptoSignWithContext(ctx context.Context, request *PostQuantumCryptoSignRequest) (response *PostQuantumCryptoSignResponse, err error) {
+    if request == nil {
+        request = NewPostQuantumCryptoSignRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PostQuantumCryptoSign require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPostQuantumCryptoSignResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewPostQuantumCryptoVerifyRequest() (request *PostQuantumCryptoVerifyRequest) {
+    request = &PostQuantumCryptoVerifyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "PostQuantumCryptoVerify")
+    
+    
+    return
+}
+
+func NewPostQuantumCryptoVerifyResponse() (response *PostQuantumCryptoVerifyResponse) {
+    response = &PostQuantumCryptoVerifyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// PostQuantumCryptoVerify
+// 使用后量子密码算法密钥对签名进行验证。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+func (c *Client) PostQuantumCryptoVerify(request *PostQuantumCryptoVerifyRequest) (response *PostQuantumCryptoVerifyResponse, err error) {
+    return c.PostQuantumCryptoVerifyWithContext(context.Background(), request)
+}
+
+// PostQuantumCryptoVerify
+// 使用后量子密码算法密钥对签名进行验证。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+func (c *Client) PostQuantumCryptoVerifyWithContext(ctx context.Context, request *PostQuantumCryptoVerifyRequest) (response *PostQuantumCryptoVerifyResponse, err error) {
+    if request == nil {
+        request = NewPostQuantumCryptoVerifyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PostQuantumCryptoVerify require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPostQuantumCryptoVerifyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewReEncryptRequest() (request *ReEncryptRequest) {
     request = &ReEncryptRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2529,8 +2817,9 @@ func NewReEncryptRequest() (request *ReEncryptRequest) {
 func NewReEncryptResponse() (response *ReEncryptResponse) {
     response = &ReEncryptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReEncrypt
@@ -2589,8 +2878,9 @@ func NewScheduleKeyDeletionRequest() (request *ScheduleKeyDeletionRequest) {
 func NewScheduleKeyDeletionResponse() (response *ScheduleKeyDeletionResponse) {
     response = &ScheduleKeyDeletionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScheduleKeyDeletion
@@ -2653,8 +2943,9 @@ func NewSignByAsymmetricKeyRequest() (request *SignByAsymmetricKeyRequest) {
 func NewSignByAsymmetricKeyResponse() (response *SignByAsymmetricKeyResponse) {
     response = &SignByAsymmetricKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SignByAsymmetricKey
@@ -2717,8 +3008,9 @@ func NewUnbindCloudResourceRequest() (request *UnbindCloudResourceRequest) {
 func NewUnbindCloudResourceResponse() (response *UnbindCloudResourceResponse) {
     response = &UnbindCloudResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnbindCloudResource
@@ -2777,8 +3069,9 @@ func NewUpdateAliasRequest() (request *UpdateAliasRequest) {
 func NewUpdateAliasResponse() (response *UpdateAliasResponse) {
     response = &UpdateAliasResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateAlias
@@ -2839,8 +3132,9 @@ func NewUpdateKeyDescriptionRequest() (request *UpdateKeyDescriptionRequest) {
 func NewUpdateKeyDescriptionResponse() (response *UpdateKeyDescriptionResponse) {
     response = &UpdateKeyDescriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateKeyDescription
@@ -2897,8 +3191,9 @@ func NewVerifyByAsymmetricKeyRequest() (request *VerifyByAsymmetricKeyRequest) {
 func NewVerifyByAsymmetricKeyResponse() (response *VerifyByAsymmetricKeyResponse) {
     response = &VerifyByAsymmetricKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // VerifyByAsymmetricKey

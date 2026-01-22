@@ -4,7 +4,7 @@ Provides a resource to create a CLB attachment.
 
 Example Usage
 
-Bind a Cvm instance by using `rule_id`
+Bind a Cvm instance by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -20,7 +20,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-Bind a Cvm instance by using `domian` and `url`
+Bind a Cvm instance by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -37,7 +37,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-Bind multiple Cvm instances by using `rule_id`
+Bind multiple Cvm instances by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -59,7 +59,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-Bind multiple Cvm instances by using `domian` and `url`
+Bind multiple Cvm instances by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -82,7 +82,7 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-Bind backend target is ENI by using `rule_id`
+Bind backend target is ENI by using rule_id
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
@@ -98,14 +98,14 @@ resource "tencentcloud_clb_attachment" "example" {
 }
 ```
 
-Bind backend target is ENI by using `domian` and `url`
+Bind backend target is ENI by using domian and url
 
 ```hcl
 resource "tencentcloud_clb_attachment" "example" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-hh141sn9"
   domain      = "test.com"
-  url         = "/"
+  url         = "/path"
   
   targets {
     eni_ip = "172.16.16.52"
@@ -119,10 +119,20 @@ Import
 
 CLB attachment can be imported using the id, e.g.
 
+If use rule_id
+
 ```
 $ terraform import tencentcloud_clb_attachment.example loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
+```
 
-Or
+If use domain & url
 
-$ terraform import tencentcloud_clb_attachment.example test.com,/#lbl-hh141sn9#lb-7a0t6zqb
+```
+$ terraform import tencentcloud_clb_attachment.example test.com,/path#lbl-hh141sn9#lb-7a0t6zqb
+```
+
+Of if use layer-4 forwarding rule
+
+```
+$ terraform import tencentcloud_clb_attachment.example ""#lbl-hh141sn9#lb-7a0t6zqb
 ```

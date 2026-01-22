@@ -20,7 +20,7 @@ func resourceTencentCloudWafIpAccessControlV2ReadPostHandleResponse0(ctx context
 		return fmt.Errorf("resource data can not be nil")
 	}
 
-	if resp.Data == nil && len(resp.Data.Res) != 1 {
+	if resp.Data == nil || len(resp.Data.Res) < 1 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `waf_ip_access_control_v2` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil

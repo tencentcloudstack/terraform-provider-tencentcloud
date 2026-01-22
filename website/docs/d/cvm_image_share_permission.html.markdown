@@ -4,18 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cvm_image_share_permission"
 sidebar_current: "docs-tencentcloud-datasource-cvm_image_share_permission"
 description: |-
-  Use this data source to query detailed information of cvm image_share_permission
+  Use this data source to query detailed information of CVM image share permission
 ---
 
 # tencentcloud_cvm_image_share_permission
 
-Use this data source to query detailed information of cvm image_share_permission
+Use this data source to query detailed information of CVM image share permission
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_cvm_image_share_permission" "image_share_permission" {
-  image_id = "img-xxxxxx"
+data "tencentcloud_cvm_image_share_permission" "example" {
+  image_id = "img-0elsru2u"
 }
 ```
 

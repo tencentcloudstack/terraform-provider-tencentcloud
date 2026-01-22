@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: Support window period switching.
+```
+
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_instance: Support window period switching.
+```

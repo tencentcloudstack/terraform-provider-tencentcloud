@@ -36,10 +36,10 @@ func DataSourceTencentCloudCbsSnapshots() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CBS_STORAGE_USAGE),
-				Description:  "Types of CBS which this snapshot created from, and available values include SYSTEM_DISK and DATA_DISK.",
+				Description:  "Types of CBS which this snapshot created from, and available values include `SYSTEM_DISK` and `DATA_DISK`.",
 			},
 			"project_id": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "ID of the project within the snapshot.",
 			},
@@ -119,31 +119,35 @@ func DataSourceTencentCloudCbsSnapshots() *schema.Resource {
 func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_cbs_snapshots.read")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	params := make(map[string]string)
 	if v, ok := d.GetOk("snapshot_id"); ok {
 		params["snapshot-id"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("snapshot_name"); ok {
 		params["snapshot-name"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("storage_id"); ok {
 		params["disk-id"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("storage_usage"); ok {
 		params["disk-usage"] = v.(string)
 	}
-	if v, ok := d.GetOkExists("project_id"); ok {
+
+	if v, ok := d.GetOk("project_id"); ok {
 		params["project-id"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("availability_zone"); ok {
 		params["zone"] = v.(string)
-	}
-
-	cbsService := CbsService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -151,6 +155,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		ids := make([]string, 0, len(snapshots))
 		snapshotList := make([]map[string]interface{}, 0, len(snapshots))
 		for _, snapshot := range snapshots {
@@ -166,6 +171,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 				"create_time":       *snapshot.CreateTime,
 				"encrypt":           *snapshot.Encrypt,
 			}
+
 			snapshotList = append(snapshotList, mapping)
 			ids = append(ids, *snapshot.SnapshotId)
 		}
@@ -185,6 +191,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read cbs snapshots failed, reason:%s\n ", logId, err.Error())
 		return err

@@ -4,19 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cvm_image_share_permission"
 sidebar_current: "docs-tencentcloud-resource-cvm_image_share_permission"
 description: |-
-  Provides a resource to create a cvm image_share_permission
+  Provides a resource to create a CVM image share permission
 ---
 
 # tencentcloud_cvm_image_share_permission
 
-Provides a resource to create a cvm image_share_permission
+Provides a resource to create a CVM image share permission
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cvm_image_share_permission" "image_share_permission" {
-  image_id    = "img-xxxxxx"
-  account_ids = ["xxxxxx"]
+resource "tencentcloud_cvm_image_share_permission" "example" {
+  image_id    = "img-0elsru2u"
+  account_ids = ["103849387508"]
 }
 ```
 
@@ -37,9 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cvm image_share_permission can be imported using the id, e.g.
+CVM image share permission can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cvm_image_share_permission.image_share_permission image_share_permission_id
+terraform import tencentcloud_cvm_image_share_permission.example img-0elsru2u
 ```
 

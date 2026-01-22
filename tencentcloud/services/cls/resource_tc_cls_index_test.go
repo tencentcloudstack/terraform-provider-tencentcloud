@@ -2,8 +2,10 @@ package cls_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
@@ -35,6 +37,10 @@ func TestAccTencentCloudClsIndex_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_index.example", "topic_id"),
 					resource.TestCheckResourceAttr("tencentcloud_cls_index.example", "status", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cls_index.example", "include_internal_fields", "true"),
+					func(s *terraform.State) error {
+						time.Sleep(1 * time.Minute)
+						return nil
+					},
 				),
 			},
 		},

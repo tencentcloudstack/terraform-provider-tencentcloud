@@ -35,14 +35,14 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 			"status": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Migrate job status.",
+				Description: "Task status. Valid values: created(Created), checking (Checking), checkPass (Check passed), checkNotPass (Check not passed), readyRun (Ready for running), running (Running), readyComplete (Preparation completed), success (Successful), failed (Failed), stopping (Stopping), completing (Completing), pausing (Pausing), manualPaused (Paused).",
 			},
 
 			// for modify operation
 			"run_mode": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Run Mode. eg:immediate,timed.",
+				Description: "Running mode. Valid values: immediate, timed.",
 			},
 
 			"migrate_option": {
@@ -62,64 +62,64 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 									"object_mode": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Object mode. eg:all,partial.",
+										Description: "Migration object type. Valid values: all, partial.",
 									},
 									"databases": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "The database list.",
+										Description: "Migration object, which is required if ObjectMode is partial.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"db_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "database name.",
+													Description: "Name of the database to be migrated or synced, which is required if ObjectMode is partial.",
 												},
 												"new_db_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "New database name.",
+													Description: "Name of the database after migration or sync, which is the same as the source database name by default.",
 												},
 												"schema_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "schema name.",
+													Description: "The schema to be migrated or synced.",
 												},
 												"new_schema_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "schema name after migration or synchronization.",
+													Description: "Name of the schema after migration or sync.",
 												},
 												"db_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "DB selection mode:all (for all objects under the current object), partial (partial objects), when the ObjectMode is partial, this item is required.",
+													Description: "Database selection mode, which is required if ObjectMode is partial. Valid values: all, partial.",
 												},
 												"schema_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "schema mode: all,partial.",
+													Description: "Schema selection mode. Valid values: all, partial.",
 												},
 												"table_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "table mode: all,partial.",
+													Description: "Table selection mode, which is required if DBMode is partial. Valid values: all, partial.",
 												},
 												"tables": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													Description: "tables list.",
+													Description: "The set of table objects, which is required if TableMode is partial.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"table_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "table name.",
+																Description: "Name of the migrated table, which is case-sensitive.",
 															},
 															"new_table_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "new table name.",
+																Description: "New name of the migrated table. This parameter is required when TableEditMode is rename. It is mutually exclusive with TmpTables..",
 															},
 															"tmp_tables": {
 																Type: schema.TypeSet,
@@ -128,12 +128,12 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 																},
 																Optional:    true,
 																Computed:    true,
-																Description: "temporary tables.",
+																Description: "The temp tables to be migrated. This parameter is mutually exclusive with NewTableName. It is valid only when the configured migration objects are table-level ones and TableEditMode is pt. To migrate temp tables generated when pt-osc or other tools are used during the migration process, you must configure this parameter first. For example, if you want to perform the pt-osc operation on a table named 't1', configure this parameter as ['_t1_new','_t1_old']; to perform the gh-ost operation on t1, configure it as ['_t1_ghc','_t1_gho','_t1_del']. Temp tables generated by pt-osc and gh-ost operations can be configured at the same time.",
 															},
 															"table_edit_mode": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "table edit mode.",
+																Description: "Table editing type. Valid values: rename (table mapping); pt (additional table sync).",
 															},
 														},
 													},
@@ -141,23 +141,23 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 												"view_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "ViewMode.",
+													Description: "View selection mode. Valid values: all, partial.",
 												},
 												"views": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													Description: "Views.",
+													Description: "The set of view objects, which is required if ViewMode is partial.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"view_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "ViewName.",
+																Description: "View name.",
 															},
 															"new_view_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "NewViewName.",
+																Description: "View name after migration.",
 															},
 														},
 													},
@@ -165,23 +165,23 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 												"role_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "RoleMode.",
+													Description: "Role selection mode, which is exclusive to PostgreSQL. Valid values: all, partial.",
 												},
 												"roles": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													Description: "Roles.",
+													Description: "Role, which is exclusive to PostgreSQL and required if RoleMode is partial.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"role_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "RoleName.",
+																Description: "Role name.",
 															},
 															"new_role_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "NewRoleName.",
+																Description: "Role name after migration.",
 															},
 														},
 													},
@@ -189,22 +189,22 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 												"function_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "FunctionMode.",
+													Description: "Sync mode. Valid values: partial, all.",
 												},
 												"trigger_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "TriggerMode.",
+													Description: "Sync mode. Valid values: partial, all.",
 												},
 												"event_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "EventMode.",
+													Description: "Sync mode. Valid values: partial, all.",
 												},
 												"procedure_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "ProcedureMode.",
+													Description: "Sync mode. Valid values: partial, all.",
 												},
 												"functions": {
 													Type: schema.TypeSet,
@@ -213,7 +213,7 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 													},
 													Optional:    true,
 													Computed:    true,
-													Description: "Functions.",
+													Description: "This parameter is required if FunctionMode is partial.",
 												},
 												"procedures": {
 													Type: schema.TypeSet,
@@ -222,7 +222,7 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 													},
 													Optional:    true,
 													Computed:    true,
-													Description: "Procedures.",
+													Description: "This parameter is required if ProcedureMode is partial.",
 												},
 												"events": {
 													Type: schema.TypeSet,
@@ -231,7 +231,7 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 													},
 													Optional:    true,
 													Computed:    true,
-													Description: "Events.",
+													Description: "This parameter is required if EventMode is partial.",
 												},
 												"triggers": {
 													Type: schema.TypeSet,
@@ -240,7 +240,7 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 													},
 													Optional:    true,
 													Computed:    true,
-													Description: "Triggers.",
+													Description: "This parameter is required if TriggerMode is partial.",
 												},
 											},
 										},
@@ -252,7 +252,7 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 										},
 										Optional:    true,
 										Computed:    true,
-										Description: "AdvancedObjects.",
+										Description: "Advanced object types, such as trigger, function, procedure, event. Note: If you want to migrate and synchronize advanced objects, the corresponding advanced object type should be included in this configuration.",
 									},
 								},
 							},
@@ -261,20 +261,20 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "MigrateType.",
+							Description: "Migration type. Valid values: full, structure, fullAndIncrement. Default value: fullAndIncrement.",
 						},
 						"consistency": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
 							Computed:    true,
-							Description: "Consistency.",
+							Description: "Data consistency check option. Data consistency check is disabled by default.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "ConsistencyOption.",
+										Description: "Data consistency check type. Valid values: full, noCheck, notConfigured.",
 									},
 								},
 							},
@@ -282,33 +282,33 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 						"is_migrate_account": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "IsMigrateAccount.",
+							Description: "Whether to migrate accounts.",
 						},
 						"is_override_root": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "IsOverrideRoot.",
+							Description: "Whether to use the Root account in the source database to overwrite that in the target database. Valid values: false, true. For database/table or structural migration, you should specify false. Note that this parameter takes effect only for OldDTS.",
 						},
 						"is_dst_read_only": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "IsDstReadOnly.",
+							Description: "Whether to set the target database to read-only during migration, which takes effect only for MySQL databases. Valid values: true, false. Default value: false.",
 						},
 						"extra_attr": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "ExtraAttr.",
+							Description: "Additional information. You can set additional parameters for certain database types.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Key.",
+										Description: "Option key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Value.",
+										Description: "Option value.",
 									},
 								},
 							},
@@ -321,136 +321,136 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "SrcInfo.",
+				Description: "Source instance information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Region.",
+							Description: "Instance region.",
 						},
 						"access_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "AccessType.",
+							Description: "Instances network access type. Valid values: extranet (public network); ipv6 (public IPv6); cvm (self-build on CVM); dcg (Direct Connect); vpncloud (VPN access); cdb (database); ccn (CCN); intranet (intranet); vpc (VPC). Note that the valid values are subject to the current link.",
 						},
 						"database_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "DatabaseType.",
+							Description: "Database type, such as mysql, redis, mongodb, postgresql, mariadb, and percona.",
 						},
 						"node_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "NodeType.",
+							Description: "Node type, empty or simple indicates a general node, cluster indicates a cluster node; for mongo services, valid values: replicaset (mongodb replica set), standalone (mongodb single node), cluster (mongodb cluster); for redis instances, valid values: empty or simple (single node), cluster (cluster), cluster-cache (cache cluster), cluster-proxy (proxy cluster).",
 						},
 						"info": {
 							Type:        schema.TypeList,
 							Required:    true,
-							Description: "Info.",
+							Description: "Database information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"role": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Role.",
+										Description: "Node role in a distributed database, such as the mongos node in MongoDB.",
 									},
 									"db_kernel": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "DbKernel.",
+										Description: "Kernel version, such as the different kernel versions of MariaDB.",
 									},
 									"host": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Host.",
+										Description: "Instance IP address, which is required for the following access types: public network, Direct Connect, VPN, CCN, intranet, and VPC.",
 									},
 									"port": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Description: "Port.",
+										Description: "Instance port, which is required for the following access types: public network, self-build on CVM, Direct Connect, VPN, CCN, intranet, and VPC.",
 									},
 									"user": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "User.",
+										Description: "Instance username.",
 									},
 									"password": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Sensitive:   true,
-										Description: "Password.",
+										Description: "Instance password.",
 									},
 									"cvm_instance_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "CvmInstanceId.",
+										Description: "Short CVM instance ID in the format of ins-olgl39y8, which is required if the access type is cvm. It is the same as the instance ID displayed in the CVM console.",
 									},
 									"uniq_vpn_gw_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "UniqVpnGwId.",
+										Description: "VPN gateway ID in the format of vpngw-9ghexg7q, which is required if the access type is vpncloud.",
 									},
 									"uniq_dcg_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "UniqDcgId.",
+										Description: "Direct Connect gateway ID in the format of dcg-0rxtqqxb, which is required if the access type is dcg.",
 									},
 									"instance_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "InstanceId.",
+										Description: "Database instance ID in the format of cdb-powiqx8q, which is required if the access type is cdb.",
 									},
 									"ccn_gw_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "CcnGwId.",
+										Description: "CCN instance ID such as ccn-afp6kltc.",
 									},
 									"vpc_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "VpcId.",
+										Description: "VPC ID in the format of vpc-92jblxto, which is required if the access type is vpc, vpncloud, ccn, or dcg.",
 									},
 									"subnet_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "SubnetId.",
+										Description: "ID of the subnet in the VPC in the format of subnet-3paxmkdz, which is required if the access type is vpc, vpncloud, ccn, or dcg.",
 									},
 									"engine_version": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "EngineVersion.",
+										Description: "Database version in the format of 5.6 or 5.7, which takes effect only if the instance is an RDS instance. Default value: 5.6.",
 									},
 									"account": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Account.",
+										Description: "Instance account.",
 									},
 									"account_role": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "AccountRole.",
+										Description: "The role used for cross-account migration, which can contain [a-zA-Z0-9-_]+.",
 									},
 									"account_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "AccountMode.",
+										Description: "The account to which the resource belongs. Valid values: empty or self (the current account); other (another account).",
 									},
 									"tmp_secret_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "TmpSecretId.",
+										Description: "Temporary SecretId, you can obtain the temporary key by GetFederationToken.",
 									},
 									"tmp_secret_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "TmpSecretKey.",
+										Description: "Temporary SecretKey, you can obtain the temporary key by GetFederationToken.",
 									},
 									"tmp_token": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "TmpToken.",
+										Description: "Temporary token, you can obtain the temporary key by GetFederationToken.",
 									},
 								},
 							},
@@ -458,23 +458,23 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 						"supplier": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Supplier.",
+							Description: "Instance service provider, such as `aliyun` and `others`.",
 						},
 						"extra_attr": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "ExtraAttr.",
+							Description: "For MongoDB, you can define the following parameters: ['AuthDatabase':'admin', 'AuthFlag': '1', 'AuthMechanism':'SCRAM-SHA-1'].",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Key.",
+										Description: "Option key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Value.",
+										Description: "Option value.",
 									},
 								},
 							},
@@ -487,136 +487,136 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "DstInfo.",
+				Description: "Target database information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Region.",
+							Description: "Instance region.",
 						},
 						"access_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "AccessType.",
+							Description: "Instances network access type. Valid values: extranet (public network); ipv6 (public IPv6); cvm (self-build on CVM); dcg (Direct Connect); vpncloud (VPN access); cdb (database); ccn (CCN); intranet (intranet); vpc (VPC). Note that the valid values are subject to the current link.",
 						},
 						"database_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "DatabaseType.",
+							Description: "Database type, such as mysql, redis, mongodb, postgresql, mariadb, and percona.",
 						},
 						"node_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "NodeType.",
+							Description: "Node type, empty or simple indicates a general node, cluster indicates a cluster node; for mongo services, valid values: replicaset (mongodb replica set), standalone (mongodb single node), cluster (mongodb cluster); for redis instances, valid values: empty or simple (single node), cluster (cluster), cluster-cache (cache cluster), cluster-proxy (proxy cluster).",
 						},
 						"info": {
 							Type:        schema.TypeList,
 							Required:    true,
-							Description: "Info.",
+							Description: "Database information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"role": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Role.",
+										Description: "Node role in a distributed database, such as the mongos node in MongoDB.",
 									},
 									"db_kernel": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "DbKernel.",
+										Description: "Kernel version, such as the different kernel versions of MariaDB.",
 									},
 									"host": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Host.",
+										Description: "Instance IP address, which is required for the following access types: public network, Direct Connect, VPN, CCN, intranet, and VPC.",
 									},
 									"port": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Description: "Port.",
+										Description: "Instance port, which is required for the following access types: public network, self-build on CVM, Direct Connect, VPN, CCN, intranet, and VPC.",
 									},
 									"user": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "User.",
+										Description: "Instance username.",
 									},
 									"password": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Sensitive:   true,
-										Description: "Password.",
+										Description: "Instance password.",
 									},
 									"cvm_instance_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "CvmInstanceId.",
+										Description: "Short CVM instance ID in the format of ins-olgl39y8, which is required if the access type is cvm. It is the same as the instance ID displayed in the CVM console.",
 									},
 									"uniq_vpn_gw_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "UniqVpnGwId.",
+										Description: "VPN gateway ID in the format of vpngw-9ghexg7q, which is required if the access type is vpncloud.",
 									},
 									"uniq_dcg_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "UniqDcgId.",
+										Description: "Direct Connect gateway ID in the format of dcg-0rxtqqxb, which is required if the access type is dcg.",
 									},
 									"instance_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "InstanceId.",
+										Description: "Database instance ID in the format of cdb-powiqx8q, which is required if the access type is cdb.",
 									},
 									"ccn_gw_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "CcnGwId.",
+										Description: "CCN instance ID such as ccn-afp6kltc.",
 									},
 									"vpc_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "VpcId.",
+										Description: "VPC ID in the format of vpc-92jblxto, which is required if the access type is vpc, vpncloud, ccn, or dcg.",
 									},
 									"subnet_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "SubnetId.",
+										Description: "ID of the subnet in the VPC in the format of subnet-3paxmkdz, which is required if the access type is vpc, vpncloud, ccn, or dcg.",
 									},
 									"engine_version": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Engine Version.",
+										Description: "Database version in the format of 5.6 or 5.7, which takes effect only if the instance is an RDS instance. Default value: 5.6.",
 									},
 									"account": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Account.",
+										Description: "Instance account.",
 									},
 									"account_role": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Account Role.",
+										Description: "The role used for cross-account migration, which can contain [a-zA-Z0-9-_]+.",
 									},
 									"account_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Account Mode.",
+										Description: "The account to which the resource belongs. Valid values: empty or self (the current account); other (another account).",
 									},
 									"tmp_secret_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Tmp SecretId.",
+										Description: "Temporary SecretId, you can obtain the temporary key by GetFederationToken.",
 									},
 									"tmp_secret_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Tmp SecretKey.",
+										Description: "Temporary SecretKey, you can obtain the temporary key by GetFederationToken.",
 									},
 									"tmp_token": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Tmp Token.",
+										Description: "Temporary token, you can obtain the temporary key by GetFederationToken.",
 									},
 								},
 							},
@@ -624,23 +624,23 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 						"supplier": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Supplier.",
+							Description: "Instance service provider, such as `aliyun` and `others`.",
 						},
 						"extra_attr": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "ExtraAttr.",
+							Description: "For MongoDB, you can define the following parameters: ['AuthDatabase':'admin','AuthFlag': '1', 'AuthMechanism':'SCRAM-SHA-1'].",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Key.",
+										Description: "Option key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Value.",
+										Description: "Option value.",
 									},
 								},
 							},
@@ -653,13 +653,13 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "ExpectRunTime.",
+				Description: "Expected start time in the format of `2006-01-02 15:04:05`, which is required if RunMode is timed.",
 			},
 
 			"auto_retry_time_range_minutes": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "AutoRetryTimeRangeMinutes.",
+				Description: "The automatic retry time period can be set from 5 to 720 minutes, with 0 indicating no retry.",
 			},
 		},
 	}

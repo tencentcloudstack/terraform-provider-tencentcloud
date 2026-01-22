@@ -77,7 +77,6 @@ The `data_disks` object supports the following:
 * `disk_size` - (Required, Int) The size of the data disk.
 * `cdc_id` - (Optional, String) Cloud Dedicated Cluster(CDC) ID.
 * `delete_with_instance` - (Optional, Bool) Whether the data disk is destroyed along with the instance, true or false.
-* `disk_id` - (Optional, String) Data disk ID.
 * `disk_type` - (Optional, String) The type of data disk.
 * `encrypt` - (Optional, Bool) Whether the data disk is encrypted, TRUE or FALSE.
 * `kms_key_id` - (Optional, String) The id of custom CMK.
@@ -148,7 +147,6 @@ The `storage_block_attr` object of `externals` supports the following:
 The `system_disk` object supports the following:
 
 * `cdc_id` - (Optional, String) Cloud Dedicated Cluster(CDC) ID.
-* `disk_id` - (Optional, String) System disk ID.
 * `disk_size` - (Optional, Int) The size of system disk.
 * `disk_type` - (Optional, String) The type of system disk.
 

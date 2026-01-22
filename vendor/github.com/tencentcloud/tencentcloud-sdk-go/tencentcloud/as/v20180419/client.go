@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -124,6 +124,7 @@ func (c *Client) AttachInstancesWithContext(ctx context.Context, request *Attach
     if request == nil {
         request = NewAttachInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "AttachInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachInstances require credential")
@@ -225,6 +226,7 @@ func (c *Client) AttachLoadBalancersWithContext(ctx context.Context, request *At
     if request == nil {
         request = NewAttachLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "AttachLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachLoadBalancers require credential")
@@ -259,7 +261,9 @@ func NewCancelInstanceRefreshResponse() (response *CancelInstanceRefreshResponse
 // CancelInstanceRefresh
 // 取消伸缩组的实例刷新活动。
 //
-// * 已刷新/正在刷新的批次不受影响，待刷新批次被取消
+// * 已刷新的批次不受影响，待刷新批次被取消
+//
+// * 如存在正在刷新的批次，不允许取消；可先暂停活动，等待当前批次结束后再取消
 //
 // * 刷新失败的实例保持备用中状态，需用户手动处理后尝试退出备用中状态或销毁
 //
@@ -280,7 +284,9 @@ func (c *Client) CancelInstanceRefresh(request *CancelInstanceRefreshRequest) (r
 // CancelInstanceRefresh
 // 取消伸缩组的实例刷新活动。
 //
-// * 已刷新/正在刷新的批次不受影响，待刷新批次被取消
+// * 已刷新的批次不受影响，待刷新批次被取消
+//
+// * 如存在正在刷新的批次，不允许取消；可先暂停活动，等待当前批次结束后再取消
 //
 // * 刷新失败的实例保持备用中状态，需用户手动处理后尝试退出备用中状态或销毁
 //
@@ -298,6 +304,7 @@ func (c *Client) CancelInstanceRefreshWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCancelInstanceRefreshRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CancelInstanceRefresh")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelInstanceRefresh require credential")
@@ -349,6 +356,7 @@ func (c *Client) ClearLaunchConfigurationAttributesWithContext(ctx context.Conte
     if request == nil {
         request = NewClearLaunchConfigurationAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ClearLaunchConfigurationAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ClearLaunchConfigurationAttributes require credential")
@@ -428,6 +436,7 @@ func (c *Client) CompleteLifecycleActionWithContext(ctx context.Context, request
     if request == nil {
         request = NewCompleteLifecycleActionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CompleteLifecycleAction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CompleteLifecycleAction require credential")
@@ -490,6 +499,7 @@ func NewCreateAutoScalingGroupResponse() (response *CreateAutoScalingGroupRespon
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SIZE = "InvalidParameterValue.Size"
 //  INVALIDPARAMETERVALUE_SUBNETIDS = "InvalidParameterValue.SubnetIds"
+//  INVALIDPARAMETERVALUE_SUBNETNOTINDEDICATEDCLUSTER = "InvalidParameterValue.SubnetNotInDedicatedCluster"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_ZONEMISMATCHREGION = "InvalidParameterValue.ZoneMismatchRegion"
@@ -541,6 +551,7 @@ func (c *Client) CreateAutoScalingGroup(request *CreateAutoScalingGroupRequest) 
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SIZE = "InvalidParameterValue.Size"
 //  INVALIDPARAMETERVALUE_SUBNETIDS = "InvalidParameterValue.SubnetIds"
+//  INVALIDPARAMETERVALUE_SUBNETNOTINDEDICATEDCLUSTER = "InvalidParameterValue.SubnetNotInDedicatedCluster"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_ZONEMISMATCHREGION = "InvalidParameterValue.ZoneMismatchRegion"
@@ -561,6 +572,7 @@ func (c *Client) CreateAutoScalingGroupWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateAutoScalingGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CreateAutoScalingGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAutoScalingGroup require credential")
@@ -668,6 +680,7 @@ func (c *Client) CreateAutoScalingGroupFromInstanceWithContext(ctx context.Conte
     if request == nil {
         request = NewCreateAutoScalingGroupFromInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CreateAutoScalingGroupFromInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAutoScalingGroupFromInstance require credential")
@@ -704,11 +717,11 @@ func NewCreateLaunchConfigurationResponse() (response *CreateLaunchConfiguration
 //
 // 
 //
-// * 启动配置，可以通过 `ModifyLaunchConfigurationAttributes` 修改少量字段。如需使用新的启动配置，建议重新创建启动配置。
+// * 启动配置，可以通过 [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298) 修改少量字段。如需使用新的启动配置，建议重新创建启动配置。
 //
 // 
 //
-// * 每个项目最多只能创建20个启动配置，详见[使用限制](https://cloud.tencent.com/document/product/377/3120)。
+// * 每个地域默认只能创建50个启动配置，详见[使用限制](https://cloud.tencent.com/document/product/377/3120)。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CALLSTSERROR = "InternalError.CallStsError"
@@ -761,11 +774,11 @@ func (c *Client) CreateLaunchConfiguration(request *CreateLaunchConfigurationReq
 //
 // 
 //
-// * 启动配置，可以通过 `ModifyLaunchConfigurationAttributes` 修改少量字段。如需使用新的启动配置，建议重新创建启动配置。
+// * 启动配置，可以通过 [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298) 修改少量字段。如需使用新的启动配置，建议重新创建启动配置。
 //
 // 
 //
-// * 每个项目最多只能创建20个启动配置，详见[使用限制](https://cloud.tencent.com/document/product/377/3120)。
+// * 每个地域默认只能创建50个启动配置，详见[使用限制](https://cloud.tencent.com/document/product/377/3120)。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CALLSTSERROR = "InternalError.CallStsError"
@@ -813,6 +826,7 @@ func (c *Client) CreateLaunchConfigurationWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateLaunchConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CreateLaunchConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLaunchConfiguration require credential")
@@ -869,15 +883,15 @@ func NewCreateLifecycleHookResponse() (response *CreateLifecycleHookResponse) {
 //
 // 	"ActivityId": "asa-fznnvrja",
 //
-// 	"AutoScalingGroupId": "asg-rrrrtttt",
+// 	"AutoScalingGroupId": "asg-ft6y7u8n",
 //
-// 	"LifecycleHookId": "ash-xxxxyyyy",
+// 	"LifecycleHookId": "ash-p9i7y6t5",
 //
 // 	"LifecycleHookName": "my-hook",
 //
 // 	"LifecycleActionToken": "3080e1c9-0efe-4dd7-ad3b-90cd6618298f",
 //
-// 	"InstanceId": "ins-aaaabbbb",
+// 	"InstanceId": "ins-y6dr5e43",
 //
 // 	"LifecycleTransition": "INSTANCE_LAUNCHING",
 //
@@ -938,15 +952,15 @@ func (c *Client) CreateLifecycleHook(request *CreateLifecycleHookRequest) (respo
 //
 // 	"ActivityId": "asa-fznnvrja",
 //
-// 	"AutoScalingGroupId": "asg-rrrrtttt",
+// 	"AutoScalingGroupId": "asg-ft6y7u8n",
 //
-// 	"LifecycleHookId": "ash-xxxxyyyy",
+// 	"LifecycleHookId": "ash-p9i7y6t5",
 //
 // 	"LifecycleHookName": "my-hook",
 //
 // 	"LifecycleActionToken": "3080e1c9-0efe-4dd7-ad3b-90cd6618298f",
 //
-// 	"InstanceId": "ins-aaaabbbb",
+// 	"InstanceId": "ins-y6dr5e43",
 //
 // 	"LifecycleTransition": "INSTANCE_LAUNCHING",
 //
@@ -982,6 +996,7 @@ func (c *Client) CreateLifecycleHookWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateLifecycleHookRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CreateLifecycleHook")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLifecycleHook require credential")
@@ -1050,7 +1065,7 @@ func NewCreateNotificationConfigurationResponse() (response *CreateNotificationC
 //
 //             "Code": "InvalidInstanceType",
 //
-//             "Zone": "ap-guangzhou-2",
+//             "Zone": "ap-guangzhou-6",
 //
 //             "InstanceId": "",
 //
@@ -1058,7 +1073,7 @@ func NewCreateNotificationConfigurationResponse() (response *CreateNotificationC
 //
 //             "SubnetId": "subnet-4t5mgeuu",
 //
-//             "Message": "The specified instance type `S5.LARGE8` is invalid in `subnet-4t5mgeuu`, `ap-guangzhou-2`.",
+//             "Message": "The specified instance type `S5.LARGE8` is invalid in `subnet-4t5mgeuu`, `ap-guangzhou-6`.",
 //
 //             "InstanceType": "S5.LARGE8"
 //
@@ -1127,7 +1142,7 @@ func (c *Client) CreateNotificationConfiguration(request *CreateNotificationConf
 //
 //             "Code": "InvalidInstanceType",
 //
-//             "Zone": "ap-guangzhou-2",
+//             "Zone": "ap-guangzhou-6",
 //
 //             "InstanceId": "",
 //
@@ -1135,7 +1150,7 @@ func (c *Client) CreateNotificationConfiguration(request *CreateNotificationConf
 //
 //             "SubnetId": "subnet-4t5mgeuu",
 //
-//             "Message": "The specified instance type `S5.LARGE8` is invalid in `subnet-4t5mgeuu`, `ap-guangzhou-2`.",
+//             "Message": "The specified instance type `S5.LARGE8` is invalid in `subnet-4t5mgeuu`, `ap-guangzhou-6`.",
 //
 //             "InstanceType": "S5.LARGE8"
 //
@@ -1167,6 +1182,7 @@ func (c *Client) CreateNotificationConfigurationWithContext(ctx context.Context,
     if request == nil {
         request = NewCreateNotificationConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CreateNotificationConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNotificationConfiguration require credential")
@@ -1201,6 +1217,8 @@ func NewCreateScalingPolicyResponse() (response *CreateScalingPolicyResponse) {
 // CreateScalingPolicy
 // 本接口（CreateScalingPolicy）用于创建告警触发策略。
 //
+// - 目标追踪策略触发扩容的条件为，指定类型指标连续 3 个周期高于阈值（目标值），每个周期 1 分钟；触发缩容的条件为，指定类型指标连续 15 个周期低于阈值（目标值的80%），每个周期 1 分钟。
+//
 // 可能返回的错误码:
 //  INTERNALERROR_CALLMONITORERROR = "InternalError.CallMonitorError"
 //  INTERNALERROR_CALLNOTIFICATIONERROR = "InternalError.CallNotificationError"
@@ -1224,6 +1242,8 @@ func (c *Client) CreateScalingPolicy(request *CreateScalingPolicyRequest) (respo
 // CreateScalingPolicy
 // 本接口（CreateScalingPolicy）用于创建告警触发策略。
 //
+// - 目标追踪策略触发扩容的条件为，指定类型指标连续 3 个周期高于阈值（目标值），每个周期 1 分钟；触发缩容的条件为，指定类型指标连续 15 个周期低于阈值（目标值的80%），每个周期 1 分钟。
+//
 // 可能返回的错误码:
 //  INTERNALERROR_CALLMONITORERROR = "InternalError.CallMonitorError"
 //  INTERNALERROR_CALLNOTIFICATIONERROR = "InternalError.CallNotificationError"
@@ -1244,6 +1264,7 @@ func (c *Client) CreateScalingPolicyWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateScalingPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CreateScalingPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateScalingPolicy require credential")
@@ -1327,6 +1348,7 @@ func (c *Client) CreateScheduledActionWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateScheduledActionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "CreateScheduledAction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateScheduledAction require credential")
@@ -1396,6 +1418,7 @@ func (c *Client) DeleteAutoScalingGroupWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteAutoScalingGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DeleteAutoScalingGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAutoScalingGroup require credential")
@@ -1459,6 +1482,7 @@ func (c *Client) DeleteLaunchConfigurationWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteLaunchConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DeleteLaunchConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLaunchConfiguration require credential")
@@ -1518,6 +1542,7 @@ func (c *Client) DeleteLifecycleHookWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteLifecycleHookRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DeleteLifecycleHook")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLifecycleHook require credential")
@@ -1571,6 +1596,7 @@ func (c *Client) DeleteNotificationConfigurationWithContext(ctx context.Context,
     if request == nil {
         request = NewDeleteNotificationConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DeleteNotificationConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNotificationConfiguration require credential")
@@ -1626,6 +1652,7 @@ func (c *Client) DeleteScalingPolicyWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteScalingPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DeleteScalingPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteScalingPolicy require credential")
@@ -1679,6 +1706,7 @@ func (c *Client) DeleteScheduledActionWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteScheduledActionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DeleteScheduledAction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteScheduledAction require credential")
@@ -1730,6 +1758,7 @@ func (c *Client) DescribeAccountLimitsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeAccountLimitsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeAccountLimits")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccountLimits require credential")
@@ -1762,7 +1791,7 @@ func NewDescribeAutoScalingActivitiesResponse() (response *DescribeAutoScalingAc
 }
 
 // DescribeAutoScalingActivities
-// 本接口（DescribeAutoScalingActivities）用于查询伸缩组的伸缩活动记录。
+// 本接口（DescribeAutoScalingActivities）用于查询伸缩组的伸缩活动记录。当前仅保存近两年的伸缩活动。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1779,7 +1808,7 @@ func (c *Client) DescribeAutoScalingActivities(request *DescribeAutoScalingActiv
 }
 
 // DescribeAutoScalingActivities
-// 本接口（DescribeAutoScalingActivities）用于查询伸缩组的伸缩活动记录。
+// 本接口（DescribeAutoScalingActivities）用于查询伸缩组的伸缩活动记录。当前仅保存近两年的伸缩活动。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1795,6 +1824,7 @@ func (c *Client) DescribeAutoScalingActivitiesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeAutoScalingActivitiesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeAutoScalingActivities")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScalingActivities require credential")
@@ -1848,6 +1878,7 @@ func (c *Client) DescribeAutoScalingAdvicesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeAutoScalingAdvicesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeAutoScalingAdvices")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScalingAdvices require credential")
@@ -1903,6 +1934,7 @@ func (c *Client) DescribeAutoScalingGroupLastActivitiesWithContext(ctx context.C
     if request == nil {
         request = NewDescribeAutoScalingGroupLastActivitiesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeAutoScalingGroupLastActivities")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScalingGroupLastActivities require credential")
@@ -1986,6 +2018,7 @@ func (c *Client) DescribeAutoScalingGroupsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAutoScalingGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeAutoScalingGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScalingGroups require credential")
@@ -2063,6 +2096,7 @@ func (c *Client) DescribeAutoScalingInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeAutoScalingInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeAutoScalingInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScalingInstances require credential")
@@ -2142,6 +2176,7 @@ func (c *Client) DescribeLaunchConfigurationsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeLaunchConfigurationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeLaunchConfigurations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLaunchConfigurations require credential")
@@ -2217,6 +2252,7 @@ func (c *Client) DescribeLifecycleHooksWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeLifecycleHooksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeLifecycleHooks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLifecycleHooks require credential")
@@ -2286,6 +2322,7 @@ func (c *Client) DescribeNotificationConfigurationsWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeNotificationConfigurationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeNotificationConfigurations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNotificationConfigurations require credential")
@@ -2349,6 +2386,7 @@ func (c *Client) DescribeRefreshActivitiesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRefreshActivitiesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeRefreshActivities")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRefreshActivities require credential")
@@ -2412,6 +2450,7 @@ func (c *Client) DescribeScalingPoliciesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeScalingPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeScalingPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScalingPolicies require credential")
@@ -2487,6 +2526,7 @@ func (c *Client) DescribeScheduledActionsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeScheduledActionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DescribeScheduledActions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScheduledActions require credential")
@@ -2572,6 +2612,7 @@ func (c *Client) DetachInstancesWithContext(ctx context.Context, request *Detach
     if request == nil {
         request = NewDetachInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DetachInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachInstances require credential")
@@ -2621,6 +2662,7 @@ func NewDetachLoadBalancersResponse() (response *DetachLoadBalancersResponse) {
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCENOTFOUND_CLASSICLOADBALANCERNOTFOUND = "ResourceNotFound.ClassicLoadBalancerNotFound"
 //  RESOURCENOTFOUND_LISTENERNOTFOUND = "ResourceNotFound.ListenerNotFound"
 //  RESOURCENOTFOUND_LOADBALANCERNOTFOUND = "ResourceNotFound.LoadBalancerNotFound"
 //  RESOURCENOTFOUND_LOADBALANCERNOTINAUTOSCALINGGROUP = "ResourceNotFound.LoadBalancerNotInAutoScalingGroup"
@@ -2652,6 +2694,7 @@ func (c *Client) DetachLoadBalancers(request *DetachLoadBalancersRequest) (respo
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCENOTFOUND_CLASSICLOADBALANCERNOTFOUND = "ResourceNotFound.ClassicLoadBalancerNotFound"
 //  RESOURCENOTFOUND_LISTENERNOTFOUND = "ResourceNotFound.ListenerNotFound"
 //  RESOURCENOTFOUND_LOADBALANCERNOTFOUND = "ResourceNotFound.LoadBalancerNotFound"
 //  RESOURCENOTFOUND_LOADBALANCERNOTINAUTOSCALINGGROUP = "ResourceNotFound.LoadBalancerNotInAutoScalingGroup"
@@ -2665,6 +2708,7 @@ func (c *Client) DetachLoadBalancersWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDetachLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DetachLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachLoadBalancers require credential")
@@ -2772,6 +2816,7 @@ func (c *Client) DisableAutoScalingGroupWithContext(ctx context.Context, request
     if request == nil {
         request = NewDisableAutoScalingGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "DisableAutoScalingGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableAutoScalingGroup require credential")
@@ -2829,6 +2874,7 @@ func (c *Client) EnableAutoScalingGroupWithContext(ctx context.Context, request 
     if request == nil {
         request = NewEnableAutoScalingGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "EnableAutoScalingGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableAutoScalingGroup require credential")
@@ -2837,6 +2883,92 @@ func (c *Client) EnableAutoScalingGroupWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewEnableAutoScalingGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnterStandbyRequest() (request *EnterStandbyRequest) {
+    request = &EnterStandbyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("as", APIVersion, "EnterStandby")
+    
+    
+    return
+}
+
+func NewEnterStandbyResponse() (response *EnterStandbyResponse) {
+    response = &EnterStandbyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// EnterStandby
+// 伸缩组内实例进入备用中状态。
+//
+// * 备用中状态实例的 CLB 权重值为 0，不会被自动缩容、不健康替换、实例刷新操作选中
+//
+// * 调用弹性伸缩开关机接口会使得备用中状态发生变化，而云服务器开关机接口不会影响
+//
+// * 实例进入备用中状态后，伸缩组会尝试下调期望实例数，新期望数不会小于最小值
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
+//  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCENOTFOUND_INSTANCESNOTFOUND = "ResourceNotFound.InstancesNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_INSTANCEINOPERATION = "ResourceUnavailable.InstanceInOperation"
+//  RESOURCEUNAVAILABLE_LOADBALANCERINOPERATION = "ResourceUnavailable.LoadBalancerInOperation"
+func (c *Client) EnterStandby(request *EnterStandbyRequest) (response *EnterStandbyResponse, err error) {
+    return c.EnterStandbyWithContext(context.Background(), request)
+}
+
+// EnterStandby
+// 伸缩组内实例进入备用中状态。
+//
+// * 备用中状态实例的 CLB 权重值为 0，不会被自动缩容、不健康替换、实例刷新操作选中
+//
+// * 调用弹性伸缩开关机接口会使得备用中状态发生变化，而云服务器开关机接口不会影响
+//
+// * 实例进入备用中状态后，伸缩组会尝试下调期望实例数，新期望数不会小于最小值
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
+//  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCENOTFOUND_INSTANCESNOTFOUND = "ResourceNotFound.InstancesNotFound"
+//  RESOURCEUNAVAILABLE_AUTOSCALINGGROUPINACTIVITY = "ResourceUnavailable.AutoScalingGroupInActivity"
+//  RESOURCEUNAVAILABLE_INSTANCEINOPERATION = "ResourceUnavailable.InstanceInOperation"
+//  RESOURCEUNAVAILABLE_LOADBALANCERINOPERATION = "ResourceUnavailable.LoadBalancerInOperation"
+func (c *Client) EnterStandbyWithContext(ctx context.Context, request *EnterStandbyRequest) (response *EnterStandbyResponse, err error) {
+    if request == nil {
+        request = NewEnterStandbyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "EnterStandby")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnterStandby require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnterStandbyResponse()
     err = c.Send(request, response)
     return
 }
@@ -2912,6 +3044,7 @@ func (c *Client) ExecuteScalingPolicyWithContext(ctx context.Context, request *E
     if request == nil {
         request = NewExecuteScalingPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ExecuteScalingPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExecuteScalingPolicy require credential")
@@ -2946,9 +3079,11 @@ func NewExitStandbyResponse() (response *ExitStandbyResponse) {
 // ExitStandby
 // 伸缩组内实例退出备用中状态。
 //
-// * 备用中状态的实例负载均衡器权重值为 0，退出备用中状态后，权重值也会恢复
+// * 退出备用中状态后，实例会进入运行中状态，CLB 权重值恢复为预设值
 //
-// * 对备用中状态实例进行开关机操作也会使其退出备用中状态
+// * 调用弹性伸缩开关机接口会使得备用中状态发生变化，而云服务器开关机接口不会影响
+//
+// * 实例退出备用中状态后，伸缩组会上调期望实例数，新期望数不能大于最大值
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
@@ -2971,9 +3106,11 @@ func (c *Client) ExitStandby(request *ExitStandbyRequest) (response *ExitStandby
 // ExitStandby
 // 伸缩组内实例退出备用中状态。
 //
-// * 备用中状态的实例负载均衡器权重值为 0，退出备用中状态后，权重值也会恢复
+// * 退出备用中状态后，实例会进入运行中状态，CLB 权重值恢复为预设值
 //
-// * 对备用中状态实例进行开关机操作也会使其退出备用中状态
+// * 调用弹性伸缩开关机接口会使得备用中状态发生变化，而云服务器开关机接口不会影响
+//
+// * 实例退出备用中状态后，伸缩组会上调期望实例数，新期望数不能大于最大值
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
@@ -2993,6 +3130,7 @@ func (c *Client) ExitStandbyWithContext(ctx context.Context, request *ExitStandb
     if request == nil {
         request = NewExitStandbyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ExitStandby")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExitStandby require credential")
@@ -3049,6 +3187,7 @@ func NewModifyAutoScalingGroupResponse() (response *ModifyAutoScalingGroupRespon
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SIZE = "InvalidParameterValue.Size"
 //  INVALIDPARAMETERVALUE_SUBNETIDS = "InvalidParameterValue.SubnetIds"
+//  INVALIDPARAMETERVALUE_SUBNETNOTINDEDICATEDCLUSTER = "InvalidParameterValue.SubnetNotInDedicatedCluster"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_MAXSIZELIMITEXCEEDED = "LimitExceeded.MaxSizeLimitExceeded"
@@ -3088,6 +3227,7 @@ func (c *Client) ModifyAutoScalingGroup(request *ModifyAutoScalingGroupRequest) 
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SIZE = "InvalidParameterValue.Size"
 //  INVALIDPARAMETERVALUE_SUBNETIDS = "InvalidParameterValue.SubnetIds"
+//  INVALIDPARAMETERVALUE_SUBNETNOTINDEDICATEDCLUSTER = "InvalidParameterValue.SubnetNotInDedicatedCluster"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_MAXSIZELIMITEXCEEDED = "LimitExceeded.MaxSizeLimitExceeded"
@@ -3102,6 +3242,7 @@ func (c *Client) ModifyAutoScalingGroupWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyAutoScalingGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyAutoScalingGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAutoScalingGroup require credential")
@@ -3171,6 +3312,7 @@ func (c *Client) ModifyDesiredCapacityWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyDesiredCapacityRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyDesiredCapacity")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDesiredCapacity require credential")
@@ -3208,8 +3350,6 @@ func NewModifyLaunchConfigurationAttributesResponse() (response *ModifyLaunchCon
 // 
 //
 // * 修改启动配置后，已经使用该启动配置扩容的存量实例不会发生变更，此后使用该启动配置的新增实例会按照新的配置进行扩容。
-//
-// * 本接口支持修改部分简单类型。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
@@ -3260,8 +3400,6 @@ func (c *Client) ModifyLaunchConfigurationAttributes(request *ModifyLaunchConfig
 //
 // * 修改启动配置后，已经使用该启动配置扩容的存量实例不会发生变更，此后使用该启动配置的新增实例会按照新的配置进行扩容。
 //
-// * 本接口支持修改部分简单类型。
-//
 // 可能返回的错误码:
 //  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
@@ -3304,6 +3442,7 @@ func (c *Client) ModifyLaunchConfigurationAttributesWithContext(ctx context.Cont
     if request == nil {
         request = NewModifyLaunchConfigurationAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyLaunchConfigurationAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLaunchConfigurationAttributes require credential")
@@ -3373,6 +3512,7 @@ func (c *Client) ModifyLifecycleHookWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyLifecycleHookRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyLifecycleHook")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLifecycleHook require credential")
@@ -3472,6 +3612,7 @@ func (c *Client) ModifyLoadBalancerTargetAttributesWithContext(ctx context.Conte
     if request == nil {
         request = NewModifyLoadBalancerTargetAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyLoadBalancerTargetAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoadBalancerTargetAttributes require credential")
@@ -3583,6 +3724,7 @@ func (c *Client) ModifyLoadBalancersWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoadBalancers require credential")
@@ -3654,6 +3796,7 @@ func (c *Client) ModifyNotificationConfigurationWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyNotificationConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyNotificationConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNotificationConfiguration require credential")
@@ -3721,6 +3864,7 @@ func (c *Client) ModifyScalingPolicyWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyScalingPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyScalingPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyScalingPolicy require credential")
@@ -3800,6 +3944,7 @@ func (c *Client) ModifyScheduledActionWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyScheduledActionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ModifyScheduledAction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyScheduledAction require credential")
@@ -3881,6 +4026,7 @@ func (c *Client) RemoveInstancesWithContext(ctx context.Context, request *Remove
     if request == nil {
         request = NewRemoveInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "RemoveInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveInstances require credential")
@@ -3942,6 +4088,7 @@ func (c *Client) ResumeInstanceRefreshWithContext(ctx context.Context, request *
     if request == nil {
         request = NewResumeInstanceRefreshRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ResumeInstanceRefresh")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResumeInstanceRefresh require credential")
@@ -4033,6 +4180,7 @@ func (c *Client) RollbackInstanceRefreshWithContext(ctx context.Context, request
     if request == nil {
         request = NewRollbackInstanceRefreshRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "RollbackInstanceRefresh")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RollbackInstanceRefresh require credential")
@@ -4118,6 +4266,7 @@ func (c *Client) ScaleInInstancesWithContext(ctx context.Context, request *Scale
     if request == nil {
         request = NewScaleInInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ScaleInInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleInInstances require credential")
@@ -4199,6 +4348,7 @@ func (c *Client) ScaleOutInstancesWithContext(ctx context.Context, request *Scal
     if request == nil {
         request = NewScaleOutInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "ScaleOutInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleOutInstances require credential")
@@ -4262,6 +4412,7 @@ func (c *Client) SetInstancesProtectionWithContext(ctx context.Context, request 
     if request == nil {
         request = NewSetInstancesProtectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "SetInstancesProtection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetInstancesProtection require credential")
@@ -4339,6 +4490,7 @@ func (c *Client) StartAutoScalingInstancesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewStartAutoScalingInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "StartAutoScalingInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartAutoScalingInstances require credential")
@@ -4426,6 +4578,7 @@ func (c *Client) StartInstanceRefreshWithContext(ctx context.Context, request *S
     if request == nil {
         request = NewStartInstanceRefreshRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "StartInstanceRefresh")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartInstanceRefresh require credential")
@@ -4519,6 +4672,7 @@ func (c *Client) StopAutoScalingInstancesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewStopAutoScalingInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "StopAutoScalingInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopAutoScalingInstances require credential")
@@ -4584,6 +4738,7 @@ func (c *Client) StopInstanceRefreshWithContext(ctx context.Context, request *St
     if request == nil {
         request = NewStopInstanceRefreshRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "StopInstanceRefresh")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopInstanceRefresh require credential")
@@ -4709,6 +4864,7 @@ func (c *Client) UpgradeLaunchConfigurationWithContext(ctx context.Context, requ
     if request == nil {
         request = NewUpgradeLaunchConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "UpgradeLaunchConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeLaunchConfiguration require credential")
@@ -4796,6 +4952,7 @@ func (c *Client) UpgradeLifecycleHookWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUpgradeLifecycleHookRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "as", APIVersion, "UpgradeLifecycleHook")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeLifecycleHook require credential")

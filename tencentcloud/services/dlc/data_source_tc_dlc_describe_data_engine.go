@@ -34,22 +34,22 @@ func DataSourceTencentCloudDlcDescribeDataEngine() *schema.Resource {
 						"engine_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine type, only support: spark/presto.",
+							Description: "Engine type: spark/presto.",
 						},
 						"cluster_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine cluster type, only support: spark_cu/presto_cu.",
+							Description: "Cluster resource type spark_private/presto_private/presto_cu/spark_cu.",
 						},
 						"quota_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Reference ID.",
+							Description: "Quota ID.",
 						},
 						"state": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Engine state, only support: 0:Init/-1:Failed/-2:Deleted/1:Pause/2:Running/3:ToBeDelete/4:Deleting.",
+							Description: "Data engine status -2 deleted, -1 failed, 0 initializing, 1 suspended, 2 running, 3 ready to delete, and 4 deleting.",
 						},
 						"create_time": {
 							Type:        schema.TypeInt,
@@ -64,52 +64,52 @@ func DataSourceTencentCloudDlcDescribeDataEngine() *schema.Resource {
 						"size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Engine size.",
+							Description: "Cluster specifications.",
 						},
 						"mode": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Engine mode, only support 1: ByAmount, 2: YearlyAndMonthly.",
+							Description: "Billing mode: 0 shared mode, 1 pay-as-you-go, and 2 monthly subscription.",
 						},
 						"min_clusters": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Engine min size, greater than or equal to 1 and MaxClusters bigger than MinClusters.",
+							Description: "Minimum number of clusters.",
 						},
 						"max_clusters": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Engine max cluster size,  MaxClusters less than or equal to 10 and MaxClusters bigger than MinClusters.",
+							Description: "Maximum number of clusters.",
 						},
 						"auto_resume": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether to automatically start the cluster, prepay not support.",
+							Description: "Whether to recover automatically.",
 						},
 						"spend_after": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Automatic recovery time, prepay not support.",
+							Description: "Automatic recovery time.",
 						},
 						"cidr_block": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine VPC network segment, just like 192.0.2.1/24.",
+							Description: "Cluster IP range.",
 						},
 						"default_data_engine": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether it is the default virtual cluster.",
+							Description: "Whether it is the default engine.",
 						},
 						"message": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine description information.",
+							Description: "Returned Message.",
 						},
 						"data_engine_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Engine unique id.",
+							Description: "Engine unique ID.",
 						},
 						"sub_account_uin": {
 							Type:        schema.TypeString,
@@ -119,22 +119,22 @@ func DataSourceTencentCloudDlcDescribeDataEngine() *schema.Resource {
 						"expire_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Expire time.",
+							Description: "Expiration time.",
 						},
 						"isolated_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Isolated time.",
+							Description: "Isolation time.",
 						},
 						"reversal_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Reversal time.",
+							Description: "Rectification time.",
 						},
 						"user_alias": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "User&amp;#39;s nickname.",
+							Description: "Username.",
 						},
 						"tag_list": {
 							Type:        schema.TypeList,
@@ -312,6 +312,12 @@ func DataSourceTencentCloudDlcDescribeDataEngine() *schema.Resource {
 							},
 						},
 						"ui_u_r_l": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Deprecated:  "It has been deprecated. Use `ui_url` instead.",
+							Description: "Jump address of ui.",
+						},
+						"ui_url": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Jump address of ui.",
@@ -683,6 +689,7 @@ func dataSourceTencentCloudDlcDescribeDataEngineRead(d *schema.ResourceData, met
 
 		if dataEngine.UiURL != nil {
 			dataEngineInfoMap["ui_u_r_l"] = dataEngine.UiURL
+			dataEngineInfoMap["ui_url"] = dataEngine.UiURL
 		}
 
 		if dataEngine.ResourceType != nil {

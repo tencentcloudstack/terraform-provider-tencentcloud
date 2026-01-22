@@ -13,10 +13,38 @@ Use this data source to query detailed information of CBS snapshots.
 
 ## Example Usage
 
+### Query all snapshots
+
+```hcl
+data "tencentcloud_cbs_snapshots" "snapshots" {}
+```
+
+### Query snapshots by filters
+
 ```hcl
 data "tencentcloud_cbs_snapshots" "snapshots" {
-  snapshot_id        = "snap-f3io7adt"
-  result_output_file = "mytestpath"
+  snapshot_id        = "snap-hibh08s3"
+  result_output_file = "my_snapshots"
+}
+
+data "tencentcloud_cbs_snapshots" "snapshots" {
+  snapshot_name = "tf-example"
+}
+
+data "tencentcloud_cbs_snapshots" "snapshots" {
+  storage_id = "disk-12j0fk1w"
+}
+
+data "tencentcloud_cbs_snapshots" "snapshots" {
+  storage_usage = "SYSTEM_DISK"
+}
+
+data "tencentcloud_cbs_snapshots" "snapshots" {
+  project_id = "0"
+}
+
+data "tencentcloud_cbs_snapshots" "snapshots" {
+  availability_zone = "ap-guangzhou-4"
 }
 ```
 
@@ -25,12 +53,12 @@ data "tencentcloud_cbs_snapshots" "snapshots" {
 The following arguments are supported:
 
 * `availability_zone` - (Optional, String) The available zone that the CBS instance locates at.
-* `project_id` - (Optional, Int) ID of the project within the snapshot.
+* `project_id` - (Optional, String) ID of the project within the snapshot.
 * `result_output_file` - (Optional, String) Used to save results.
 * `snapshot_id` - (Optional, String) ID of the snapshot to be queried.
 * `snapshot_name` - (Optional, String) Name of the snapshot to be queried.
 * `storage_id` - (Optional, String) ID of the the CBS which this snapshot created from.
-* `storage_usage` - (Optional, String) Types of CBS which this snapshot created from, and available values include SYSTEM_DISK and DATA_DISK.
+* `storage_usage` - (Optional, String) Types of CBS which this snapshot created from, and available values include `SYSTEM_DISK` and `DATA_DISK`.
 
 ## Attributes Reference
 

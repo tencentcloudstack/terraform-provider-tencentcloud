@@ -47,7 +47,7 @@ func ResourceTencentCloudMonitorTmpInstance() *schema.Resource {
 			"data_retention_time": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Data retention time(in days). Value range: 15, 30, 45, 90, 180, 360, 720.",
+				Description: "Data retention time(in days). Value range: 15, 30, 45, 90, 180, 365, 730.",
 			},
 
 			"zone": {
@@ -128,6 +128,10 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create monitor tmpInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -135,6 +139,10 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpInstance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
 	}
 
 	tmpInstanceId := *response.Response.InstanceId

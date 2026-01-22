@@ -216,42 +216,42 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"priority": {
 										Type:        schema.TypeInt,
-										Required:    true,
+										Computed:    true,
 										Description: "Priority of origin-pull rules, do not set the same value for multiple rules.",
 									},
 									"sync_back_to_source": {
 										Type:        schema.TypeBool,
-										Optional:    true,
-										Default:     false,
+										Computed:    true,
 										Description: "If `true`, COS will not return 3XX status code when pulling data from an origin server. Currently available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.",
+									},
+									"back_to_source_mode": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Back to source mode. Allow value: Proxy, Mirror, Redirect.",
 									},
 									"prefix": {
 										Type:        schema.TypeString,
-										Optional:    true,
-										Default:     "",
+										Computed:    true,
 										Description: "Triggers the origin-pull rule when the requested file name matches this prefix.",
 									},
 									"protocol": {
 										Type:        schema.TypeString,
-										Optional:    true,
-										Default:     "",
+										Computed:    true,
 										Description: "the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.",
 									},
 									"host": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "Allows only a domain name or IP address. You can optionally append a port number to the address.",
 									},
 									"follow_query_string": {
 										Type:        schema.TypeBool,
-										Optional:    true,
-										Default:     true,
+										Computed:    true,
 										Description: "Specifies whether to pass through COS request query string when accessing the origin server.",
 									},
 									"follow_redirection": {
 										Type:        schema.TypeBool,
-										Optional:    true,
-										Default:     true,
+										Computed:    true,
 										Description: "Specifies whether to follow 3XX redirect to another origin server to pull data from.",
 									},
 									//"copy_origin_data": {
@@ -262,13 +262,13 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 									//},
 									"follow_http_headers": {
 										Type:        schema.TypeList,
-										Optional:    true,
+										Computed:    true,
 										Description: "Specifies the pass through headers when accessing the origin server.",
 										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
 									"custom_http_headers": {
 										Type:        schema.TypeMap,
-										Optional:    true,
+										Computed:    true,
 										Description: "Specifies the custom headers that you can add for COS to access your origin server.",
 									},
 									//"redirect_prefix": {
@@ -292,21 +292,18 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"domain": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "Specify domain host.",
 									},
 									"type": {
 										Type:        schema.TypeString,
-										Optional:    true,
-										Default:     "REST",
+										Computed:    true,
 										Description: "Specify origin domain type, available values: `REST`, `WEBSITE`, `ACCELERATE`, default: `REST`.",
 									},
 									"status": {
-										Type:         schema.TypeString,
-										Optional:     true,
-										Default:      "ENABLED",
-										Description:  "Domain status, default: `ENABLED`.",
-										ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"ENABLED", "DISABLED"}),
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Domain status, default: `ENABLED`.",
 									},
 								},
 							},

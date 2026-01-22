@@ -267,7 +267,7 @@ func ResourceTencentCloudWafSaasDomain() *schema.Resource {
 				Optional:     true,
 				Default:      PROTECTION_STATUS_1,
 				ValidateFunc: tccommon.ValidateAllowedIntValue(PROTECTION_STATUS),
-				Description:  "Binding status between waf and LB, 0:not bind, 1:binding.",
+				Description:  "WAF switch status, 1: turn on WAF switch; 0: turn off WAF switch.",
 			},
 			"domain_id": {
 				Type:        schema.TypeString,

@@ -78,7 +78,6 @@ func init() {
 }
 
 func TestAccTencentCloudCbsStorageResource_basic(t *testing.T) {
-	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -105,8 +104,38 @@ func TestAccTencentCloudCbsStorageResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCbsStorageResource_burstPerformance(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCbsStorageDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCbsStorage_burstPerformance,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.burst_performance"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.burst_performance", "burst_performance", "true"),
+				),
+			},
+			{
+				Config: testAccCbsStorage_burstPerformanceUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.burst_performance"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.burst_performance", "burst_performance", "false"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cbs_storage.burst_performance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force_delete"},
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudCbsStorageResource_full(t *testing.T) {
-	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -258,6 +287,24 @@ resource "tencentcloud_cbs_storage" "storage_basic" {
 }
 `
 
+const testAccCbsStorage_burstPerformance = `
+resource "tencentcloud_cbs_storage" "burst_performance" {
+	storage_type      = "CLOUD_HSSD"
+	storage_name      = "burst-performance"
+	storage_size      = 500
+	availability_zone = "ap-guangzhou-3"
+	burst_performance = true
+}
+`
+const testAccCbsStorage_burstPerformanceUpdate = `
+resource "tencentcloud_cbs_storage" "burst_performance" {
+	storage_type      = "CLOUD_HSSD"
+	storage_name      = "burst-performance"
+	storage_size      = 500
+	availability_zone = "ap-guangzhou-3"
+	burst_performance = false
+}
+`
 const testAccCbsStorage_full = `
 resource "tencentcloud_cbs_storage" "storage_full" {
 	storage_type      = "CLOUD_PREMIUM"

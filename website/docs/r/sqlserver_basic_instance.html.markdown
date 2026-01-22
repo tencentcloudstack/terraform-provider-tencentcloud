@@ -90,7 +90,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the SQL Server basic instance.
+* `dns_pod_domain` - Internet address domain name.
 * `status` - Status of the SQL Server basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.
+* `tgw_wan_vport` - External port number.
 * `vip` - IP for private access.
 * `vport` - Port for private access.
 

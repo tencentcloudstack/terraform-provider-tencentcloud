@@ -99,7 +99,7 @@ func ResourceTencentCloudCvmLaunchTemplate() *schema.Resource {
 						},
 						"disk_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "System disk ID.",
 						},
 						"disk_size": {
@@ -135,7 +135,7 @@ func ResourceTencentCloudCvmLaunchTemplate() *schema.Resource {
 						},
 						"disk_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Data disk ID.",
 						},
 						"delete_with_instance": {
@@ -665,9 +665,6 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 		if v, ok := dMap["disk_type"]; ok {
 			systemDisk.DiskType = helper.String(v.(string))
 		}
-		if v, ok := dMap["disk_id"]; ok {
-			systemDisk.DiskId = helper.String(v.(string))
-		}
 		if v, ok := dMap["disk_size"]; ok {
 			systemDisk.DiskSize = helper.IntInt64(v.(int))
 		}
@@ -686,9 +683,6 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 			}
 			if v, ok := dMap["disk_type"]; ok {
 				dataDisk.DiskType = helper.String(v.(string))
-			}
-			if v, ok := dMap["disk_id"]; ok {
-				dataDisk.DiskId = helper.String(v.(string))
 			}
 			if v, ok := dMap["delete_with_instance"]; ok {
 				dataDisk.DeleteWithInstance = helper.Bool(v.(bool))
@@ -738,17 +732,17 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "internet_accessible"); ok {
 		internetAccessible := cvm.InternetAccessible{}
-		if v, ok := dMap["internet_charge_type"]; ok {
-			internetAccessible.InternetChargeType = helper.String(v.(string))
+		if v, ok := dMap["internet_charge_type"].(string); ok && v != "" {
+			internetAccessible.InternetChargeType = helper.String(v)
 		}
-		if v, ok := dMap["internet_max_bandwidth_out"]; ok {
-			internetAccessible.InternetMaxBandwidthOut = helper.IntInt64(v.(int))
+		if v, ok := dMap["internet_max_bandwidth_out"].(int); ok && v != 0 {
+			internetAccessible.InternetMaxBandwidthOut = helper.IntInt64(v)
 		}
-		if v, ok := dMap["public_ip_assigned"]; ok {
-			internetAccessible.PublicIpAssigned = helper.Bool(v.(bool))
+		if v, ok := dMap["public_ip_assigned"].(bool); ok && v {
+			internetAccessible.PublicIpAssigned = helper.Bool(v)
 		}
-		if v, ok := dMap["bandwidth_package_id"]; ok {
-			internetAccessible.BandwidthPackageId = helper.String(v.(string))
+		if v, ok := dMap["bandwidth_package_id"].(string); ok && v != "" {
+			internetAccessible.BandwidthPackageId = helper.String(v)
 		}
 		request.InternetAccessible = &internetAccessible
 	}
@@ -763,8 +757,8 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "login_settings"); ok {
 		loginSettings := cvm.LoginSettings{}
-		if v, ok := dMap["password"]; ok {
-			loginSettings.Password = helper.String(v.(string))
+		if v, ok := dMap["password"].(string); ok && v != "" {
+			loginSettings.Password = helper.String(v)
 		}
 		if v, ok := dMap["key_ids"]; ok {
 			keyIdsSet := v.(*schema.Set).List()
@@ -773,8 +767,8 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 				loginSettings.KeyIds = append(loginSettings.KeyIds, &keyIds)
 			}
 		}
-		if v, ok := dMap["keep_image_login"]; ok {
-			loginSettings.KeepImageLogin = helper.String(v.(string))
+		if v, ok := dMap["keep_image_login"].(string); ok && v != "" {
+			loginSettings.KeepImageLogin = helper.String(v)
 		}
 		request.LoginSettings = &loginSettings
 	}

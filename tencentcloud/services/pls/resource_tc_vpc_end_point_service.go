@@ -53,7 +53,7 @@ func ResourceTencentCloudVpcEndPointService() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Type of service instance, like `CLB`, `CDB`, `CRS`, default is `CLB`.",
+				Description: "Type of service instance, like `CLB`, `CDB`, `CRS`, `GWLB`. default is `CLB`.",
 			},
 
 			"service_owner": {
@@ -93,13 +93,13 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_end_point_service.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
 		request           = vpc.NewCreateVpcEndPointServiceRequest()
 		response          = vpc.NewCreateVpcEndPointServiceResponse()
 		endPointServiceId string
 	)
+
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
 	}
@@ -108,7 +108,7 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 		request.EndPointServiceName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("auto_accept_flag"); v != nil {
+	if v, ok := d.GetOkExists("auto_accept_flag"); ok {
 		request.AutoAcceptFlag = helper.Bool(v.(bool))
 	}
 
@@ -127,12 +127,22 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil || result.Response.EndPointService == nil {
+			return resource.RetryableError(fmt.Errorf("Create vpc endPointService failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create vpc endPointService failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.EndPointService.EndPointServiceId == nil {
+		return fmt.Errorf("EndPointServiceId is nil.")
 	}
 
 	endPointServiceId = *response.Response.EndPointService.EndPointServiceId
@@ -145,23 +155,21 @@ func resourceTencentCloudVpcEndPointServiceRead(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_end_point_service.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
-	endPointServiceId := d.Id()
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service           = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		endPointServiceId = d.Id()
+	)
 
 	endPointService, err := service.DescribeVpcEndPointServiceById(ctx, endPointServiceId)
-
 	if err != nil {
 		return err
 	}
 
 	if endPointService == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		return fmt.Errorf("resource `tencentcloud_vpc_end_point_service` %s does not exist", d.Id())
 	}
 
 	if endPointService.VpcId != nil {
@@ -211,26 +219,27 @@ func resourceTencentCloudVpcEndPointServiceUpdate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_end_point_service.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := vpc.NewModifyVpcEndPointServiceAttributeRequest()
-
-	endPointServiceId := d.Id()
-
-	request.EndPointServiceId = &endPointServiceId
-
-	if v, ok := d.GetOk("vpc_id"); ok {
-		request.VpcId = helper.String(v.(string))
-	}
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		request           = vpc.NewModifyVpcEndPointServiceAttributeRequest()
+		endPointServiceId = d.Id()
+	)
 
 	unsupportedUpdateFields := []string{
 		"vpc_id",
 		"service_type",
 	}
+
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
 			return fmt.Errorf("tencentcloud_vpc_end_point_service update on %s is not support yet", field)
 		}
+	}
+
+	request.EndPointServiceId = &endPointServiceId
+
+	if v, ok := d.GetOk("vpc_id"); ok {
+		request.VpcId = helper.String(v.(string))
 	}
 
 	if d.HasChange("end_point_service_name") {
@@ -240,7 +249,7 @@ func resourceTencentCloudVpcEndPointServiceUpdate(d *schema.ResourceData, meta i
 	}
 
 	if d.HasChange("auto_accept_flag") {
-		if v, _ := d.GetOk("auto_accept_flag"); v != nil {
+		if v, ok := d.GetOkExists("auto_accept_flag"); ok {
 			request.AutoAcceptFlag = helper.Bool(v.(bool))
 		}
 	}
@@ -258,8 +267,10 @@ func resourceTencentCloudVpcEndPointServiceUpdate(d *schema.ResourceData, meta i
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create vpc endPointService failed, reason:%+v", logId, err)
 		return err
@@ -272,11 +283,12 @@ func resourceTencentCloudVpcEndPointServiceDelete(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_end_point_service.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	endPointServiceId := d.Id()
+	var (
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
+		ctx               = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service           = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		endPointServiceId = d.Id()
+	)
 
 	if err := service.DeleteVpcEndPointServiceById(ctx, endPointServiceId); err != nil {
 		return nil

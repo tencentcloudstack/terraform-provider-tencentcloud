@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to create a CynosDB cluster.
 
+~> **NOTE:** params `instance_count` and `instance_init_infos` only choose one. If neither parameter is set, the CynosDB cluster is created with parameter `instance_count` set to `2` by default(one RW instance + one Ro instance). If you only need to create a master instance, explicitly set the `instance_count` field to `1`, or configure the RW instance information in the `instance_init_infos` field.
+
 ## Example Usage
 
 ### Create a single availability zone NORMAL CynosDB cluster
@@ -105,6 +107,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     instance_count = 1
     device_type    = "exclusive"
   }
+
+  cynos_version = "2.1.14.001"
 
   tags = {
     createBy = "terraform"
@@ -219,8 +223,10 @@ The following arguments are supported:
 * `auto_pause` - (Optional, String) Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`.
+* `cynos_version` - (Optional, String) Kernel minor version, like `3.1.16.002`.
 * `db_mode` - (Optional, String) Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.
 * `force_delete` - (Optional, Bool) Indicate whether to delete cluster instance directly or not. Default is false. If set true, the cluster and its `All RELATED INSTANCES` will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
+* `instance_count` - (Optional, Int, ForceNew) The number of instances, the range is (0,16], the default value is 2 (i.e. one RW instance + one Ro instance), the passed n means 1 RW instance + n-1 Ro instances (with the same specifications), if you need a more accurate cluster composition, please use InstanceInitInfos.
 * `instance_cpu_core` - (Optional, Int) The number of CPU cores of read-write type instance in the CynosDB cluster. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_init_infos` - (Optional, List, ForceNew) Instance initialization configuration information, mainly used to select instances of different specifications when purchasing a cluster.
 * `instance_maintain_duration` - (Optional, Int) Duration time for maintenance, unit in second. `3600` by default.
@@ -297,6 +303,6 @@ In addition to all arguments above, the following attributes are exported:
 CynosDB cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
+terraform import tencentcloud_cynosdb_cluster.example cynosdbmysql-dzj5l8gz
 ```
 

@@ -60,6 +60,7 @@ In addition to all arguments above, the following attributes are exported:
     * `ip` - IP.
     * `provider` - Supplier, BGP represents default, CMCC represents China Mobile, CUCC represents China Unicom, and CTCC represents China Telecom.
   * `ip` - IP.
+  * `is_auto_scale_proxy` - Indicates whether the auto scale channel is enabled, with 0 for no and 1 for yes.
   * `is_support_tls_choice` - Whether to allow TLS configuration.0-no support, 1-expressed support.
   * `modify_config_time` - Configuration change timeNote: This field may return null, indicating that a valid value cannot be obtained.
   * `network_type` - Network type: normal represents regular BGP, cn2 represents premium BGP, triple represents triple network, secure_EIP represents customized security EIPNote: This field may return null, indicating that a valid value cannot be obtained.

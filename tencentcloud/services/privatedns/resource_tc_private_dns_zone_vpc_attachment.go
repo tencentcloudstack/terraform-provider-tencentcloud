@@ -141,7 +141,6 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 			}
 
 			accountVpcInfo.VpcName = helper.String("")
-
 			request.AccountVpcSet = append(request.AccountVpcSet, accountVpcInfo)
 		}
 	}
@@ -150,14 +149,13 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().AddSpecifyPrivateZoneVpc(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response.UniqId == nil {
-			e = fmt.Errorf("PrivateDns ZoneVpcAttachment not exists")
-			return resource.NonRetryableError(e)
+		if result == nil || result.Response == nil || result.Response.UniqId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create PrivateDns ZoneVpcAttachment failed, Response is nil."))
 		}
 
 		uniqId = *result.Response.UniqId
@@ -176,9 +174,17 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().QueryAsyncBindVpcStatus(asyncRequest)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, asyncRequest.GetAction(), asyncRequest.ToJsonString(), asyncRequest.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Query async bind vpc status failed, Response is nil."))
+		}
+
+		if result.Response.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Status is nil."))
 		}
 
 		if *result.Response.Status == "success" {
@@ -220,8 +226,8 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentRead(d *schema.ResourceData,
 	}
 
 	if ZoneVpcAttachment == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_private_dns_zone_vpc_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `PrivateDnsZoneVpcAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -233,7 +239,6 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentRead(d *schema.ResourceData,
 		vpcSetList := []interface{}{}
 		for _, vpcSet := range ZoneVpcAttachment.VpcSet {
 			vpcSetMap := map[string]interface{}{}
-
 			if *vpcSet.UniqVpcId == uniqVpcId {
 				vpcSetMap["uniq_vpc_id"] = *vpcSet.UniqVpcId
 				vpcSetMap["region"] = *vpcSet.Region
@@ -249,7 +254,6 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentRead(d *schema.ResourceData,
 		accountVpcSetList := []interface{}{}
 		for _, accountVpcSet := range ZoneVpcAttachment.AccountVpcSet {
 			accountVpcSetMap := map[string]interface{}{}
-
 			if *accountVpcSet.UniqVpcId == uniqVpcId {
 				accountVpcSetMap["uniq_vpc_id"] = *accountVpcSet.UniqVpcId
 				accountVpcSetMap["region"] = *accountVpcSet.Region
@@ -292,8 +296,8 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentDelete(d *schema.ResourceDat
 	}
 
 	if ZoneVpcAttachment == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_private_dns_zone_vpc_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `PrivateDnsZoneVpcAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 

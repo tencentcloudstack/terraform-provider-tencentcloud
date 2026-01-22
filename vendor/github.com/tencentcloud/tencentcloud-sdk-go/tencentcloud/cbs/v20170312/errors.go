@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -89,6 +89,9 @@ const (
 	// 云硬盘大小与快照大小不匹配。
 	INVALIDPARAMETER_DISKSIZENOTMATCH = "InvalidParameter.DiskSizeNotMatch"
 
+	// ClientToken不可用。
+	INVALIDPARAMETER_INVALIDCLIENTTOKEN = "InvalidParameter.InvalidClientToken"
+
 	// 项目ID不存在。
 	INVALIDPARAMETER_PROJECTIDNOTEXIST = "InvalidParameter.ProjectIdNotExist"
 
@@ -115,6 +118,9 @@ const (
 
 	// 实例挂载云盘数量超过限制。
 	LIMITEXCEEDED_INSTANCEATTACHEDDISK = "LimitExceeded.InstanceAttachedDisk"
+
+	// 调用标签服务超过了频率限制。
+	LIMITEXCEEDED_TAGQUOTALIMITEXCEEDED = "LimitExceeded.TagQuotaLimitExceeded"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
@@ -143,6 +149,9 @@ const (
 	// 云盘退还数量已达上限，不能再退还。
 	RESOURCEINSUFFICIENT_OVERREFUNDQUOTA = "ResourceInsufficient.OverRefundQuota"
 
+	// 云硬盘升级服务繁忙，请稍后重试。
+	RESOURCEINSUFFICIENT_UPGRADESERVICEBUSY = "ResourceInsufficient.UpgradeServiceBusy"
+
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
@@ -154,6 +163,9 @@ const (
 
 	// 云硬盘已挂载至其他云服务器上。
 	RESOURCEUNAVAILABLE_ATTACHED = "ResourceUnavailable.Attached"
+
+	// 数据备份点尚未创建完成，暂时不可使用。
+	RESOURCEUNAVAILABLE_DISKBACKUPCREATING = "ResourceUnavailable.DiskBackupCreating"
 
 	// 云硬盘快照链长度过长，拒绝创建快照。
 	RESOURCEUNAVAILABLE_DISKSNAPSHOTCHAINTOOLARGE = "ResourceUnavailable.DiskSnapshotChainTooLarge"
@@ -191,6 +203,9 @@ const (
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
+	// CAM鉴权Token不可用。
+	UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+
 	// MFA鉴权过期，请重试。
 	UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 
@@ -217,6 +232,9 @@ const (
 
 	// 该快照已经共享，请先解除共享。
 	UNSUPPORTEDOPERATION_SNAPHASSHARED = "UnsupportedOperation.SnapHasShared"
+
+	// 快照组关联快照的原云硬盘未挂载在同一实例上。
+	UNSUPPORTEDOPERATION_SNAPSHOTGROUPDISKATTACHMULTIINSTANCE = "UnsupportedOperation.SnapshotGroupDiskAttachMultiInstance"
 
 	// 该快照创建了自定义快照，请先删除对应镜像。
 	UNSUPPORTEDOPERATION_SNAPSHOTHASBINDEDIMAGE = "UnsupportedOperation.SnapshotHasBindedImage"

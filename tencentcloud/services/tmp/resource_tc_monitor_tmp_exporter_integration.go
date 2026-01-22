@@ -10,8 +10,6 @@ import (
 	"strconv"
 	"strings"
 
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -21,10 +19,11 @@ import (
 
 func ResourceTencentCloudMonitorTmpExporterIntegration() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorTmpExporterIntegrationRead,
-		Create: resourceTencentCloudMonitorTmpExporterIntegrationCreate,
-		Update: resourceTencentCloudMonitorTmpExporterIntegrationUpdate,
-		Delete: resourceTencentCloudMonitorTmpExporterIntegrationDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.81.182. Please use 'tencentcloud_monitor_tmp_exporter_integration_v2' instead.",
+		Read:               resourceTencentCloudMonitorTmpExporterIntegrationRead,
+		Create:             resourceTencentCloudMonitorTmpExporterIntegrationCreate,
+		Update:             resourceTencentCloudMonitorTmpExporterIntegrationUpdate,
+		Delete:             resourceTencentCloudMonitorTmpExporterIntegrationDelete,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -101,10 +100,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 		request.ClusterId = helper.String(clusterId)
 	}
 
-	initStatus := tke.NewDescribePrometheusInstanceInitStatusRequest()
+	initStatus := monitor.NewDescribePrometheusInstanceInitStatusRequest()
 	initStatus.InstanceId = request.InstanceId
 	err := resource.Retry(8*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		results, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribePrometheusInstanceInitStatus(initStatus)
+		results, errRet := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribePrometheusInstanceInitStatus(initStatus)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
@@ -116,10 +115,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 			return nil
 		}
 		if *status == "uninitialized" {
-			iniRequest := tke.NewRunPrometheusInstanceRequest()
+			iniRequest := monitor.NewRunPrometheusInstanceRequest()
 			iniRequest.InstanceId = request.InstanceId
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().RunPrometheusInstance(iniRequest)
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().RunPrometheusInstance(iniRequest)
 				if e != nil {
 					return tccommon.RetryError(e)
 				} else {
@@ -147,6 +146,11 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil || result.Response.Names == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create monitor tmpExporterIntegration failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -154,6 +158,10 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpExporterIntegration failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if len(response.Response.Names) < 1 {
+		return fmt.Errorf("Names is nil.")
 	}
 
 	tmpExporterIntegrationId := *response.Response.Names[0]
@@ -164,7 +172,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 }
 
 func resourceTencentCloudMonitorTmpExporterIntegrationRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmpExporterIntegration.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_exporter_integration.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -182,7 +190,8 @@ func resourceTencentCloudMonitorTmpExporterIntegrationRead(d *schema.ResourceDat
 
 	if tmpExporterIntegration == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpExporterIntegration` %s does not exist", tmpExporterIntegrationId)
+		log.Printf("[WARN]%s resource `tmpExporterIntegration` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if tmpExporterIntegration.Kind != nil {

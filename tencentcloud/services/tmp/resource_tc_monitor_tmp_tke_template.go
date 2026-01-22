@@ -2,7 +2,6 @@ package tmp
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -332,7 +331,8 @@ func resourceTencentCloudMonitorTmpTkeTemplateRead(d *schema.ResourceData, meta 
 
 	if template == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `template` %s does not exist", templateId)
+		log.Printf("[WARN]%s resource `template` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	templates := make([]map[string]interface{}, 0)

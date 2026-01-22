@@ -31,7 +31,7 @@ resource "tencentcloud_waf_anti_info_leak" "example" {
 
 The following arguments are supported:
 
-* `action_type` - (Required, Int) Rule Action. 0: alarm; 1: replacement; 2: only displaying the first four digits; 3: only displaying the last four digits; 4: blocking.
+* `action_type` - (Required, Int) Rule Action, 0 (log), 1 (replace), 2 (only display the first four digits), 3 (only display the last four digits), 4 (deny).
 * `domain` - (Required, String) Domain.
 * `name` - (Required, String) Rule Name.
 * `strategies` - (Required, List) Strategies detail.
@@ -40,8 +40,13 @@ The following arguments are supported:
 
 The `strategies` object supports the following:
 
-* `content` - (Required, String) Matching Content. If field is returncode support: 400, 403, 404, 4xx, 500, 501, 502, 504, 5xx; If field is information support: idcard, phone, bankcard; If field is keywords users input matching content themselves.
-* `field` - (Required, String) Matching Fields. support: returncode, keywords, information.
+* `content` - (Required, String) Matching content
+          The following options are available when Field is set to information:
+          idcard (ID card), phone (phone number), and bankcard (bank card).
+          The following options are available when Field is set to returncode:
+          400 (status code 400), 403 (status code 403), 404 (status code 404), 4xx (other 4xx status codes), 500 (status code 500), 501 (status code 501), 502 (status code 502), 504 (status code 504), and 5xx (other 5xx status codes).
+          When Field is set to keywords, users need to input the matching content themselves.
+* `field` - (Required, String) Matching Criteria, returncode (Response Code), keywords (Keywords), information (Sensitive Information).
 
 ## Attributes Reference
 

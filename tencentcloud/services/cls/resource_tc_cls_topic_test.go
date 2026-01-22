@@ -181,9 +181,6 @@ resource "tencentcloud_cls_topic" "example" {
   period               = 30
   storage_type         = "hot"
   describes            = "Test Demo Update."
-  hot_period           = 15
-  tags                 = {
-    "test" = "test",
-  }
+  hot_period           = 10
 }
 `

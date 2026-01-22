@@ -16,10 +16,11 @@ import (
 
 func ResourceTencentCloudTcssImageRegistry() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTcssImageRegistryCreate,
-		Read:   resourceTencentCloudTcssImageRegistryRead,
-		Update: resourceTencentCloudTcssImageRegistryUpdate,
-		Delete: resourceTencentCloudTcssImageRegistryDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.82.23.",
+		Create:             resourceTencentCloudTcssImageRegistryCreate,
+		Read:               resourceTencentCloudTcssImageRegistryRead,
+		Update:             resourceTencentCloudTcssImageRegistryUpdate,
+		Delete:             resourceTencentCloudTcssImageRegistryDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

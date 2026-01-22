@@ -3,13 +3,16 @@ package tcss
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
 	tcssv20201101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss/v20201101"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -73,5 +76,52 @@ func (me *TcssService) DescribeTcssImageRegistryById(ctx context.Context, regist
 		}
 	}
 
+	return
+}
+
+func (me *TcssService) DescribeTcssClusterAccessById(ctx context.Context, clusterId string) (ret *tcssv20201101.ClusterInfoItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tcssv20201101.NewDescribeUserClusterRequest()
+	response := tcssv20201101.NewDescribeUserClusterResponse()
+	request.Offset = helper.IntUint64(0)
+	request.Limit = helper.IntUint64(1)
+	request.Filters = []*tcssv20201101.ComplianceFilters{
+		{
+			Name:       helper.String("ClusterID"),
+			Values:     helper.Strings([]string{clusterId}),
+			ExactMatch: helper.Bool(true),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTcssV20201101Client().DescribeUserCluster(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ClusterInfoList == nil || len(result.Response.ClusterInfoList) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("Describe user cluster failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.ClusterInfoList[0]
 	return
 }

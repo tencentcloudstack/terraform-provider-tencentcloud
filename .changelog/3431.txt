@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_teo_l7_acc_rule_v2: Correct the `tls_config_parameters.0.version` field type.
+```
+
+```release-note:enhancement
+resource/tencentcloud_teo_l7_acc_rule: Correct the `tls_config_parameters.0.version` field type.
+```

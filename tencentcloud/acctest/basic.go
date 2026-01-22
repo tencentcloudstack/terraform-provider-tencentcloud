@@ -214,14 +214,14 @@ variable "international_subnet_id" {
 // Tke Exclusive Network Environment
 const (
 	TkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
-	DefaultTkeClusterId   = "cls-r8gqwjw6"
+	DefaultTkeClusterId   = "cls-2weetaxi"
 	DefaultTkeClusterName = "keep-tke-cluster"
 	DefaultTkeClusterType = "tke"
-	DefaultPrometheusId   = "prom-1lspn8sw"
+	DefaultPrometheusId   = "prom-9ywsz034"
 	DefaultTemplateId     = "temp-gqunlvo1"
-	ClusterPrometheusId   = "prom-g261hacc"
-	TkeClusterIdAgent     = "cls-9ae9qo9k"
-	TkeClusterTypeAgent   = "eks"
+	ClusterPrometheusId   = "prom-9ywsz034"
+	TkeClusterIdAgent     = "cls-2weetaxi"
+	TkeClusterTypeAgent   = "tke"
 	DefaultAgentId        = "agent-q3zy8gt8"
 )
 
@@ -856,10 +856,10 @@ locals {
 locals {
   filtered_sharding_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0 && lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") == "4.4" && lookup(i, "memory") == 4096 && lookup(i, "default_storage") == 256000]
   sharding_spec = concat(local.filtered_sharding_spec, [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0])
-  sharding_machine_type = local.sharding_spec.0.machine_type
-  sharding_memory = local.sharding_spec.0.memory / 1024
-  sharding_volume = local.sharding_spec.0.default_storage / 1000
-  sharding_engine_version = lookup(var.engine_versions, local.sharding_spec.0.engine_version)
+  sharding_machine_type = local.filtered_sharding_spec.0.machine_type
+  sharding_memory = local.filtered_sharding_spec.0.memory / 1024
+  sharding_volume = local.filtered_sharding_spec.0.default_storage / 1000
+  sharding_engine_version = lookup(var.engine_versions, local.filtered_sharding_spec.0.engine_version)
 }
 `
 
@@ -1148,8 +1148,8 @@ const (
 	DefaultEsInstanceId    = "es-5wn36he6"
 	DefaultEsSecurityGroup = "sg-edmur627"
 	DefaultEsLogstash      = "ls-kru90fkz"
-	DefaultEsVpcId         = "vpc-lrj71tt3"
-	DefaultEsSubnetId      = "subnet-kggvos8o"
+	DefaultEsVpcId         = "vpc-38vqkwq1"
+	DefaultEsSubnetId      = "subnet-qoyiqmn0"
 )
 
 const DefaultEsVariables = `

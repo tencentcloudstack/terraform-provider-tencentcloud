@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_emr_cluster"
 sidebar_current: "docs-tencentcloud-resource-emr_cluster"
 description: |-
-  Provide a resource to create a emr cluster.
+  Provide a resource to create an emr cluster.
 ---
 
 # tencentcloud_emr_cluster
 
-Provide a resource to create a emr cluster.
+Provide a resource to create an emr cluster.
 
 ## Example Usage
 
@@ -94,7 +94,7 @@ resource "tencentcloud_emr_cluster" "emr_cluster" {
   time_span = 3600
   time_unit = "s"
   pay_mode  = 0
-  placement_info = {
+  placement_info {
     zone       = var.availability_zone
     project_id = 0
   }
@@ -130,6 +130,8 @@ The following arguments are supported:
 * `display_strategy` - (Optional, String, **Deprecated**) It will be deprecated in later versions. Display strategy of EMR instance.
 * `extend_fs_field` - (Optional, String) Access the external file system.
 * `login_settings` - (Optional, Map) Instance login settings. There are two optional fields:- password: Instance login password: 8-16 characters, including uppercase letters, lowercase letters, numbers and special characters. Special symbols only support! @% ^ *. The first bit of the password cannot be a special character;- public_key_id: Public key id. After the key is associated, the instance can be accessed through the corresponding private key.
+* `multi_zone_setting` - (Optional, List) The specification of node resources is as follows: fill in a few available areas. In order, the first one is the main available area, the second one is the backup available area, and the third one is the arbitration available area.
+* `multi_zone` - (Optional, Bool, ForceNew) true means that cross-AZ deployment is enabled; it is only a user parameter when creating a new cluster, and no subsequent adjustment is supported.
 * `need_master_wan` - (Optional, String, ForceNew) Whether to enable the cluster Master node public network. Value range:
 				- NEED_MASTER_WAN: Indicates that the cluster Master node public network is enabled.
 				- NOT_NEED_MASTER_WAN: Indicates that it is not turned on.
@@ -138,6 +140,11 @@ The following arguments are supported:
 * `placement` - (Optional, Map, **Deprecated**) It will be deprecated in later versions. Use `placement_info` instead. The location of the instance.
 * `pre_executed_file_settings` - (Optional, List, ForceNew) Pre executed file settings. It can only be set at the time of creation, and cannot be modified.
 * `resource_spec` - (Optional, List) Resource specification of EMR instance.
+* `scene_name` - (Optional, String) Scene-based value:
+	- Hadoop-Kudu
+	- Hadoop-Zookeeper
+	- Hadoop-Presto
+	- Hadoop-Hbase.
 * `sg_id` - (Optional, String, ForceNew) The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.
 * `tags` - (Optional, Map) Tag description list.
 * `terminate_node_info` - (Optional, List) Terminate nodes. Note: it only works when the number of nodes decreases.
@@ -238,10 +245,20 @@ The `multi_disks` object of `task_resource_spec` supports the following:
 	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.
 * `volume` - (Optional, Int, ForceNew) Cloud disk size.
 
+The `multi_zone_setting` object supports the following:
+
+* `vpc_settings` - (Required, Map, ForceNew) The private net config of EMR instance.
+* `placement` - (Optional, List) The location of the instance.
+* `resource_spec` - (Optional, List) Resource specification of EMR instance.
+
 The `placement_info` object supports the following:
 
 * `zone` - (Required, String) Zone.
 * `project_id` - (Optional, Int) Project id.
+
+The `placement` object of `multi_zone_setting` supports the following:
+
+* `zone` - (Required, String, ForceNew) Zone.
 
 The `pre_executed_file_settings` object supports the following:
 
@@ -253,6 +270,17 @@ The `pre_executed_file_settings` object supports the following:
 * `remark` - (Optional, String, ForceNew) Remark.
 * `run_order` - (Optional, Int, ForceNew) Run order.
 * `when_run` - (Optional, String, ForceNew) `resourceAfter` or `clusterAfter`.
+
+The `resource_spec` object of `multi_zone_setting` supports the following:
+
+* `common_count` - (Optional, Int, ForceNew) The number of common node.
+* `common_resource_spec` - (Optional, List, ForceNew) Resource details.
+* `core_count` - (Optional, Int) The number of core node.
+* `core_resource_spec` - (Optional, List, ForceNew) Resource details.
+* `master_count` - (Optional, Int) The number of master node.
+* `master_resource_spec` - (Optional, List, ForceNew) Resource details.
+* `task_count` - (Optional, Int) The number of core node.
+* `task_resource_spec` - (Optional, List, ForceNew) Resource details.
 
 The `resource_spec` object supports the following:
 

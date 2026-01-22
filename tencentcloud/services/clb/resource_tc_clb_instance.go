@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -102,11 +103,12 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.",
+				Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is Mbps.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.",
 			},
@@ -222,7 +224,13 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 			"eip_address_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.",
+			},
+			"associate_endpoint": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The associated terminal node ID; passing an empty string indicates unassociating the node.",
 			},
 			"domain": {
 				Type:        schema.TypeString,
@@ -337,9 +345,9 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.Get("snat_ips").([]interface{}); ok && len(v) > 0 {
 		for i := range v {
 			item := v[i].(map[string]interface{})
-			subnetId := item["subnet_id"].(string)
-			snatIp := &clb.SnatIp{
-				SubnetId: &subnetId,
+			snatIp := &clb.SnatIp{}
+			if v, ok := item["subnet_id"].(string); ok && v != "" {
+				snatIp.SubnetId = &v
 			}
 
 			if v, ok := item["ip"].(string); ok && v != "" {
@@ -427,20 +435,17 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().CreateLoadBalancer(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			requestId := *result.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
-			if retryErr != nil {
-				return tccommon.RetryError(errors.WithStack(retryErr))
-			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RequestId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create CLB instance failed, Response is nil."))
 		}
 
 		response = result
@@ -452,12 +457,18 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	if len(response.Response.LoadBalancerIds) < 1 {
+	// wait
+	requestId := *response.Response.RequestId
+	clbId, err := waitForTaskFinishGetID(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+	if err != nil {
+		return err
+	}
+
+	if clbId == "" {
 		return fmt.Errorf("[CHECK][CLB instance][Create] check: response error, load balancer id is nil")
 	}
 
-	d.SetId(*response.Response.LoadBalancerIds[0])
-	clbId = *response.Response.LoadBalancerIds[0]
+	d.SetId(clbId)
 
 	if v, ok := d.GetOk("security_groups"); ok {
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
@@ -466,8 +477,9 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
 			if securityGroups[i] != nil {
-				securityGroup := securityGroups[i].(string)
-				sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+				if securityGroup, ok := securityGroups[i].(string); ok && securityGroup != "" {
+					sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+				}
 			}
 		}
 
@@ -574,6 +586,39 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
+					requestId := *mResponse.Response.RequestId
+					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+					if retryErr != nil {
+						return tccommon.RetryError(errors.WithStack(retryErr))
+					}
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
+	if v, ok := d.GetOkExists("associate_endpoint"); ok {
+		endpointId := v.(string)
+		if endpointId != "" {
+			mRequest := clb.NewModifyLoadBalancerAttributesRequest()
+			mRequest.LoadBalancerId = helper.String(clbId)
+			mRequest.AssociateEndpoint = &endpointId
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				mResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerAttributes(mRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
+					if mResponse == nil || mResponse.Response == nil || mResponse.Response.RequestId == nil {
+						return resource.NonRetryableError(fmt.Errorf("Modify load balancer attributes failed, Response is nil."))
+					}
+
 					requestId := *mResponse.Response.RequestId
 					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
 					if retryErr != nil {
@@ -719,6 +764,10 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	if instance.AssociateEndpoint != nil {
+		_ = d.Set("associate_endpoint", instance.AssociateEndpoint)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "clb", "clb", tcClient.Region, d.Id())
@@ -827,6 +876,12 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		request.DeleteProtect = &isDeleteProtect
 	}
 
+	if d.HasChange("associate_endpoint") {
+		changed = true
+		associateEndpoint := d.Get("associate_endpoint").(string)
+		request.AssociateEndpoint = &associateEndpoint
+	}
+
 	if changed {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerAttributes(request)
@@ -887,8 +942,9 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		securityGroups := d.Get("security_groups").([]interface{})
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
-			securityGroup := securityGroups[i].(string)
-			sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			if securityGroup, ok := securityGroups[i].(string); ok && securityGroup != "" {
+				sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -1104,6 +1160,12 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteLoadBalancerById(ctx, clbId)
 		if e != nil {
+			if ve, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ve.GetCode() == "FailedOperation.ResourceInOperating" {
+					return tccommon.RetryError(e, "FailedOperation.ResourceInOperating")
+				}
+			}
+
 			return tccommon.RetryError(e)
 		}
 

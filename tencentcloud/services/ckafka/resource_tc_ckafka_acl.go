@@ -121,7 +121,7 @@ func resourceTencentCloudCkafkaAclRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("operation_type", CKAFKA_ACL_OPERATION_TO_STRING[*info.Operation])
 	_ = d.Set("permission_type", CKAFKA_PERMISSION_TYPE_TO_STRING[*info.PermissionType])
 	_ = d.Set("host", info.Host)
-	_ = d.Set("principal", strings.TrimLeft(*info.Principal, CKAFKA_ACL_PRINCIPAL_STR))
+	_ = d.Set("principal", strings.TrimPrefix(*info.Principal, CKAFKA_ACL_PRINCIPAL_STR))
 
 	return nil
 }

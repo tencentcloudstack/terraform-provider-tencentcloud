@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -194,7 +194,6 @@ func (r *AddOrganizationMemberEmailRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type AddOrganizationMemberEmailResponseParams struct {
 	// 绑定Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BindId *uint64 `json:"BindId,omitnil,omitempty" name:"BindId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -757,25 +756,20 @@ func (r *AttachPolicyResponse) FromJsonString(s string) error {
 
 type AuthNode struct {
 	// 互信主体关系ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RelationId *int64 `json:"RelationId,omitnil,omitempty" name:"RelationId"`
 
 	// 互信主体名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AuthName *string `json:"AuthName,omitnil,omitempty" name:"AuthName"`
 
 	// 主体管理员
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Manager *MemberMainInfo `json:"Manager,omitnil,omitempty" name:"Manager"`
 }
 
 type AuthRelationFile struct {
 	// 文件名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 文件路径。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
 }
 
@@ -848,6 +842,67 @@ func (r *BindOrganizationMemberAuthAccountResponse) FromJsonString(s string) err
 }
 
 // Predefined struct for user
+type BindOrganizationPolicySubAccountRequestParams struct {
+	// 策略ID。
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 组织管理员子账号Uin列表。最大5个
+	OrgSubAccountUins []*int64 `json:"OrgSubAccountUins,omitnil,omitempty" name:"OrgSubAccountUins"`
+}
+
+type BindOrganizationPolicySubAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 策略ID。
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 组织管理员子账号Uin列表。最大5个
+	OrgSubAccountUins []*int64 `json:"OrgSubAccountUins,omitnil,omitempty" name:"OrgSubAccountUins"`
+}
+
+func (r *BindOrganizationPolicySubAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *BindOrganizationPolicySubAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "PolicyId")
+	delete(f, "OrgSubAccountUins")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "BindOrganizationPolicySubAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type BindOrganizationPolicySubAccountResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type BindOrganizationPolicySubAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *BindOrganizationPolicySubAccountResponseParams `json:"Response"`
+}
+
+func (r *BindOrganizationPolicySubAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *BindOrganizationPolicySubAccountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CancelOrganizationMemberAuthAccountRequestParams struct {
 	// 成员Uin。
 	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
@@ -912,6 +967,67 @@ func (r *CancelOrganizationMemberAuthAccountResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CancelOrganizationMemberAuthAccountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CancelOrganizationPolicySubAccountRequestParams struct {
+	// 策略ID。
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 组织管理员子账号Uin列表。最大5个
+	OrgSubAccountUins []*int64 `json:"OrgSubAccountUins,omitnil,omitempty" name:"OrgSubAccountUins"`
+}
+
+type CancelOrganizationPolicySubAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 策略ID。
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 组织管理员子账号Uin列表。最大5个
+	OrgSubAccountUins []*int64 `json:"OrgSubAccountUins,omitnil,omitempty" name:"OrgSubAccountUins"`
+}
+
+func (r *CancelOrganizationPolicySubAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CancelOrganizationPolicySubAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "PolicyId")
+	delete(f, "OrgSubAccountUins")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CancelOrganizationPolicySubAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CancelOrganizationPolicySubAccountResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CancelOrganizationPolicySubAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *CancelOrganizationPolicySubAccountResponseParams `json:"Response"`
+}
+
+func (r *CancelOrganizationPolicySubAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CancelOrganizationPolicySubAccountResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1109,11 +1225,14 @@ func (r *CreateGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateOrgServiceAssignRequestParams struct {
-	// 集团服务ID。可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
-	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
-
 	// 委派管理员Uin列表。 最大长度20个
 	MemberUins []*int64 `json:"MemberUins,omitnil,omitempty" name:"MemberUins"`
+
+	// 集团服务ID。和集团服务产品标识二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 集团服务产品标识。和集团服务ID二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
 	// 委派管理员管理范围。 取值：1-全部成员 2-部分成员，默认值1
 	ManagementScope *uint64 `json:"ManagementScope,omitnil,omitempty" name:"ManagementScope"`
@@ -1128,11 +1247,14 @@ type CreateOrgServiceAssignRequestParams struct {
 type CreateOrgServiceAssignRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集团服务ID。可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
-	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
-
 	// 委派管理员Uin列表。 最大长度20个
 	MemberUins []*int64 `json:"MemberUins,omitnil,omitempty" name:"MemberUins"`
+
+	// 集团服务ID。和集团服务产品标识二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 集团服务产品标识。和集团服务ID二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
 	// 委派管理员管理范围。 取值：1-全部成员 2-部分成员，默认值1
 	ManagementScope *uint64 `json:"ManagementScope,omitnil,omitempty" name:"ManagementScope"`
@@ -1156,8 +1278,9 @@ func (r *CreateOrgServiceAssignRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "ServiceId")
 	delete(f, "MemberUins")
+	delete(f, "ServiceId")
+	delete(f, "Product")
 	delete(f, "ManagementScope")
 	delete(f, "ManagementScopeUins")
 	delete(f, "ManagementScopeNodeIds")
@@ -1238,7 +1361,6 @@ func (r *CreateOrganizationIdentityRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateOrganizationIdentityResponseParams struct {
 	// 身份ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityId *uint64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1378,7 +1500,6 @@ func (r *CreateOrganizationMemberPolicyRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateOrganizationMemberPolicyResponseParams struct {
 	// 策略ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1409,7 +1530,7 @@ type CreateOrganizationMemberRequestParams struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -1446,7 +1567,7 @@ type CreateOrganizationMemberRequest struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -1506,7 +1627,6 @@ func (r *CreateOrganizationMemberRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateOrganizationMemberResponseParams struct {
 	// 成员Uin。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Uin *int64 `json:"Uin,omitnil,omitempty" name:"Uin"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1585,7 +1705,6 @@ func (r *CreateOrganizationMembersPolicyRequest) FromJsonString(s string) error 
 // Predefined struct for user
 type CreateOrganizationMembersPolicyResponseParams struct {
 	// 策略ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1898,6 +2017,9 @@ func (r *CreateRoleConfigurationResponse) FromJsonString(s string) error {
 type CreateSCIMCredentialRequestParams struct {
 	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 过期时间（秒），最小1小时，最大99年。如果不传则默认一年过期
+	ExpireDuration *uint64 `json:"ExpireDuration,omitnil,omitempty" name:"ExpireDuration"`
 }
 
 type CreateSCIMCredentialRequest struct {
@@ -1905,6 +2027,9 @@ type CreateSCIMCredentialRequest struct {
 	
 	// 空间ID。z-前缀开头，后面是12位随机数字/小写字母
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 过期时间（秒），最小1小时，最大99年。如果不传则默认一年过期
+	ExpireDuration *uint64 `json:"ExpireDuration,omitnil,omitempty" name:"ExpireDuration"`
 }
 
 func (r *CreateSCIMCredentialRequest) ToJsonString() string {
@@ -1920,6 +2045,7 @@ func (r *CreateSCIMCredentialRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ZoneId")
+	delete(f, "ExpireDuration")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSCIMCredentialRequest has unknown keys!", "")
 	}
@@ -1997,6 +2123,9 @@ type CreateUserRequestParams struct {
 
 	// 用户类型  Manual：手动创建，Synchronized：外部导入
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+
+	// 是否需要重置密码： true: 需要重置  false: 不需要重置密码。 默认false
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 type CreateUserRequest struct {
@@ -2028,6 +2157,9 @@ type CreateUserRequest struct {
 
 	// 用户类型  Manual：手动创建，Synchronized：外部导入
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+
+	// 是否需要重置密码： true: 需要重置  false: 不需要重置密码。 默认false
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 func (r *CreateUserRequest) ToJsonString() string {
@@ -2051,6 +2183,7 @@ func (r *CreateUserRequest) FromJsonString(s string) error {
 	delete(f, "Email")
 	delete(f, "UserStatus")
 	delete(f, "UserType")
+	delete(f, "NeedResetPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserRequest has unknown keys!", "")
 	}
@@ -2263,21 +2396,27 @@ func (r *DeleteGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteOrgServiceAssignRequestParams struct {
-	// 集团服务ID。可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
-	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
-
 	// 委派管理员Uin。
 	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
+
+	// 集团服务ID。和集团服务产品标识二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 集团服务产品标识。和集团服务ID二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
 type DeleteOrgServiceAssignRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集团服务ID。可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
-	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
-
 	// 委派管理员Uin。
 	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
+
+	// 集团服务ID。和集团服务产品标识二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 集团服务产品标识。和集团服务ID二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
 func (r *DeleteOrgServiceAssignRequest) ToJsonString() string {
@@ -2292,8 +2431,9 @@ func (r *DeleteOrgServiceAssignRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "ServiceId")
 	delete(f, "MemberUin")
+	delete(f, "ServiceId")
+	delete(f, "Product")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteOrgServiceAssignRequest has unknown keys!", "")
 	}
@@ -3289,7 +3429,6 @@ func (r *DescribeEffectivePolicyRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeEffectivePolicyResponseParams struct {
 	// 有效策略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EffectivePolicy *EffectivePolicy `json:"EffectivePolicy,omitnil,omitempty" name:"EffectivePolicy"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3430,11 +3569,9 @@ func (r *DescribeOrganizationAuthNodeRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeOrganizationAuthNodeResponseParams struct {
 	// 总数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 条目详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*AuthNode `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3527,15 +3664,12 @@ func (r *DescribeOrganizationFinancialByMemberRequest) FromJsonString(s string) 
 // Predefined struct for user
 type DescribeOrganizationFinancialByMemberResponseParams struct {
 	// 当月总消耗。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCost *float64 `json:"TotalCost,omitnil,omitempty" name:"TotalCost"`
 
 	// 成员消耗详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgMemberFinancial `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 总数目。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3614,7 +3748,6 @@ func (r *DescribeOrganizationFinancialByMonthRequest) FromJsonString(s string) e
 // Predefined struct for user
 type DescribeOrganizationFinancialByMonthResponseParams struct {
 	// 产品消耗详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgFinancialByMonth `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3707,15 +3840,12 @@ func (r *DescribeOrganizationFinancialByProductRequest) FromJsonString(s string)
 // Predefined struct for user
 type DescribeOrganizationFinancialByProductResponseParams struct {
 	// 当月总消耗。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCost *float64 `json:"TotalCost,omitnil,omitempty" name:"TotalCost"`
 
 	// 产品消耗详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgProductFinancial `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 总数目。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3794,11 +3924,9 @@ func (r *DescribeOrganizationMemberAuthAccountsRequest) FromJsonString(s string)
 // Predefined struct for user
 type DescribeOrganizationMemberAuthAccountsResponseParams struct {
 	// 列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgMemberAuthAccount `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 总数目
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3877,11 +4005,9 @@ func (r *DescribeOrganizationMemberAuthIdentitiesRequest) FromJsonString(s strin
 // Predefined struct for user
 type DescribeOrganizationMemberAuthIdentitiesResponseParams struct {
 	// 授权身份列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgMemberAuthIdentity `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 总数目。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3939,39 +4065,30 @@ func (r *DescribeOrganizationMemberEmailBindRequest) FromJsonString(s string) er
 // Predefined struct for user
 type DescribeOrganizationMemberEmailBindResponseParams struct {
 	// 绑定ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BindId *uint64 `json:"BindId,omitnil,omitempty" name:"BindId"`
 
 	// 申请时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApplyTime *string `json:"ApplyTime,omitnil,omitempty" name:"ApplyTime"`
 
 	// 邮箱地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Email *string `json:"Email,omitnil,omitempty" name:"Email"`
 
 	// 安全手机号。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Phone *string `json:"Phone,omitnil,omitempty" name:"Phone"`
 
 	// 绑定状态。    未绑定：Unbound，待激活：Valid，绑定成功：Success，绑定失败：Failed
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BindStatus *string `json:"BindStatus,omitnil,omitempty" name:"BindStatus"`
 
 	// 绑定时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BindTime *string `json:"BindTime,omitnil,omitempty" name:"BindTime"`
 
 	// 失败说明。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 安全手机绑定状态 。 未绑定：0，已绑定：1
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PhoneBind *uint64 `json:"PhoneBind,omitnil,omitempty" name:"PhoneBind"`
 
 	// 国际区号。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CountryCode *string `json:"CountryCode,omitnil,omitempty" name:"CountryCode"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4050,11 +4167,9 @@ func (r *DescribeOrganizationMemberPoliciesRequest) FromJsonString(s string) err
 // Predefined struct for user
 type DescribeOrganizationMemberPoliciesResponseParams struct {
 	// 列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgMemberPolicy `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 总数目。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4074,6 +4189,96 @@ func (r *DescribeOrganizationMemberPoliciesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeOrganizationMemberPoliciesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOrganizationMembersAuthPolicyRequestParams struct {
+	// 偏移量。取值是limit的整数倍。默认值 : 0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 限制数目。取值范围：1~50。默认值：10。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 成员uin。
+	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
+
+	// 集团管理员子账号uin。
+	OrgSubAccountUin *int64 `json:"OrgSubAccountUin,omitnil,omitempty" name:"OrgSubAccountUin"`
+
+	// 成员访问策略Id。
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+}
+
+type DescribeOrganizationMembersAuthPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 偏移量。取值是limit的整数倍。默认值 : 0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 限制数目。取值范围：1~50。默认值：10。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 成员uin。
+	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
+
+	// 集团管理员子账号uin。
+	OrgSubAccountUin *int64 `json:"OrgSubAccountUin,omitnil,omitempty" name:"OrgSubAccountUin"`
+
+	// 成员访问策略Id。
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+}
+
+func (r *DescribeOrganizationMembersAuthPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOrganizationMembersAuthPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "MemberUin")
+	delete(f, "OrgSubAccountUin")
+	delete(f, "PolicyId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOrganizationMembersAuthPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOrganizationMembersAuthPolicyResponseParams struct {
+	// 访问授权策略列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*OrgMembersAuthPolicy `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 总数目。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeOrganizationMembersAuthPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOrganizationMembersAuthPolicyResponseParams `json:"Response"`
+}
+
+func (r *DescribeOrganizationMembersAuthPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOrganizationMembersAuthPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4099,6 +4304,12 @@ type DescribeOrganizationMembersRequestParams struct {
 
 	// 成员标签搜索列表，最大10个
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 组织单元ID
+	NodeId *uint64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+
+	// 组织单元名称
+	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
 type DescribeOrganizationMembersRequest struct {
@@ -4124,6 +4335,12 @@ type DescribeOrganizationMembersRequest struct {
 
 	// 成员标签搜索列表，最大10个
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 组织单元ID
+	NodeId *uint64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+
+	// 组织单元名称
+	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
 func (r *DescribeOrganizationMembersRequest) ToJsonString() string {
@@ -4145,6 +4362,8 @@ func (r *DescribeOrganizationMembersRequest) FromJsonString(s string) error {
 	delete(f, "AuthName")
 	delete(f, "Product")
 	delete(f, "Tags")
+	delete(f, "NodeId")
+	delete(f, "NodeName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOrganizationMembersRequest has unknown keys!", "")
 	}
@@ -4228,11 +4447,9 @@ func (r *DescribeOrganizationNodesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeOrganizationNodesResponseParams struct {
 	// 总数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 列表详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgNode `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4297,67 +4514,51 @@ func (r *DescribeOrganizationRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeOrganizationResponseParams struct {
 	// 企业组织ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgId *int64 `json:"OrgId,omitnil,omitempty" name:"OrgId"`
 
 	// 创建者UIN。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostUin *int64 `json:"HostUin,omitnil,omitempty" name:"HostUin"`
 
 	// 创建者昵称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NickName *string `json:"NickName,omitnil,omitempty" name:"NickName"`
 
 	// 企业组织类型。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgType *int64 `json:"OrgType,omitnil,omitempty" name:"OrgType"`
 
 	// 是否组织管理员。是：true ，否：false
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsManager *bool `json:"IsManager,omitnil,omitempty" name:"IsManager"`
 
 	// 策略类型。财务管理：Financial
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgPolicyType *string `json:"OrgPolicyType,omitnil,omitempty" name:"OrgPolicyType"`
 
 	// 策略名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgPolicyName *string `json:"OrgPolicyName,omitnil,omitempty" name:"OrgPolicyName"`
 
 	// 成员财务权限列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgPermission []*OrgPermission `json:"OrgPermission,omitnil,omitempty" name:"OrgPermission"`
 
 	// 组织根节点ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RootNodeId *int64 `json:"RootNodeId,omitnil,omitempty" name:"RootNodeId"`
 
 	// 组织创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 成员加入时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	JoinTime *string `json:"JoinTime,omitnil,omitempty" name:"JoinTime"`
 
 	// 成员是否允许退出。允许：Allow，不允许：Denied
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAllowQuit *string `json:"IsAllowQuit,omitnil,omitempty" name:"IsAllowQuit"`
 
 	// 代付者Uin。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PayUin *string `json:"PayUin,omitnil,omitempty" name:"PayUin"`
 
 	// 代付者名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PayName *string `json:"PayName,omitnil,omitempty" name:"PayName"`
 
 	// 是否可信服务管理员。是：true，否：false
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAssignManager *bool `json:"IsAssignManager,omitnil,omitempty" name:"IsAssignManager"`
 
 	// 是否实名主体管理员。是：true，否：false
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAuthManager *bool `json:"IsAuthManager,omitnil,omitempty" name:"IsAuthManager"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4449,7 +4650,7 @@ func (r *DescribePolicyConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribePolicyRequestParams struct {
-	// 策略Id。
+	// 策略Id。可以调用[ListPolicies](https://cloud.tencent.com/document/product/850/105311)获取
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略
@@ -4459,7 +4660,7 @@ type DescribePolicyRequestParams struct {
 type DescribePolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 策略Id。
+	// 策略Id。可以调用[ListPolicies](https://cloud.tencent.com/document/product/850/105311)获取
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略
@@ -4492,26 +4693,21 @@ type DescribePolicyResponseParams struct {
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 策略名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
 
 	// 策略类型。1-自定义 2-预设策略
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 策略描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 策略文档。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyDocument *string `json:"PolicyDocument,omitnil,omitempty" name:"PolicyDocument"`
 
 	// 策略更新时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 策略创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AddTime *string `json:"AddTime,omitnil,omitempty" name:"AddTime"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4531,6 +4727,103 @@ func (r *DescribePolicyResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceToShareMemberRequestParams struct {
+	// 共享地域。可通过接口[DescribeShareAreas](https://cloud.tencent.com/document/product/850/103050)获取支持共享的地域。
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// 偏移量。取值是limit的整数倍。默认值 : 0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 限制数目。取值范围：1~50。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 搜索关键字，支持业务资源ID搜索。
+	SearchKey *string `json:"SearchKey,omitnil,omitempty" name:"SearchKey"`
+
+	// 共享资源类型。支持共享的资源类型,请参见[资源共享概述](https://cloud.tencent.com/document/product/850/59489)
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 业务资源ID。最大50个
+	ProductResourceIds []*string `json:"ProductResourceIds,omitnil,omitempty" name:"ProductResourceIds"`
+}
+
+type DescribeResourceToShareMemberRequest struct {
+	*tchttp.BaseRequest
+	
+	// 共享地域。可通过接口[DescribeShareAreas](https://cloud.tencent.com/document/product/850/103050)获取支持共享的地域。
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// 偏移量。取值是limit的整数倍。默认值 : 0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 限制数目。取值范围：1~50。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 搜索关键字，支持业务资源ID搜索。
+	SearchKey *string `json:"SearchKey,omitnil,omitempty" name:"SearchKey"`
+
+	// 共享资源类型。支持共享的资源类型,请参见[资源共享概述](https://cloud.tencent.com/document/product/850/59489)
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 业务资源ID。最大50个
+	ProductResourceIds []*string `json:"ProductResourceIds,omitnil,omitempty" name:"ProductResourceIds"`
+}
+
+func (r *DescribeResourceToShareMemberRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceToShareMemberRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Area")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "SearchKey")
+	delete(f, "Type")
+	delete(f, "ProductResourceIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceToShareMemberRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceToShareMemberResponseParams struct {
+	// 总数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*ShareResourceToMember `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceToShareMemberResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceToShareMemberResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceToShareMemberResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceToShareMemberResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4569,7 +4862,6 @@ func (r *DescribeShareAreasRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeShareAreasResponseParams struct {
 	// 详情
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*ShareArea `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4655,11 +4947,9 @@ func (r *DescribeShareUnitMembersRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeShareUnitMembersResponseParams struct {
 	// 总数目。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 共享单元成员列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*ShareUnitMember `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4752,11 +5042,9 @@ func (r *DescribeShareUnitResourcesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeShareUnitResourcesResponseParams struct {
 	// 总数目。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 共享单元资源列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*ShareUnitResource `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4835,11 +5123,9 @@ func (r *DescribeShareUnitsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeShareUnitsResponseParams struct {
 	// 总数目。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 共享单元列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*ManagerShareUnit `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5820,11 +6106,9 @@ type IdentityPolicy struct {
 	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
 
 	// 策略类型。取值 1-自定义策略  2-预设策略；默认值2
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyType *uint64 `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
 	// 自定义策略内容，遵循CAM策略语法。PolicyType 为自定义策略时有效且必选
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyDocument *string `json:"PolicyDocument,omitnil,omitempty" name:"PolicyDocument"`
 }
 
@@ -5839,7 +6123,7 @@ type InviteOrganizationMemberRequestParams struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -5876,7 +6160,7 @@ type InviteOrganizationMemberRequest struct {
 	// 关系策略。取值：Financial
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费，1、2 默认必须
+	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
@@ -6402,11 +6686,9 @@ func (r *ListNonCompliantResourceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ListNonCompliantResourceResponseParams struct {
 	// 资源及标签合规信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*ResourceTagMapping `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 获取的下一页的Token值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PaginationToken *string `json:"PaginationToken,omitnil,omitempty" name:"PaginationToken"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6437,8 +6719,11 @@ type ListOrgServiceAssignMemberRequestParams struct {
 	// 限制数目。取值范围：1~50，默认值：10
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 集团服务ID。可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	// 集团服务ID。和集团服务产品标识二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
 	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 集团服务产品标识。和集团服务ID二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
 type ListOrgServiceAssignMemberRequest struct {
@@ -6450,8 +6735,11 @@ type ListOrgServiceAssignMemberRequest struct {
 	// 限制数目。取值范围：1~50，默认值：10
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 集团服务ID。可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	// 集团服务ID。和集团服务产品标识二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
 	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 集团服务产品标识。和集团服务ID二选一必填，可以通过[ListOrganizationService](https://cloud.tencent.com/document/product/850/109561)获取
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
 func (r *ListOrgServiceAssignMemberRequest) ToJsonString() string {
@@ -6469,6 +6757,7 @@ func (r *ListOrgServiceAssignMemberRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "ServiceId")
+	delete(f, "Product")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListOrgServiceAssignMemberRequest has unknown keys!", "")
 	}
@@ -6478,11 +6767,9 @@ func (r *ListOrgServiceAssignMemberRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ListOrgServiceAssignMemberResponseParams struct {
 	// 总数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 委派管理员列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrganizationServiceAssignMember `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6568,11 +6855,9 @@ func (r *ListOrganizationIdentityRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ListOrganizationIdentityResponseParams struct {
 	// 总数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 条目详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrgIdentity `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6644,11 +6929,9 @@ func (r *ListOrganizationServiceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ListOrganizationServiceResponseParams struct {
 	// 总数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 集团服务列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*OrganizationServiceAssign `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6760,7 +7043,6 @@ type ListPoliciesForTarget struct {
 	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
 
 	// 备注信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 关联的账号或节点
@@ -6770,19 +7052,15 @@ type ListPoliciesForTarget struct {
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 策略创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AddTime *string `json:"AddTime,omitnil,omitempty" name:"AddTime"`
 
 	// 策略更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 部门名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 策略绑定时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttachTime *string `json:"AttachTime,omitnil,omitempty" name:"AttachTime"`
 }
 
@@ -6852,7 +7130,6 @@ type ListPoliciesForTargetResponseParams struct {
 	TotalNum *uint64 `json:"TotalNum,omitnil,omitempty" name:"TotalNum"`
 
 	// 目标关联的策略列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*ListPoliciesForTarget `json:"List,omitnil,omitempty" name:"List"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6941,7 +7218,6 @@ type ListPoliciesResponseParams struct {
 	TotalNum *uint64 `json:"TotalNum,omitnil,omitempty" name:"TotalNum"`
 
 	// 策略列表数据
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*ListPolicyNode `json:"List,omitnil,omitempty" name:"List"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6966,15 +7242,12 @@ func (r *ListPoliciesResponse) FromJsonString(s string) error {
 
 type ListPolicyNode struct {
 	// 策略创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AddTime *string `json:"AddTime,omitnil,omitempty" name:"AddTime"`
 
 	// 策略绑定次数
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttachedTimes *uint64 `json:"AttachedTimes,omitnil,omitempty" name:"AttachedTimes"`
 
 	// 策略描述信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 策略名称
@@ -6984,7 +7257,6 @@ type ListPolicyNode struct {
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 策略更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 策略类型 1-自定义 2-预设
@@ -7413,7 +7685,6 @@ type ListTargetsForPolicyNode struct {
 	RelatedType *uint64 `json:"RelatedType,omitnil,omitempty" name:"RelatedType"`
 
 	// 账号或者节点名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 绑定时间
@@ -7493,7 +7764,6 @@ type ListTargetsForPolicyResponseParams struct {
 	TotalNum *uint64 `json:"TotalNum,omitnil,omitempty" name:"TotalNum"`
 
 	// 指定SCP策略关联目标列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*ListTargetsForPolicyNode `json:"List,omitnil,omitempty" name:"List"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7915,43 +8185,34 @@ type ManagerShareUnit struct {
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
 	// 描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 共享单元资源数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ShareResourceNum *int64 `json:"ShareResourceNum,omitnil,omitempty" name:"ShareResourceNum"`
 
 	// 共享单元成员数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ShareMemberNum *int64 `json:"ShareMemberNum,omitnil,omitempty" name:"ShareMemberNum"`
 
 	// 共享范围。取值：1-仅允许集团组织内共享 2-允许共享给任意账号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ShareScope *uint64 `json:"ShareScope,omitnil,omitempty" name:"ShareScope"`
 }
 
 type MemberIdentity struct {
 	// 身份ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
 
 	// 身份名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityAliasName *string `json:"IdentityAliasName,omitnil,omitempty" name:"IdentityAliasName"`
 }
 
 type MemberMainInfo struct {
 	// 成员uin
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
 
-	// 成员名称j
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 成员名称
 	MemberName *string `json:"MemberName,omitnil,omitempty" name:"MemberName"`
 }
 
@@ -8018,49 +8279,38 @@ func (r *MoveOrganizationNodeMembersResponse) FromJsonString(s string) error {
 
 type NodeMainInfo struct {
 	// 部门ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 
 	// 部门名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 }
 
 type NotAllowReason struct {
 	// 是否创建的成员。true-是、false-否；成员不是创建的成员不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsCreateMember *bool `json:"IsCreateMember,omitnil,omitempty" name:"IsCreateMember"`
 
 	// 成员删除许可。true-开启、false-关闭；成员删除许可关闭时不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeletionPermission *bool `json:"DeletionPermission,omitnil,omitempty" name:"DeletionPermission"`
 
 	// 是否可信服务委派管理员。true-是、false-否；成员是可信服务委派管理员不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAssignManager *bool `json:"IsAssignManager,omitnil,omitempty" name:"IsAssignManager"`
 
 	// 是否主体管理员。true-是、false-否；成员是主体管理员不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAuthManager *bool `json:"IsAuthManager,omitnil,omitempty" name:"IsAuthManager"`
 
 	// 是否共享资源管理员。true-是、false-否；成员是共享资源管理员不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsShareManager *bool `json:"IsShareManager,omitnil,omitempty" name:"IsShareManager"`
 
 	// 成员是否设置了操作审批。true-是、false-否；成员设置了操作审批时不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OperateProcess *bool `json:"OperateProcess,omitnil,omitempty" name:"OperateProcess"`
 
 	// 是否允许解除成员财务权限。true-是、false-否；成员不能解除财务权限时不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BillingPermission *bool `json:"BillingPermission,omitnil,omitempty" name:"BillingPermission"`
 
 	// 存在的资源列表。账号存在资源时不允许删除
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExistResources []*string `json:"ExistResources,omitnil,omitempty" name:"ExistResources"`
 
 	// 检测失败的资源列表。账号有资源检测失败时不允许删除。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DetectFailedResources []*string `json:"DetectFailedResources,omitnil,omitempty" name:"DetectFailedResources"`
 }
 
@@ -8123,162 +8373,200 @@ func (r *OpenIdentityCenterResponse) FromJsonString(s string) error {
 
 type OrgFinancialByMonth struct {
 	// 记录ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 月份，格式：yyyy-mm，示例：2021-01。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Month *string `json:"Month,omitnil,omitempty" name:"Month"`
 
 	// 消耗金额，单元：元。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCost *float64 `json:"TotalCost,omitnil,omitempty" name:"TotalCost"`
 
 	// 比上月增长率%。正数增长，负数下降，空值无法统计。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GrowthRate *string `json:"GrowthRate,omitnil,omitempty" name:"GrowthRate"`
 }
 
 type OrgIdentity struct {
 	// 身份ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
 
 	// 身份名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityAliasName *string `json:"IdentityAliasName,omitnil,omitempty" name:"IdentityAliasName"`
 
 	// 描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 身份策略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityPolicy []*IdentityPolicy `json:"IdentityPolicy,omitnil,omitempty" name:"IdentityPolicy"`
 
 	// 身份类型。 1-预设、 2-自定义
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityType *uint64 `json:"IdentityType,omitnil,omitempty" name:"IdentityType"`
 
 	// 更新时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
 type OrgMember struct {
 	// 成员Uin
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
 
 	// 成员名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 成员类型，邀请：Invite， 创建：Create
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemberType *string `json:"MemberType,omitnil,omitempty" name:"MemberType"`
 
 	// 关系策略类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgPolicyType *string `json:"OrgPolicyType,omitnil,omitempty" name:"OrgPolicyType"`
 
 	// 关系策略名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgPolicyName *string `json:"OrgPolicyName,omitnil,omitempty" name:"OrgPolicyName"`
 
 	// 关系策略权限
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgPermission []*OrgPermission `json:"OrgPermission,omitnil,omitempty" name:"OrgPermission"`
 
 	// 所属节点ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 
 	// 所属节点名
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
 
 	// 备注
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 是否允许成员退出。允许：Allow，不允许：Denied。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAllowQuit *string `json:"IsAllowQuit,omitnil,omitempty" name:"IsAllowQuit"`
 
 	// 代付者Uin
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PayUin *string `json:"PayUin,omitnil,omitempty" name:"PayUin"`
 
 	// 代付者名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PayName *string `json:"PayName,omitnil,omitempty" name:"PayName"`
 
 	// 管理身份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgIdentity []*MemberIdentity `json:"OrgIdentity,omitnil,omitempty" name:"OrgIdentity"`
 
 	// 安全信息绑定状态  未绑定：Unbound，待激活：Valid，绑定成功：Success，绑定失败：Failed
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BindStatus *string `json:"BindStatus,omitnil,omitempty" name:"BindStatus"`
 
 	// 成员权限状态 已确认：Confirmed ，待确认：UnConfirmed
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PermissionStatus *string `json:"PermissionStatus,omitnil,omitempty" name:"PermissionStatus"`
 
 	// 成员标签列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 腾讯云昵称
+	NickName *string `json:"NickName,omitnil,omitempty" name:"NickName"`
 }
 
 type OrgMemberAuthAccount struct {
 	// 组织子账号Uin。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgSubAccountUin *int64 `json:"OrgSubAccountUin,omitnil,omitempty" name:"OrgSubAccountUin"`
 
 	// 策略ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 策略名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
 
 	// 身份ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
 
 	// 身份角色名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityRoleName *string `json:"IdentityRoleName,omitnil,omitempty" name:"IdentityRoleName"`
 
 	// 身份角色别名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityRoleAliasName *string `json:"IdentityRoleAliasName,omitnil,omitempty" name:"IdentityRoleAliasName"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 更新时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 子账号名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OrgSubAccountName *string `json:"OrgSubAccountName,omitnil,omitempty" name:"OrgSubAccountName"`
 }
 
 type OrgMemberAuthIdentity struct {
 	// 身份ID。
+	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
+
+	// 身份的角色名。
+	IdentityRoleName *string `json:"IdentityRoleName,omitnil,omitempty" name:"IdentityRoleName"`
+
+	// 身份的角色别名。
+	IdentityRoleAliasName *string `json:"IdentityRoleAliasName,omitnil,omitempty" name:"IdentityRoleAliasName"`
+
+	// 身份描述。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 首次配置成功的时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 最后一次配置成功的时间。
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// 身份类型。取值： 1-预设身份  2-自定义身份
+	IdentityType *uint64 `json:"IdentityType,omitnil,omitempty" name:"IdentityType"`
+
+	// 配置状态。取值：1-配置完成 2-需重新配置
+	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 成员Uin。
+	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
+
+	// 成员名称。
+	MemberName *string `json:"MemberName,omitnil,omitempty" name:"MemberName"`
+}
+
+type OrgMemberFinancial struct {
+	// 成员Uin。
+	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
+
+	// 成员名称。
+	MemberName *string `json:"MemberName,omitnil,omitempty" name:"MemberName"`
+
+	// 消耗金额，单位：元。
+	TotalCost *float64 `json:"TotalCost,omitnil,omitempty" name:"TotalCost"`
+
+	// 占比%。
+	Ratio *string `json:"Ratio,omitnil,omitempty" name:"Ratio"`
+}
+
+type OrgMemberPolicy struct {
+	// 策略ID。
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 策略名。
+	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
+
+	// 身份ID。
+	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
+
+	// 身份角色名。
+	IdentityRoleName *string `json:"IdentityRoleName,omitnil,omitempty" name:"IdentityRoleName"`
+
+	// 身份角色别名。
+	IdentityRoleAliasName *string `json:"IdentityRoleAliasName,omitnil,omitempty" name:"IdentityRoleAliasName"`
+
+	// 描述。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 更新时间。
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
+type OrgMembersAuthPolicy struct {
+	// 身份Id。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
 
@@ -8290,114 +8578,63 @@ type OrgMemberAuthIdentity struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IdentityRoleAliasName *string `json:"IdentityRoleAliasName,omitnil,omitempty" name:"IdentityRoleAliasName"`
 
-	// 身份描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
-
-	// 首次配置成功的时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
-
-	// 最后一次配置成功的时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
-
-	// 身份类型。取值： 1-预设身份  2-自定义身份
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IdentityType *uint64 `json:"IdentityType,omitnil,omitempty" name:"IdentityType"`
-
-	// 配置状态。取值：1-配置完成 2-需重新配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
-
-	// 成员Uin。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
-
-	// 成员名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MemberName *string `json:"MemberName,omitnil,omitempty" name:"MemberName"`
-}
-
-type OrgMemberFinancial struct {
-	// 成员Uin。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
-
-	// 成员名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MemberName *string `json:"MemberName,omitnil,omitempty" name:"MemberName"`
-
-	// 消耗金额，单位：元。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCost *float64 `json:"TotalCost,omitnil,omitempty" name:"TotalCost"`
-
-	// 占比%。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Ratio *string `json:"Ratio,omitnil,omitempty" name:"Ratio"`
-}
-
-type OrgMemberPolicy struct {
-	// 策略ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
-
-	// 策略名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
-
-	// 身份ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
-
-	// 身份角色名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IdentityRoleName *string `json:"IdentityRoleName,omitnil,omitempty" name:"IdentityRoleName"`
-
-	// 身份角色别名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IdentityRoleAliasName *string `json:"IdentityRoleAliasName,omitnil,omitempty" name:"IdentityRoleAliasName"`
-
-	// 描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
-
 	// 创建时间。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 更新时间。
+	// 成员访问策略Id。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 成员访问策略名称。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
+
+	// 成员uin。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
+
+	// 成员名称。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MemberName *string `json:"MemberName,omitnil,omitempty" name:"MemberName"`
+
+	// 子账号uin或者用户组Id。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OrgSubAccountUin *int64 `json:"OrgSubAccountUin,omitnil,omitempty" name:"OrgSubAccountUin"`
+
+	// 子账号名称或者用户组名称。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OrgSubAccountName *string `json:"OrgSubAccountName,omitnil,omitempty" name:"OrgSubAccountName"`
+
+	// 绑定类型。1-子账号、2-用户组
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BindType *uint64 `json:"BindType,omitnil,omitempty" name:"BindType"`
+
+	// 成员信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Members []*MemberMainInfo `json:"Members,omitnil,omitempty" name:"Members"`
 }
 
 type OrgNode struct {
 	// 组织节点ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 
 	// 名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 父节点ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ParentNodeId *int64 `json:"ParentNodeId,omitnil,omitempty" name:"ParentNodeId"`
 
 	// 备注
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 成员标签列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -8411,112 +8648,86 @@ type OrgPermission struct {
 
 type OrgProductFinancial struct {
 	// 产品Code。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProductName *string `json:"ProductName,omitnil,omitempty" name:"ProductName"`
 
 	// 产品名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProductCode *string `json:"ProductCode,omitnil,omitempty" name:"ProductCode"`
 
 	// 产品消耗，单位：元。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCost *float64 `json:"TotalCost,omitnil,omitempty" name:"TotalCost"`
 
 	// 占比%。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ratio *string `json:"Ratio,omitnil,omitempty" name:"Ratio"`
 }
 
 type OrganizationServiceAssign struct {
 	// 集团服务ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 集团服务产品名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProductName *string `json:"ProductName,omitnil,omitempty" name:"ProductName"`
 
 	// 是否支持委派。取值: 1-是  2-否
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAssign *uint64 `json:"IsAssign,omitnil,omitempty" name:"IsAssign"`
 
 	// 集团服务描述。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 当前委派管理员数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemberNum *string `json:"MemberNum,omitnil,omitempty" name:"MemberNum"`
 
 	// 帮助文档。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Document *string `json:"Document,omitnil,omitempty" name:"Document"`
 
 	// 集团服务产品控制台路径。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ConsoleUrl *string `json:"ConsoleUrl,omitnil,omitempty" name:"ConsoleUrl"`
 
 	// 是否接入使用状态。取值: 1-是 
 	//  2-否
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsUsageStatus *uint64 `json:"IsUsageStatus,omitnil,omitempty" name:"IsUsageStatus"`
 
 	// 委派管理员数量限制。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CanAssignCount *uint64 `json:"CanAssignCount,omitnil,omitempty" name:"CanAssignCount"`
 
 	// 集团服务产品标识。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
 	// 是否支持集团服务授权。取值 1-是、2-否
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceGrant *uint64 `json:"ServiceGrant,omitnil,omitempty" name:"ServiceGrant"`
 
 	// 集团服务授权启用状态。ServiceGrant值为1时该字段有效 ，取值：Enabled-开启  Disabled-关闭 
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GrantStatus *string `json:"GrantStatus,omitnil,omitempty" name:"GrantStatus"`
 
 	// 是否支持设置委派管理范围。取值: 1-是  2-否
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSetManagementScope *uint64 `json:"IsSetManagementScope,omitnil,omitempty" name:"IsSetManagementScope"`
 }
 
 type OrganizationServiceAssignMember struct {
 	// 集团服务ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceId *uint64 `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 集团服务产品名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProductName *string `json:"ProductName,omitnil,omitempty" name:"ProductName"`
 
 	// 委派管理员Uin。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemberUin *int64 `json:"MemberUin,omitnil,omitempty" name:"MemberUin"`
 
 	// 委派管理员名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MemberName *string `json:"MemberName,omitnil,omitempty" name:"MemberName"`
 
 	// 启用状态 。取值：0-服务无启用状态  1-已启用  2-未启用
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UsageStatus *uint64 `json:"UsageStatus,omitnil,omitempty" name:"UsageStatus"`
 
 	// 委派时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 委派管理员管理范围。取值: 1-全部成员  2-部分成员
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ManagementScope *uint64 `json:"ManagementScope,omitnil,omitempty" name:"ManagementScope"`
 
 	// 管理的成员Uin列表。ManagementScope值为2时该参数有效
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ManagementScopeMembers []*MemberMainInfo `json:"ManagementScopeMembers,omitnil,omitempty" name:"ManagementScopeMembers"`
 
 	// 管理的部门ID列表。ManagementScope值为2时该参数有效
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ManagementScopeNodes []*NodeMainInfo `json:"ManagementScopeNodes,omitnil,omitempty" name:"ManagementScopeNodes"`
 }
 
@@ -8525,7 +8736,6 @@ type PolicyDetail struct {
 	PolicyId *int64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
 	// 策略名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
 }
 
@@ -8939,15 +9149,12 @@ func (r *RemoveUserFromGroupResponse) FromJsonString(s string) error {
 type ResourceTagMapping struct {
 	// 资源六段式。腾讯云使用资源六段式描述一个资源。
 	// 例如：qcs::${ServiceType}:${Region}:${Account}:${ResourcePreifx}/${ResourceId}。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 
 	// 合规详情。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ComplianceDetails *TagComplianceDetails `json:"ComplianceDetails,omitnil,omitempty" name:"ComplianceDetails"`
 
 	// 资源标签。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tags `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -9060,7 +9267,6 @@ type RoleConfigurationProvisionings struct {
 
 type RolePolicie struct {
 	// 策略ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RolePolicyId *int64 `json:"RolePolicyId,omitnil,omitempty" name:"RolePolicyId"`
 
 	// 权限策略名称
@@ -9090,15 +9296,12 @@ type RoleProvisioningsTask struct {
 	TargetUin *int64 `json:"TargetUin,omitnil,omitempty" name:"TargetUin"`
 
 	// 同步的集团账号目标账号的类型，ManagerUin管理账号;MemberUin成员账号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
 	// 任务类型。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
 	// 任务状态：InProgress: 进行中，Failed: 失败 3:Success: 成功
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskStatus *string `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 }
 
@@ -9321,6 +9524,9 @@ func (r *SetExternalSAMLIdentityProviderRequest) FromJsonString(s string) error 
 
 // Predefined struct for user
 type SetExternalSAMLIdentityProviderResponseParams struct {
+	// 证书ID。
+	CertificateIds []*string `json:"CertificateIds,omitnil,omitempty" name:"CertificateIds"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -9364,8 +9570,30 @@ type ShareResource struct {
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 产品资源ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProductResourceId *string `json:"ProductResourceId,omitnil,omitempty" name:"ProductResourceId"`
+}
+
+type ShareResourceToMember struct {
+	// 共享单元资源ID。
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 资源类型。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 共享单元ID。
+	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
+
+	// 共享单元名称。
+	UnitName *string `json:"UnitName,omitnil,omitempty" name:"UnitName"`
+
+	// 创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 业务资源ID。
+	ProductResourceId *string `json:"ProductResourceId,omitnil,omitempty" name:"ProductResourceId"`
+
+	// 共享账号Uin。
+	ShareManagerUin *int64 `json:"ShareManagerUin,omitnil,omitempty" name:"ShareManagerUin"`
 }
 
 type ShareUnitMember struct {
@@ -9373,7 +9601,6 @@ type ShareUnitMember struct {
 	ShareMemberUin *int64 `json:"ShareMemberUin,omitnil,omitempty" name:"ShareMemberUin"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 }
 
@@ -9385,56 +9612,45 @@ type ShareUnitResource struct {
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 创建时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 产品资源ID。
 	ProductResourceId *string `json:"ProductResourceId,omitnil,omitempty" name:"ProductResourceId"`
 
 	// 共享单元成员数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SharedMemberNum *uint64 `json:"SharedMemberNum,omitnil,omitempty" name:"SharedMemberNum"`
 
 	// 使用中共享单元成员数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SharedMemberUseNum *uint64 `json:"SharedMemberUseNum,omitnil,omitempty" name:"SharedMemberUseNum"`
 
 	// 共享管理员OwnerUin。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ShareManagerUin *int64 `json:"ShareManagerUin,omitnil,omitempty" name:"ShareManagerUin"`
 }
 
 type Tag struct {
 	// 标签键
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
 	// 标签值
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagValue *string `json:"TagValue,omitnil,omitempty" name:"TagValue"`
 }
 
 type TagComplianceDetails struct {
 	// 合规状态。true-合规，false-不合规
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ComplianceStatus *bool `json:"ComplianceStatus,omitnil,omitempty" name:"ComplianceStatus"`
 
 	// 值不合规的标签键列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeysWithNonCompliantValues []*string `json:"KeysWithNonCompliantValues,omitnil,omitempty" name:"KeysWithNonCompliantValues"`
 
 	// 键不合规的标签键列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NonCompliantKeys []*string `json:"NonCompliantKeys,omitnil,omitempty" name:"NonCompliantKeys"`
 }
 
 type Tags struct {
 	// 标签键。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
 	// 标签值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagValue *string `json:"TagValue,omitnil,omitempty" name:"TagValue"`
 }
 
@@ -9467,7 +9683,6 @@ type TaskInfo struct {
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 失败原因
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FailureReason *string `json:"FailureReason,omitnil,omitempty" name:"FailureReason"`
 }
 
@@ -9809,7 +10024,7 @@ type UpdateOrganizationMemberRequestParams struct {
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
 	// 成员财务权限ID列表。PermissionIds不为空，PolicyType不能为空。
-	// 取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析，如果有值，1、2 默认必须
+	// 取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 是否允许成员退出组织。取值：Allow-允许、Denied-不允许
@@ -9817,6 +10032,9 @@ type UpdateOrganizationMemberRequestParams struct {
 
 	// 代付者Uin。成员财务权限有代付费时需要，取值为成员对应主体的主体管理员Uin
 	PayUin *string `json:"PayUin,omitnil,omitempty" name:"PayUin"`
+
+	// 是否同步组织成员名称到成员账号昵称。取值： 1-同步 0-不同步
+	IsModifyNickName *uint64 `json:"IsModifyNickName,omitnil,omitempty" name:"IsModifyNickName"`
 }
 
 type UpdateOrganizationMemberRequest struct {
@@ -9835,7 +10053,7 @@ type UpdateOrganizationMemberRequest struct {
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
 	// 成员财务权限ID列表。PermissionIds不为空，PolicyType不能为空。
-	// 取值：1-查看账单、2-查看余额、3-资金划拨、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析，如果有值，1、2 默认必须
+	// 取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
 	// 是否允许成员退出组织。取值：Allow-允许、Denied-不允许
@@ -9843,6 +10061,9 @@ type UpdateOrganizationMemberRequest struct {
 
 	// 代付者Uin。成员财务权限有代付费时需要，取值为成员对应主体的主体管理员Uin
 	PayUin *string `json:"PayUin,omitnil,omitempty" name:"PayUin"`
+
+	// 是否同步组织成员名称到成员账号昵称。取值： 1-同步 0-不同步
+	IsModifyNickName *uint64 `json:"IsModifyNickName,omitnil,omitempty" name:"IsModifyNickName"`
 }
 
 func (r *UpdateOrganizationMemberRequest) ToJsonString() string {
@@ -9864,6 +10085,7 @@ func (r *UpdateOrganizationMemberRequest) FromJsonString(s string) error {
 	delete(f, "PermissionIds")
 	delete(f, "IsAllowQuit")
 	delete(f, "PayUin")
+	delete(f, "IsModifyNickName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateOrganizationMemberRequest has unknown keys!", "")
 	}
@@ -9889,6 +10111,81 @@ func (r *UpdateOrganizationMemberResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateOrganizationMemberResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateOrganizationMembersPolicyRequestParams struct {
+	// 成员Uin列表。最多10个
+	MemberUins []*int64 `json:"MemberUins,omitnil,omitempty" name:"MemberUins"`
+
+	// 成员访问策略Id。可通过DescribeOrganizationMemberPolicies获取
+	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 成员访问身份ID。可通过ListOrganizationIdentity获取
+	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
+
+	// 策略描述。最大长度为128个字符
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+type UpdateOrganizationMembersPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 成员Uin列表。最多10个
+	MemberUins []*int64 `json:"MemberUins,omitnil,omitempty" name:"MemberUins"`
+
+	// 成员访问策略Id。可通过DescribeOrganizationMemberPolicies获取
+	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 成员访问身份ID。可通过ListOrganizationIdentity获取
+	IdentityId *int64 `json:"IdentityId,omitnil,omitempty" name:"IdentityId"`
+
+	// 策略描述。最大长度为128个字符
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+func (r *UpdateOrganizationMembersPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateOrganizationMembersPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MemberUins")
+	delete(f, "PolicyId")
+	delete(f, "IdentityId")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateOrganizationMembersPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateOrganizationMembersPolicyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateOrganizationMembersPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateOrganizationMembersPolicyResponseParams `json:"Response"`
+}
+
+func (r *UpdateOrganizationMembersPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateOrganizationMembersPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10353,6 +10650,9 @@ type UpdateUserRequestParams struct {
 
 	// 用户的电子邮箱。
 	NewEmail *string `json:"NewEmail,omitnil,omitempty" name:"NewEmail"`
+
+	// 是否需要重置密码
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 type UpdateUserRequest struct {
@@ -10378,6 +10678,9 @@ type UpdateUserRequest struct {
 
 	// 用户的电子邮箱。
 	NewEmail *string `json:"NewEmail,omitnil,omitempty" name:"NewEmail"`
+
+	// 是否需要重置密码
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 func (r *UpdateUserRequest) ToJsonString() string {
@@ -10399,6 +10702,7 @@ func (r *UpdateUserRequest) FromJsonString(s string) error {
 	delete(f, "NewDisplayName")
 	delete(f, "NewDescription")
 	delete(f, "NewEmail")
+	delete(f, "NeedResetPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateUserRequest has unknown keys!", "")
 	}
@@ -10677,6 +10981,12 @@ type UserInfo struct {
 
 	// 是否选中
 	IsSelected *bool `json:"IsSelected,omitnil,omitempty" name:"IsSelected"`
+
+	// 用户密码
+	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 下次登录是否需要重置密码， true: 需要重置密码， false：不需要重置密码
+	NeedResetPassword *bool `json:"NeedResetPassword,omitnil,omitempty" name:"NeedResetPassword"`
 }
 
 type UserProvisioning struct {

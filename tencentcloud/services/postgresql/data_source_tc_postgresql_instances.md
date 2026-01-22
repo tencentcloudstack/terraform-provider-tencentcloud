@@ -1,17 +1,19 @@
-Use this data source to query postgresql instances
+Use this data source to query PostgreSQL instances
 
 Example Usage
 
+Query all postgresql instances
+
 ```hcl
-data "tencentcloud_postgresql_instances" "name" {
-  name = "test"
-}
+data "tencentcloud_postgresql_instances" "example" {}
+```
 
-data "tencentcloud_postgresql_instances" "project" {
-  project_id = 0
-}
+Query postgresql instances by filters
 
-data "tencentcloud_postgresql_instances" "id" {
-  id = "postgres-h9t4fde1"
+```hcl
+data "tencentcloud_postgresql_instances" "example" {
+  id         = "postgres-gngyhl9d"
+  name       = "tf-example"
+  project_id = "1235143"
 }
 ```

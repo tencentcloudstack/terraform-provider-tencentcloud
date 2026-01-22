@@ -253,7 +253,9 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 		}
 
 		if describeResponse != nil && describeResponse.Response != nil {
-			m["cert"] = *describeResponse.Response.CertificatePublicKey
+			if describeResponse.Response.CertificatePublicKey != nil {
+				m["cert"] = *describeResponse.Response.CertificatePublicKey
+			}
 			if describeResponse.Response.CertificatePrivateKey != nil {
 				m["key"] = *describeResponse.Response.CertificatePrivateKey
 			}

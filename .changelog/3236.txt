@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_cdwpg_reset_account_password
+```
+
+```release-note:new-resource
+tencentcloud_cdwpg_restart_instance
+```
+
+```release-note:new-resource
+tencentcloud_cdwpg_userhba
+```
+
+```release-note:enhancement
+resource/tencentcloud_cdwpg_instance: support product_version
+```

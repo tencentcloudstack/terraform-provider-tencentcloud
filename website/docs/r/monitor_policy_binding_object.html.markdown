@@ -73,6 +73,7 @@ The following arguments are supported:
 The `dimensions` object supports the following:
 
 * `dimensions_json` - (Required, String, ForceNew) Represents a collection of dimensions of an object instance, json format.eg:'{"unInstanceId":"ins-ot3cq4bi"}'.
+* `region` - (Optional, String, ForceNew) Region.
 
 ## Attributes Reference
 

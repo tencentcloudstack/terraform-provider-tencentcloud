@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,8 +59,9 @@ func NewCompleteMigrateJobRequest() (request *CompleteMigrateJobRequest) {
 func NewCompleteMigrateJobResponse() (response *CompleteMigrateJobResponse) {
     response = &CompleteMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CompleteMigrateJob
@@ -147,6 +148,7 @@ func (c *Client) CompleteMigrateJobWithContext(ctx context.Context, request *Com
     if request == nil {
         request = NewCompleteMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CompleteMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CompleteMigrateJob require credential")
@@ -155,6 +157,94 @@ func (c *Client) CompleteMigrateJobWithContext(ctx context.Context, request *Com
     request.SetContext(ctx)
     
     response = NewCompleteMigrateJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewConfigureSubscribeJobRequest() (request *ConfigureSubscribeJobRequest) {
+    request = &ConfigureSubscribeJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ConfigureSubscribeJob")
+    
+    
+    return
+}
+
+func NewConfigureSubscribeJobResponse() (response *ConfigureSubscribeJobResponse) {
+    response = &ConfigureSubscribeJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ConfigureSubscribeJob
+// 本接口(ConfigureSubscribeJob)用于配置数据订阅实例。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ConfigureSubscribeJob(request *ConfigureSubscribeJobRequest) (response *ConfigureSubscribeJobResponse, err error) {
+    return c.ConfigureSubscribeJobWithContext(context.Background(), request)
+}
+
+// ConfigureSubscribeJob
+// 本接口(ConfigureSubscribeJob)用于配置数据订阅实例。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ConfigureSubscribeJobWithContext(ctx context.Context, request *ConfigureSubscribeJobRequest) (response *ConfigureSubscribeJobResponse, err error) {
+    if request == nil {
+        request = NewConfigureSubscribeJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ConfigureSubscribeJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ConfigureSubscribeJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewConfigureSubscribeJobResponse()
     err = c.Send(request, response)
     return
 }
@@ -173,8 +263,9 @@ func NewConfigureSyncJobRequest() (request *ConfigureSyncJobRequest) {
 func NewConfigureSyncJobResponse() (response *ConfigureSyncJobResponse) {
     response = &ConfigureSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ConfigureSyncJob
@@ -184,6 +275,8 @@ func NewConfigureSyncJobResponse() (response *ConfigureSyncJobResponse) {
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) ConfigureSyncJob(request *ConfigureSyncJobRequest) (response *ConfigureSyncJobResponse, err error) {
     return c.ConfigureSyncJobWithContext(context.Background(), request)
 }
@@ -195,10 +288,13 @@ func (c *Client) ConfigureSyncJob(request *ConfigureSyncJobRequest) (response *C
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) ConfigureSyncJobWithContext(ctx context.Context, request *ConfigureSyncJobRequest) (response *ConfigureSyncJobResponse, err error) {
     if request == nil {
         request = NewConfigureSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ConfigureSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConfigureSyncJob require credential")
@@ -225,8 +321,9 @@ func NewContinueMigrateJobRequest() (request *ContinueMigrateJobRequest) {
 func NewContinueMigrateJobResponse() (response *ContinueMigrateJobResponse) {
     response = &ContinueMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ContinueMigrateJob
@@ -234,6 +331,7 @@ func NewContinueMigrateJobResponse() (response *ContinueMigrateJobResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
@@ -246,6 +344,7 @@ func (c *Client) ContinueMigrateJob(request *ContinueMigrateJobRequest) (respons
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
@@ -253,6 +352,7 @@ func (c *Client) ContinueMigrateJobWithContext(ctx context.Context, request *Con
     if request == nil {
         request = NewContinueMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ContinueMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ContinueMigrateJob require credential")
@@ -279,8 +379,9 @@ func NewContinueSyncJobRequest() (request *ContinueSyncJobRequest) {
 func NewContinueSyncJobResponse() (response *ContinueSyncJobResponse) {
     response = &ContinueSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ContinueSyncJob
@@ -315,6 +416,7 @@ func (c *Client) ContinueSyncJobWithContext(ctx context.Context, request *Contin
     if request == nil {
         request = NewContinueSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ContinueSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ContinueSyncJob require credential")
@@ -341,8 +443,9 @@ func NewCreateCheckSyncJobRequest() (request *CreateCheckSyncJobRequest) {
 func NewCreateCheckSyncJobResponse() (response *CreateCheckSyncJobResponse) {
     response = &CreateCheckSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCheckSyncJob
@@ -350,6 +453,7 @@ func NewCreateCheckSyncJobResponse() (response *CreateCheckSyncJobResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDERROR = "UnsupportedOperation.IntraNetUserNotTaggedError"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDFORSYNCJOBERROR = "UnsupportedOperation.IntraNetUserNotTaggedForSyncJobError"
@@ -363,6 +467,7 @@ func (c *Client) CreateCheckSyncJob(request *CreateCheckSyncJobRequest) (respons
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDERROR = "UnsupportedOperation.IntraNetUserNotTaggedError"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDFORSYNCJOBERROR = "UnsupportedOperation.IntraNetUserNotTaggedForSyncJobError"
@@ -371,6 +476,7 @@ func (c *Client) CreateCheckSyncJobWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateCheckSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateCheckSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCheckSyncJob require credential")
@@ -397,8 +503,9 @@ func NewCreateCompareTaskRequest() (request *CreateCompareTaskRequest) {
 func NewCreateCompareTaskResponse() (response *CreateCompareTaskResponse) {
     response = &CreateCompareTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCompareTask
@@ -455,6 +562,7 @@ func (c *Client) CreateCompareTaskWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateCompareTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateCompareTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCompareTask require credential")
@@ -463,6 +571,94 @@ func (c *Client) CreateCompareTaskWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateCompareTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateConsumerGroupRequest() (request *CreateConsumerGroupRequest) {
+    request = &CreateConsumerGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "CreateConsumerGroup")
+    
+    
+    return
+}
+
+func NewCreateConsumerGroupResponse() (response *CreateConsumerGroupResponse) {
+    response = &CreateConsumerGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConsumerGroup
+// 为订阅实例创建消费者组。
+//
+// 只有状态为运行中的实例支持创建消费组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateConsumerGroup(request *CreateConsumerGroupRequest) (response *CreateConsumerGroupResponse, err error) {
+    return c.CreateConsumerGroupWithContext(context.Background(), request)
+}
+
+// CreateConsumerGroup
+// 为订阅实例创建消费者组。
+//
+// 只有状态为运行中的实例支持创建消费组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateConsumerGroupWithContext(ctx context.Context, request *CreateConsumerGroupRequest) (response *CreateConsumerGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateConsumerGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateConsumerGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConsumerGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConsumerGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -481,12 +677,13 @@ func NewCreateMigrateCheckJobRequest() (request *CreateMigrateCheckJobRequest) {
 func NewCreateMigrateCheckJobResponse() (response *CreateMigrateCheckJobResponse) {
     response = &CreateMigrateCheckJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateMigrateCheckJob
-// 校验迁移任务，
+// 创建校验迁移任务，
 //
 // 在开始迁移前, 必须调用本接口创建校验迁移任务, 且校验成功后才能开始迁移. 校验的结果可以通过DescribeMigrationCheckJob查看，
 //
@@ -534,7 +731,7 @@ func (c *Client) CreateMigrateCheckJob(request *CreateMigrateCheckJobRequest) (r
 }
 
 // CreateMigrateCheckJob
-// 校验迁移任务，
+// 创建校验迁移任务，
 //
 // 在开始迁移前, 必须调用本接口创建校验迁移任务, 且校验成功后才能开始迁移. 校验的结果可以通过DescribeMigrationCheckJob查看，
 //
@@ -581,6 +778,7 @@ func (c *Client) CreateMigrateCheckJobWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateMigrateCheckJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateMigrateCheckJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateMigrateCheckJob require credential")
@@ -607,8 +805,9 @@ func NewCreateMigrationServiceRequest() (request *CreateMigrationServiceRequest)
 func NewCreateMigrationServiceResponse() (response *CreateMigrationServiceResponse) {
     response = &CreateMigrationServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateMigrationService
@@ -667,6 +866,7 @@ func (c *Client) CreateMigrationServiceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateMigrationServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateMigrationService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateMigrationService require credential")
@@ -675,6 +875,264 @@ func (c *Client) CreateMigrationServiceWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewCreateMigrationServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateModifyCheckSyncJobRequest() (request *CreateModifyCheckSyncJobRequest) {
+    request = &CreateModifyCheckSyncJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "CreateModifyCheckSyncJob")
+    
+    
+    return
+}
+
+func NewCreateModifyCheckSyncJobResponse() (response *CreateModifyCheckSyncJobResponse) {
+    response = &CreateModifyCheckSyncJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateModifyCheckSyncJob
+// 在修改同步任务的配置后、通过该接口校验当前任务是否支持修改对象操作
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
+//  MISSINGPARAMETER_MISSINGPARAMETERERROR = "MissingParameter.MissingParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDEDERROR = "RequestLimitExceeded.RequestLimitExceededError"
+//  RESOURCEINUSE_RESOURCEINUSEERROR = "ResourceInUse.ResourceInUseError"
+//  RESOURCEINSUFFICIENT_RESOURCEINSUFFICIENTERROR = "ResourceInsufficient.ResourceInsufficientError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  RESOURCEUNAVAILABLE_RESOURCEUNAVAILABLEERROR = "ResourceUnavailable.ResourceUnavailableError"
+//  RESOURCESSOLDOUT_RESOURCESSOLDOUTERROR = "ResourcesSoldOut.ResourcesSoldOutError"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateModifyCheckSyncJob(request *CreateModifyCheckSyncJobRequest) (response *CreateModifyCheckSyncJobResponse, err error) {
+    return c.CreateModifyCheckSyncJobWithContext(context.Background(), request)
+}
+
+// CreateModifyCheckSyncJob
+// 在修改同步任务的配置后、通过该接口校验当前任务是否支持修改对象操作
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
+//  MISSINGPARAMETER_MISSINGPARAMETERERROR = "MissingParameter.MissingParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDEDERROR = "RequestLimitExceeded.RequestLimitExceededError"
+//  RESOURCEINUSE_RESOURCEINUSEERROR = "ResourceInUse.ResourceInUseError"
+//  RESOURCEINSUFFICIENT_RESOURCEINSUFFICIENTERROR = "ResourceInsufficient.ResourceInsufficientError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  RESOURCEUNAVAILABLE_RESOURCEUNAVAILABLEERROR = "ResourceUnavailable.ResourceUnavailableError"
+//  RESOURCESSOLDOUT_RESOURCESSOLDOUTERROR = "ResourcesSoldOut.ResourcesSoldOutError"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateModifyCheckSyncJobWithContext(ctx context.Context, request *CreateModifyCheckSyncJobRequest) (response *CreateModifyCheckSyncJobResponse, err error) {
+    if request == nil {
+        request = NewCreateModifyCheckSyncJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateModifyCheckSyncJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateModifyCheckSyncJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateModifyCheckSyncJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSubscribeRequest() (request *CreateSubscribeRequest) {
+    request = &CreateSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "CreateSubscribe")
+    
+    
+    return
+}
+
+func NewCreateSubscribeResponse() (response *CreateSubscribeResponse) {
+    response = &CreateSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateSubscribe
+// 本接口(CreateSubscribe)用于创建一个数据订阅任务。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_USERNOTAUTHED = "FailedOperation.UserNotAuthed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_NOTENOUGHMONEYERROR = "OperationDenied.NotEnoughMoneyError"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateSubscribe(request *CreateSubscribeRequest) (response *CreateSubscribeResponse, err error) {
+    return c.CreateSubscribeWithContext(context.Background(), request)
+}
+
+// CreateSubscribe
+// 本接口(CreateSubscribe)用于创建一个数据订阅任务。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_USERNOTAUTHED = "FailedOperation.UserNotAuthed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_NOTENOUGHMONEYERROR = "OperationDenied.NotEnoughMoneyError"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateSubscribeWithContext(ctx context.Context, request *CreateSubscribeRequest) (response *CreateSubscribeResponse, err error) {
+    if request == nil {
+        request = NewCreateSubscribeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateSubscribe")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSubscribeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSubscribeCheckJobRequest() (request *CreateSubscribeCheckJobRequest) {
+    request = &CreateSubscribeCheckJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "CreateSubscribeCheckJob")
+    
+    
+    return
+}
+
+func NewCreateSubscribeCheckJobResponse() (response *CreateSubscribeCheckJobResponse) {
+    response = &CreateSubscribeCheckJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateSubscribeCheckJob
+// 本接口(CreateSubscribeCheckJob)用于创建一个订阅校验任务。任务必须已经成功调用ConfigureSubscribeJob接口配置了所有的必要信息才能启动校验。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateSubscribeCheckJob(request *CreateSubscribeCheckJobRequest) (response *CreateSubscribeCheckJobResponse, err error) {
+    return c.CreateSubscribeCheckJobWithContext(context.Background(), request)
+}
+
+// CreateSubscribeCheckJob
+// 本接口(CreateSubscribeCheckJob)用于创建一个订阅校验任务。任务必须已经成功调用ConfigureSubscribeJob接口配置了所有的必要信息才能启动校验。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) CreateSubscribeCheckJobWithContext(ctx context.Context, request *CreateSubscribeCheckJobRequest) (response *CreateSubscribeCheckJobResponse, err error) {
+    if request == nil {
+        request = NewCreateSubscribeCheckJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateSubscribeCheckJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSubscribeCheckJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSubscribeCheckJobResponse()
     err = c.Send(request, response)
     return
 }
@@ -693,8 +1151,9 @@ func NewCreateSyncJobRequest() (request *CreateSyncJobRequest) {
 func NewCreateSyncJobResponse() (response *CreateSyncJobResponse) {
     response = &CreateSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSyncJob
@@ -703,6 +1162,7 @@ func NewCreateSyncJobResponse() (response *CreateSyncJobResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATIONERROR = "AuthFailure.UnauthorizedOperationError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALINNERCOMMONERROR = "InternalError.InternalInnerCommonError"
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
@@ -722,6 +1182,7 @@ func (c *Client) CreateSyncJob(request *CreateSyncJobRequest) (response *CreateS
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATIONERROR = "AuthFailure.UnauthorizedOperationError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALINNERCOMMONERROR = "InternalError.InternalInnerCommonError"
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
@@ -735,6 +1196,7 @@ func (c *Client) CreateSyncJobWithContext(ctx context.Context, request *CreateSy
     if request == nil {
         request = NewCreateSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "CreateSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSyncJob require credential")
@@ -761,8 +1223,9 @@ func NewDeleteCompareTaskRequest() (request *DeleteCompareTaskRequest) {
 func NewDeleteCompareTaskResponse() (response *DeleteCompareTaskResponse) {
     response = &DeleteCompareTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCompareTask
@@ -819,6 +1282,7 @@ func (c *Client) DeleteCompareTaskWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteCompareTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DeleteCompareTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCompareTask require credential")
@@ -827,6 +1291,90 @@ func (c *Client) DeleteCompareTaskWithContext(ctx context.Context, request *Dele
     request.SetContext(ctx)
     
     response = NewDeleteCompareTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteConsumerGroupRequest() (request *DeleteConsumerGroupRequest) {
+    request = &DeleteConsumerGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DeleteConsumerGroup")
+    
+    
+    return
+}
+
+func NewDeleteConsumerGroupResponse() (response *DeleteConsumerGroupResponse) {
+    response = &DeleteConsumerGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteConsumerGroup
+// 本接口(DeleteConsumerGroup)用于删除一个订阅任务的消费组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DeleteConsumerGroup(request *DeleteConsumerGroupRequest) (response *DeleteConsumerGroupResponse, err error) {
+    return c.DeleteConsumerGroupWithContext(context.Background(), request)
+}
+
+// DeleteConsumerGroup
+// 本接口(DeleteConsumerGroup)用于删除一个订阅任务的消费组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DeleteConsumerGroupWithContext(ctx context.Context, request *DeleteConsumerGroupRequest) (response *DeleteConsumerGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteConsumerGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DeleteConsumerGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteConsumerGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteConsumerGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -845,8 +1393,9 @@ func NewDescribeCheckSyncJobResultRequest() (request *DescribeCheckSyncJobResult
 func NewDescribeCheckSyncJobResultResponse() (response *DescribeCheckSyncJobResultResponse) {
     response = &DescribeCheckSyncJobResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCheckSyncJobResult
@@ -871,6 +1420,7 @@ func (c *Client) DescribeCheckSyncJobResultWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeCheckSyncJobResultRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeCheckSyncJobResult")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCheckSyncJobResult require credential")
@@ -897,8 +1447,9 @@ func NewDescribeCompareReportRequest() (request *DescribeCompareReportRequest) {
 func NewDescribeCompareReportResponse() (response *DescribeCompareReportResponse) {
     response = &DescribeCompareReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCompareReport
@@ -953,6 +1504,7 @@ func (c *Client) DescribeCompareReportWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeCompareReportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeCompareReport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCompareReport require credential")
@@ -979,12 +1531,13 @@ func NewDescribeCompareTasksRequest() (request *DescribeCompareTasksRequest) {
 func NewDescribeCompareTasksResponse() (response *DescribeCompareTasksResponse) {
     response = &DescribeCompareTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCompareTasks
-// 查询一致性校验任务列表，调用该接口后可通过接口`DescribeCompareTasks` 查询一致性校验任务列表来获得启动后的状态。
+// 查询一致性校验任务列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -1000,6 +1553,7 @@ func NewDescribeCompareTasksResponse() (response *DescribeCompareTasksResponse) 
 //  RESOURCEINUSE_RESOURCEINUSEERROR = "ResourceInUse.ResourceInUseError"
 //  RESOURCEINSUFFICIENT_RESOURCEINSUFFICIENTERROR = "ResourceInsufficient.ResourceInsufficientError"
 //  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 //  RESOURCEUNAVAILABLE_RESOURCEUNAVAILABLEERROR = "ResourceUnavailable.ResourceUnavailableError"
 //  RESOURCESSOLDOUT_RESOURCESSOLDOUTERROR = "ResourcesSoldOut.ResourcesSoldOutError"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
@@ -1010,7 +1564,7 @@ func (c *Client) DescribeCompareTasks(request *DescribeCompareTasksRequest) (res
 }
 
 // DescribeCompareTasks
-// 查询一致性校验任务列表，调用该接口后可通过接口`DescribeCompareTasks` 查询一致性校验任务列表来获得启动后的状态。
+// 查询一致性校验任务列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -1026,6 +1580,7 @@ func (c *Client) DescribeCompareTasks(request *DescribeCompareTasksRequest) (res
 //  RESOURCEINUSE_RESOURCEINUSEERROR = "ResourceInUse.ResourceInUseError"
 //  RESOURCEINSUFFICIENT_RESOURCEINSUFFICIENTERROR = "ResourceInsufficient.ResourceInsufficientError"
 //  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 //  RESOURCEUNAVAILABLE_RESOURCEUNAVAILABLEERROR = "ResourceUnavailable.ResourceUnavailableError"
 //  RESOURCESSOLDOUT_RESOURCESSOLDOUTERROR = "ResourcesSoldOut.ResourcesSoldOutError"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
@@ -1035,6 +1590,7 @@ func (c *Client) DescribeCompareTasksWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeCompareTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeCompareTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCompareTasks require credential")
@@ -1043,6 +1599,90 @@ func (c *Client) DescribeCompareTasksWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeCompareTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConsumerGroupsRequest() (request *DescribeConsumerGroupsRequest) {
+    request = &DescribeConsumerGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DescribeConsumerGroups")
+    
+    
+    return
+}
+
+func NewDescribeConsumerGroupsResponse() (response *DescribeConsumerGroupsResponse) {
+    response = &DescribeConsumerGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConsumerGroups
+// 本接口(DescribeConsumerGroups)用于获取订阅实例配置的消费者组详情。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeConsumerGroups(request *DescribeConsumerGroupsRequest) (response *DescribeConsumerGroupsResponse, err error) {
+    return c.DescribeConsumerGroupsWithContext(context.Background(), request)
+}
+
+// DescribeConsumerGroups
+// 本接口(DescribeConsumerGroups)用于获取订阅实例配置的消费者组详情。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeConsumerGroupsWithContext(ctx context.Context, request *DescribeConsumerGroupsRequest) (response *DescribeConsumerGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeConsumerGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeConsumerGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConsumerGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConsumerGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1061,8 +1701,9 @@ func NewDescribeMigrateDBInstancesRequest() (request *DescribeMigrateDBInstances
 func NewDescribeMigrateDBInstancesResponse() (response *DescribeMigrateDBInstancesResponse) {
     response = &DescribeMigrateDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMigrateDBInstances
@@ -1141,6 +1782,7 @@ func (c *Client) DescribeMigrateDBInstancesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeMigrateDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeMigrateDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMigrateDBInstances require credential")
@@ -1167,8 +1809,9 @@ func NewDescribeMigrationCheckJobRequest() (request *DescribeMigrationCheckJobRe
 func NewDescribeMigrationCheckJobResponse() (response *DescribeMigrationCheckJobResponse) {
     response = &DescribeMigrationCheckJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMigrationCheckJob
@@ -1231,6 +1874,7 @@ func (c *Client) DescribeMigrationCheckJobWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeMigrationCheckJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeMigrationCheckJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMigrationCheckJob require credential")
@@ -1257,8 +1901,9 @@ func NewDescribeMigrationDetailRequest() (request *DescribeMigrationDetailReques
 func NewDescribeMigrationDetailResponse() (response *DescribeMigrationDetailResponse) {
     response = &DescribeMigrationDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMigrationDetail
@@ -1315,6 +1960,7 @@ func (c *Client) DescribeMigrationDetailWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeMigrationDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeMigrationDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMigrationDetail require credential")
@@ -1341,8 +1987,9 @@ func NewDescribeMigrationJobsRequest() (request *DescribeMigrationJobsRequest) {
 func NewDescribeMigrationJobsResponse() (response *DescribeMigrationJobsResponse) {
     response = &DescribeMigrationJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMigrationJobs
@@ -1367,6 +2014,7 @@ func NewDescribeMigrationJobsResponse() (response *DescribeMigrationJobsResponse
 //  RESOURCESSOLDOUT_RESOURCESSOLDOUTERROR = "ResourcesSoldOut.ResourcesSoldOutError"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
 //  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
 func (c *Client) DescribeMigrationJobs(request *DescribeMigrationJobsRequest) (response *DescribeMigrationJobsResponse, err error) {
     return c.DescribeMigrationJobsWithContext(context.Background(), request)
@@ -1394,11 +2042,13 @@ func (c *Client) DescribeMigrationJobs(request *DescribeMigrationJobsRequest) (r
 //  RESOURCESSOLDOUT_RESOURCESSOLDOUTERROR = "ResourcesSoldOut.ResourcesSoldOutError"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
 //  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
 func (c *Client) DescribeMigrationJobsWithContext(ctx context.Context, request *DescribeMigrationJobsRequest) (response *DescribeMigrationJobsResponse, err error) {
     if request == nil {
         request = NewDescribeMigrationJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeMigrationJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMigrationJobs require credential")
@@ -1407,6 +2057,488 @@ func (c *Client) DescribeMigrationJobsWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDescribeMigrationJobsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeModifyCheckSyncJobResultRequest() (request *DescribeModifyCheckSyncJobResultRequest) {
+    request = &DescribeModifyCheckSyncJobResultRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DescribeModifyCheckSyncJobResult")
+    
+    
+    return
+}
+
+func NewDescribeModifyCheckSyncJobResultResponse() (response *DescribeModifyCheckSyncJobResultResponse) {
+    response = &DescribeModifyCheckSyncJobResultResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeModifyCheckSyncJobResult
+// 在创建修改对象的校验任务后、通过该接口查看校验任务的结果
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) DescribeModifyCheckSyncJobResult(request *DescribeModifyCheckSyncJobResultRequest) (response *DescribeModifyCheckSyncJobResultResponse, err error) {
+    return c.DescribeModifyCheckSyncJobResultWithContext(context.Background(), request)
+}
+
+// DescribeModifyCheckSyncJobResult
+// 在创建修改对象的校验任务后、通过该接口查看校验任务的结果
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) DescribeModifyCheckSyncJobResultWithContext(ctx context.Context, request *DescribeModifyCheckSyncJobResultRequest) (response *DescribeModifyCheckSyncJobResultResponse, err error) {
+    if request == nil {
+        request = NewDescribeModifyCheckSyncJobResultRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeModifyCheckSyncJobResult")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeModifyCheckSyncJobResult require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeModifyCheckSyncJobResultResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOffsetByTimeRequest() (request *DescribeOffsetByTimeRequest) {
+    request = &DescribeOffsetByTimeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DescribeOffsetByTime")
+    
+    
+    return
+}
+
+func NewDescribeOffsetByTimeResponse() (response *DescribeOffsetByTimeResponse) {
+    response = &DescribeOffsetByTimeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOffsetByTime
+// 本接口(DescribeOffsetByTime)查询KafkaTopic中指定时间前最近的offset。
+//
+// 接口输出的offset是离这个时间最近的offset。
+//
+// 如果输入时间比当前时间晚的多，相当于输出的就是最新的offset；
+//
+// 如果输入时间比当前时间早的多，相当于输出的就是最老的offset；
+//
+// 如果输入空，默认0时间，也就是查询最老的offset。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeOffsetByTime(request *DescribeOffsetByTimeRequest) (response *DescribeOffsetByTimeResponse, err error) {
+    return c.DescribeOffsetByTimeWithContext(context.Background(), request)
+}
+
+// DescribeOffsetByTime
+// 本接口(DescribeOffsetByTime)查询KafkaTopic中指定时间前最近的offset。
+//
+// 接口输出的offset是离这个时间最近的offset。
+//
+// 如果输入时间比当前时间晚的多，相当于输出的就是最新的offset；
+//
+// 如果输入时间比当前时间早的多，相当于输出的就是最老的offset；
+//
+// 如果输入空，默认0时间，也就是查询最老的offset。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeOffsetByTimeWithContext(ctx context.Context, request *DescribeOffsetByTimeRequest) (response *DescribeOffsetByTimeResponse, err error) {
+    if request == nil {
+        request = NewDescribeOffsetByTimeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeOffsetByTime")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOffsetByTime require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOffsetByTimeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSubscribeCheckJobRequest() (request *DescribeSubscribeCheckJobRequest) {
+    request = &DescribeSubscribeCheckJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DescribeSubscribeCheckJob")
+    
+    
+    return
+}
+
+func NewDescribeSubscribeCheckJobResponse() (response *DescribeSubscribeCheckJobResponse) {
+    response = &DescribeSubscribeCheckJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSubscribeCheckJob
+// 本接口(DescribeSubscribeCheckJob)用于查询订阅校验任务结果。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeCheckJob(request *DescribeSubscribeCheckJobRequest) (response *DescribeSubscribeCheckJobResponse, err error) {
+    return c.DescribeSubscribeCheckJobWithContext(context.Background(), request)
+}
+
+// DescribeSubscribeCheckJob
+// 本接口(DescribeSubscribeCheckJob)用于查询订阅校验任务结果。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeCheckJobWithContext(ctx context.Context, request *DescribeSubscribeCheckJobRequest) (response *DescribeSubscribeCheckJobResponse, err error) {
+    if request == nil {
+        request = NewDescribeSubscribeCheckJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeSubscribeCheckJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSubscribeCheckJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSubscribeCheckJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSubscribeDetailRequest() (request *DescribeSubscribeDetailRequest) {
+    request = &DescribeSubscribeDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DescribeSubscribeDetail")
+    
+    
+    return
+}
+
+func NewDescribeSubscribeDetailResponse() (response *DescribeSubscribeDetailResponse) {
+    response = &DescribeSubscribeDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSubscribeDetail
+// 本接口(DescribeSubscribeDetail)获取数据订阅实例的配置信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeDetail(request *DescribeSubscribeDetailRequest) (response *DescribeSubscribeDetailResponse, err error) {
+    return c.DescribeSubscribeDetailWithContext(context.Background(), request)
+}
+
+// DescribeSubscribeDetail
+// 本接口(DescribeSubscribeDetail)获取数据订阅实例的配置信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeDetailWithContext(ctx context.Context, request *DescribeSubscribeDetailRequest) (response *DescribeSubscribeDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeSubscribeDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeSubscribeDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSubscribeDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSubscribeDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSubscribeJobsRequest() (request *DescribeSubscribeJobsRequest) {
+    request = &DescribeSubscribeJobsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DescribeSubscribeJobs")
+    
+    
+    return
+}
+
+func NewDescribeSubscribeJobsResponse() (response *DescribeSubscribeJobsResponse) {
+    response = &DescribeSubscribeJobsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSubscribeJobs
+// 本接口(DescribeSubscribes)获取数据订阅实例信息列表，默认分页，每次返回20条
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeJobs(request *DescribeSubscribeJobsRequest) (response *DescribeSubscribeJobsResponse, err error) {
+    return c.DescribeSubscribeJobsWithContext(context.Background(), request)
+}
+
+// DescribeSubscribeJobs
+// 本接口(DescribeSubscribes)获取数据订阅实例信息列表，默认分页，每次返回20条
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeJobsWithContext(ctx context.Context, request *DescribeSubscribeJobsRequest) (response *DescribeSubscribeJobsResponse, err error) {
+    if request == nil {
+        request = NewDescribeSubscribeJobsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeSubscribeJobs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSubscribeJobs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSubscribeJobsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSubscribeReturnableRequest() (request *DescribeSubscribeReturnableRequest) {
+    request = &DescribeSubscribeReturnableRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DescribeSubscribeReturnable")
+    
+    
+    return
+}
+
+func NewDescribeSubscribeReturnableResponse() (response *DescribeSubscribeReturnableResponse) {
+    response = &DescribeSubscribeReturnableResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSubscribeReturnable
+// 本接口(DescribeSubscribeReturnable)用于查询订阅任务是否可以销毁和退货。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeReturnable(request *DescribeSubscribeReturnableRequest) (response *DescribeSubscribeReturnableResponse, err error) {
+    return c.DescribeSubscribeReturnableWithContext(context.Background(), request)
+}
+
+// DescribeSubscribeReturnable
+// 本接口(DescribeSubscribeReturnable)用于查询订阅任务是否可以销毁和退货。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DescribeSubscribeReturnableWithContext(ctx context.Context, request *DescribeSubscribeReturnableRequest) (response *DescribeSubscribeReturnableResponse, err error) {
+    if request == nil {
+        request = NewDescribeSubscribeReturnableRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeSubscribeReturnable")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSubscribeReturnable require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSubscribeReturnableResponse()
     err = c.Send(request, response)
     return
 }
@@ -1425,8 +2557,9 @@ func NewDescribeSyncJobsRequest() (request *DescribeSyncJobsRequest) {
 func NewDescribeSyncJobsResponse() (response *DescribeSyncJobsResponse) {
     response = &DescribeSyncJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSyncJobs
@@ -1437,6 +2570,7 @@ func NewDescribeSyncJobsResponse() (response *DescribeSyncJobsResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATIONERROR = "AuthFailure.UnauthorizedOperationError"
 //  FAILEDOPERATION_NOTALLOWOPERATION = "FailedOperation.NotAllowOperation"
 //  INTERNALERROR_DATABASEERROR = "InternalError.DatabaseError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_PROTOCOLERROR = "InternalError.ProtocolError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -1452,6 +2586,7 @@ func (c *Client) DescribeSyncJobs(request *DescribeSyncJobsRequest) (response *D
 //  AUTHFAILURE_UNAUTHORIZEDOPERATIONERROR = "AuthFailure.UnauthorizedOperationError"
 //  FAILEDOPERATION_NOTALLOWOPERATION = "FailedOperation.NotAllowOperation"
 //  INTERNALERROR_DATABASEERROR = "InternalError.DatabaseError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_PROTOCOLERROR = "InternalError.ProtocolError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -1459,6 +2594,7 @@ func (c *Client) DescribeSyncJobsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeSyncJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DescribeSyncJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSyncJobs require credential")
@@ -1467,6 +2603,90 @@ func (c *Client) DescribeSyncJobsWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeSyncJobsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDestroyIsolatedSubscribeRequest() (request *DestroyIsolatedSubscribeRequest) {
+    request = &DestroyIsolatedSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "DestroyIsolatedSubscribe")
+    
+    
+    return
+}
+
+func NewDestroyIsolatedSubscribeResponse() (response *DestroyIsolatedSubscribeResponse) {
+    response = &DestroyIsolatedSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DestroyIsolatedSubscribe
+// 本接口（DestroyIsolatedSubscribe）用于下线已隔离的数据订阅实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DestroyIsolatedSubscribe(request *DestroyIsolatedSubscribeRequest) (response *DestroyIsolatedSubscribeResponse, err error) {
+    return c.DestroyIsolatedSubscribeWithContext(context.Background(), request)
+}
+
+// DestroyIsolatedSubscribe
+// 本接口（DestroyIsolatedSubscribe）用于下线已隔离的数据订阅实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) DestroyIsolatedSubscribeWithContext(ctx context.Context, request *DestroyIsolatedSubscribeRequest) (response *DestroyIsolatedSubscribeResponse, err error) {
+    if request == nil {
+        request = NewDestroyIsolatedSubscribeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DestroyIsolatedSubscribe")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DestroyIsolatedSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDestroyIsolatedSubscribeResponse()
     err = c.Send(request, response)
     return
 }
@@ -1485,8 +2705,9 @@ func NewDestroyMigrateJobRequest() (request *DestroyMigrateJobRequest) {
 func NewDestroyMigrateJobResponse() (response *DestroyMigrateJobResponse) {
     response = &DestroyMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroyMigrateJob
@@ -1541,6 +2762,7 @@ func (c *Client) DestroyMigrateJobWithContext(ctx context.Context, request *Dest
     if request == nil {
         request = NewDestroyMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DestroyMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyMigrateJob require credential")
@@ -1567,8 +2789,9 @@ func NewDestroySyncJobRequest() (request *DestroySyncJobRequest) {
 func NewDestroySyncJobResponse() (response *DestroySyncJobResponse) {
     response = &DestroySyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroySyncJob
@@ -1591,6 +2814,7 @@ func (c *Client) DestroySyncJobWithContext(ctx context.Context, request *Destroy
     if request == nil {
         request = NewDestroySyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "DestroySyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroySyncJob require credential")
@@ -1617,12 +2841,13 @@ func NewIsolateMigrateJobRequest() (request *IsolateMigrateJobRequest) {
 func NewIsolateMigrateJobResponse() (response *IsolateMigrateJobResponse) {
     response = &IsolateMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateMigrateJob
-//  隔离退还数据迁移服务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。对于计费任务，在任务隔离后可进行解除隔离(RecoverMigrationJob)操作或直接进行下线销毁(DestroyMigrateJob)操作。对于不计费任务，调用此接口会直接销毁任务，无法进行恢复操作。
+// 隔离退还数据迁移服务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。对于计费任务，在任务隔离后可进行解除隔离(RecoverMigrateJob)操作或直接进行下线销毁(DestroyMigrateJob)操作。对于不计费任务，调用此接口会直接销毁任务，无法进行恢复操作。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -1649,7 +2874,7 @@ func (c *Client) IsolateMigrateJob(request *IsolateMigrateJobRequest) (response 
 }
 
 // IsolateMigrateJob
-//  隔离退还数据迁移服务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。对于计费任务，在任务隔离后可进行解除隔离(RecoverMigrationJob)操作或直接进行下线销毁(DestroyMigrateJob)操作。对于不计费任务，调用此接口会直接销毁任务，无法进行恢复操作。
+// 隔离退还数据迁移服务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。对于计费任务，在任务隔离后可进行解除隔离(RecoverMigrateJob)操作或直接进行下线销毁(DestroyMigrateJob)操作。对于不计费任务，调用此接口会直接销毁任务，无法进行恢复操作。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -1675,6 +2900,7 @@ func (c *Client) IsolateMigrateJobWithContext(ctx context.Context, request *Isol
     if request == nil {
         request = NewIsolateMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "IsolateMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateMigrateJob require credential")
@@ -1683,6 +2909,90 @@ func (c *Client) IsolateMigrateJobWithContext(ctx context.Context, request *Isol
     request.SetContext(ctx)
     
     response = NewIsolateMigrateJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewIsolateSubscribeRequest() (request *IsolateSubscribeRequest) {
+    request = &IsolateSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "IsolateSubscribe")
+    
+    
+    return
+}
+
+func NewIsolateSubscribeResponse() (response *IsolateSubscribeResponse) {
+    response = &IsolateSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// IsolateSubscribe
+// 本接口（IsolateSubscribe）用于隔离订阅任务。调用后，订阅任务将不能使用。按量计费的任务会停止计费，包年包月的任务会自动退费
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) IsolateSubscribe(request *IsolateSubscribeRequest) (response *IsolateSubscribeResponse, err error) {
+    return c.IsolateSubscribeWithContext(context.Background(), request)
+}
+
+// IsolateSubscribe
+// 本接口（IsolateSubscribe）用于隔离订阅任务。调用后，订阅任务将不能使用。按量计费的任务会停止计费，包年包月的任务会自动退费
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) IsolateSubscribeWithContext(ctx context.Context, request *IsolateSubscribeRequest) (response *IsolateSubscribeResponse, err error) {
+    if request == nil {
+        request = NewIsolateSubscribeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "IsolateSubscribe")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("IsolateSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewIsolateSubscribeResponse()
     err = c.Send(request, response)
     return
 }
@@ -1701,32 +3011,38 @@ func NewIsolateSyncJobRequest() (request *IsolateSyncJobRequest) {
 func NewIsolateSyncJobResponse() (response *IsolateSyncJobResponse) {
     response = &IsolateSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateSyncJob
-// 隔离同步任务，隔离后可通过查询同步任务信息接口DescribeSyncJobs获取隔离后状态。在任务隔离后可进行解除隔离(RecoverSyncJob)操作或直接进行下线操作。对于不计费任务，调用此接口后会直接删除任务，无法进行恢复操作。
+// 隔离同步任务，隔离后可通过查询同步任务信息接口DescribeSyncJobs获取隔离后状态。在任务隔离后可进行解除隔离(RecoverSyncJob)操作或直接进行下线(DestroySyncJob)操作。对于不计费任务，调用此接口后会直接删除任务，无法进行恢复操作。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
 func (c *Client) IsolateSyncJob(request *IsolateSyncJobRequest) (response *IsolateSyncJobResponse, err error) {
     return c.IsolateSyncJobWithContext(context.Background(), request)
 }
 
 // IsolateSyncJob
-// 隔离同步任务，隔离后可通过查询同步任务信息接口DescribeSyncJobs获取隔离后状态。在任务隔离后可进行解除隔离(RecoverSyncJob)操作或直接进行下线操作。对于不计费任务，调用此接口后会直接删除任务，无法进行恢复操作。
+// 隔离同步任务，隔离后可通过查询同步任务信息接口DescribeSyncJobs获取隔离后状态。在任务隔离后可进行解除隔离(RecoverSyncJob)操作或直接进行下线(DestroySyncJob)操作。对于不计费任务，调用此接口后会直接删除任务，无法进行恢复操作。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
 func (c *Client) IsolateSyncJobWithContext(ctx context.Context, request *IsolateSyncJobRequest) (response *IsolateSyncJobResponse, err error) {
     if request == nil {
         request = NewIsolateSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "IsolateSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateSyncJob require credential")
@@ -1753,8 +3069,9 @@ func NewModifyCompareTaskRequest() (request *ModifyCompareTaskRequest) {
 func NewModifyCompareTaskResponse() (response *ModifyCompareTaskResponse) {
     response = &ModifyCompareTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCompareTask
@@ -1811,6 +3128,7 @@ func (c *Client) ModifyCompareTaskWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyCompareTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyCompareTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCompareTask require credential")
@@ -1837,8 +3155,9 @@ func NewModifyCompareTaskNameRequest() (request *ModifyCompareTaskNameRequest) {
 func NewModifyCompareTaskNameResponse() (response *ModifyCompareTaskNameResponse) {
     response = &ModifyCompareTaskNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCompareTaskName
@@ -1893,6 +3212,7 @@ func (c *Client) ModifyCompareTaskNameWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyCompareTaskNameRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyCompareTaskName")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCompareTaskName require credential")
@@ -1901,6 +3221,174 @@ func (c *Client) ModifyCompareTaskNameWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyCompareTaskNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConsumerGroupDescriptionRequest() (request *ModifyConsumerGroupDescriptionRequest) {
+    request = &ModifyConsumerGroupDescriptionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifyConsumerGroupDescription")
+    
+    
+    return
+}
+
+func NewModifyConsumerGroupDescriptionResponse() (response *ModifyConsumerGroupDescriptionResponse) {
+    response = &ModifyConsumerGroupDescriptionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConsumerGroupDescription
+// 本接口(ModifyConsumerGroupDescription)用于修改指定订阅消费组备注。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifyConsumerGroupDescription(request *ModifyConsumerGroupDescriptionRequest) (response *ModifyConsumerGroupDescriptionResponse, err error) {
+    return c.ModifyConsumerGroupDescriptionWithContext(context.Background(), request)
+}
+
+// ModifyConsumerGroupDescription
+// 本接口(ModifyConsumerGroupDescription)用于修改指定订阅消费组备注。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifyConsumerGroupDescriptionWithContext(ctx context.Context, request *ModifyConsumerGroupDescriptionRequest) (response *ModifyConsumerGroupDescriptionResponse, err error) {
+    if request == nil {
+        request = NewModifyConsumerGroupDescriptionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyConsumerGroupDescription")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConsumerGroupDescription require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConsumerGroupDescriptionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConsumerGroupPasswordRequest() (request *ModifyConsumerGroupPasswordRequest) {
+    request = &ModifyConsumerGroupPasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifyConsumerGroupPassword")
+    
+    
+    return
+}
+
+func NewModifyConsumerGroupPasswordResponse() (response *ModifyConsumerGroupPasswordResponse) {
+    response = &ModifyConsumerGroupPasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConsumerGroupPassword
+// 本接口(ModifyConsumerGroupPassword)用于修改指定订阅消费组密码。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifyConsumerGroupPassword(request *ModifyConsumerGroupPasswordRequest) (response *ModifyConsumerGroupPasswordResponse, err error) {
+    return c.ModifyConsumerGroupPasswordWithContext(context.Background(), request)
+}
+
+// ModifyConsumerGroupPassword
+// 本接口(ModifyConsumerGroupPassword)用于修改指定订阅消费组密码。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifyConsumerGroupPasswordWithContext(ctx context.Context, request *ModifyConsumerGroupPasswordRequest) (response *ModifyConsumerGroupPasswordResponse, err error) {
+    if request == nil {
+        request = NewModifyConsumerGroupPasswordRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyConsumerGroupPassword")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConsumerGroupPassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConsumerGroupPasswordResponse()
     err = c.Send(request, response)
     return
 }
@@ -1919,12 +3407,13 @@ func NewModifyMigrateJobSpecRequest() (request *ModifyMigrateJobSpecRequest) {
 func NewModifyMigrateJobSpecResponse() (response *ModifyMigrateJobSpecResponse) {
     response = &ModifyMigrateJobSpecResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMigrateJobSpec
-// 调整实例规格，此接口只支持按量计费任务的调整。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
+// 调整实例规格，此接口只支持按量计费任务的调整，且仅在计费或者待计费状态下支持修改。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -1949,7 +3438,7 @@ func (c *Client) ModifyMigrateJobSpec(request *ModifyMigrateJobSpecRequest) (res
 }
 
 // ModifyMigrateJobSpec
-// 调整实例规格，此接口只支持按量计费任务的调整。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
+// 调整实例规格，此接口只支持按量计费任务的调整，且仅在计费或者待计费状态下支持修改。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -1973,6 +3462,7 @@ func (c *Client) ModifyMigrateJobSpecWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyMigrateJobSpecRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyMigrateJobSpec")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMigrateJobSpec require credential")
@@ -1999,8 +3489,9 @@ func NewModifyMigrateNameRequest() (request *ModifyMigrateNameRequest) {
 func NewModifyMigrateNameResponse() (response *ModifyMigrateNameResponse) {
     response = &ModifyMigrateNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMigrateName
@@ -2057,6 +3548,7 @@ func (c *Client) ModifyMigrateNameWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyMigrateNameRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyMigrateName")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMigrateName require credential")
@@ -2065,6 +3557,172 @@ func (c *Client) ModifyMigrateNameWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyMigrateNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyMigrateRateLimitRequest() (request *ModifyMigrateRateLimitRequest) {
+    request = &ModifyMigrateRateLimitRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifyMigrateRateLimit")
+    
+    
+    return
+}
+
+func NewModifyMigrateRateLimitResponse() (response *ModifyMigrateRateLimitResponse) {
+    response = &ModifyMigrateRateLimitResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyMigrateRateLimit
+// 用户在发现迁移任务对用户的数据库的负载影响较大时、可通过该接口限制任务的传输速率；此操作仅在任务运行中可执行。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_AUTHORIZEDOPERATIONDENYERROR = "AuthFailure.AuthorizedOperationDenyError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_STATUSINCONFLICT = "FailedOperation.StatusInConflict"
+//  FAILEDOPERATION_STATUSINCONFLICTERROR = "FailedOperation.StatusInConflictError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_INTERNALINNERCOMMONERROR = "InternalError.InternalInnerCommonError"
+//  INTERNALERROR_NOTENOUGHMONEYERROR = "InternalError.NotEnoughMoneyError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_BIZINVALIDPARAMETERVALUEERROR = "InvalidParameterValue.BizInvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_JOBOPERATIONDENIEDERROR = "OperationDenied.JobOperationDeniedError"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDEDERROR = "RequestLimitExceeded.RequestLimitExceededError"
+//  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION_NOTENOUGHPRIVILEGES = "UnauthorizedOperation.NotEnoughPrivileges"
+//  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifyMigrateRateLimit(request *ModifyMigrateRateLimitRequest) (response *ModifyMigrateRateLimitResponse, err error) {
+    return c.ModifyMigrateRateLimitWithContext(context.Background(), request)
+}
+
+// ModifyMigrateRateLimit
+// 用户在发现迁移任务对用户的数据库的负载影响较大时、可通过该接口限制任务的传输速率；此操作仅在任务运行中可执行。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_AUTHORIZEDOPERATIONDENYERROR = "AuthFailure.AuthorizedOperationDenyError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_STATUSINCONFLICT = "FailedOperation.StatusInConflict"
+//  FAILEDOPERATION_STATUSINCONFLICTERROR = "FailedOperation.StatusInConflictError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_INTERNALINNERCOMMONERROR = "InternalError.InternalInnerCommonError"
+//  INTERNALERROR_NOTENOUGHMONEYERROR = "InternalError.NotEnoughMoneyError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_BIZINVALIDPARAMETERVALUEERROR = "InvalidParameterValue.BizInvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_JOBOPERATIONDENIEDERROR = "OperationDenied.JobOperationDeniedError"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDEDERROR = "RequestLimitExceeded.RequestLimitExceededError"
+//  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION_NOTENOUGHPRIVILEGES = "UnauthorizedOperation.NotEnoughPrivileges"
+//  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifyMigrateRateLimitWithContext(ctx context.Context, request *ModifyMigrateRateLimitRequest) (response *ModifyMigrateRateLimitResponse, err error) {
+    if request == nil {
+        request = NewModifyMigrateRateLimitRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyMigrateRateLimit")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyMigrateRateLimit require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyMigrateRateLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyMigrateRuntimeAttributeRequest() (request *ModifyMigrateRuntimeAttributeRequest) {
+    request = &ModifyMigrateRuntimeAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifyMigrateRuntimeAttribute")
+    
+    
+    return
+}
+
+func NewModifyMigrateRuntimeAttributeResponse() (response *ModifyMigrateRuntimeAttributeResponse) {
+    response = &ModifyMigrateRuntimeAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyMigrateRuntimeAttribute
+// 修改任务运行时属性，此接口不同于配置类接口，不会进行状态机判断。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+func (c *Client) ModifyMigrateRuntimeAttribute(request *ModifyMigrateRuntimeAttributeRequest) (response *ModifyMigrateRuntimeAttributeResponse, err error) {
+    return c.ModifyMigrateRuntimeAttributeWithContext(context.Background(), request)
+}
+
+// ModifyMigrateRuntimeAttribute
+// 修改任务运行时属性，此接口不同于配置类接口，不会进行状态机判断。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNKNOWNPARAMETER_UNKNOWNPARAMETERERROR = "UnknownParameter.UnknownParameterError"
+func (c *Client) ModifyMigrateRuntimeAttributeWithContext(ctx context.Context, request *ModifyMigrateRuntimeAttributeRequest) (response *ModifyMigrateRuntimeAttributeResponse, err error) {
+    if request == nil {
+        request = NewModifyMigrateRuntimeAttributeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyMigrateRuntimeAttribute")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyMigrateRuntimeAttribute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyMigrateRuntimeAttributeResponse()
     err = c.Send(request, response)
     return
 }
@@ -2083,12 +3741,13 @@ func NewModifyMigrationJobRequest() (request *ModifyMigrationJobRequest) {
 func NewModifyMigrationJobResponse() (response *ModifyMigrationJobResponse) {
     response = &ModifyMigrationJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMigrationJob
-// 配置迁移服务，配置成功后可通过`CreateMigrationCheckJob` 创建迁移校验任务接口发起校验任务，只有校验通过才能启动迁移任务。
+// 配置迁移服务，配置成功后可通过`CreateMigrateCheckJob` 创建迁移校验任务接口发起校验任务，只有校验通过才能启动迁移任务。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2099,6 +3758,7 @@ func NewModifyMigrationJobResponse() (response *ModifyMigrationJobResponse) {
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -2119,7 +3779,7 @@ func (c *Client) ModifyMigrationJob(request *ModifyMigrationJobRequest) (respons
 }
 
 // ModifyMigrationJob
-// 配置迁移服务，配置成功后可通过`CreateMigrationCheckJob` 创建迁移校验任务接口发起校验任务，只有校验通过才能启动迁移任务。
+// 配置迁移服务，配置成功后可通过`CreateMigrateCheckJob` 创建迁移校验任务接口发起校验任务，只有校验通过才能启动迁移任务。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2130,6 +3790,7 @@ func (c *Client) ModifyMigrationJob(request *ModifyMigrationJobRequest) (respons
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -2149,6 +3810,7 @@ func (c *Client) ModifyMigrationJobWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyMigrationJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifyMigrationJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMigrationJob require credential")
@@ -2157,6 +3819,364 @@ func (c *Client) ModifyMigrationJobWithContext(ctx context.Context, request *Mod
     request.SetContext(ctx)
     
     response = NewModifyMigrationJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifySubscribeAutoRenewFlagRequest() (request *ModifySubscribeAutoRenewFlagRequest) {
+    request = &ModifySubscribeAutoRenewFlagRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifySubscribeAutoRenewFlag")
+    
+    
+    return
+}
+
+func NewModifySubscribeAutoRenewFlagResponse() (response *ModifySubscribeAutoRenewFlagResponse) {
+    response = &ModifySubscribeAutoRenewFlagResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySubscribeAutoRenewFlag
+// 修改订阅实例自动续费标识。只有包年包月的任务修改才有意义，按量计费任务修改后无影响。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifySubscribeAutoRenewFlag(request *ModifySubscribeAutoRenewFlagRequest) (response *ModifySubscribeAutoRenewFlagResponse, err error) {
+    return c.ModifySubscribeAutoRenewFlagWithContext(context.Background(), request)
+}
+
+// ModifySubscribeAutoRenewFlag
+// 修改订阅实例自动续费标识。只有包年包月的任务修改才有意义，按量计费任务修改后无影响。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifySubscribeAutoRenewFlagWithContext(ctx context.Context, request *ModifySubscribeAutoRenewFlagRequest) (response *ModifySubscribeAutoRenewFlagResponse, err error) {
+    if request == nil {
+        request = NewModifySubscribeAutoRenewFlagRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifySubscribeAutoRenewFlag")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySubscribeAutoRenewFlag require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySubscribeAutoRenewFlagResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifySubscribeNameRequest() (request *ModifySubscribeNameRequest) {
+    request = &ModifySubscribeNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifySubscribeName")
+    
+    
+    return
+}
+
+func NewModifySubscribeNameResponse() (response *ModifySubscribeNameResponse) {
+    response = &ModifySubscribeNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySubscribeName
+// 本接口(ModifySubscribeName)用于修改数据订阅实例的名称
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifySubscribeName(request *ModifySubscribeNameRequest) (response *ModifySubscribeNameResponse, err error) {
+    return c.ModifySubscribeNameWithContext(context.Background(), request)
+}
+
+// ModifySubscribeName
+// 本接口(ModifySubscribeName)用于修改数据订阅实例的名称
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifySubscribeNameWithContext(ctx context.Context, request *ModifySubscribeNameRequest) (response *ModifySubscribeNameResponse, err error) {
+    if request == nil {
+        request = NewModifySubscribeNameRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifySubscribeName")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySubscribeName require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySubscribeNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifySubscribeObjectsRequest() (request *ModifySubscribeObjectsRequest) {
+    request = &ModifySubscribeObjectsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifySubscribeObjects")
+    
+    
+    return
+}
+
+func NewModifySubscribeObjectsResponse() (response *ModifySubscribeObjectsResponse) {
+    response = &ModifySubscribeObjectsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySubscribeObjects
+// 本接口(ModifySubscribeObjects)用于修改数据订阅对象和kafka分区规则，如果是mongo订阅，还可以修改输出聚合规则。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifySubscribeObjects(request *ModifySubscribeObjectsRequest) (response *ModifySubscribeObjectsResponse, err error) {
+    return c.ModifySubscribeObjectsWithContext(context.Background(), request)
+}
+
+// ModifySubscribeObjects
+// 本接口(ModifySubscribeObjects)用于修改数据订阅对象和kafka分区规则，如果是mongo订阅，还可以修改输出聚合规则。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ModifySubscribeObjectsWithContext(ctx context.Context, request *ModifySubscribeObjectsRequest) (response *ModifySubscribeObjectsResponse, err error) {
+    if request == nil {
+        request = NewModifySubscribeObjectsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifySubscribeObjects")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySubscribeObjects require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySubscribeObjectsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifySyncJobConfigRequest() (request *ModifySyncJobConfigRequest) {
+    request = &ModifySyncJobConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifySyncJobConfig")
+    
+    
+    return
+}
+
+func NewModifySyncJobConfigResponse() (response *ModifySyncJobConfigResponse) {
+    response = &ModifySyncJobConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySyncJobConfig
+// 该接口支持在同步任务启动后修改任务的配置
+//
+// 修改同步配置的完整流程：修改同步任务配置->创建修改同步任务配置的校验任务->查询修改配置的校验任务的结果->启动修改配置任务
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+func (c *Client) ModifySyncJobConfig(request *ModifySyncJobConfigRequest) (response *ModifySyncJobConfigResponse, err error) {
+    return c.ModifySyncJobConfigWithContext(context.Background(), request)
+}
+
+// ModifySyncJobConfig
+// 该接口支持在同步任务启动后修改任务的配置
+//
+// 修改同步配置的完整流程：修改同步任务配置->创建修改同步任务配置的校验任务->查询修改配置的校验任务的结果->启动修改配置任务
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+func (c *Client) ModifySyncJobConfigWithContext(ctx context.Context, request *ModifySyncJobConfigRequest) (response *ModifySyncJobConfigResponse, err error) {
+    if request == nil {
+        request = NewModifySyncJobConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifySyncJobConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySyncJobConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySyncJobConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifySyncRateLimitRequest() (request *ModifySyncRateLimitRequest) {
+    request = &ModifySyncRateLimitRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ModifySyncRateLimit")
+    
+    
+    return
+}
+
+func NewModifySyncRateLimitResponse() (response *ModifySyncRateLimitResponse) {
+    response = &ModifySyncRateLimitResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySyncRateLimit
+// 用户在发现同步任务对用户的数据库的负载影响较大时、可通过该接口限制任务的传输速率
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ModifySyncRateLimit(request *ModifySyncRateLimitRequest) (response *ModifySyncRateLimitResponse, err error) {
+    return c.ModifySyncRateLimitWithContext(context.Background(), request)
+}
+
+// ModifySyncRateLimit
+// 用户在发现同步任务对用户的数据库的负载影响较大时、可通过该接口限制任务的传输速率
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ModifySyncRateLimitWithContext(ctx context.Context, request *ModifySyncRateLimitRequest) (response *ModifySyncRateLimitResponse, err error) {
+    if request == nil {
+        request = NewModifySyncRateLimitRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ModifySyncRateLimit")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySyncRateLimit require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySyncRateLimitResponse()
     err = c.Send(request, response)
     return
 }
@@ -2175,8 +4195,9 @@ func NewPauseMigrateJobRequest() (request *PauseMigrateJobRequest) {
 func NewPauseMigrateJobResponse() (response *PauseMigrateJobResponse) {
     response = &PauseMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PauseMigrateJob
@@ -2184,6 +4205,7 @@ func NewPauseMigrateJobResponse() (response *PauseMigrateJobResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
@@ -2196,6 +4218,7 @@ func (c *Client) PauseMigrateJob(request *PauseMigrateJobRequest) (response *Pau
 //
 // 可能返回的错误码:
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
@@ -2203,6 +4226,7 @@ func (c *Client) PauseMigrateJobWithContext(ctx context.Context, request *PauseM
     if request == nil {
         request = NewPauseMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "PauseMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PauseMigrateJob require credential")
@@ -2229,8 +4253,9 @@ func NewPauseSyncJobRequest() (request *PauseSyncJobRequest) {
 func NewPauseSyncJobResponse() (response *PauseSyncJobResponse) {
     response = &PauseSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PauseSyncJob
@@ -2265,6 +4290,7 @@ func (c *Client) PauseSyncJobWithContext(ctx context.Context, request *PauseSync
     if request == nil {
         request = NewPauseSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "PauseSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PauseSyncJob require credential")
@@ -2291,14 +4317,16 @@ func NewRecoverMigrateJobRequest() (request *RecoverMigrateJobRequest) {
 func NewRecoverMigrateJobResponse() (response *RecoverMigrateJobResponse) {
     response = &RecoverMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RecoverMigrateJob
 // 解除隔离数据迁移任务，用户手动发起隔离后的手动解隔离，只有任务状态为已隔离(手动操作)状态下才能触发此操作。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) RecoverMigrateJob(request *RecoverMigrateJobRequest) (response *RecoverMigrateJobResponse, err error) {
     return c.RecoverMigrateJobWithContext(context.Background(), request)
@@ -2308,11 +4336,13 @@ func (c *Client) RecoverMigrateJob(request *RecoverMigrateJobRequest) (response 
 // 解除隔离数据迁移任务，用户手动发起隔离后的手动解隔离，只有任务状态为已隔离(手动操作)状态下才能触发此操作。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) RecoverMigrateJobWithContext(ctx context.Context, request *RecoverMigrateJobRequest) (response *RecoverMigrateJobResponse, err error) {
     if request == nil {
         request = NewRecoverMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "RecoverMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RecoverMigrateJob require credential")
@@ -2339,12 +4369,13 @@ func NewRecoverSyncJobRequest() (request *RecoverSyncJobRequest) {
 func NewRecoverSyncJobResponse() (response *RecoverSyncJobResponse) {
     response = &RecoverSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RecoverSyncJob
-// 解除隔离同步任务，任务在已隔离状态下可调用该接口解除隔离状态任务，同时可通过查询同步任务信息接口DescribeSyncJobs，获取操作后状态。
+// 解除隔离同步任务，任务在已隔离状态下可调用该接口解除隔离状态任务，同时可通过查询同步任务信息接口DescribeSyncJobs，获取操作后状态。注意，此接口只支持按量计费实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2371,7 +4402,7 @@ func (c *Client) RecoverSyncJob(request *RecoverSyncJobRequest) (response *Recov
 }
 
 // RecoverSyncJob
-// 解除隔离同步任务，任务在已隔离状态下可调用该接口解除隔离状态任务，同时可通过查询同步任务信息接口DescribeSyncJobs，获取操作后状态。
+// 解除隔离同步任务，任务在已隔离状态下可调用该接口解除隔离状态任务，同时可通过查询同步任务信息接口DescribeSyncJobs，获取操作后状态。注意，此接口只支持按量计费实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2397,6 +4428,7 @@ func (c *Client) RecoverSyncJobWithContext(ctx context.Context, request *Recover
     if request == nil {
         request = NewRecoverSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "RecoverSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RecoverSyncJob require credential")
@@ -2405,6 +4437,236 @@ func (c *Client) RecoverSyncJobWithContext(ctx context.Context, request *Recover
     request.SetContext(ctx)
     
     response = NewRecoverSyncJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetConsumerGroupOffsetRequest() (request *ResetConsumerGroupOffsetRequest) {
+    request = &ResetConsumerGroupOffsetRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ResetConsumerGroupOffset")
+    
+    
+    return
+}
+
+func NewResetConsumerGroupOffsetResponse() (response *ResetConsumerGroupOffsetResponse) {
+    response = &ResetConsumerGroupOffsetResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetConsumerGroupOffset
+// 本接口(ResetConsumerGroupOffset)用于重置订阅消费组的offset。调用DescribeConsumerGroups接口查询消费组状态，只有消费组状态为 Dead 或 Empty 才可以执行重置该操作。否则重置不会生效，接口也不会报错。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ResetConsumerGroupOffset(request *ResetConsumerGroupOffsetRequest) (response *ResetConsumerGroupOffsetResponse, err error) {
+    return c.ResetConsumerGroupOffsetWithContext(context.Background(), request)
+}
+
+// ResetConsumerGroupOffset
+// 本接口(ResetConsumerGroupOffset)用于重置订阅消费组的offset。调用DescribeConsumerGroups接口查询消费组状态，只有消费组状态为 Dead 或 Empty 才可以执行重置该操作。否则重置不会生效，接口也不会报错。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ResetConsumerGroupOffsetWithContext(ctx context.Context, request *ResetConsumerGroupOffsetRequest) (response *ResetConsumerGroupOffsetResponse, err error) {
+    if request == nil {
+        request = NewResetConsumerGroupOffsetRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ResetConsumerGroupOffset")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetConsumerGroupOffset require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetConsumerGroupOffsetResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetSubscribeRequest() (request *ResetSubscribeRequest) {
+    request = &ResetSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ResetSubscribe")
+    
+    
+    return
+}
+
+func NewResetSubscribeResponse() (response *ResetSubscribeResponse) {
+    response = &ResetSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetSubscribe
+// 本接口(ResetSubscribe)用于重置订阅实例，重置后，可以重新配置订阅任务。
+//
+// 可以调用 [DescribeSubscribeDetail](https://cloud.tencent.com/document/product/571/102944) 查询订阅信息判断是否置成功。当SubsStatus变为notStarted时，表示重置成功。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ResetSubscribe(request *ResetSubscribeRequest) (response *ResetSubscribeResponse, err error) {
+    return c.ResetSubscribeWithContext(context.Background(), request)
+}
+
+// ResetSubscribe
+// 本接口(ResetSubscribe)用于重置订阅实例，重置后，可以重新配置订阅任务。
+//
+// 可以调用 [DescribeSubscribeDetail](https://cloud.tencent.com/document/product/571/102944) 查询订阅信息判断是否置成功。当SubsStatus变为notStarted时，表示重置成功。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ResetSubscribeWithContext(ctx context.Context, request *ResetSubscribeRequest) (response *ResetSubscribeResponse, err error) {
+    if request == nil {
+        request = NewResetSubscribeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ResetSubscribe")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetSubscribeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetSyncJobRequest() (request *ResetSyncJobRequest) {
+    request = &ResetSyncJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ResetSyncJob")
+    
+    
+    return
+}
+
+func NewResetSyncJobResponse() (response *ResetSyncJobResponse) {
+    response = &ResetSyncJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResetSyncJob
+// 重置已经结束的同步任务，重置后可以重新配置启动任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ResetSyncJob(request *ResetSyncJobRequest) (response *ResetSyncJobResponse, err error) {
+    return c.ResetSyncJobWithContext(context.Background(), request)
+}
+
+// ResetSyncJob
+// 重置已经结束的同步任务，重置后可以重新配置启动任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ResetSyncJobWithContext(ctx context.Context, request *ResetSyncJobRequest) (response *ResetSyncJobResponse, err error) {
+    if request == nil {
+        request = NewResetSyncJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ResetSyncJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetSyncJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetSyncJobResponse()
     err = c.Send(request, response)
     return
 }
@@ -2423,14 +4685,16 @@ func NewResizeSyncJobRequest() (request *ResizeSyncJobRequest) {
 func NewResizeSyncJobResponse() (response *ResizeSyncJobResponse) {
     response = &ResizeSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResizeSyncJob
 // 调整同步任务规格，此接口只支持按量计费任务的调整，调用此接口后不会立即生效，后台调整时间大概为3~5分钟。调用此接口后可通过查询同步任务信息接口DescribeSyncJobs，获取变配后的状态。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
 //  INTERNALERROR_NOTENOUGHMONEYERROR = "InternalError.NotEnoughMoneyError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
@@ -2442,6 +4706,7 @@ func (c *Client) ResizeSyncJob(request *ResizeSyncJobRequest) (response *ResizeS
 // 调整同步任务规格，此接口只支持按量计费任务的调整，调用此接口后不会立即生效，后台调整时间大概为3~5分钟。调用此接口后可通过查询同步任务信息接口DescribeSyncJobs，获取变配后的状态。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
 //  INTERNALERROR_NOTENOUGHMONEYERROR = "InternalError.NotEnoughMoneyError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
@@ -2449,6 +4714,7 @@ func (c *Client) ResizeSyncJobWithContext(ctx context.Context, request *ResizeSy
     if request == nil {
         request = NewResizeSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ResizeSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResizeSyncJob require credential")
@@ -2475,12 +4741,13 @@ func NewResumeMigrateJobRequest() (request *ResumeMigrateJobRequest) {
 func NewResumeMigrateJobResponse() (response *ResumeMigrateJobResponse) {
     response = &ResumeMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResumeMigrateJob
-// 重试数据迁移任务，针对异常情况可进行重试，对于redis在失败时也可重试。注意：此操作跳过校验阶段，直接重新发起任务，相当于从StartMigrationJob开始执行。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
+// 重试数据迁移任务，针对异常情况可进行重试，对于redis在失败时也可重试。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2511,7 +4778,7 @@ func (c *Client) ResumeMigrateJob(request *ResumeMigrateJobRequest) (response *R
 }
 
 // ResumeMigrateJob
-// 重试数据迁移任务，针对异常情况可进行重试，对于redis在失败时也可重试。注意：此操作跳过校验阶段，直接重新发起任务，相当于从StartMigrationJob开始执行。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
+// 重试数据迁移任务，针对异常情况可进行重试，对于redis在失败时也可重试。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2541,6 +4808,7 @@ func (c *Client) ResumeMigrateJobWithContext(ctx context.Context, request *Resum
     if request == nil {
         request = NewResumeMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ResumeMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResumeMigrateJob require credential")
@@ -2549,6 +4817,90 @@ func (c *Client) ResumeMigrateJobWithContext(ctx context.Context, request *Resum
     request.SetContext(ctx)
     
     response = NewResumeMigrateJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResumeSubscribeRequest() (request *ResumeSubscribeRequest) {
+    request = &ResumeSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ResumeSubscribe")
+    
+    
+    return
+}
+
+func NewResumeSubscribeResponse() (response *ResumeSubscribeResponse) {
+    response = &ResumeSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResumeSubscribe
+// 本接口(ResumeSubscribe) 用于恢复报错的订阅任务。当订阅任务的状态为error时，可通过本接口尝试对任务进行恢复。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ResumeSubscribe(request *ResumeSubscribeRequest) (response *ResumeSubscribeResponse, err error) {
+    return c.ResumeSubscribeWithContext(context.Background(), request)
+}
+
+// ResumeSubscribe
+// 本接口(ResumeSubscribe) 用于恢复报错的订阅任务。当订阅任务的状态为error时，可通过本接口尝试对任务进行恢复。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) ResumeSubscribeWithContext(ctx context.Context, request *ResumeSubscribeRequest) (response *ResumeSubscribeResponse, err error) {
+    if request == nil {
+        request = NewResumeSubscribeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ResumeSubscribe")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResumeSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResumeSubscribeResponse()
     err = c.Send(request, response)
     return
 }
@@ -2567,8 +4919,9 @@ func NewResumeSyncJobRequest() (request *ResumeSyncJobRequest) {
 func NewResumeSyncJobResponse() (response *ResumeSyncJobResponse) {
     response = &ResumeSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResumeSyncJob
@@ -2589,6 +4942,7 @@ func (c *Client) ResumeSyncJobWithContext(ctx context.Context, request *ResumeSy
     if request == nil {
         request = NewResumeSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "ResumeSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResumeSyncJob require credential")
@@ -2615,8 +4969,9 @@ func NewSkipCheckItemRequest() (request *SkipCheckItemRequest) {
 func NewSkipCheckItemResponse() (response *SkipCheckItemResponse) {
     response = &SkipCheckItemResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SkipCheckItem
@@ -2641,6 +4996,7 @@ func (c *Client) SkipCheckItemWithContext(ctx context.Context, request *SkipChec
     if request == nil {
         request = NewSkipCheckItemRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "SkipCheckItem")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SkipCheckItem require credential")
@@ -2667,8 +5023,9 @@ func NewSkipSyncCheckItemRequest() (request *SkipSyncCheckItemRequest) {
 func NewSkipSyncCheckItemResponse() (response *SkipSyncCheckItemResponse) {
     response = &SkipSyncCheckItemResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SkipSyncCheckItem
@@ -2682,9 +5039,11 @@ func NewSkipSyncCheckItemResponse() (response *SkipSyncCheckItemResponse) {
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) SkipSyncCheckItem(request *SkipSyncCheckItemRequest) (response *SkipSyncCheckItemResponse, err error) {
     return c.SkipSyncCheckItemWithContext(context.Background(), request)
 }
@@ -2700,13 +5059,16 @@ func (c *Client) SkipSyncCheckItem(request *SkipSyncCheckItemRequest) (response 
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) SkipSyncCheckItemWithContext(ctx context.Context, request *SkipSyncCheckItemRequest) (response *SkipSyncCheckItemResponse, err error) {
     if request == nil {
         request = NewSkipSyncCheckItemRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "SkipSyncCheckItem")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SkipSyncCheckItem require credential")
@@ -2733,12 +5095,13 @@ func NewStartCompareRequest() (request *StartCompareRequest) {
 func NewStartCompareResponse() (response *StartCompareResponse) {
     response = &StartCompareResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartCompare
-// 启动一致性校验任务，启动之前需要先通过接口`CreateCompareTask` 创建一致性校验任务，启动后可通过接口`DescribeCompareTasks` 查询一致性校验任务列表来获得启动后的状态
+// 启动一致性校验任务，启动之前需要先通过接口 [CreateCompareTask](https://cloud.tencent.com/document/product/571/82093) 创建一致性校验任务，启动后可通过接口 [DescribeCompareTasks](https://cloud.tencent.com/document/product/571/82088) 查询一致性校验任务列表来获得启动后的状态
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2764,7 +5127,7 @@ func (c *Client) StartCompare(request *StartCompareRequest) (response *StartComp
 }
 
 // StartCompare
-// 启动一致性校验任务，启动之前需要先通过接口`CreateCompareTask` 创建一致性校验任务，启动后可通过接口`DescribeCompareTasks` 查询一致性校验任务列表来获得启动后的状态
+// 启动一致性校验任务，启动之前需要先通过接口 [CreateCompareTask](https://cloud.tencent.com/document/product/571/82093) 创建一致性校验任务，启动后可通过接口 [DescribeCompareTasks](https://cloud.tencent.com/document/product/571/82088) 查询一致性校验任务列表来获得启动后的状态
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2789,6 +5152,7 @@ func (c *Client) StartCompareWithContext(ctx context.Context, request *StartComp
     if request == nil {
         request = NewStartCompareRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StartCompare")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartCompare require credential")
@@ -2815,12 +5179,13 @@ func NewStartMigrateJobRequest() (request *StartMigrateJobRequest) {
 func NewStartMigrateJobResponse() (response *StartMigrateJobResponse) {
     response = &StartMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartMigrateJob
-// 本接口（StartMigrationJob）用于启动迁移任务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
+// 本接口（StartMigrateJob）用于启动迁移任务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2861,7 +5226,7 @@ func (c *Client) StartMigrateJob(request *StartMigrateJobRequest) (response *Sta
 }
 
 // StartMigrateJob
-// 本接口（StartMigrationJob）用于启动迁移任务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
+// 本接口（StartMigrateJob）用于启动迁移任务。调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
@@ -2901,6 +5266,7 @@ func (c *Client) StartMigrateJobWithContext(ctx context.Context, request *StartM
     if request == nil {
         request = NewStartMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StartMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartMigrateJob require credential")
@@ -2909,6 +5275,142 @@ func (c *Client) StartMigrateJobWithContext(ctx context.Context, request *StartM
     request.SetContext(ctx)
     
     response = NewStartMigrateJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartModifySyncJobRequest() (request *StartModifySyncJobRequest) {
+    request = &StartModifySyncJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "StartModifySyncJob")
+    
+    
+    return
+}
+
+func NewStartModifySyncJobResponse() (response *StartModifySyncJobResponse) {
+    response = &StartModifySyncJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartModifySyncJob
+// 在查询修改对象的校验任务的结果中的status为success后、通过该接口开始修改配置流程
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) StartModifySyncJob(request *StartModifySyncJobRequest) (response *StartModifySyncJobResponse, err error) {
+    return c.StartModifySyncJobWithContext(context.Background(), request)
+}
+
+// StartModifySyncJob
+// 在查询修改对象的校验任务的结果中的status为success后、通过该接口开始修改配置流程
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) StartModifySyncJobWithContext(ctx context.Context, request *StartModifySyncJobRequest) (response *StartModifySyncJobResponse, err error) {
+    if request == nil {
+        request = NewStartModifySyncJobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StartModifySyncJob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartModifySyncJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartModifySyncJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartSubscribeRequest() (request *StartSubscribeRequest) {
+    request = &StartSubscribeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "StartSubscribe")
+    
+    
+    return
+}
+
+func NewStartSubscribeResponse() (response *StartSubscribeResponse) {
+    response = &StartSubscribeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartSubscribe
+// 本接口(StartSubscribe)用于启动一个kafka版本的数据订阅实例。只有当订阅任务的状态为checkPass时，才能调用本接口。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) StartSubscribe(request *StartSubscribeRequest) (response *StartSubscribeResponse, err error) {
+    return c.StartSubscribeWithContext(context.Background(), request)
+}
+
+// StartSubscribe
+// 本接口(StartSubscribe)用于启动一个kafka版本的数据订阅实例。只有当订阅任务的状态为checkPass时，才能调用本接口。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONERROR = "UnauthorizedOperation.UnauthorizedOperationError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
+func (c *Client) StartSubscribeWithContext(ctx context.Context, request *StartSubscribeRequest) (response *StartSubscribeResponse, err error) {
+    if request == nil {
+        request = NewStartSubscribeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StartSubscribe")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartSubscribe require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartSubscribeResponse()
     err = c.Send(request, response)
     return
 }
@@ -2927,8 +5429,9 @@ func NewStartSyncJobRequest() (request *StartSyncJobRequest) {
 func NewStartSyncJobResponse() (response *StartSyncJobResponse) {
     response = &StartSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartSyncJob
@@ -2938,6 +5441,7 @@ func NewStartSyncJobResponse() (response *StartSyncJobResponse) {
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_BIZOPERATIONDENIEDERROR = "OperationDenied.BizOperationDeniedError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) StartSyncJob(request *StartSyncJobRequest) (response *StartSyncJobResponse, err error) {
     return c.StartSyncJobWithContext(context.Background(), request)
 }
@@ -2949,10 +5453,12 @@ func (c *Client) StartSyncJob(request *StartSyncJobRequest) (response *StartSync
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_BIZOPERATIONDENIEDERROR = "OperationDenied.BizOperationDeniedError"
 //  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
 func (c *Client) StartSyncJobWithContext(ctx context.Context, request *StartSyncJobRequest) (response *StartSyncJobResponse, err error) {
     if request == nil {
         request = NewStartSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StartSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartSyncJob require credential")
@@ -2979,8 +5485,9 @@ func NewStopCompareRequest() (request *StopCompareRequest) {
 func NewStopCompareResponse() (response *StopCompareResponse) {
     response = &StopCompareResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopCompare
@@ -3035,6 +5542,7 @@ func (c *Client) StopCompareWithContext(ctx context.Context, request *StopCompar
     if request == nil {
         request = NewStopCompareRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StopCompare")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopCompare require credential")
@@ -3061,12 +5569,13 @@ func NewStopMigrateJobRequest() (request *StopMigrateJobRequest) {
 func NewStopMigrateJobResponse() (response *StopMigrateJobResponse) {
     response = &StopMigrateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopMigrateJob
-// 本接口（StopMigrateJob）用于终止数据迁移任务。
+// 本接口（StopMigrateJob）用于终止数据迁移任务。当任务状态为运行中、准备运行、准备完成、错误、暂停、未知等状态时可调用此接口终止任务。
 //
 // 调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
@@ -3103,7 +5612,7 @@ func (c *Client) StopMigrateJob(request *StopMigrateJobRequest) (response *StopM
 }
 
 // StopMigrateJob
-// 本接口（StopMigrateJob）用于终止数据迁移任务。
+// 本接口（StopMigrateJob）用于终止数据迁移任务。当任务状态为运行中、准备运行、准备完成、错误、暂停、未知等状态时可调用此接口终止任务。
 //
 // 调用此接口后可通过查询迁移服务列表接口`DescribeMigrationJobs`来查询当前任务状态。
 //
@@ -3139,6 +5648,7 @@ func (c *Client) StopMigrateJobWithContext(ctx context.Context, request *StopMig
     if request == nil {
         request = NewStopMigrateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StopMigrateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopMigrateJob require credential")
@@ -3165,8 +5675,9 @@ func NewStopSyncJobRequest() (request *StopSyncJobRequest) {
 func NewStopSyncJobResponse() (response *StopSyncJobResponse) {
     response = &StopSyncJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopSyncJob
@@ -3189,6 +5700,7 @@ func (c *Client) StopSyncJobWithContext(ctx context.Context, request *StopSyncJo
     if request == nil {
         request = NewStopSyncJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dts", APIVersion, "StopSyncJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopSyncJob require credential")

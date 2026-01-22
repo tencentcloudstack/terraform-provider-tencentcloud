@@ -118,6 +118,48 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 	return nil
 }
 
+func (me *MongodbService) ModifyMongosMemory(ctx context.Context, instanceId string, mongosMemory int) (dealId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewModifyDBInstanceSpecRequest()
+	request.InstanceId = &instanceId
+	request.MongosMemory = helper.String(helper.IntToStr(mongosMemory))
+
+	var response *mongodb.ModifyDBInstanceSpecResponse
+	tradeError := false
+	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().ModifyDBInstanceSpec(request)
+		if e != nil {
+			// request might be accepted between "InvalidParameterValue.InvalidTradeOperation" and "InvalidParameterValue.StatusAbnormal" error
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "InvalidParameterValue.InvalidTradeOperation" {
+					tradeError = true
+					return resource.RetryableError(e)
+				} else if ee.Code == "InvalidParameterValue.StatusAbnormal" && tradeError {
+					response = result
+					return nil
+				} else {
+					return resource.NonRetryableError(e)
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.NonRetryableError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil && response.Response.DealId != nil {
+		dealId = *response.Response.DealId
+	}
+	return
+}
 func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string, memory int, volume int, params map[string]interface{}) (dealId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewModifyDBInstanceSpecRequest()
@@ -147,6 +189,9 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 				NodeName: helper.String(removeNodeMap["node_name"].(string)),
 			})
 		}
+	}
+	if v, ok := params["in_maintenance"]; ok {
+		request.InMaintenance = helper.IntUint64(v.(int))
 	}
 	var response *mongodb.ModifyDBInstanceSpecResponse
 	tradeError := false
@@ -922,4 +967,152 @@ func (me *MongodbService) SetInstanceMaintenance(ctx context.Context, instanceId
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return nil
+}
+
+func (me *MongodbService) DescribeMongodbInstanceParamValues(ctx context.Context, instanceId string, paramNames []string) (res map[string]string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewDescribeInstanceParamsRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeInstanceParams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	res = make(map[string]string)
+	for _, param := range response.Response.InstanceEnumParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+	for _, param := range response.Response.InstanceIntegerParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+	for _, param := range response.Response.InstanceMultiParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+	for _, param := range response.Response.InstanceTextParam {
+		for _, paramName := range paramNames {
+			if *param.ParamName == paramName {
+				res[paramName] = *param.CurrentValue
+			}
+		}
+	}
+
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceUrls(ctx context.Context, instanceId string) (ret []*mongodb.DbURL, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = mongodb.NewDescribeDBInstanceURLRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = helper.String(instanceId)
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeDBInstanceURL(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response.Urls
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceSSLById(ctx context.Context, instanceId string) (sslStatus *mongodb.DescribeInstanceSSLResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewDescribeInstanceSSLRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *mongodb.DescribeInstanceSSLResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().DescribeInstanceSSL(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s read mongodb instance ssl failed, reason: %v", logId, err)
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	sslStatus = response
+	return
+}
+
+func (me *MongodbService) ModifyMongodbInstanceSSL(ctx context.Context, instanceId string, enable bool) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := mongodb.NewInstanceEnableSSLRequest()
+	request.InstanceId = &instanceId
+	request.Enable = &enable
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().InstanceEnableSSL(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s modify mongodb instance ssl failed, reason: %v", logId, err)
+		errRet = err
+		return
+	}
+
+	return
 }

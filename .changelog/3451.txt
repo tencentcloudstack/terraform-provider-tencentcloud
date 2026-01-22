@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_instance: support AntiDDos Eip
+```
+
+```release-note:enhancement
+resource/tencentcloud_as_scaling_config: support AntiDDos Eip
+```

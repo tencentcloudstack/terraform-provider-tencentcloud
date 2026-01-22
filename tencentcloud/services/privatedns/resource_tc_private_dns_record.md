@@ -23,7 +23,7 @@ resource "tencentcloud_private_dns_zone" "example" {
   cname_speedup_status = "ENABLED"
 
   tags = {
-    createdBy : "terraform"
+    createdBy = "Terraform"
   }
 }
 
@@ -34,8 +34,9 @@ resource "tencentcloud_private_dns_record" "example" {
   record_value = "192.168.1.2"
   sub_domain   = "www"
   ttl          = 300
-  weight       = 1
+  weight       = 20
   mx           = 0
+  status       = "disabled"
 }
 ```
 

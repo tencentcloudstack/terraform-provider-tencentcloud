@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket_domain_certificate_attachment: set sensitive for `cert` and `private_key`
+```

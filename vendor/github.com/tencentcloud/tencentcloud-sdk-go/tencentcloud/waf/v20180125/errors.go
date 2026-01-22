@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,8 +38,17 @@ const (
 	// CLS内部错误。
 	FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
 
+	// 日志主题正在清空中
+	FAILEDOPERATION_CLSRESOURCESNOTFOUND = "FailedOperation.CLSResourcesNotFound"
+
+	// 证书不存在
+	FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+
 	// 操作CH数据库失败
 	FAILEDOPERATION_CLICKHOUSEOPERATIONFAILED = "FailedOperation.ClickHouseOperationFailed"
+
+	// FailedOperation.InvalidContext
+	FAILEDOPERATION_INVALIDCONTEXT = "FailedOperation.InvalidContext"
 
 	// 操作Mongo数据库失败
 	FAILEDOPERATION_MONGOOPERATIONFAILED = "FailedOperation.MongoOperationFailed"
@@ -47,17 +56,38 @@ const (
 	// 操作Mysql数据库失败
 	FAILEDOPERATION_MYSQLDBOPERATIONFAILED = "FailedOperation.MysqlDBOperationFailed"
 
+	// FailedOperation.QueryError
+	FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
+
 	// 操作Redis数据库失败
 	FAILEDOPERATION_REDISOPERATIONFAILED = "FailedOperation.RedisOperationFailed"
 
+	// FailedOperation.SearchTimeout
+	FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
+
 	// 删除的Session正在被启用
 	FAILEDOPERATION_SESSIONINUSED = "FailedOperation.SessionInUsed"
+
+	// FailedOperation.SyntaxError
+	FAILEDOPERATION_SYNTAXERROR = "FailedOperation.SyntaxError"
+
+	// FailedOperation.TagQpsLimit
+	FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 
 	// 黑白名单添加数超过上限
 	FAILEDOPERATION_THENUMBEROFADDEDBLACKANDWHITELISTEXCEEDSTHEUPPERLIMIT = "FailedOperation.TheNumberOfAddedBlackAndWhiteListExceedsTheUpperLimit"
 
 	// 一次性删除数量达到上限
 	FAILEDOPERATION_THENUMBEROFONETIMEDELETIONSREACHEDTHEUPPERLIMIT = "FailedOperation.TheNumberOfOneTimeDeletionsReachedTheUpperLimit"
+
+	// FailedOperation.Timeout
+	FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+
+	// FailedOperation.TopicClosed
+	FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
+
+	// FailedOperation.TopicIsolated
+	FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -68,11 +98,35 @@ const (
 	// DBErr
 	INTERNALERROR_DBERR = "InternalError.DBErr"
 
+	// 调用SSL证书接口发生内部错误
+	INTERNALERROR_SSLCALLFAILED = "InternalError.SSLCallFailed"
+
+	// InternalError.SearchError
+	INTERNALERROR_SEARCHERROR = "InternalError.SearchError"
+
+	// InternalError.SearchFailed
+	INTERNALERROR_SEARCHFAILED = "InternalError.SearchFailed"
+
+	// InternalError.ServerBusy
+	INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
+
+	// InternalError.Unknown
+	INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+
 	// 存在内部错误，请联系我们
 	INTERNALERROR_UNKNOWNERR = "InternalError.UnknownErr"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 命名重复
+	INVALIDPARAMETER_BOTNAMEREPEATERR = "InvalidParameter.BotNameRepeatErr"
+
+	// Bot场景不存在
+	INVALIDPARAMETER_BOTSCENENOTEXISTERR = "InvalidParameter.BotSceneNotExistErr"
+
+	// 证书和私钥检查不通过
+	INVALIDPARAMETER_CERTIFICATECHECKERR = "InvalidParameter.CertificateCheckErr"
 
 	// 证书信息参数错误
 	INVALIDPARAMETER_CERTIFICATIONPARAMETERERR = "InvalidParameter.CertificationParameterErr"
@@ -128,11 +182,29 @@ const (
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// 自定义规则CEL逻辑表达式长度超过10240字符
+	INVALIDPARAMETERVALUE_CELLENGTHEXCEEDLIMIT = "InvalidParameterValue.CELLengthExceedLimit"
+
+	// 自定义规则CEL逻辑表达式语法错误
+	INVALIDPARAMETERVALUE_CELSYNTAXERR = "InvalidParameterValue.CELSyntaxErr"
+
 	// InvalidRequest
 	INVALIDPARAMETERVALUE_INVALIDREQUEST = "InvalidParameterValue.InvalidRequest"
 
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
+
+	// LimitExceeded.Export
+	LIMITEXCEEDED_EXPORT = "LimitExceeded.Export"
+
+	// LimitExceeded.LogSearch
+	LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
+
+	// LimitExceeded.SearchResources
+	LIMITEXCEEDED_SEARCHRESOURCES = "LimitExceeded.SearchResources"
+
+	// LimitExceeded.SearchResultTooLarge
+	LIMITEXCEEDED_SEARCHRESULTTOOLARGE = "LimitExceeded.SearchResultTooLarge"
 
 	// SpecificationErr
 	LIMITEXCEEDED_SPECIFICATIONERR = "LimitExceeded.SpecificationErr"
@@ -142,6 +214,27 @@ const (
 
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
+
+	// OperationDenied.ACLFailed
+	OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+
+	// OperationDenied.AccountDestroy
+	OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+
+	// OperationDenied.AccountIsolate
+	OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+
+	// OperationDenied.AccountNotExists
+	OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+
+	// OperationDenied.AnalysisSwitchClose
+	OPERATIONDENIED_ANALYSISSWITCHCLOSE = "OperationDenied.AnalysisSwitchClose"
+
+	// OperationDenied.NewSyntaxNotSupported
+	OPERATIONDENIED_NEWSYNTAXNOTSUPPORTED = "OperationDenied.NewSyntaxNotSupported"
+
+	// OperationDenied.OperationNotSupportInSearchLow
+	OPERATIONDENIED_OPERATIONNOTSUPPORTINSEARCHLOW = "OperationDenied.OperationNotSupportInSearchLow"
 
 	// 请求的次数超过了频率限制。
 	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
@@ -158,11 +251,26 @@ const (
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
+	// ResourceNotFound.ExportNotExist
+	RESOURCENOTFOUND_EXPORTNOTEXIST = "ResourceNotFound.ExportNotExist"
+
+	// ResourceNotFound.LogsetNotExist
+	RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+
+	// ResourceNotFound.NotFound
+	RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+
+	// ResourceNotFound.TopicNotExist
+	RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
 	// IPV6网络正在分配，请耐心等待
 	RESOURCEUNAVAILABLE_DOMAINIPV6INCONFIGERR = "ResourceUnavailable.DomainIpv6InConfigErr"
+
+	// SSL证书ID关联的证书内容错误
+	RESOURCEUNAVAILABLE_SSLCERTIFICATEERR = "ResourceUnavailable.SSLCertificateErr"
 
 	// 资源售罄。
 	RESOURCESSOLDOUT = "ResourcesSoldOut"
@@ -175,6 +283,9 @@ const (
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// Bot套餐未购买
+	UNSUPPORTEDOPERATION_BOTSERVICENOTSUBSCRIBEERR = "UnsupportedOperation.BotServiceNotSubscribeErr"
 
 	// InvalidRequest
 	UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"

@@ -222,8 +222,6 @@ func resourceTencentCloudOrganizationOrgMemberEmailUpdate(d *schema.ResourceData
 	memberUin := idSplit[0]
 	bindId := idSplit[1]
 
-	request.MemberUin = helper.StrToInt64Point(memberUin)
-	request.BindId = helper.StrToInt64Point(bindId)
 	immutableArgs := []string{"member_uin", "bind_id", "apply_time", "bind_status", "bind_time", "description", "phone_bind"}
 
 	for _, v := range immutableArgs {
@@ -232,28 +230,19 @@ func resourceTencentCloudOrganizationOrgMemberEmailUpdate(d *schema.ResourceData
 		}
 	}
 
-	if d.HasChange("member_uin") {
-		if v, ok := d.GetOkExists("member_uin"); ok {
-			request.MemberUin = helper.IntInt64(v.(int))
-		}
+	request.MemberUin = helper.StrToInt64Point(memberUin)
+	request.BindId = helper.StrToInt64Point(bindId)
+
+	if v, ok := d.GetOk("email"); ok {
+		request.Email = helper.String(v.(string))
 	}
 
-	if d.HasChange("email") {
-		if v, ok := d.GetOk("email"); ok {
-			request.Email = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("country_code"); ok {
+		request.CountryCode = helper.String(v.(string))
 	}
 
-	if d.HasChange("country_code") {
-		if v, ok := d.GetOk("country_code"); ok {
-			request.CountryCode = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("phone") {
-		if v, ok := d.GetOk("phone"); ok {
-			request.Phone = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("phone"); ok {
+		request.Phone = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -263,8 +252,10 @@ func resourceTencentCloudOrganizationOrgMemberEmailUpdate(d *schema.ResourceData
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s update organization orgMemberEmail failed, reason:%+v", logId, err)
 		return err

@@ -177,6 +177,16 @@ func ResourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				Optional:    true,
 				Description: "The tags of the SQL Server basic instance.",
 			},
+			"dns_pod_domain": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Internet address domain name.",
+			},
+			"tgw_wan_vport": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "External port number.",
+			},
 		},
 	}
 }
@@ -333,6 +343,13 @@ func resourceTencentCloudSqlserverBasicInstanceRead(d *schema.ResourceData, meta
 	_ = d.Set("storage", instance.Storage)
 	_ = d.Set("vip", instance.Vip)
 	_ = d.Set("vport", instance.Vport)
+	if instance.DnsPodDomain != nil {
+		_ = d.Set("dns_pod_domain", instance.DnsPodDomain)
+	}
+
+	if instance.TgwWanVPort != nil {
+		_ = d.Set("tgw_wan_vport", instance.TgwWanVPort)
+	}
 
 	//maintanence
 	var weekSet []int

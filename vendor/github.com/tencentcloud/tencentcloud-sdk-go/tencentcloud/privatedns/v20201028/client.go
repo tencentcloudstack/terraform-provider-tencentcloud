@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -142,6 +142,7 @@ func (c *Client) AddSpecifyPrivateZoneVpcWithContext(ctx context.Context, reques
     if request == nil {
         request = NewAddSpecifyPrivateZoneVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "AddSpecifyPrivateZoneVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddSpecifyPrivateZoneVpc require credential")
@@ -154,26 +155,26 @@ func (c *Client) AddSpecifyPrivateZoneVpcWithContext(ctx context.Context, reques
     return
 }
 
-func NewCreateEndPointRequest() (request *CreateEndPointRequest) {
-    request = &CreateEndPointRequest{
+func NewCreateExtendEndpointRequest() (request *CreateExtendEndpointRequest) {
+    request = &CreateExtendEndpointRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("privatedns", APIVersion, "CreateEndPoint")
+    request.Init().WithApiInfo("privatedns", APIVersion, "CreateExtendEndpoint")
     
     
     return
 }
 
-func NewCreateEndPointResponse() (response *CreateEndPointResponse) {
-    response = &CreateEndPointResponse{
+func NewCreateExtendEndpointResponse() (response *CreateExtendEndpointResponse) {
+    response = &CreateExtendEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// CreateEndPoint
+// CreateExtendEndpoint
 // 创建终端节点
 //
 // 可能返回的错误码:
@@ -197,11 +198,11 @@ func NewCreateEndPointResponse() (response *CreateEndPointResponse) {
 //  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
 //  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) CreateEndPoint(request *CreateEndPointRequest) (response *CreateEndPointResponse, err error) {
-    return c.CreateEndPointWithContext(context.Background(), request)
+func (c *Client) CreateExtendEndpoint(request *CreateExtendEndpointRequest) (response *CreateExtendEndpointResponse, err error) {
+    return c.CreateExtendEndpointWithContext(context.Background(), request)
 }
 
-// CreateEndPoint
+// CreateExtendEndpoint
 // 创建终端节点
 //
 // 可能返回的错误码:
@@ -225,111 +226,19 @@ func (c *Client) CreateEndPoint(request *CreateEndPointRequest) (response *Creat
 //  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
 //  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) CreateEndPointWithContext(ctx context.Context, request *CreateEndPointRequest) (response *CreateEndPointResponse, err error) {
+func (c *Client) CreateExtendEndpointWithContext(ctx context.Context, request *CreateExtendEndpointRequest) (response *CreateExtendEndpointResponse, err error) {
     if request == nil {
-        request = NewCreateEndPointRequest()
+        request = NewCreateExtendEndpointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreateExtendEndpoint")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("CreateEndPoint require credential")
+        return nil, errors.New("CreateExtendEndpoint require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewCreateEndPointResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateEndPointAndEndPointServiceRequest() (request *CreateEndPointAndEndPointServiceRequest) {
-    request = &CreateEndPointAndEndPointServiceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("privatedns", APIVersion, "CreateEndPointAndEndPointService")
-    
-    
-    return
-}
-
-func NewCreateEndPointAndEndPointServiceResponse() (response *CreateEndPointAndEndPointServiceResponse) {
-    response = &CreateEndPointAndEndPointServiceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateEndPointAndEndPointService
-// 同时创建终端节点和终端节点服务
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CREATEVPCENDPOINTERROR = "FailedOperation.CreateVpcEndPointError"
-//  FAILEDOPERATION_CREATEVPCENDPOINTFAILED = "FailedOperation.CreateVpcEndPointFailed"
-//  FAILEDOPERATION_ENDPOINTSERVICECREATEFAILED = "FailedOperation.EndPointServiceCreateFailed"
-//  FAILEDOPERATION_ENDPOINTSERVICEDELETEFAILED = "FailedOperation.EndPointServiceDeleteFailed"
-//  FAILEDOPERATION_ENDPOINTSERVICEWHITELISTFAILED = "FailedOperation.EndPointServiceWhiteListFailed"
-//  FAILEDOPERATION_GETTMPCREDFAILED = "FailedOperation.GetTmpCredFailed"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ENDPOINTSERVICENOTEXIST = "InvalidParameter.EndPointServiceNotExist"
-//  INVALIDPARAMETERVALUE_UINNOTINWHITELIST = "InvalidParameterValue.UinNotInWhiteList"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  RESOURCEUNAVAILABLE_SERVICEWHITELISTNOTADDED = "ResourceUnavailable.ServiceWhiteListNotAdded"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) CreateEndPointAndEndPointService(request *CreateEndPointAndEndPointServiceRequest) (response *CreateEndPointAndEndPointServiceResponse, err error) {
-    return c.CreateEndPointAndEndPointServiceWithContext(context.Background(), request)
-}
-
-// CreateEndPointAndEndPointService
-// 同时创建终端节点和终端节点服务
-//
-// 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CREATEVPCENDPOINTERROR = "FailedOperation.CreateVpcEndPointError"
-//  FAILEDOPERATION_CREATEVPCENDPOINTFAILED = "FailedOperation.CreateVpcEndPointFailed"
-//  FAILEDOPERATION_ENDPOINTSERVICECREATEFAILED = "FailedOperation.EndPointServiceCreateFailed"
-//  FAILEDOPERATION_ENDPOINTSERVICEDELETEFAILED = "FailedOperation.EndPointServiceDeleteFailed"
-//  FAILEDOPERATION_ENDPOINTSERVICEWHITELISTFAILED = "FailedOperation.EndPointServiceWhiteListFailed"
-//  FAILEDOPERATION_GETTMPCREDFAILED = "FailedOperation.GetTmpCredFailed"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ENDPOINTSERVICENOTEXIST = "InvalidParameter.EndPointServiceNotExist"
-//  INVALIDPARAMETERVALUE_UINNOTINWHITELIST = "InvalidParameterValue.UinNotInWhiteList"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  RESOURCEUNAVAILABLE_SERVICEWHITELISTNOTADDED = "ResourceUnavailable.ServiceWhiteListNotAdded"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) CreateEndPointAndEndPointServiceWithContext(ctx context.Context, request *CreateEndPointAndEndPointServiceRequest) (response *CreateEndPointAndEndPointServiceResponse, err error) {
-    if request == nil {
-        request = NewCreateEndPointAndEndPointServiceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateEndPointAndEndPointService require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateEndPointAndEndPointServiceResponse()
+    response = NewCreateExtendEndpointResponse()
     err = c.Send(request, response)
     return
 }
@@ -395,6 +304,7 @@ func (c *Client) CreateForwardRuleWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateForwardRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreateForwardRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateForwardRule require credential")
@@ -403,6 +313,82 @@ func (c *Client) CreateForwardRuleWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateForwardRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateInboundEndpointRequest() (request *CreateInboundEndpointRequest) {
+    request = &CreateInboundEndpointRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "CreateInboundEndpoint")
+    
+    
+    return
+}
+
+func NewCreateInboundEndpointResponse() (response *CreateInboundEndpointResponse) {
+    response = &CreateInboundEndpointResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateInboundEndpoint
+// 删除入站终端节点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INBOUNDOVERLIMIT = "FailedOperation.InboundOverLimit"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateInboundEndpoint(request *CreateInboundEndpointRequest) (response *CreateInboundEndpointResponse, err error) {
+    return c.CreateInboundEndpointWithContext(context.Background(), request)
+}
+
+// CreateInboundEndpoint
+// 删除入站终端节点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INBOUNDOVERLIMIT = "FailedOperation.InboundOverLimit"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateInboundEndpointWithContext(ctx context.Context, request *CreateInboundEndpointRequest) (response *CreateInboundEndpointResponse, err error) {
+    if request == nil {
+        request = NewCreateInboundEndpointRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreateInboundEndpoint")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateInboundEndpoint require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateInboundEndpointResponse()
     err = c.Send(request, response)
     return
 }
@@ -427,7 +413,7 @@ func NewCreatePrivateDNSAccountResponse() (response *CreatePrivateDNSAccountResp
 }
 
 // CreatePrivateDNSAccount
-// 创建私有域解析账号
+// 跨账号关联VPC时绑定其他账号
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -458,7 +444,7 @@ func (c *Client) CreatePrivateDNSAccount(request *CreatePrivateDNSAccountRequest
 }
 
 // CreatePrivateDNSAccount
-// 创建私有域解析账号
+// 跨账号关联VPC时绑定其他账号
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -488,6 +474,7 @@ func (c *Client) CreatePrivateDNSAccountWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreatePrivateDNSAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreatePrivateDNSAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePrivateDNSAccount require credential")
@@ -611,6 +598,7 @@ func (c *Client) CreatePrivateZoneWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreatePrivateZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreatePrivateZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePrivateZone require credential")
@@ -666,7 +654,7 @@ func NewCreatePrivateZoneRecordResponse() (response *CreatePrivateZoneRecordResp
 //  INVALIDPARAMETER_RECORDCOUNTEXCEED = "InvalidParameter.RecordCountExceed"
 //  INVALIDPARAMETER_RECORDEXIST = "InvalidParameter.RecordExist"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -717,7 +705,7 @@ func (c *Client) CreatePrivateZoneRecord(request *CreatePrivateZoneRecordRequest
 //  INVALIDPARAMETER_RECORDCOUNTEXCEED = "InvalidParameter.RecordCountExceed"
 //  INVALIDPARAMETER_RECORDEXIST = "InvalidParameter.RecordExist"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -744,6 +732,7 @@ func (c *Client) CreatePrivateZoneRecordWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreatePrivateZoneRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "CreatePrivateZoneRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePrivateZoneRecord require credential")
@@ -819,6 +808,7 @@ func (c *Client) DeleteEndPointWithContext(ctx context.Context, request *DeleteE
     if request == nil {
         request = NewDeleteEndPointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeleteEndPoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteEndPoint require credential")
@@ -898,6 +888,7 @@ func (c *Client) DeleteForwardRuleWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteForwardRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeleteForwardRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteForwardRule require credential")
@@ -906,6 +897,80 @@ func (c *Client) DeleteForwardRuleWithContext(ctx context.Context, request *Dele
     request.SetContext(ctx)
     
     response = NewDeleteForwardRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteInboundEndpointRequest() (request *DeleteInboundEndpointRequest) {
+    request = &DeleteInboundEndpointRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "DeleteInboundEndpoint")
+    
+    
+    return
+}
+
+func NewDeleteInboundEndpointResponse() (response *DeleteInboundEndpointResponse) {
+    response = &DeleteInboundEndpointResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteInboundEndpoint
+// 删除入站终端节点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteInboundEndpoint(request *DeleteInboundEndpointRequest) (response *DeleteInboundEndpointResponse, err error) {
+    return c.DeleteInboundEndpointWithContext(context.Background(), request)
+}
+
+// DeleteInboundEndpoint
+// 删除入站终端节点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteInboundEndpointWithContext(ctx context.Context, request *DeleteInboundEndpointRequest) (response *DeleteInboundEndpointResponse, err error) {
+    if request == nil {
+        request = NewDeleteInboundEndpointRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeleteInboundEndpoint")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteInboundEndpoint require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteInboundEndpointResponse()
     err = c.Send(request, response)
     return
 }
@@ -989,6 +1054,7 @@ func (c *Client) DeletePrivateDNSAccountWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeletePrivateDNSAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeletePrivateDNSAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePrivateDNSAccount require credential")
@@ -1086,6 +1152,7 @@ func (c *Client) DeletePrivateZoneWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeletePrivateZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeletePrivateZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePrivateZone require credential")
@@ -1185,6 +1252,7 @@ func (c *Client) DeletePrivateZoneRecordWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeletePrivateZoneRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeletePrivateZoneRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePrivateZoneRecord require credential")
@@ -1294,6 +1362,7 @@ func (c *Client) DeleteSpecifyPrivateZoneVpcWithContext(ctx context.Context, req
     if request == nil {
         request = NewDeleteSpecifyPrivateZoneVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeleteSpecifyPrivateZoneVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSpecifyPrivateZoneVpc require credential")
@@ -1385,6 +1454,7 @@ func (c *Client) DescribeAccountVpcListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeAccountVpcListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeAccountVpcList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccountVpcList require credential")
@@ -1468,6 +1538,7 @@ func (c *Client) DescribeAuditLogWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeAuditLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeAuditLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAuditLog require credential")
@@ -1557,6 +1628,7 @@ func (c *Client) DescribeDashboardWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDashboardRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeDashboard")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDashboard require credential")
@@ -1569,26 +1641,26 @@ func (c *Client) DescribeDashboardWithContext(ctx context.Context, request *Desc
     return
 }
 
-func NewDescribeEndPointListRequest() (request *DescribeEndPointListRequest) {
-    request = &DescribeEndPointListRequest{
+func NewDescribeExtendEndpointListRequest() (request *DescribeExtendEndpointListRequest) {
+    request = &DescribeExtendEndpointListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("privatedns", APIVersion, "DescribeEndPointList")
+    request.Init().WithApiInfo("privatedns", APIVersion, "DescribeExtendEndpointList")
     
     
     return
 }
 
-func NewDescribeEndPointListResponse() (response *DescribeEndPointListResponse) {
-    response = &DescribeEndPointListResponse{
+func NewDescribeExtendEndpointListResponse() (response *DescribeExtendEndpointListResponse) {
+    response = &DescribeExtendEndpointListResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// DescribeEndPointList
+// DescribeExtendEndpointList
 // 获取终端节点列表
 //
 // 可能返回的错误码:
@@ -1611,11 +1683,11 @@ func NewDescribeEndPointListResponse() (response *DescribeEndPointListResponse) 
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeEndPointList(request *DescribeEndPointListRequest) (response *DescribeEndPointListResponse, err error) {
-    return c.DescribeEndPointListWithContext(context.Background(), request)
+func (c *Client) DescribeExtendEndpointList(request *DescribeExtendEndpointListRequest) (response *DescribeExtendEndpointListResponse, err error) {
+    return c.DescribeExtendEndpointListWithContext(context.Background(), request)
 }
 
-// DescribeEndPointList
+// DescribeExtendEndpointList
 // 获取终端节点列表
 //
 // 可能返回的错误码:
@@ -1638,146 +1710,19 @@ func (c *Client) DescribeEndPointList(request *DescribeEndPointListRequest) (res
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeEndPointListWithContext(ctx context.Context, request *DescribeEndPointListRequest) (response *DescribeEndPointListResponse, err error) {
+func (c *Client) DescribeExtendEndpointListWithContext(ctx context.Context, request *DescribeExtendEndpointListRequest) (response *DescribeExtendEndpointListResponse, err error) {
     if request == nil {
-        request = NewDescribeEndPointListRequest()
+        request = NewDescribeExtendEndpointListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeExtendEndpointList")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeEndPointList require credential")
+        return nil, errors.New("DescribeExtendEndpointList require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeEndPointListResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeEndPointRegionRequest() (request *DescribeEndPointRegionRequest) {
-    request = &DescribeEndPointRegionRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("privatedns", APIVersion, "DescribeEndPointRegion")
-    
-    
-    return
-}
-
-func NewDescribeEndPointRegionResponse() (response *DescribeEndPointRegionResponse) {
-    response = &DescribeEndPointRegionResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeEndPointRegion
-// 查询终端节点已经启用了的地域
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
-//  UNSUPPORTEDOPERATION_FREQUENCYLIMIT = "UnsupportedOperation.FrequencyLimit"
-func (c *Client) DescribeEndPointRegion(request *DescribeEndPointRegionRequest) (response *DescribeEndPointRegionResponse, err error) {
-    return c.DescribeEndPointRegionWithContext(context.Background(), request)
-}
-
-// DescribeEndPointRegion
-// 查询终端节点已经启用了的地域
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
-//  UNSUPPORTEDOPERATION_FREQUENCYLIMIT = "UnsupportedOperation.FrequencyLimit"
-func (c *Client) DescribeEndPointRegionWithContext(ctx context.Context, request *DescribeEndPointRegionRequest) (response *DescribeEndPointRegionResponse, err error) {
-    if request == nil {
-        request = NewDescribeEndPointRegionRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeEndPointRegion require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeEndPointRegionResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeForwardRuleRequest() (request *DescribeForwardRuleRequest) {
-    request = &DescribeForwardRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("privatedns", APIVersion, "DescribeForwardRule")
-    
-    
-    return
-}
-
-func NewDescribeForwardRuleResponse() (response *DescribeForwardRuleResponse) {
-    response = &DescribeForwardRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeForwardRule
-// 查询转发规则
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ENDPOINTBINDFORWARDRULE = "InvalidParameter.EndPointBindForwardRule"
-//  INVALIDPARAMETER_FORWARDRULENOTEXIST = "InvalidParameter.ForwardRuleNotExist"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_FREQUENCYLIMIT = "UnsupportedOperation.FrequencyLimit"
-func (c *Client) DescribeForwardRule(request *DescribeForwardRuleRequest) (response *DescribeForwardRuleResponse, err error) {
-    return c.DescribeForwardRuleWithContext(context.Background(), request)
-}
-
-// DescribeForwardRule
-// 查询转发规则
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_ENDPOINTBINDFORWARDRULE = "InvalidParameter.EndPointBindForwardRule"
-//  INVALIDPARAMETER_FORWARDRULENOTEXIST = "InvalidParameter.ForwardRuleNotExist"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_FREQUENCYLIMIT = "UnsupportedOperation.FrequencyLimit"
-func (c *Client) DescribeForwardRuleWithContext(ctx context.Context, request *DescribeForwardRuleRequest) (response *DescribeForwardRuleResponse, err error) {
-    if request == nil {
-        request = NewDescribeForwardRuleRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeForwardRule require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeForwardRuleResponse()
+    response = NewDescribeExtendEndpointListResponse()
     err = c.Send(request, response)
     return
 }
@@ -1839,6 +1784,7 @@ func (c *Client) DescribeForwardRuleListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeForwardRuleListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeForwardRuleList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeForwardRuleList require credential")
@@ -1847,6 +1793,80 @@ func (c *Client) DescribeForwardRuleListWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDescribeForwardRuleListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInboundEndpointListRequest() (request *DescribeInboundEndpointListRequest) {
+    request = &DescribeInboundEndpointListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "DescribeInboundEndpointList")
+    
+    
+    return
+}
+
+func NewDescribeInboundEndpointListResponse() (response *DescribeInboundEndpointListResponse) {
+    response = &DescribeInboundEndpointListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInboundEndpointList
+// 获取入站终端节点列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeInboundEndpointList(request *DescribeInboundEndpointListRequest) (response *DescribeInboundEndpointListResponse, err error) {
+    return c.DescribeInboundEndpointListWithContext(context.Background(), request)
+}
+
+// DescribeInboundEndpointList
+// 获取入站终端节点列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeInboundEndpointListWithContext(ctx context.Context, request *DescribeInboundEndpointListRequest) (response *DescribeInboundEndpointListResponse, err error) {
+    if request == nil {
+        request = NewDescribeInboundEndpointListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeInboundEndpointList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInboundEndpointList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInboundEndpointListResponse()
     err = c.Send(request, response)
     return
 }
@@ -1926,6 +1946,7 @@ func (c *Client) DescribePrivateDNSAccountListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribePrivateDNSAccountListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateDNSAccountList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateDNSAccountList require credential")
@@ -2017,6 +2038,7 @@ func (c *Client) DescribePrivateZoneWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribePrivateZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateZone require credential")
@@ -2104,6 +2126,7 @@ func (c *Client) DescribePrivateZoneListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribePrivateZoneListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateZoneList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateZoneList require credential")
@@ -2175,6 +2198,7 @@ func (c *Client) DescribePrivateZoneRecordListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribePrivateZoneRecordListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateZoneRecordList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateZoneRecordList require credential")
@@ -2260,6 +2284,7 @@ func (c *Client) DescribePrivateZoneServiceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribePrivateZoneServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribePrivateZoneService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrivateZoneService require credential")
@@ -2321,6 +2346,7 @@ func (c *Client) DescribeQuotaUsageWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeQuotaUsageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeQuotaUsage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeQuotaUsage require credential")
@@ -2329,6 +2355,80 @@ func (c *Client) DescribeQuotaUsageWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeQuotaUsageResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRecordRequest() (request *DescribeRecordRequest) {
+    request = &DescribeRecordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "DescribeRecord")
+    
+    
+    return
+}
+
+func NewDescribeRecordResponse() (response *DescribeRecordResponse) {
+    response = &DescribeRecordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRecord
+// 获取私有域记录
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRecord(request *DescribeRecordRequest) (response *DescribeRecordResponse, err error) {
+    return c.DescribeRecordWithContext(context.Background(), request)
+}
+
+// DescribeRecord
+// 获取私有域记录
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRecordWithContext(ctx context.Context, request *DescribeRecordRequest) (response *DescribeRecordResponse, err error) {
+    if request == nil {
+        request = NewDescribeRecordRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeRecord")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRecord require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRecordResponse()
     err = c.Send(request, response)
     return
 }
@@ -2374,6 +2474,7 @@ func (c *Client) DescribeRequestDataWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeRequestDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DescribeRequestData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRequestData require credential")
@@ -2455,6 +2556,7 @@ func (c *Client) ModifyForwardRuleWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyForwardRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyForwardRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyForwardRule require credential")
@@ -2463,6 +2565,80 @@ func (c *Client) ModifyForwardRuleWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyForwardRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInboundEndpointRequest() (request *ModifyInboundEndpointRequest) {
+    request = &ModifyInboundEndpointRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "ModifyInboundEndpoint")
+    
+    
+    return
+}
+
+func NewModifyInboundEndpointResponse() (response *ModifyInboundEndpointResponse) {
+    response = &ModifyInboundEndpointResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInboundEndpoint
+// 删除入站终端节点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyInboundEndpoint(request *ModifyInboundEndpointRequest) (response *ModifyInboundEndpointResponse, err error) {
+    return c.ModifyInboundEndpointWithContext(context.Background(), request)
+}
+
+// ModifyInboundEndpoint
+// 删除入站终端节点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_SERVICENOTSUBSCRIBED = "ResourceNotFound.ServiceNotSubscribed"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyInboundEndpointWithContext(ctx context.Context, request *ModifyInboundEndpointRequest) (response *ModifyInboundEndpointResponse, err error) {
+    if request == nil {
+        request = NewModifyInboundEndpointRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyInboundEndpoint")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInboundEndpoint require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInboundEndpointResponse()
     err = c.Send(request, response)
     return
 }
@@ -2556,6 +2732,7 @@ func (c *Client) ModifyPrivateZoneWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyPrivateZoneRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyPrivateZone")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPrivateZone require credential")
@@ -2613,7 +2790,7 @@ func NewModifyPrivateZoneRecordResponse() (response *ModifyPrivateZoneRecordResp
 //  INVALIDPARAMETER_RECORDLEVELEXCEED = "InvalidParameter.RecordLevelExceed"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
 //  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -2667,7 +2844,7 @@ func (c *Client) ModifyPrivateZoneRecord(request *ModifyPrivateZoneRecordRequest
 //  INVALIDPARAMETER_RECORDLEVELEXCEED = "InvalidParameter.RecordLevelExceed"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
 //  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -2695,6 +2872,7 @@ func (c *Client) ModifyPrivateZoneRecordWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyPrivateZoneRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyPrivateZoneRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPrivateZoneRecord require credential")
@@ -2804,6 +2982,7 @@ func (c *Client) ModifyPrivateZoneVpcWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyPrivateZoneVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyPrivateZoneVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPrivateZoneVpc require credential")
@@ -2871,6 +3050,7 @@ func (c *Client) ModifyRecordsStatusWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyRecordsStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "ModifyRecordsStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRecordsStatus require credential")
@@ -2982,6 +3162,7 @@ func (c *Client) QueryAsyncBindVpcStatusWithContext(ctx context.Context, request
     if request == nil {
         request = NewQueryAsyncBindVpcStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "QueryAsyncBindVpcStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("QueryAsyncBindVpcStatus require credential")
@@ -3069,6 +3250,7 @@ func (c *Client) SubscribePrivateZoneServiceWithContext(ctx context.Context, req
     if request == nil {
         request = NewSubscribePrivateZoneServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "SubscribePrivateZoneService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SubscribePrivateZoneService require credential")

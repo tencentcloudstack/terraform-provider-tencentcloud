@@ -46,7 +46,7 @@ func ResourceTencentCloudPostgresqlBackupPlanConfig() *schema.Resource {
 			"base_backup_retention_period": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Backup retention period in days. Value range:3-7.",
+				Description: "Backup retention period in days. Value range:7-1830.",
 			},
 
 			"backup_period": {

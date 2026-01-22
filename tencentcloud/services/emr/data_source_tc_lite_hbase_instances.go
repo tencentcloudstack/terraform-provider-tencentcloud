@@ -12,7 +12,8 @@ import (
 
 func DataSourceTencentCloudLiteHbaseInstances() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudLiteHbaseInstancesRead,
+		DeprecationMessage: "This data source will been deprecated in Terraform TencentCloud provider later version. Please use `tencentcloud_serverless_hbase_instances` instead.",
+		Read:               dataSourceTencentCloudLiteHbaseInstancesRead,
 		Schema: map[string]*schema.Schema{
 			"display_strategy": {
 				Type:     schema.TypeString,

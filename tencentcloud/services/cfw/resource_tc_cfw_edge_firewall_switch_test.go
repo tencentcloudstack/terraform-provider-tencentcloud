@@ -41,16 +41,16 @@ func TestAccTencentCloudNeedFixCfwEdgeFirewallSwitchResource_basic(t *testing.T)
 
 const testAccCfwEdgeFirewallSwitch = `
 resource "tencentcloud_cfw_edge_firewall_switch" "example" {
-  public_ip   = "43.138.44.22"
-  switch_mode = 1
-  enable      = 0
+  public_ip   = "106.53.77.106"
+  switch_mode = 0
+  enable      = 1
 }
 `
 
 const testAccCfwEdgeFirewallSwitchUpdate = `
 resource "tencentcloud_cfw_edge_firewall_switch" "example" {
-  public_ip   = "43.138.44.22"
+  public_ip   = "106.53.77.106"
   switch_mode = 0
-  enable      = 1
+  enable      = 0
 }
 `

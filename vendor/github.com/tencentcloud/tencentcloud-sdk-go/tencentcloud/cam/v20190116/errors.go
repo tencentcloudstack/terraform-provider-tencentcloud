@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,14 +26,23 @@ const (
 	// 操作访问密钥错误。
 	FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
 
+	// 协助审批人已达到上限。
+	FAILEDOPERATION_ASSISTAPPROVERFULL = "FailedOperation.AssistApproverFull"
+
 	// 生成AuthToken异常。
 	FAILEDOPERATION_BUILDAUTHTOKEN = "FailedOperation.BuildAuthToken"
 
 	// CIC的身份提供商禁止操作
 	FAILEDOPERATION_CICIDENTITYFORBIDDEN = "FailedOperation.CICIdentityForbidden"
 
+	// 存在高风险操作。
+	FAILEDOPERATION_EXISTHIGHRISKOPERATIONS = "FailedOperation.ExistHighRiskOperations"
+
 	// 凭据操作失败。
 	FAILEDOPERATION_FLOWAUTHILLEGAL = "FailedOperation.FlowAuthIllegal"
+
+	// 禁止当前用户创建子账号。
+	FAILEDOPERATION_FORBIDADD = "FailedOperation.ForbidAdd"
 
 	// 获取用户地域信息失败
 	FAILEDOPERATION_GETUSERAREAERROR = "FailedOperation.GetUserAreaError"
@@ -95,6 +104,9 @@ const (
 	// 策略语法中操作服务不存在。
 	INVALIDPARAMETER_ACTIONSERVICENOTEXIST = "InvalidParameter.ActionServiceNotExist"
 
+	// 协助审批类型不合法。
+	INVALIDPARAMETER_ASSITAPPROVERTYPEERROR = "InvalidParameter.AssitApproverTypeError"
+
 	// principal字段的授权对象关联策略数已达到上限。
 	INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 
@@ -133,6 +145,12 @@ const (
 
 	// 用户组中的子用户数量达到上限。
 	INVALIDPARAMETER_GROUPUSERFULL = "InvalidParameter.GroupUserFull"
+
+	// IP段格式不合法。
+	INVALIDPARAMETER_IPILLEGAL = "InvalidParameter.IPIllegal"
+
+	// IP段重复。
+	INVALIDPARAMETER_IPRANGEOVERLAPPING = "InvalidParameter.IPRangeOverlapping"
 
 	// 身份提供商名称已经使用。
 	INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
@@ -260,6 +278,9 @@ const (
 	// 子用户名称重复。
 	INVALIDPARAMETER_SUBUSERNAMEINUSE = "InvalidParameter.SubUserNameInUse"
 
+	// 子账号不存在已认证的手机。
+	INVALIDPARAMETER_SUBUSERPHONENOTEXSIT = "InvalidParameter.SubUserPhoneNotExsit"
+
 	// 超出标签限制。
 	INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
 
@@ -308,8 +329,14 @@ const (
 	// 每个账号最多支持两个AccessKey。
 	OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 
+	// 禁止变更 CIC Policy。
+	OPERATIONDENIED_CICPOLICYOPERATIONDENIED = "OperationDenied.CicPolicyOperationDenied"
+
 	// 存在未删除的API密钥。
 	OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
+
+	// 关联到标签组的策略，不能包含标签条件键。
+	OPERATIONDENIED_POLICYTAGCONFLICT = "OperationDenied.PolicyTagConflict"
 
 	// 子用户不允许操作主账号密钥。
 	OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"

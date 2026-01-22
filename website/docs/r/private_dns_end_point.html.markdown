@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_private_dns_end_point"
 sidebar_current: "docs-tencentcloud-resource-private_dns_end_point"
 description: |-
-  Provides a resource to create a privatedns end point
+  Provides a resource to create a Private Dns end point
 ---
 
 # tencentcloud_private_dns_end_point
 
-Provides a resource to create a privatedns end point
+Provides a resource to create a Private Dns end point
 
 ## Example Usage
 
@@ -41,7 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-private dns end point can be imported using the id, e.g.
+Private Dns end point can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_private_dns_end_point.example eid-77a246c867

@@ -1,4 +1,4 @@
-Provides a resource to create a cfw nat_firewall_switch
+Provides a resource to create a CFW nat firewall switch
 
 Example Usage
 
@@ -32,7 +32,7 @@ resource "tencentcloud_cfw_nat_firewall_switch" "example" {
 
 Import
 
-cfw nat_firewall_switch can be imported using the id, e.g.
+CFW nat firewall switch can be imported using the natInsId#subnetId, e.g.
 
 ```
 terraform import tencentcloud_cfw_nat_firewall_switch.example cfwnat-18d2ba18#subnet-ef7wyymr

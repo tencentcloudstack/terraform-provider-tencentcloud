@@ -235,6 +235,7 @@ func resourceTencentCloudWedataScriptUpdate(d *schema.ResourceData, meta interfa
 	extraInfoBytes, _ := json.Marshal(ExtraInfoObj)
 	extraInfoStr := string(extraInfoBytes)
 	scriptRequestInfo.ExtraInfo = helper.String(extraInfoStr)
+	request.ScriptRequestInfo = &scriptRequestInfo
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().UploadContent(request)

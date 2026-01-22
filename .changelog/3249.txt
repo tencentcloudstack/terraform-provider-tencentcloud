@@ -1,0 +1,43 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_alert_rule: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmpCvmAgent: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_exporter_integration: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_tmp_monitor_recording_rule: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmpScrapeJob: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_tke_tmp_alert_policy: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_tke_cluster_agent: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_tke_tmp_config: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_tke_global_notification: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_tke_template: Modify the query to be empty without error.
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_tke_template_attachment: Modify the query to be empty without error.
+```

@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
+	"hash"
 	"sort"
 
 	tchttp "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/http"
@@ -18,9 +19,12 @@ const (
 )
 
 func Sign(s, secretKey, method string) string {
-	hashed := hmac.New(sha1.New, []byte(secretKey))
-	if method == SHA256 {
+	var hashed hash.Hash
+	switch method {
+	case SHA256:
 		hashed = hmac.New(sha256.New, []byte(secretKey))
+	default:
+		hashed = hmac.New(sha1.New, []byte(secretKey))
 	}
 	hashed.Write([]byte(s))
 
@@ -42,26 +46,26 @@ func signRequest(request tchttp.Request, credential CredentialIface, method stri
 	if method != SHA256 {
 		method = SHA1
 	}
-	checkAuthParams(request, credential, method)
-	s := getStringToSign(request)
-	signature := Sign(s, credential.GetSecretKey(), method)
-	request.GetParams()["Signature"] = signature
-	return
-}
-
-func checkAuthParams(request tchttp.Request, credential CredentialIface, method string) {
 	params := request.GetParams()
-	params["SecretId"] = credential.GetSecretId()
-	if token := credential.GetToken(); len(token) != 0 {
+	secId, secKey, token := credential.GetCredential()
+	params["SecretId"] = secId
+	if len(token) != 0 {
 		params["Token"] = token
 	}
 	params["SignatureMethod"] = method
 	delete(params, "Signature")
+	s := getStringToSign(request)
+	signature := Sign(s, secKey, method)
+	request.GetParams()["Signature"] = signature
+	return
 }
 
 func getStringToSign(request tchttp.Request) string {
 	method := request.GetHttpMethod()
-	domain := request.GetDomain()
+	domain := request.GetHeader()["Host"]
+	if domain == "" {
+		domain = request.GetDomain()
+	}
 	path := request.GetPath()
 
 	var buf bytes.Buffer

@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a teo rule_engine
 
+~> **NOTE:** The current resource has been deprecated, please use `tencentcloud_teo_l7_acc_rule`.
+
 ## Example Usage
 
 ```hcl
@@ -186,8 +188,8 @@ Note: This field may return null, indicating that no valid values can be obtaine
 The `and` object of `or` supports the following:
 
 * `operator` - (Required, String) Operator. Valid values:
-  - `equals`: Equals.
-  - `notEquals`: Does not equal.
+  - `equal`: Equal.
+  - `notEqual`: Does not equal.
   - `exist`: Exists.
   - `notexist`: Does not exist.
 * `target` - (Required, String) The match type. Values:
@@ -218,8 +220,8 @@ The `and` object of `or` supports the following:
 The `and` object of `or` supports the following:
 
 * `operator` - (Required, String) Operator. Valid values:
-  - `equals`: Equals.
-  - `notEquals`: Does not equal.
+  - `equal`: Equal.
+  - `notEqual`: Does not equal.
   - `exist`: Exists.
   - `notexist`: Does not exist.
 * `target` - (Required, String) The match type. Values:

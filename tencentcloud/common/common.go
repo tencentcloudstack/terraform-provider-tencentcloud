@@ -23,6 +23,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	sdkErrorsIntlEn "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentyun/cos-go-sdk-v5"
 	"gopkg.in/yaml.v2"
@@ -202,7 +203,7 @@ func InconsistentCheck(d *schema.ResourceData, meta interface{}) func() {
 // RetryError returns retry error
 func RetryError(err error, additionRetryableError ...string) *resource.RetryError {
 	switch realErr := errors.Cause(err).(type) {
-	case *sdkErrors.TencentCloudSDKError:
+	case *sdkErrors.TencentCloudSDKError, *sdkErrorsIntlEn.TencentCloudSDKError:
 		if IsExpectError(realErr, retryableErrorCode) {
 			log.Printf("[CRITAL] Retryable defined error: %v", err)
 			return resource.RetryableError(err)
@@ -276,6 +277,22 @@ func isCosExpectedError(err error, expectedError []string) bool {
 func IsExpectError(err error, expectError []string) bool {
 	e, ok := err.(*sdkErrors.TencentCloudSDKError)
 	if !ok {
+		if eIntlEn, ok := err.(*sdkErrorsIntlEn.TencentCloudSDKError); ok {
+			longCode := eIntlEn.Code
+			if IsContains(expectError, longCode) {
+				return true
+			}
+
+			if strings.Contains(longCode, ".") {
+				shortCode := strings.Split(longCode, ".")[0]
+				if IsContains(expectError, shortCode) {
+					return true
+				}
+			}
+
+			return false
+		}
+
 		return false
 	}
 

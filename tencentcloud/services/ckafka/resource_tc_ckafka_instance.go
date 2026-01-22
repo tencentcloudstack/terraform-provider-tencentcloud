@@ -55,8 +55,8 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "profession",
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"standard", "profession"}),
-				Description:  "Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.",
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"standard", "profession", "premium"}),
+				Description:  "Specifications type of instance. Allowed values are `profession`, `premium`. Default is `profession`.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
@@ -252,6 +252,7 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 			"rebalance_time": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.82.37.",
 				Description: "Modification of the rebalancing time after upgrade.",
 			},
 			"public_network": {
@@ -267,6 +268,16 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(1024, 12*1024*1024),
 				Description:  "The size of a single message in bytes at the instance level. Value range: `1024 - 12*1024*1024 bytes (i.e., 1KB-12MB).",
+			},
+			"elastic_bandwidth_switch": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Elastic bandwidth switch 0 not turned on 1 turned on (0 default). This takes effect only when the instance is created.",
+			},
+			"custom_ssl_cert_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom certificate ID, only effective when `specifications_type` is set to `profession`, supports custom certificate capabilities.",
 			},
 			"vip": {
 				Type:        schema.TypeString,
@@ -363,6 +374,14 @@ func ckafkaRequestSetParams(request interface{}, d *schema.ResourceData) {
 			zoneIds = append(zoneIds, helper.IntInt64(v.(int)))
 		}
 		values.FieldByName("ZoneIds").Set(reflect.ValueOf(zoneIds))
+	}
+
+	if v, ok := d.GetOk("elastic_bandwidth_switch"); ok {
+		values.FieldByName("ElasticBandwidthSwitch").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+	}
+
+	if v, ok := d.GetOk("custom_ssl_cert_id"); ok {
+		values.FieldByName("CustomSslCertId").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 }
 
@@ -722,6 +741,7 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		"subnet_id", "renew_flag", "kafka_version",
 		"multi_zone_flag", "zone_ids", "disk_type",
 		"specifications_type", "instance_type",
+		"elastic_bandwidth_switch", "custom_ssl_cert_id",
 	}
 
 	for _, v := range immutableArgs {

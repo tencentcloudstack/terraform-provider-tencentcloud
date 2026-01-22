@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_wedata_resource_group
+```
+
+```release-note:new-resource
+tencentcloud_wedata_resource_group_to_project_attachment
+```

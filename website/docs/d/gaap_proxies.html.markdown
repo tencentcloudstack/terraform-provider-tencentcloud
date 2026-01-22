@@ -51,6 +51,7 @@ In addition to all arguments above, the following attributes are exported:
   * `forward_ip` - Forwarding IP of the GAAP proxy.
   * `id` - ID of the GAAP proxy.
   * `ip` - Access domain of the GAAP proxy.
+  * `is_auto_scale_proxy` - Indicates whether the auto scale channel is enabled, with 0 for no and 1 for yes.
   * `name` - Name of the GAAP proxy.
   * `policy_id` - Security policy ID of the GAAP proxy.
   * `project_id` - ID of the project within the GAAP proxy, '0' means is default project.

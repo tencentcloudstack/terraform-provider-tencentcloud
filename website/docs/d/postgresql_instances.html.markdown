@@ -4,26 +4,28 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_postgresql_instances"
 sidebar_current: "docs-tencentcloud-datasource-postgresql_instances"
 description: |-
-  Use this data source to query postgresql instances
+  Use this data source to query PostgreSQL instances
 ---
 
 # tencentcloud_postgresql_instances
 
-Use this data source to query postgresql instances
+Use this data source to query PostgreSQL instances
 
 ## Example Usage
 
+### Query all postgresql instances
+
 ```hcl
-data "tencentcloud_postgresql_instances" "name" {
-  name = "test"
-}
+data "tencentcloud_postgresql_instances" "example" {}
+```
 
-data "tencentcloud_postgresql_instances" "project" {
-  project_id = 0
-}
+### Query postgresql instances by filters
 
-data "tencentcloud_postgresql_instances" "id" {
-  id = "postgres-h9t4fde1"
+```hcl
+data "tencentcloud_postgresql_instances" "example" {
+  id         = "postgres-gngyhl9d"
+  name       = "tf-example"
+  project_id = "1235143"
 }
 ```
 
@@ -33,7 +35,7 @@ The following arguments are supported:
 
 * `id` - (Optional, String) ID of the postgresql instance to be query.
 * `name` - (Optional, String) Name of the postgresql instance to be query.
-* `project_id` - (Optional, Int) Project ID of the postgresql instance to be query.
+* `project_id` - (Optional, String) Project ID of the postgresql instance to be query.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
@@ -46,6 +48,8 @@ In addition to all arguments above, the following attributes are exported:
   * `charge_type` - Pay type of the postgresql instance.
   * `charset` - Charset of the postgresql instance.
   * `create_time` - Create time of the postgresql instance.
+  * `db_kernel_version` - PostgreSQL kernel version number.
+  * `db_major_version` - PostgreSQL major version number.
   * `engine_version` - Version of the postgresql database engine.
   * `id` - ID of the postgresql instance.
   * `memory` - Memory size(in GB).

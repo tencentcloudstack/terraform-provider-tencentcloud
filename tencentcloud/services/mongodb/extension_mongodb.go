@@ -75,10 +75,9 @@ const (
 func TencentMongodbBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_name": {
-			Type:         schema.TypeString,
-			Required:     true,
-			ValidateFunc: tccommon.ValidateStringLengthInRange(2, 35),
-			Description:  "Name of the Mongodb instance.",
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Mongodb instance.",
 		},
 		"memory": {
 			Type:         schema.TypeInt,
@@ -95,8 +94,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"engine_version": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
-			Description: "Version of the Mongodb, and available values include `MONGO_36_WT` (MongoDB 3.6 WiredTiger Edition), `MONGO_40_WT` (MongoDB 4.0 WiredTiger Edition) and `MONGO_42_WT`  (MongoDB 4.2 WiredTiger Edition). NOTE: `MONGO_3_WT` (MongoDB 3.2 WiredTiger Edition) and `MONGO_3_ROCKS` (MongoDB 3.2 RocksDB Edition) will deprecated.",
+			Description: "Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.\n- MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.\n- MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.\n- MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.\n- MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.\n- MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.\n- MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.\n- MONGO_80_WT: version of the MongoDB 8.0 WiredTiger storage engine.",
 		},
 		"machine_type": {
 			Type:     schema.TypeString,
@@ -199,6 +197,14 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     0,
 			Description: "Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.",
+		},
+		"in_maintenance": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Description: "Switch time for instance configuration changes.\n" +
+				"	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.\n" +
+				"	- 1: Perform reconfiguration tasks within the maintenance time window.\n" +
+				"Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.",
 		},
 		// Computed
 		"status": {

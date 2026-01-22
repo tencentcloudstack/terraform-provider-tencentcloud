@@ -45,7 +45,7 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "The available zone ID of an instance to be created, please refer to `tencentcloud_redis_zone_config.list`.",
+				Description: "The available zone of an instance to be created, like `ap-beijing-7`, please refer to `tencentcloud_redis_zone_config.list`.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -57,7 +57,19 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateIntegerMin(2),
-				Description:  "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.",
+				Description: "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified." +
+					"<ul><li>2: Redis 2.8 Memory Edition (standard architecture);</li> " +
+					"<li>3: CKV 3.2 Memory Edition (standard architecture);</li> " +
+					"<li>4: CKV 3.2 Memory Edition (cluster architecture);</li> " +
+					"<li>6: Redis 4.0 Memory Edition (standard architecture);</li> " +
+					"<li>7: Redis 4.0 Memory Edition (cluster architecture);</li> " +
+					"<li>8: Redis 5.0 Memory Edition (standard architecture);</li> " +
+					"<li>9: Redis 5.0 Memory Edition (cluster architecture);</li> " +
+					"<li>15: Redis 6.2 Memory Edition (standard architecture);</li> " +
+					"<li>16: Redis 6.2 Memory Edition (cluster architecture);</li> " +
+					"<li>17: Redis 7.0 Memory Edition (standard architecture);</li> " +
+					"<li>18: Redis 7.0 Memory Edition (cluster architecture). </li> " +
+					"<li>200: Memcached 1.6 Memory Edition (cluster architecture). </li>Note: The CKV version is currently used by existing users and is temporarily retained.</ul>.",
 			},
 			"redis_shard_num": {
 				Type:         schema.TypeInt,
@@ -116,10 +128,9 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Description: "Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.",
 			},
 			"mem_size": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{256, 512, 1024, 2048, 4096, 8192, 12288, 16384, 20480, 24576, 32768, 40960, 49152, 65536}),
-				Description:  "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding. `512MB` is supported only in master-slave instance.",
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding. `512MB` is supported only in master-slave instance.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
@@ -270,6 +281,17 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 						},
 					},
 				},
+			},
+			"wan_address_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Wan address switch, default `close`, values: `open`, `close`.",
+			},
+			"wan_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Allocate Wan Address.",
 			},
 		},
 	}
@@ -522,6 +544,13 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 	//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
+	if v, ok := d.GetOk("wan_address_switch"); ok {
+		err := resourceRedisWanAddressModify(ctx, &redisService, meta, d.Id(), v.(string))
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudRedisInstanceRead(d, meta)
 }
 
@@ -684,6 +713,14 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("tags", tags)
 
 	_ = d.Set("charge_type", REDIS_CHARGE_TYPE_NAME[*info.BillingMode])
+
+	if info.WanAddress != nil && *info.WanAddress != "" {
+		_ = d.Set("wan_address", info.WanAddress)
+		_ = d.Set("wan_address_switch", "open")
+	} else {
+		_ = d.Set("wan_address_switch", "close")
+	}
+
 	return nil
 }
 
@@ -1018,6 +1055,13 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		_ = d.Set("operation_network", operation)
 	}
 
+	if d.HasChange("wan_address_switch") {
+		err := resourceRedisWanAddressModify(ctx, &redisService, meta, d.Id(), d.Get("wan_address_switch").(string))
+		if err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
@@ -1291,4 +1335,68 @@ func TencentCloudRedisGetRemoveNodesByIds(ids []int, nodes []*redis.RedisNodeInf
 		ids = append(ids[:index], ids[index+1:]...)
 	}
 	return
+}
+
+func resourceRedisWanAddressModify(ctx context.Context, service *RedisService, meta interface{}, instanceId, addressSwitch string) error {
+	instance, err := service.DescribeRedisInstanceById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if addressSwitch == "close" {
+		if instance.WanAddress != nil && *instance.WanAddress != "" {
+			request := redis.NewReleaseWanAddressRequest()
+			request.InstanceId = helper.String(instanceId)
+
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().ReleaseWanAddressWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if reqErr != nil {
+				log.Printf("[CRITAL] delete redis wan address failed, reason:%+v", reqErr)
+				return reqErr
+			}
+
+			_, _, _, err := service.CheckRedisOnlineOk(ctx, instanceId, 20*tccommon.ReadRetryTimeout)
+			if err != nil {
+				log.Printf("[CRITAL] redis networkConfig fail, reason:%s\n", err.Error())
+				return err
+			}
+		}
+	} else if addressSwitch == "open" {
+		if instance.WanAddress == nil || *instance.WanAddress == "" {
+			request := redis.NewAllocateWanAddressRequest()
+			request.InstanceId = helper.String(instanceId)
+
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().AllocateWanAddressWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG] api[%s] success, request body [%s], response body [%s]\n", request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if reqErr != nil {
+				log.Printf("[CRITAL] create redis wan address failed, reason:%+v", reqErr)
+				return reqErr
+			}
+
+			service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			_, _, _, err := service.CheckRedisOnlineOk(ctx, instanceId, 20*tccommon.ReadRetryTimeout)
+			if err != nil {
+				log.Printf("[CRITAL] redis networkConfig fail, reason:%s\n", err.Error())
+				return err
+			}
+		}
+	} else {
+		return fmt.Errorf("invalid address_switch %s", addressSwitch)
+	}
+
+	return nil
 }

@@ -62,6 +62,7 @@ func ResourceTencentCloudDcInstance() *schema.Resource {
 
 			"bandwidth": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Connection port bandwidth in Mbps. Value range: [2,10240]. Default value: 1000.",
 			},
@@ -74,6 +75,7 @@ func ResourceTencentCloudDcInstance() *schema.Resource {
 
 			"vlan": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "VLAN for connection debugging, which is enabled and automatically assigned by default.",
 			},
@@ -104,6 +106,7 @@ func ResourceTencentCloudDcInstance() *schema.Resource {
 
 			"customer_contact_number": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Contact number of connection applicant, which is obtained from the account system by default.",
 			},
@@ -122,6 +125,7 @@ func ResourceTencentCloudDcInstance() *schema.Resource {
 
 			"sign_law": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether the connection applicant has signed the service agreement. Default value: true.",
 			},

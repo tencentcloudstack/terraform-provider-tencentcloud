@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudAsScalingPolicy(t *testing.T) {
+func TestAccTencentCloudAsScalingPolicy_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -52,6 +52,28 @@ func TestAccTencentCloudAsScalingPolicy(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "continuous_time", "9"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "statistic", "MAXIMUM"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "cooldown", "300"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudAsScalingPolicy_TargetTracking(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckAsScalingPolicyDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: TargetTrackingPolicy,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingPolicyExists("tencentcloud_as_scaling_policy.scaling_policy"),
+					resource.TestCheckResourceAttrSet("tencentcloud_as_scaling_policy.scaling_policy", "scaling_group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "policy_name", "tf-as-scaling-policy"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "policy_type", "TARGET_TRACKING"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "predefined_metric_type", "ASG_AVG_CPU_UTILIZATION"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "target_value", "80"),
 				),
 			},
 		},
@@ -119,7 +141,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-policy"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-9qrfy1xt"
   instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
 }
 
@@ -164,7 +186,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-policy"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-9qrfy1xt"
   instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
 }
 
@@ -192,3 +214,40 @@ resource "tencentcloud_as_scaling_policy" "scaling_policy" {
 }
 `
 }
+
+const TargetTrackingPolicy = tcacctest.DefaultAsVariable + `
+resource "tencentcloud_vpc" "vpc" {
+  name       = "tf-as-vpc"
+  cidr_block = "10.2.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "tf-as-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_as_scaling_config" "launch_configuration" {
+  configuration_name = "tf-as-configuration-policy"
+  image_id           = "img-9qrfy1xt"
+  instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
+}
+
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+  scaling_group_name = "tf-as-scaling-group-policy"
+  configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_ids         = [tencentcloud_subnet.subnet.id]
+}
+
+resource "tencentcloud_as_scaling_policy" "scaling_policy" {
+  scaling_group_id       = tencentcloud_as_scaling_group.scaling_group.id
+  policy_name            = "tf-as-scaling-policy"
+  policy_type            = "TARGET_TRACKING"
+  predefined_metric_type = "ASG_AVG_CPU_UTILIZATION"
+  target_value           = 80
+}
+`

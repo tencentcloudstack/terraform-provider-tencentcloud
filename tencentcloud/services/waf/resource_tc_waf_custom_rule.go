@@ -2,6 +2,7 @@ package waf
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"strconv"
@@ -12,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
+	wafv20180125 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -39,12 +41,12 @@ func ResourceTencentCloudWafCustomRule() *schema.Resource {
 			"redirect": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "If the action is a redirect, it represents the redirect address; Other situations can be left blank.",
+				Description: "If the action is a Redirect, it represents the redirect address; Other situations can be left blank.",
 			},
 			"expire_time": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Expiration time, measured in seconds, such as 1677254399, which means the expiration time is 2023-02-24 23:59:59 0 means never expires.",
+				Description: "Expiration time in second-level timestamp, for example, 1677254399 indicates the expiration time is 2023-02-24 23:59:59; 0 indicates it will never expire.",
 			},
 			"strategies": {
 				Required:    true,
@@ -53,24 +55,68 @@ func ResourceTencentCloudWafCustomRule() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"field": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Matching Fields.",
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `Matching field
+              Different matching fields result in different matching parameters, logical operators, and matching contents. The details are as follows:
+			  <table><thead><tr><th>Matching Field</th><th>Matching Parameter</th><th>Logical Symbol</th><th>Matching Content</th></tr></thead><tbody><tr><td>IP (source IP)</td><td>Parameters are not supported.</td><td>ipmatch (match)<br>ipnmatch (mismatch)</td><td>Multiple IP addresses are separated by commas. A maximum of 20 IP addresses are allowed.</td></tr><tr><td>IPv6 (source IPv6)</td><td>Parameters are not supported.</td><td>ipmatch (match)<br>ipnmatch (mismatch)</td><td>A single IPv6 address is supported.</td></tr><tr><td>Referer (referer)</td><td>Parameters are not supported.</td><td>empty (Content is empty.)<br>null (do not exist)<br>eq (equal to)<br>neq (not equal to)<br>contains (contain)<br>ncontains (do not contain)<br>len_eq (length equals to)<br>len_gt (length is greater than)<br>len_lt (length is less than)<br>strprefix (prefix matching)<br>strsuffix (suffix matching)<br>rematch (regular expression matching)</td><td>Enter the content, with a maximum of 512 characters.</td></tr><tr><td>URL (request path)</td><td>Parameters are not supported.</td><td>eq (equal to)<br>neq (not equal to)<br>contains (contain)<br>ncontains (do not contain)<br>len_eq (length equals to)<br>len_gt (length is greater than)<br>len_lt (length is less than)<br>strprefix (prefix matching)<br>strsuffix (suffix matching)<br>rematch (regular expression matching)</td><td>Enter the content starting with /, with a maximum of 512 characters.</td></tr><tr><td>UserAgent (UserAgent)</td><td>Parameters are not supported.</td><td>Same logical symbols as the matching field <font color="Red">Referer</font></td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>HTTP_METHOD (HTTP request method)</td><td>Parameters are not supported.</td><td>eq (equal to)<br>neq (not equal to)</td><td>Enter the method name. The uppercase is recommended.</td></tr><tr><td>QUERY_STRING (request string)</td><td>Parameters are not supported.</td><td>Same logical symbol as the matching field <font color="Red">Request Path</font></td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>GET (GET parameter value)</td><td>Parameter entry is supported.</td><td>contains (contain)<br>ncontains (do not contain)<br>len_eq (length equals to)<br>len_gt (length is greater than)<br>len_lt (length is less than)<br>strprefix (prefix matching)<br>strsuffix (suffix matching)</td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>GET_PARAMS_NAMES (GET parameter name)</td><td>Parameters are not supported.</td><td>exist (Parameter exists.)<br>nexist (Parameter does not exist.)<br>len_eq (length equals to)<br>len_gt (length is greater than)<br>len_lt (length is less than)<br>strprefix (prefix matching)<br>strsuffix (suffix matching)</td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>POST (POST parameter value)</td><td>Parameter entry is supported.</td><td>Same logical symbol as the matching field <font color="Red">GET Parameter Value</font></td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>GET_POST_NAMES (POST parameter name)</td><td>Parameters are not supported.</td><td>Same logical symbol as the matching field <font color="Red">GET Parameter Name</font></td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>POST_BODY (complete body)</td><td>Parameters are not supported.</td><td>Same logical symbol as the matching field <font color="Red">Request Path</font></td><td>Enter the body content with a maximum of 512 characters.</td></tr><tr><td>COOKIE (cookie)</td><td>Parameters are not supported.</td><td>empty (Content is empty.)<br>null (do not exist)<br>rematch (regular expression matching)</td><td><font color="Red">Unsupported currently</font></td></tr><tr><td>GET_COOKIES_NAMES (cookie parameter name)</td><td>Parameters are not supported.</td><td>Same logical symbol as the matching field <font color="Red">GET Parameter Name</font></td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>ARGS_COOKIE (cookie parameter value)</td><td>Parameter entry is supported.</td><td>Same logical symbol as the matching field <font color="Red">GET Parameter Value</font></td><td>Enter the contentwith a maximum of 512 characters.</td></tr><tr><td>GET_HEADERS_NAMES (header parameter name)</td><td>Parameters are not supported.</td><td>exist (Parameter exists.)<br>nexist (Parameter does not exist.)<br>len_eq (length equals to)<br>len_gt (length is greater than)<br>len_lt (length is less than)<br>strprefix (prefix matching)<br>strsuffix (suffix matching)<br>rematch (regular expression matching)</td><td>Enter the content with a maximum of 512 characters. The lowercase is recommended.</td></tr><tr><td>ARGS_HEADER (header parameter value)</td><td>Parameter entry is supported.</td><td>contains (contain)<br>ncontains (do not contain)<br>len_eq (length equals to)<br>len_gt (length is greater than)<br>len_lt (length is less than)<br>strprefix (prefix matching)<br>strsuffix (suffix matching)<br>rematch (regular expression matching)</td><td>Enter the content with a maximum of 512 characters.</td></tr><tr><td>CAPTCHA_RISK (CAPTCHA risk)</td><td>Parameters are not supported.</td><td>eq (equal to)<br>neq (not equal to)<br>belong (belongs to)<br>not_belong (does not belong to)<br>null (does not exist)<br>exist (exists)</td><td>Enter risk level value, supporting numerical range 0-255</td></tr><tr><td>CAPTCHA_DEVICE_RISK (CAPTCHA device risk)</td><td>Parameters are not supported.</td><td>eq (equal to)<br>neq (not equal to)<br>belong (belongs to)<br>not_belong (does not belong to)<br>null (does not exist)<br>exist (exists)</td><td>Enter device risk code, supporting values: 101, 201, 301, 401, 501, 601, 701</td></tr><tr><td>CAPTCHAR_SCORE (CAPTCHA risk assessment score)</td><td>Parameters are not supported.</td><td>numeq (numerically equal to)<br>numgt (numerically greater than)<br>numlt (numerically less than)<br>numle (numerically less than or equal to)<br>numge (numerically greater than or equal to)<br>null (does not exist)<br>exist (exists)</td><td>Enter assessment score, supporting numerical range 0-100</td></tr></tbody></table>
+          	  Note: This field may return null, indicating that no valid values can be obtained.`,
 						},
 						"compare_func": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Logical symbol.",
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `Logic symbol
+              Logical symbols are divided into the following types:
+                  empty (content is empty)
+                  null (do not exist)
+                  eq (equal to)
+                  neq (not equal to)
+                  contains (contain)
+                  ncontains (do not contain)
+                  strprefix (prefix matching)
+                  strsuffix (suffix matching)
+                  len_eq (length equals to)
+                  len_gt (length is greater than)
+                  len_lt (length is less than)
+                  ipmatch (belong to)
+                  ipnmatch (do not belong to)
+                  numgt (number greater than)
+                  numlt (number less than)
+                  geo_in (IP geo belongs to)
+                  geo_not_in (IP geo not belongs to)
+                  rematch (regex match)
+				  numgt (numerically greater than)
+				  numlt (numerically less than)
+				  numeq (numerically equal to)
+				  numneq (numerically not equal to)
+				  numle (numerically less than or equal to)
+				  numge (numerically greater than or equal to)
+              Different matching fields correspond to different logical operators. For details, see the matching field table above.
+          Note: This field may return null, indicating that no valid values can be obtained.`,
 						},
 						"content": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Matching Content.",
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `Matching content
+              Currently, when the matching field is COOKIE (cookie), the matching content is not required. In other scenes, the matching content is required.
+          Note: This field may return null, indicating that no valid values can be obtained.`,
 						},
 						"arg": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Matching parameters.",
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `Matching parameter
+              There are two types of configuration parameters: unsupported parameters and supported parameters.
+              The matching parameter can be entered only when the matching field is one of the following four. Otherwise, the parameter is not supported.
+                  GET (GET parameter value)		
+                  POST (POST parameter value)		
+                  ARGS_COOKIE (Cookie parameter value)		
+                  ARGS_HEADER (Header parameter value)
+          Note: This field may return null, indicating that no valid values can be obtained.`,
+						},
+						"case_not_sensitive": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "0: case-sensitive, 1: case-insensitive. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
@@ -78,20 +124,96 @@ func ResourceTencentCloudWafCustomRule() *schema.Resource {
 			"domain": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Domain name that needs to add policy.",
+				Description: "Domain.",
 			},
 			"action_type": {
 				Required:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CUSTOM_RULE_ACTION_TYPE),
-				Description:  "Action type, 1 represents blocking, 2 represents captcha, 3 represents observation, and 4 represents redirection.",
+				Description:  "Action type, 1(Block), 2(Captcha), 3(log), 4(Redirect).",
 			},
 			"status": {
 				Optional:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CUSTOM_RULE_STATUS),
 				Default:      CUSTOM_RULE_STATUS_1,
-				Description:  "The status of the switch, 1 is on, 0 is off, default 1.",
+				Description:  "The status of the rule, 1(open), 0(close).",
+			},
+			"job_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Rule execution mode: TimedJob indicates scheduled execution. CronJob indicates periodic execution.",
+			},
+			"job_date_time": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Rule execution time.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"timed": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Time parameters for scheduled execution. Note: This field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"start_date_time": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Start timestamp, in seconds. Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"end_date_time": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "End timestamp, in seconds. Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
+						"cron": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Time parameters for periodic execution. Note: This field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"days": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Days in each month for execution. Note: This field may return null, indicating that no valid values can be obtained.",
+										Elem: &schema.Schema{
+											Type: schema.TypeInt,
+										},
+									},
+									"w_days": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Days of each week for execution. Note: This field may return null, indicating that no valid values can be obtained.",
+										Elem: &schema.Schema{
+											Type: schema.TypeInt,
+										},
+									},
+									"start_time": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Start time. Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"end_time": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "End time. Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
+						"time_t_zone": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Time zone. Note: This field may return null, indicating that no valid values can be obtained.",
+						},
+					},
+				},
 			},
 			"rule_id": {
 				Computed:    true,
@@ -136,20 +258,32 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			strategy := waf.Strategy{}
+			var base46Flag bool
 			if v, ok := dMap["field"]; ok {
 				strategy.Field = helper.String(v.(string))
 			}
 
 			if v, ok := dMap["compare_func"]; ok {
 				strategy.CompareFunc = helper.String(v.(string))
+				if v.(string) == "rematch" {
+					base46Flag = true
+				}
 			}
 
 			if v, ok := dMap["content"]; ok {
-				strategy.Content = helper.String(v.(string))
+				if base46Flag {
+					strategy.Content = helper.String(base64.URLEncoding.EncodeToString([]byte(v.(string))))
+				} else {
+					strategy.Content = helper.String(v.(string))
+				}
 			}
 
 			if v, ok := dMap["arg"]; ok {
 				strategy.Arg = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["case_not_sensitive"]; ok {
+				strategy.CaseNotSensitive = helper.IntUint64(v.(int))
 			}
 
 			request.Strategies = append(request.Strategies, &strategy)
@@ -163,6 +297,67 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOk("action_type"); ok {
 		request.ActionType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("job_type"); ok {
+		request.JobType = helper.String(v.(string))
+	}
+
+	if jobDateTimeMap, ok := helper.InterfacesHeadMap(d, "job_date_time"); ok {
+		jobDateTime := waf.JobDateTime{}
+		if v, ok := jobDateTimeMap["timed"]; ok {
+			for _, item := range v.([]interface{}) {
+				timedMap := item.(map[string]interface{})
+				timedJob := waf.TimedJob{}
+				if v, ok := timedMap["start_date_time"].(int); ok {
+					timedJob.StartDateTime = helper.IntUint64(v)
+				}
+
+				if v, ok := timedMap["end_date_time"].(int); ok {
+					timedJob.EndDateTime = helper.IntUint64(v)
+				}
+
+				jobDateTime.Timed = append(jobDateTime.Timed, &timedJob)
+			}
+		}
+
+		if v, ok := jobDateTimeMap["cron"]; ok {
+			for _, item := range v.([]interface{}) {
+				cronMap := item.(map[string]interface{})
+				cronJob := wafv20180125.CronJob{}
+				if v, ok := cronMap["days"]; ok {
+					daysSet := v.(*schema.Set).List()
+					for i := range daysSet {
+						days := daysSet[i].(int)
+						cronJob.Days = append(cronJob.Days, helper.IntUint64(days))
+					}
+				}
+
+				if v, ok := cronMap["w_days"]; ok {
+					wDaysSet := v.(*schema.Set).List()
+					for i := range wDaysSet {
+						wDays := wDaysSet[i].(int)
+						cronJob.WDays = append(cronJob.WDays, helper.IntUint64(wDays))
+					}
+				}
+
+				if v, ok := cronMap["start_time"].(string); ok && v != "" {
+					cronJob.StartTime = helper.String(v)
+				}
+
+				if v, ok := cronMap["end_time"].(string); ok && v != "" {
+					cronJob.EndTime = helper.String(v)
+				}
+
+				jobDateTime.Cron = append(jobDateTime.Cron, &cronJob)
+			}
+		}
+
+		if v, ok := jobDateTimeMap["time_t_zone"].(string); ok && v != "" {
+			jobDateTime.TimeTZone = helper.String(v)
+		}
+
+		request.JobDateTime = &jobDateTime
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -227,7 +422,7 @@ func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interfac
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", idSplit)
+		return fmt.Errorf("id is broken, %s", idSplit)
 	}
 
 	domain := idSplit[0]
@@ -264,21 +459,37 @@ func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interfac
 		strategiesList := []interface{}{}
 		for _, strategies := range customRule.Strategies {
 			strategiesMap := map[string]interface{}{}
-
+			var base46Flag bool
 			if strategies.Field != nil {
 				strategiesMap["field"] = strategies.Field
 			}
 
 			if strategies.CompareFunc != nil {
 				strategiesMap["compare_func"] = strategies.CompareFunc
+				if *strategies.CompareFunc == "rematch" {
+					base46Flag = true
+				}
 			}
 
 			if strategies.Content != nil {
-				strategiesMap["content"] = strategies.Content
+				if base46Flag {
+					decoded, e := base64.StdEncoding.DecodeString(*strategies.Content)
+					if e != nil {
+						return fmt.Errorf("[%s] base64 decode error: %s", *strategies.Content, e.Error())
+					}
+
+					strategiesMap["content"] = string(decoded)
+				} else {
+					strategiesMap["content"] = strategies.Content
+				}
 			}
 
 			if strategies.Arg != nil {
 				strategiesMap["arg"] = strategies.Arg
+			}
+
+			if strategies.CaseNotSensitive != nil {
+				strategiesMap["case_not_sensitive"] = strategies.CaseNotSensitive
 			}
 
 			strategiesList = append(strategiesList, strategiesMap)
@@ -292,6 +503,66 @@ func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interfac
 
 	if customRule.ActionType != nil {
 		_ = d.Set("action_type", customRule.ActionType)
+	}
+
+	if customRule.JobType != nil {
+		_ = d.Set("job_type", customRule.JobType)
+	}
+
+	if customRule.JobDateTime != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		dMap := map[string]interface{}{}
+		if customRule.JobDateTime.Timed != nil {
+			timedList := []interface{}{}
+			for _, v := range customRule.JobDateTime.Timed {
+				timedMap := map[string]interface{}{}
+				if v.StartDateTime != nil {
+					timedMap["start_date_time"] = v.StartDateTime
+				}
+
+				if v.EndDateTime != nil {
+					timedMap["end_date_time"] = v.EndDateTime
+				}
+
+				timedList = append(timedList, timedMap)
+			}
+
+			dMap["timed"] = timedList
+		}
+
+		if customRule.JobDateTime.Cron != nil {
+			cronList := []interface{}{}
+			for _, v := range customRule.JobDateTime.Cron {
+				cronMap := map[string]interface{}{}
+				if v.Days != nil {
+					cronMap["days"] = v.Days
+				}
+
+				if v.WDays != nil {
+					cronMap["w_days"] = v.WDays
+				}
+
+				if v.StartTime != nil {
+					cronMap["start_time"] = v.StartTime
+				}
+
+				if v.EndTime != nil {
+					cronMap["end_time"] = v.EndTime
+				}
+
+				cronList = append(cronList, cronMap)
+			}
+
+			dMap["cron"] = cronList
+		}
+
+		if customRule.JobDateTime.TimeTZone != nil {
+			dMap["time_t_zone"] = customRule.JobDateTime.TimeTZone
+		}
+
+		tmpList = append(tmpList, dMap)
+
+		_ = d.Set("job_date_time", tmpList)
 	}
 
 	if customRule.Status != nil {
@@ -364,20 +635,97 @@ func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interf
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			strategy := waf.Strategy{}
+			var base46Flag bool
 			if v, ok := dMap["field"]; ok {
 				strategy.Field = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["compare_func"]; ok {
 				strategy.CompareFunc = helper.String(v.(string))
+				if v.(string) == "rematch" {
+					base46Flag = true
+				}
 			}
+
 			if v, ok := dMap["content"]; ok {
-				strategy.Content = helper.String(v.(string))
+				if base46Flag {
+					strategy.Content = helper.String(base64.URLEncoding.EncodeToString([]byte(v.(string))))
+				} else {
+					strategy.Content = helper.String(v.(string))
+				}
 			}
+
 			if v, ok := dMap["arg"]; ok {
 				strategy.Arg = helper.String(v.(string))
 			}
+
+			if v, ok := dMap["case_not_sensitive"]; ok {
+				strategy.CaseNotSensitive = helper.IntUint64(v.(int))
+			}
+
 			request.Strategies = append(request.Strategies, &strategy)
 		}
+	}
+
+	if v, ok := d.GetOk("job_type"); ok {
+		request.JobType = helper.String(v.(string))
+	}
+
+	if jobDateTimeMap, ok := helper.InterfacesHeadMap(d, "job_date_time"); ok {
+		jobDateTime := waf.JobDateTime{}
+		if v, ok := jobDateTimeMap["timed"]; ok {
+			for _, item := range v.([]interface{}) {
+				timedMap := item.(map[string]interface{})
+				timedJob := waf.TimedJob{}
+				if v, ok := timedMap["start_date_time"].(int); ok {
+					timedJob.StartDateTime = helper.IntUint64(v)
+				}
+
+				if v, ok := timedMap["end_date_time"].(int); ok {
+					timedJob.EndDateTime = helper.IntUint64(v)
+				}
+
+				jobDateTime.Timed = append(jobDateTime.Timed, &timedJob)
+			}
+		}
+
+		if v, ok := jobDateTimeMap["cron"]; ok {
+			for _, item := range v.([]interface{}) {
+				cronMap := item.(map[string]interface{})
+				cronJob := wafv20180125.CronJob{}
+				if v, ok := cronMap["days"]; ok {
+					daysSet := v.(*schema.Set).List()
+					for i := range daysSet {
+						days := daysSet[i].(int)
+						cronJob.Days = append(cronJob.Days, helper.IntUint64(days))
+					}
+				}
+
+				if v, ok := cronMap["w_days"]; ok {
+					wDaysSet := v.(*schema.Set).List()
+					for i := range wDaysSet {
+						wDays := wDaysSet[i].(int)
+						cronJob.WDays = append(cronJob.WDays, helper.IntUint64(wDays))
+					}
+				}
+
+				if v, ok := cronMap["start_time"].(string); ok && v != "" {
+					cronJob.StartTime = helper.String(v)
+				}
+
+				if v, ok := cronMap["end_time"].(string); ok && v != "" {
+					cronJob.EndTime = helper.String(v)
+				}
+
+				jobDateTime.Cron = append(jobDateTime.Cron, &cronJob)
+			}
+		}
+
+		if v, ok := jobDateTimeMap["time_t_zone"].(string); ok && v != "" {
+			jobDateTime.TimeTZone = helper.String(v)
+		}
+
+		request.JobDateTime = &jobDateTime
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

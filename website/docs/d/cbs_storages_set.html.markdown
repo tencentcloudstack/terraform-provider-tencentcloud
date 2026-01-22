@@ -53,6 +53,7 @@ In addition to all arguments above, the following attributes are exported:
   * `dedicated_cluster_id` - Exclusive cluster id.
   * `encrypt` - Indicates whether CBS is encrypted.
   * `instance_id` - ID of the CVM instance that be mounted by this CBS.
+  * `kms_key_id` - Kms key ID.
   * `prepaid_renew_flag` - The way that CBS instance will be renew automatically or not when it reach the end of the prepaid tenancy.
   * `project_id` - ID of the project.
   * `status` - Status of CBS.

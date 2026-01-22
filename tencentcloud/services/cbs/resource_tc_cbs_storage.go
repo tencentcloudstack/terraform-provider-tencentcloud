@@ -95,11 +95,18 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Default:     0,
 				Description: "ID of the project to which the instance belongs.",
 			},
+			"kms_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.",
+			},
 			"encrypt": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Indicates whether CBS is encrypted.",
+				Description: "Pass in this parameter to create an encrypted cloud disk.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -123,6 +130,19 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "The quota of backup points of cloud disk.",
+			},
+			"burst_performance": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable performance burst when creating a cloud disk.",
+			},
+			"encrypt_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk.",
 			},
 			// computed
 			"storage_status": {
@@ -156,7 +176,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		Zone: helper.String(d.Get("availability_zone").(string)),
 	}
 
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		request.Placement.ProjectId = helper.IntUint64(v.(int))
 	}
 
@@ -168,11 +188,15 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		request.SnapshotId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("kms_key_id"); ok {
+		request.KmsKeyId = helper.String(v.(string))
+	}
+
 	if _, ok := d.GetOk("encrypt"); ok {
 		request.Encrypt = helper.String("ENCRYPT")
 	}
 
-	if v, ok := d.GetOk("throughput_performance"); ok {
+	if v, ok := d.GetOkExists("throughput_performance"); ok {
 		request.ThroughputPerformance = helper.IntUint64(v.(int))
 	}
 
@@ -182,7 +206,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	if chargeType == CBS_CHARGE_TYPE_PREPAID {
 		request.DiskChargePrepaid = &cbs.DiskChargePrepaid{}
-		if period, ok := d.GetOk("prepaid_period"); ok {
+		if period, ok := d.GetOkExists("prepaid_period"); ok {
 			periodInt64 := uint64(period.(int))
 			request.DiskChargePrepaid.Period = &periodInt64
 		} else {
@@ -206,6 +230,14 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if v, ok := d.GetOkExists("burst_performance"); ok {
+		request.BurstPerformance = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("encrypt_type"); ok {
+		request.EncryptType = helper.String(v.(string))
+	}
+
 	storageId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().CreateDisks(request)
@@ -213,6 +245,10 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create cbs failed, Response is nil."))
 		}
 
 		if len(response.Response.DiskIdSet) < 1 {
@@ -230,13 +266,6 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	d.SetId(storageId)
 
-	if v, ok := d.GetOk("disk_backup_quota"); ok {
-		err = cbsService.ModifyDiskBackupQuota(ctx, storageId, v.(int))
-		if err != nil {
-			return err
-		}
-	}
-
 	// must wait for finishing creating disk
 	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
@@ -253,6 +282,20 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	if err != nil {
 		return err
+	}
+	if v, ok := d.GetOk("disk_backup_quota"); ok {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			e := cbsService.ModifyDiskBackupQuota(ctx, storageId, v.(int))
+			if e != nil {
+				return tccommon.RetryError(e, tccommon.InternalError)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudCbsStorageRead(d, meta)
@@ -302,6 +345,15 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("charge_type", storage.DiskChargeType)
 	_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
 	_ = d.Set("throughput_performance", storage.ThroughputPerformance)
+	_ = d.Set("burst_performance", storage.BurstPerformance)
+
+	if storage.EncryptType != nil {
+		_ = d.Set("encrypt_type", storage.EncryptType)
+	}
+
+	if storage.KmsKeyId != nil {
+		_ = d.Set("kms_key_id", storage.KmsKeyId)
+	}
 
 	if *storage.DiskChargeType == CBS_CHARGE_TYPE_PREPAID {
 		_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
@@ -328,6 +380,8 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
+	d.Partial(true)
+
 	//only support update prepaid_period when upgrade chargeType
 	if d.HasChange("prepaid_period") && (!d.HasChange("charge_type") && d.Get("charge_type").(string) == CBS_CHARGE_TYPE_PREPAID) {
 		return fmt.Errorf("tencentcloud_cbs_storage renew is not support yet")
@@ -337,7 +391,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("tencentcloud_cbs_storage do not support downgrade instance")
 	}
 
-	d.Partial(true)
 	storageId := d.Id()
 	storageName := ""
 	projectId := -1
@@ -353,9 +406,21 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		projectId = d.Get("project_id").(int)
 	}
 
+	var burstPerformanceOperation string
+	if d.HasChange("burst_performance") {
+		if v, ok := d.GetOkExists("burst_performance"); ok {
+			if v.(bool) {
+				burstPerformanceOperation = "CREATE"
+			} else {
+				burstPerformanceOperation = "CANCEL"
+			}
+			changed = true
+		}
+	}
+
 	if changed {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			e := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId)
+			e := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId, burstPerformanceOperation)
 			if e != nil {
 				return tccommon.RetryError(e)
 			}
@@ -554,7 +619,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 
 	d.Partial(false)
 
-	return nil
+	return resourceTencentCloudCbsStorageRead(d, meta)
 }
 
 func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface{}) error {

@@ -129,6 +129,72 @@ func ResourceTencentCloudDtsSyncConfig() *schema.Resource {
 								},
 							},
 						},
+						"rate_limit_option": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Task speed limit information\nNote: This field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"current_dump_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The number of full export threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 16.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_dump_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default number of full export threads. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_dump_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The full export Rps currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 50,000,000.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_dump_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default full export Rps. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_load_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The number of full import threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 16.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_load_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default number of full import threads. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_load_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The full import Rps currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 50,000,000.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_load_rps": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default full import Rps. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"current_sinker_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The number of incremental import threads currently in effect. The value of this field can be adjusted when configuring the task. Note: If it is not set or set to 0, it means the current value is maintained. The maximum value is 128.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"default_sinker_thread": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The default number of incremental import threads. This field is only meaningful in the output parameter.\nNote: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"has_user_set_rate_limit": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "enum:\"no\"/\"yes\", no: the user has not set a speed limit; yes: a speed limit has been set. This field is only meaningful in the output parameter.Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -747,6 +813,55 @@ func resourceTencentCloudDtsSyncConfigRead(d *schema.ResourceData, meta interfac
 			optionsMap["ddl_options"] = ddlOptionsList
 		}
 
+		if syncConfig.Options.RateLimitOption != nil {
+			rateLimitOptionMap := map[string]interface{}{}
+			if syncConfig.Options.RateLimitOption.CurrentDumpThread != nil {
+				rateLimitOptionMap["current_dump_thread"] = syncConfig.Options.RateLimitOption.CurrentDumpThread
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultDumpThread != nil {
+				rateLimitOptionMap["default_dump_thread"] = syncConfig.Options.RateLimitOption.DefaultDumpThread
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentDumpRps != nil {
+				rateLimitOptionMap["current_dump_rps"] = syncConfig.Options.RateLimitOption.CurrentDumpRps
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultDumpRps != nil {
+				rateLimitOptionMap["default_dump_rps"] = syncConfig.Options.RateLimitOption.DefaultDumpRps
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentLoadThread != nil {
+				rateLimitOptionMap["current_load_thread"] = syncConfig.Options.RateLimitOption.CurrentLoadThread
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultLoadThread != nil {
+				rateLimitOptionMap["default_load_thread"] = syncConfig.Options.RateLimitOption.DefaultLoadThread
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentLoadRps != nil {
+				rateLimitOptionMap["current_load_rps"] = syncConfig.Options.RateLimitOption.CurrentLoadRps
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultLoadRps != nil {
+				rateLimitOptionMap["default_load_rps"] = syncConfig.Options.RateLimitOption.DefaultLoadRps
+			}
+
+			if syncConfig.Options.RateLimitOption.CurrentSinkerThread != nil {
+				rateLimitOptionMap["current_sinker_thread"] = syncConfig.Options.RateLimitOption.CurrentSinkerThread
+			}
+
+			if syncConfig.Options.RateLimitOption.DefaultSinkerThread != nil {
+				rateLimitOptionMap["default_sinker_thread"] = syncConfig.Options.RateLimitOption.DefaultSinkerThread
+			}
+
+			if syncConfig.Options.RateLimitOption.HasUserSetRateLimit != nil {
+				rateLimitOptionMap["has_user_set_rate_limit"] = syncConfig.Options.RateLimitOption.HasUserSetRateLimit
+			}
+
+			optionsMap["rate_limit_option"] = []interface{}{rateLimitOptionMap}
+		}
+
 		_ = d.Set("options", []interface{}{optionsMap})
 	}
 
@@ -1152,407 +1267,434 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 
 	request.JobId = &jobId
 
-	if d.HasChange("src_access_type") {
-		if v, ok := d.GetOk("src_access_type"); ok {
-			request.SrcAccessType = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("src_access_type"); ok {
+		request.SrcAccessType = helper.String(v.(string))
 	}
 
-	if d.HasChange("dst_access_type") {
-		if v, ok := d.GetOk("dst_access_type"); ok {
-			request.DstAccessType = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("dst_access_type"); ok {
+		request.DstAccessType = helper.String(v.(string))
 	}
 
-	if d.HasChange("options") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "options"); ok {
-			options := dts.Options{}
-			if v, ok := dMap["init_type"]; ok {
-				options.InitType = helper.String(v.(string))
-			}
-			if v, ok := dMap["deal_of_exist_same_table"]; ok {
-				options.DealOfExistSameTable = helper.String(v.(string))
-			}
-			if v, ok := dMap["conflict_handle_type"]; ok {
-				options.ConflictHandleType = helper.String(v.(string))
-			}
-			if v, ok := dMap["add_additional_column"]; ok {
-				options.AddAdditionalColumn = helper.Bool(v.(bool))
-			}
-			if v, ok := dMap["op_types"]; ok {
-				opTypesSet := v.(*schema.Set).List()
-				for i := range opTypesSet {
-					if opTypesSet[i] != nil {
-						opTypes := opTypesSet[i].(string)
-						options.OpTypes = append(options.OpTypes, &opTypes)
-					}
+	if dMap, ok := helper.InterfacesHeadMap(d, "options"); ok {
+		options := dts.Options{}
+		if v, ok := dMap["init_type"]; ok {
+			options.InitType = helper.String(v.(string))
+		}
+		if v, ok := dMap["deal_of_exist_same_table"]; ok {
+			options.DealOfExistSameTable = helper.String(v.(string))
+		}
+		if v, ok := dMap["conflict_handle_type"]; ok {
+			options.ConflictHandleType = helper.String(v.(string))
+		}
+		if v, ok := dMap["add_additional_column"]; ok {
+			options.AddAdditionalColumn = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["op_types"]; ok {
+			opTypesSet := v.(*schema.Set).List()
+			for i := range opTypesSet {
+				if opTypesSet[i] != nil {
+					opTypes := opTypesSet[i].(string)
+					options.OpTypes = append(options.OpTypes, &opTypes)
 				}
 			}
-			if conflictHandleOptionMap, ok := helper.InterfaceToMap(dMap, "conflict_handle_option"); ok {
-				conflictHandleOption := dts.ConflictHandleOption{}
-				if v, ok := conflictHandleOptionMap["condition_column"]; ok {
-					conflictHandleOption.ConditionColumn = helper.String(v.(string))
-				}
-				if v, ok := conflictHandleOptionMap["condition_operator"]; ok {
-					conflictHandleOption.ConditionOperator = helper.String(v.(string))
-				}
-				if v, ok := conflictHandleOptionMap["condition_order_in_src_and_dst"]; ok {
-					conflictHandleOption.ConditionOrderInSrcAndDst = helper.String(v.(string))
-				}
-				options.ConflictHandleOption = &conflictHandleOption
+		}
+		if conflictHandleOptionMap, ok := helper.InterfaceToMap(dMap, "conflict_handle_option"); ok {
+			conflictHandleOption := dts.ConflictHandleOption{}
+			if v, ok := conflictHandleOptionMap["condition_column"]; ok {
+				conflictHandleOption.ConditionColumn = helper.String(v.(string))
 			}
-			if v, ok := dMap["ddl_options"]; ok {
-				for _, item := range v.([]interface{}) {
-					ddlOptionsMap := item.(map[string]interface{})
-					ddlOption := dts.DdlOption{}
-					if v, ok := ddlOptionsMap["ddl_object"]; ok {
-						ddlOption.DdlObject = helper.String(v.(string))
-					}
-					if v, ok := ddlOptionsMap["ddl_value"]; ok {
-						ddlValueSet := v.(*schema.Set).List()
-						for i := range ddlValueSet {
-							if ddlValueSet[i] != nil {
-								ddlValue := ddlValueSet[i].(string)
-								ddlOption.DdlValue = append(ddlOption.DdlValue, &ddlValue)
-							}
+			if v, ok := conflictHandleOptionMap["condition_operator"]; ok {
+				conflictHandleOption.ConditionOperator = helper.String(v.(string))
+			}
+			if v, ok := conflictHandleOptionMap["condition_order_in_src_and_dst"]; ok {
+				conflictHandleOption.ConditionOrderInSrcAndDst = helper.String(v.(string))
+			}
+			options.ConflictHandleOption = &conflictHandleOption
+		}
+		if v, ok := dMap["ddl_options"]; ok {
+			for _, item := range v.([]interface{}) {
+				ddlOptionsMap := item.(map[string]interface{})
+				ddlOption := dts.DdlOption{}
+				if v, ok := ddlOptionsMap["ddl_object"]; ok {
+					ddlOption.DdlObject = helper.String(v.(string))
+				}
+				if v, ok := ddlOptionsMap["ddl_value"]; ok {
+					ddlValueSet := v.(*schema.Set).List()
+					for i := range ddlValueSet {
+						if ddlValueSet[i] != nil {
+							ddlValue := ddlValueSet[i].(string)
+							ddlOption.DdlValue = append(ddlOption.DdlValue, &ddlValue)
 						}
 					}
-					options.DdlOptions = append(options.DdlOptions, &ddlOption)
 				}
+				options.DdlOptions = append(options.DdlOptions, &ddlOption)
 			}
-			request.Options = &options
 		}
+		if rateLimitOptionMap, ok := helper.InterfaceToMap(dMap, "rate_limit_option"); ok {
+			rateLimitOption := dts.RateLimitOption{}
+			if v, ok := rateLimitOptionMap["current_dump_thread"].(int); ok {
+				rateLimitOption.CurrentDumpThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_dump_thread"].(int); ok {
+				rateLimitOption.DefaultDumpThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_dump_rps"].(int); ok {
+				rateLimitOption.CurrentDumpRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_dump_rps"].(int); ok {
+				rateLimitOption.DefaultDumpRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_load_thread"].(int); ok {
+				rateLimitOption.CurrentLoadThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_load_thread"].(int); ok {
+				rateLimitOption.DefaultLoadThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_load_rps"].(int); ok {
+				rateLimitOption.CurrentLoadRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_load_rps"].(int); ok {
+				rateLimitOption.DefaultLoadRps = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["current_sinker_thread"].(int); ok {
+				rateLimitOption.CurrentSinkerThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["default_sinker_thread"].(int); ok {
+				rateLimitOption.DefaultSinkerThread = helper.IntInt64(v)
+			}
+
+			if v, ok := rateLimitOptionMap["has_user_set_rate_limit"].(string); ok && v != "" {
+				rateLimitOption.HasUserSetRateLimit = helper.String(v)
+			}
+
+			options.RateLimitOption = &rateLimitOption
+		}
+
+		request.Options = &options
 	}
 
-	if d.HasChange("objects") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "objects"); ok {
-			objects := dts.Objects{}
-			if v, ok := dMap["mode"]; ok {
-				objects.Mode = helper.String(v.(string))
-			}
-			if v, ok := dMap["databases"]; ok {
-				for _, item := range v.([]interface{}) {
-					databasesMap := item.(map[string]interface{})
-					database := dts.Database{}
-					if v, ok := databasesMap["db_name"]; ok {
-						database.DbName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["new_db_name"]; ok {
-						database.NewDbName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["db_mode"]; ok {
-						database.DbMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["schema_name"]; ok {
-						database.SchemaName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["new_schema_name"]; ok {
-						database.NewSchemaName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["table_mode"]; ok {
-						database.TableMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["tables"]; ok {
-						for _, item := range v.([]interface{}) {
-							tablesMap := item.(map[string]interface{})
-							table := dts.Table{}
-							if v, ok := tablesMap["table_name"]; ok {
-								table.TableName = helper.String(v.(string))
-							}
-							if v, ok := tablesMap["new_table_name"]; ok {
-								table.NewTableName = helper.String(v.(string))
-							}
-							if v, ok := tablesMap["filter_condition"]; ok {
-								table.FilterCondition = helper.String(v.(string))
-							}
-							database.Tables = append(database.Tables, &table)
-						}
-					}
-					if v, ok := databasesMap["view_mode"]; ok {
-						database.ViewMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["views"]; ok {
-						for _, item := range v.([]interface{}) {
-							viewsMap := item.(map[string]interface{})
-							view := dts.View{}
-							if v, ok := viewsMap["view_name"]; ok {
-								view.ViewName = helper.String(v.(string))
-							}
-							if v, ok := viewsMap["new_view_name"]; ok {
-								view.NewViewName = helper.String(v.(string))
-							}
-							database.Views = append(database.Views, &view)
-						}
-					}
-					if v, ok := databasesMap["function_mode"]; ok {
-						database.FunctionMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["functions"]; ok {
-						functionsSet := v.(*schema.Set).List()
-						for i := range functionsSet {
-							if functionsSet[i] != nil {
-								functions := functionsSet[i].(string)
-								database.Functions = append(database.Functions, &functions)
-							}
-						}
-					}
-					if v, ok := databasesMap["procedure_mode"]; ok {
-						database.ProcedureMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["procedures"]; ok {
-						proceduresSet := v.(*schema.Set).List()
-						for i := range proceduresSet {
-							if proceduresSet[i] != nil {
-								procedures := proceduresSet[i].(string)
-								database.Procedures = append(database.Procedures, &procedures)
-							}
-						}
-					}
-					if v, ok := databasesMap["trigger_mode"]; ok {
-						database.TriggerMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["triggers"]; ok {
-						triggersSet := v.(*schema.Set).List()
-						for i := range triggersSet {
-							if triggersSet[i] != nil {
-								triggers := triggersSet[i].(string)
-								database.Triggers = append(database.Triggers, &triggers)
-							}
-						}
-					}
-					if v, ok := databasesMap["event_mode"]; ok {
-						database.EventMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["events"]; ok {
-						eventsSet := v.(*schema.Set).List()
-						for i := range eventsSet {
-							if eventsSet[i] != nil {
-								events := eventsSet[i].(string)
-								database.Events = append(database.Events, &events)
-							}
-						}
-					}
-					objects.Databases = append(objects.Databases, &database)
+	if dMap, ok := helper.InterfacesHeadMap(d, "objects"); ok {
+		objects := dts.Objects{}
+		if v, ok := dMap["mode"]; ok {
+			objects.Mode = helper.String(v.(string))
+		}
+		if v, ok := dMap["databases"]; ok {
+			for _, item := range v.([]interface{}) {
+				databasesMap := item.(map[string]interface{})
+				database := dts.Database{}
+				if v, ok := databasesMap["db_name"]; ok {
+					database.DbName = helper.String(v.(string))
 				}
-			}
-			if v, ok := dMap["advanced_objects"]; ok {
-				advancedObjectsSet := v.(*schema.Set).List()
-				for i := range advancedObjectsSet {
-					if advancedObjectsSet[i] != nil {
-						advancedObjects := advancedObjectsSet[i].(string)
-						objects.AdvancedObjects = append(objects.AdvancedObjects, &advancedObjects)
+				if v, ok := databasesMap["new_db_name"]; ok {
+					database.NewDbName = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["db_mode"]; ok {
+					database.DbMode = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["schema_name"]; ok {
+					database.SchemaName = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["new_schema_name"]; ok {
+					database.NewSchemaName = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["table_mode"]; ok {
+					database.TableMode = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["tables"]; ok {
+					for _, item := range v.([]interface{}) {
+						tablesMap := item.(map[string]interface{})
+						table := dts.Table{}
+						if v, ok := tablesMap["table_name"]; ok {
+							table.TableName = helper.String(v.(string))
+						}
+						if v, ok := tablesMap["new_table_name"]; ok {
+							table.NewTableName = helper.String(v.(string))
+						}
+						if v, ok := tablesMap["filter_condition"]; ok {
+							table.FilterCondition = helper.String(v.(string))
+						}
+						database.Tables = append(database.Tables, &table)
 					}
 				}
-			}
-			if onlineDDLMap, ok := helper.InterfaceToMap(dMap, "online_ddl"); ok {
-				onlineDDL := dts.OnlineDDL{}
-				if v, ok := onlineDDLMap["status"]; ok {
-					onlineDDL.Status = helper.String(v.(string))
+				if v, ok := databasesMap["view_mode"]; ok {
+					database.ViewMode = helper.String(v.(string))
 				}
-				objects.OnlineDDL = &onlineDDL
+				if v, ok := databasesMap["views"]; ok {
+					for _, item := range v.([]interface{}) {
+						viewsMap := item.(map[string]interface{})
+						view := dts.View{}
+						if v, ok := viewsMap["view_name"]; ok {
+							view.ViewName = helper.String(v.(string))
+						}
+						if v, ok := viewsMap["new_view_name"]; ok {
+							view.NewViewName = helper.String(v.(string))
+						}
+						database.Views = append(database.Views, &view)
+					}
+				}
+				if v, ok := databasesMap["function_mode"]; ok {
+					database.FunctionMode = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["functions"]; ok {
+					functionsSet := v.(*schema.Set).List()
+					for i := range functionsSet {
+						if functionsSet[i] != nil {
+							functions := functionsSet[i].(string)
+							database.Functions = append(database.Functions, &functions)
+						}
+					}
+				}
+				if v, ok := databasesMap["procedure_mode"]; ok {
+					database.ProcedureMode = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["procedures"]; ok {
+					proceduresSet := v.(*schema.Set).List()
+					for i := range proceduresSet {
+						if proceduresSet[i] != nil {
+							procedures := proceduresSet[i].(string)
+							database.Procedures = append(database.Procedures, &procedures)
+						}
+					}
+				}
+				if v, ok := databasesMap["trigger_mode"]; ok {
+					database.TriggerMode = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["triggers"]; ok {
+					triggersSet := v.(*schema.Set).List()
+					for i := range triggersSet {
+						if triggersSet[i] != nil {
+							triggers := triggersSet[i].(string)
+							database.Triggers = append(database.Triggers, &triggers)
+						}
+					}
+				}
+				if v, ok := databasesMap["event_mode"]; ok {
+					database.EventMode = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["events"]; ok {
+					eventsSet := v.(*schema.Set).List()
+					for i := range eventsSet {
+						if eventsSet[i] != nil {
+							events := eventsSet[i].(string)
+							database.Events = append(database.Events, &events)
+						}
+					}
+				}
+				objects.Databases = append(objects.Databases, &database)
 			}
-			request.Objects = &objects
 		}
+		if v, ok := dMap["advanced_objects"]; ok {
+			advancedObjectsSet := v.(*schema.Set).List()
+			for i := range advancedObjectsSet {
+				if advancedObjectsSet[i] != nil {
+					advancedObjects := advancedObjectsSet[i].(string)
+					objects.AdvancedObjects = append(objects.AdvancedObjects, &advancedObjects)
+				}
+			}
+		}
+		if onlineDDLMap, ok := helper.InterfaceToMap(dMap, "online_ddl"); ok {
+			onlineDDL := dts.OnlineDDL{}
+			if v, ok := onlineDDLMap["status"]; ok {
+				onlineDDL.Status = helper.String(v.(string))
+			}
+			objects.OnlineDDL = &onlineDDL
+		}
+		request.Objects = &objects
 	}
 
-	if d.HasChange("job_name") {
-		if v, ok := d.GetOk("job_name"); ok {
-			request.JobName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("job_name"); ok {
+		request.JobName = helper.String(v.(string))
 	}
 
-	if d.HasChange("job_mode") {
-		if v, ok := d.GetOk("job_mode"); ok {
-			request.JobMode = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("job_mode"); ok {
+		request.JobMode = helper.String(v.(string))
 	}
 
-	if d.HasChange("run_mode") {
-		if v, ok := d.GetOk("run_mode"); ok {
-			request.RunMode = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("run_mode"); ok {
+		request.RunMode = helper.String(v.(string))
 	}
 
-	if d.HasChange("expect_run_time") {
-		if v, ok := d.GetOk("expect_run_time"); ok {
-			request.ExpectRunTime = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("expect_run_time"); ok {
+		request.ExpectRunTime = helper.String(v.(string))
 	}
 
-	if d.HasChange("src_info") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "src_info"); ok {
-			endpoint := dts.Endpoint{}
-			if v, ok := dMap["region"]; ok {
-				endpoint.Region = helper.String(v.(string))
-			}
-			if v, ok := dMap["role"]; ok {
-				endpoint.Role = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_kernel"]; ok {
-				endpoint.DbKernel = helper.String(v.(string))
-			}
-			if v, ok := dMap["instance_id"]; ok {
-				endpoint.InstanceId = helper.String(v.(string))
-			}
-			if v, ok := dMap["ip"]; ok {
-				endpoint.Ip = helper.String(v.(string))
-			}
-			if v, ok := dMap["port"]; ok {
-				endpoint.Port = helper.IntUint64(v.(int))
-			}
-			if v, ok := dMap["user"]; ok {
-				endpoint.User = helper.String(v.(string))
-			}
-			if v, ok := dMap["password"]; ok {
-				endpoint.Password = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_name"]; ok {
-				endpoint.DbName = helper.String(v.(string))
-			}
-			if v, ok := dMap["vpc_id"]; ok {
-				endpoint.VpcId = helper.String(v.(string))
-			}
-			if v, ok := dMap["subnet_id"]; ok {
-				endpoint.SubnetId = helper.String(v.(string))
-			}
-			if v, ok := dMap["cvm_instance_id"]; ok {
-				endpoint.CvmInstanceId = helper.String(v.(string))
-			}
-			if v, ok := dMap["uniq_dcg_id"]; ok {
-				endpoint.UniqDcgId = helper.String(v.(string))
-			}
-			if v, ok := dMap["uniq_vpn_gw_id"]; ok {
-				endpoint.UniqVpnGwId = helper.String(v.(string))
-			}
-			if v, ok := dMap["ccn_id"]; ok {
-				endpoint.CcnId = helper.String(v.(string))
-			}
-			if v, ok := dMap["supplier"]; ok {
-				endpoint.Supplier = helper.String(v.(string))
-			}
-			if v, ok := dMap["engine_version"]; ok {
-				endpoint.EngineVersion = helper.String(v.(string))
-			}
-			if v, ok := dMap["account"]; ok {
-				endpoint.Account = helper.String(v.(string))
-			}
-			if v, ok := dMap["account_mode"]; ok {
-				endpoint.AccountMode = helper.String(v.(string))
-			}
-			if v, ok := dMap["account_role"]; ok {
-				endpoint.AccountRole = helper.String(v.(string))
-			}
-			if v, ok := dMap["role_external_id"]; ok {
-				endpoint.RoleExternalId = helper.String(v.(string))
-			}
-			if v, ok := dMap["tmp_secret_id"]; ok {
-				endpoint.TmpSecretId = helper.String(v.(string))
-			}
-			if v, ok := dMap["tmp_secret_key"]; ok {
-				endpoint.TmpSecretKey = helper.String(v.(string))
-			}
-			if v, ok := dMap["tmp_token"]; ok {
-				endpoint.TmpToken = helper.String(v.(string))
-			}
-			if v, ok := dMap["encrypt_conn"]; ok {
-				endpoint.EncryptConn = helper.String(v.(string))
-			}
-			if v, ok := dMap["database_net_env"]; ok {
-				endpoint.DatabaseNetEnv = helper.String(v.(string))
-			}
-			request.SrcInfo = &endpoint
+	if dMap, ok := helper.InterfacesHeadMap(d, "src_info"); ok {
+		endpoint := dts.Endpoint{}
+		if v, ok := dMap["region"]; ok {
+			endpoint.Region = helper.String(v.(string))
 		}
+		if v, ok := dMap["role"]; ok {
+			endpoint.Role = helper.String(v.(string))
+		}
+		if v, ok := dMap["db_kernel"]; ok {
+			endpoint.DbKernel = helper.String(v.(string))
+		}
+		if v, ok := dMap["instance_id"]; ok {
+			endpoint.InstanceId = helper.String(v.(string))
+		}
+		if v, ok := dMap["ip"]; ok {
+			endpoint.Ip = helper.String(v.(string))
+		}
+		if v, ok := dMap["port"]; ok {
+			endpoint.Port = helper.IntUint64(v.(int))
+		}
+		if v, ok := dMap["user"]; ok {
+			endpoint.User = helper.String(v.(string))
+		}
+		if v, ok := dMap["password"]; ok {
+			endpoint.Password = helper.String(v.(string))
+		}
+		if v, ok := dMap["db_name"]; ok {
+			endpoint.DbName = helper.String(v.(string))
+		}
+		if v, ok := dMap["vpc_id"]; ok {
+			endpoint.VpcId = helper.String(v.(string))
+		}
+		if v, ok := dMap["subnet_id"]; ok {
+			endpoint.SubnetId = helper.String(v.(string))
+		}
+		if v, ok := dMap["cvm_instance_id"]; ok {
+			endpoint.CvmInstanceId = helper.String(v.(string))
+		}
+		if v, ok := dMap["uniq_dcg_id"]; ok {
+			endpoint.UniqDcgId = helper.String(v.(string))
+		}
+		if v, ok := dMap["uniq_vpn_gw_id"]; ok {
+			endpoint.UniqVpnGwId = helper.String(v.(string))
+		}
+		if v, ok := dMap["ccn_id"]; ok {
+			endpoint.CcnId = helper.String(v.(string))
+		}
+		if v, ok := dMap["supplier"]; ok {
+			endpoint.Supplier = helper.String(v.(string))
+		}
+		if v, ok := dMap["engine_version"]; ok {
+			endpoint.EngineVersion = helper.String(v.(string))
+		}
+		if v, ok := dMap["account"]; ok {
+			endpoint.Account = helper.String(v.(string))
+		}
+		if v, ok := dMap["account_mode"]; ok {
+			endpoint.AccountMode = helper.String(v.(string))
+		}
+		if v, ok := dMap["account_role"]; ok {
+			endpoint.AccountRole = helper.String(v.(string))
+		}
+		if v, ok := dMap["role_external_id"]; ok {
+			endpoint.RoleExternalId = helper.String(v.(string))
+		}
+		if v, ok := dMap["tmp_secret_id"]; ok {
+			endpoint.TmpSecretId = helper.String(v.(string))
+		}
+		if v, ok := dMap["tmp_secret_key"]; ok {
+			endpoint.TmpSecretKey = helper.String(v.(string))
+		}
+		if v, ok := dMap["tmp_token"]; ok {
+			endpoint.TmpToken = helper.String(v.(string))
+		}
+		if v, ok := dMap["encrypt_conn"]; ok {
+			endpoint.EncryptConn = helper.String(v.(string))
+		}
+		if v, ok := dMap["database_net_env"]; ok {
+			endpoint.DatabaseNetEnv = helper.String(v.(string))
+		}
+		request.SrcInfo = &endpoint
 	}
 
-	if d.HasChange("dst_info") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "dst_info"); ok {
-			endpoint := dts.Endpoint{}
-			if v, ok := dMap["region"]; ok {
-				endpoint.Region = helper.String(v.(string))
-			}
-			if v, ok := dMap["role"]; ok {
-				endpoint.Role = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_kernel"]; ok {
-				endpoint.DbKernel = helper.String(v.(string))
-			}
-			if v, ok := dMap["instance_id"]; ok {
-				endpoint.InstanceId = helper.String(v.(string))
-			}
-			if v, ok := dMap["ip"]; ok {
-				endpoint.Ip = helper.String(v.(string))
-			}
-			if v, ok := dMap["port"]; ok {
-				endpoint.Port = helper.IntUint64(v.(int))
-			}
-			if v, ok := dMap["user"]; ok {
-				endpoint.User = helper.String(v.(string))
-			}
-			if v, ok := dMap["password"]; ok {
-				endpoint.Password = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_name"]; ok {
-				endpoint.DbName = helper.String(v.(string))
-			}
-			if v, ok := dMap["vpc_id"]; ok {
-				endpoint.VpcId = helper.String(v.(string))
-			}
-			if v, ok := dMap["subnet_id"]; ok {
-				endpoint.SubnetId = helper.String(v.(string))
-			}
-			if v, ok := dMap["cvm_instance_id"]; ok {
-				endpoint.CvmInstanceId = helper.String(v.(string))
-			}
-			if v, ok := dMap["uniq_dcg_id"]; ok {
-				endpoint.UniqDcgId = helper.String(v.(string))
-			}
-			if v, ok := dMap["uniq_vpn_gw_id"]; ok {
-				endpoint.UniqVpnGwId = helper.String(v.(string))
-			}
-			if v, ok := dMap["ccn_id"]; ok {
-				endpoint.CcnId = helper.String(v.(string))
-			}
-			if v, ok := dMap["supplier"]; ok {
-				endpoint.Supplier = helper.String(v.(string))
-			}
-			if v, ok := dMap["engine_version"]; ok {
-				endpoint.EngineVersion = helper.String(v.(string))
-			}
-			if v, ok := dMap["account"]; ok {
-				endpoint.Account = helper.String(v.(string))
-			}
-			if v, ok := dMap["account_mode"]; ok {
-				endpoint.AccountMode = helper.String(v.(string))
-			}
-			if v, ok := dMap["account_role"]; ok {
-				endpoint.AccountRole = helper.String(v.(string))
-			}
-			if v, ok := dMap["role_external_id"]; ok {
-				endpoint.RoleExternalId = helper.String(v.(string))
-			}
-			if v, ok := dMap["tmp_secret_id"]; ok {
-				endpoint.TmpSecretId = helper.String(v.(string))
-			}
-			if v, ok := dMap["tmp_secret_key"]; ok {
-				endpoint.TmpSecretKey = helper.String(v.(string))
-			}
-			if v, ok := dMap["tmp_token"]; ok {
-				endpoint.TmpToken = helper.String(v.(string))
-			}
-			if v, ok := dMap["encrypt_conn"]; ok {
-				endpoint.EncryptConn = helper.String(v.(string))
-			}
-			if v, ok := dMap["database_net_env"]; ok {
-				endpoint.DatabaseNetEnv = helper.String(v.(string))
-			}
-			request.DstInfo = &endpoint
+	if dMap, ok := helper.InterfacesHeadMap(d, "dst_info"); ok {
+		endpoint := dts.Endpoint{}
+		if v, ok := dMap["region"]; ok {
+			endpoint.Region = helper.String(v.(string))
 		}
+		if v, ok := dMap["role"]; ok {
+			endpoint.Role = helper.String(v.(string))
+		}
+		if v, ok := dMap["db_kernel"]; ok {
+			endpoint.DbKernel = helper.String(v.(string))
+		}
+		if v, ok := dMap["instance_id"]; ok {
+			endpoint.InstanceId = helper.String(v.(string))
+		}
+		if v, ok := dMap["ip"]; ok {
+			endpoint.Ip = helper.String(v.(string))
+		}
+		if v, ok := dMap["port"]; ok {
+			endpoint.Port = helper.IntUint64(v.(int))
+		}
+		if v, ok := dMap["user"]; ok {
+			endpoint.User = helper.String(v.(string))
+		}
+		if v, ok := dMap["password"]; ok {
+			endpoint.Password = helper.String(v.(string))
+		}
+		if v, ok := dMap["db_name"]; ok {
+			endpoint.DbName = helper.String(v.(string))
+		}
+		if v, ok := dMap["vpc_id"]; ok {
+			endpoint.VpcId = helper.String(v.(string))
+		}
+		if v, ok := dMap["subnet_id"]; ok {
+			endpoint.SubnetId = helper.String(v.(string))
+		}
+		if v, ok := dMap["cvm_instance_id"]; ok {
+			endpoint.CvmInstanceId = helper.String(v.(string))
+		}
+		if v, ok := dMap["uniq_dcg_id"]; ok {
+			endpoint.UniqDcgId = helper.String(v.(string))
+		}
+		if v, ok := dMap["uniq_vpn_gw_id"]; ok {
+			endpoint.UniqVpnGwId = helper.String(v.(string))
+		}
+		if v, ok := dMap["ccn_id"]; ok {
+			endpoint.CcnId = helper.String(v.(string))
+		}
+		if v, ok := dMap["supplier"]; ok {
+			endpoint.Supplier = helper.String(v.(string))
+		}
+		if v, ok := dMap["engine_version"]; ok {
+			endpoint.EngineVersion = helper.String(v.(string))
+		}
+		if v, ok := dMap["account"]; ok {
+			endpoint.Account = helper.String(v.(string))
+		}
+		if v, ok := dMap["account_mode"]; ok {
+			endpoint.AccountMode = helper.String(v.(string))
+		}
+		if v, ok := dMap["account_role"]; ok {
+			endpoint.AccountRole = helper.String(v.(string))
+		}
+		if v, ok := dMap["role_external_id"]; ok {
+			endpoint.RoleExternalId = helper.String(v.(string))
+		}
+		if v, ok := dMap["tmp_secret_id"]; ok {
+			endpoint.TmpSecretId = helper.String(v.(string))
+		}
+		if v, ok := dMap["tmp_secret_key"]; ok {
+			endpoint.TmpSecretKey = helper.String(v.(string))
+		}
+		if v, ok := dMap["tmp_token"]; ok {
+			endpoint.TmpToken = helper.String(v.(string))
+		}
+		if v, ok := dMap["encrypt_conn"]; ok {
+			endpoint.EncryptConn = helper.String(v.(string))
+		}
+		if v, ok := dMap["database_net_env"]; ok {
+			endpoint.DatabaseNetEnv = helper.String(v.(string))
+		}
+		request.DstInfo = &endpoint
 	}
 
-	if d.HasChange("auto_retry_time_range_minutes") {
-		if v, ok := d.GetOkExists("auto_retry_time_range_minutes"); ok {
-			request.AutoRetryTimeRangeMinutes = helper.IntInt64(v.(int))
-		}
+	if v, ok := d.GetOkExists("auto_retry_time_range_minutes"); ok {
+		request.AutoRetryTimeRangeMinutes = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

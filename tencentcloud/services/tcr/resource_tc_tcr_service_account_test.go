@@ -56,6 +56,17 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: fmt.Sprintf(testAccTcrServiceAccount_updatePassword, expireTime),
+				PreConfig: func() {
+					tcacctest.AccStepSetRegion(t, "ap-shanghai")
+					tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON)
+				},
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_service_account.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_service_account.example", "password", "passwordTest1"),
+				),
+			},
+			{
 				ResourceName:            "tencentcloud_tcr_service_account.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
@@ -68,7 +79,7 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 const testAccTcrServiceAccount = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance"
+	name          = "tf-example-tcr-instance3"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
@@ -83,9 +94,6 @@ resource "tencentcloud_tcr_instance" "example" {
 	is_auto_scan   = true
 	is_prevent_vul = true
 	severity       = "medium"
-	cve_whitelist_items {
-	  cve_id = "tf_example_cve_id"
-	}
   }
   
   resource "tencentcloud_tcr_service_account" "example" {
@@ -108,7 +116,7 @@ resource "tencentcloud_tcr_instance" "example" {
 const testAccTcrServiceAccount_Update = `
 
 resource "tencentcloud_tcr_instance" "example" {
-	name          = "tf-example-tcr-instance"
+	name          = "tf-example-tcr-instance3"
 	instance_type = "premium"
 	delete_bucket = true
 	tags = {
@@ -123,9 +131,6 @@ resource "tencentcloud_tcr_instance" "example" {
 	is_auto_scan   = true
 	is_prevent_vul = true
 	severity       = "medium"
-	cve_whitelist_items {
-	  cve_id = "tf_example_cve_id"
-	}
   }
   
   resource "tencentcloud_tcr_service_account" "example" {
@@ -141,6 +146,44 @@ resource "tencentcloud_tcr_instance" "example" {
 	tags = {
 	  "createdBy" = "terraform"
 	}
+  }
+
+`
+
+const testAccTcrServiceAccount_updatePassword = `
+
+resource "tencentcloud_tcr_instance" "example" {
+	name          = "tf-example-tcr-instance3"
+	instance_type = "premium"
+	delete_bucket = true
+	tags = {
+	  "createdBy" = "terraform"
+	}
+  }
+  
+  resource "tencentcloud_tcr_namespace" "example" {
+	instance_id    = tencentcloud_tcr_instance.example.id
+	name           = "tf_test_tcr_namespace"
+	is_public      = true
+	is_auto_scan   = true
+	is_prevent_vul = true
+	severity       = "medium"
+  }
+  
+  resource "tencentcloud_tcr_service_account" "example" {
+	registry_id = tencentcloud_tcr_instance.example.id
+	name        = "tf_example_account"
+	permissions {
+	  resource = tencentcloud_tcr_namespace.example.name
+	  actions  = ["tcr:PushRepository"]
+	}
+	description = "CHANGED tf example for tcr service account"
+	expires_at  = %d
+	disable     = false
+	tags = {
+	  "createdBy" = "terraform"
+	}
+	password = "passwordTest1"
   }
 
 `

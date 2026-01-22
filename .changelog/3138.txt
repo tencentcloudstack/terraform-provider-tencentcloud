@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clb_target_group_instance_attachment: Query module update returns weight field
+```

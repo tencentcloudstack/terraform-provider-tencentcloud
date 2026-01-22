@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a group of AS (Auto scaling) instances.
 
+~> **NOTE:** If the resource management rule `forward_balancer_id` is used, resource `tencentcloud_as_load_balancer` management cannot be used simultaneously under the same auto scaling group id
+
 ## Example Usage
 
 ### Create a basic Scaling Group
@@ -103,6 +105,7 @@ resource "tencentcloud_as_scaling_group" "example" {
   replace_load_balancer_unhealthy         = false
   replace_mode                            = "RECREATE"
   desired_capacity_sync_with_max_min_size = false
+  priority_scale_in_unhealthy             = true
   termination_policies                    = ["NEWEST_INSTANCE"]
   retry_policy                            = "INCREMENTAL_INTERVALS"
 
@@ -140,6 +143,7 @@ The following arguments are supported:
 * `lb_health_check_grace_period` - (Optional, Int) Grace period of the CLB health check during which the `IN_SERVICE` instances added will not be marked as `CLB_UNHEALTHY`.<br>Valid range: 0-7200, in seconds. Default value: `0`.
 * `load_balancer_ids` - (Optional, List: [`String`]) ID list of traditional load balancers.
 * `multi_zone_subnet_policy` - (Optional, String) Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.
+* `priority_scale_in_unhealthy` - (Optional, Bool) Whether to enable priority for unhealthy instances during scale-in operations. If set to `true`, unhealthy instances will be removed first when scaling in.
 * `project_id` - (Optional, Int) Specifies to which project the scaling group belongs.
 * `replace_load_balancer_unhealthy` - (Optional, Bool) Enable unhealthy instance replacement. If set to `true`, AS will replace instances that are found unhealthy in the CLB health check.
 * `replace_mode` - (Optional, String) Replace mode of unhealthy replacement service. Valid values: RECREATE: Rebuild an instance to replace the original unhealthy instance. RESET: Performing a system reinstallation on unhealthy instances to keep information such as data disks, private IP addresses, and instance IDs unchanged. The instance login settings, HostName, enhanced services, and UserData will remain consistent with the current launch configuration. Default value: RECREATE. Note: This field may return null, indicating that no valid values can be obtained.

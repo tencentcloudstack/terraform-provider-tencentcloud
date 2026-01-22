@@ -1,9 +1,11 @@
-Use this data source to query detailed information of dlc describe_user_roles
+Use this data source to query detailed information of DLC describe user roles
 
 Example Usage
 
 ```hcl
-data "tencentcloud_dlc_describe_user_roles" "describe_user_roles" {
-  fuzzy = "1"
-  }
+data "tencentcloud_dlc_describe_user_roles" "example" {
+  fuzzy   = "1"
+  sort_by = "modify-time"
+  sorting = "desc"
+}
 ```

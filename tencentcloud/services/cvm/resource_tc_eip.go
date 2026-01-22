@@ -41,7 +41,7 @@ func ResourceTencentCloudEip() *schema.Resource {
 				Optional:    true,
 				Default:     svcvpc.EIP_TYPE_EIP,
 				ForceNew:    true,
-				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP` and `AntiDDoSEIP`. Default is `EIP`.",
+				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP` and `AntiDDoSEIP` and `ResidentialEIP`. Default is `EIP`.",
 			},
 			"anycast_zone": {
 				Type:        schema.TypeString,
@@ -211,7 +211,11 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 			return resource.RetryableError(fmt.Errorf("eip id is nil"))
 		}
 		eipId = *response.Response.AddressSet[0]
-		taskId = *response.Response.TaskId
+		// taskId maybe nil
+		if response.Response.TaskId != nil {
+			taskId = *response.Response.TaskId
+		}
+
 		return nil
 	})
 	if err != nil {
@@ -220,28 +224,30 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	d.SetId(eipId)
 
 	// wait for status
-	taskIdUint64, err := strconv.ParseUint(taskId, 10, 64)
-	if err != nil {
-		return err
-	}
-	taskRequest := vpc.NewDescribeTaskResultRequest()
-	taskRequest.TaskId = &taskIdUint64
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(taskRequest.GetAction())
-		taskResponse, err := client.UseVpcClient().DescribeTaskResult(taskRequest)
+	if taskId != "" {
+		taskIdUint64, err := strconv.ParseUint(taskId, 10, 64)
 		if err != nil {
-			return tccommon.RetryError(err)
+			return err
 		}
-		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_RUNNING {
-			return resource.RetryableError(errors.New("eip task is running"))
+		taskRequest := vpc.NewDescribeTaskResultRequest()
+		taskRequest.TaskId = &taskIdUint64
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(taskRequest.GetAction())
+			taskResponse, err := client.UseVpcClient().DescribeTaskResult(taskRequest)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+			if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_RUNNING {
+				return resource.RetryableError(errors.New("eip task is running"))
+			}
+			if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_FAILED {
+				return resource.NonRetryableError(errors.New("eip task is failed"))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
 		}
-		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == svcvpc.VPN_TASK_STATUS_FAILED {
-			return resource.NonRetryableError(errors.New("eip task is failed"))
-		}
-		return nil
-	})
-	if err != nil {
-		return err
 	}
 
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -252,11 +258,12 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		if eip == nil {
 			return resource.NonRetryableError(errors.New("eip is nil"))
 		}
-		if eip != nil && *eip.AddressStatus == svcvpc.EIP_STATUS_CREATING {
+		if eip.AddressStatus != nil && *eip.AddressStatus == svcvpc.EIP_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("eip is still creating"))
 		}
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}

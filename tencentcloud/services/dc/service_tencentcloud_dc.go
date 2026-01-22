@@ -621,7 +621,7 @@ func (me *DcService) DescribeDcAccessPointsByFilter(ctx context.Context, param m
 	return
 }
 func (me *DcService) waitCreateDirectConnectTunnelAvailable(ctx context.Context, dcxId string) (err error) {
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		item, has, e := me.DescribeDirectConnectTunnel(ctx, dcxId)
 		if e != nil {
 			return tccommon.RetryError(e)

@@ -1,6 +1,7 @@
 package cvm
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -57,6 +58,40 @@ func ResourceTencentCloudCvmSyncImage() *schema.Resource {
 				Type:        schema.TypeBool,
 				Description: "Whether to return the ID of image created in the destination region.",
 			},
+
+			"encrypt": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to synchronize as an encrypted custom image. Default value is `false`. Synchronization to an encrypted custom image is only supported within the same region.",
+			},
+
+			"kms_key_id": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "KMS key ID used when synchronizing to an encrypted custom image. This parameter is valid only synchronizing to an encrypted image. If KmsKeyId is not specified, the default CBS cloud product KMS key is used.",
+			},
+
+			"image_set": {
+				Computed: true,
+				Type:     schema.TypeList,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"image_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Image ID.",
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Region of the image.",
+						},
+					},
+				},
+				Description: "ID of the image created in the destination region.",
+			},
 		},
 	}
 }
@@ -67,6 +102,7 @@ func resourceTencentCloudCvmSyncImageCreate(d *schema.ResourceData, meta interfa
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := cvm.NewSyncImagesRequest()
+	response := cvm.NewSyncImagesResponse()
 	imageId := d.Get("image_id").(string)
 	request.ImageIds = []*string{&imageId}
 
@@ -78,7 +114,7 @@ func resourceTencentCloudCvmSyncImageCreate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if v, _ := d.GetOk("dry_run"); v != nil {
+	if v, ok := d.GetOkExists("dry_run"); ok {
 		request.DryRun = helper.Bool(v.(bool))
 	}
 
@@ -86,8 +122,16 @@ func resourceTencentCloudCvmSyncImageCreate(d *schema.ResourceData, meta interfa
 		request.ImageName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("image_set_required"); v != nil {
+	if v, ok := d.GetOkExists("image_set_required"); ok {
 		request.ImageSetRequired = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("encrypt"); ok {
+		request.Encrypt = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("kms_key_id"); ok {
+		request.KmsKeyId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -97,6 +141,7 @@ func resourceTencentCloudCvmSyncImageCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -104,7 +149,29 @@ func resourceTencentCloudCvmSyncImageCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	if response == nil || response.Response == nil || response.Response.ImageSet == nil {
+		err = fmt.Errorf("Response is nil")
+		return err
+	}
+
 	d.SetId(imageId)
+
+	imageSetList := []interface{}{}
+	for _, image := range response.Response.ImageSet {
+		imageMap := map[string]interface{}{}
+
+		if image.ImageId != nil {
+			imageMap["image_id"] = image.ImageId
+		}
+
+		if image.Region != nil {
+			imageMap["region"] = image.Region
+		}
+
+		imageSetList = append(imageSetList, imageMap)
+	}
+
+	_ = d.Set("image_set", imageSetList)
 
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 

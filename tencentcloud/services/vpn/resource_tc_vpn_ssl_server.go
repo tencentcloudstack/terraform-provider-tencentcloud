@@ -55,29 +55,33 @@ func ResourceTencentCloudVpnSslServer() *schema.Resource {
 			"ssl_vpn_protocol": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The protocol of ssl vpn. Default value: UDP.",
 			},
 			"ssl_vpn_port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "The port of ssl vpn. Default value: 1194.",
+				Computed:    true,
+				Description: "The port of ssl vpn. Currently only supports UDP. Default value: 1194.",
 			},
 			"integrity_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.",
+				Computed:    true,
+				Description: "The integrity algorithm. Valid values: SHA1. Default value: SHA1.",
 			},
 			"encrypt_algorithm": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Description: "The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE." +
-					"Default value: NONE.",
+				Computed: true,
+				Description: "The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC." +
+					"Default value: AES-128-CBC.",
 			},
 			"compress": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     svccvm.FALSE,
-				Description: "need compressed. Default value: False.",
+				Description: "Need compressed. Currently is not supports compress. Default value: False.",
 			},
 		},
 	}
@@ -114,7 +118,7 @@ func resourceTencentCloudVpnSslServerCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("ssl_vpn_protocol"); ok {
 		request.SslVpnProtocol = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("ssl_vpn_port"); ok {
+	if v, ok := d.GetOkExists("ssl_vpn_port"); ok {
 		request.SslVpnPort = helper.IntInt64(v.(int))
 	}
 	if v, ok := d.GetOk("integrity_algorithm"); ok {
@@ -123,7 +127,7 @@ func resourceTencentCloudVpnSslServerCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("encrypt_algorithm"); ok {
 		request.EncryptAlgorithm = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("compress"); ok {
+	if v, ok := d.GetOkExists("compress"); ok {
 		request.Compress = helper.Bool(v.(bool))
 	}
 
@@ -244,7 +248,7 @@ func resourceTencentCloudVpnSslServerUpdate(d *schema.ResourceData, meta interfa
 		if v, ok := d.GetOk("ssl_vpn_protocol"); ok {
 			request.SslVpnProtocol = helper.String(v.(string))
 		}
-		if v, ok := d.GetOk("ssl_vpn_port"); ok {
+		if v, ok := d.GetOkExists("ssl_vpn_port"); ok {
 			request.SslVpnPort = helper.IntInt64(v.(int))
 		}
 		if v, ok := d.GetOk("integrity_algorithm"); ok {

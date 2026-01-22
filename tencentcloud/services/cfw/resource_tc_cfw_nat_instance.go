@@ -130,6 +130,13 @@ func ResourceTencentCloudCfwNatInstance() *schema.Resource {
 			//		},
 			//	},
 			//},
+
+			// computed
+			"nat_instance_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Nat instance ID.",
+			},
 		},
 	}
 }
@@ -288,6 +295,10 @@ func resourceTencentCloudCfwNatInstanceCreate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create cfw natInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -295,6 +306,10 @@ func resourceTencentCloudCfwNatInstanceCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s create cfw natInstance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.CfwInsId == nil {
+		return fmt.Errorf("CfwInsId is nil.")
 	}
 
 	instanceId = *response.Response.CfwInsId
@@ -308,8 +323,11 @@ func resourceTencentCloudCfwNatInstanceCreate(d *schema.ResourceData, meta inter
 		}
 
 		if natInstance == nil {
-			e = fmt.Errorf("cfw nat instance %s not exists", instanceId)
-			return resource.NonRetryableError(e)
+			return resource.NonRetryableError(fmt.Errorf("cfw nat instance %s not exists", instanceId))
+		}
+
+		if natInstance.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("status is nil"))
 		}
 
 		if *natInstance.Status == 0 {
@@ -346,8 +364,8 @@ func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interfa
 	}
 
 	if natInstance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_nat_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CfwNatInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -404,14 +422,12 @@ func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if natInstance.ZoneZh != nil {
-		zoneZh := *natInstance.ZoneZh
-		zone = ZONE_MAP_CN2EN[zoneZh]
+	if natInstance.Zone != nil {
+		zone = *natInstance.Zone
 	}
 
-	if natInstance.ZoneZhBak != nil {
-		zoneBakZh := *natInstance.ZoneZhBak
-		zoneBak = ZONE_MAP_CN2EN[zoneBakZh]
+	if natInstance.ZoneBak != nil {
+		zoneBak = *natInstance.ZoneBak
 	}
 
 	if zone == zoneBak {
@@ -419,6 +435,7 @@ func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interfa
 		zoneList := []string{
 			zone,
 		}
+
 		_ = d.Set("zone_set", zoneList)
 	} else {
 		_ = d.Set("cross_a_zone", CROSS_A_ZONE_1)
@@ -426,6 +443,7 @@ func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interfa
 			zone,
 			zoneBak,
 		}
+
 		_ = d.Set("zone_set", zoneList)
 	}
 
@@ -466,6 +484,10 @@ func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interfa
 	//	_ = d.Set("fw_cidr_info", []interface{}{fwCidrInfoMap})
 	//}
 
+	if natInstance.NatinsId != nil {
+		_ = d.Set("nat_instance_id", natInstance.NatinsId)
+	}
+
 	return nil
 }
 
@@ -479,20 +501,18 @@ func resourceTencentCloudCfwNatInstanceUpdate(d *schema.ResourceData, meta inter
 		instanceId = d.Id()
 	)
 
-	immutableArgs := []string{"width", "mode", "new_mode_items", "nat_gw_list", "zone", "zone_bak", "cross_a_zone", "domain", "fw_cidr_info"}
-
+	immutableArgs := []string{"width", "mode", "new_mode_items", "nat_gw_list", "zone", "zone_bak", "cross_a_zone"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	request.NatInstanceId = &instanceId
-
 	if v, ok := d.GetOk("name"); ok {
 		request.InstanceName = helper.String(v.(string))
 	}
 
+	request.NatInstanceId = &instanceId
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyNatInstance(request)
 		if e != nil {

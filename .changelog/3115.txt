@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_monitor_tmp_multiple_writes_list
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_multiple_writes: resource will been deprecated in version v1.81.166
+```

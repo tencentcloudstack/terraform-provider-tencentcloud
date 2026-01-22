@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_waf_ip_access_control_v2: Fix the issue of unable to query properly
+```
+
+```release-note:enhancement
+resource/tencentcloud_waf_cc: Update doc
+```

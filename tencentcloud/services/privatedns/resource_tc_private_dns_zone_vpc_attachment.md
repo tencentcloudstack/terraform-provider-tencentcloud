@@ -1,4 +1,4 @@
-Provides a resource to create a PrivateDns zone_vpc_attachment
+Provides a resource to create a PrivateDns zone vpc attachment
 
 ~> **NOTE:**  If you need to bind account A to account B's VPC resources, you need to first grant role authorization to account A.
 
@@ -15,7 +15,7 @@ resource "tencentcloud_private_dns_zone" "example" {
   cname_speedup_status = "ENABLED"
 
   tags = {
-    createdBy : "terraform"
+    createdBy = "terraform"
   }
 }
 
@@ -50,7 +50,7 @@ resource "tencentcloud_private_dns_zone_vpc_attachment" "example" {
 
 Import
 
-PrivateDns zone_vpc_attachment can be imported using the id, e.g.
+PrivateDns zone vpc attachment can be imported using the zoneId#uniqVpcId, e.g.
 
 ```
 terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone-6t11lof0#vpc-jdx11z0t

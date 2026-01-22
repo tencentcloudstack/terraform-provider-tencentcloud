@@ -512,6 +512,21 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
+### Create instance with associate endpoint
+
+```hcl
+resource "tencentcloud_clb_instance" "example" {
+  network_type       = "OPEN"
+  clb_name           = "tf-example"
+  project_id         = 0
+  vpc_id             = "vpc-e51ilko8"
+  associate_endpoint = "vpce-du9ssd3z"
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -519,12 +534,13 @@ The following arguments are supported:
 * `clb_name` - (Required, String) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
 * `network_type` - (Required, String, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
 * `address_ip_version` - (Optional, String) It's only applicable to public network CLB instances. IP version. Values: `IPV4`, `IPV6` and `IPv6FullChain` (case-insensitive). Default: `IPV4`. Note: IPV6 indicates IPv6 NAT64, while IPv6FullChain indicates IPv6.
+* `associate_endpoint` - (Optional, String) The associated terminal node ID; passing an empty string indicates unassociating the node.
 * `bandwidth_package_id` - (Optional, String) Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.
 * `cluster_id` - (Optional, String, ForceNew) Cluster ID.
 * `delete_protect` - (Optional, Bool) Whether to enable delete protection.
 * `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
 * `eip_address_id` - (Optional, String) The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.
-* `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
+* `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is Mbps.
 * `internet_charge_type` - (Optional, String) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional, Bool) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
 * `log_set_id` - (Optional, String) The id of log set.

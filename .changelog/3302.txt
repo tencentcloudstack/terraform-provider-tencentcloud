@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_protocol_template: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_protocol_template_group: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_address_template: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_address_template_group: update doc
+```

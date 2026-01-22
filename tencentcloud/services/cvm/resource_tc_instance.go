@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -17,6 +18,7 @@ import (
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -41,15 +43,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"image_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The image to use for the instance. Changing `image_id` will cause the instance reset.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				AtLeastOneOf: []string{"image_id", "launch_template_id"},
+				Description:  "The image to use for the instance. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"availability_zone": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "The available zone for the CVM instance.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				AtLeastOneOf: []string{"availability_zone", "launch_template_id"},
+				Description:  "The available zone for the CVM instance.",
 			},
 			"dedicated_cluster_id": {
 				Type:        schema.TypeString,
@@ -57,19 +63,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Exclusive cluster id.",
 			},
-			"instance_count": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead.",
-				ValidateFunc: tccommon.ValidateIntegerInRange(1, 100),
-				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
-			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      "Terraform-CVM-Instance",
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 128),
-				Description:  "The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.",
+				Description:  "The name of the instance. The max length of instance_name is 128, and default value is `Terraform-CVM-Instance`.",
 			},
 			"instance_type": {
 				Type:         schema.TypeString,
@@ -81,19 +80,30 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"hostname": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.",
+				Computed:    true,
+				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Changing the `hostname` will cause the instance system to restart.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
+				Computed:    true,
 				Description: "The project the instance belongs to, default to 0.",
 			},
 			"running_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
+				Computed:    true,
 				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.",
+			},
+			"stop_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Instance shutdown mode. Valid values: SOFT_FIRST: perform a soft shutdown first, and force shut down the instance if the soft shutdown fails; HARD: force shut down the instance directly; SOFT: soft shutdown only. Default value: SOFT.",
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{
+					CVM_STOP_TYPE_SOFT_FIRST,
+					CVM_STOP_TYPE_HARD,
+					CVM_STOP_TYPE_SOFT,
+				}),
 			},
 			"stopped_mode": {
 				Type:        schema.TypeString,
@@ -107,14 +117,20 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"placement_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Description: "The ID of a placement group.",
+			},
+			"force_replace_placement_group_id": {
+				Type:         schema.TypeBool,
+				Optional:     true,
+				RequiredWith: []string{"placement_group_id"},
+				Description:  "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.",
 			},
 			// payment
 			"instance_charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      CVM_CHARGE_TYPE_POSTPAID,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_CHARGE_TYPE),
 				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDHPAID` and `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR` and `CDHPAID`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time. `CDHPAID` instance must set `cdh_instance_type` and `cdh_host_id`.",
 			},
@@ -147,6 +163,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"cdh_instance_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateStringPrefix("CDH_"),
 				Description:  "Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.",
 			},
@@ -154,6 +171,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.",
 			},
 			// network
@@ -188,6 +206,36 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				ForceNew:    true,
 				Description: "Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.",
+			},
+			"ipv4_address_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"WanIP", "HighQualityEIP", "AntiDDoSEIP"}),
+				Description:  "AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.",
+			},
+			"ipv6_address_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"EIPv6", "HighQualityEIPv6"}),
+				Description:  "IPv6 AddressType. Default value: WanIP. EIPv6: Elastic IPv6; HighQualityEIPv6: Premium IPv6, only China Hong Kong supports premium IPv6. To allocate IPv6 addresses to resources, please specify the Elastic IPv6 type.",
+			},
+			"ipv6_address_count": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Specify the number of randomly generated IPv6 addresses for the Elastic Network Interface.",
+			},
+			"anti_ddos_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.",
 			},
 			// vpc
 			"vpc_id": {
@@ -231,14 +279,14 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"system_disk_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      CVM_DISK_TYPE_CLOUD_PREMIUM,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_DISK_TYPE),
 				Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: cloud disk, `CLOUD_SSD`: cloud SSD disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD. NOTE: If modified, the instance may force stop.",
 			},
 			"system_disk_size": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     50,
+				Computed:    true,
 				Description: "Size of the system disk. unit is GB, Default is 50GB. If modified, the instance may force stop.",
 			},
 			"system_disk_id": {
@@ -309,6 +357,13 @@ func ResourceTencentCloudInstance() *schema.Resource {
 							ForceNew:    true,
 							Description: "Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `PREPAID` instance), default is false.",
 						},
+						"kms_key_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
+							Description: "Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.",
+						},
 						"encrypt": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -331,19 +386,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"disable_monitor_service": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"disable_automation_service": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.",
+				Description: "Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			// login
 			"key_name": {
@@ -352,14 +407,14 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:      true,
 				Deprecated:    "Please use `key_ids` instead.",
 				ConflictsWith: []string{"key_ids"},
-				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"key_ids": {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"key_name", "password"},
-				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.",
 				Set:           schema.HashString,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 			},
@@ -367,12 +422,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifying will cause the instance reset.",
+				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifications may lead to the reinstallation of the instance's operating system.",
 			},
 			"keep_image_login": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
+				Computed: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "false" && old == "" || old == "false" && new == "" {
 						return true
@@ -381,25 +436,32 @@ func ResourceTencentCloudInstance() *schema.Resource {
 					}
 				},
 				ConflictsWith: []string{"key_name", "key_ids", "password"},
-				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.",
+				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifications may lead to the reinstallation of the instance's operating system..",
 			},
 			"user_data": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ForceNew:      true,
+				Computed:      true,
 				ConflictsWith: []string{"user_data_raw"},
-				Description:   "The user data to be injected into this instance. Must be base64 encoded and up to 16 KB.",
+				Description:   "The user data to be injected into this instance. Must be base64 encoded and up to 16 KB. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.",
 			},
 			"user_data_raw": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ForceNew:      true,
+				Computed:      true,
 				ConflictsWith: []string{"user_data"},
-				Description:   "The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded.",
+				Description:   "The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.",
+			},
+			"user_data_replace_on_change": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "When used in combination with `user_data` or `user_data_raw` will trigger a destroy and recreate of the CVM instance when set to `true`. Default is `false`.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
+				Computed:    true,
 				Description: "A mapping of tags to assign to the resource. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).",
 			},
 			"force_delete": {
@@ -411,15 +473,40 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"disable_api_termination": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
+				Computed:    true,
 				Description: "Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.",
 			},
 			// role
 			"cam_role_name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
+				Computed:    true,
 				Description: "CAM role name authorized to access.",
+			},
+			"hpc_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.",
+			},
+			// template
+			"launch_template_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Instance launch template ID. This parameter allows you to create an instance using the preset parameters in the instance template.",
+			},
+			"launch_template_version": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The instance launch template version number. If given, a new instance launch template will be created based on the given version number.",
+			},
+			"release_address": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Release elastic IP. Under EIP 2.0, only the first EIP under the primary network card is provided, and the EIP types are limited to HighQualityEIP, AntiDDoSEIP, EIPv6, and HighQualityEIPv6. Default behavior is not released.",
 			},
 			// Computed values.
 			"instance_status": {
@@ -462,7 +549,29 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Instance os name.",
 			},
+			"ipv6_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed:    true,
+				Description: "IPv6 address of the instance.",
+			},
+			"public_ipv6_addresses": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed:    true,
+				Description: "The public IPv6 address to which the instance is bound.",
+			},
 		},
+
+		CustomizeDiff: customdiff.All(
+			customdiff.ForceNewIf("user_data", func(_ context.Context, diff *schema.ResourceDiff, meta interface{}) bool {
+				return diff.Get("user_data_replace_on_change").(bool)
+			}),
+
+			customdiff.ForceNewIf("user_data_raw", func(_ context.Context, diff *schema.ResourceDiff, meta interface{}) bool {
+				return diff.Get("user_data_replace_on_change").(bool)
+			}),
+		),
 	}
 }
 
@@ -470,32 +579,34 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_instance.create")()
 
 	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		cvmService = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cvmService         = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceChargeType = CVM_CHARGE_TYPE_POSTPAID
 	)
 
 	request := cvm.NewRunInstancesRequest()
-	request.ImageId = helper.String(d.Get("image_id").(string))
-	request.Placement = &cvm.Placement{
-		Zone: helper.String(d.Get("availability_zone").(string)),
+	if v, ok := d.GetOk("image_id"); ok {
+		request.ImageId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("availability_zone"); ok {
+		request.Placement = &cvm.Placement{
+			Zone: helper.String(v.(string)),
+		}
 	}
 
 	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		projectId := int64(v.(int))
 		request.Placement.ProjectId = &projectId
 	}
 
 	if v, ok := d.GetOk("instance_name"); ok {
 		request.InstanceName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("instance_count"); ok {
-		request.InstanceCount = helper.Int64(int64(v.(int)))
 	}
 
 	if v, ok := d.GetOk("instance_type"); ok {
@@ -510,8 +621,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.CamRoleName = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("hpc_cluster_id"); ok {
+		request.HpcClusterId = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("instance_charge_type"); ok {
-		instanceChargeType := v.(string)
+		instanceChargeType = v.(string)
 		request.InstanceChargeType = &instanceChargeType
 		if instanceChargeType == CVM_CHARGE_TYPE_PREPAID || instanceChargeType == CVM_CHARGE_TYPE_UNDERWRITE {
 			request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
@@ -558,28 +673,62 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if v, ok := d.GetOk("placement_group_id"); ok {
-		request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+	var rpgFlag bool
+	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+		rpgFlag = v.(bool)
+	}
+
+	if !rpgFlag {
+		if v, ok := d.GetOk("placement_group_id"); ok {
+			request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+		}
 	}
 
 	// network
-	request.InternetAccessible = &cvm.InternetAccessible{}
+	var (
+		internetAccessible cvm.InternetAccessible
+		netWorkFlag        bool
+	)
+
 	if v, ok := d.GetOk("internet_charge_type"); ok {
-		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+		internetAccessible.InternetChargeType = helper.String(v.(string))
+		netWorkFlag = true
 	}
 
-	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
+	if v, ok := d.GetOkExists("internet_max_bandwidth_out"); ok {
 		maxBandwidthOut := int64(v.(int))
-		request.InternetAccessible.InternetMaxBandwidthOut = &maxBandwidthOut
+		internetAccessible.InternetMaxBandwidthOut = &maxBandwidthOut
+		netWorkFlag = true
 	}
 
 	if v, ok := d.GetOk("bandwidth_package_id"); ok {
-		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		internetAccessible.BandwidthPackageId = helper.String(v.(string))
+		netWorkFlag = true
 	}
 
 	if v, ok := d.GetOkExists("allocate_public_ip"); ok {
 		allocatePublicIp := v.(bool)
-		request.InternetAccessible.PublicIpAssigned = &allocatePublicIp
+		internetAccessible.PublicIpAssigned = &allocatePublicIp
+		netWorkFlag = true
+	}
+
+	if v, ok := d.GetOk("ipv4_address_type"); ok {
+		internetAccessible.IPv4AddressType = helper.String(v.(string))
+		netWorkFlag = true
+	}
+
+	if v, ok := d.GetOk("ipv6_address_type"); ok {
+		internetAccessible.IPv6AddressType = helper.String(v.(string))
+		netWorkFlag = true
+	}
+
+	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
+		internetAccessible.AntiDDoSPackageId = helper.String(v.(string))
+		netWorkFlag = true
+	}
+
+	if netWorkFlag {
+		request.InternetAccessible = &internetAccessible
 	}
 
 	// vpc
@@ -593,6 +742,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 		if v, ok = d.GetOk("private_ip"); ok {
 			request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
+		}
+		if v, ok = d.GetOkExists("ipv6_address_count"); ok {
+			request.VirtualPrivateCloud.Ipv6AddressCount = helper.IntUint64(v.(int))
 		}
 	}
 
@@ -613,27 +765,38 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// storage
-	request.SystemDisk = &cvm.SystemDisk{}
+	var (
+		systemDisk     cvm.SystemDisk
+		systemDiskFlag bool
+	)
+
 	if v, ok := d.GetOk("system_disk_type"); ok {
-		request.SystemDisk.DiskType = helper.String(v.(string))
+		systemDisk.DiskType = helper.String(v.(string))
+		systemDiskFlag = true
 	}
 
-	if v, ok := d.GetOk("system_disk_size"); ok {
+	if v, ok := d.GetOkExists("system_disk_size"); ok {
 		diskSize := int64(v.(int))
-		request.SystemDisk.DiskSize = &diskSize
+		systemDisk.DiskSize = &diskSize
+		systemDiskFlag = true
 	}
 
 	if v, ok := d.GetOk("system_disk_id"); ok {
-		request.SystemDisk.DiskId = helper.String(v.(string))
+		systemDisk.DiskId = helper.String(v.(string))
+		systemDiskFlag = true
 	}
 
 	if v, ok := d.GetOk("system_disk_name"); ok {
-		request.SystemDisk.DiskName = helper.String(v.(string))
+		systemDisk.DiskName = helper.String(v.(string))
+		systemDiskFlag = true
+	}
+
+	if systemDiskFlag {
+		request.SystemDisk = &systemDisk
 	}
 
 	if v, ok := d.GetOk("data_disks"); ok {
 		dataDisks := v.([]interface{})
-		request.DataDisks = make([]*cvm.DataDisk, 0, len(dataDisks))
 		for _, d := range dataDisks {
 			value := d.(map[string]interface{})
 			diskType := value["data_disk_type"].(string)
@@ -665,7 +828,15 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
 				deleteWithInstanceBool := deleteWithInstance.(bool)
+				if (instanceChargeType != CVM_CHARGE_TYPE_POSTPAID) && deleteWithInstanceBool {
+					return fmt.Errorf("param `delete_with_instance` only can be true when `instance_charge_type` is %s", CVM_CHARGE_TYPE_POSTPAID)
+				}
+
 				dataDisk.DeleteWithInstance = &deleteWithInstanceBool
+			}
+
+			if v, ok := value["kms_key_id"]; ok && v != "" {
+				dataDisk.KmsKeyId = helper.String(v.(string))
 			}
 
 			if encrypt, ok := value["encrypt"]; ok {
@@ -678,46 +849,75 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// enhanced service
-	request.EnhancedService = &cvm.EnhancedService{}
+	var (
+		enhancedService     cvm.EnhancedService
+		enhancedServiceFlag bool
+	)
+
 	if v, ok := d.GetOkExists("disable_security_service"); ok {
 		securityService := !(v.(bool))
-		request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
+		enhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
 			Enabled: &securityService,
 		}
+		enhancedServiceFlag = true
 	}
 
 	if v, ok := d.GetOkExists("disable_monitor_service"); ok {
 		monitorService := !(v.(bool))
-		request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
+		enhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
 			Enabled: &monitorService,
 		}
+		enhancedServiceFlag = true
 	}
 
 	if v, ok := d.GetOkExists("disable_automation_service"); ok {
 		automationService := !(v.(bool))
-		request.EnhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
+		enhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
 			Enabled: &automationService,
 		}
+		enhancedServiceFlag = true
+	}
+
+	if enhancedServiceFlag {
+		request.EnhancedService = &enhancedService
 	}
 
 	// login
-	request.LoginSettings = &cvm.LoginSettings{}
-	keyIds := d.Get("key_ids").(*schema.Set).List()
-	if len(keyIds) > 0 {
-		request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(keyIds)
-	} else if v, ok := d.GetOk("key_name"); ok {
-		request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
+	var (
+		loginSettings     cvm.LoginSettings
+		loginSettingsFlag bool
+	)
+
+	if v, ok := d.GetOk("key_name"); ok {
+		loginSettings.KeyIds = []*string{helper.String(v.(string))}
+		loginSettingsFlag = true
+	}
+
+	if v, ok := d.GetOk("key_ids"); ok {
+		keyIds := v.(*schema.Set).List()
+		if len(keyIds) > 0 {
+			loginSettings.KeyIds = helper.InterfacesStringsPoint(keyIds)
+			loginSettingsFlag = true
+		}
 	}
 
 	if v, ok := d.GetOk("password"); ok {
-		request.LoginSettings.Password = helper.String(v.(string))
+		loginSettings.Password = helper.String(v.(string))
+		loginSettingsFlag = true
 	}
 
-	v := d.Get("keep_image_login").(bool)
-	if v {
-		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
-	} else {
-		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+	if v, ok := d.GetOkExists("keep_image_login"); ok {
+		if v.(bool) {
+			loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+		} else {
+			loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+		}
+
+		loginSettingsFlag = true
+	}
+
+	if loginSettingsFlag {
+		request.LoginSettings = &loginSettings
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
@@ -731,6 +931,17 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOkExists("disable_api_termination"); ok {
 		request.DisableApiTermination = helper.Bool(v.(bool))
+	}
+
+	var launchTemplate cvm.LaunchTemplate
+	if v, ok := d.GetOk("launch_template_id"); ok {
+		launchTemplate.LaunchTemplateId = helper.String(v.(string))
+		request.LaunchTemplate = &launchTemplate
+	}
+
+	if v, ok := d.GetOkExists("launch_template_version"); ok {
+		launchTemplate.LaunchTemplateVersion = helper.IntUint64(v.(int))
+		request.LaunchTemplate = &launchTemplate
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -752,6 +963,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
 	}
 
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
+
 	instanceId := ""
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check("create")
@@ -764,7 +978,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				return resource.RetryableError(fmt.Errorf("cvm create error: %s, retrying", e.Error()))
 			}
 
-			return resource.NonRetryableError(err)
+			return tccommon.RetryError(err)
 		}
 
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -810,6 +1024,57 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	// set placement group id
+	if rpgFlag {
+		if v, ok := d.GetOk("placement_group_id"); ok && v != "" {
+			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+			request.InstanceIds = helper.Strings([]string{instanceId})
+			request.DisasterRecoverGroupId = helper.String(v.(string))
+			request.Force = helper.Bool(rpgFlag)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+
+			// wait
+			err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return tccommon.RetryError(errRet, tccommon.InternalError)
+				}
+
+				if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+					//LatestOperationCodeMode
+					if instance.LatestOperationErrorMsg != nil {
+						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+					}
+
+					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
+				}
+
+				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	// Wait for the tags attached to the vm since tags attachment it's async while vm creation.
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -834,28 +1099,31 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if !(d.Get("running_flag").(bool)) {
-		stoppedMode := d.Get("stopped_mode").(string)
-		err = cvmService.StopInstance(ctx, instanceId, stoppedMode)
-		if err != nil {
-			return err
-		}
-
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return tccommon.RetryError(errRet, tccommon.InternalError)
+	if v, ok := d.GetOkExists("running_flag"); ok {
+		if !v.(bool) {
+			stopType := d.Get("stop_type").(string)
+			stoppedMode := d.Get("stopped_mode").(string)
+			err = cvmService.StopInstance(ctx, instanceId, stopType, stoppedMode)
+			if err != nil {
+				return err
 			}
 
-			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
-				return nil
+			err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return tccommon.RetryError(errRet, tccommon.InternalError)
+				}
+
+				if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+			})
+
+			if err != nil {
+				return err
 			}
-
-			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-		})
-
-		if err != nil {
-			return err
 		}
 	}
 
@@ -957,9 +1225,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("cpu", instance.CPU)
 	_ = d.Set("memory", instance.Memory)
 	_ = d.Set("os_name", instance.OsName)
+	_ = d.Set("hpc_cluster_id", instance.HpcClusterId)
+	_ = d.Set("ipv6_addresses", instance.IPv6Addresses)
+	_ = d.Set("public_ipv6_addresses", instance.PublicIPv6Addresses)
 
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)
+	}
+
+	if instance.DisasterRecoverGroupId != nil {
+		_ = d.Set("placement_group_id", instance.DisasterRecoverGroupId)
 	}
 
 	if *instance.InstanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
@@ -968,6 +1243,20 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 
 	if _, ok := d.GetOkExists("allocate_public_ip"); !ok {
 		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
+	}
+
+	if instance.InternetAccessible != nil {
+		if instance.InternetAccessible.IPv4AddressType != nil {
+			_ = d.Set("ipv4_address_type", instance.InternetAccessible.IPv4AddressType)
+		}
+
+		if instance.InternetAccessible.IPv6AddressType != nil {
+			_ = d.Set("ipv6_address_type", instance.InternetAccessible.IPv6AddressType)
+		}
+
+		if instance.InternetAccessible.AntiDDoSPackageId != nil {
+			_ = d.Set("anti_ddos_package_id", instance.InternetAccessible.AntiDDoSPackageId)
+		}
 	}
 
 	tagService := svctag.NewTagService(client)
@@ -983,11 +1272,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("tags", tags)
 
 	// set system_disk_name
-	if instance.SystemDisk.DiskId != nil {
+	if instance.SystemDisk.DiskId != nil && strings.HasPrefix(*instance.SystemDisk.DiskId, "disk-") {
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			disks, err := cbsService.DescribeDiskList(ctx, []*string{instance.SystemDisk.DiskId})
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			for i := range disks {
@@ -1010,7 +1299,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// set data_disks
-	var hasDataDisks, isCombineDataDisks, hasDataDisksId, hasDataDisksName bool
+	var hasDataDisks, isCombineDataDisks, hasDataDisksId bool
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	diskSizeMap := map[string]*uint64{}
 	diskOrderMap := make(map[string]int)
@@ -1025,16 +1314,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			value := item.(map[string]interface{})
 			if v, ok := value["data_disk_id"]; ok && v != nil {
 				diskId := v.(string)
-				if diskId != "" {
+				if diskId != "" && strings.HasPrefix(diskId, "disk-") {
 					dataDiskIds = append(dataDiskIds, &diskId)
 					hasDataDisksId = true
-				}
-			}
-
-			if v, ok := value["data_disk_name"]; ok && v != nil {
-				diskName := v.(string)
-				if diskName != "" {
-					hasDataDisksName = true
 				}
 			}
 		}
@@ -1045,7 +1327,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			disks, err := cbsService.DescribeDiskList(ctx, dataDiskIds)
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			if v, ok := d.GetOk("data_disks"); ok {
@@ -1056,6 +1338,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 						if value["data_disk_id"].(string) == *item.DiskId {
 							value["data_disk_name"] = *item.DiskName
 							value["data_disk_size"] = int(*item.DiskSize)
+							value["data_disk_type"] = *item.DiskType
+							if item.KmsKeyId != nil {
+								value["kms_key_id"] = *item.KmsKeyId
+							}
+
+							value["encrypt"] = *item.Encrypt
+							value["throughput_performance"] = *item.ThroughputPerformance
+							value["delete_with_instance"] = *item.DeleteWithInstance
 							break
 						}
 					}
@@ -1073,7 +1363,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// scene with has disks name
-	if len(instance.DataDisks) > 0 && !hasDataDisksName {
+	if len(instance.DataDisks) > 0 && !hasDataDisksId {
 		var diskIds []*string
 		for i := range instance.DataDisks {
 			id := instance.DataDisks[i].DiskId
@@ -1089,102 +1379,30 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			disks, err := cbsService.DescribeDiskList(ctx, diskIds)
-			if err != nil {
-				return resource.NonRetryableError(err)
-			}
-
-			for i := range disks {
-				disk := disks[i]
-				if *disk.DiskState == "EXPANDING" {
-					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
+		if len(diskIds) > 0 {
+			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				disks, err := cbsService.DescribeDiskList(ctx, diskIds)
+				if err != nil {
+					return tccommon.RetryError(err)
 				}
 
-				diskSizeMap[*disk.DiskId] = disk.DiskSize
-				if hasDataDisks {
-					items := strings.Split(*disk.DiskName, "_")
-					diskOrder := items[len(items)-1]
-					diskOrderInt, err := strconv.Atoi(diskOrder)
-					if err != nil {
-						isCombineDataDisks = true
-						continue
+				for i := range disks {
+					disk := disks[i]
+					if *disk.DiskState == "EXPANDING" {
+						return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
 					}
 
-					diskOrderMap[*disk.DiskId] = diskOrderInt
-				}
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			return err
-		}
-
-		tmpDataDisks := make([]interface{}, 0, len(instance.DataDisks))
-		if v, ok := d.GetOk("data_disks"); ok {
-			tmpDataDisks = v.([]interface{})
-		}
-
-		for _, disk := range instance.DataDisks {
-			dataDisk := make(map[string]interface{}, 5)
-			dataDisk["data_disk_id"] = disk.DiskId
-			if disk.DiskId == nil {
-				dataDisk["data_disk_size"] = disk.DiskSize
-			} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
-				dataDisk["data_disk_size"] = size
-			}
-
-			dataDisk["data_disk_type"] = disk.DiskType
-			dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
-			dataDisk["delete_with_instance"] = disk.DeleteWithInstance
-			dataDisk["encrypt"] = disk.Encrypt
-			dataDisk["throughput_performance"] = disk.ThroughputPerformance
-			dataDiskList = append(dataDiskList, dataDisk)
-		}
-
-		if hasDataDisks && !isCombineDataDisks {
-			sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
-				dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
-				dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
-				return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
-			})
-		}
-
-		// set data disk delete_with_instance_prepaid
-		for i := range dataDiskList {
-			dataDiskList[i]["delete_with_instance_prepaid"] = false
-			if hasDataDisks {
-				tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
-				if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
-					dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
-				}
-			}
-		}
-
-		// set data disk name
-		finalDiskIds := make([]*string, 0, len(dataDiskList))
-		for _, item := range dataDiskList {
-			diskId := item["data_disk_id"].(*string)
-			finalDiskIds = append(finalDiskIds, diskId)
-		}
-
-		if len(finalDiskIds) != 0 {
-			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				disks, err := cbsService.DescribeDiskList(ctx, finalDiskIds)
-				if err != nil {
-					return resource.NonRetryableError(err)
-				}
-
-				for _, disk := range disks {
-					diskId := disk.DiskId
-					for _, v := range dataDiskList {
-						tmpDiskId := v["data_disk_id"].(*string)
-						if *diskId == *tmpDiskId {
-							v["data_disk_name"] = disk.DiskName
-							break
+					diskSizeMap[*disk.DiskId] = disk.DiskSize
+					if hasDataDisks {
+						items := strings.Split(*disk.DiskName, "_")
+						diskOrder := items[len(items)-1]
+						diskOrderInt, err := strconv.Atoi(diskOrder)
+						if err != nil {
+							isCombineDataDisks = true
+							continue
 						}
+
+						diskOrderMap[*disk.DiskId] = diskOrderInt
 					}
 				}
 
@@ -1194,10 +1412,94 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			if err != nil {
 				return err
 			}
-		}
 
-		_ = d.Set("data_disks", dataDiskList)
-	} else if len(instance.DataDisks) > 0 && hasDataDisksName {
+			tmpDataDisks := make([]interface{}, 0, len(instance.DataDisks))
+			if v, ok := d.GetOk("data_disks"); ok {
+				tmpDataDisks = v.([]interface{})
+			}
+
+			for _, disk := range instance.DataDisks {
+				dataDisk := make(map[string]interface{})
+				if !strings.HasPrefix(*disk.DiskId, "disk-") {
+					continue
+				}
+
+				dataDisk["data_disk_id"] = disk.DiskId
+				if disk.DiskId == nil {
+					dataDisk["data_disk_size"] = disk.DiskSize
+				} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
+					dataDisk["data_disk_size"] = size
+				}
+
+				dataDisk["data_disk_type"] = disk.DiskType
+				dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
+				dataDisk["delete_with_instance"] = disk.DeleteWithInstance
+				dataDisk["kms_key_id"] = disk.KmsKeyId
+				dataDisk["encrypt"] = disk.Encrypt
+				dataDisk["throughput_performance"] = disk.ThroughputPerformance
+				dataDiskList = append(dataDiskList, dataDisk)
+			}
+
+			if hasDataDisks && !isCombineDataDisks {
+				sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
+					dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
+					dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
+					return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
+				})
+			}
+
+			// set data disk name
+			finalDiskIds := make([]*string, 0, len(dataDiskList))
+			for _, item := range dataDiskList {
+				diskId := item["data_disk_id"].(*string)
+				finalDiskIds = append(finalDiskIds, diskId)
+			}
+
+			if len(finalDiskIds) != 0 {
+				err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					disks, err := cbsService.DescribeDiskList(ctx, finalDiskIds)
+					if err != nil {
+						return tccommon.RetryError(err)
+					}
+
+					for _, disk := range disks {
+						diskId := disk.DiskId
+						for _, v := range dataDiskList {
+							tmpDiskId := v["data_disk_id"].(*string)
+							if *diskId == *tmpDiskId {
+								v["data_disk_name"] = disk.DiskName
+								break
+							}
+						}
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+
+			sortedDataDiskList, err := sortDataDisks(tmpDataDisks, dataDiskList)
+			if err != nil {
+				return err
+			}
+
+			// set data disk delete_with_instance_prepaid
+			for i := range sortedDataDiskList {
+				sortedDataDiskList[i]["delete_with_instance_prepaid"] = false
+				if hasDataDisks {
+					tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
+					if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
+						sortedDataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+					}
+				}
+			}
+
+			_ = d.Set("data_disks", sortedDataDiskList)
+		}
+	} else if len(instance.DataDisks) > 0 && hasDataDisksId {
 		// scene with no disks name
 		dDiskHash := make([]map[string]interface{}, 0)
 		// get source disk hash
@@ -1214,6 +1516,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				diskType := value["data_disk_type"].(string)
 				diskSize := int64(value["data_disk_size"].(int))
 				deleteWithInstance := value["delete_with_instance"].(bool)
+				kmsKeyId := value["kms_key_id"].(string)
 				encrypt := value["encrypt"].(bool)
 				if tmpV, ok := value["data_disk_name"].(string); ok && tmpV != "" {
 					diskName = tmpV
@@ -1223,6 +1526,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 					diskType:           diskType,
 					diskSize:           diskSize,
 					deleteWithInstance: deleteWithInstance,
+					kmsKeyId:           kmsKeyId,
 					encrypt:            encrypt,
 				}
 
@@ -1248,69 +1552,123 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			cbsDisks, err = cbsService.DescribeDiskList(ctx, diskIds)
+		if len(diskIds) > 0 {
+			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				cbsDisks, err = cbsService.DescribeDiskList(ctx, diskIds)
+				if err != nil {
+					return tccommon.RetryError(err)
+				}
+
+				for i := range cbsDisks {
+					disk := cbsDisks[i]
+					if *disk.DiskState == "EXPANDING" {
+						return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
+					}
+				}
+
+				return nil
+			})
+
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return err
 			}
 
-			for i := range cbsDisks {
-				disk := cbsDisks[i]
-				if *disk.DiskState == "EXPANDING" {
-					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
+			// make data disks data
+			sourceDataDisks := make([]*map[string]interface{}, 0)
+			for _, cvmDisk := range instance.DataDisks {
+				for _, cbsDisk := range cbsDisks {
+					if *cvmDisk.DiskId == *cbsDisk.DiskId {
+						dataDisk := make(map[string]interface{}, 10)
+						dataDisk["data_disk_id"] = cvmDisk.DiskId
+						dataDisk["data_disk_size"] = cvmDisk.DiskSize
+						dataDisk["data_disk_name"] = cbsDisk.DiskName
+						dataDisk["data_disk_type"] = cvmDisk.DiskType
+						dataDisk["data_disk_snapshot_id"] = cvmDisk.SnapshotId
+						dataDisk["delete_with_instance"] = cvmDisk.DeleteWithInstance
+						dataDisk["kms_key_id"] = cvmDisk.KmsKeyId
+						dataDisk["encrypt"] = cvmDisk.Encrypt
+						dataDisk["throughput_performance"] = cvmDisk.ThroughputPerformance
+						dataDisk["flag"] = 0
+						sourceDataDisks = append(sourceDataDisks, &dataDisk)
+						break
+					}
 				}
 			}
 
-			return nil
-		})
+			// has set disk name first
+			for v := range sourceDataDisks {
+				for i := range dDiskHash {
+					var kmsKeyId *string
+					disk := *sourceDataDisks[v]
+					diskFlag := disk["flag"].(int)
+					diskName := disk["data_disk_name"].(*string)
+					diskType := disk["data_disk_type"].(*string)
+					diskSize := disk["data_disk_size"].(*int64)
+					deleteWithInstance := disk["delete_with_instance"].(*bool)
+					if v, ok := disk["kms_key_id"].(*string); ok && v != nil {
+						kmsKeyId = v
+					} else {
+						kmsKeyId = helper.String("")
+					}
+					encrypt := disk["encrypt"].(*bool)
+					tmpHash := getDataDiskHash(diskHash{
+						diskType:           *diskType,
+						diskSize:           *diskSize,
+						deleteWithInstance: *deleteWithInstance,
+						kmsKeyId:           *kmsKeyId,
+						encrypt:            *encrypt,
+					})
 
-		if err != nil {
-			return err
-		}
-
-		// make data disks data
-		sourceDataDisks := make([]*map[string]interface{}, 0)
-		for _, cvmDisk := range instance.DataDisks {
-			for _, cbsDisk := range cbsDisks {
-				if *cvmDisk.DiskId == *cbsDisk.DiskId {
-					dataDisk := make(map[string]interface{}, 10)
-					dataDisk["data_disk_id"] = cvmDisk.DiskId
-					dataDisk["data_disk_size"] = cvmDisk.DiskSize
-					dataDisk["data_disk_name"] = cbsDisk.DiskName
-					dataDisk["data_disk_type"] = cvmDisk.DiskType
-					dataDisk["data_disk_snapshot_id"] = cvmDisk.SnapshotId
-					dataDisk["delete_with_instance"] = cvmDisk.DeleteWithInstance
-					dataDisk["encrypt"] = cvmDisk.Encrypt
-					dataDisk["throughput_performance"] = cvmDisk.ThroughputPerformance
-					dataDisk["flag"] = 0
-					sourceDataDisks = append(sourceDataDisks, &dataDisk)
-					break
+					// get disk name
+					hashItem := dDiskHash[i]
+					if _, ok := hashItem[*diskName]; ok {
+						// check hash and flag
+						if hashItem["flag"] == 0 && diskFlag == 0 && tmpHash == hashItem[*diskName] {
+							dataDisk := make(map[string]interface{}, 8)
+							dataDisk["data_disk_id"] = disk["data_disk_id"]
+							dataDisk["data_disk_size"] = disk["data_disk_size"]
+							dataDisk["data_disk_name"] = disk["data_disk_name"]
+							dataDisk["data_disk_type"] = disk["data_disk_type"]
+							dataDisk["data_disk_snapshot_id"] = disk["data_disk_snapshot_id"]
+							dataDisk["delete_with_instance"] = disk["delete_with_instance"]
+							dataDisk["kms_key_id"] = disk["kms_key_id"]
+							dataDisk["encrypt"] = disk["encrypt"]
+							dataDisk["throughput_performance"] = disk["throughput_performance"]
+							tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
+							hashItem["flag"] = 1
+							disk["flag"] = 1
+							break
+						}
+					}
 				}
 			}
-		}
 
-		// has set disk name first
-		for v := range sourceDataDisks {
-			for i := range dDiskHash {
-				disk := *sourceDataDisks[v]
-				diskFlag := disk["flag"].(int)
-				diskName := disk["data_disk_name"].(*string)
-				diskType := disk["data_disk_type"].(*string)
-				diskSize := disk["data_disk_size"].(*int64)
-				deleteWithInstance := disk["delete_with_instance"].(*bool)
-				encrypt := disk["encrypt"].(*bool)
-				tmpHash := getDataDiskHash(diskHash{
-					diskType:           *diskType,
-					diskSize:           *diskSize,
-					deleteWithInstance: *deleteWithInstance,
-					encrypt:            *encrypt,
-				})
+			// no set disk name last
+			for v := range sourceDataDisks {
+				for i := range dDiskHash {
+					var kmsKeyId *string
+					disk := *sourceDataDisks[v]
+					diskFlag := disk["flag"].(int)
+					diskType := disk["data_disk_type"].(*string)
+					diskSize := disk["data_disk_size"].(*int64)
+					deleteWithInstance := disk["delete_with_instance"].(*bool)
+					if v, ok := disk["kms_key_id"].(*string); ok && v != nil {
+						kmsKeyId = v
+					} else {
+						kmsKeyId = helper.String("")
+					}
+					encrypt := disk["encrypt"].(*bool)
+					tmpHash := getDataDiskHash(diskHash{
+						diskType:           *diskType,
+						diskSize:           *diskSize,
+						deleteWithInstance: *deleteWithInstance,
+						kmsKeyId:           *kmsKeyId,
+						encrypt:            *encrypt,
+					})
 
-				// get disk name
-				hashItem := dDiskHash[i]
-				if _, ok := hashItem[*diskName]; ok {
 					// check hash and flag
-					if hashItem["flag"] == 0 && diskFlag == 0 && tmpHash == hashItem[*diskName] {
+					hashItem := dDiskHash[i]
+					if hashItem["flag"] == 0 && diskFlag == 0 && tmpHash == hashItem[strconv.Itoa(i)] {
 						dataDisk := make(map[string]interface{}, 8)
 						dataDisk["data_disk_id"] = disk["data_disk_id"]
 						dataDisk["data_disk_size"] = disk["data_disk_size"]
@@ -1318,6 +1676,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 						dataDisk["data_disk_type"] = disk["data_disk_type"]
 						dataDisk["data_disk_snapshot_id"] = disk["data_disk_snapshot_id"]
 						dataDisk["delete_with_instance"] = disk["delete_with_instance"]
+						dataDisk["kms_key_id"] = disk["kms_key_id"]
 						dataDisk["encrypt"] = disk["encrypt"]
 						dataDisk["throughput_performance"] = disk["throughput_performance"]
 						tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
@@ -1327,70 +1686,34 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 					}
 				}
 			}
-		}
 
-		// no set disk name last
-		for v := range sourceDataDisks {
-			for i := range dDiskHash {
-				disk := *sourceDataDisks[v]
-				diskFlag := disk["flag"].(int)
-				diskType := disk["data_disk_type"].(*string)
-				diskSize := disk["data_disk_size"].(*int64)
-				deleteWithInstance := disk["delete_with_instance"].(*bool)
-				encrypt := disk["encrypt"].(*bool)
-				tmpHash := getDataDiskHash(diskHash{
-					diskType:           *diskType,
-					diskSize:           *diskSize,
-					deleteWithInstance: *deleteWithInstance,
-					encrypt:            *encrypt,
-				})
-
-				// check hash and flag
-				hashItem := dDiskHash[i]
-				if hashItem["flag"] == 0 && diskFlag == 0 && tmpHash == hashItem[strconv.Itoa(i)] {
-					dataDisk := make(map[string]interface{}, 8)
-					dataDisk["data_disk_id"] = disk["data_disk_id"]
-					dataDisk["data_disk_size"] = disk["data_disk_size"]
-					dataDisk["data_disk_name"] = disk["data_disk_name"]
-					dataDisk["data_disk_type"] = disk["data_disk_type"]
-					dataDisk["data_disk_snapshot_id"] = disk["data_disk_snapshot_id"]
-					dataDisk["delete_with_instance"] = disk["delete_with_instance"]
-					dataDisk["encrypt"] = disk["encrypt"]
-					dataDisk["throughput_performance"] = disk["throughput_performance"]
-					tmpDataDiskMap[hashItem["index"].(int)] = dataDisk
-					hashItem["flag"] = 1
-					disk["flag"] = 1
-					break
-				}
+			keys := make([]int, 0, len(tmpDataDiskMap))
+			for k := range tmpDataDiskMap {
+				keys = append(keys, k)
 			}
-		}
 
-		keys := make([]int, 0, len(tmpDataDiskMap))
-		for k := range tmpDataDiskMap {
-			keys = append(keys, k)
-		}
+			sort.Ints(keys)
+			for _, v := range keys {
+				tmpDataDisk := tmpDataDiskMap[v].(map[string]interface{})
+				dataDiskList = append(dataDiskList, tmpDataDisk)
+			}
 
-		sort.Ints(keys)
-		for _, v := range keys {
-			tmpDataDisk := tmpDataDiskMap[v].(map[string]interface{})
-			dataDiskList = append(dataDiskList, tmpDataDisk)
-		}
-
-		// set data disk delete_with_instance_prepaid
-		if v, ok := d.GetOk("data_disks"); ok {
-			tmpDataDisks := v.([]interface{})
-			for i := range tmpDataDisks {
-				dataDiskList[i]["delete_with_instance_prepaid"] = false
-				if hasDataDisks {
-					tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
-					if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
-						dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+			// set data disk delete_with_instance_prepaid
+			if v, ok := d.GetOk("data_disks"); ok {
+				tmpDataDisks := v.([]interface{})
+				for i := range dataDiskList {
+					dataDiskList[i]["delete_with_instance_prepaid"] = false
+					if hasDataDisks {
+						tmpDataDisk := tmpDataDisks[i].(map[string]interface{})
+						if deleteWithInstancePrepaidBool, ok := tmpDataDisk["delete_with_instance_prepaid"].(bool); ok {
+							dataDiskList[i]["delete_with_instance_prepaid"] = deleteWithInstancePrepaidBool
+						}
 					}
 				}
 			}
-		}
 
-		_ = d.Set("data_disks", dataDiskList)
+			_ = d.Set("data_disks", dataDiskList)
+		}
 	} else {
 		_ = d.Set("data_disks", dataDiskList)
 	}
@@ -1419,6 +1742,38 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("running_flag", false)
 	} else {
 		_ = d.Set("running_flag", true)
+	}
+
+	var instanceAttribute *cvm.InstanceAttribute
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		request := cvm.NewDescribeInstancesAttributesRequest()
+		request.InstanceIds = helper.Strings([]string{instanceId})
+		request.Attributes = helper.Strings([]string{"UserData"})
+		response, errRet := client.UseCvmClient().DescribeInstancesAttributes(request)
+		if errRet != nil {
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+
+		if len(response.Response.InstanceSet) > 0 {
+			instanceAttribute = response.Response.InstanceSet[0]
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	if instanceAttribute != nil && instanceAttribute.Attributes != nil && instanceAttribute.Attributes.UserData != nil {
+		_ = d.Set("user_data", instanceAttribute.Attributes.UserData)
+		userDataRaw, e := base64.StdEncoding.DecodeString(*(instanceAttribute.Attributes.UserData))
+		if e != nil {
+			return e
+		}
+		_ = d.Set("user_data_raw", string(userDataRaw))
+	}
+
+	if instance.VirtualPrivateCloud != nil && instance.VirtualPrivateCloud.Ipv6AddressCount != nil {
+		_ = d.Set("ipv6_address_count", instance.VirtualPrivateCloud.Ipv6AddressCount)
 	}
 
 	return nil
@@ -1536,8 +1891,22 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	if d.HasChange("hostname") {
+		err := cvmService.ModifyHostName(ctx, instanceId, d.Get("hostname").(string))
+		if err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("disable_api_termination") {
 		err := cvmService.ModifyDisableApiTermination(ctx, instanceId, d.Get("disable_api_termination").(bool))
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("cam_role_name") {
+		err := cvmService.ModifyCamRoleName(ctx, instanceId, d.Get("cam_role_name").(string))
 		if err != nil {
 			return err
 		}
@@ -1580,7 +1949,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	// Reset Instance
 	// Keep Login Info
 	if d.HasChange("image_id") ||
-		d.HasChange("hostname") ||
 		d.HasChange("disable_security_service") ||
 		d.HasChange("disable_monitor_service") ||
 		d.HasChange("disable_automation_service") ||
@@ -1593,53 +1961,76 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			request.ImageId = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("hostname"); ok {
-			request.HostName = helper.String(v.(string))
-		}
-
 		// enhanced service
-		request.EnhancedService = &cvm.EnhancedService{}
-		if d.HasChange("disable_security_service") {
-			v := d.Get("disable_security_service")
-			securityService := v.(bool)
-			request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
+		var (
+			enhancedService     cvm.EnhancedService
+			enhancedServiceFlag bool
+		)
+
+		if v, ok := d.GetOkExists("disable_security_service"); ok {
+			securityService := !(v.(bool))
+			enhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
 				Enabled: &securityService,
 			}
+			enhancedServiceFlag = true
 		}
 
-		if d.HasChange("disable_monitor_service") {
-			v := d.Get("disable_monitor_service")
+		if v, ok := d.GetOkExists("disable_monitor_service"); ok {
 			monitorService := !(v.(bool))
-			request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
+			enhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
 				Enabled: &monitorService,
 			}
+			enhancedServiceFlag = true
 		}
 
-		if d.HasChange("disable_automation_service") {
-			v := d.Get("disable_automation_service")
+		if v, ok := d.GetOkExists("disable_automation_service"); ok {
 			automationService := !(v.(bool))
-			request.EnhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
+			enhancedService.AutomationService = &cvm.RunAutomationServiceEnabled{
 				Enabled: &automationService,
 			}
+			enhancedServiceFlag = true
 		}
 
-		// Modify or keep login info when instance reset
-		request.LoginSettings = &cvm.LoginSettings{}
+		if enhancedServiceFlag {
+			request.EnhancedService = &enhancedService
+		}
 
-		if v, ok := d.GetOk("password"); ok {
-			request.LoginSettings.Password = helper.String(v.(string))
+		// login
+		var (
+			loginSettings     cvm.LoginSettings
+			loginSettingsFlag bool
+		)
+
+		if v, ok := d.GetOk("key_name"); ok {
+			loginSettings.KeyIds = []*string{helper.String(v.(string))}
+			loginSettingsFlag = true
 		}
 
 		if v, ok := d.GetOk("key_ids"); ok {
-			request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
-		} else if v, ok := d.GetOk("key_name"); ok {
-			request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
+			keyIds := v.(*schema.Set).List()
+			if len(keyIds) > 0 {
+				loginSettings.KeyIds = helper.InterfacesStringsPoint(keyIds)
+				loginSettingsFlag = true
+			}
 		}
 
-		if v := d.Get("keep_image_login").(bool); v {
-			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
-		} else {
-			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+		if v, ok := d.GetOk("password"); ok {
+			loginSettings.Password = helper.String(v.(string))
+			loginSettingsFlag = true
+		}
+
+		if v, ok := d.GetOkExists("keep_image_login"); ok {
+			if v.(bool) {
+				loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+			} else {
+				loginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+			}
+
+			loginSettingsFlag = true
+		}
+
+		if loginSettingsFlag {
+			request.LoginSettings = &loginSettings
 		}
 
 		if err := cvmService.ResetInstance(ctx, request); err != nil {
@@ -1751,7 +2142,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if d.HasChange(nameKey) {
 				name := d.Get(nameKey).(string)
 				diskId := d.Get(idKey).(string)
-				err := cbsService.ModifyDiskAttributes(ctx, diskId, name, -1)
+				err := cbsService.ModifyDiskAttributes(ctx, diskId, name, -1, "")
 				if err != nil {
 					return fmt.Errorf("an error occurred when modifying data disk name: %s, reason: %s", name, err.Error())
 				}
@@ -1790,7 +2181,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			instance, err := cvmService.DescribeInstanceById(ctx, instanceId)
 			if err != nil {
-				return resource.NonRetryableError(err)
+				return tccommon.RetryError(err)
 			}
 
 			if instance != nil && instance.LatestOperationState != nil {
@@ -1823,7 +2214,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if v, ok := d.GetOk("system_disk_id"); ok {
 			systemDiskId := v.(string)
 			cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-			err := cbsService.ModifyDiskAttributes(ctx, systemDiskId, systemDiskName, -1)
+			err := cbsService.ModifyDiskAttributes(ctx, systemDiskId, systemDiskName, -1, "")
 			if err != nil {
 				return fmt.Errorf("an error occurred when modifying system disk name %s, reason: %s", systemDiskName, err.Error())
 			}
@@ -1921,6 +2312,95 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	if d.HasChange("user_data") {
+		err := cvmService.ModifyUserData(ctx, instanceId, d.Get("user_data").(string))
+		if err != nil {
+			return err
+		}
+
+		err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("user_data_raw") {
+		userDataRaw := d.Get("user_data_raw").(string)
+		userData := base64.StdEncoding.EncodeToString([]byte(userDataRaw))
+		err := cvmService.ModifyUserData(ctx, instanceId, userData)
+		if err != nil {
+			return err
+		}
+
+		err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("placement_group_id") || d.HasChange("force_replace_placement_group_id") {
+		oldPGI, newPGI := d.GetChange("placement_group_id")
+		oldPGIStr := oldPGI.(string)
+		newPGIStr := newPGI.(string)
+		if newPGIStr == "" {
+			// wait cvm support delete DisasterRecoverGroupId
+			return fmt.Errorf("Deleting `placement_group_id` is not currently supported.")
+		} else {
+			if oldPGIStr == newPGIStr {
+				return fmt.Errorf("It is not possible to change only `force_replace_placement_group_id`, it needs to be modified together with `placement_group_id`.")
+			}
+
+			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+			if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+				request.Force = helper.Bool(v.(bool))
+			}
+
+			request.InstanceIds = helper.Strings([]string{instanceId})
+			request.DisasterRecoverGroupId = helper.String(newPGIStr)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+
+			// wait
+			err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return tccommon.RetryError(errRet, tccommon.InternalError)
+				}
+
+				if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+					//LatestOperationCodeMode
+					if instance.LatestOperationErrorMsg != nil {
+						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+					}
+
+					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
+				}
+
+				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudInstanceRead(d, meta)
@@ -1945,8 +2425,12 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	var releaseAddress bool
+	if v, ok := d.GetOkExists("release_address"); ok {
+		releaseAddress = v.(bool)
+	}
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		errRet := cvmService.DeleteInstance(ctx, instanceId, releaseAddress)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -2096,7 +2580,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 
 	// exist in recycle, delete again
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		errRet := cvmService.DeleteInstance(ctx, instanceId, releaseAddress)
 		//when state is terminating, do not delete but check exist
 		if errRet != nil {
 			//check InvalidInstanceState.Terminating
@@ -2316,12 +2800,13 @@ func switchInstance(cvmService *CvmService, ctx context.Context, d *schema.Resou
 			return err
 		}
 	} else {
+		stopType := d.Get("stop_type").(string)
 		stoppedMode := d.Get("stopped_mode").(string)
 		skipStopApi := false
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			// when retry polling instance status, stop instance should skipped
 			if !skipStopApi {
-				err := cvmService.StopInstance(ctx, instanceId, stoppedMode)
+				err := cvmService.StopInstance(ctx, instanceId, stopType, stoppedMode)
 				if err != nil {
 					return resource.NonRetryableError(err)
 				}
@@ -2452,6 +2937,7 @@ type diskHash struct {
 	diskType           string
 	diskSize           int64
 	deleteWithInstance bool
+	kmsKeyId           string
 	encrypt            bool
 }
 
@@ -2460,6 +2946,121 @@ func getDataDiskHash(obj diskHash) string {
 	h.Write([]byte(obj.diskType))
 	h.Write([]byte(fmt.Sprintf("%d", obj.diskSize)))
 	h.Write([]byte(fmt.Sprintf("%t", obj.deleteWithInstance)))
+	h.Write([]byte(obj.kmsKeyId))
 	h.Write([]byte(fmt.Sprintf("%t", obj.encrypt)))
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+func sortDataDisks(tmpDataDisks []interface{}, dataDiskList []map[string]interface{}) (sortedList []map[string]interface{}, err error) {
+	// import
+	if len(tmpDataDisks) == 0 {
+		return dataDiskList, nil
+	}
+
+	if len(tmpDataDisks) != len(dataDiskList) {
+		err = fmt.Errorf("Inconsistent number of data disks.")
+		return
+	}
+
+	remainingDisks := make([]map[string]interface{}, len(dataDiskList))
+	copy(remainingDisks, dataDiskList)
+
+	for _, tmpDisk := range tmpDataDisks {
+		dMap := tmpDisk.(map[string]interface{})
+		tmpName, _ := dMap["data_disk_name"].(string)
+		tmpSizeRaw := dMap["data_disk_size"]
+		tmpSize, e := extractInt(tmpSizeRaw)
+		if e != nil {
+			return nil, e
+		}
+
+		tmpType, _ := dMap["data_disk_type"].(string)
+		tmpKmsKeyId, _ := dMap["kms_key_id"].(string)
+		tmpEncrypt, _ := dMap["encrypt"].(bool)
+		tmpDelWithIns, _ := dMap["delete_with_instance"].(bool)
+		tmpTpRaw := dMap["throughput_performance"]
+		tmpTp, e := extractInt(tmpTpRaw)
+		if e != nil {
+			return nil, e
+		}
+
+		var matchedDisk map[string]interface{}
+		matchedIndex := -1
+
+		for i, dataDisk := range remainingDisks {
+			dataName, _ := dataDisk["data_disk_name"].(*string)
+			dataSizeRaw := dataDisk["data_disk_size"]
+			dataSize, e := extractInt(dataSizeRaw)
+			if e != nil {
+				return nil, e
+			}
+
+			dataType, _ := dataDisk["data_disk_type"].(*string)
+			dataKmsKeyId, _ := dataDisk["kms_key_id"].(*string)
+			dataEncrypt, _ := dataDisk["encrypt"].(*bool)
+			dataDelWithIns, _ := dataDisk["delete_with_instance"].(*bool)
+			dataTpRaw := dataDisk["throughput_performance"]
+			dataTp, e := extractInt(dataTpRaw)
+			if e != nil {
+				return nil, e
+			}
+
+			match := true
+			if tmpName != "" && *dataName != tmpName {
+				match = false
+			}
+
+			if tmpKmsKeyId != "" && dataKmsKeyId != nil {
+				if tmpKmsKeyId != *dataKmsKeyId {
+					match = false
+				}
+			}
+
+			if dataSize != tmpSize || *dataType != tmpType || *dataEncrypt != tmpEncrypt || *dataDelWithIns != tmpDelWithIns || dataTp != tmpTp {
+				match = false
+			}
+
+			if match {
+				matchedDisk = dataDisk
+				matchedIndex = i
+				break
+			}
+		}
+
+		if matchedIndex == -1 {
+			err = fmt.Errorf("Unable to find match: tmpDisk = %v", tmpDisk)
+			return
+		}
+
+		sortedList = append(sortedList, matchedDisk)
+		remainingDisks = append(remainingDisks[:matchedIndex], remainingDisks[matchedIndex+1:]...)
+	}
+
+	return
+}
+
+func extractInt(value interface{}) (int, error) {
+	if value == nil {
+		return 0, fmt.Errorf("value is nil.")
+	}
+
+	if reflect.TypeOf(value).Kind() == reflect.Ptr {
+		ptrValue := reflect.ValueOf(value).Elem().Interface()
+		return extractInt(ptrValue)
+	}
+
+	switch v := value.(type) {
+	case int:
+		return v, nil
+	case float64:
+		return int(v), nil
+	case uint64:
+		return int(v), nil
+	case int32:
+		return int(v), nil
+	case int64:
+		return int(v), nil
+	default:
+		return 0, fmt.Errorf("Unrecognized numerical type: %T.", value)
+	}
 }

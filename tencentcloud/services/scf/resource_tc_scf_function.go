@@ -317,10 +317,9 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 							Description: "Region of cos bucket. if `type` is `cos`, `cos_region` is required.",
 						},
 						"type": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: tccommon.ValidateAllowedStringValue(SCF_TRIGGER_TYPES),
-							Description:  "Type of the SCF function trigger, support `cos`, `cls`, `timer`, `ckafka`, `http`, `apigw`, `cmq`.",
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Type of the SCF function trigger, support `timer`, `ckafka`, `custom_kafka`, `apigw`, `cmq`, `cos`, `mqtt`, `cls`, `clb`, `mps`, `vod`, `cm`, `eb`, `http`.",
 						},
 						"trigger_desc": {
 							Type:        schema.TypeString,
@@ -749,20 +748,8 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	// Pass tag as creation param instead of modify and time.Sleep
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		functionInfo.tags = tags
-
-		tagService := svctag.NewTagService(m.(tccommon.ProviderMeta).GetAPIV3Conn())
-		region := m.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-		functionId := fmt.Sprintf("%s/function/%s", *functionInfo.namespace, functionInfo.name)
-		resourceName := tccommon.BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			log.Printf("[CRITAL]%s create function tags failed: %+v", logId, err)
-			return err
-		}
-		// wait for tags add successfully
-		time.Sleep(time.Second)
 	}
 
 	if v, ok := d.GetOk("async_run_enable"); ok && v != nil {

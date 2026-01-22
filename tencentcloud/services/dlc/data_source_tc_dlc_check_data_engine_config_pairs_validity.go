@@ -19,7 +19,7 @@ func DataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity() *schema.Resou
 			"child_image_version_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Engine Image version id.",
+				Description: "ID of the minor version of the engine.",
 			},
 
 			"data_engine_config_pairs": {
@@ -45,7 +45,7 @@ func DataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity() *schema.Resou
 			"image_version_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Engine major version id. If a minor version id exists, you only need to pass in the minor version id. If it does not exist, the latest minor version id under the current major version will be obtained.",
+				Description: "ID of the major version of the engine. If there is the ID of the minor version, only the ID of the minor version needs to be input. If not, the latest ID of the minor version under the major version will be acquired.",
 			},
 
 			"is_available": {
@@ -55,11 +55,9 @@ func DataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity() *schema.Resou
 			},
 
 			"unavailable_config": {
-				Computed: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				Computed:    true,
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Invalid parameter set.",
 			},
 

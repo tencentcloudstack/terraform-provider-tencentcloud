@@ -67,13 +67,11 @@ func ResourceTencentCloudClsMachineGroup() *schema.Resource {
 			"update_start_time": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Update start time. We recommend you update LogListener during off-peak hours.",
 			},
 			"update_end_time": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Update end time. We recommend you update LogListener during off-peak hours.",
 			},
 			"service_logging": {

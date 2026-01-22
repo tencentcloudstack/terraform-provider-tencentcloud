@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_cfw_ccn_instance_region_status
+```
+
+```release-note:new-data-source
+tencentcloud_cfw_ccn_associated_instances
+```
+
+```release-note:new-data-source
+tencentcloud_cfw_ccn_vpc_fw_switch
+```
+
+```release-note:new-resource
+tencentcloud_cfw_cluster_vpc_fw_switch
+```

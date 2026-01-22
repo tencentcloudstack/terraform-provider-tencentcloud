@@ -458,7 +458,8 @@ func resourceTencentCloudTkeTmpAlertPolicyRead(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG] tmpAlertPolicy[%v]\n", tmpAlertPolicy)
 	if tmpAlertPolicy == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `AlertPolicy` %s does not exist", tmpAlertPolicyId)
+		log.Printf("[WARN]%s resource `AlertPolicy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	rules := make([]map[string]interface{}, 0, len(tmpAlertPolicy.Rules))
@@ -490,13 +491,15 @@ func resourceTencentCloudTkeTmpAlertPolicyRead(d *schema.ResourceData, meta inte
 	}
 
 	notify := tmpAlertPolicy.Notification
-	alertManager := map[string]interface{}{
-		"url":          notify.AlertManager.Url,
-		"cluster_type": notify.AlertManager.ClusterType,
-		"cluster_id":   notify.AlertManager.ClusterId,
-	}
 	var alertManagers []map[string]interface{}
-	alertManagers = append(alertManagers, alertManager)
+	if notify.AlertManager != nil {
+		alertManager := map[string]interface{}{
+			"url":          notify.AlertManager.Url,
+			"cluster_type": notify.AlertManager.ClusterType,
+			"cluster_id":   notify.AlertManager.ClusterId,
+		}
+		alertManagers = append(alertManagers, alertManager)
+	}
 
 	var notifyWay []string
 	if len(notify.NotifyWay) > 0 {

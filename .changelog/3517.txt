@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_organization_external_saml_identity_provider
+```

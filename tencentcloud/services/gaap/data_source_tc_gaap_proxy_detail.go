@@ -350,6 +350,11 @@ func DataSourceTencentCloudGaapProxyDetail() *schema.Resource {
 							Computed:    true,
 							Description: "Whether to allow TLS configuration.0-no support, 1-expressed support.",
 						},
+						"is_auto_scale_proxy": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Indicates whether the auto scale channel is enabled, with 0 for no and 1 for yes.",
+						},
 					},
 				},
 			},
@@ -636,6 +641,9 @@ func dataSourceTencentCloudGaapProxyDetailRead(d *schema.ResourceData, meta inte
 		}
 		if proxyDetail.IsSupportTLSChoice != nil {
 			proxyInfoMap["is_support_tls_choice"] = proxyDetail.IsSupportTLSChoice
+		}
+		if proxyDetail.IsAutoScaleProxy != nil {
+			proxyInfoMap["is_auto_scale_proxy"] = proxyDetail.IsAutoScaleProxy
 		}
 
 		_ = d.Set("proxy_detail", []interface{}{proxyInfoMap})

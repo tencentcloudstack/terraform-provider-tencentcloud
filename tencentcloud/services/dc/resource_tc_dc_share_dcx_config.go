@@ -74,12 +74,14 @@ func resourceTencentCloudDcShareDcxConfigRead(d *schema.ResourceData, meta inter
 		_ = d.Set("direct_connect_tunnel_id", ShareDcxConfig.DirectConnectTunnelId)
 	}
 
-	if *ShareDcxConfig.State == "AVAILABLE" {
-		_ = d.Set("enable", true)
-	}
+	if ShareDcxConfig.State != nil {
+		if *ShareDcxConfig.State == "AVAILABLE" {
+			_ = d.Set("enable", true)
+		}
 
-	if *ShareDcxConfig.State == "REJECTED" {
-		_ = d.Set("enable", false)
+		if *ShareDcxConfig.State == "REJECTED" {
+			_ = d.Set("enable", false)
+		}
 	}
 
 	return nil

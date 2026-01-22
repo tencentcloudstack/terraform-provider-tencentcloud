@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_sqlserver_instance: Support time_zone field.
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_readonly_instance: Support time_zone field.
+```
+
+```release-note:new-data-source
+tencentcloud_sqlserver_collation_time_zone
+```

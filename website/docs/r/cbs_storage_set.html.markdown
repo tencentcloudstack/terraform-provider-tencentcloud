@@ -11,6 +11,10 @@ description: |-
 
 Provides a resource to create CBS set.
 
+-> **NOTE:** When creating encrypted disks, if `kms_key_id` is not entered, the product side will generate a key by default.
+
+-> **NOTE:** When using CBS encrypted disk, it is necessary to add `CVM_QcsRole` role and `QcloudKMSAccessForCVMRole` strategy to the account.
+
 ## Example Usage
 
 ### Create 3 standard CBS storages
@@ -24,6 +28,35 @@ resource "tencentcloud_cbs_storage_set" "example" {
   availability_zone = "ap-guangzhou-3"
   project_id        = 0
   encrypt           = false
+}
+```
+
+### Create 3 standard CBS storages with customize kms_key_id
+
+```hcl
+resource "tencentcloud_cbs_storage_set" "example" {
+  disk_count        = 3
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  kms_key_id        = "b60b328d-7ed5-11ef-8836-5254009ad364"
+  encrypt           = true
+}
+```
+
+### Create 3 encrypted CBS storage with default generated kms_key_id
+
+```hcl
+resource "tencentcloud_cbs_storage_set" "example" {
+  disk_count        = 3
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  encrypt           = true
 }
 ```
 
@@ -55,6 +88,7 @@ The following arguments are supported:
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `disk_count` - (Optional, Int, ForceNew) The number of disks to be purchased. Default 1.
 * `encrypt` - (Optional, Bool, ForceNew) Indicates whether CBS is encrypted.
+* `kms_key_id` - (Optional, String, ForceNew) Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.
 * `project_id` - (Optional, Int) ID of the project to which the instance belongs.
 * `snapshot_id` - (Optional, String) ID of the snapshot. If specified, created the CBS by this snapshot.
 * `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.

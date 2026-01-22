@@ -18,25 +18,6 @@ resource "tencentcloud_identity_center_role_configuration_permission_custom_poli
   zone_id               = "z-xxxxxx"
   role_configuration_id = "rc-xxxxxx"
   policies {
-    role_policy_name     = "CustomPolicy2"
-    role_policy_document = <<-EOF
-{
-    "version": "2.0",
-    "statement": [
-        {
-            "effect": "allow",
-            "action": [
-                "vpc:AcceptAttachCcnInstances"
-            ],
-            "resource": [
-                "*"
-            ]
-        }
-    ]
-}
-EOF
-  }
-  policies {
     role_policy_name     = "CustomPolicy1"
     role_policy_document = <<-EOF
 {

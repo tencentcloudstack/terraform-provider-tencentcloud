@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_wedata_add_calc_engines_to_project_operation
+```
+
+```release-note:new-resource
+tencentcloud_wedata_data_backfill_plan_operation
+```

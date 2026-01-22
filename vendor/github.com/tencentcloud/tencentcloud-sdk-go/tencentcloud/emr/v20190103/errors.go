@@ -158,6 +158,12 @@ const (
 	// 无效的引导脚本。
 	INVALIDPARAMETER_INVALIDBOOTSTRAPACTION = "InvalidParameter.InvalidBootstrapAction"
 
+	// ExternalAccess.ClbSetting.VpcSetting参数无效。
+	INVALIDPARAMETER_INVALIDCLBSERVERVPCSETTING = "InvalidParameter.InvalidCLBServerVpcSetting"
+
+	// Classification参数值无效。
+	INVALIDPARAMETER_INVALIDCLASSIFICATION = "InvalidParameter.InvalidClassification"
+
 	// 无效的ClickHouse集群。
 	INVALIDPARAMETER_INVALIDCLICKHOUSECLUSTER = "InvalidParameter.InvalidClickHouseCluster"
 
@@ -209,11 +215,17 @@ const (
 	// 无效的磁盘大小。
 	INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
 
+	// 参数错误。
+	INVALIDPARAMETER_INVALIDDISKTYPE = "InvalidParameter.InvalidDiskType"
+
 	// 无效的EKS实例。
 	INVALIDPARAMETER_INVALIDEKSINSTANCE = "InvalidParameter.InvalidEksInstance"
 
 	// CustomConfig参数值无效。
 	INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+
+	// 无效组件依赖集群vpc。
+	INVALIDPARAMETER_INVALIDEXTERNALSERVICEVPCID = "InvalidParameter.InvalidExternalServiceVpcId"
 
 	// 无效的任务失败处理策略。
 	INVALIDPARAMETER_INVALIDFAILUREPOLICY = "InvalidParameter.InvalidFailurePolicy"
@@ -250,6 +262,9 @@ const (
 
 	// 无效的元数据库URL。
 	INVALIDPARAMETER_INVALIDMETADATAJDBCURL = "InvalidParameter.InvalidMetaDataJdbcUrl"
+
+	// 无效的元数据库实例Id。
+	INVALIDPARAMETER_INVALIDMETAINSTANCEID = "InvalidParameter.InvalidMetaInstanceId"
 
 	// 无效的元数据表类型。
 	INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
@@ -296,6 +311,9 @@ const (
 	// 不合法自动续费标识。
 	INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
 
+	// 无效资源ID。
+	INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
+
 	// 资源ID无效。
 	INVALIDPARAMETER_INVALIDRESOURCEIDS = "InvalidParameter.InvalidResourceIds"
 
@@ -319,6 +337,9 @@ const (
 
 	// 参数ServiceNodeInfo无效或错误。
 	INVALIDPARAMETER_INVALIDSERVICENODEINFO = "InvalidParameter.InvalidServiceNodeInfo"
+
+	// 参数错误。
+	INVALIDPARAMETER_INVALIDSERVICETYPE = "InvalidParameter.InvalidServiceType"
 
 	// 参数InvalidSoftDeployInfo无效或错误。
 	INVALIDPARAMETER_INVALIDSOFTDEPLOYINFO = "InvalidParameter.InvalidSoftDeployInfo"
@@ -383,6 +404,9 @@ const (
 	// 无效的统一元数据库。
 	INVALIDPARAMETER_INVALIDUNIFYMETA = "InvalidParameter.InvalidUnifyMeta"
 
+	// 参数错误。
+	INVALIDPARAMETER_INVALIDVOLUMETYPE = "InvalidParameter.InvalidVolumeType"
+
 	// 无效的私有网络ID。
 	INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
 
@@ -431,6 +455,15 @@ const (
 	// 引导脚本数量超过限制。
 	LIMITEXCEEDED_BOOTSTRAPACTIONSNUMLIMITEXCEEDED = "LimitExceeded.BootstrapActionsNumLimitExceeded"
 
+	// Pod Cpu请求数量超过集群限制。
+	LIMITEXCEEDED_PODCPULIMITEXCEEDEDAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededAvailableCpu"
+
+	// Pod Cpu请求数量超过节点限制。
+	LIMITEXCEEDED_PODCPULIMITEXCEEDEDNODEAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededNodeAvailableCpu"
+
+	// Pod 内存请求数量超过集群限制。
+	LIMITEXCEEDED_PODMEMORYLIMITEXCEEDEDAVAILABLEMEMORY = "LimitExceeded.PodMemoryLimitExceededAvailableMemory"
+
 	// 安全组数量超过限制。
 	LIMITEXCEEDED_SECURITYGROUPNUMLIMITEXCEEDED = "LimitExceeded.SecurityGroupNumLimitExceeded"
 
@@ -467,6 +500,9 @@ const (
 	// 无法找到监控元数据。
 	RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
 
+	// 无法找到该服务组件。
+	RESOURCENOTFOUND_SERVICEGROUPNOTFOUND = "ResourceNotFound.ServiceGroupNotFound"
+
 	// 未找到相应扩缩容规则。
 	RESOURCENOTFOUND_STRATEGYNOTFOUND = "ResourceNotFound.StrategyNotFound"
 
@@ -478,6 +514,15 @@ const (
 
 	// 没有查找到指定标签。
 	RESOURCENOTFOUND_TAGSNOTFOUND = "ResourceNotFound.TagsNotFound"
+
+	// 资源不可用。
+	RESOURCEUNAVAILABLE_NOTSUPPORTCLUSTERTYPE = "ResourceUnavailable.NotSupportClusterType"
+
+	// 资源不可用。
+	RESOURCEUNAVAILABLE_NOTSUPPORTRESOURCETYPE = "ResourceUnavailable.NotSupportResourceType"
+
+	// 资源规格重复。
+	RESOURCEUNAVAILABLE_REPEATSPEC = "ResourceUnavailable.RepeatSpec"
 
 	// 当前资源规格不存在默认规格。
 	RESOURCEUNAVAILABLE_RESOURCESPECNOTDEFAULTSPEC = "ResourceUnavailable.ResourceSpecNotDefaultSpec"
@@ -493,6 +538,9 @@ const (
 
 	// 云服务器已售罄。
 	RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+
+	// 未授权操作。
+	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
 	// appid不一致。
 	UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"

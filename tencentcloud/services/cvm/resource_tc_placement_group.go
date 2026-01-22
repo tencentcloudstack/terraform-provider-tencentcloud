@@ -3,6 +3,9 @@ package cvm
 import (
 	"context"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -33,6 +36,19 @@ func ResourceTencentCloudPlacementGroup() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_PLACEMENT_GROUP_TYPE),
 				Description:  "Type of the placement group. Valid values: `HOST`, `SW` and `RACK`.",
+			},
+			"affinity": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
+				Description:  "Affinity of the placement group.Valid values: 1~10, default is 1.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the placement group.",
 			},
 
 			// computed
@@ -65,10 +81,26 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 	}
 	placementName := d.Get("name").(string)
 	placementType := d.Get("type").(string)
+
+	var affinity int
+	if v, ok := d.GetOkExists("affinity"); ok {
+		affinity = v.(int)
+	}
+
+	tags := make([]*cvm.Tag, 0)
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := cvm.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			tags = append(tags, &tag)
+		}
+	}
 	var id string
 	var errRet error
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		id, errRet = cvmService.CreatePlacementGroup(ctx, placementName, placementType)
+		id, errRet = cvmService.CreatePlacementGroup(ctx, placementName, placementType, affinity, tags)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -112,9 +144,14 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 
 	_ = d.Set("name", placement.Name)
 	_ = d.Set("type", placement.Type)
+	_ = d.Set("affinity", placement.Affinity)
 	_ = d.Set("cvm_quota_total", placement.CvmQuotaTotal)
 	_ = d.Set("current_num", placement.CurrentNum)
 	_ = d.Set("create_time", placement.CreateTime)
+
+	if len(placement.Tags) > 0 {
+		_ = d.Set("tags", flattenInstanceTagsMapping(placement.Tags))
+	}
 
 	return nil
 }
@@ -137,6 +174,20 @@ func resourceTencentCloudPlacementGroupUpdate(d *schema.ResourceData, meta inter
 			}
 			return nil
 		})
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(client)
+		region := client.Region
+		resourceName := tccommon.BuildTagResourceName("cvm", "ps", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
 		}

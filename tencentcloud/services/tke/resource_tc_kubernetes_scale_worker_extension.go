@@ -113,6 +113,10 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostRequest1(ctx context.Conte
 			mapping["tags"] = tmpList
 		}
 
+		if instance.DedicatedClusterId != nil {
+			mapping["cdc_id"] = instance.DedicatedClusterId
+		}
+
 		instanceList = append(instanceList, mapping)
 	}
 	if importFlag1 {

@@ -177,6 +177,29 @@ func TestAccTencentCloudEmrClusterResource_Basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudEmrClusterResource_Zookeeper(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testEmrZookeeper,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEmrExists("tencentcloud_emr_cluster.emr_zookeeper"),
+					resource.TestCheckResourceAttr("tencentcloud_emr_cluster.emr_zookeeper", "scene_name", "Hadoop-Zookeeper"),
+					resource.TestCheckResourceAttr("tencentcloud_emr_cluster.emr_zookeeper", "resource_spec.0.common_count", "3"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_emr_cluster.emr_zookeeper",
+				ImportState:             true,
+				ImportStateVerifyIgnore: []string{"display_strategy", "placement", "time_span", "time_unit", "login_settings", "terminate_node_info"},
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudEmrClusterResource_PreExecutedFileSettings(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -240,6 +263,24 @@ func TestAccTencentCloudEmrClusterResource_NotNeedMasterWan(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEmrExists(testEmrClusterResourceKey),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "need_master_wan", "NOT_NEED_MASTER_WAN"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudEmrClusterResource_multiZone(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testEmrMultiZone,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEmrExists(testEmrClusterResourceKey),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "multi_zone", "true"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "multi_zone_setting.#", "2"),
 				),
 			},
 		},
@@ -667,4 +708,212 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
     }
 	need_master_wan = "NOT_NEED_MASTER_WAN"
   }
+`
+
+const testEmrZookeeper = tcacctest.DefaultEMRVariable + `
+data "tencentcloud_instance_types" "cvm2c4m" {
+	exclude_sold_out=true
+	cpu_core_count=2
+	memory_size=4
+    filter {
+      name   = "instance-charge-type"
+      values = ["POSTPAID_BY_HOUR"]
+    }
+    filter {
+    name   = "zone"
+    values = ["ap-guangzhou-3"]
+  }
+}
+
+resource "tencentcloud_emr_cluster" "emr_zookeeper" {
+  product_id = 37
+  vpc_settings = {
+    vpc_id    = var.vpc_id
+    subnet_id = var.subnet_id
+  }
+  softwares = [
+    "zookeeper-3.6.3",
+  ]
+  support_ha    = 1
+  instance_name = "emr-test-demo"
+  resource_spec {
+    common_resource_spec {
+      mem_size     = 4096
+      cpu          = 2
+      disk_size    = 100
+      disk_type    = "CLOUD_SSD"
+      spec         = "CVM.${data.tencentcloud_instance_types.cvm2c4m.instance_types.0.family}"
+      storage_type = 4
+      root_size    = 50
+    }
+    common_count = 3
+  }
+  login_settings = {
+    password = "Tencent@cloud123"
+  }
+  time_span = 3600
+  time_unit = "s"
+  pay_mode  = 0
+  placement_info {
+    zone       = "ap-guangzhou-3"
+    project_id = 0
+  }
+  sg_id = var.sg_id
+  need_master_wan = "NOT_NEED_MASTER_WAN"
+  scene_name = "Hadoop-Zookeeper"
+}
+`
+
+const testEmrMultiZone = `
+data "tencentcloud_instance_types" "cvm4c8m" {
+  exclude_sold_out = true
+  cpu_core_count   = 4
+  memory_size      = 8
+  filter {
+    name   = "instance-charge-type"
+    values = ["POSTPAID_BY_HOUR"]
+  }
+  filter {
+    name   = "zone"
+    values = ["ap-guangzhou-6", "ap-guangzhou-7"]
+  }
+  filter {
+    name   = "instance-family"
+    values = ["S5"]
+  }
+}
+
+resource "tencentcloud_emr_cluster" "emrrrr" {
+  need_master_wan = "NOT_NEED_MASTER_WAN"
+  product_id      = 38
+  vpc_settings = {
+    vpc_id    = "vpc-axrsmmrv"
+    subnet_id = "subnet-kxaxknmg"
+  }
+  softwares = [
+    "hdfs-2.8.5",
+    "knox-1.6.1",
+    "openldap-2.4.44",
+    "yarn-2.8.5",
+    "zookeeper-3.6.3",
+  ]
+  support_ha    = 1
+  instance_name = "emr-test-demo"
+  multi_zone    = true
+  multi_zone_setting {
+    vpc_settings = {
+      vpc_id    = "vpc-axrsmmrv"
+      subnet_id = "subnet-kxaxknmg"
+    }
+    placement {
+      zone = "ap-guangzhou-6"
+    }
+
+    resource_spec {
+      master_resource_spec {
+        mem_size     = 8192
+        cpu          = 4
+        disk_size    = 100
+        disk_type    = "CLOUD_PREMIUM"
+        spec         = "CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+        storage_type = 5
+        root_size    = 50
+        multi_disks {
+          disk_type = "CLOUD_PREMIUM"
+          volume    = 200
+          count     = 1
+        }
+      }
+      core_resource_spec {
+        mem_size     = 8192
+        cpu          = 4
+        disk_size    = 100
+        disk_type    = "CLOUD_PREMIUM"
+        spec         = "CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+        storage_type = 5
+        root_size    = 50
+        multi_disks {
+          disk_type = "CLOUD_PREMIUM"
+          volume    = 100
+          count     = 2
+        }
+      }
+      common_resource_spec {
+        mem_size     = 4096
+        cpu          = 2
+        disk_size    = 100
+        disk_type    = "CLOUD_SSD"
+        spec         = "CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+        storage_type = 4
+        root_size    = 50
+      }
+      common_count = 2
+      master_count = 1
+      core_count   = 3
+    }
+  }
+  multi_zone_setting {
+    vpc_settings = {
+      vpc_id    = "vpc-axrsmmrv"
+      subnet_id = "subnet-861wd75e"
+    }
+    placement {
+      zone = "ap-guangzhou-7"
+    }
+
+    resource_spec {
+      master_resource_spec {
+        mem_size     = 8192
+        cpu          = 4
+        disk_size    = 100
+        disk_type    = "CLOUD_PREMIUM"
+        spec         = "CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+        storage_type = 5
+        root_size    = 50
+        multi_disks {
+          disk_type = "CLOUD_PREMIUM"
+          volume    = 200
+          count     = 1
+        }
+      }
+      core_resource_spec {
+        mem_size     = 8192
+        cpu          = 4
+        disk_size    = 100
+        disk_type    = "CLOUD_PREMIUM"
+        spec         = "CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+        storage_type = 5
+        root_size    = 50
+        multi_disks {
+          disk_type = "CLOUD_PREMIUM"
+          volume    = 100
+          count     = 2
+        }
+      }
+      common_resource_spec {
+        mem_size     = 4096
+        cpu          = 2
+        disk_size    = 100
+        disk_type    = "CLOUD_SSD"
+        spec         = "CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+        storage_type = 4
+        root_size    = 50
+      }
+      common_count = 1
+      master_count = 1
+      core_count   = 4
+    }
+  }
+  login_settings = {
+    password = "Tencent@cloud123"
+  }
+  time_span = 3600
+  time_unit = "s"
+  pay_mode  = 0
+  sg_id = "sg-bzbu5ezt"
+  placement_info {
+    zone       = "ap-guangzhou-6"
+    project_id = 0
+  }
+}
 `

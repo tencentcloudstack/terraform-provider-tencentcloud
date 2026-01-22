@@ -4,16 +4,16 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_instance"
 sidebar_current: "docs-tencentcloud-resource-mysql_instance"
 description: |-
-  Provides a mysql instance resource to create master database instances.
+  Provides a MySQL instance resource to create master database instances.
 ---
 
 # tencentcloud_mysql_instance
 
-Provides a mysql instance resource to create master database instances.
+Provides a MySQL instance resource to create master database instances.
 
 ~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
-~> **NOTE:** The value of parameter `parameters` can be used with tencentcloud_mysql_parameter_list to obtain.
+~> **NOTE:** The value of parameter `parameters` can be used with `tencentcloud_mysql_parameter_list` to obtain.
 
 ## Example Usage
 
@@ -43,6 +43,7 @@ resource "tencentcloud_security_group" "security_group" {
 }
 
 resource "tencentcloud_mysql_instance" "example" {
+  device_type       = "BASIC_V2"
   internet_service  = 1
   engine_version    = "5.7"
   charge_type       = "POSTPAID"
@@ -65,6 +66,11 @@ resource "tencentcloud_mysql_instance" "example" {
   parameters = {
     character_set_server = "utf8"
     max_connections      = "1000"
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
   }
 }
 ```
@@ -96,6 +102,11 @@ resource "tencentcloud_mysql_instance" "example" {
   parameters = {
     character_set_server = "utf8"
     max_connections      = "1000"
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
   }
 }
 ```
@@ -129,6 +140,60 @@ resource "tencentcloud_mysql_instance" "example" {
     character_set_server = "utf8"
     max_connections      = "1000"
   }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+```
+
+### Create instance by custom cluster_topology
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  instance_name     = "tf-example"
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord@123"
+  slave_deploy_mode = 1
+  slave_sync_mode   = 1
+  device_type       = "CLOUD_NATIVE_CLUSTER"
+  availability_zone = "ap-guangzhou-6"
+  cpu               = 2
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = "vpc-i5yyodl9"
+  subnet_id         = "subnet-hhi88a58"
+  intranet_port     = 3306
+  security_groups   = ["sg-e6a8xxib"]
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+  tags = {
+    createBy = "Terraform"
+  }
+
+  cluster_topology {
+    read_write_node {
+      zone = "ap-guangzhou-6"
+    }
+
+    read_only_nodes {
+      is_random_zone = true
+    }
+
+    read_only_nodes {
+      zone = "ap-guangzhou-7"
+    }
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
 }
 ```
 
@@ -142,8 +207,15 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. NOTES: Only supported prepaid instance.
 * `availability_zone` - (Optional, String) Indicates which availability zone will be used.
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
+* `cluster_topology` - (Optional, List) Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.
 * `cpu` - (Optional, Int) CPU cores.
-* `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
+* `device_type` - (Optional, String) Specify device type, available values:
+	- `UNIVERSAL` (default): universal instance,
+	- `EXCLUSIVE`: exclusive instance,
+	- `BASIC_V2`: ONTKE single-node instance,
+	- `CLOUD_NATIVE_CLUSTER`: cluster version standard type,
+	- `CLOUD_NATIVE_CLUSTER_EXCLUSIVE`: cluster version enhanced type.
+If it is not specified, it defaults to a universal instance.
 * `engine_type` - (Optional, String) Instance engine type. The default value is `InnoDB`. Supported values include `InnoDB` and `RocksDB`.
 * `engine_version` - (Optional, String) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.
 * `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
@@ -161,13 +233,29 @@ The following arguments are supported:
 * `root_password` - (Optional, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `second_slave_zone` - (Optional, String) Zone information about second slave instance.
 * `security_groups` - (Optional, Set: [`String`]) Security groups to use.
-* `slave_deploy_mode` - (Optional, Int) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
+* `slave_deploy_mode` - (Optional, Int) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones. Readonly instance settings are not supported.
 * `slave_sync_mode` - (Optional, Int) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
 * `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional, Map) Instance tags.
 * `upgrade_subversion` - (Optional, Int) Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.
 * `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.
 * `wait_switch` - (Optional, Int) Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.
+
+The `cluster_topology` object supports the following:
+
+* `read_only_nodes` - (Optional, Set) RO Node Topology.
+* `read_write_node` - (Optional, List) RW Node Topology.
+
+The `read_only_nodes` object of `cluster_topology` supports the following:
+
+* `is_random_zone` - (Optional, Bool) Whether to distribute in random availability zones. Enter `true` to specify a random availability zone. Otherwise, use the availability zone specified by Zone.
+* `node_id` - (Optional, String) When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.
+* `zone` - (Optional, String) Specifies the availability zone where the node is distributed.
+
+The `read_write_node` object of `cluster_topology` supports the following:
+
+* `zone` - (Required, String) The availability zone where the RW node is located.
+* `node_id` - (Optional, String) When upgrading a cluster instance, if you want to adjust the availability zone of a read-only node, you need to specify the node ID.
 
 ## Attributes Reference
 
@@ -182,12 +270,18 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status. Valid values: `0`, `1`, `4`, `5`. `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `20m`) Used when creating the resource.
+* `delete` - (Defaults to `20m`) Used when deleting the resource.
 
 ## Import
 
 MySQL instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mysql_instance.foo cdb-12345678
+$ terraform import tencentcloud_mysql_instance.example cdb-12345678
 ```
 

@@ -24,7 +24,7 @@ resource "tencentcloud_protocol_template_group" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required, String, ForceNew) Name of the protocol template group.
+* `name` - (Required, String) Name of the protocol template group.
 * `template_ids` - (Required, Set: [`String`]) Service template ID list.
 
 ## Attributes Reference

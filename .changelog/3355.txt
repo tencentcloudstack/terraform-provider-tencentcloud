@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_waf_bot_scene_status_config
+```
+
+```release-note:new-resource
+tencentcloud_waf_bot_status_config
+```

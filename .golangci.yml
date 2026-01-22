@@ -12,10 +12,12 @@ linters:
   enable:
     - errcheck
     - gofmt
-    - gosimple
     - ineffassign
     - misspell
+<<<<<<< HEAD
     - staticcheck
+=======
+>>>>>>> 1d6743f8f63593fb470fa4021ca1875bebb70f90
     - unconvert
     - unused
     - vet
@@ -28,7 +30,11 @@ run:
   modules-download-mode: vendor
   timeout: 60m
   # The default concurrency value is the number of available CPU.
+<<<<<<< HEAD
   concurrency: 2
+=======
+  concurrency: 4
+>>>>>>> 1d6743f8f63593fb470fa4021ca1875bebb70f90
   # Allow multiple parallel golangci-lint instances running.
   # If false (default) - golangci-lint acquires file lock on start.
   allow-parallel-runners: true

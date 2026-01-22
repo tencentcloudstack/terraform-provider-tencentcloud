@@ -2,8 +2,10 @@ package cls
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
@@ -43,7 +45,6 @@ func (me *ClsService) DescribeClsLogset(ctx context.Context, logsetId string) (l
 			Values: []*string{&logsetId},
 		},
 	)
-	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
 	var pageSize int64 = 100
@@ -51,34 +52,43 @@ func (me *ClsService) DescribeClsLogset(ctx context.Context, logsetId string) (l
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = logsetId
 
-	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClsClient(iacExtInfo).DescribeLogsets(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		for {
+			request.Offset = &offset
+			request.Limit = &pageSize
+			ratelimit.Check(request.GetAction())
+			response, e := me.client.UseClsClient(iacExtInfo).DescribeLogsets(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				errRet = e
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Logsets) < 1 {
-			break
+			if response == nil || len(response.Response.Logsets) < 1 {
+				break
+			}
+			instances = append(instances, response.Response.Logsets...)
+			if len(response.Response.Logsets) < int(pageSize) {
+				break
+			}
+			offset += pageSize
 		}
-		instances = append(instances, response.Response.Logsets...)
-		if len(response.Response.Logsets) < int(pageSize) {
-			break
-		}
-		offset += pageSize
-	}
 
-	if len(instances) < 1 {
+		if len(instances) < 1 {
+			return nil
+		}
+		logset = instances[0]
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
 		return
 	}
-	logset = instances[0]
 
 	return
 
@@ -97,14 +107,22 @@ func (me *ClsService) DeleteClsLogsetById(ctx context.Context, logsetId string) 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseClsClient().DeleteLogset(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseClsClient().DeleteLogset(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -231,7 +249,7 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 			Values: []*string{&topicId},
 		},
 	}
-	ratelimit.Check(request.GetAction())
+
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = topicId
 	var (
@@ -284,14 +302,22 @@ func (me *ClsService) DeleteClsTopic(ctx context.Context, id string) (errRet err
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseClsClient().DeleteTopic(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsClient().DeleteTopic(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -764,14 +790,22 @@ func (me *ClsService) DeleteClsIndex(ctx context.Context, id string) (errRet err
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseClsClient().DeleteIndex(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsClient().DeleteIndex(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -1372,10 +1406,24 @@ func (me *ClsService) DeleteClsScheduledSqlById(ctx context.Context, taskId stri
 	return
 }
 
-func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context) (ret *cls.DescribeCloudProductLogTasksResponseParams, errRet error) {
+func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context, instanceId, assumerName, logType string) (ret *cls.DescribeCloudProductLogTasksResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cls.NewDescribeCloudProductLogTasksRequest()
+	request.Filters = []*cls.Filter{
+		{
+			Key:    helper.String("instanceId"),
+			Values: helper.Strings([]string{instanceId}),
+		},
+		{
+			Key:    helper.String("assumerName"),
+			Values: helper.Strings([]string{assumerName}),
+		},
+		{
+			Key:    helper.String("logType"),
+			Values: helper.Strings([]string{logType}),
+		},
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -1383,21 +1431,43 @@ func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context) (r
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsV20201016Client().DescribeCloudProductLogTasks(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
 
-	if err := resourceTencentCloudClsCloudProductLogTaskReadPreRequest0(ctx, request); err != nil {
-		return nil, err
-	}
+		ret = response.Response
+		return nil
+	})
 
-	response, err := me.client.UseClsV20201016Client().DescribeCloudProductLogTasks(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	ret = response.Response
 	return
+}
+
+func (me *ClsService) ClsCloudProductLogTaskStateRefreshFunc(ctx context.Context, instanceId, assumerName, logType string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ret, err := me.DescribeClsCloudProductLogTaskById(ctx, instanceId, assumerName, logType)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if ret == nil || len(ret.Tasks) < 1 {
+			return cls.CloudProductLogTaskInfo{}, "3", nil
+		}
+		task := ret.Tasks[0]
+		if task.Status == nil {
+			return nil, "", fmt.Errorf("task status is nil")
+		}
+		return task, helper.Int64ToStr(*task.Status), nil
+	}
 }
 
 func (me *ClsService) DescribeClsNoticeContentById(ctx context.Context, noticeContentId string) (ret *cls.NoticeContentTemplate, errRet error) {
@@ -1430,5 +1500,109 @@ func (me *ClsService) DescribeClsNoticeContentById(ctx context.Context, noticeCo
 	}
 
 	ret = response.Response.NoticeContents[0]
+	return
+}
+
+func (me *ClsService) DescribeClsWebCallbackById(ctx context.Context, webCallbackId string) (ret *cls.WebCallbackInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeWebCallbacksRequest()
+	filter := &cls.Filter{
+		Key:    helper.String("webCallbackId"),
+		Values: []*string{helper.String(webCallbackId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsV20201016Client().DescribeWebCallbacks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.WebCallbacks) < 1 {
+		return
+	}
+
+	ret = response.Response.WebCallbacks[0]
+	return
+}
+
+func (me *ClsService) DescribeClsTopicsByFilter(ctx context.Context, param map[string]interface{}) (ret []*cls.TopicInfo, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = cls.NewDescribeTopicsRequest()
+		response = cls.NewDescribeTopicsResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cls.Filter)
+		}
+
+		if k == "PreciseSearch" {
+			request.PreciseSearch = v.(*uint64)
+		}
+
+		if k == "BizType" {
+			request.BizType = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseClsClient().DescribeTopics(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || len(response.Response.Topics) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Topics...)
+		if len(response.Response.Topics) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
 	return
 }

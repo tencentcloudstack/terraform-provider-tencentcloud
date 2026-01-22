@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a teo zone_setting
 
+~> **NOTE:** The current resource has been deprecated, please use `tencentcloud_teo_l7_acc_setting`.
+
 ## Example Usage
 
 ```hcl

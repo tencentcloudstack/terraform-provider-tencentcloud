@@ -328,7 +328,8 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentRead(d *schema.ResourceData, m
 
 	if clusterAgent == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `global_notification` %s does not exist", instanceId)
+		log.Printf("[WARN]%s resource `cluster_agent` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	var agents []map[string]interface{}

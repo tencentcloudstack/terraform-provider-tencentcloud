@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to start a tcr instance replication operation
 
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.82.50. Please use `tencentcloud_tcr_replication` instead.
+
 ## Example Usage
 
 ### Sync source tcr instance to target instance

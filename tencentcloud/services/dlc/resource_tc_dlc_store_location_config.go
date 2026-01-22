@@ -2,6 +2,7 @@ package dlc
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -19,20 +20,17 @@ func ResourceTencentCloudDlcStoreLocationConfig() *schema.Resource {
 		Read:   resourceTencentCloudDlcStoreLocationConfigRead,
 		Update: resourceTencentCloudDlcStoreLocationConfigUpdate,
 		Delete: resourceTencentCloudDlcStoreLocationConfigDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"store_location": {
-				Required:    true,
 				Type:        schema.TypeString,
+				Required:    true,
 				Description: "The calculation results are stored in the cos path, such as: cosn://bucketname/.",
 			},
 
 			"enable": {
-				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Whether to enable advanced settings: 0-no, 1-yes.",
+				Required:    true,
+				Description: "Whether to enable advanced settings. 0 means no while 1 means yes.",
 			},
 		},
 	}
@@ -42,6 +40,18 @@ func resourceTencentCloudDlcStoreLocationConfigCreate(d *schema.ResourceData, me
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_store_location_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	var storeLocation string
+
+	if v, ok := d.GetOk("store_location"); ok {
+		storeLocation = v.(string)
+	}
+
+	if storeLocation != "" {
+		d.SetId(storeLocation)
+	} else {
+		d.SetId(helper.BuildToken())
+	}
+
 	return resourceTencentCloudDlcStoreLocationConfigUpdate(d, meta)
 }
 
@@ -49,11 +59,11 @@ func resourceTencentCloudDlcStoreLocationConfigRead(d *schema.ResourceData, meta
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_store_location_config.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	storeLocationConfig, err := service.DescribeDlcStoreLocationConfigById(ctx)
 	if err != nil {
@@ -61,8 +71,8 @@ func resourceTencentCloudDlcStoreLocationConfigRead(d *schema.ResourceData, meta
 	}
 
 	if storeLocationConfig == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_dlc_store_location_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `DlcStoreLocationConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -73,6 +83,7 @@ func resourceTencentCloudDlcStoreLocationConfigRead(d *schema.ResourceData, meta
 	if storeLocationConfig.Enable != nil {
 		_ = d.Set("enable", storeLocationConfig.Enable)
 	}
+
 	return nil
 }
 
@@ -80,20 +91,21 @@ func resourceTencentCloudDlcStoreLocationConfigUpdate(d *schema.ResourceData, me
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_store_location_config.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		request       = dlc.NewModifyAdvancedStoreLocationRequest()
+		storeLocation string
+	)
 
-	request := dlc.NewModifyAdvancedStoreLocationRequest()
-
-	var storeLocation string
 	if v, ok := d.GetOk("store_location"); ok {
 		storeLocation = v.(string)
-		request.StoreLocation = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("enable"); ok {
 		request.Enable = helper.IntUint64(v.(int))
 	}
 
+	request.StoreLocation = &storeLocation
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().ModifyAdvancedStoreLocation(request)
 		if e != nil {
@@ -101,14 +113,19 @@ func resourceTencentCloudDlcStoreLocationConfigUpdate(d *schema.ResourceData, me
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Update dlc advanced store location failed, Response is nil."))
+		}
+
 		return nil
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s update dlc storeLocationConfig failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update dlc advanced store location failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(storeLocation)
 	return resourceTencentCloudDlcStoreLocationConfigRead(d, meta)
 }
 

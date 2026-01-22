@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfw_vpc_instance"
 sidebar_current: "docs-tencentcloud-resource-cfw_vpc_instance"
 description: |-
-  Provides a resource to create a cfw vpc_instance
+  Provides a resource to create a CFW vpc instance
 ---
 
 # tencentcloud_cfw_vpc_instance
 
-Provides a resource to create a cfw vpc_instance
+Provides a resource to create a CFW vpc instance
 
 ## Example Usage
 
@@ -96,12 +96,12 @@ The `vpc_fw_instances` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `fw_group_id` - Firewall group ID.
 
 
 ## Import
 
-cfw vpc_instance can be imported using the id, e.g.
+CFW vpc instance can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_cfw_vpc_instance.example cfwg-4ee69507

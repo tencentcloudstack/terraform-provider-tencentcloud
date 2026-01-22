@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_teo_l7_acc_rule_v2
+```
+
+```release-note:new-resource
+tencentcloud_teo_l7_acc_rule_priority_operation
+```

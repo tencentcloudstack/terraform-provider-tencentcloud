@@ -168,4 +168,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `ro_instance_id` - Primary read only instance ID, in the format: mssqlro-lbljc5qd.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `2h0m`) Used when creating the resource.
+* `read` - (Defaults to `2h0m`) Used when reading the resource.
+* `update` - (Defaults to `2h0m`) Used when updating the resource.
+* `delete` - (Defaults to `2h0m`) Used when deleting the resource.
 

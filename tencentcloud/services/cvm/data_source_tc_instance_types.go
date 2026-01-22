@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	svccbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -57,6 +58,40 @@ func DataSourceTencentCloudInstanceTypes() *schema.Resource {
 							Required:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "The filter values.",
+						},
+					},
+				},
+			},
+			"cbs_filter": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Cbs filter.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"disk_types": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Description: "Hard disk media type. Value range:\n" +
+								"	- CLOUD_BASIC: Represents ordinary Cloud Block Storage;\n" +
+								"	- CLOUD_PREMIUM: Represents high-performance Cloud Block Storage;\n" +
+								"	- CLOUD_SSD: Represents SSD Cloud Block Storage;\n" +
+								"	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.",
+						},
+						"disk_charge_type": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: "Payment model. Value range:\n" +
+								"	- PREPAID: Prepaid;\n" +
+								"	- POSTPAID_BY_HOUR: Post-payment.",
+						},
+						"disk_usage": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: "System disk or data disk. Value range:\n" +
+								"	- SYSTEM_DISK: Represents the system disk;\n" +
+								"	- DATA_DISK: Represents the data disk.",
 						},
 					},
 				},
@@ -119,6 +154,79 @@ func DataSourceTencentCloudInstanceTypes() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Sell status of the instance.",
+						},
+						"cbs_configs": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "CBS config. The cbs_configs is populated when the cbs_filter is added.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"available": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Whether the configuration is available.",
+									},
+									"disk_charge_type": {
+										Type:     schema.TypeString,
+										Computed: true,
+										Description: "Payment model. Value range:\n" +
+											"	- PREPAID: Prepaid;\n" +
+											"	- POSTPAID_BY_HOUR: Post-payment.",
+									},
+									"zone": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The availability zone to which the Cloud Block Storage belongs.",
+									},
+									"instance_family": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Instance family.",
+									},
+									"disk_type": {
+										Type:     schema.TypeString,
+										Computed: true,
+										Description: "Hard disk media type. Value range:\n" +
+											"	- CLOUD_BASIC: Represents ordinary Cloud Block Storage;\n" +
+											"	- CLOUD_PREMIUM: Represents high-performance Cloud Block Storage;\n" +
+											"	- CLOUD_SSD: Represents SSD Cloud Block Storage;\n" +
+											"	- CLOUD_HSSD: Represents enhanced SSD Cloud Block Storage.",
+									},
+									"step_size": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Minimum step size change in cloud disk size, in GB.",
+									},
+									"extra_performance_range": {
+										Computed:    true,
+										Type:        schema.TypeList,
+										Elem:        &schema.Schema{Type: schema.TypeInt},
+										Description: "Extra performance range.",
+									},
+									"device_class": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Device class.",
+									},
+									"disk_usage": {
+										Type:     schema.TypeString,
+										Computed: true,
+										Description: "Cloud disk type. Value range:\n" +
+											"	- SYSTEM_DISK: Represents the system disk;\n" +
+											"	- DATA_DISK: Represents the data disk.",
+									},
+									"min_disk_size": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "The minimum configurable cloud disk size, in GB.",
+									},
+									"max_disk_size": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "The maximum configurable cloud disk size, in GB.",
+									},
+								},
+							},
 						},
 					},
 				},
@@ -204,6 +312,65 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 			}
 			typeList = append(typeList, mapping)
 			ids = append(ids, *instanceType.InstanceType)
+		}
+	}
+
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	cbsService := svccbs.NewCbsService(client)
+	cbsFilterParams := make(map[string]interface{})
+	var hasCbsFilter bool
+	if dMap, ok := helper.InterfacesHeadMap(d, "cbs_filter"); ok {
+		if v, ok := dMap["disk_types"].([]interface{}); ok && len(v) > 0 {
+			cbsFilterParams["disk_types"] = helper.InterfacesStrings(v)
+		}
+		if v, ok := dMap["disk_charge_type"].(string); ok && v != "" {
+			cbsFilterParams["disk_charge_type"] = v
+		}
+		if v, ok := dMap["disk_usage"].(string); ok && v != "" {
+			cbsFilterParams["disk_usage"] = v
+		}
+		hasCbsFilter = true
+	}
+	if hasCbsFilter {
+		for idx, t := range typeList {
+			filterParams := make(map[string]interface{})
+			for k, v := range cbsFilterParams {
+				filterParams[k] = v
+			}
+
+			if v, ok := t["availability_zone"].(*string); ok && v != nil {
+				filterParams["availability_zone"] = *v
+			}
+			if v, ok := t["cpu_core_count"].(*int64); ok && v != nil {
+				filterParams["cpu_core_count"] = *v
+			}
+			if v, ok := t["memory_size"].(*int64); ok && v != nil {
+				filterParams["memory_size"] = *v
+			}
+			if v, ok := t["family"].(*string); ok && v != nil {
+				filterParams["family"] = *v
+			}
+			diskConfigSet, err := cbsService.DescribeDiskConfigQuota(ctx, filterParams)
+			if err != nil {
+				return err
+			}
+			cbsConfigList := make([]interface{}, 0)
+			for _, diskConfig := range diskConfigSet {
+				cbsConfigList = append(cbsConfigList, map[string]interface{}{
+					"available":               diskConfig.Available,
+					"disk_charge_type":        diskConfig.DiskChargeType,
+					"zone":                    diskConfig.Zone,
+					"instance_family":         diskConfig.InstanceFamily,
+					"disk_type":               diskConfig.DiskType,
+					"step_size":               diskConfig.StepSize,
+					"extra_performance_range": diskConfig.ExtraPerformanceRange,
+					"device_class":            diskConfig.DeviceClass,
+					"disk_usage":              diskConfig.DiskUsage,
+					"min_disk_size":           diskConfig.MinDiskSize,
+					"max_disk_size":           diskConfig.MaxDiskSize,
+				})
+			}
+			typeList[idx]["cbs_configs"] = cbsConfigList
 		}
 	}
 

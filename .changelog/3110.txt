@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clb_attachment: fix the diff in the `targets` field
+```

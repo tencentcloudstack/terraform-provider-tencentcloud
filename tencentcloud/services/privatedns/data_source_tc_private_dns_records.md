@@ -1,13 +1,21 @@
-Use this data source to query detailed information of private dns records
+Use this data source to query detailed information of Private Dns records
 
 Example Usage
 
 ```hcl
-data "tencentcloud_private_dns_records" "private_dns_record" {
-  zone_id = "zone-xxxxxx"
+data "tencentcloud_private_dns_records" "example" {
+  zone_id = "zone-kumt5wos"
+}
+```
+
+Or
+
+```hcl
+data "tencentcloud_private_dns_records" "example" {
+  zone_id = "zone-kumt5wos"
   filters {
-	name = "Value"
-	values = ["8.8.8.8"]
+    name   = "RecordType"
+    values = ["A"]
   }
 }
 ```

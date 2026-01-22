@@ -17,8 +17,8 @@ import (
 
 func ResourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudDcdbHourdbInstanceRead,
 		Create: resourceTencentCloudDcdbHourdbInstanceCreate,
+		Read:   resourceTencentCloudDcdbHourdbInstanceRead,
 		Update: resourceTencentCloudDcdbHourdbInstanceUpdate,
 		Delete: resourceTencentCloudDcdbHourdbInstanceDelete,
 		Importer: &schema.ResourceImporter{
@@ -166,6 +166,9 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service       = DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request       = dcdb.NewCreateHourDCDBInstanceRequest()
 		response      *dcdb.CreateHourDCDBInstanceResponse
 		instanceId    string
@@ -173,9 +176,6 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		vpcId         string
 		subnetId      string
 		ipv6Flag      int
-		logId         = tccommon.GetLogId(tccommon.ContextNil)
-		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service       = DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
 	if v, ok := d.GetOk("zones"); ok {
@@ -186,19 +186,19 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		}
 	}
 
-	if v, ok := d.GetOk("shard_memory"); ok {
+	if v, ok := d.GetOkExists("shard_memory"); ok {
 		request.ShardMemory = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("shard_storage"); ok {
+	if v, ok := d.GetOkExists("shard_storage"); ok {
 		request.ShardStorage = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("shard_node_count"); ok {
+	if v, ok := d.GetOkExists("shard_node_count"); ok {
 		request.ShardNodeCount = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("shard_count"); ok {
+	if v, ok := d.GetOkExists("shard_count"); ok {
 		request.ShardCount = helper.IntInt64(v.(int))
 	}
 
@@ -220,7 +220,7 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		request.SecurityGroupId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		request.ProjectId = helper.IntInt64(v.(int))
 	}
 
@@ -228,7 +228,7 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		request.InstanceName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("ipv6_flag"); v != nil {
+	if v, _ := d.GetOkExists("ipv6_flag"); v != nil {
 		request.Ipv6Flag = helper.IntInt64(v.(int))
 		ipv6Flag = v.(int)
 	}
@@ -240,6 +240,7 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 			if v, ok := dMap["tag_key"]; ok {
 				resourceTag.TagKey = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["tag_value"]; ok {
 				resourceTag.TagValue = helper.String(v.(string))
 			}
@@ -265,6 +266,11 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create dcdb hourdbInstance failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -272,6 +278,10 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	if err != nil {
 		log.Printf("[CRITAL]%s create dcdb hourdbInstance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if len(response.Response.InstanceIds) != 1 {
+		return fmt.Errorf("InstanceIds is error.")
 	}
 
 	instanceId = *response.Response.InstanceIds[0]
@@ -301,6 +311,7 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	if err != nil {
 		return err
 	}
+
 	if !initRet {
 		return fmt.Errorf("db instance init failed")
 	}
@@ -339,6 +350,7 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	if v, ok := d.GetOk("vip"); ok {
 		vip = v.(string)
 	}
+
 	if v, ok := d.GetOk("vipv6"); ok {
 		vipv6 = v.(string)
 	}
@@ -361,15 +373,14 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_dcdb_hourdb_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
 	hourdbInstances, err := service.DescribeDcdbHourdbInstance(ctx, instanceId)
-
 	if err != nil {
 		return err
 	}
@@ -385,10 +396,8 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	hourdbInstance := hourdbInstances.Instances[0]
-
 	if hourdbInstance.ShardDetail[0] != nil { // Memory and Storage is params for one shard
 		shard := hourdbInstance.ShardDetail[0]
-
 		if shard.Memory != nil {
 			_ = d.Set("shard_memory", shard.Memory)
 		}
@@ -448,6 +457,7 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 			if resourceTags.TagKey != nil {
 				resourceTagsMap["tag_key"] = resourceTags.TagKey
 			}
+
 			if resourceTags.TagValue != nil {
 				resourceTagsMap["tag_value"] = resourceTags.TagValue
 			}
@@ -462,6 +472,7 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		if sg != nil && len(sg.Groups) > 0 {
 			sgId = *sg.Groups[0].SecurityGroupId
 		}
+
 		_ = d.Set("security_group_id", sgId)
 	} else {
 		return err
@@ -493,6 +504,7 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 				if detail.SlaveZones != nil {
 					zones = append(zones, detail.SlaveZones...)
 				}
+
 				_ = d.Set("zones", zones)
 			}
 		}
@@ -507,46 +519,19 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_dcdb_hourdb_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
 	var (
-		request = dcdb.NewModifyDBInstanceNameRequest()
-		service = DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
 	)
 
-	instanceId := d.Id()
-
-	request.InstanceId = &instanceId
-
-	if d.HasChange("zones") {
-		return fmt.Errorf("`zones` do not support change now.")
+	immutableArgs := []string{"zones", "shard_node_count", "shard_count", "db_version_id", "dcn_region", "dcn_instance_id", "resource_tags"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
-
-	if d.HasChange("shard_memory") {
-		return fmt.Errorf("`shard_memory` do not support change now.")
-	}
-
-	if d.HasChange("shard_storage") {
-		return fmt.Errorf("`shard_storage` do not support change now.")
-	}
-
-	if d.HasChange("shard_node_count") {
-		return fmt.Errorf("`shard_node_count` do not support change now.")
-	}
-
-	if d.HasChange("shard_count") {
-		return fmt.Errorf("`shard_count` do not support change now.")
-	}
-
-	if d.HasChange("db_version_id") {
-		return fmt.Errorf("`db_version_id` do not support change now.")
-	}
-
-	// wait for ModifyDBInstanceSecurityGroups
-	// if d.HasChange("security_group_id") {
-	// 	return fmt.Errorf("`security_group_id` do not support change now.")
-	// }
 
 	if v, ok := d.GetOkExists("extranet_access"); ok && v != nil {
 		flag := v.(bool)
@@ -554,20 +539,20 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 		if v, _ := d.GetOk("ipv6_flag"); v != nil {
 			ipv6Flag = v.(int)
 		}
+
 		err := service.SetDcdbExtranetAccess(ctx, instanceId, ipv6Flag, flag)
 		if err != nil {
 			return err
 		}
+
 		time.Sleep(2 * time.Second)
 	}
 
 	if d.HasChange("project_id") {
 		if projectId, ok := d.GetOk("project_id"); ok {
 			request := dcdb.NewModifyDBInstancesProjectRequest()
-
 			request.InstanceIds = []*string{&instanceId}
 			request.ProjectId = helper.IntInt64(projectId.(int))
-
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcdbClient().ModifyDBInstancesProject(request)
 				if e != nil {
@@ -575,13 +560,16 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
+
 				return nil
 			})
+
 			if err != nil {
 				log.Printf("[CRITAL]%s operate dcdb modifyInstanceProjectOperation failed, reason:%+v", logId, err)
 				return err
 			}
 		}
+
 		time.Sleep(2 * time.Second)
 	}
 
@@ -592,15 +580,19 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 			vpcId    string
 			subnetId string
 		)
+
 		if v, ok := d.GetOk("vip"); ok {
 			vip = v.(string)
 		}
+
 		if v, ok := d.GetOk("vipv6"); ok {
 			vipv6 = v.(string)
 		}
+
 		if v, ok := d.GetOk("vpc_id"); ok {
 			vpcId = v.(string)
 		}
+
 		if v, ok := d.GetOk("subnet_id"); ok {
 			subnetId = v.(string)
 		}
@@ -615,21 +607,13 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 		}
 	}
 
-	if d.HasChange("dcn_region") {
-		return fmt.Errorf("`dcn_region` do not support change now.")
-	}
-	if d.HasChange("dcn_instance_id") {
-		return fmt.Errorf("`dcn_instance_id` do not support change now.")
-	}
-
-	if d.HasChange("resource_tags") {
-		return fmt.Errorf("`resource_tags` do not support change now.")
-	}
-
 	if d.HasChange("instance_name") {
+		request := dcdb.NewModifyDBInstanceNameRequest()
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
+
+		request.InstanceId = &instanceId
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcdbClient().ModifyDBInstanceName(request)
 			if e != nil {
@@ -638,11 +622,100 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s create dcdb hourdbInstance failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s modify dcdb hourdbInstance name failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("shard_memory") || d.HasChange("shard_storage") {
+		// get ShardInstanceIds
+		hourdbInstances, err := service.DescribeDcdbHourdbInstance(ctx, instanceId)
+		if err != nil {
+			return err
+		}
+
+		if hourdbInstances == nil {
+			d.SetId("")
+			return fmt.Errorf("resource `hourdbInstance` %s does not exist", instanceId)
+		}
+
+		if *hourdbInstances.TotalCount > 1 || len(hourdbInstances.Instances) > 1 {
+			d.SetId("")
+			return fmt.Errorf("the count of resource `hourdbInstance` shoud not beyond one. count: %v\n", hourdbInstances.TotalCount)
+		}
+
+		hourdbInstance := hourdbInstances.Instances[0]
+		shardInstanceIds := make([]string, 0, len(hourdbInstance.ShardDetail))
+		if len(hourdbInstance.ShardDetail) > 0 { // Memory and Storage is params for one shard
+			for _, item := range hourdbInstance.ShardDetail {
+				shardInstanceIds = append(shardInstanceIds, *item.ShardInstanceId)
+			}
+		}
+
+		var (
+			shardMemory  int
+			shardStorage int
+		)
+
+		if v, ok := d.GetOkExists("shard_memory"); ok {
+			shardMemory = v.(int)
+		}
+
+		if v, ok := d.GetOkExists("shard_storage"); ok {
+			shardStorage = v.(int)
+		}
+
+		request := dcdb.NewUpgradeHourDCDBInstanceRequest()
+		request.InstanceId = &instanceId
+		request.UpgradeType = helper.String("EXPAND")
+		request.ExpandShardConfig = &dcdb.ExpandShardConfig{
+			ShardInstanceIds: helper.Strings(shardInstanceIds),
+			ShardMemory:      helper.IntInt64(shardMemory),
+			ShardStorage:     helper.IntInt64(shardStorage),
+		}
+
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcdbClient().UpgradeHourDCDBInstance(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify dcdb hourdbInstance config failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait
+		err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+			dbInstances, errResp := service.DescribeDcdbDbInstance(ctx, instanceId)
+			if errResp != nil {
+				return tccommon.RetryError(errResp, tccommon.InternalError)
+			}
+
+			if dbInstances.Instances[0] == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeDcdbDbInstance return result(dcdb instance) is nil!"))
+			}
+
+			dbInstance := dbInstances.Instances[0]
+			if *dbInstance.Status == 2 {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("dcdb instance status is %v, retry...", *dbInstance.Status))
+		})
+
+		if err != nil {
 			return err
 		}
 	}
@@ -654,14 +727,23 @@ func resourceTencentCloudDcdbHourdbInstanceDelete(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_dcdb_hourdb_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
 
-	service := DcdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		e := service.DeleteDcdbHourdbInstanceById(ctx, instanceId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	instanceId := d.Id()
+		return nil
+	})
 
-	if err := service.DeleteDcdbHourdbInstanceById(ctx, instanceId); err != nil {
+	if err != nil {
 		return err
 	}
 

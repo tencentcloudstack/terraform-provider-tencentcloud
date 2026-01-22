@@ -122,6 +122,99 @@ func (c *Client) AddMetricScaleStrategyWithContext(ctx context.Context, request 
     return
 }
 
+func NewAddNodeResourceConfigRequest() (request *AddNodeResourceConfigRequest) {
+    request = &AddNodeResourceConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "AddNodeResourceConfig")
+    
+    
+    return
+}
+
+func NewAddNodeResourceConfigResponse() (response *AddNodeResourceConfigResponse) {
+    response = &AddNodeResourceConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddNodeResourceConfig
+// 增加当前集群的节点规格配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  RESOURCEUNAVAILABLE_REPEATSPEC = "ResourceUnavailable.RepeatSpec"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTDEFAULTSPEC = "ResourceUnavailable.ResourceSpecNotDefaultSpec"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) AddNodeResourceConfig(request *AddNodeResourceConfigRequest) (response *AddNodeResourceConfigResponse, err error) {
+    return c.AddNodeResourceConfigWithContext(context.Background(), request)
+}
+
+// AddNodeResourceConfig
+// 增加当前集群的节点规格配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  RESOURCEUNAVAILABLE_REPEATSPEC = "ResourceUnavailable.RepeatSpec"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTDEFAULTSPEC = "ResourceUnavailable.ResourceSpecNotDefaultSpec"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) AddNodeResourceConfigWithContext(ctx context.Context, request *AddNodeResourceConfigRequest) (response *AddNodeResourceConfigResponse, err error) {
+    if request == nil {
+        request = NewAddNodeResourceConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddNodeResourceConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddNodeResourceConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAddUsersForUserManagerRequest() (request *AddUsersForUserManagerRequest) {
     request = &AddUsersForUserManagerRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -179,6 +272,258 @@ func (c *Client) AddUsersForUserManagerWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewAddUsersForUserManagerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAttachDisksRequest() (request *AttachDisksRequest) {
+    request = &AttachDisksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "AttachDisks")
+    
+    
+    return
+}
+
+func NewAttachDisksResponse() (response *AttachDisksResponse) {
+    response = &AttachDisksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AttachDisks
+// 云盘挂载
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+func (c *Client) AttachDisks(request *AttachDisksRequest) (response *AttachDisksResponse, err error) {
+    return c.AttachDisksWithContext(context.Background(), request)
+}
+
+// AttachDisks
+// 云盘挂载
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+func (c *Client) AttachDisksWithContext(ctx context.Context, request *AttachDisksRequest) (response *AttachDisksResponse, err error) {
+    if request == nil {
+        request = NewAttachDisksRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AttachDisks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAttachDisksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudInstanceRequest() (request *CreateCloudInstanceRequest) {
+    request = &CreateCloudInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "CreateCloudInstance")
+    
+    
+    return
+}
+
+func NewCreateCloudInstanceResponse() (response *CreateCloudInstanceResponse) {
+    response = &CreateCloudInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudInstance
+// 创建EMR容器集群实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TKEERROR = "InternalError.TKEError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INCORRECTCOMMONCOUNT = "InvalidParameter.IncorrectCommonCount"
+//  INVALIDPARAMETER_INCORRECTMASTERCOUNT = "InvalidParameter.IncorrectMasterCount"
+//  INVALIDPARAMETER_INVALIDAUTORENEW = "InvalidParameter.InvalidAutoRenew"
+//  INVALIDPARAMETER_INVALIDCLBSERVERVPCSETTING = "InvalidParameter.InvalidCLBServerVpcSetting"
+//  INVALIDPARAMETER_INVALIDCLIENTTOKEN = "InvalidParameter.InvalidClientToken"
+//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
+//  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+//  INVALIDPARAMETER_INVALIDEXTERNALSERVICEVPCID = "InvalidParameter.InvalidExternalServiceVpcId"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDMETAINSTANCEID = "InvalidParameter.InvalidMetaInstanceId"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDPREEXECUTEDFILE = "InvalidParameter.InvalidPreExecutedFile"
+//  INVALIDPARAMETER_INVALIDPRODUCTID = "InvalidParameter.InvalidProductId"
+//  INVALIDPARAMETER_INVALIDPROJECTID = "InvalidParameter.InvalidProjectId"
+//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+//  INVALIDPARAMETER_INVALIDSERCURITYGRPUPID = "InvalidParameter.InvalidSercurityGrpupId"
+//  INVALIDPARAMETER_INVALIDSERVICENAME = "InvalidParameter.InvalidServiceName"
+//  INVALIDPARAMETER_INVALIDSOFTDEPLOYINFO = "InvalidParameter.InvalidSoftDeployInfo"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDSOFTWARE = "InvalidParameter.InvalidSoftWare"
+//  INVALIDPARAMETER_INVALIDSOFTWARENAME = "InvalidParameter.InvalidSoftWareName"
+//  INVALIDPARAMETER_INVALIDSOFTWAREVERSION = "InvalidParameter.InvalidSoftWareVersion"
+//  INVALIDPARAMETER_INVALIDSUBNETID = "InvalidParameter.InvalidSubnetId"
+//  INVALIDPARAMETER_INVALIDSUPPORTHA = "InvalidParameter.InvalidSupportHA"
+//  INVALIDPARAMETER_INVALIDTIMESPAN = "InvalidParameter.InvalidTimeSpan"
+//  INVALIDPARAMETER_INVALIDTIMEUNIT = "InvalidParameter.InvalidTimeUnit"
+//  INVALIDPARAMETER_INVALIDVOLUMETYPE = "InvalidParameter.InvalidVolumeType"
+//  INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
+//  INVALIDPARAMETER_PAYMODERESOURCENOTMATCH = "InvalidParameter.PayModeResourceNotMatch"
+//  INVALIDPARAMETER_SOFTWARENOTINPRODUCT = "InvalidParameter.SoftwareNotInProduct"
+//  INVALIDPARAMETER_UNGRANTEDPOLICY = "InvalidParameter.UngrantedPolicy"
+//  INVALIDPARAMETER_UNGRANTEDROLE = "InvalidParameter.UngrantedRole"
+//  INVALIDPARAMETER_ZONERESOURCENOTMATCH = "InvalidParameter.ZoneResourceNotMatch"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededAvailableCpu"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDNODEAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededNodeAvailableCpu"
+//  LIMITEXCEEDED_PODMEMORYLIMITEXCEEDEDAVAILABLEMEMORY = "LimitExceeded.PodMemoryLimitExceededAvailableMemory"
+//  LIMITEXCEEDED_SECURITYGROUPNUMLIMITEXCEEDED = "LimitExceeded.SecurityGroupNumLimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_DISKINSUFFICIENT = "ResourceInsufficient.DiskInsufficient"
+//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
+//  RESOURCENOTFOUND_SUBNETNOTFOUND = "ResourceNotFound.SubnetNotFound"
+//  RESOURCENOTFOUND_TAGSNOTFOUND = "ResourceNotFound.TagsNotFound"
+//  RESOURCESSOLDOUT_CBSSOLDOUT = "ResourcesSoldOut.CbsSoldOut"
+//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCloudInstance(request *CreateCloudInstanceRequest) (response *CreateCloudInstanceResponse, err error) {
+    return c.CreateCloudInstanceWithContext(context.Background(), request)
+}
+
+// CreateCloudInstance
+// 创建EMR容器集群实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TKEERROR = "InternalError.TKEError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INCORRECTCOMMONCOUNT = "InvalidParameter.IncorrectCommonCount"
+//  INVALIDPARAMETER_INCORRECTMASTERCOUNT = "InvalidParameter.IncorrectMasterCount"
+//  INVALIDPARAMETER_INVALIDAUTORENEW = "InvalidParameter.InvalidAutoRenew"
+//  INVALIDPARAMETER_INVALIDCLBSERVERVPCSETTING = "InvalidParameter.InvalidCLBServerVpcSetting"
+//  INVALIDPARAMETER_INVALIDCLIENTTOKEN = "InvalidParameter.InvalidClientToken"
+//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
+//  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+//  INVALIDPARAMETER_INVALIDEXTERNALSERVICEVPCID = "InvalidParameter.InvalidExternalServiceVpcId"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDMETAINSTANCEID = "InvalidParameter.InvalidMetaInstanceId"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDPREEXECUTEDFILE = "InvalidParameter.InvalidPreExecutedFile"
+//  INVALIDPARAMETER_INVALIDPRODUCTID = "InvalidParameter.InvalidProductId"
+//  INVALIDPARAMETER_INVALIDPROJECTID = "InvalidParameter.InvalidProjectId"
+//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+//  INVALIDPARAMETER_INVALIDSERCURITYGRPUPID = "InvalidParameter.InvalidSercurityGrpupId"
+//  INVALIDPARAMETER_INVALIDSERVICENAME = "InvalidParameter.InvalidServiceName"
+//  INVALIDPARAMETER_INVALIDSOFTDEPLOYINFO = "InvalidParameter.InvalidSoftDeployInfo"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDSOFTWARE = "InvalidParameter.InvalidSoftWare"
+//  INVALIDPARAMETER_INVALIDSOFTWARENAME = "InvalidParameter.InvalidSoftWareName"
+//  INVALIDPARAMETER_INVALIDSOFTWAREVERSION = "InvalidParameter.InvalidSoftWareVersion"
+//  INVALIDPARAMETER_INVALIDSUBNETID = "InvalidParameter.InvalidSubnetId"
+//  INVALIDPARAMETER_INVALIDSUPPORTHA = "InvalidParameter.InvalidSupportHA"
+//  INVALIDPARAMETER_INVALIDTIMESPAN = "InvalidParameter.InvalidTimeSpan"
+//  INVALIDPARAMETER_INVALIDTIMEUNIT = "InvalidParameter.InvalidTimeUnit"
+//  INVALIDPARAMETER_INVALIDVOLUMETYPE = "InvalidParameter.InvalidVolumeType"
+//  INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
+//  INVALIDPARAMETER_PAYMODERESOURCENOTMATCH = "InvalidParameter.PayModeResourceNotMatch"
+//  INVALIDPARAMETER_SOFTWARENOTINPRODUCT = "InvalidParameter.SoftwareNotInProduct"
+//  INVALIDPARAMETER_UNGRANTEDPOLICY = "InvalidParameter.UngrantedPolicy"
+//  INVALIDPARAMETER_UNGRANTEDROLE = "InvalidParameter.UngrantedRole"
+//  INVALIDPARAMETER_ZONERESOURCENOTMATCH = "InvalidParameter.ZoneResourceNotMatch"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededAvailableCpu"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDNODEAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededNodeAvailableCpu"
+//  LIMITEXCEEDED_PODMEMORYLIMITEXCEEDEDAVAILABLEMEMORY = "LimitExceeded.PodMemoryLimitExceededAvailableMemory"
+//  LIMITEXCEEDED_SECURITYGROUPNUMLIMITEXCEEDED = "LimitExceeded.SecurityGroupNumLimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_DISKINSUFFICIENT = "ResourceInsufficient.DiskInsufficient"
+//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
+//  RESOURCENOTFOUND_SUBNETNOTFOUND = "ResourceNotFound.SubnetNotFound"
+//  RESOURCENOTFOUND_TAGSNOTFOUND = "ResourceNotFound.TagsNotFound"
+//  RESOURCESSOLDOUT_CBSSOLDOUT = "ResourcesSoldOut.CbsSoldOut"
+//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCloudInstanceWithContext(ctx context.Context, request *CreateCloudInstanceRequest) (response *CreateCloudInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -635,6 +980,59 @@ func (c *Client) DeleteAutoScaleStrategyWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDeleteAutoScaleStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteNodeResourceConfigRequest() (request *DeleteNodeResourceConfigRequest) {
+    request = &DeleteNodeResourceConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DeleteNodeResourceConfig")
+    
+    
+    return
+}
+
+func NewDeleteNodeResourceConfigResponse() (response *DeleteNodeResourceConfigResponse) {
+    response = &DeleteNodeResourceConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteNodeResourceConfig
+// 删除当前集群的节点规格配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) DeleteNodeResourceConfig(request *DeleteNodeResourceConfigRequest) (response *DeleteNodeResourceConfigResponse, err error) {
+    return c.DeleteNodeResourceConfigWithContext(context.Background(), request)
+}
+
+// DeleteNodeResourceConfig
+// 删除当前集群的节点规格配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) DeleteNodeResourceConfigWithContext(ctx context.Context, request *DeleteNodeResourceConfigRequest) (response *DeleteNodeResourceConfigResponse, err error) {
+    if request == nil {
+        request = NewDeleteNodeResourceConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteNodeResourceConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteNodeResourceConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -1135,6 +1533,57 @@ func (c *Client) DescribeCvmQuotaWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeCvmQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDAGInfoRequest() (request *DescribeDAGInfoRequest) {
+    request = &DescribeDAGInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeDAGInfo")
+    
+    
+    return
+}
+
+func NewDescribeDAGInfoResponse() (response *DescribeDAGInfoResponse) {
+    response = &DescribeDAGInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDAGInfo
+// 查询DAG信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeDAGInfo(request *DescribeDAGInfoRequest) (response *DescribeDAGInfoResponse, err error) {
+    return c.DescribeDAGInfoWithContext(context.Background(), request)
+}
+
+// DescribeDAGInfo
+// 查询DAG信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeDAGInfoWithContext(ctx context.Context, request *DescribeDAGInfoRequest) (response *DescribeDAGInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeDAGInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDAGInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDAGInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -1980,6 +2429,128 @@ func (c *Client) DescribeKyuubiQueryInfoWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDescribeKyuubiQueryInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNodeDataDisksRequest() (request *DescribeNodeDataDisksRequest) {
+    request = &DescribeNodeDataDisksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeNodeDataDisks")
+    
+    
+    return
+}
+
+func NewDescribeNodeDataDisksResponse() (response *DescribeNodeDataDisksResponse) {
+    response = &DescribeNodeDataDisksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNodeDataDisks
+// 查询节点数据盘信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+func (c *Client) DescribeNodeDataDisks(request *DescribeNodeDataDisksRequest) (response *DescribeNodeDataDisksResponse, err error) {
+    return c.DescribeNodeDataDisksWithContext(context.Background(), request)
+}
+
+// DescribeNodeDataDisks
+// 查询节点数据盘信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+func (c *Client) DescribeNodeDataDisksWithContext(ctx context.Context, request *DescribeNodeDataDisksRequest) (response *DescribeNodeDataDisksResponse, err error) {
+    if request == nil {
+        request = NewDescribeNodeDataDisksRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNodeDataDisks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNodeDataDisksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNodeResourceConfigFastRequest() (request *DescribeNodeResourceConfigFastRequest) {
+    request = &DescribeNodeResourceConfigFastRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeNodeResourceConfigFast")
+    
+    
+    return
+}
+
+func NewDescribeNodeResourceConfigFastResponse() (response *DescribeNodeResourceConfigFastResponse) {
+    response = &DescribeNodeResourceConfigFastResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNodeResourceConfigFast
+// 快速获取当前集群的节点规格配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDDISKTYPE = "InvalidParameter.InvalidDiskType"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTRESOURCETYPE = "ResourceUnavailable.NotSupportResourceType"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTDEFAULTSPEC = "ResourceUnavailable.ResourceSpecNotDefaultSpec"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNSUPPORTEDOPERATION_SERVICENOTSUPPORT = "UnsupportedOperation.ServiceNotSupport"
+func (c *Client) DescribeNodeResourceConfigFast(request *DescribeNodeResourceConfigFastRequest) (response *DescribeNodeResourceConfigFastResponse, err error) {
+    return c.DescribeNodeResourceConfigFastWithContext(context.Background(), request)
+}
+
+// DescribeNodeResourceConfigFast
+// 快速获取当前集群的节点规格配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDDISKTYPE = "InvalidParameter.InvalidDiskType"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTRESOURCETYPE = "ResourceUnavailable.NotSupportResourceType"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTDEFAULTSPEC = "ResourceUnavailable.ResourceSpecNotDefaultSpec"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNSUPPORTEDOPERATION_SERVICENOTSUPPORT = "UnsupportedOperation.ServiceNotSupport"
+func (c *Client) DescribeNodeResourceConfigFastWithContext(ctx context.Context, request *DescribeNodeResourceConfigFastRequest) (response *DescribeNodeResourceConfigFastResponse, err error) {
+    if request == nil {
+        request = NewDescribeNodeResourceConfigFastRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNodeResourceConfigFast require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNodeResourceConfigFastResponse()
     err = c.Send(request, response)
     return
 }
@@ -3578,6 +4149,229 @@ func (c *Client) ModifyGlobalConfigWithContext(ctx context.Context, request *Mod
     return
 }
 
+func NewModifyInstanceBasicRequest() (request *ModifyInstanceBasicRequest) {
+    request = &ModifyInstanceBasicRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyInstanceBasic")
+    
+    
+    return
+}
+
+func NewModifyInstanceBasicResponse() (response *ModifyInstanceBasicResponse) {
+    response = &ModifyInstanceBasicResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceBasic
+// 修改集群名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyInstanceBasic(request *ModifyInstanceBasicRequest) (response *ModifyInstanceBasicResponse, err error) {
+    return c.ModifyInstanceBasicWithContext(context.Background(), request)
+}
+
+// ModifyInstanceBasic
+// 修改集群名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyInstanceBasicWithContext(ctx context.Context, request *ModifyInstanceBasicRequest) (response *ModifyInstanceBasicResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceBasicRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceBasic require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceBasicResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyPodNumRequest() (request *ModifyPodNumRequest) {
+    request = &ModifyPodNumRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyPodNum")
+    
+    
+    return
+}
+
+func NewModifyPodNumResponse() (response *ModifyPodNumResponse) {
+    response = &ModifyPodNumResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyPodNum
+// 调整Pod数量
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
+//  INVALIDPARAMETER_INVALIDSERVICETYPE = "InvalidParameter.InvalidServiceType"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_SERVICEGROUPNOTFOUND = "ResourceNotFound.ServiceGroupNotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTCLUSTERTYPE = "ResourceUnavailable.NotSupportClusterType"
+func (c *Client) ModifyPodNum(request *ModifyPodNumRequest) (response *ModifyPodNumResponse, err error) {
+    return c.ModifyPodNumWithContext(context.Background(), request)
+}
+
+// ModifyPodNum
+// 调整Pod数量
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
+//  INVALIDPARAMETER_INVALIDSERVICETYPE = "InvalidParameter.InvalidServiceType"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_SERVICEGROUPNOTFOUND = "ResourceNotFound.ServiceGroupNotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTCLUSTERTYPE = "ResourceUnavailable.NotSupportClusterType"
+func (c *Client) ModifyPodNumWithContext(ctx context.Context, request *ModifyPodNumRequest) (response *ModifyPodNumResponse, err error) {
+    if request == nil {
+        request = NewModifyPodNumRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyPodNum require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyPodNumResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyResourceRequest() (request *ModifyResourceRequest) {
+    request = &ModifyResourceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyResource")
+    
+    
+    return
+}
+
+func NewModifyResourceResponse() (response *ModifyResourceResponse) {
+    response = &ModifyResourceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyResource
+// 变配实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCLASSIFICATION = "InvalidParameter.InvalidClassification"
+//  INVALIDPARAMETER_INVALIDMODIFYSPEC = "InvalidParameter.InvalidModifySpec"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
+//  INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) ModifyResource(request *ModifyResourceRequest) (response *ModifyResourceResponse, err error) {
+    return c.ModifyResourceWithContext(context.Background(), request)
+}
+
+// ModifyResource
+// 变配实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCLASSIFICATION = "InvalidParameter.InvalidClassification"
+//  INVALIDPARAMETER_INVALIDMODIFYSPEC = "InvalidParameter.InvalidModifySpec"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
+//  INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) ModifyResourceWithContext(ctx context.Context, request *ModifyResourceRequest) (response *ModifyResourceResponse, err error) {
+    if request == nil {
+        request = NewModifyResourceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyResource require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyResourceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyResourcePoolsRequest() (request *ModifyResourcePoolsRequest) {
     request = &ModifyResourcePoolsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3897,6 +4691,65 @@ func (c *Client) ModifySLInstanceWithContext(ctx context.Context, request *Modif
     return
 }
 
+func NewModifySLInstanceBasicRequest() (request *ModifySLInstanceBasicRequest) {
+    request = &ModifySLInstanceBasicRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifySLInstanceBasic")
+    
+    
+    return
+}
+
+func NewModifySLInstanceBasicResponse() (response *ModifySLInstanceBasicResponse) {
+    response = &ModifySLInstanceBasicResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySLInstanceBasic
+// serverless hbase修改实例名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifySLInstanceBasic(request *ModifySLInstanceBasicRequest) (response *ModifySLInstanceBasicResponse, err error) {
+    return c.ModifySLInstanceBasicWithContext(context.Background(), request)
+}
+
+// ModifySLInstanceBasic
+// serverless hbase修改实例名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifySLInstanceBasicWithContext(ctx context.Context, request *ModifySLInstanceBasicRequest) (response *ModifySLInstanceBasicResponse, err error) {
+    if request == nil {
+        request = NewModifySLInstanceBasicRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySLInstanceBasic require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySLInstanceBasicResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyUserManagerPwdRequest() (request *ModifyUserManagerPwdRequest) {
     request = &ModifyUserManagerPwdRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4121,6 +4974,59 @@ func (c *Client) ResetYarnConfigWithContext(ctx context.Context, request *ResetY
     request.SetContext(ctx)
     
     response = NewResetYarnConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResizeDataDisksRequest() (request *ResizeDataDisksRequest) {
+    request = &ResizeDataDisksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ResizeDataDisks")
+    
+    
+    return
+}
+
+func NewResizeDataDisksResponse() (response *ResizeDataDisksResponse) {
+    response = &ResizeDataDisksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResizeDataDisks
+// 云盘扩容
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ResizeDataDisks(request *ResizeDataDisksRequest) (response *ResizeDataDisksResponse, err error) {
+    return c.ResizeDataDisksWithContext(context.Background(), request)
+}
+
+// ResizeDataDisks
+// 云盘扩容
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ResizeDataDisksWithContext(ctx context.Context, request *ResizeDataDisksRequest) (response *ResizeDataDisksResponse, err error) {
+    if request == nil {
+        request = NewResizeDataDisksRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResizeDataDisks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResizeDataDisksResponse()
     err = c.Send(request, response)
     return
 }
@@ -4488,6 +5394,63 @@ func (c *Client) ScaleOutInstanceWithContext(ctx context.Context, request *Scale
     request.SetContext(ctx)
     
     response = NewScaleOutInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSetNodeResourceConfigDefaultRequest() (request *SetNodeResourceConfigDefaultRequest) {
+    request = &SetNodeResourceConfigDefaultRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "SetNodeResourceConfigDefault")
+    
+    
+    return
+}
+
+func NewSetNodeResourceConfigDefaultResponse() (response *SetNodeResourceConfigDefaultResponse) {
+    response = &SetNodeResourceConfigDefaultResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SetNodeResourceConfigDefault
+// 设置当前集群的某个节点规格配置为默认或取消默认
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) SetNodeResourceConfigDefault(request *SetNodeResourceConfigDefaultRequest) (response *SetNodeResourceConfigDefaultResponse, err error) {
+    return c.SetNodeResourceConfigDefaultWithContext(context.Background(), request)
+}
+
+// SetNodeResourceConfigDefault
+// 设置当前集群的某个节点规格配置为默认或取消默认
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE_RESOURCESPECNOTEXIST = "ResourceUnavailable.ResourceSpecNotExist"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) SetNodeResourceConfigDefaultWithContext(ctx context.Context, request *SetNodeResourceConfigDefaultRequest) (response *SetNodeResourceConfigDefaultResponse, err error) {
+    if request == nil {
+        request = NewSetNodeResourceConfigDefaultRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SetNodeResourceConfigDefault require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSetNodeResourceConfigDefaultResponse()
     err = c.Send(request, response)
     return
 }

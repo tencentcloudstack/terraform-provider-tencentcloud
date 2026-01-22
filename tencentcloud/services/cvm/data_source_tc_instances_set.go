@@ -26,7 +26,7 @@ func DataSourceTencentCloudInstancesSet() *schema.Resource {
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 30),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 128),
 				Description:  "Name of the instances to be queried.",
 			},
 			"availability_zone": {

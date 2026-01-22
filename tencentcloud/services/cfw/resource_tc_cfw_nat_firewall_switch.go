@@ -51,11 +51,20 @@ func resourceTencentCloudCfwNatFirewallSwitchCreate(d *schema.ResourceData, meta
 	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_firewall_switch.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	natInsId := d.Get("nat_ins_id").(string)
-	subnetId := d.Get("subnet_id").(string)
+	var (
+		natInsId string
+		subnetId string
+	)
+
+	if v, ok := d.GetOk("nat_ins_id"); ok {
+		natInsId = v.(string)
+	}
+
+	if v, ok := d.GetOk("subnet_id"); ok {
+		subnetId = v.(string)
+	}
 
 	d.SetId(strings.Join([]string{natInsId, subnetId}, tccommon.FILED_SP))
-
 	return resourceTencentCloudCfwNatFirewallSwitchUpdate(d, meta)
 }
 
@@ -76,7 +85,7 @@ func resourceTencentCloudCfwNatFirewallSwitchRead(d *schema.ResourceData, meta i
 	natInsId := idSplit[0]
 	subnetId := idSplit[1]
 
-	natFirewallSwitch, err := service.DescribeCfwNatFirewallSwitchById(ctx, natInsId, subnetId)
+	natFirewallSwitch, err := service.DescribeCfwNatFirewallFwSwitchById(ctx, natInsId, subnetId)
 	if err != nil {
 		return err
 	}
@@ -85,6 +94,14 @@ func resourceTencentCloudCfwNatFirewallSwitchRead(d *schema.ResourceData, meta i
 		d.SetId("")
 		log.Printf("[WARN]%s resource `CfwNatFirewallSwitch` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
+	}
+
+	if natFirewallSwitch.NatInsId != nil {
+		_ = d.Set("nat_ins_id", natFirewallSwitch.NatInsId)
+	}
+
+	if natFirewallSwitch.SubnetId != nil {
+		_ = d.Set("subnet_id", natFirewallSwitch.SubnetId)
 	}
 
 	if natFirewallSwitch.Enable != nil {
@@ -109,6 +126,7 @@ func resourceTencentCloudCfwNatFirewallSwitchUpdate(d *schema.ResourceData, meta
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
+
 	natInsId := idSplit[0]
 	subnetId := idSplit[1]
 
@@ -117,7 +135,6 @@ func resourceTencentCloudCfwNatFirewallSwitchUpdate(d *schema.ResourceData, meta
 	}
 
 	request.SubnetIdList = common.StringPtrs([]string{subnetId})
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyNatFwSwitch(request)
 		if e != nil {
@@ -136,7 +153,7 @@ func resourceTencentCloudCfwNatFirewallSwitchUpdate(d *schema.ResourceData, meta
 
 	// wait
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		switchDetail, e := service.DescribeCfwNatFirewallSwitchById(ctx, natInsId, subnetId)
+		switchDetail, e := service.DescribeCfwNatFirewallFwSwitchById(ctx, natInsId, subnetId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

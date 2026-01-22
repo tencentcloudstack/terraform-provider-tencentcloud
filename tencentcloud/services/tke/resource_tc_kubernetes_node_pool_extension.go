@@ -261,6 +261,9 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 		if launchCfg.InternetAccessible.PublicIpAssigned != nil {
 			launchConfig["public_ip_assigned"] = launchCfg.InternetAccessible.PublicIpAssigned
 		}
+		if launchCfg.InternetAccessible.IPv4AddressType != nil {
+			launchConfig["ipv4_address_type"] = launchCfg.InternetAccessible.IPv4AddressType
+		}
 		if launchCfg.InstanceChargeType != nil {
 			launchConfig["instance_charge_type"] = launchCfg.InstanceChargeType
 			if *launchCfg.InstanceChargeType == svcas.INSTANCE_CHARGE_TYPE_SPOTPAID && launchCfg.InstanceMarketOptions != nil {
@@ -336,6 +339,10 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 			launchConfig["host_name_style"] = launchCfg.HostNameSettings.HostNameStyle
 		}
 
+		if launchCfg.DedicatedClusterId != nil {
+			launchConfig["cdc_id"] = launchCfg.DedicatedClusterId
+		}
+
 		asgConfig := make([]interface{}, 0, 1)
 		asgConfig = append(asgConfig, launchConfig)
 		if err := d.Set("auto_scaling_config", asgConfig); err != nil {
@@ -393,6 +400,10 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 
 		if helper.PString(nodePool.UserScript) != "" {
 			nodeConfig["user_data"] = helper.PString(nodePool.UserScript)
+		}
+
+		if helper.PString(nodePool.PreStartUserScript) != "" {
+			nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
 		}
 
 		if nodePool.GPUArgs != nil {
@@ -829,6 +840,24 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx context.Context) err
 		}
 		_ = d.Set("auto_scaling_config.0.backup_instance_types", instanceTypes)
 	}
+
+	if d.HasChange("node_config.0.user_data") || d.HasChange("node_config.0.pre_start_user_script") {
+		userData := d.Get("node_config.0.user_data").(string)
+		preStartUserScript := d.Get("node_config.0.pre_start_user_script").(string)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			errRet := service.ModifyClusterNodePoolPreStartUserScript(ctx, clusterId, nodePoolId, userData, preStartUserScript)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 
 	return nil
@@ -986,6 +1015,10 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
 	}
+	if v, ok := dMap["ipv4_address_type"]; ok && v != "" {
+		ipv4AddressType := v.(string)
+		request.InternetAccessible.IPv4AddressType = &ipv4AddressType
+	}
 
 	request.LoginSettings = &as.LoginSettings{}
 
@@ -1107,6 +1140,11 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 			}
 		}
 	}
+
+	if v, ok := dMap["cdc_id"]; ok && v != "" {
+		request.DedicatedClusterId = helper.String(v.(string))
+	}
+
 	result = request.ToJsonString()
 	return result, errRet
 }
@@ -1190,6 +1228,10 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	if v, ok := dMap["public_ip_assigned"]; ok {
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
+	}
+	if v, ok := dMap["ipv4_address_type"]; ok && v != "" {
+		ipv4AddressType := v.(string)
+		request.InternetAccessible.IPv4AddressType = &ipv4AddressType
 	}
 
 	if d.HasChange("auto_scaling_config.0.security_group_ids") {

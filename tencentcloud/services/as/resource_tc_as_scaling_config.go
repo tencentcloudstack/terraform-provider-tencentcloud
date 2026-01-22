@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 
@@ -54,7 +56,7 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
-				MaxItems:    5,
+				MaxItems:    10,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Specified types of CVM instances.",
 			},
@@ -153,6 +155,29 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Specify whether to assign an Internet IP address.",
+			},
+			"bandwidth_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Bandwidth package ID.",
+			},
+			"ipv4_address_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"WanIP", "HighQualityEIP", "AntiDDoSEIP"}),
+				Description:  "AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.",
+			},
+			"anti_ddos_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.",
+			},
+			"is_keep_eip": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to delete the bound EIP when the instance is destroyed. Range of values: True: retain the EIP; False: not retain the EIP. Note that when the IPv4AddressType field specifies the EIP type, the default behavior is not to retain the EIP. WanIP is unaffected by this field and will always be deleted with the instance. Changing this field configuration will take effect immediately for resources already bound to a scaling group.",
 			},
 			"password": {
 				Type:          schema.TypeString,
@@ -262,10 +287,26 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 					},
 				},
 			},
+
+			"disaster_recover_group_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "Placement group ID. Only one is allowed.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+
 			"dedicated_cluster_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Dedicated Cluster ID.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of launch configuration.",
 			},
 			// Computed values
 			"status": {
@@ -351,6 +392,18 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOkExists("public_ip_assigned"); ok {
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
+	}
+	if v, ok := d.GetOk("bandwidth_package_id"); ok {
+		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("ipv4_address_type"); ok {
+		request.InternetAccessible.IPv4AddressType = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
+		request.InternetAccessible.AntiDDoSPackageId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOkExists("is_keep_eip"); ok {
+		request.InternetAccessible.IsKeepEIP = helper.Bool(v.(bool))
 	}
 
 	request.LoginSettings = &as.LoginSettings{}
@@ -490,23 +543,54 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.InstanceNameSettings = settings[0]
 	}
 
+	if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
+		disasterRecoverGroupIds := v.([]interface{})
+		request.DisasterRecoverGroupIds = make([]*string, 0, len(disasterRecoverGroupIds))
+		for i := range disasterRecoverGroupIds {
+			subnetId := disasterRecoverGroupIds[i].(string)
+			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &subnetId)
+		}
+	}
+
 	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLaunchConfiguration(request)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := as.Tag{
+				ResourceType: helper.String("launch-configuration"),
+				Key:          helper.String(tagKey),
+				Value:        helper.String(tagValue),
+			}
+
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
+	var launchConfigurationId string
+	err := resource.Retry(4*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().CreateLaunchConfiguration(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if response.Response.LaunchConfigurationId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Launch configuration id is nil"))
+		}
+		launchConfigurationId = *response.Response.LaunchConfigurationId
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
-	if response.Response.LaunchConfigurationId == nil {
-		return fmt.Errorf("Launch configuration id is nil")
-	}
-	d.SetId(*response.Response.LaunchConfigurationId)
+
+	d.SetId(launchConfigurationId)
 
 	return resourceTencentCloudAsScalingConfigRead(d, meta)
 }
@@ -561,6 +645,24 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 
 		_ = d.Set("cam_role_name", *config.CamRoleName)
 
+		if config.InternetAccessible != nil {
+			if config.InternetAccessible.BandwidthPackageId != nil {
+				_ = d.Set("bandwidth_package_id", config.InternetAccessible.BandwidthPackageId)
+			}
+
+			if config.InternetAccessible.IPv4AddressType != nil {
+				_ = d.Set("ipv4_address_type", config.InternetAccessible.IPv4AddressType)
+			}
+
+			if config.InternetAccessible.AntiDDoSPackageId != nil {
+				_ = d.Set("anti_ddos_package_id", config.InternetAccessible.AntiDDoSPackageId)
+			}
+
+			if config.InternetAccessible.IsKeepEIP != nil {
+				_ = d.Set("is_keep_eip", config.InternetAccessible.IsKeepEIP)
+			}
+		}
+
 		if config.HostNameSettings != nil {
 			isEmptySettings := true
 			settings := map[string]interface{}{}
@@ -608,8 +710,18 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 			_ = d.Set("instance_charge_type_prepaid_renew_flag", config.InstanceChargePrepaid.RenewFlag)
 		}
 
+		if len(config.DisasterRecoverGroupIds) > 0 {
+			_ = d.Set("disaster_recover_group_ids", helper.StringsInterfaces(config.DisasterRecoverGroupIds))
+		} else {
+			_ = d.Set("disaster_recover_group_ids", []string{})
+		}
+
 		if config.DedicatedClusterId != nil {
 			_ = d.Set("dedicated_cluster_id", config.DedicatedClusterId)
+		}
+
+		if config.Tags != nil && len(config.Tags) > 0 {
+			_ = d.Set("tags", flattenTagsMapping(config.Tags))
 		}
 
 		return nil
@@ -690,7 +802,8 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if d.HasChange("internet_charge_type") || d.HasChange("internet_max_bandwidth_out") || d.HasChange("public_ip_assigned") {
+	if d.HasChange("internet_charge_type") || d.HasChange("internet_max_bandwidth_out") || d.HasChange("public_ip_assigned") ||
+		d.HasChange("bandwidth_package_id") || d.HasChange("ipv4_address_type") || d.HasChange("anti_ddos_package_id") || d.HasChange("is_keep_eip") {
 		request.InternetAccessible = &as.InternetAccessible{}
 		if v, ok := d.GetOk("internet_charge_type"); ok {
 			request.InternetAccessible.InternetChargeType = helper.String(v.(string))
@@ -701,6 +814,18 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOkExists("public_ip_assigned"); ok {
 			publicIpAssigned := v.(bool)
 			request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
+		}
+		if v, ok := d.GetOk("bandwidth_package_id"); ok {
+			request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("ipv4_address_type"); ok {
+			request.InternetAccessible.IPv4AddressType = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("anti_ddos_package_id"); ok {
+			request.InternetAccessible.AntiDDoSPackageId = helper.String(v.(string))
+		}
+		if v, ok := d.GetOkExists("is_keep_eip"); ok {
+			request.InternetAccessible.IsKeepEIP = helper.Bool(v.(bool))
 		}
 	}
 
@@ -851,6 +976,7 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("password") || d.HasChange("key_ids") || d.HasChange("keep_image_login") {
+		request.LoginSettings = &as.LoginSettings{}
 		if v, ok := d.GetOk("password"); ok {
 			request.LoginSettings.Password = helper.String(v.(string))
 		}
@@ -868,20 +994,55 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
+	if d.HasChange("disaster_recover_group_ids") {
+		if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
+			disasterRecoverGroupIds := v.([]interface{})
+			request.DisasterRecoverGroupIds = make([]*string, 0, len(disasterRecoverGroupIds))
+			for i := range disasterRecoverGroupIds {
+				subnetId := disasterRecoverGroupIds[i].(string)
+				request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &subnetId)
+			}
+		}
+	}
+
 	if d.HasChange("dedicated_cluster_id") {
 		if v, ok := d.GetOk("dedicated_cluster_id"); ok {
 			request.DedicatedClusterId = helper.String(v.(string))
 		}
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyLaunchConfigurationAttributes(request)
+	if d.HasChange("tags") {
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(client)
+		region := client.Region
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		resourceName := tccommon.BuildTagResourceName("as", "launch-configuration", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+	}
+
+	err := resource.Retry(4*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAsClient().ModifyLaunchConfigurationAttributes(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
 
 	return resourceTencentCloudAsScalingConfigRead(d, meta)

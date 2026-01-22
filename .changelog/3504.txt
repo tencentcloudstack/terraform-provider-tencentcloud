@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_waf_cc: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_watencentcloud_waf_custom_white_rulef_cc: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_waf_custom_rule: update doc
+```

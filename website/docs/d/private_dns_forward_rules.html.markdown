@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_private_dns_forward_rules"
 sidebar_current: "docs-tencentcloud-datasource-private_dns_forward_rules"
 description: |-
-  Use this data source to query detailed information of private dns forward rules
+  Use this data source to query detailed information of Private Dns forward rules
 ---
 
 # tencentcloud_private_dns_forward_rules
 
-Use this data source to query detailed information of private dns forward rules
+Use this data source to query detailed information of Private Dns forward rules
 
 ## Example Usage
 
@@ -25,12 +25,7 @@ data "tencentcloud_private_dns_forward_rules" "example" {}
 data "tencentcloud_private_dns_forward_rules" "example" {
   filters {
     name   = "RuleId"
-    values = ["eid-e9d5880672"]
-  }
-
-  filters {
-    name   = "RuleName"
-    values = ["tf-example"]
+    values = ["fid-2ece6ca305"]
   }
 
   filters {

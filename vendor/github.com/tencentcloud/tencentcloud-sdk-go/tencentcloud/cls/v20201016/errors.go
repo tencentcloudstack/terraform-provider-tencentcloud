@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,9 @@ const (
 
 	// 桶内无相应前缀文件，请使用正确的桶、文件前缀和压缩方式。
 	FAILEDOPERATION_BUCKETNOFILE = "FailedOperation.BucketNoFile"
+
+	// 调用云产品接口异常
+	FAILEDOPERATION_CLOUDPRODUCTINVOCATIONERROR = "FailedOperation.CloudProductInvocationError"
 
 	// 文件解压缩失败，请选择正确的压缩方式。
 	FAILEDOPERATION_DECOMPRESSFILE = "FailedOperation.DecompressFile"
@@ -188,6 +191,12 @@ const (
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
 
+	// 一个billing topic只能创建一个cos采集配置
+	LIMITEXCEEDED_BILLINGCOSRECHARGEOUTOFLIMIT = "LimitExceeded.BillingCosRechargeOutOfLimit"
+
+	// 一个uin只能创建一个billing topic
+	LIMITEXCEEDED_BILLINGTOPICOUTOFLIMIT = "LimitExceeded.BillingTopicOutOfLimit"
+
 	// 采集规则配置超过最大值限制。
 	LIMITEXCEEDED_CONFIG = "LimitExceeded.Config"
 
@@ -343,4 +352,7 @@ const (
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// billing topic不允许修改cos导入配置
+	UNSUPPORTEDOPERATION_MODIFYBILLINGCOSRECHARGENOSUPPORT = "UnsupportedOperation.ModifyBillingCosRechargeNoSupport"
 )

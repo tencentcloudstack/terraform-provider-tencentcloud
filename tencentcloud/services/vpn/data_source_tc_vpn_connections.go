@@ -326,6 +326,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 		mapping := map[string]interface{}{
 			"id":                         *connection.VpnConnectionId,
 			"name":                       *connection.VpnConnectionName,
+			"vpc_id":                     *connection.VpcId,
 			"vpn_gateway_id":             *connection.VpnGatewayId,
 			"customer_gateway_id":        *connection.CustomerGatewayId,
 			"ike_proto_authen_algorithm": *connection.IKEOptionsSpecification.PropoAuthenAlgorithm,

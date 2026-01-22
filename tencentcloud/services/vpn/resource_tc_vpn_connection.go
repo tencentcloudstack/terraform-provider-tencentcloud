@@ -378,6 +378,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+
 	if !has {
 		return fmt.Errorf("[CRITAL] vpn_gateway_id %s doesn't exist", d.Get("vpn_gateway_id").(string))
 	}
@@ -396,6 +397,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		}
 		request.VpcId = helper.String("")
 	}
+
 	request.VpnGatewayId = helper.String(d.Get("vpn_gateway_id").(string))
 	request.CustomerGatewayId = helper.String(d.Get("customer_gateway_id").(string))
 	request.PreShareKey = helper.String(d.Get("pre_share_key").(string))
@@ -403,9 +405,11 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		dpdEnable := v.(int)
 		request.DpdEnable = helper.IntInt64(dpdEnable)
 	}
+
 	if v, ok := d.GetOk("dpd_action"); ok {
 		request.DpdAction = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("dpd_timeout"); ok {
 		request.DpdTimeout = helper.String(strconv.Itoa(v.(int)))
 	}
@@ -418,22 +422,26 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		request.NegotiationType = helper.String(v.(string))
 	}
 
-	//set up  SecurityPolicyDatabases
+	//set up SecurityPolicyDatabases
 	if v, ok := d.GetOk("security_group_policy"); ok {
-		sgps := v.(*schema.Set).List()
-		request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
-		for _, v := range sgps {
-			m := v.(map[string]interface{})
-			var sgp vpc.SecurityPolicyDatabase
-			local := m["local_cidr_block"].(string)
-			sgp.LocalCidrBlock = &local
-			// list
-			remoteCidrBlocks := m["remote_cidr_block"].(*schema.Set).List()
-			for _, vv := range remoteCidrBlocks {
-				remoteCidrBlock := vv.(string)
-				sgp.RemoteCidrBlock = append(sgp.RemoteCidrBlock, &remoteCidrBlock)
+		for _, item := range v.(*schema.Set).List() {
+			if dMap, ok := item.(map[string]interface{}); ok && dMap != nil {
+				var sgp vpc.SecurityPolicyDatabase
+				if v, ok := dMap["local_cidr_block"].(string); ok && v != "" {
+					sgp.LocalCidrBlock = &v
+				}
+
+				if v, ok := dMap["remote_cidr_block"].(*schema.Set); ok {
+					remoteCidrBlocks := v.List()
+					for _, rcb := range remoteCidrBlocks {
+						if v, ok := rcb.(string); ok && v != "" {
+							sgp.RemoteCidrBlock = append(sgp.RemoteCidrBlock, &v)
+						}
+					}
+				}
+
+				request.SecurityPolicyDatabases = append(request.SecurityPolicyDatabases, &sgp)
 			}
-			request.SecurityPolicyDatabases = append(request.SecurityPolicyDatabases, &sgp)
 		}
 	}
 
@@ -457,6 +465,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 			return fmt.Errorf("ike_local_fqdn_name need to be set when ike_local_identity is `FQDN`")
 		}
 	}
+
 	if *ikeOptionsSpecification.LocalIdentity == svcvpc.VPN_IKE_IDENTITY_ADDRESS {
 		if v, ok := d.GetOk("ike_remote_address"); ok {
 			ikeOptionsSpecification.RemoteAddress = helper.String(v.(string))
@@ -493,9 +502,11 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("enable_health_check"); ok {
 		request.EnableHealthCheck = helper.Bool(v.(bool))
 	}
+
 	if v, ok := d.GetOk("health_check_local_ip"); ok {
 		request.HealthCheckLocalIp = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("health_check_remote_ip"); ok {
 		request.HealthCheckRemoteIp = helper.String(v.(string))
 	}
@@ -564,20 +575,27 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().CreateVpnConnection(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create VPN connection failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
 	if response.Response.VpnConnection == nil {
-		return fmt.Errorf("VPN connection id is nil")
+		return fmt.Errorf("VpnConnection is nil.")
 	}
 
 	vpnConnectionId := ""
@@ -589,28 +607,31 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		if v, ok := d.GetOk("vpn_gateway_id"); ok {
 			params["vpn-gateway-id"] = v.(string)
 		}
+
 		if v, ok := d.GetOk("vpc_id"); ok && *gateway.Type != "CCN" {
 			params["vpc-id"] = v.(string)
 		}
+
 		if v, ok := d.GetOk("customer_gateway_id"); ok {
 			params["customer-gateway-id"] = v.(string)
 		}
+
 		for k, v := range params {
 			filter := &vpc.Filter{
 				Name:   helper.String(k),
 				Values: []*string{helper.String(v)},
 			}
+
 			idRequest.Filters = append(idRequest.Filters, filter)
 		}
+
 		offset := uint64(0)
 		idRequest.Offset = &offset
 
 		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeVpnConnections(idRequest)
-
 			if e != nil {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-					logId, idRequest.GetAction(), idRequest.ToJsonString(), e.Error())
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, idRequest.GetAction(), idRequest.ToJsonString(), e.Error())
 				return tccommon.RetryError(e, tccommon.InternalError)
 			} else {
 				if len(result.Response.VpnConnectionSet) == 0 || *result.Response.VpnConnectionSet[0].VpnConnectionId == "" {
@@ -626,10 +647,8 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-	}
-
-	if vpnConnectionId == "" {
-		return fmt.Errorf("VPN connection id is nil")
+	} else {
+		vpnConnectionId = *response.Response.VpnConnection.VpnConnectionId
 	}
 
 	d.SetId(vpnConnectionId)

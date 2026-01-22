@@ -76,7 +76,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
+func TestAccTencentCloudAsScalingConfigResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
@@ -89,7 +89,7 @@ func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "configuration_name", "tf-as-basic"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "image_id", "img-2lr9q49h"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.0", "SA1.SMALL1"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.0", "SA5.MEDIUM2"),
 				),
 			},
 			{
@@ -102,7 +102,7 @@ func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudAsScalingConfig_loginSettings(t *testing.T) {
+func TestAccTencentCloudAsScalingConfigResource_loginSettings(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
@@ -126,7 +126,7 @@ func TestAccTencentCloudAsScalingConfig_loginSettings(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
+func TestAccTencentCloudAsScalingConfigResource_full(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -140,7 +140,7 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "configuration_name", "tf-as-full"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "image_id", "img-2lr9q49h"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.0", "SA1.SMALL1"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.0", "SA5.MEDIUM2"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "system_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "system_disk_size", "50"),
@@ -188,7 +188,7 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudAsScalingConfig_charge(t *testing.T) {
+func TestAccTencentCloudAsScalingConfigResource_charge(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -274,7 +274,7 @@ func testAccAsScalingConfig_basic() string {
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	configuration_name = "tf-as-basic"
 	image_id = "img-2lr9q49h"
-	instance_types = ["SA1.SMALL1"]
+	instance_types = ["SA5.MEDIUM2"]
 }
 	`
 }
@@ -284,7 +284,7 @@ func testAccAsScalingConfig_full() string {
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-full"
   image_id           = "img-2lr9q49h"
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = ["SA5.MEDIUM2"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
@@ -357,7 +357,7 @@ func testAccAsScalingConfig_charge() string {
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	configuration_name = "tf-as-basic-charge"
 	image_id = "img-2lr9q49h"
-	instance_types = ["SA1.SMALL1"]
+	instance_types = ["SA5.MEDIUM2"]
 	instance_charge_type = "POSTPAID_BY_HOUR"
 }
 	`
@@ -368,7 +368,7 @@ func testAccAsScalingConfig_charge_spot() string {
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	configuration_name = "tf-as-basic-charge-spot"
 	image_id = "img-2lr9q49h"
-	instance_types = ["SA1.SMALL1"]
+	instance_types = ["SA5.MEDIUM2"]
 	instance_charge_type = "SPOTPAID"
 	spot_instance_type = "one-time"
 	spot_max_price = "1000"
@@ -381,7 +381,7 @@ func testAccAsScalingConfig_charge_prepaid() string {
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	configuration_name = "tf-as-basic-charge-prepaid"
 	image_id = "img-2lr9q49h"
-	instance_types = ["SA1.SMALL1"]
+	instance_types = ["SA5.MEDIUM2"]
 	instance_charge_type = "PREPAID"
 	instance_charge_type_prepaid_period = 1
 	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"

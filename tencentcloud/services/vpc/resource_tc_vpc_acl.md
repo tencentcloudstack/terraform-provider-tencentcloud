@@ -9,15 +9,15 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_vpc_acl" "example" {
-  vpc_id  = tencentcloud_vpc.vpc.id
-  name    = "tf-example"
+  vpc_id = tencentcloud_vpc.vpc.id
+  name   = "tf-example"
   ingress = [
     "ACCEPT#192.168.1.0/24#800#TCP",
-    "ACCEPT#192.168.1.0/24#800-900#TCP",
+    "ACCEPT#192.168.1.0/24#800-900#TCP#DESCRIPTION",
   ]
   egress = [
     "ACCEPT#192.168.1.0/24#800#TCP",
-    "ACCEPT#192.168.1.0/24#800-900#TCP",
+    "ACCEPT#192.168.1.0/24#800-900#TCP#DESCRIPTION",
   ]
 }
 ```
@@ -27,5 +27,5 @@ Import
 Vpc ACL can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_vpc_acl.default acl-id
+$ terraform import tencentcloud_vpc_acl.example acl-mijp2oyu
 ```

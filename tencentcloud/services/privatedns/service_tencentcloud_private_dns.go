@@ -6,9 +6,11 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	privatednsIntlv20201028 "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 
+	intlSdkError "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -37,7 +39,7 @@ func (me *PrivateDnsService) DescribePrivateDnsRecordByFilter(ctx context.Contex
 		}
 	}()
 	var (
-		limit  int64 = 20
+		limit  int64 = 200
 		offset int64 = 0
 		total  int64 = -1
 	)
@@ -46,6 +48,9 @@ func (me *PrivateDnsService) DescribePrivateDnsRecordByFilter(ctx context.Contex
 	if filterList != nil {
 		request.Filters = filterList
 	}
+
+	var tmpRetry = PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR
+	tmpRetry = append(tmpRetry, tccommon.InternalError)
 
 getMoreData:
 
@@ -59,12 +64,11 @@ getMoreData:
 	ratelimit.Check(request.GetAction())
 	request.Limit = &limit
 	request.Offset = &offset
-
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, err := me.client.UsePrivateDnsClient().DescribePrivateZoneRecordList(request)
 		if err != nil {
-			return tccommon.RetryError(err, tccommon.InternalError)
+			return tccommon.RetryError(err, tmpRetry...)
 		}
 		response = result
 		return nil
@@ -90,6 +94,7 @@ func (me *PrivateDnsService) DescribePrivateDnsZoneVpcAttachmentById(ctx context
 	logId := tccommon.GetLogId(ctx)
 
 	request := privatedns.NewDescribePrivateZoneRequest()
+	response := privatedns.NewDescribePrivateZoneResponse()
 	request.ZoneId = &zoneId
 
 	defer func() {
@@ -98,22 +103,33 @@ func (me *PrivateDnsService) DescribePrivateDnsZoneVpcAttachmentById(ctx context
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivateDnsClient().DescribePrivateZone(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePrivateDnsClient().DescribePrivateZone(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe PrivateDns zone failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response.Response.PrivateZone == nil {
 		return
 	}
 
 	ZoneVpcAttachment = response.Response.PrivateZone
-
 	return
 }
 
@@ -125,6 +141,7 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 	)
 
 	request := privatedns.NewDeleteSpecifyPrivateZoneVpcRequest()
+	response := privatedns.NewDeleteSpecifyPrivateZoneVpcResponse()
 	request.ZoneId = &zoneId
 	request.Sync = common.BoolPtr(false)
 	if uin == "" {
@@ -151,30 +168,45 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivateDnsClient().DeleteSpecifyPrivateZoneVpc(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePrivateDnsClient().DeleteSpecifyPrivateZoneVpc(request)
+		if result == nil || result.Response == nil || result.Response.UniqId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe PrivateDns zone failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || response.Response.UniqId == nil {
-		return fmt.Errorf("Delete specify private zone vpc failed.")
-	}
-
-	uniqId = *response.Response.UniqId
-
 	// wait
+	uniqId = *response.Response.UniqId
 	asyncRequest.UniqId = &uniqId
 	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		result, e := me.client.UsePrivateDnsClient().QueryAsyncBindVpcStatus(asyncRequest)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, asyncRequest.GetAction(), asyncRequest.ToJsonString(), asyncRequest.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Query async bind vpc status failed, Response is nil."))
+		}
+
+		if result.Response.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Status is nil."))
 		}
 
 		if *result.Response.Status == "success" {
@@ -194,8 +226,9 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 
 func (me *PrivateDnsService) DescribePrivatednsPrivateZoneListByFilter(ctx context.Context, param map[string]interface{}) (privateZoneList []*privatedns.PrivateZone, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = privatedns.NewDescribePrivateZoneListRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = privatedns.NewDescribePrivateZoneListRequest()
+		response = privatedns.NewDescribePrivateZoneListResponse()
 	)
 
 	defer func() {
@@ -210,15 +243,27 @@ func (me *PrivateDnsService) DescribePrivatednsPrivateZoneListByFilter(ctx conte
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivateDnsClient().DescribePrivateZoneList(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePrivateDnsClient().DescribePrivateZoneList(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe PrivateDns zone list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.PrivateZoneSet) < 1 {
 		return
@@ -228,10 +273,11 @@ func (me *PrivateDnsService) DescribePrivatednsPrivateZoneListByFilter(ctx conte
 	return
 }
 
-func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Context, ruleId string) (ret *privatedns.ForwardRule, errRet error) {
+func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Context, ruleId string) (ret *privatednsIntlv20201028.ForwardRule, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := privatedns.NewDescribeForwardRuleRequest()
+	request := privatednsIntlv20201028.NewDescribeForwardRuleRequest()
+	response := privatednsIntlv20201028.NewDescribeForwardRuleResponse()
 	request.RuleId = helper.String(ruleId)
 
 	defer func() {
@@ -240,16 +286,25 @@ func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Conte
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeForwardRule(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePrivatednsV20201028Client().DescribeForwardRule(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe forward rule failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response.Response == nil {
 		return
 	}
 
@@ -257,11 +312,12 @@ func (me *PrivatednsService) DescribePrivateDnsForwardRuleById(ctx context.Conte
 	return
 }
 
-func (me *PrivatednsService) DescribePrivateDnsEndPointById(ctx context.Context, endPointId string) (ret *privatedns.DescribeEndPointListResponseParams, errRet error) {
+func (me *PrivatednsService) DescribePrivateDnsEndPointById(ctx context.Context, endPointId string) (ret *privatednsIntlv20201028.DescribeEndPointListResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
+	request := privatednsIntlv20201028.NewDescribeEndPointListRequest()
+	response := privatednsIntlv20201028.NewDescribeEndPointListResponse()
 
-	request := privatedns.NewDescribeEndPointListRequest()
-	filter := &privatedns.Filter{
+	filter := &privatednsIntlv20201028.Filter{
 		Name:   helper.String("EndPointId"),
 		Values: []*string{helper.String(endPointId)},
 	}
@@ -273,14 +329,70 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointById(ctx context.Context,
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeEndPointList(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UsePrivatednsV20201028Client().DescribeEndPointList(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe end point list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *PrivatednsService) DescribePrivateDnsExtendEndPointById(ctx context.Context, endPointId string) (ret *privatednsIntlv20201028.DescribeExtendEndpointListResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatednsIntlv20201028.NewDescribeExtendEndpointListRequest()
+	response := privatednsIntlv20201028.NewDescribeExtendEndpointListResponse()
+	filter := &privatednsIntlv20201028.Filter{
+		Name:   helper.String("EndpointId"),
+		Values: []*string{helper.String(endPointId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeExtendEndpointList(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe extend end point list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
 
 	ret = response.Response
 	return
@@ -334,10 +446,10 @@ func (me *PrivatednsService) DescribePrivateDnsForwardRulesByFilter(ctx context.
 	return
 }
 
-func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Context, param map[string]interface{}) (ret []*privatedns.EndPointInfo, errRet error) {
+func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Context, param map[string]interface{}) (ret []*privatednsIntlv20201028.EndPointInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
-		request = privatedns.NewDescribeEndPointListRequest()
+		request = privatednsIntlv20201028.NewDescribeEndPointListRequest()
 	)
 
 	defer func() {
@@ -348,7 +460,7 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Con
 
 	for k, v := range param {
 		if k == "Filters" {
-			request.Filters = v.([]*privatedns.Filter)
+			request.Filters = v.([]*privatednsIntlv20201028.Filter)
 		}
 	}
 
@@ -361,7 +473,7 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Con
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UsePrivatednsV20201028Client().DescribeEndPointList(request)
+		response, err := me.client.UsePrivatednsIntlV20201028Client().DescribeEndPointList(request)
 		if err != nil {
 			errRet = err
 			return
@@ -379,5 +491,107 @@ func (me *PrivatednsService) DescribePrivateDnsEndPointsByFilter(ctx context.Con
 		offset += limit
 	}
 
+	return
+}
+
+func (me *PrivateDnsService) DescribePrivateDnsRecordById(ctx context.Context, zoneId, recordId string) (recordInfo *privatednsIntlv20201028.RecordInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatednsIntlv20201028.NewDescribeRecordRequest()
+	response := privatednsIntlv20201028.NewDescribeRecordResponse()
+	request.ZoneId = &zoneId
+	request.RecordId = &recordId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivatednsIntlV20201028Client().DescribeRecord(request)
+		if e != nil {
+			if sdkError, ok := e.(*intlSdkError.TencentCloudSDKError); ok {
+				if sdkError.Code == "InvalidParameter.RecordNotExist" {
+					return nil
+				}
+			}
+
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe PrivateDns record %s failed, Response is nil.", recordId))
+		}
+
+		if result.Response.RecordInfo != nil && result.Response.RecordInfo.RecordId != nil {
+			respRecordId := *result.Response.RecordInfo.RecordId
+			if respRecordId == recordId {
+				response = result
+				return nil
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("Describe PrivateDns record %s does not meet expectations, Response is %s.", recordId, respRecordId))
+			}
+		}
+
+		return resource.RetryableError(fmt.Errorf("Record %s is still creating...", recordId))
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response != nil && response.Response != nil {
+		recordInfo = response.Response.RecordInfo
+	}
+
+	return
+}
+
+func (me *PrivatednsService) DescribePrivateDnsInboundEndpointById(ctx context.Context, endpointId string) (ret *privatedns.InboundEndpointSet, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := privatedns.NewDescribeInboundEndpointListRequest()
+	response := privatedns.NewDescribeInboundEndpointListResponse()
+	request.Filters = []*privatedns.Filter{
+		{
+			Name:   common.StringPtr("EndPointId"),
+			Values: common.StringPtrs([]string{endpointId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivatednsV20201028Client().DescribeInboundEndpointList(request)
+		if e != nil {
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.InboundEndpointSet == nil || len(result.Response.InboundEndpointSet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe inbound endpoint list failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.InboundEndpointSet[0]
 	return
 }

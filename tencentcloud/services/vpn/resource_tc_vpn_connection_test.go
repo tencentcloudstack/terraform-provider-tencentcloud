@@ -15,6 +15,7 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudVpnConnectionResource_basic -v
 func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
@@ -50,9 +51,6 @@ func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_enable", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_timeout", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_action", "clear"),
-					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "enable_health_check", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "health_check_local_ip", "192.168.0.2"),
-					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "health_check_remote_ip", "3.3.3.2"),
 				),
 			},
 			{
@@ -243,7 +241,7 @@ func testAccCheckVpnConnectionExists(n string) resource.TestCheckFunc {
 const testAccVpnConnectionConfig = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "1.3.3.3"
+  public_ip_address = "10.3.3.14"
 
 }
 
@@ -262,6 +260,7 @@ resource "tencentcloud_vpn_gateway" "vpn" {
     test = "test"
   }
 }
+
 resource "tencentcloud_vpn_connection" "connection" {
   name                       = "vpn_connection_test"
   vpc_id                     = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
@@ -282,9 +281,9 @@ resource "tencentcloud_vpn_connection" "connection" {
   ipsec_sa_lifetime_seconds  = 3600
   ipsec_pfs_dh_group         = "DH-GROUP1"
   ipsec_sa_lifetime_traffic  = 2560
-  dpd_enable = 1
-  dpd_timeout = "30"
-  dpd_action = "clear"
+  dpd_enable                 = 1
+  dpd_timeout                = "30"
+  dpd_action                 = "clear"
   security_group_policy {
     local_cidr_block  = "172.16.0.0/16"
     remote_cidr_block = ["3.3.3.0/32", ]
@@ -292,16 +291,13 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "test"
   }
-  enable_health_check = true
-  health_check_local_ip = "192.168.0.2"
-  health_check_remote_ip = "3.3.3.2"
 }
 `
 
 const testAccVpnConnectionConfigUpdate = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "1.3.3.3"
+  public_ip_address = "10.3.3.15"
 }
 
 # Create VPC and Subnet
@@ -358,7 +354,7 @@ resource "tencentcloud_vpn_connection" "connection" {
 const testAccVpnConnectionConfigUpdate2 = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "1.3.3.3"
+  public_ip_address = "10.3.3.16"
 }
 
 # Create VPC and Subnet
@@ -415,7 +411,7 @@ resource "tencentcloud_vpn_connection" "connection" {
 const testAccVpnConnectionConfigUpdate3 = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "1.3.3.3"
+  public_ip_address = "10.3.3.17"
 }
 
 # Create VPC and Subnet

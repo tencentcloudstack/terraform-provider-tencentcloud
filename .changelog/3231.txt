@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_cos_shipper: support new params
+```

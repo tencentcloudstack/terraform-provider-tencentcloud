@@ -17,43 +17,40 @@ func ResourceTencentCloudDlcRenewDataEngineOperation() *schema.Resource {
 		Create: resourceTencentCloudDlcRenewDataEngineCreate,
 		Read:   resourceTencentCloudDlcRenewDataEngineRead,
 		Delete: resourceTencentCloudDlcRenewDataEngineDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"data_engine_name": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Data engine name.",
+				Description: "CU queue name.",
 			},
 
 			"time_span": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine TimeSpan, prePay: minimum of 1, representing one month of purchasing resources, with a maximum of 120, default 3600, postPay: fixed fee of 3600.",
+				Description: "Renewal period in months, which is at least one month.",
 			},
 
 			"pay_mode": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine pay mode type, only support 0: postPay, 1: prePay(default).",
+				Description: "Payment type. It is 1 by default and is prepaid.",
 			},
 
 			"time_unit": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Engine TimeUnit, prePay: use m(default), postPay: use h.",
+				Description: "Unit. It is m by default, and only m can be filled in.",
 			},
 
 			"renew_flag": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "Automatic renewal flag, 0, initial state, automatic renewal is not performed by default. if the user has prepaid non-stop service privileges, automatic renewal will occur. 1: Automatic renewal. 2: make it clear that there will be no automatic renewal. if this parameter is not passed, the default value is 0.",
+				Description: "Auto-renewal flag: 0 means the initial status, and there is no automatic renewal by default. If the user has the privilege to retain services with prepayment, there will be an automatic renewal. 1 means that there is an automatic renewal. 2 means that there is surely no automatic renewal. If it is not specified, the parameter is 0 by default.",
 			},
 		},
 	}
@@ -63,12 +60,12 @@ func resourceTencentCloudDlcRenewDataEngineCreate(d *schema.ResourceData, meta i
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_renew_data_engine_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
 		request        = dlc.NewRenewDataEngineRequest()
 		dataEngineName string
 	)
+
 	if v, ok := d.GetOk("data_engine_name"); ok {
 		dataEngineName = v.(string)
 		request.DataEngineName = helper.String(v.(string))
@@ -97,15 +94,16 @@ func resourceTencentCloudDlcRenewDataEngineCreate(d *schema.ResourceData, meta i
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s operate dlc renewDataEngine failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(dataEngineName)
-
 	return resourceTencentCloudDlcRenewDataEngineRead(d, meta)
 }
 

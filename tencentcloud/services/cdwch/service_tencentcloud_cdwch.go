@@ -199,6 +199,7 @@ func (me *CdwchService) DescribeInstancesNew(ctx context.Context, instanceId str
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdwch.NewDescribeInstancesNewRequest()
+	response := cdwch.NewDescribeInstancesNewResponse()
 	request.SearchInstanceId = &instanceId
 
 	defer func() {
@@ -207,17 +208,29 @@ func (me *CdwchService) DescribeInstancesNew(ctx context.Context, instanceId str
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCdwchClient().DescribeInstancesNew(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseCdwchClient().DescribeInstancesNew(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe instances failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe clickhouse instances failed, reason:%+v", logId, errRet)
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	instancesList = response.Response.InstancesList
-
 	return
 }
 

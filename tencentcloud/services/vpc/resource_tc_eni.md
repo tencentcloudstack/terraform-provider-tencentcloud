@@ -46,7 +46,7 @@ resource "tencentcloud_eni" "example" {
   subnet_id       = tencentcloud_subnet.subnet.id
   description     = "eni desc."
   ipv4_count      = 1
-  security_groups = [
+  orderly_security_groups = [
     tencentcloud_security_group.example1.id,
     tencentcloud_security_group.example2.id
   ]
@@ -58,5 +58,5 @@ Import
 ENI can be imported using the id, e.g.
 
 ```
-  $ terraform import tencentcloud_eni.foo eni-qka182br
+  $ terraform import tencentcloud_eni.example eni-qka182br
 ```

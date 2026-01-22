@@ -2,9 +2,12 @@ package cdc
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cdc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -251,4 +254,127 @@ func (me *CdcService) DescribeCdcDedicatedClusterOrdersByFilter(ctx context.Cont
 
 	dedicatedClusterOrders = response.Response.DedicatedClusterOrderSet
 	return
+}
+
+func (me *CdcService) DescribeCdcDedicatedClustersByFilter(ctx context.Context, param map[string]interface{}) (ret []*cdc.DedicatedCluster, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cdc.NewDescribeDedicatedClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DedicatedClusterIds" {
+			request.DedicatedClusterIds = v.([]*string)
+		}
+		if k == "Zones" {
+			request.Zones = v.([]*string)
+		}
+		if k == "SiteIds" {
+			request.SiteIds = v.([]*string)
+		}
+		if k == "LifecycleStatuses" {
+			request.LifecycleStatuses = v.([]*string)
+		}
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCdcV20201214Client().DescribeDedicatedClusters(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DedicatedClusterSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.DedicatedClusterSet...)
+		if len(response.Response.DedicatedClusterSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CdcService) DescribeImages(ctx context.Context, dedicatedClusterId string, imageId string, cdcCacheStatus string) (images []*cvm.Image, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cvm.NewDescribeImagesRequest()
+	request.Filters = []*cvm.Filter{
+		{
+			Name:   helper.String("image-id"),
+			Values: helper.Strings([]string{imageId}),
+		},
+		{
+			Name:   helper.String("image-state"),
+			Values: helper.Strings([]string{"NORMAL", "SYNCING", "EXPORTING"}),
+		},
+		{
+			Name:   helper.String("dedicated-cluster-id"),
+			Values: helper.Strings([]string{dedicatedClusterId}),
+		},
+		{
+			Name:   helper.String("cdc-cache-status"),
+			Values: helper.Strings([]string{cdcCacheStatus}),
+		},
+	}
+
+	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeImages(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		if response != nil && response.Response != nil {
+			if len(response.Response.ImageSet) > 0 {
+				images = response.Response.ImageSet
+			}
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("response is null"))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *CdcService) DedicatedClusterImageCacheStateRefreshFunc(dedicatedClusterId string, imageId string, cdcCacheStatus string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := tccommon.ContextNil
+		images, err := me.DescribeImages(ctx, dedicatedClusterId, imageId, cdcCacheStatus)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if len(images) < 1 {
+			return nil, "", fmt.Errorf("Not found image.")
+		}
+
+		return images[0], helper.PString(images[0].CdcCacheStatus), nil
+	}
 }

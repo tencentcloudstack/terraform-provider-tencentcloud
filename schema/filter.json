@@ -52,21 +52,20 @@
                                     "required": true,
                                     "description": "域名."
                                 },
-                                "sub_domain": {
-                                    "type": "string",
+                                "sub_domains": {
+                                    "type": "set_string",
                                     "metadata": {
-                                        "filter": {
-                                            "enable": true
-                                        },
-                                        "widget": "text",
+                                        "widget": "textarea",
                                         "val_source": {
                                             "values": {}
                                         },
-                                        "description": "主机记录, 默认值为 @.",
-                                        "display_name": "主机记录"
+                                        "display_name": "主机记录",
+                                        "delimiter": "[\\s\n,;]",
+                                        "help": "多个描述以英文逗号、英文分号、空格或换行分割，最多10个，重复将去重",
+                                        "description": "主机记录列表, 默认值为 @."
                                     },
                                     "optional": true,
-                                    "description": "主机记录, 默认值为 @."
+                                    "description": "主机记录列表, 默认值为 @."
                                 },
                                 "is_exact_sub_domain": {
                                     "type": "bool",
@@ -86,6 +85,33 @@
                                         },
                                         "description": "是否精确搜索主机记录",
                                         "display_name": "是否精确搜索主机记录",
+                                        "default_value": {
+                                            "value": true,
+                                            "display_name": "是"
+                                        },
+                                        "is_not_edited": true
+                                    },
+                                    "required": true,
+                                    "description": ""
+                                },
+                                "filter_at_ns": {
+                                    "type": "bool",
+                                    "metadata": {
+                                        "filter": {
+                                            "enable": true
+                                        },
+                                        "values": [
+                                            {
+                                                "value": true,
+                                                "display_name": "是"
+                                            }
+                                        ],
+                                        "widget": "select",
+                                        "val_source": {
+                                            "values": {}
+                                        },
+                                        "description": "是否过滤主机记录为 @ 的 NS 记录",
+                                        "display_name": "是否过滤主机记录为 @ 的 NS 记录",
                                         "default_value": {
                                             "value": true,
                                             "display_name": "是"

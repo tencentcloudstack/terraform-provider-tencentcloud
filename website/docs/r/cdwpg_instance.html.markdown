@@ -66,6 +66,7 @@ The following arguments are supported:
 * `user_subnet_id` - (Required, String) subnet.
 * `user_vpc_id` - (Required, String) private network.
 * `zone` - (Required, String) Availability Zone.
+* `product_version` - (Optional, String) Version.
 * `tags` - (Optional, Map) Tag description list.
 
 The `charge_properties` object supports the following:

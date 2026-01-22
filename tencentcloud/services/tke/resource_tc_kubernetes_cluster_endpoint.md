@@ -1,29 +1,36 @@
-Provide a resource to create a KubernetesClusterEndpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
+Provide a resource to create a kubernetes cluster endpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
 
 ~> **NOTE:** Recommend using `depends_on` to make sure endpoint create after node pools or workers does.
 
+~> **NOTE:** Please do not use this resource and resource `tencentcloud_kubernetes_cluster` to operate cluster public network/intranet access at the same time.
+
 Example Usage
 
-```hcl
-resource "tencentcloud_kubernetes_node_pool" "pool1" {}
+Open intranet access for kubernetes cluster
 
-resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
-  cluster_id = "cls-xxxxxxxx"
-  cluster_internet = true
-  cluster_intranet = true
-  # managed_cluster_internet_security_policies = [
-    "192.168.0.0/24"
-  ]
-  cluster_intranet_subnet_id = "subnet-xxxxxxxx"
-  depends_on = [
-	tencentcloud_kubernetes_node_pool.pool1
-  ]
+```hcl
+resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
+  cluster_id                 = "cls-fdy7hm1q"
+  cluster_intranet           = true
+  cluster_intranet_subnet_id = "subnet-7nl0sswi"
+  cluster_intranet_domain    = "intranet_demo.com"
 }
 ```
 
-Import
+Open internet access for kubernetes cluster
 
-KubernetesClusterEndpoint instance can be imported by passing cluster id, e.g.
-```
-$ terraform import tencentcloud_kubernetes_cluster_endpoint.test cluster-id
+```hcl
+resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
+  cluster_id                      = "cls-fdy7hm1q"
+  cluster_internet                = true
+  cluster_internet_security_group = "sg-e6a8xxib"
+  cluster_internet_domain         = "internet_demo.com"
+  extensive_parameters = jsonencode({
+    "AddressIPVersion" : "IPV4",
+    "InternetAccessible" : {
+      "InternetChargeType" : "TRAFFIC_POSTPAID_BY_HOUR",
+      "InternetMaxBandwidthOut" : 10
+    }
+  })
+}
 ```

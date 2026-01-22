@@ -43,13 +43,13 @@ func ResourceTencentCloudVpcACL() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Ingress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
+				Description: "Ingress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]#[description]. The available value of `action` is `ACCEPT` and `DROP`. The `cidr_ip` must be an IP address network or segment. The `port` valid format is `80`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When `protocol` is `ICMP` or `ALL`, the 'port' must be `ALL`. The `description` content must be in uppercase.",
 			},
 			"egress": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
+				Description: "Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]#[description]. The available value of `action` is `ACCEPT` and `DROP`. The `cidr_ip` must be an IP address network or segment. The `port` valid format is `80`, `80-90` or `ALL`. The available value of `protocol` is `TCP`, `UDP`, `ICMP` and `ALL`. When `protocol` is `ICMP` or `ALL`, the `port` must be `ALL`. The `description` content must be in uppercase.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -169,10 +169,11 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		}
 
 		var (
-			action    string
-			cidrBlock string
-			port      string
-			protocol  string
+			action      string
+			cidrBlock   string
+			port        string
+			protocol    string
+			description string
 		)
 
 		if info.EgressEntries[i].Action != nil {
@@ -189,13 +190,27 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		if info.EgressEntries[i].Protocol != nil {
 			protocol = *info.EgressEntries[i].Protocol
 		}
+		if info.EgressEntries[i].Description != nil {
+			description = *info.EgressEntries[i].Description
+		}
 
-		result := strings.Join([]string{
-			action,
-			cidrBlock,
-			port,
-			protocol,
-		}, tccommon.FILED_SP)
+		var result string
+		if description != "" {
+			result = strings.Join([]string{
+				action,
+				cidrBlock,
+				port,
+				protocol,
+				description,
+			}, tccommon.FILED_SP)
+		} else {
+			result = strings.Join([]string{
+				action,
+				cidrBlock,
+				port,
+				protocol,
+			}, tccommon.FILED_SP)
+		}
 
 		egressList = append(egressList, strings.ToUpper(result))
 	}
@@ -208,10 +223,11 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		}
 
 		var (
-			action    string
-			cidrBlock string
-			port      string
-			protocol  string
+			action      string
+			cidrBlock   string
+			port        string
+			protocol    string
+			description string
 		)
 
 		if info.IngressEntries[i].Action != nil {
@@ -228,13 +244,27 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		if info.IngressEntries[i].Protocol != nil {
 			protocol = *info.IngressEntries[i].Protocol
 		}
+		if info.IngressEntries[i].Description != nil {
+			description = *info.IngressEntries[i].Description
+		}
 
-		result := strings.Join([]string{
-			action,
-			cidrBlock,
-			port,
-			protocol,
-		}, tccommon.FILED_SP)
+		var result string
+		if description != "" {
+			result = strings.Join([]string{
+				action,
+				cidrBlock,
+				port,
+				protocol,
+				description,
+			}, tccommon.FILED_SP)
+		} else {
+			result = strings.Join([]string{
+				action,
+				cidrBlock,
+				port,
+				protocol,
+			}, tccommon.FILED_SP)
+		}
 		ingressList = append(ingressList, strings.ToUpper(result))
 	}
 	_ = d.Set("egress", egressList)

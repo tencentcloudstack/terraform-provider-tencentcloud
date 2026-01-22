@@ -26,7 +26,7 @@ resource "tencentcloud_vpn_gateway" "example" {
   vpc_id    = "vpc-86v957zb"
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
@@ -41,7 +41,7 @@ resource "tencentcloud_vpn_gateway" "example" {
   type      = "IPSEC"
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
@@ -56,7 +56,7 @@ resource "tencentcloud_vpn_gateway" "example" {
   type      = "SSL_CCN"
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
@@ -71,7 +71,7 @@ resource "tencentcloud_vpn_gateway" "example" {
   bgp_asn   = 9000
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
@@ -86,7 +86,7 @@ resource "tencentcloud_vpn_gateway" "example" {
   zone      = "ap-guangzhou-3"
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```
@@ -103,7 +103,7 @@ resource "tencentcloud_vpn_gateway" "example" {
   prepaid_period = 1
 
   tags = {
-    createBy = "terraform"
+    createBy = "Terraform"
   }
 }
 ```

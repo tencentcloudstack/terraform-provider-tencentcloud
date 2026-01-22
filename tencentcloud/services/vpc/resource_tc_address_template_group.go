@@ -23,7 +23,6 @@ func ResourceTencentCloudAddressTemplateGroup() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
 				Description: "Name of the address template group.",
 			},

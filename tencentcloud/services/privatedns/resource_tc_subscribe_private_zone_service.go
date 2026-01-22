@@ -41,14 +41,13 @@ func resourceTencentCloudSubscribePrivateZoneServiceCreate(d *schema.ResourceDat
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().SubscribePrivateZoneServiceWithContext(ctx, request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
 		if result == nil || result.Response == nil {
-			e = fmt.Errorf("create subscribe private zone service failed.")
-			return resource.NonRetryableError(e)
+			return resource.NonRetryableError(fmt.Errorf("Create subscribe private zone service failed. Response is nil"))
 		}
 
 		response = result

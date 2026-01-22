@@ -1,0 +1,7 @@
+```release-note:enhancement
+datasource/tencentcloud_cfw_nat_fw_switches: deprecated `status`, use `enable` instead
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfw_nat_firewall_switch: optimiz read function code logic
+```

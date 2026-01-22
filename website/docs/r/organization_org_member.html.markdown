@@ -4,27 +4,27 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_organization_org_member"
 sidebar_current: "docs-tencentcloud-resource-organization_org_member"
 description: |-
-  Provides a resource to create a organization org_member
+  Provides a resource to create a Organization member
 ---
 
 # tencentcloud_organization_org_member
 
-Provides a resource to create a organization org_member
+Provides a resource to create a Organization member
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_organization_org_member" "org_member" {
-  name    = "terraform_test"
-  node_id = 2003721
+resource "tencentcloud_organization_org_member" "example" {
+  name    = "tf-example-dev"
+  node_id = 2013128
   permission_ids = [
     1,
     2,
-    3,
     4,
   ]
-  policy_type = "Financial"
-  remark      = "for terraform test"
+  policy_type          = "Financial"
+  remark               = "remark."
+  force_delete_account = false
 }
 ```
 
@@ -36,6 +36,8 @@ The following arguments are supported:
 * `node_id` - (Required, Int) Organization node ID.
 * `permission_ids` - (Required, Set: [`Int`]) Financial management permission IDs.Valid values:- `1`: View bill.- `2`: Check balance.- `3`: Fund transfer.- `4`: Combine bill.- `5`: Issue an invoice.- `6`: Inherit discount.- `7`: Pay on behalf.value 1,2 is required.
 * `policy_type` - (Required, String) Organization policy type.- `Financial`: Financial management policy.
+* `force_delete_account` - (Optional, Bool) Whether to force delete the member account when deleting the organization member. It is only applicable to member accounts of the creation type, not to member accounts of the invitation type. Default is false.
+* `is_modify_nick_name` - (Optional, Int) Whether to synchronize organization member names to their account nicknames. Values: 1 - Sync, 0 - Do not sync. This parameter takes effect only when the name field is being modified.
 * `pay_uin` - (Optional, String) The uin which is payment account on behalf.When `PermissionIds` contains 7, is required.
 * `record_id` - (Optional, Int) Create member record ID.When create failed and needs to be recreated, is required.
 * `remark` - (Optional, String) Notes.
@@ -60,8 +62,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-organization org_member can be imported using the id, e.g.
+Organization member can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_organization_org_member.org_member orgMember_id
+terraform import tencentcloud_organization_org_member.example 100043985088
 ```
 

@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_igtm_address_pool_list
+```
+
+```release-note:new-resource
+tencentcloud_igtm_address_pool
+```

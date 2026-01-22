@@ -44,6 +44,13 @@ func ResourceTencentCloudHaVip() *schema.Resource {
 				ForceNew:    true,
 				Description: "Subnet ID.",
 			},
+			"check_associate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to enable verification of the submachine or network card range during HAVIP drift. Not enabled by default.",
+			},
 			"vip": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -93,6 +100,9 @@ func resourceTencentCloudHaVipCreate(d *schema.ResourceData, meta interface{}) e
 	//optional
 	if v, ok := d.GetOk("vip"); ok {
 		request.Vip = helper.String(v.(string))
+	}
+	if v, ok := d.GetOkExists("check_associate"); ok {
+		request.CheckAssociate = helper.Bool(v.(bool))
 	}
 	var response *vpc.CreateHaVipResponse
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -146,16 +156,20 @@ func resourceTencentCloudHaVipRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	haVip := response.Response.HaVipSet[0]
-
-	_ = d.Set("name", *haVip.HaVipName)
-	_ = d.Set("create_time", *haVip.CreatedTime)
-	_ = d.Set("vip", *haVip.Vip)
-	_ = d.Set("vpc_id", *haVip.VpcId)
-	_ = d.Set("subnet_id", *haVip.SubnetId)
-	_ = d.Set("address_ip", *haVip.AddressIp)
-	_ = d.Set("state", *haVip.State)
-	_ = d.Set("network_interface_id", *haVip.NetworkInterfaceId)
-	_ = d.Set("instance_id", *haVip.InstanceId)
+	if haVip != nil {
+		_ = d.Set("name", haVip.HaVipName)
+		_ = d.Set("create_time", haVip.CreatedTime)
+		_ = d.Set("vip", haVip.Vip)
+		_ = d.Set("vpc_id", haVip.VpcId)
+		_ = d.Set("subnet_id", haVip.SubnetId)
+		_ = d.Set("address_ip", haVip.AddressIp)
+		_ = d.Set("state", haVip.State)
+		_ = d.Set("network_interface_id", haVip.NetworkInterfaceId)
+		_ = d.Set("instance_id", haVip.InstanceId)
+		if haVip.CheckAssociate != nil {
+			_ = d.Set("check_associate", *haVip.CheckAssociate)
+		}
+	}
 
 	return nil
 }

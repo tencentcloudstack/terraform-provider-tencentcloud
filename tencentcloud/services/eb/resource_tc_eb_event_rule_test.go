@@ -76,7 +76,7 @@ func testAccCheckEbEventRuleDestroy(s *terraform.State) error {
 
 		rule, err := service.DescribeEbEventRuleById(ctx, eventBusId, ruleId)
 		if err != nil {
-			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound.Rule" {
+			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound" {
 				return nil
 			}
 			return err

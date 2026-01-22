@@ -9,6 +9,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svccrs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
@@ -132,11 +133,12 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).",
 			},
-			//"tag_list": {
-			//	Type:        schema.TypeMap,
-			//	Optional:    true,
-			//	Description: "The information of tags to be associated with instances. This parameter is left empty by default..",
-			//},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tags.",
+			},
 			"read_only_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -146,6 +148,12 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Dedicated cluster ID.",
+			},
+			"wait_switch": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY, POSTGRESQL_KERNEL_UPGRADE_MAINTAIN_WINDOW}),
+				Description:  "Switch time after instance configurations are modified. `0`: Switch immediately; `2`: Switch during maintenance time window. Default: `0`. Note: This only takes effect when updating the `memory`, `storage`, `cpu` fields.",
 			},
 			// Computed values
 			"create_time": {
@@ -246,14 +254,6 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
-	//if tags := helper.GetTags(d, "tag_list"); len(tags) > 0 {
-	//	for k, v := range tags {
-	//		request.TagList = &postgresql.Tag{
-	//			TagKey:   &k,
-	//			TagValue: &v,
-	//		}
-	//	}
-	//}
 
 	// get specCode with db_version and memory
 	var allowVersion, allowSpec []string
@@ -318,7 +318,28 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	if err != nil {
 		return err
 	}
-	instanceId := *response.Response.DBInstanceIdSet[0]
+	var instanceId string
+	if len(response.Response.DBInstanceIdSet) == 0 {
+		if len(response.Response.DealNames) == 0 {
+			return fmt.Errorf("TencentCloud SDK returns empty postgresql ID and Deals")
+		}
+		dealId := response.Response.DealNames[0]
+		service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+		deals, err := service.DescribeOrders(ctx, []*string{dealId})
+		if err != nil {
+			return err
+		}
+		if len(deals) > 0 && len(deals[0].DBInstanceIdSet) > 0 {
+			if deals[0].DBInstanceIdSet[0] != nil {
+				instanceId = *deals[0].DBInstanceIdSet[0]
+			}
+		}
+	} else {
+		if response.Response.DBInstanceIdSet[0] != nil {
+			instanceId = *response.Response.DBInstanceIdSet[0]
+		}
+	}
 	d.SetId(instanceId)
 
 	// check creation done
@@ -337,6 +358,15 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 
 	if err != nil {
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudPostgresqlReadOnlyInstanceRead(d, meta)
@@ -410,11 +440,14 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 		_ = d.Set("security_groups_ids", sg)
 	}
 
-	//tags := make(map[string]string, len(instance.TagList))
-	//for _, tag := range instance.TagList {
-	//	tags[*tag.TagKey] = *tag.TagValue
-	//}
-	//_ = d.Set("tag_list", tags)
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(tcClient)
+	tags, err := tagService.DescribeResourceTags(ctx, "postgres", "DBInstanceId", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
 
 	// computed
 	_ = d.Set("create_time", instance.CreateTime)
@@ -451,6 +484,11 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		"dedicated_cluster_id",
 	); err != nil {
 		return err
+	}
+
+	waitSwitch := POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY
+	if v, ok := d.GetOk("wait_switch"); ok {
+		waitSwitch = v.(int)
 	}
 
 	if d.HasChange("read_only_group_id") {
@@ -526,7 +564,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 			cpu = v.(int)
 		}
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu)
+			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu, waitSwitch)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -535,13 +573,15 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if outErr != nil {
 			return outErr
 		}
-		time.Sleep(time.Second * 5)
-		// check update storage and memory done
-		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-		if checkErr != nil {
-			return checkErr
-		}
 
+		if waitSwitch == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
+			time.Sleep(time.Second * 5)
+			// check update storage and memory done
+			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+			if checkErr != nil {
+				return checkErr
+			}
+		}
 	}
 
 	// update project id
@@ -582,20 +622,18 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 
 	}
 
-	//if d.HasChange("tags") {
-	//
-	//	oldValue, newValue := d.GetChange("tags")
-	//	replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
-	//
-	//	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	//	tagService := svctag.NewTagService(tcClient)
-	//	resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
-	//	err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
-	//	if err != nil {
-	//		return err
-	//	}
-	//
-	//}
+	if d.HasChange("tags") {
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+	}
 
 	d.Partial(false)
 

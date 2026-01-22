@@ -53,10 +53,15 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_tags = {
     tag = "example"
   }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
-### charge type
+### Using SPOTPAID charge type
 
 ```hcl
 data "tencentcloud_images" "example" {
@@ -71,6 +76,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "one-time"
   spot_max_price       = "1000"
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
@@ -84,6 +94,34 @@ resource "tencentcloud_as_scaling_config" "example" {
   enhanced_monitor_service          = false
   enhanced_security_service         = false
   enhanced_automation_tools_service = false
+  instance_tags                     = {}
+  instance_types = [
+    "S5.SMALL2",
+  ]
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 0
+  key_ids                    = []
+  project_id                 = 0
+  public_ip_assigned         = false
+  security_group_ids = [
+    "sg-5275dorp",
+  ]
+  system_disk_size = 50
+  system_disk_type = "CLOUD_BSSD"
+}
+```
+
+### Using DisasterRecoverGroupIds
+
+```hcl
+resource "tencentcloud_as_scaling_config" "example" {
+  image_family                      = "business-daily-update"
+  configuration_name                = "as-test-config"
+  disk_type_policy                  = "ORIGINAL"
+  enhanced_monitor_service          = false
+  enhanced_security_service         = false
+  enhanced_automation_tools_service = false
+  disaster_recover_group_ids        = ["ps-e2u4ew"]
   instance_tags                     = {}
   instance_types = [
     "S5.SMALL2",
@@ -141,6 +179,62 @@ resource "tencentcloud_as_scaling_config" "example" {
   instance_tags = {
     tag = "example"
   }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
+}
+```
+
+### Create configuration with AntiDDos Eip
+
+```hcl
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 4 for x86_64"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name = "tf-example"
+  image_id           = data.tencentcloud_images.example.images.0.image_id
+  instance_types     = ["SA5.MEDIUM4"]
+  project_id         = 0
+  system_disk_type   = "CLOUD_HSSD"
+  system_disk_size   = "50"
+  security_group_ids = ["sg-l222vn6w"]
+
+  data_disk {
+    disk_type = "CLOUD_HSSD"
+    disk_size = 50
+  }
+
+  internet_charge_type              = "BANDWIDTH_PACKAGE"
+  internet_max_bandwidth_out        = 100
+  public_ip_assigned                = true
+  bandwidth_package_id              = "bwp-rp2nx3ab"
+  ipv4_address_type                 = "AntiDDoSEIP"
+  anti_ddos_package_id              = "bgp-31400fvq"
+  is_keep_eip                       = true
+  password                          = "Test@123#"
+  enhanced_security_service         = false
+  enhanced_monitor_service          = false
+  enhanced_automation_tools_service = false
+  user_data                         = "dGVzdA=="
+
+  host_name_settings {
+    host_name       = "host-name"
+    host_name_style = "UNIQUE"
+  }
+
+  instance_tags = {
+    tag = "example"
+  }
+
+  tags = {
+    "createdBy" = "Terraform"
+    "owner"     = "tf"
+  }
 }
 ```
 
@@ -150,9 +244,12 @@ The following arguments are supported:
 
 * `configuration_name` - (Required, String) Name of a launch configuration.
 * `instance_types` - (Required, List: [`String`]) Specified types of CVM instances.
+* `anti_ddos_package_id` - (Optional, String) Anti-DDoS service package ID. This is required when you want to request an AntiDDoS IP.
+* `bandwidth_package_id` - (Optional, String) Bandwidth package ID.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `dedicated_cluster_id` - (Optional, String) Dedicated Cluster ID.
+* `disaster_recover_group_ids` - (Optional, List: [`String`]) Placement group ID. Only one is allowed.
 * `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
 * `enhanced_automation_tools_service` - (Optional, Bool) To specify whether to enable cloud automation tools service.
 * `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
@@ -167,6 +264,8 @@ The following arguments are supported:
 * `instance_tags` - (Optional, Map) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
+* `ipv4_address_type` - (Optional, String) AddressType. Default value: WanIP. For beta users of dedicated IP. the value can be: HighQualityEIP: Dedicated IP. Note that dedicated IPs are only available in partial regions. For beta users of Anti-DDoS IP, the value can be: AntiDDoSEIP: Anti-DDoS EIP. Note that Anti-DDoS IPs are only available in partial regions.
+* `is_keep_eip` - (Optional, Bool) Whether to delete the bound EIP when the instance is destroyed. Range of values: True: retain the EIP; False: not retain the EIP. Note that when the IPv4AddressType field specifies the EIP type, the default behavior is not to retain the EIP. WanIP is unaffected by this field and will always be deleted with the instance. Changing this field configuration will take effect immediately for resources already bound to a scaling group.
 * `keep_image_login` - (Optional, Bool) Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.
 * `key_ids` - (Optional, List: [`String`]) ID list of keys.
 * `password` - (Optional, String) Password to access.
@@ -177,6 +276,7 @@ The following arguments are supported:
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String) Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.
+* `tags` - (Optional, Map) Tags of launch configuration.
 * `user_data` - (Optional, String) ase64-encoded User Data text, the length limit is 16KB.
 
 The `data_disk` object supports the following:

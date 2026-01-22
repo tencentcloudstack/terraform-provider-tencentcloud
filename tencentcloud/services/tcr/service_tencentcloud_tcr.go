@@ -1742,6 +1742,7 @@ func (me *TCRService) DescribeTcrServiceAccountById(ctx context.Context, registr
 	logId := tccommon.GetLogId(ctx)
 
 	request := tcr.NewDescribeServiceAccountsRequest()
+	response := tcr.NewDescribeServiceAccountsResponse()
 	request.RegistryId = &registryId
 
 	defer func() {
@@ -1750,14 +1751,27 @@ func (me *TCRService) DescribeTcrServiceAccountById(ctx context.Context, registr
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTCRClient().DescribeServiceAccounts(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTCRClient().DescribeServiceAccounts(request)
+		if result == nil || result.Response == nil || result.Response.ServiceAccounts == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tcr ServiceAccounts failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.ServiceAccounts) < 1 {
 		return
@@ -1790,14 +1804,112 @@ func (me *TCRService) DeleteTcrServiceAccountById(ctx context.Context, registryI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTCRClient().DeleteServiceAccount(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTCRClient().DeleteServiceAccount(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TCRService) ModifyServiceAccountPassword(ctx context.Context, registryId string, name string, password string) (passwordResp string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tcr.NewModifyServiceAccountPasswordRequest()
+	response := tcr.NewModifyServiceAccountPasswordResponse()
+	request.RegistryId = &registryId
+	request.Name = &name
+	request.Random = helper.Bool(false)
+	request.Password = helper.String(password)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTCRClient().ModifyServiceAccountPassword(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Modify tcr ServiceAccountPassword failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.Password != nil {
+		passwordResp = *response.Response.Password
+	}
+
+	return
+}
+
+func (me *TCRService) DescribeTcrReplicationById(ctx context.Context, sourceRegistryId, ruleName string) (ret *tcr.ReplicationPolicyInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tcr.NewDescribeReplicationPoliciesRequest()
+	response := tcr.NewDescribeReplicationPoliciesResponse()
+	request.RegistryId = &sourceRegistryId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTCRClient().DescribeReplicationPolicies(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ReplicationPolicyInfoList == nil || len(result.Response.ReplicationPolicyInfoList) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe tcr replication policies failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range response.Response.ReplicationPolicyInfoList {
+		if item != nil && item.Name != nil && *item.Name == ruleName {
+			ret = item
+			return
+		}
+	}
 
 	return
 }

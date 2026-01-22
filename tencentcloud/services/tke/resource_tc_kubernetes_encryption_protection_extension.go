@@ -30,7 +30,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionCreatePostHandleResponse0
 	conf := tccommon.BuildStateChangeConf(
 		[]string{},
 		[]string{"Opened"},
-		3*tccommon.ReadRetryTimeout,
+		5*tccommon.ReadRetryTimeout,
 		time.Second,
 		service.TkeEncryptionProtectionStateRefreshFunc(clusterId, []string{}),
 	)
@@ -55,7 +55,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionDeletePostHandleResponse0
 	conf := tccommon.BuildStateChangeConf(
 		[]string{},
 		[]string{"Closed"},
-		3*tccommon.ReadRetryTimeout,
+		5*tccommon.ReadRetryTimeout,
 		time.Second,
 		service.TkeEncryptionProtectionStateRefreshFunc(d.Id(), []string{}),
 	)

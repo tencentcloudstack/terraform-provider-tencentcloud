@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cwp_license_order"
 sidebar_current: "docs-tencentcloud-resource-cwp_license_order"
 description: |-
-  Provides a resource to create a cwp license_order
+  Provides a resource to create a CWP license order
 ---
 
 # tencentcloud_cwp_license_order
 
-Provides a resource to create a cwp license_order
+Provides a resource to create a CWP license order
 
 ## Example Usage
 
@@ -21,7 +21,7 @@ resource "tencentcloud_cwp_license_order" "example" {
   region_id    = 1
   project_id   = 0
   tags = {
-    "createdBy" = "terraform"
+    createdBy = "terraform"
   }
 }
 ```
@@ -31,10 +31,10 @@ resource "tencentcloud_cwp_license_order" "example" {
 The following arguments are supported:
 
 * `alias` - (Optional, String) Resource alias.
-* `license_num` - (Optional, Int) License quantity, Quantity to be purchased.Default is 1.
-* `license_type` - (Optional, Int) LicenseType, 0 CWP Pro - Pay as you go, 1 CWP Pro - Monthly subscription, 2 CWP Ultimate - Monthly subscription. Default is 0.
+* `license_num` - (Optional, Int) Authorization quantity: the number of units that need to be purchased, The default is 1.
+* `license_type` - (Optional, Int) Authorization type. 0: Pro Edition-pay-as-you-go; 1: Pro Edition-monthly subscription; 2 - Ultimate Edition-monthly subscriptionThe default is 0.
 * `project_id` - (Optional, Int) Project ID. Default is 0.
-* `region_id` - (Optional, Int) Purchase order region, only 1 Guangzhou, 9 Singapore is supported here. Guangzhou is recommended. Singapore is whitelisted. Default is 1.
+* `region_id` - (Optional, Int) Region of purchase order. In this case, only 1 - Guangzhou and 9 - Singapore are supported. Guangzhou is recommended. Singapore region is reserved for allowlisted users. The default is 1.
 * `tags` - (Optional, Map) Tags of the license order.
 
 ## Attributes Reference
@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cwp license_order can be imported using the id, e.g.
+CWP license order can be imported using the resourceId#regionId, e.g.
 
 ```
 terraform import tencentcloud_cwp_license_order.example cwplic-130715d2#1

@@ -18,6 +18,10 @@ It's more flexible than managing worker config directly with `tencentcloud_kuber
 
 ~> **NOTE:** Executing `terraform destroy` to destroy the resource will default to deleting the node resource, If it is necessary to preserve node instance resources, Please set `instance_delete_mode` to `retain`.
 
+~> **NOTE:** If you want to set up addon for the tke cluster, it is recommended to use resource `tencentcloud_kubernetes_addon`.
+
+~> **NOTE:** Please do not use this resource and resource `tencentcloud_kubernetes_cluster_endpoint` to operate cluster public network/intranet access at the same time.
+
 ## Example Usage
 
 ### Create a basic cluster with two worker nodes
@@ -93,54 +97,6 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_version                 = "1.22.5"
   cluster_deploy_type             = "MANAGED_CLUSTER"
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.first_subnet_id
-    # img_id                     = local.image_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # key_ids                   = ["skey-11112222"]
-    password = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_second
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.second_subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    key_ids                   = ["skey-11112222"]
-    cam_role_name             = "CVM_QcsRole"
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
   labels = {
     "test1" = "test1",
     "test2" = "test2",
@@ -212,7 +168,6 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_max_service_num = 32
   cluster_version         = "1.22.5"
   cluster_deploy_type     = "MANAGED_CLUSTER"
-  # without any worker config
 }
 
 resource "tencentcloud_kubernetes_node_pool" "example" {
@@ -338,7 +293,6 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_internet        = false # (can be ignored) open it after the nodes added
   cluster_version         = "1.22.5"
   cluster_deploy_type     = "MANAGED_CLUSTER"
-  # without any worker config
 }
 
 resource "tencentcloud_kubernetes_node_pool" "example" {
@@ -484,59 +438,6 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_version                 = "1.22.5"
   cluster_deploy_type             = "MANAGED_CLUSTER"
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.first_subnet_id
-    # img_id                     = local.image_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-      encrypt   = false
-    }
-
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    user_data                  = "dGVzdA=="
-    disaster_recover_group_ids = []
-    security_group_ids         = []
-    key_ids                    = []
-    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_second
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.second_subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    user_data                  = "dGVzdA=="
-    disaster_recover_group_ids = []
-    security_group_ids         = []
-    key_ids                    = []
-    cam_role_name              = "CVM_QcsRole"
-    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
   labels = {
     "test1" = "test1",
     "test2" = "test2",
@@ -585,26 +486,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 32
   cluster_internet        = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type = "MANAGED_CLUSTER"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-    # img_id                     = "img-rkiynh11"
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids = "skey-11112222"
-  }
+  cluster_deploy_type     = "MANAGED_CLUSTER"
 
   extension_addon {
     name = "COS"
@@ -615,18 +497,21 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
       }
     })
   }
+
   extension_addon {
     name = "SecurityGroupPolicy"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : local.chartMap["securitygrouppolicy"] } }
     })
   }
+
   extension_addon {
     name = "OOMGuard"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : local.chartMap["oomguard"] } }
     })
   }
+
   extension_addon {
     name = "OLM"
     param = jsonencode({
@@ -663,8 +548,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 32
   cluster_internet        = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type = "MANAGED_CLUSTER"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -685,7 +569,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    # password                = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
     key_ids = "skey-11112222"
   }
 
@@ -734,29 +618,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   network_type            = "VPC-CNI"
   eni_subnet_ids          = ["subnet-bk1etlyu"]
   service_cidr            = "10.1.0.0/24"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_PREMIUM"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = "subnet-t5dv27rs"
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    key_ids                   = "skey-11112222"
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
+  data_plane_v2           = true
 
   labels = {
     "test1" = "test1",
@@ -845,6 +707,31 @@ resource "tencentcloud_kubernetes_cluster" "cdc_cluster" {
 }
 ```
 
+### TKE cluster cloud subnet and CDC subnet are interconnected
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "example" {
+  cluster_name            = "tf-example"
+  cluster_desc            = "cluster desc"
+  cluster_os              = "tlinux3.1x86_64"
+  cluster_max_pod_num     = 64
+  cluster_max_service_num = 256
+  cluster_version         = "1.30.0"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+  container_runtime       = "containerd"
+  runtime_version         = "1.6.9"
+  is_dual_stack           = false
+  is_non_static_ip_mode   = true
+  network_type            = "VPC-CNI"
+  vpc_cni_type            = "tke-route-eni"
+  vpc_id                  = "vpc-i5yyodl9"
+  cluster_subnet_id       = "subnet-5rrirqyc"
+  eni_subnet_ids          = ["subnet-5rrirqyc"]
+  service_cidr            = "192.168.0.0/24"
+  cdc_id                  = "cluster-262n63e8"
+}
+```
+
 ### Use delete options to delete CBS when deleting the Cluster
 
 ```hcl
@@ -863,41 +750,37 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_deploy_type        = "MANAGED_CLUSTER"
   container_runtime          = "containerd"
   docker_graph_path          = "/var/lib/containerd"
-  # without any worker config
+
   tags = {
     "demo" = "test"
-  }
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = "SA2.MEDIUM2"
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.first_subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    user_data                  = "dGVzdA=="
-    disaster_recover_group_ids = []
-    security_group_ids         = []
-    key_ids                    = []
-    cam_role_name              = "CVM_QcsRole"
-    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   resource_delete_options {
     resource_type = "CBS"
     delete_mode   = "terminate"
   }
+}
+```
+
+### Using disable addons
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                           = "vpc-i5yyodl9"
+  cluster_max_pod_num              = 32
+  cluster_name                     = "tf-example"
+  cluster_desc                     = "cluster desc."
+  cluster_max_service_num          = 256
+  cluster_version                  = "1.30.0"
+  cluster_deploy_type              = "MANAGED_CLUSTER"
+  container_runtime                = "containerd"
+  runtime_version                  = "1.6.9"
+  instance_delete_mode             = "terminate"
+  upgrade_instances_follow_cluster = true
+  network_type                     = "VPC-CNI"
+  eni_subnet_ids                   = ["subnet-hhi88a58"]
+  service_cidr                     = "10.1.0.0/24"
+  disable_addons                   = ["ip-masq-agent"]
 }
 ```
 
@@ -930,21 +813,24 @@ The following arguments are supported:
 * `cluster_name` - (Optional, String) Name of the cluster.
 * `cluster_os_type` - (Optional, String, ForceNew) Image type of the cluster os, the available values include: 'GENERAL'. Default is 'GENERAL'.
 * `cluster_os` - (Optional, String) Cluster operating system, supports setting public images (the field passes the corresponding image Name) and custom images (the field passes the corresponding image ID). For details, please refer to: https://cloud.tencent.com/document/product/457/68289.
-* `cluster_subnet_id` - (Optional, String, ForceNew) Subnet ID of the cluster, such as: subnet-b3p7d7q5.
+* `cluster_subnet_id` - (Optional, String, ForceNew) Control Plane Subnet Information. This field is required only in the following scenarios: When the container network plugin is CiliumOverlay, TKE will obtain 2 IPs from this subnet to create an internal load balancer; When creating a managed cluster that supports CDC with the VPC-CNI network plugin, at least 12 IPs must be reserved.
 * `cluster_version` - (Optional, String) Version of the cluster. Use `tencentcloud_kubernetes_available_cluster_versions` to get the upgradable cluster version.
-* `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher.Default is 'docker'.
+* `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher. The default value is `docker` for versions below v1.24 and `containerd` for versions above v1.24.
+* `data_plane_v2` - (Optional, Bool, ForceNew) Whether to enable DataPlaneV2 (replace kube-proxy with cilium). `data_plane_v2` and `cluster_ipvs` should not be set at the same time.
 * `deletion_protection` - (Optional, Bool) Indicates whether cluster deletion protection is enabled. Default is false.
+* `disable_addons` - (Optional, List: [`String`]) To prevent the installation of a specific Addon component, enter the corresponding AddonName.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `enable_customized_pod_cidr` - (Optional, Bool) Whether to enable the custom mode of node podCIDR size. Default is false.
 * `eni_subnet_ids` - (Optional, List: [`String`]) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `event_persistence` - (Optional, List) Specify cluster Event Persistence config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
-* `exist_instance` - (Optional, List, ForceNew) create tke cluster by existed instances.
-* `extension_addon` - (Optional, List) Information of the add-on to be installed.
+* `exist_instance` - (Optional, Set) Create tke cluster by existed instances.
+* `extension_addon` - (Optional, List) Information of the add-on to be installed. It is recommended to use resource `tencentcloud_kubernetes_addon` management cluster addon.
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
 * `globe_desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
 * `ignore_service_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the service cidr conflict error. Only valid in `VPC-CNI` mode.
 * `instance_delete_mode` - (Optional, String) The strategy for deleting cluster instances: terminate (destroy instances, only support pay as you go cloud host instances) retain (remove only, keep instances), Default is terminate.
+* `is_dual_stack` - (Optional, Bool, ForceNew) In the VPC-CNI mode of the cluster, the dual stack cluster status defaults to false, indicating a non dual stack cluster.
 * `is_non_static_ip_mode` - (Optional, Bool, ForceNew) Indicates whether non-static ip mode is enabled. Default is false.
 * `kube_proxy_mode` - (Optional, String) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.
 * `labels` - (Optional, Map, ForceNew) Labels of tke cluster nodes.
@@ -962,7 +848,7 @@ The following arguments are supported:
 * `service_cidr` - (Optional, String, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional, Map) The tags of the cluster.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
-* `upgrade_instances_follow_cluster` - (Optional, Bool) Indicates whether upgrade all instances when cluster_version change. Default is false.
+* `upgrade_instances_follow_cluster` - (Optional, Bool) Indicates whether upgrade all cluster instances. Default is false.
 * `vpc_cni_type` - (Optional, String) Distinguish between shared network card multi-IP mode and independent network card mode. Fill in `tke-route-eni` for shared network card multi-IP mode and `tke-direct-eni` for independent network card mode. The default is shared network card mode. When it is necessary to turn off the vpc-cni container network capability, both `eni_subnet_ids` and `vpc_cni_type` must be set to empty.
 * `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_scale_worker'.
 
@@ -988,6 +874,15 @@ The `cluster_extra_args` object supports the following:
 
 The `data_disk` object of `master_config` supports the following:
 
+* `auto_format_and_mount` - (Optional, Bool) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
+* `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
+* `file_system` - (Optional, String) File system, e.g. `ext3/ext4/xfs`.
+* `mount_target` - (Optional, String) Mount target.
+
+The `data_disk` object of `master_config` supports the following:
+
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
@@ -997,15 +892,6 @@ The `data_disk` object of `master_config` supports the following:
 * `kms_key_id` - (Optional, String) ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
-
-The `data_disk` object of `master_config` supports the following:
-
-* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
-* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
-* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_PREMIUM`, `CLOUD_SSD`, `CLOUD_HSSD`, `CLOUD_TSSD` and `CLOUD_BSSD`.
-* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
-* `mount_target` - (Optional, String, ForceNew) Mount target.
 
 The `data_disk` object of `worker_config` supports the following:
 
@@ -1028,9 +914,9 @@ The `event_persistence` object supports the following:
 
 The `exist_instance` object supports the following:
 
-* `desired_pod_numbers` - (Optional, List, ForceNew) Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.
-* `instances_para` - (Optional, List, ForceNew) Reinstallation parameters of an existing instance.
-* `node_role` - (Optional, String, ForceNew) Role of existed node. value:MASTER_ETCD or WORKER.
+* `desired_pod_numbers` - (Optional, List) Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.
+* `instances_para` - (Optional, List) Reinstallation parameters of an existing instance.
+* `node_role` - (Optional, String) Role of existed node. Value: MASTER_ETCD or WORKER.
 
 The `extension_addon` object supports the following:
 
@@ -1039,30 +925,30 @@ The `extension_addon` object supports the following:
 
 The `extra_args` object of `master_config` supports the following:
 
-* `kubelet` - (Optional, List, ForceNew) Kubelet custom parameter. The parameter format is ["k1=v1", "k1=v2"].
+* `kubelet` - (Optional, List) Kubelet custom parameter. The parameter format is ["k1=v1", "k1=v2"].
 
 The `gpu_args` object of `master_config` supports the following:
 
-* `cuda` - (Optional, Map, ForceNew) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
-* `cudnn` - (Optional, Map, ForceNew) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
-* `custom_driver` - (Optional, Map, ForceNew) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
-* `driver` - (Optional, Map, ForceNew) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
-* `mig_enable` - (Optional, Bool, ForceNew) Whether to enable MIG.
+* `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
 The `instances_para` object of `exist_instance` supports the following:
 
-* `instance_ids` - (Required, List, ForceNew) Cluster IDs.
-* `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
-* `enhanced_security_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
-* `key_ids` - (Optional, List, ForceNew) ID list of keys, should be set if `password` not set.
-* `master_config` - (Optional, List, ForceNew) Advanced Node Settings. commonly used to attach existing instances.
-* `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
-* `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
+* `instance_ids` - (Required, List) Cluster IDs.
+* `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is TRUE.
+* `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is TRUE.
+* `key_ids` - (Optional, List) ID list of keys, should be set if `password` not set.
+* `master_config` - (Optional, List) Advanced Node Settings. commonly used to attach existing instances.
+* `password` - (Optional, String) Password to access, should be set if `key_ids` not set.
+* `security_group_ids` - (Optional, List) Security groups to which a CVM instance belongs.
 
 The `labels` object of `master_config` supports the following:
 
-* `name` - (Required, String, ForceNew) Name of map.
-* `value` - (Required, String, ForceNew) Value of map.
+* `name` - (Required, String) Name of map.
+* `value` - (Required, String) Value of map.
 
 The `log_agent` object supports the following:
 
@@ -1071,16 +957,16 @@ The `log_agent` object supports the following:
 
 The `master_config` object of `instances_para` supports the following:
 
-* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
-* `desired_pod_number` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
-* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
-* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
-* `labels` - (Optional, List, ForceNew) Node label list.
-* `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
-* `taints` - (Optional, List, ForceNew) Node taint.
-* `unschedulable` - (Optional, Int, ForceNew) Set whether the joined nodes participate in scheduling, with a default value of 0, indicating participation in scheduling; Non 0 means not participating in scheduling.
-* `user_script` - (Optional, String, ForceNew) User script encoded in base64, which will be executed after the k8s component runs. The user needs to ensure the script's reentrant and retry logic. The script and its generated log files can be viewed in the node path /data/ccs_userscript/. If the node needs to be initialized before joining the schedule, it can be used in conjunction with the `unschedulable` parameter. After the final initialization of the userScript is completed, add the command "kubectl uncordon nodename --kubeconfig=/root/.kube/config" to add the node to the schedule.
+* `data_disk` - (Optional, List) Configurations of data disk.
+* `desired_pod_number` - (Optional, Int) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
+* `docker_graph_path` - (Optional, String) Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, List) Custom parameter information related to the node. This is a white-list parameter.
+* `gpu_args` - (Optional, List) GPU driver parameters.
+* `labels` - (Optional, List) Node label list.
+* `mount_target` - (Optional, String) Mount target. Default is not mounting.
+* `taints` - (Optional, List) Node taint.
+* `unschedulable` - (Optional, Int) Set whether the joined nodes participate in scheduling, with a default value of 0, indicating participation in scheduling; Non 0 means not participating in scheduling.
+* `user_script` - (Optional, String) User script encoded in base64, which will be executed after the k8s component runs. The user needs to ensure the script's reentrant and retry logic. The script and its generated log files can be viewed in the node path /data/ccs_userscript/. If the node needs to be initialized before joining the schedule, it can be used in conjunction with the `unschedulable` parameter. After the final initialization of the userScript is completed, add the command "kubectl uncordon nodename --kubeconfig=/root/.kube/config" to add the node to the schedule.
 
 The `master_config` object supports the following:
 
@@ -1132,9 +1018,9 @@ The `resource_delete_options` object supports the following:
 
 The `taints` object of `master_config` supports the following:
 
-* `effect` - (Optional, String, ForceNew) Effect of the taint.
-* `key` - (Optional, String, ForceNew) Key of the taint.
-* `value` - (Optional, String, ForceNew) Value of the taint.
+* `effect` - (Optional, String) Effect of the taint.
+* `key` - (Optional, String) Key of the taint.
+* `value` - (Optional, String) Value of the taint.
 
 The `worker_config` object supports the following:
 

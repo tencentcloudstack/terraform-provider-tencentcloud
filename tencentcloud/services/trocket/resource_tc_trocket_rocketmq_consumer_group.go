@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -62,6 +63,13 @@ func ResourceTencentCloudTrocketRocketmqConsumerGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "remark.",
 			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag of consumer group.",
+			},
 		},
 	}
 }
@@ -70,14 +78,15 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupCreate(d *schema.ResourceDa
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_consumer_group.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request       = trocket.NewCreateConsumerGroupRequest()
 		response      = trocket.NewCreateConsumerGroupResponse()
 		instanceId    string
 		consumerGroup string
 	)
+
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = helper.String(v.(string))
 	}
@@ -109,17 +118,36 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupCreate(d *schema.ResourceDa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create trocket rocketmq consumer group failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s create trocket rocketmqConsumerGroup failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create trocket rocketmq consumer group failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.InstanceId == nil || response.Response.ConsumerGroup == nil {
+		return fmt.Errorf("InstanceId or ConsumerGroup is nil.")
 	}
 
 	instanceId = *response.Response.InstanceId
 	consumerGroup = *response.Response.ConsumerGroup
-	d.SetId(instanceId + tccommon.FILED_SP + consumerGroup)
+	d.SetId(strings.Join([]string{instanceId, consumerGroup}, tccommon.FILED_SP))
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := fmt.Sprintf("qcs::trocket:%s:uin/:consumerGroup/%s/%s", region, instanceId, consumerGroup)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudTrocketRocketmqConsumerGroupRead(d, meta)
 }
@@ -128,11 +156,11 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupRead(d *schema.ResourceData
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_consumer_group.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -147,8 +175,8 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupRead(d *schema.ResourceData
 	}
 
 	if rocketmqConsumerGroup == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_trocket_rocketmq_consumer_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TrocketRocketmqConsumerGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -171,6 +199,15 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupRead(d *schema.ResourceData
 		_ = d.Set("remark", rocketmqConsumerGroup.Remark)
 	}
 
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	tags, err := tagService.DescribeResourceTags(ctx, "trocket", "consumerGroup", tcClient.Region, fmt.Sprintf("%s/%s", instanceId, consumerGroup))
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -178,9 +215,12 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupUpdate(d *schema.ResourceDa
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_consumer_group.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := trocket.NewModifyConsumerGroupRequest()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request    = trocket.NewModifyConsumerGroupRequest()
+		needChange bool
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -189,13 +229,7 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupUpdate(d *schema.ResourceDa
 	instanceId := idSplit[0]
 	consumerGroup := idSplit[1]
 
-	request.InstanceId = &instanceId
-	request.ConsumerGroup = &consumerGroup
-
-	needChange := false
-
 	mutableArgs := []string{"max_retry_times", "consume_enable", "consume_message_orderly", "remark"}
-
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -219,6 +253,8 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupUpdate(d *schema.ResourceDa
 			request.Remark = helper.String(v.(string))
 		}
 
+		request.InstanceId = &instanceId
+		request.ConsumerGroup = &consumerGroup
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTrocketClient().ModifyConsumerGroup(request)
 			if e != nil {
@@ -226,10 +262,23 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupUpdate(d *schema.ResourceDa
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
-			log.Printf("[CRITAL]%s update trocket rocketmqConsumerGroup failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update trocket rocketmq consumer group failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("trocket", "consumerGroup", tcClient.Region, fmt.Sprintf("%s/%s", instanceId, consumerGroup))
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 	}
@@ -241,17 +290,19 @@ func resourceTencentCloudTrocketRocketmqConsumerGroupDelete(d *schema.ResourceDa
 	defer tccommon.LogElapsed("resource.tencentcloud_trocket_rocketmq_consumer_group.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	service := TrocketService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	instanceId := idSplit[0]
 	consumerGroup := idSplit[1]
-
 	if err := service.DeleteTrocketRocketmqConsumerGroupById(ctx, instanceId, consumerGroup); err != nil {
 		return err
 	}

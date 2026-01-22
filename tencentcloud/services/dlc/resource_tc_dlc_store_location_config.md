@@ -1,18 +1,21 @@
-Provides a resource to create a dlc store_location_config
+Provides a resource to create a DLC store location config
 
 Example Usage
 
+Select user-defined COS path storage
+
 ```hcl
-resource "tencentcloud_dlc_store_location_config" "store_location_config" {
-  store_location = "cosn://bucketname/"
-  enable = 1
+resource "tencentcloud_dlc_store_location_config" "example" {
+  store_location = "cosn://tf-example-1308135196/demo"
+  enable         = 1
 }
 ```
 
-Import
+Select DLC internal storage
 
-dlc store_location_config can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_store_location_config.store_location_config store_location_config_id
+```hcl
+resource "tencentcloud_dlc_store_location_config" "example" {
+  store_location = ""
+  enable         = 0
+}
 ```

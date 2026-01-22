@@ -112,7 +112,7 @@ resource "tencentcloud_monitor_tmp_alert_group" "tmp_alert_group" {
     "notice-om017kc2",
   ]
   group_name      = "tf-test"
-  instance_id     = tencentcloud_monitor_tmp_instance.basic.id
+  instance_id     = tencentcloud_monitor_tmp_instance.example.id
   repeat_interval = "5m"
 
   custom_receiver {
@@ -145,7 +145,7 @@ resource "tencentcloud_monitor_tmp_alert_group" "tmp_alert_group" {
     "notice-om017kc2",
   ]
   group_name      = "tf-test-up"
-  instance_id     = tencentcloud_monitor_tmp_instance.basic.id
+  instance_id     = tencentcloud_monitor_tmp_instance.example.id
   repeat_interval = "1h"
 
   custom_receiver {

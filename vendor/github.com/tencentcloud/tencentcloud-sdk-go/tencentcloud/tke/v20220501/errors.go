@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ const (
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
+	// 没有权限。
+	INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+
 	// db错误。
 	INTERNALERROR_DB = "InternalError.Db"
 
@@ -35,11 +38,17 @@ const (
 	// 初始化master失败。
 	INTERNALERROR_INITMASTERFAILED = "InternalError.InitMasterFailed"
 
-	// Param。
+	// 参数错误。
 	INTERNALERROR_PARAM = "InternalError.Param"
 
-	// 公共集群不支持扩展节点。
+	// 集群不支持当前操作。
 	INTERNALERROR_PUBLICCLUSTEROPNOTSUPPORT = "InternalError.PublicClusterOpNotSupport"
+
+	// 超过配额限制。
+	INTERNALERROR_QUOTAMAXCLSLIMIT = "InternalError.QuotaMaxClsLimit"
+
+	// 超过配额限制。
+	INTERNALERROR_QUOTAMAXNODLIMIT = "InternalError.QuotaMaxNodLimit"
 
 	// 内部错误。
 	INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -56,6 +65,12 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 
+	// 参数取值错误。
+	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
 
@@ -70,4 +85,13 @@ const (
 
 	// 集群状态不支持该操作。
 	RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+
+	// 无该接口CAM权限。
+	UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+
+	// 未知参数错误。
+	UNKNOWNPARAMETER = "UnknownParameter"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 )

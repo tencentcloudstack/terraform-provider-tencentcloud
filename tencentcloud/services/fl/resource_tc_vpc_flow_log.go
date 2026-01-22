@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"regexp"
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -31,62 +30,62 @@ func ResourceTencentCloudVpcFlowLog() *schema.Resource {
 			"flow_log_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Specify flow log name.",
+				Description: "The name of the flow log instance.",
 			},
 			"resource_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Specify resource type. NOTE: Only support `NETWORKINTERFACE` for now. Values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, `DCG`.",
+				Description: "The type of resource associated with the flow log. Valid values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, and `DCG`.",
 			},
 			"resource_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Specify resource unique Id of `resource_type` configured.",
+				Description: "The unique ID of the resource.",
 			},
 			"traffic_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Specify log traffic type, values: `ACCEPT`, `REJECT`, `ALL`.",
+				Description: "Type of the flow logs to be collected. Valid values: `ACCEPT`, `REJECT` and `ALL`.",
 			},
 			"vpc_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Specify vpc Id, ignore while `resource_type` is `CCN` (unsupported) but required while other types.",
+				Description: "The VPC ID or unique ID of the resource. We recommend using the unique ID. This parameter is required unless the `ResourceType` is set to `CCN`.",
 			},
 			"flow_log_description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Specify flow Log description.",
+				Description: "The description of the flow log.",
 			},
 			"cloud_log_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Specify flow log storage id, just set cls topic id.",
+				Description: "The storage ID of the flow log.",
 			},
 			"storage_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Specify consumer type, values: `cls`, `ckafka`.",
+				Description: "Consumer types: `cls` and `ckafka`.",
 			},
 			"flow_log_storage": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "Specify consumer detail, required while `storage_type` is `ckafka`.",
+				Description: "Information of the flow log consumer, required while `storage_type` is `ckafka`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"storage_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Specify storage instance id, required while `storage_type` is `ckafka`.",
+							Description: "Storage instance ID, required while `storage_type` is `ckafka`.",
 						},
 						"storage_topic": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Specify storage topic id, required while `storage_type` is `ckafka`.",
+							Description: "Topic ID, required while `storage_type` is `ckafka`.",
 						},
 					},
 				},
@@ -95,7 +94,7 @@ func ResourceTencentCloudVpcFlowLog() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Specify flow log storage region, default using current.",
+				Description: "The region corresponding to the flow log storage ID. If not passed in, this field defaults to the current region.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -110,13 +109,14 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
 		request   = vpc.NewCreateFlowLogRequest()
 		response  = vpc.NewCreateFlowLogResponse()
 		flowLogId string
+		vpcId     string
 	)
+
 	if v, ok := d.GetOk("flow_log_name"); ok {
 		request.FlowLogName = helper.String(v.(string))
 	}
@@ -135,6 +135,7 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
+		vpcId = v.(string)
 	}
 
 	if v, ok := d.GetOk("flow_log_description"); ok {
@@ -154,9 +155,11 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 		if v, ok := dMap["storage_id"]; ok {
 			flowLogStorage.StorageId = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["storage_topic"]; ok {
 			flowLogStorage.StorageTopic = helper.String(v.(string))
 		}
+
 		request.FlowLogStorage = &flowLogStorage
 	}
 
@@ -171,9 +174,15 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create vpc flowLog failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create vpc flowLog failed, reason:%+v", logId, err)
 		return err
@@ -184,8 +193,7 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 	}
 
 	flowLogId = *response.Response.FlowLog[0].FlowLogId
-
-	resourceTencentCloudSetFlowLogId(d, flowLogId, d.Get("vpc_id").(string))
+	d.SetId(strings.Join([]string{flowLogId, vpcId}, tccommon.FILED_SP))
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -205,19 +213,18 @@ func resourceTencentCloudVpcFlowLogRead(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
-
 	if err != nil {
 		return err
 	}
 
-	flowLog, err := service.DescribeVpcFlowLogById(ctx, flowLogId, vpcId)
+	flowLog, err := service.DescribeVpcFlowLogsById(ctx, flowLogId, vpcId)
 	if err != nil {
 		return err
 	}
@@ -295,13 +302,13 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	request := vpc.NewModifyFlowLogAttributeRequest()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request = vpc.NewModifyFlowLogAttributeRequest()
+	)
 
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
-
 	if err != nil {
 		return err
 	}
@@ -335,7 +342,10 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 		}
 
 		request.FlowLogId = &flowLogId
-		request.VpcId = &vpcId
+		if vpcId != "" {
+			request.VpcId = &vpcId
+		}
+
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyFlowLogAttribute(request)
 			if e != nil {
@@ -343,6 +353,7 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
 
@@ -372,12 +383,13 @@ func resourceTencentCloudVpcFlowLogDelete(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	)
 
-	service := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
-
 	if err != nil {
 		return err
 	}
@@ -395,11 +407,6 @@ func resourceTencentCloudSetFlowLogId(d *schema.ResourceData, id, vpcId string) 
 
 func resourceTencentCloudGetFlowLogId(d *schema.ResourceData) (id, vpcId string, err error) {
 	rawId := d.Id()
-	rawIdRE := regexp.MustCompile(`^fl-[0-9a-z]{8}#vpc-[0-9a-z]{8}$`)
-	if !rawIdRE.MatchString(rawId) {
-		err = fmt.Errorf("invalid id format %s, expect `fl-xxxxxxxx#vpc-xxxxxxxx`", rawId)
-		return
-	}
 	ids := strings.Split(rawId, tccommon.FILED_SP)
 	id = ids[0]
 	vpcId = ids[1]

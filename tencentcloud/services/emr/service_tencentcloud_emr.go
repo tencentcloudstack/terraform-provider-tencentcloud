@@ -59,9 +59,27 @@ func (me *EMRService) DeleteInstance(ctx context.Context, d *schema.ResourceData
 	return nil
 }
 
+func (me *EMRService) TerminateInstance(ctx context.Context, instanceId string) error {
+	logId := tccommon.GetLogId(ctx)
+	request := emr.NewTerminateInstanceRequest()
+	request.InstanceId = helper.String(instanceId)
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseEmrClient().TerminateInstance(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	return nil
+}
+
 func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData) (id string, err error) {
 	logId := tccommon.GetLogId(ctx)
 	request := emr.NewCreateInstanceRequest()
+
+	if v, ok := d.GetOk("scene_name"); ok {
+		request.SceneName = helper.String(v.(string))
+	}
 
 	if v, ok := d.GetOk("auto_renew"); ok {
 		request.AutoRenew = common.Uint64Ptr((uint64)(v.(int)))
@@ -147,6 +165,111 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		}
 	}
 
+	if v, ok := d.GetOkExists("multi_zone"); ok {
+		request.MultiZone = helper.Bool(v.(bool))
+		request.VersionID = helper.IntInt64(1)
+	}
+	if v, ok := d.GetOk("multi_zone_setting"); ok {
+		multiZoneSettings := v.([]interface{})
+		request.MultiZoneSettings = make([]*emr.MultiZoneSetting, 0)
+		for idx, zone := range multiZoneSettings {
+			if zone == nil {
+				err = fmt.Errorf("multi_zone_setting element with index %d is nil", idx+1)
+				return
+			}
+			zoneMap := zone.(map[string]interface{})
+			tmpZone := &emr.MultiZoneSetting{}
+			if v, ok := zoneMap["zone_tag"].(string); ok && v != "" {
+				tmpZone.ZoneTag = helper.String(v)
+			}
+			if v, ok := zoneMap["vpc_settings"]; ok {
+				value := v.(map[string]interface{})
+				var vpcId string
+				var subnetId string
+
+				if subV, ok := value["vpc_id"]; ok {
+					vpcId = subV.(string)
+				}
+				if subV, ok := value["subnet_id"]; ok {
+					subnetId = subV.(string)
+				}
+				vpcSettings := &emr.VPCSettings{VpcId: &vpcId, SubnetId: &subnetId}
+				tmpZone.VPCSettings = vpcSettings
+			}
+			if v, ok := zoneMap["placement"]; ok {
+				tmpZone.Placement = &emr.Placement{}
+				placementList := v.([]interface{})
+				if len(placementList) == 0 {
+					err = fmt.Errorf("placement in multi_zone_setting is empty")
+					return
+				}
+				placement := placementList[0].(map[string]interface{})
+
+				if projectId, ok := placement["project_id"]; ok {
+					projectIdInt64, _ := strconv.ParseInt(projectId.(string), 10, 64)
+					tmpZone.Placement.ProjectId = common.Int64Ptr(projectIdInt64)
+				} else {
+					tmpZone.Placement.ProjectId = common.Int64Ptr(0)
+				}
+				if z, ok := placement["zone"]; ok {
+					tmpZone.Placement.Zone = common.StringPtr(z.(string))
+				}
+			}
+			if v, ok := zoneMap["resource_spec"]; ok {
+				tmpResourceSpec := v.([]interface{})
+				resourceSpec := tmpResourceSpec[0].(map[string]interface{})
+				tmpZone.ResourceSpec = &emr.NewResourceSpec{}
+				for k, v := range resourceSpec {
+					if k == "master_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.MasterResourceSpec = ParseResource(spec)
+						}
+					} else if k == "core_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.CoreResourceSpec = ParseResource(spec)
+						}
+					} else if k == "task_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.TaskResourceSpec = ParseResource(spec)
+						}
+					} else if k == "master_count" {
+						tmpZone.ResourceSpec.MasterCount = common.Int64Ptr((int64)(v.(int)))
+					} else if k == "core_count" {
+						tmpZone.ResourceSpec.CoreCount = common.Int64Ptr((int64)(v.(int)))
+					} else if k == "task_count" {
+						tmpZone.ResourceSpec.TaskCount = common.Int64Ptr((int64)(v.(int)))
+					} else if k == "common_resource_spec" {
+						if len(v.([]interface{})) > 0 {
+							spec := v.([]interface{})[0].(map[string]interface{})
+							err = validateMultiDisks(spec)
+							if err != nil {
+								return
+							}
+							tmpZone.ResourceSpec.CommonResourceSpec = ParseResource(spec)
+						}
+					} else if k == "common_count" {
+						tmpZone.ResourceSpec.CommonCount = common.Int64Ptr((int64)(v.(int)))
+					}
+				}
+			}
+			request.MultiZoneSettings = append(request.MultiZoneSettings, tmpZone)
+		}
+	}
 	if v, ok := d.GetOk("support_ha"); ok {
 		request.SupportHA = common.Uint64Ptr((uint64)(v.(int)))
 	} else {
@@ -230,7 +353,11 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 
 	if v, ok := d.GetOk("pre_executed_file_settings"); ok {
 		preExecutedFileSettings := v.([]interface{})
-		for _, preExecutedFileSetting := range preExecutedFileSettings {
+		for idx, preExecutedFileSetting := range preExecutedFileSettings {
+			if preExecutedFileSetting == nil {
+				err = fmt.Errorf("pre_executed_file_settings element with index %d is nil", idx+1)
+				return
+			}
 			preExecutedFileSettingMap := preExecutedFileSetting.(map[string]interface{})
 			tmpPreExecutedFileSetting := &emr.PreExecuteFileSettings{}
 			if v, ok := preExecutedFileSettingMap["args"]; ok {
@@ -345,8 +472,6 @@ func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, node
 	request.InstanceId = &instanceId
 	request.NodeFlag = &nodeFlag
 	request.HardwareResourceType = &hardwareResourceType
-	request.Limit = helper.IntInt64(limit)
-	request.Offset = helper.IntInt64(offset)
 	response, err := me.client.UseEmrClient().DescribeClusterNodes(request)
 
 	if err != nil {
@@ -781,5 +906,252 @@ func (me *EMRService) ScaleOutInstance(ctx context.Context, request *emr.ScaleOu
 	if err != nil {
 		return
 	}
+	return
+}
+
+func (me *EMRService) DescribeEmrYarnById(ctx context.Context, instanceId string) (ret *emr.DescribeGlobalConfigResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := emr.NewDescribeGlobalConfigRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeGlobalConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *EMRService) DescribeEmrJobStatusDetailByFilter(ctx context.Context, param map[string]interface{}) (ret *emr.DescribeClusterFlowStatusDetailResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = emr.NewDescribeClusterFlowStatusDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "FlowParam" {
+			request.FlowParam = v.(*emr.FlowParam)
+		}
+		if k == "NeedExtraDetail" {
+			request.NeedExtraDetail = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeClusterFlowStatusDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *EMRService) DescribeEmrServiceNodeInfosByFilter(ctx context.Context, param map[string]interface{}) (ret *emr.DescribeServiceNodeInfosResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = emr.NewDescribeServiceNodeInfosRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "SearchText" {
+			request.SearchText = v.(*string)
+		}
+		if k == "ConfStatus" {
+			request.ConfStatus = v.(*int64)
+		}
+		if k == "MaintainStateId" {
+			request.MaintainStateId = v.(*int64)
+		}
+		if k == "OperatorStateId" {
+			request.OperatorStateId = v.(*int64)
+		}
+		if k == "HealthStateId" {
+			request.HealthStateId = v.(*string)
+		}
+		if k == "ServiceName" {
+			request.ServiceName = v.(*string)
+		}
+		if k == "NodeTypeName" {
+			request.NodeTypeName = v.(*string)
+		}
+		if k == "DataNodeMaintenanceId" {
+			request.DataNodeMaintenanceId = v.(*int64)
+		}
+		if k == "SearchFields" {
+			searchFields := v.([]interface{})
+			for _, searchField := range searchFields {
+				request.SearchFields = append(request.SearchFields, searchField.(*emr.SearchItem))
+			}
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeServiceNodeInfos(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *EMRService) DescribeEmrAutoScaleStrategyById(ctx context.Context, instanceId string) (ret *emr.DescribeAutoScaleStrategiesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := emr.NewDescribeAutoScaleStrategiesRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeAutoScaleStrategies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *EMRService) DescribeEmrAutoScaleStrategy(ctx context.Context, instanceId, name string) (ret *emr.DescribeAutoScaleStrategiesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := emr.NewDescribeAutoScaleStrategiesRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeAutoScaleStrategies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *EMRService) DeleteAutoScaleStrategy(ctx context.Context, instanceId, strategyType string, strategyId int64) error {
+	logId := tccommon.GetLogId(ctx)
+	var (
+		request  = emr.NewDeleteAutoScaleStrategyRequest()
+		response = emr.NewDeleteAutoScaleStrategyResponse()
+	)
+	request.InstanceId = helper.String(instanceId)
+
+	request.StrategyType = helper.StrToInt64Point(strategyType)
+	request.StrategyId = helper.Int64(strategyId)
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseEmrClient().DeleteAutoScaleStrategyWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s delete emr auto scale strategy failed, reason:%+v", logId, err)
+		return err
+	}
+
+	_ = response
+	return nil
+
+}
+
+func (me *EMRService) DescribeEmrClusterNewById(ctx context.Context, instanceId string) (ret *emr.ClusterInstancesInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := emr.NewDescribeInstancesRequest()
+	request.DisplayStrategy = helper.String("clusterList")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ClusterList) < 1 {
+		return
+	}
+
+	ret = response.Response.ClusterList[0]
 	return
 }

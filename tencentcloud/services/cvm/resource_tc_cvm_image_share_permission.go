@@ -2,6 +2,7 @@ package cvm
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -16,8 +17,8 @@ import (
 func ResourceTencentCloudCvmImageSharePermission() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCvmImageSharePermissionCreate,
-		Update: resourceTencentCloudCvmImageSharePermissionUpdate,
 		Read:   resourceTencentCloudCvmImageSharePermissionRead,
+		Update: resourceTencentCloudCvmImageSharePermissionUpdate,
 		Delete: resourceTencentCloudCvmImageSharePermissionDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -31,11 +32,9 @@ func ResourceTencentCloudCvmImageSharePermission() *schema.Resource {
 			},
 
 			"account_ids": {
-				Required: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				Required:    true,
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "List of account IDs with which an image is shared.",
 			},
 		},
@@ -46,12 +45,12 @@ func resourceTencentCloudCvmImageSharePermissionCreate(d *schema.ResourceData, m
 	defer tccommon.LogElapsed("resource.tencentcloud_cvm_image_share_permission.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = cvm.NewModifyImageSharePermissionRequest()
 		imageId string
 	)
+
 	if v, ok := d.GetOk("image_id"); ok {
 		imageId = v.(string)
 		request.ImageId = helper.String(imageId)
@@ -66,7 +65,6 @@ func resourceTencentCloudCvmImageSharePermissionCreate(d *schema.ResourceData, m
 	}
 
 	request.Permission = helper.String(IMAGE_SHARE_PERMISSION_SHARE)
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyImageSharePermission(request)
 		if e != nil {
@@ -74,46 +72,20 @@ func resourceTencentCloudCvmImageSharePermissionCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Operate cvm modifyImageSharePermission failed, Response is nil."))
+		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s operate cvm modifyImageSharePermission failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(imageId)
-
-	return resourceTencentCloudCvmImageSharePermissionRead(d, meta)
-}
-
-func resourceTencentCloudCvmImageSharePermissionUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cvm_image_share_permission.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	if d.HasChange("account_ids") {
-		old, new := d.GetChange("account_ids")
-		oldSet := old.(*schema.Set)
-		newSet := new.(*schema.Set)
-		add := newSet.Difference(oldSet).List()
-		remove := oldSet.Difference(newSet).List()
-		if len(add) > 0 {
-			addError := service.ModifyImageSharePermission(ctx, d.Id(), IMAGE_SHARE_PERMISSION_SHARE, helper.InterfacesStrings(add))
-			if addError != nil {
-				return addError
-			}
-		}
-		if len(remove) > 0 {
-			removeError := service.ModifyImageSharePermission(ctx, d.Id(), IMAGE_SHARE_PERMISSION_CANCEL, helper.InterfacesStrings(remove))
-			if removeError != nil {
-				return removeError
-			}
-		}
-	}
-
 	return resourceTencentCloudCvmImageSharePermissionRead(d, meta)
 }
 
@@ -121,19 +93,23 @@ func resourceTencentCloudCvmImageSharePermissionRead(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("resource.tencentcloud_cvm_image_share_permission.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	var sharePermissionSet []*cvm.SharePermission
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		sharePermissionSet []*cvm.SharePermission
+	)
 
-	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCvmImageSharePermissionByFilter(ctx, map[string]interface{}{"ImageId": helper.String(d.Id())})
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		sharePermissionSet = result
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -148,22 +124,61 @@ func resourceTencentCloudCvmImageSharePermissionRead(d *schema.ResourceData, met
 	return nil
 }
 
+func resourceTencentCloudCvmImageSharePermissionUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_image_share_permission.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
+
+	if d.HasChange("account_ids") {
+		old, new := d.GetChange("account_ids")
+		oldSet := old.(*schema.Set)
+		newSet := new.(*schema.Set)
+		add := newSet.Difference(oldSet).List()
+		remove := oldSet.Difference(newSet).List()
+		if len(add) > 0 {
+			addError := service.ModifyImageSharePermission(ctx, d.Id(), IMAGE_SHARE_PERMISSION_SHARE, helper.InterfacesStrings(add))
+			if addError != nil {
+				return addError
+			}
+		}
+
+		if len(remove) > 0 {
+			removeError := service.ModifyImageSharePermission(ctx, d.Id(), IMAGE_SHARE_PERMISSION_CANCEL, helper.InterfacesStrings(remove))
+			if removeError != nil {
+				return removeError
+			}
+		}
+	}
+
+	return resourceTencentCloudCvmImageSharePermissionRead(d, meta)
+}
+
 func resourceTencentCloudCvmImageSharePermissionDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cvm_image_share_permission.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	var sharePermissionSet []*cvm.SharePermission
 
-	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		sharePermissionSet []*cvm.SharePermission
+	)
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCvmImageSharePermissionByFilter(ctx, map[string]interface{}{"ImageId": helper.String(d.Id())})
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		sharePermissionSet = result
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}

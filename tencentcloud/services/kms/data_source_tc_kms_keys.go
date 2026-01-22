@@ -57,6 +57,11 @@ func DataSourceTencentCloudKmsKeys() *schema.Resource {
 				Optional:    true,
 				Description: "Tags to filter CMK.",
 			},
+			"hsm_cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The HSM cluster ID corresponding to KMS Advanced Edition (only valid for KMS Exclusive/Managed Edition service instances).",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -133,6 +138,11 @@ func DataSourceTencentCloudKmsKeys() *schema.Resource {
 							Computed:    true,
 							Description: "Valid when origin is `EXTERNAL`, it means the effective date of the key material.",
 						},
+						"hsm_cluster_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The HSM cluster ID corresponding to KMS Advanced Edition (only valid for KMS Exclusive/Managed Edition service instances).",
+						},
 					},
 				},
 			},
@@ -169,6 +179,9 @@ func dataSourceTencentCloudKmsKeysRead(d *schema.ResourceData, meta interface{})
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		param["tag_filter"] = tags
 	}
+	if v, ok := d.GetOk("hsm_cluster_id"); ok {
+		param["hsm_cluster_id"] = v.(string)
+	}
 
 	kmsService := KmsService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
@@ -203,6 +216,7 @@ func dataSourceTencentCloudKmsKeysRead(d *schema.ResourceData, meta interface{})
 			"deletion_date":        key.DeletionDate,
 			"origin":               key.Origin,
 			"valid_to":             key.ValidTo,
+			"hsm_cluster_id":       key.HsmClusterId,
 		}
 
 		keyList = append(keyList, mapping)

@@ -25,6 +25,12 @@ func DataSourceTencentCloudAsLastActivity() *schema.Resource {
 				Description: "ID list of an auto scaling group.",
 			},
 
+			"exclude_cancelled_activity": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Exclude cancellation type activities when querying. The default value is false, indicating that cancellation type activities are not excluded.",
+			},
+
 			"activity_set": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -249,9 +255,11 @@ func dataSourceTencentCloudAsLastActivityRead(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("data_source.tencentcloud_as_last_activity.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = AsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("auto_scaling_group_ids"); ok {
@@ -259,29 +267,30 @@ func dataSourceTencentCloudAsLastActivityRead(d *schema.ResourceData, meta inter
 		paramMap["AutoScalingGroupIds"] = helper.InterfacesStringsPoint(autoScalingGroupIdsSet)
 	}
 
-	service := AsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	if v, ok := d.GetOk("exclude_cancelled_activity"); ok {
+		paramMap["ExcludeCancelledActivity"] = helper.Bool(v.(bool))
+	}
 
 	var activitySet []*as.Activity
-
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeAsLastActivity(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		activitySet = result
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
 
 	ids := make([]string, 0, len(activitySet))
 	tmpList := make([]map[string]interface{}, 0, len(activitySet))
-
 	if activitySet != nil {
 		for _, activity := range activitySet {
 			activityMap := map[string]interface{}{}
-
 			if activity.AutoScalingGroupId != nil {
 				activityMap["auto_scaling_group_id"] = activity.AutoScalingGroupId
 			}
@@ -472,5 +481,6 @@ func dataSourceTencentCloudAsLastActivityRead(d *schema.ResourceData, meta inter
 			return e
 		}
 	}
+
 	return nil
 }

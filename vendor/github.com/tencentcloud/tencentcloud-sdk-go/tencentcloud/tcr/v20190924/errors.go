@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,6 +55,9 @@ const (
 
 	// 操作取消。
 	FAILEDOPERATION_OPERATIONCANCEL = "FailedOperation.OperationCancel"
+
+	// 先决条件不满足。
+	FAILEDOPERATION_PRECONDITIONFAILED = "FailedOperation.PreconditionFailed"
 
 	// 交易失败。
 	FAILEDOPERATION_TRADEFAILED = "FailedOperation.TradeFailed"
@@ -223,6 +226,9 @@ const (
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 未授权操作
+	UNAUTHORIZEDOPERATION_ERRORTCRUNAUTHORIZED = "UnauthorizedOperation.ErrorTcrUnauthorized"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"

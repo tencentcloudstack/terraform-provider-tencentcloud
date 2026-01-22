@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_mysql_password_complexity: update doc
+```

@@ -79,11 +79,13 @@ func ResourceTencentCloudClbServerAttachment() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Default:     "",
 							Description: "CVM Instance Id of the backend server, conflict with `eni_ip` but must specify one of them.",
 						},
 						"eni_ip": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Default:     "",
 							Description: "Eni IP address of the backend server, conflict with `instance_id` but must specify one of them.",
 						},
 						"port": {
@@ -197,6 +199,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 	} else if domain != "" && url != "" {
 		id = fmt.Sprintf("%s,%s#%v#%v", domain, url, d.Get("listener_id"), d.Get("clb_id"))
 	} else {
+		// only api support for now
 		id = fmt.Sprintf("%s#%v#%v", "", d.Get("listener_id"), d.Get("clb_id"))
 	}
 
@@ -263,6 +266,10 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	_ = d.Set("listener_id", listenerId)
 	_ = d.Set("protocol_type", instance.Protocol)
 
+	if locationId != "" {
+		_ = d.Set("rule_id", locationId)
+	}
+
 	if domain != "" && url != "" {
 		_ = d.Set("domain", domain)
 		_ = d.Set("url", url)
@@ -270,11 +277,11 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 
 	var onlineTargets []*clb.Backend
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-		_ = d.Set("rule_id", locationId)
 		if len(instance.Rules) > 0 {
 			for _, loc := range instance.Rules {
-				if locationId == "" || locationId == *loc.LocationId {
+				if (locationId == *loc.LocationId) || (domain == *loc.Domain && url == *loc.Url) {
 					onlineTargets = loc.Targets
+					break
 				}
 			}
 		}
@@ -294,7 +301,10 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 
 			targets = append(targets, target)
 		} else if *onlineTarget.Type == CLB_BACKEND_TYPE_ENI || *onlineTarget.Type == CLB_BACKEND_TYPE_NAT ||
-			*onlineTarget.Type == CLB_BACKEND_TYPE_CCN || *onlineTarget.Type == CLB_BACKEND_TYPE_SRV {
+			*onlineTarget.Type == CLB_BACKEND_TYPE_CCN || *onlineTarget.Type == CLB_BACKEND_TYPE_SRV ||
+			*onlineTarget.Type == CLB_BACKEND_TYPE_MS || *onlineTarget.Type == CLB_BACKEND_TYPE_EVM ||
+			*onlineTarget.Type == CLB_BACKEND_TYPE_GR || *onlineTarget.Type == CLB_BACKEND_TYPE_IPDC ||
+			*onlineTarget.Type == CLB_BACKEND_TYPE_PVGW {
 			target := map[string]interface{}{
 				"weight": int(*onlineTarget.Weight),
 				"port":   int(*onlineTarget.Port),

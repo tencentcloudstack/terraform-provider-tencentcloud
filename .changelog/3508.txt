@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_ha_vip: support `check_associate`
+```
+
+```release-note:new-resource
+tencentcloud_ha_vip_instance_attachment
+```

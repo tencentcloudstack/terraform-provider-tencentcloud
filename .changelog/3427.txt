@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: support subentId for cdc cluster
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_addon_attachment: Take this resource offline
+```

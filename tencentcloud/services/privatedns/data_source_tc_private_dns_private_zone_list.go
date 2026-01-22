@@ -3,7 +3,6 @@ package privatedns
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 
@@ -243,16 +242,7 @@ func dataSourceTencentCloudPrivateDnsPrivateZoneListRead(d *schema.ResourceData,
 		paramMap["Filters"] = tmpSet
 	}
 
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribePrivatednsPrivateZoneListByFilter(ctx, paramMap)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		privateZoneSet = result
-		return nil
-	})
-
+	privateZoneSet, err := service.DescribePrivatednsPrivateZoneListByFilter(ctx, paramMap)
 	if err != nil {
 		return err
 	}

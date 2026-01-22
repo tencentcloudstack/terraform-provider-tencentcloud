@@ -220,13 +220,11 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 						"user_data": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Base64-encoded User Data text, the length limit is 16KB.",
 						},
 						"pre_start_user_script": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
 						},
 						"is_schedule": {
@@ -319,7 +317,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Optional:     true,
 							Default:      50,
 							Description:  "Volume of system disk in GB. Default is `50`.",
-							ValidateFunc: tccommon.ValidateIntegerInRange(20, 1024),
+							ValidateFunc: tccommon.ValidateIntegerInRange(20, 2048),
 						},
 						"data_disk": {
 							Type:        schema.TypeList,
@@ -368,7 +366,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
+							Description: "Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
 						},
 						"instance_charge_type_prepaid_period": {
 							Type:         schema.TypeInt,
@@ -417,6 +415,12 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Specify whether to assign an Internet IP address.",
+						},
+						"ipv4_address_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Type of public IP address. WanIP: Ordinary public IP address; HighQualityEIP: High Quality EIP is supported only in Singapore and Hong Kong; AntiDDoSEIP: Anti-DDoS IP is supported only in specific regions. For details, see EIP Product Overview. Specify the type of public IPv4 address to assign a public IPv4 address to the resource. HighQualityEIP and AntiDDoSEIP features are gradually released in select regions. For usage, submit a ticket for consultation.",
 						},
 						"password": {
 							Type:          schema.TypeString,
@@ -501,6 +505,12 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 							Computed:    true,
 							Description: "The style of the host name of the cloud server, the value range includes ORIGINAL and UNIQUE, and the default is ORIGINAL. For usage, refer to `HostNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
 						},
+						"cdc_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "CDC ID.",
+						},
 					},
 				},
 			},
@@ -583,7 +593,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "tlinux2.4x86_64",
-				Description: "Operating system of the cluster. Please refer to [TencentCloud Documentation](https://www.tencentcloud.com/document/product/457/46750?lang=en&pg=#list-of-public-images-supported-by-tke) for available values. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.",
+				Description: "Node pool operating system (enter the image ID for a custom image, and enter the OS name for a public image). If custom image, please refer to [TencentCloud Documentation](https://www.tencentcloud.com/document/product/457/46750?lang=en&pg=#list-of-public-images-supported-by-tke) for available values. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.",
 			},
 
 			"node_os_type": {

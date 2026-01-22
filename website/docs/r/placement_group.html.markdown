@@ -15,8 +15,12 @@ Provide a resource to create a placement group.
 
 ```hcl
 resource "tencentcloud_placement_group" "foo" {
-  name = "test"
-  type = "HOST"
+  name     = "test"
+  type     = "HOST"
+  affinity = 2
+  tags = {
+    createBy = "terraform"
+  }
 }
 ```
 
@@ -26,6 +30,8 @@ The following arguments are supported:
 
 * `name` - (Required, String) Name of the placement group, 1-60 characters in length.
 * `type` - (Required, String, ForceNew) Type of the placement group. Valid values: `HOST`, `SW` and `RACK`.
+* `affinity` - (Optional, Int, ForceNew) Affinity of the placement group.Valid values: 1~10, default is 1.
+* `tags` - (Optional, Map) Tags of the placement group.
 
 ## Attributes Reference
 

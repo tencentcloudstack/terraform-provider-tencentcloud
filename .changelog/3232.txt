@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_cdwpg_instances
+```
+
+```release-note:new-data-source
+tencentcloud_cdwpg_log
+```
+
+```release-note:new-data-source
+tencentcloud_cdwpg_nodes
+```

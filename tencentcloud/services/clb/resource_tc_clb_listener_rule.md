@@ -32,19 +32,29 @@ Create a listener rule for domain lists
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "example" {
-  listener_id                = "lbl-hh141sn9"
-  clb_id                     = "lb-k2zjp9lv"
+  listener_id                = "lbl-2qzcv7oq"
+  clb_id                     = "lb-l6cp6jt4"
   domains                    = ["example1.com", "example2.com"]
   url                        = "/"
   health_check_switch        = true
   health_check_interval_time = 5
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
-  health_check_http_code     = 2
+  health_check_port          = 8080
+  health_check_time_out      = 2
+  health_check_http_code     = 15
+  health_check_type          = "HTTP"
   health_check_http_path     = "/"
   health_check_http_domain   = "check.com"
   health_check_http_method   = "GET"
   scheduler                  = "WRR"
+  multi_cert_info {
+    ssl_mode = "UNIDIRECTIONAL"
+    cert_id_list = [
+      "LCYouprI",
+      "JVO1alRN",
+    ]
+  }
 }
 ```
 

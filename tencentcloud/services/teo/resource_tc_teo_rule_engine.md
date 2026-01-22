@@ -1,5 +1,7 @@
 Provides a resource to create a teo rule_engine
 
+~> **NOTE:** The current resource has been deprecated, please use `tencentcloud_teo_l7_acc_rule`.
+
 Example Usage
 
 ```hcl

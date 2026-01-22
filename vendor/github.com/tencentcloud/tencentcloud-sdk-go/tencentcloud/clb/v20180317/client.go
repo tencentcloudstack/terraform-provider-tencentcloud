@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,7 +67,15 @@ func NewAssociateTargetGroupsResponse() (response *AssociateTargetGroupsResponse
 // AssociateTargetGroups
 // 本接口(AssociateTargetGroups)用来将目标组绑定到负载均衡的监听器（四层协议）或转发规则（七层协议）上。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+//
+// 限制说明：
+//
+// - 四层监听器绑定旧版目标组需要监听器开启后端目标组。
+//
+// - 七层绑定目标组，数据结构 TargetGroupAssociation 中 LocationId 为必填项。
+//
+// - 负载均衡的 VPC 需要和目标组的 VPC 一致。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -84,7 +92,15 @@ func (c *Client) AssociateTargetGroups(request *AssociateTargetGroupsRequest) (r
 // AssociateTargetGroups
 // 本接口(AssociateTargetGroups)用来将目标组绑定到负载均衡的监听器（四层协议）或转发规则（七层协议）上。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
+//
+// 限制说明：
+//
+// - 四层监听器绑定旧版目标组需要监听器开启后端目标组。
+//
+// - 七层绑定目标组，数据结构 TargetGroupAssociation 中 LocationId 为必填项。
+//
+// - 负载均衡的 VPC 需要和目标组的 VPC 一致。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -98,6 +114,7 @@ func (c *Client) AssociateTargetGroupsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewAssociateTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "AssociateTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateTargetGroups require credential")
@@ -181,6 +198,7 @@ func (c *Client) AutoRewriteWithContext(ctx context.Context, request *AutoRewrit
     if request == nil {
         request = NewAutoRewriteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "AutoRewrite")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AutoRewrite require credential")
@@ -262,6 +280,7 @@ func (c *Client) BatchDeregisterTargetsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewBatchDeregisterTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "BatchDeregisterTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchDeregisterTargets require credential")
@@ -298,6 +317,7 @@ func NewBatchModifyTargetTagResponse() (response *BatchModifyTargetTagResponse) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -313,6 +333,7 @@ func (c *Client) BatchModifyTargetTag(request *BatchModifyTargetTagRequest) (res
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -323,6 +344,7 @@ func (c *Client) BatchModifyTargetTagWithContext(ctx context.Context, request *B
     if request == nil {
         request = NewBatchModifyTargetTagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "BatchModifyTargetTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchModifyTargetTag require credential")
@@ -384,6 +406,7 @@ func (c *Client) BatchModifyTargetWeightWithContext(ctx context.Context, request
     if request == nil {
         request = NewBatchModifyTargetWeightRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "BatchModifyTargetWeight")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchModifyTargetWeight require credential")
@@ -463,6 +486,7 @@ func (c *Client) BatchRegisterTargetsWithContext(ctx context.Context, request *B
     if request == nil {
         request = NewBatchRegisterTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "BatchRegisterTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BatchRegisterTargets require credential")
@@ -507,9 +531,9 @@ func NewCloneLoadBalancerResponse() (response *CloneLoadBalancerResponse) {
 //
 // 实例属性维度限制：
 //
-// - 支持克隆网络计费模式为按量计费与包年包月的实例，包年包月实例克隆后的新实例网络计费模式会转换为按小时带宽计费，其带宽、规格与原实例设置保持一致。
+// - 支持克隆实例计费模式为按量计费与包年包月的实例，包年包月实例克隆后的新实例网络计费模式会转换为按小时带宽计费，其带宽、规格与原实例设置保持一致。
 //
-// - 不支持克隆未关联实例计费项的 CLB。
+// - 不支持克隆未关联实例计费项的 CLB（历史免费活动创建）。
 //
 // - 不支持克隆传统型负载均衡实例和高防 CLB。
 //
@@ -536,8 +560,6 @@ func NewCloneLoadBalancerResponse() (response *CloneLoadBalancerResponse) {
 // BGP带宽包必须传带宽包id
 //
 // 独占集群克隆必须传对应的参数，否则按共享型创建
-//
-// 功能内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/1akuvsmyn0g)。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -578,9 +600,9 @@ func (c *Client) CloneLoadBalancer(request *CloneLoadBalancerRequest) (response 
 //
 // 实例属性维度限制：
 //
-// - 支持克隆网络计费模式为按量计费与包年包月的实例，包年包月实例克隆后的新实例网络计费模式会转换为按小时带宽计费，其带宽、规格与原实例设置保持一致。
+// - 支持克隆实例计费模式为按量计费与包年包月的实例，包年包月实例克隆后的新实例网络计费模式会转换为按小时带宽计费，其带宽、规格与原实例设置保持一致。
 //
-// - 不支持克隆未关联实例计费项的 CLB。
+// - 不支持克隆未关联实例计费项的 CLB（历史免费活动创建）。
 //
 // - 不支持克隆传统型负载均衡实例和高防 CLB。
 //
@@ -608,8 +630,6 @@ func (c *Client) CloneLoadBalancer(request *CloneLoadBalancerRequest) (response 
 //
 // 独占集群克隆必须传对应的参数，否则按共享型创建
 //
-// 功能内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/1akuvsmyn0g)。
-//
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
@@ -636,6 +656,7 @@ func (c *Client) CloneLoadBalancerWithContext(ctx context.Context, request *Clon
     if request == nil {
         request = NewCloneLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CloneLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloneLoadBalancer require credential")
@@ -701,6 +722,7 @@ func (c *Client) CreateClsLogSetWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateClsLogSetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CreateClsLogSet")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateClsLogSet require credential")
@@ -735,7 +757,7 @@ func NewCreateListenerResponse() (response *CreateListenerResponse) {
 // CreateListener
 // 在一个负载均衡实例下创建监听器。
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -757,7 +779,7 @@ func (c *Client) CreateListener(request *CreateListenerRequest) (response *Creat
 // CreateListener
 // 在一个负载均衡实例下创建监听器。
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -776,6 +798,7 @@ func (c *Client) CreateListenerWithContext(ctx context.Context, request *CreateL
     if request == nil {
         request = NewCreateListenerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CreateListener")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateListener require credential")
@@ -808,11 +831,11 @@ func NewCreateLoadBalancerResponse() (response *CreateLoadBalancerResponse) {
 }
 
 // CreateLoadBalancer
-// 本接口(CreateLoadBalancer)用来创建负载均衡实例（本接口只支持购买按量计费的负载均衡，包年包月的负载均衡请通过控制台购买）。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
+// 本接口(CreateLoadBalancer)用来创建负载均衡实例。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
 //
-// 注意：(1)指定可用区申请负载均衡、跨zone容灾(仅香港支持)【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】；(2)目前只有北京、上海、广州支持IPv6；(3)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
+// 注意：(1)可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域是否支持创建IPv6实例；(2)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
 //
-// 本接口为异步接口，接口成功返回后，可使用 DescribeLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// 本接口为异步接口，接口成功返回后，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -833,11 +856,11 @@ func (c *Client) CreateLoadBalancer(request *CreateLoadBalancerRequest) (respons
 }
 
 // CreateLoadBalancer
-// 本接口(CreateLoadBalancer)用来创建负载均衡实例（本接口只支持购买按量计费的负载均衡，包年包月的负载均衡请通过控制台购买）。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
+// 本接口(CreateLoadBalancer)用来创建负载均衡实例。为了使用负载均衡服务，您必须购买一个或多个负载均衡实例。成功调用该接口后，会返回负载均衡实例的唯一 ID。负载均衡实例的类型分为：公网、内网。详情可参考产品说明中的产品类型。
 //
-// 注意：(1)指定可用区申请负载均衡、跨zone容灾(仅香港支持)【如果您需要体验该功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】；(2)目前只有北京、上海、广州支持IPv6；(3)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
+// 注意：(1)可通过 [DescribeResources](https://cloud.tencent.com/document/api/214/70213) 接口查询一个地域是否支持创建IPv6实例；(2)一个账号在每个地域的默认购买配额为：公网100个，内网100个。
 //
-// 本接口为异步接口，接口成功返回后，可使用 DescribeLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// 本接口为异步接口，接口成功返回后，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -857,6 +880,7 @@ func (c *Client) CreateLoadBalancerWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CreateLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLoadBalancer require credential")
@@ -891,10 +915,11 @@ func NewCreateLoadBalancerSnatIpsResponse() (response *CreateLoadBalancerSnatIps
 // CreateLoadBalancerSnatIps
 // 针对SnatPro负载均衡，这个接口用于添加SnatIp，如果负载均衡没有开启SnatPro，添加SnatIp后会自动开启。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -910,10 +935,11 @@ func (c *Client) CreateLoadBalancerSnatIps(request *CreateLoadBalancerSnatIpsReq
 // CreateLoadBalancerSnatIps
 // 针对SnatPro负载均衡，这个接口用于添加SnatIp，如果负载均衡没有开启SnatPro，添加SnatIp后会自动开启。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -926,6 +952,7 @@ func (c *Client) CreateLoadBalancerSnatIpsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateLoadBalancerSnatIpsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CreateLoadBalancerSnatIps")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLoadBalancerSnatIps require credential")
@@ -960,10 +987,11 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 // CreateRule
 // CreateRule 接口用于在一个已存在的负载均衡七层监听器下创建转发规则，七层监听器中，后端服务必须绑定到规则上而非监听器上。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -980,10 +1008,11 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 // CreateRule
 // CreateRule 接口用于在一个已存在的负载均衡七层监听器下创建转发规则，七层监听器中，后端服务必须绑定到规则上而非监听器上。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -997,6 +1026,7 @@ func (c *Client) CreateRuleWithContext(ctx context.Context, request *CreateRuleR
     if request == nil {
         request = NewCreateRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CreateRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRule require credential")
@@ -1058,6 +1088,7 @@ func (c *Client) CreateTargetGroupWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateTargetGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CreateTargetGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTargetGroup require credential")
@@ -1129,6 +1160,7 @@ func (c *Client) CreateTopicWithContext(ctx context.Context, request *CreateTopi
     if request == nil {
         request = NewCreateTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "CreateTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTopic require credential")
@@ -1163,7 +1195,7 @@ func NewDeleteListenerResponse() (response *DeleteListenerResponse) {
 // DeleteListener
 // 本接口用来删除负载均衡实例下的监听器（四层和七层）。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1180,7 +1212,7 @@ func (c *Client) DeleteListener(request *DeleteListenerRequest) (response *Delet
 // DeleteListener
 // 本接口用来删除负载均衡实例下的监听器（四层和七层）。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1194,6 +1226,7 @@ func (c *Client) DeleteListenerWithContext(ctx context.Context, request *DeleteL
     if request == nil {
         request = NewDeleteListenerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteListener")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteListener require credential")
@@ -1228,10 +1261,14 @@ func NewDeleteLoadBalancerResponse() (response *DeleteLoadBalancerResponse) {
 // DeleteLoadBalancer
 // DeleteLoadBalancer 接口用以删除指定的一个或多个负载均衡实例。成功删除后，会把负载均衡实例下的监听器、转发规则一起删除，并把后端服务解绑。
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EIPTRAFFICCHECKRISK = "FailedOperation.EipTrafficCheckRisk"
+//  FAILEDOPERATION_FREQUENCYCHECKRISK = "FailedOperation.FrequencyCheckRisk"
+//  FAILEDOPERATION_TARGETNUMCHECKRISK = "FailedOperation.TargetNumCheckRisk"
+//  FAILEDOPERATION_TRAFFICCHECKRISK = "FailedOperation.TrafficCheckRisk"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -1248,10 +1285,14 @@ func (c *Client) DeleteLoadBalancer(request *DeleteLoadBalancerRequest) (respons
 // DeleteLoadBalancer
 // DeleteLoadBalancer 接口用以删除指定的一个或多个负载均衡实例。成功删除后，会把负载均衡实例下的监听器、转发规则一起删除，并把后端服务解绑。
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_EIPTRAFFICCHECKRISK = "FailedOperation.EipTrafficCheckRisk"
+//  FAILEDOPERATION_FREQUENCYCHECKRISK = "FailedOperation.FrequencyCheckRisk"
+//  FAILEDOPERATION_TARGETNUMCHECKRISK = "FailedOperation.TargetNumCheckRisk"
+//  FAILEDOPERATION_TRAFFICCHECKRISK = "FailedOperation.TrafficCheckRisk"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -1265,6 +1306,7 @@ func (c *Client) DeleteLoadBalancerWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLoadBalancer require credential")
@@ -1299,7 +1341,7 @@ func NewDeleteLoadBalancerListenersResponse() (response *DeleteLoadBalancerListe
 // DeleteLoadBalancerListeners
 // 该接口支持删除负载均衡的多个监听器。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1318,7 +1360,7 @@ func (c *Client) DeleteLoadBalancerListeners(request *DeleteLoadBalancerListener
 // DeleteLoadBalancerListeners
 // 该接口支持删除负载均衡的多个监听器。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1334,6 +1376,7 @@ func (c *Client) DeleteLoadBalancerListenersWithContext(ctx context.Context, req
     if request == nil {
         request = NewDeleteLoadBalancerListenersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteLoadBalancerListeners")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLoadBalancerListeners require credential")
@@ -1368,10 +1411,11 @@ func NewDeleteLoadBalancerSnatIpsResponse() (response *DeleteLoadBalancerSnatIps
 // DeleteLoadBalancerSnatIps
 // 这个接口用于删除SnatPro的负载均衡的SnatIp。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -1385,10 +1429,11 @@ func (c *Client) DeleteLoadBalancerSnatIps(request *DeleteLoadBalancerSnatIpsReq
 // DeleteLoadBalancerSnatIps
 // 这个接口用于删除SnatPro的负载均衡的SnatIp。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -1399,6 +1444,7 @@ func (c *Client) DeleteLoadBalancerSnatIpsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteLoadBalancerSnatIpsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteLoadBalancerSnatIps")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLoadBalancerSnatIps require credential")
@@ -1474,6 +1520,7 @@ func (c *Client) DeleteRewriteWithContext(ctx context.Context, request *DeleteRe
     if request == nil {
         request = NewDeleteRewriteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteRewrite")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRewrite require credential")
@@ -1508,7 +1555,7 @@ func NewDeleteRuleResponse() (response *DeleteRuleResponse) {
 // DeleteRule
 // DeleteRule 接口用来删除负载均衡实例七层监听器下的转发规则。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1526,7 +1573,7 @@ func (c *Client) DeleteRule(request *DeleteRuleRequest) (response *DeleteRuleRes
 // DeleteRule
 // DeleteRule 接口用来删除负载均衡实例七层监听器下的转发规则。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1541,6 +1588,7 @@ func (c *Client) DeleteRuleWithContext(ctx context.Context, request *DeleteRuleR
     if request == nil {
         request = NewDeleteRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRule require credential")
@@ -1573,7 +1621,7 @@ func NewDeleteTargetGroupsResponse() (response *DeleteTargetGroupsResponse) {
 }
 
 // DeleteTargetGroups
-// 删除目标组
+// 删除目标组，支持批量删除目标组，单次最多批量删除 20 个目标组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1586,7 +1634,7 @@ func (c *Client) DeleteTargetGroups(request *DeleteTargetGroupsRequest) (respons
 }
 
 // DeleteTargetGroups
-// 删除目标组
+// 删除目标组，支持批量删除目标组，单次最多批量删除 20 个目标组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1598,6 +1646,7 @@ func (c *Client) DeleteTargetGroupsWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeleteTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTargetGroups require credential")
@@ -1638,7 +1687,7 @@ func NewDeregisterFunctionTargetsResponse() (response *DeregisterFunctionTargets
 //
 // 
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
 //
 // - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。
 //
@@ -1679,7 +1728,7 @@ func (c *Client) DeregisterFunctionTargets(request *DeregisterFunctionTargetsReq
 //
 // 
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
 //
 // - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。
 //
@@ -1711,6 +1760,7 @@ func (c *Client) DeregisterFunctionTargetsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeregisterFunctionTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeregisterFunctionTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeregisterFunctionTargets require credential")
@@ -1745,7 +1795,7 @@ func NewDeregisterTargetGroupInstancesResponse() (response *DeregisterTargetGrou
 // DeregisterTargetGroupInstances
 // 从目标组中解绑服务器。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1761,7 +1811,7 @@ func (c *Client) DeregisterTargetGroupInstances(request *DeregisterTargetGroupIn
 // DeregisterTargetGroupInstances
 // 从目标组中解绑服务器。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1774,6 +1824,7 @@ func (c *Client) DeregisterTargetGroupInstancesWithContext(ctx context.Context, 
     if request == nil {
         request = NewDeregisterTargetGroupInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeregisterTargetGroupInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeregisterTargetGroupInstances require credential")
@@ -1843,6 +1894,7 @@ func (c *Client) DeregisterTargetsWithContext(ctx context.Context, request *Dere
     if request == nil {
         request = NewDeregisterTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeregisterTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeregisterTargets require credential")
@@ -1908,6 +1960,7 @@ func (c *Client) DeregisterTargetsFromClassicalLBWithContext(ctx context.Context
     if request == nil {
         request = NewDeregisterTargetsFromClassicalLBRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DeregisterTargetsFromClassicalLB")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeregisterTargetsFromClassicalLB require credential")
@@ -1969,6 +2022,7 @@ func (c *Client) DescribeBlockIPListWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeBlockIPListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeBlockIPList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBlockIPList require credential")
@@ -2022,6 +2076,7 @@ func (c *Client) DescribeBlockIPTaskWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeBlockIPTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeBlockIPTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBlockIPTask require credential")
@@ -2087,6 +2142,7 @@ func (c *Client) DescribeClassicalLBByInstanceIdWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeClassicalLBByInstanceIdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeClassicalLBByInstanceId")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClassicalLBByInstanceId require credential")
@@ -2152,6 +2208,7 @@ func (c *Client) DescribeClassicalLBHealthStatusWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeClassicalLBHealthStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeClassicalLBHealthStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClassicalLBHealthStatus require credential")
@@ -2219,6 +2276,7 @@ func (c *Client) DescribeClassicalLBListenersWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeClassicalLBListenersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeClassicalLBListeners")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClassicalLBListeners require credential")
@@ -2284,6 +2342,7 @@ func (c *Client) DescribeClassicalLBTargetsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeClassicalLBTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeClassicalLBTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClassicalLBTargets require credential")
@@ -2339,6 +2398,7 @@ func (c *Client) DescribeClsLogSetWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeClsLogSetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeClsLogSet")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClsLogSet require credential")
@@ -2404,6 +2464,7 @@ func (c *Client) DescribeClusterResourcesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeClusterResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeClusterResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterResources require credential")
@@ -2469,6 +2530,7 @@ func (c *Client) DescribeCrossTargetsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeCrossTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeCrossTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCrossTargets require credential")
@@ -2532,6 +2594,7 @@ func (c *Client) DescribeCustomizedConfigAssociateListWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeCustomizedConfigAssociateListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeCustomizedConfigAssociateList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCustomizedConfigAssociateList require credential")
@@ -2619,6 +2682,7 @@ func (c *Client) DescribeCustomizedConfigListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeCustomizedConfigListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeCustomizedConfigList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCustomizedConfigList require credential")
@@ -2684,6 +2748,7 @@ func (c *Client) DescribeExclusiveClustersWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeExclusiveClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeExclusiveClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeExclusiveClusters require credential")
@@ -2757,6 +2822,7 @@ func (c *Client) DescribeIdleLoadBalancersWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeIdleLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeIdleLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIdleLoadBalancers require credential")
@@ -2824,6 +2890,7 @@ func (c *Client) DescribeLBListenersWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeLBListenersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeLBListeners")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLBListeners require credential")
@@ -2832,6 +2899,74 @@ func (c *Client) DescribeLBListenersWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeLBListenersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLBOperateProtectRequest() (request *DescribeLBOperateProtectRequest) {
+    request = &DescribeLBOperateProtectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeLBOperateProtect")
+    
+    
+    return
+}
+
+func NewDescribeLBOperateProtectResponse() (response *DescribeLBOperateProtectResponse) {
+    response = &DescribeLBOperateProtectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLBOperateProtect
+// 查询负载均衡的操作保护信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeLBOperateProtect(request *DescribeLBOperateProtectRequest) (response *DescribeLBOperateProtectResponse, err error) {
+    return c.DescribeLBOperateProtectWithContext(context.Background(), request)
+}
+
+// DescribeLBOperateProtect
+// 查询负载均衡的操作保护信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeLBOperateProtectWithContext(ctx context.Context, request *DescribeLBOperateProtectRequest) (response *DescribeLBOperateProtectResponse, err error) {
+    if request == nil {
+        request = NewDescribeLBOperateProtectRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeLBOperateProtect")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLBOperateProtect require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLBOperateProtectResponse()
     err = c.Send(request, response)
     return
 }
@@ -2891,6 +3026,7 @@ func (c *Client) DescribeListenersWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeListenersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeListeners")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeListeners require credential")
@@ -2952,6 +3088,7 @@ func (c *Client) DescribeLoadBalancerListByCertIdWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeLoadBalancerListByCertIdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeLoadBalancerListByCertId")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoadBalancerListByCertId require credential")
@@ -3011,6 +3148,7 @@ func (c *Client) DescribeLoadBalancerOverviewWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeLoadBalancerOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeLoadBalancerOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoadBalancerOverview require credential")
@@ -3068,6 +3206,7 @@ func (c *Client) DescribeLoadBalancerTrafficWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLoadBalancerTrafficRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeLoadBalancerTraffic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoadBalancerTraffic require credential")
@@ -3137,6 +3276,7 @@ func (c *Client) DescribeLoadBalancersWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoadBalancers require credential")
@@ -3202,6 +3342,7 @@ func (c *Client) DescribeLoadBalancersDetailWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLoadBalancersDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeLoadBalancersDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLoadBalancersDetail require credential")
@@ -3255,6 +3396,7 @@ func (c *Client) DescribeQuotaWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeQuota require credential")
@@ -3320,6 +3462,7 @@ func (c *Client) DescribeResourcesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResources require credential")
@@ -3389,6 +3532,7 @@ func (c *Client) DescribeRewriteWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeRewriteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeRewrite")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRewrite require credential")
@@ -3446,6 +3590,7 @@ func (c *Client) DescribeTargetGroupInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeTargetGroupInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeTargetGroupInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetGroupInstances require credential")
@@ -3503,6 +3648,7 @@ func (c *Client) DescribeTargetGroupListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeTargetGroupListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeTargetGroupList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetGroupList require credential")
@@ -3560,6 +3706,7 @@ func (c *Client) DescribeTargetGroupsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetGroups require credential")
@@ -3625,6 +3772,7 @@ func (c *Client) DescribeTargetHealthWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeTargetHealthRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeTargetHealth")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetHealth require credential")
@@ -3690,6 +3838,7 @@ func (c *Client) DescribeTargetsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargets require credential")
@@ -3745,6 +3894,7 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTaskStatus require credential")
@@ -3781,6 +3931,8 @@ func NewDisassociateTargetGroupsResponse() (response *DisassociateTargetGroupsRe
 //
 // 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
 //
+// 当解绑七层转发规则时，LocationId 为必填项。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -3797,6 +3949,8 @@ func (c *Client) DisassociateTargetGroups(request *DisassociateTargetGroupsReque
 //
 // 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
 //
+// 当解绑七层转发规则时，LocationId 为必填项。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -3808,6 +3962,7 @@ func (c *Client) DisassociateTargetGroupsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDisassociateTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DisassociateTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateTargetGroups require credential")
@@ -3865,6 +4020,7 @@ func (c *Client) InquiryPriceCreateLoadBalancerWithContext(ctx context.Context, 
     if request == nil {
         request = NewInquiryPriceCreateLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "InquiryPriceCreateLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceCreateLoadBalancer require credential")
@@ -3922,6 +4078,7 @@ func (c *Client) InquiryPriceModifyLoadBalancerWithContext(ctx context.Context, 
     if request == nil {
         request = NewInquiryPriceModifyLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "InquiryPriceModifyLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceModifyLoadBalancer require credential")
@@ -3954,7 +4111,7 @@ func NewInquiryPriceRefundLoadBalancerResponse() (response *InquiryPriceRefundLo
 }
 
 // InquiryPriceRefundLoadBalancer
-// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格。
+// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格，只支持预付费类型的负载均衡实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3967,7 +4124,7 @@ func (c *Client) InquiryPriceRefundLoadBalancer(request *InquiryPriceRefundLoadB
 }
 
 // InquiryPriceRefundLoadBalancer
-// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格。
+// InquiryPriceRefundLoadBalancer接口查询负载均衡退费价格，只支持预付费类型的负载均衡实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3979,6 +4136,7 @@ func (c *Client) InquiryPriceRefundLoadBalancerWithContext(ctx context.Context, 
     if request == nil {
         request = NewInquiryPriceRefundLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "InquiryPriceRefundLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRefundLoadBalancer require credential")
@@ -4036,6 +4194,7 @@ func (c *Client) InquiryPriceRenewLoadBalancerWithContext(ctx context.Context, r
     if request == nil {
         request = NewInquiryPriceRenewLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "InquiryPriceRenewLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRenewLoadBalancer require credential")
@@ -4119,6 +4278,7 @@ func (c *Client) ManualRewriteWithContext(ctx context.Context, request *ManualRe
     if request == nil {
         request = NewManualRewriteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ManualRewrite")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManualRewrite require credential")
@@ -4184,6 +4344,7 @@ func (c *Client) MigrateClassicalLoadBalancersWithContext(ctx context.Context, r
     if request == nil {
         request = NewMigrateClassicalLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "MigrateClassicalLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("MigrateClassicalLoadBalancers require credential")
@@ -4251,6 +4412,7 @@ func (c *Client) ModifyBlockIPListWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyBlockIPListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyBlockIPList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBlockIPList require credential")
@@ -4285,10 +4447,11 @@ func NewModifyDomainResponse() (response *ModifyDomainResponse) {
 // ModifyDomain
 // ModifyDomain接口用来修改负载均衡七层监听器下的域名。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -4302,10 +4465,11 @@ func (c *Client) ModifyDomain(request *ModifyDomainRequest) (response *ModifyDom
 // ModifyDomain
 // ModifyDomain接口用来修改负载均衡七层监听器下的域名。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -4316,6 +4480,7 @@ func (c *Client) ModifyDomainWithContext(ctx context.Context, request *ModifyDom
     if request == nil {
         request = NewModifyDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDomain require credential")
@@ -4348,9 +4513,9 @@ func NewModifyDomainAttributesResponse() (response *ModifyDomainAttributesRespon
 }
 
 // ModifyDomainAttributes
-// ModifyDomainAttributes接口用于修改负载均衡7层监听器转发规则的域名级别属性，如修改域名、修改DefaultServer、开启/关闭Http2、修改证书。
+// ModifyDomainAttributes接口用于修改负载均衡7层监听器转发规则的域名级别属性，如修改域名、修改DefaultServer、开启/关闭Http2、修改证书
 //
-// 本接口为异步接口，本接口返回成功后，需以返回的RequestId为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后，需以返回的RequestId为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4368,9 +4533,9 @@ func (c *Client) ModifyDomainAttributes(request *ModifyDomainAttributesRequest) 
 }
 
 // ModifyDomainAttributes
-// ModifyDomainAttributes接口用于修改负载均衡7层监听器转发规则的域名级别属性，如修改域名、修改DefaultServer、开启/关闭Http2、修改证书。
+// ModifyDomainAttributes接口用于修改负载均衡7层监听器转发规则的域名级别属性，如修改域名、修改DefaultServer、开启/关闭Http2、修改证书
 //
-// 本接口为异步接口，本接口返回成功后，需以返回的RequestId为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后，需以返回的RequestId为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4387,6 +4552,7 @@ func (c *Client) ModifyDomainAttributesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyDomainAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyDomainAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDomainAttributes require credential")
@@ -4421,6 +4587,10 @@ func NewModifyFunctionTargetsResponse() (response *ModifyFunctionTargetsResponse
 // ModifyFunctionTargets
 // 修改负载均衡转发规则上所绑定的云函数。
 //
+// 限制说明：
+//
+// - 仅支持绑定“Event 函数”类型的云函数。
+//
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
@@ -4439,6 +4609,10 @@ func (c *Client) ModifyFunctionTargets(request *ModifyFunctionTargetsRequest) (r
 // ModifyFunctionTargets
 // 修改负载均衡转发规则上所绑定的云函数。
 //
+// 限制说明：
+//
+// - 仅支持绑定“Event 函数”类型的云函数。
+//
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
@@ -4454,6 +4628,7 @@ func (c *Client) ModifyFunctionTargetsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyFunctionTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyFunctionTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFunctionTargets require credential")
@@ -4488,7 +4663,7 @@ func NewModifyListenerResponse() (response *ModifyListenerResponse) {
 // ModifyListener
 // ModifyListener接口用来修改负载均衡监听器的属性，包括监听器名称、健康检查参数、证书信息、转发策略等。本接口不支持传统型负载均衡。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4507,7 +4682,7 @@ func (c *Client) ModifyListener(request *ModifyListenerRequest) (response *Modif
 // ModifyListener
 // ModifyListener接口用来修改负载均衡监听器的属性，包括监听器名称、健康检查参数、证书信息、转发策略等。本接口不支持传统型负载均衡。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4523,6 +4698,7 @@ func (c *Client) ModifyListenerWithContext(ctx context.Context, request *ModifyL
     if request == nil {
         request = NewModifyListenerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyListener")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyListener require credential")
@@ -4557,9 +4733,9 @@ func NewModifyLoadBalancerAttributesResponse() (response *ModifyLoadBalancerAttr
 // ModifyLoadBalancerAttributes
 // 修改负载均衡实例的属性。支持修改负载均衡实例的名称、设置负载均衡的跨域属性。
 //
-// 注意：非带宽上移用户的 CLB 实例必须加入带宽包才可以设置跨域属性。
+// 注意：非带宽上移用户的 CLB 实例必须加入带宽包才可以设置跨域属性。修改网络计费模式请到控制台操作。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4583,9 +4759,9 @@ func (c *Client) ModifyLoadBalancerAttributes(request *ModifyLoadBalancerAttribu
 // ModifyLoadBalancerAttributes
 // 修改负载均衡实例的属性。支持修改负载均衡实例的名称、设置负载均衡的跨域属性。
 //
-// 注意：非带宽上移用户的 CLB 实例必须加入带宽包才可以设置跨域属性。
+// 注意：非带宽上移用户的 CLB 实例必须加入带宽包才可以设置跨域属性。修改网络计费模式请到控制台操作。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4606,6 +4782,7 @@ func (c *Client) ModifyLoadBalancerAttributesWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyLoadBalancerAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyLoadBalancerAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoadBalancerAttributes require credential")
@@ -4675,6 +4852,7 @@ func (c *Client) ModifyLoadBalancerMixIpTargetWithContext(ctx context.Context, r
     if request == nil {
         request = NewModifyLoadBalancerMixIpTargetRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyLoadBalancerMixIpTarget")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoadBalancerMixIpTarget require credential")
@@ -4707,13 +4885,13 @@ func NewModifyLoadBalancerSlaResponse() (response *ModifyLoadBalancerSlaResponse
 }
 
 // ModifyLoadBalancerSla
-// 本接口（ModifyLoadBalancerSla）用于将按量计费模式的共享型实例升级为性能容量型实例。<br/>
+// 本接口（ModifyLoadBalancerSla）用于调整按量计费模式实例的性能容量型规格，如共享型升级性能容量型，性能容量型实例规格调整。<br/>
 //
 // 限制条件：
 //
-// - 本接口只支持升级按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行升级。
+// - 本接口只支持调整按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行调整。
 //
-// - 升级为性能容量型实例后，不支持再回退到共享型实例。
+// - 共享型升级为性能容量型实例后，不支持再回退到共享型实例。
 //
 // - 传统型负载均衡实例不支持升级为性能容量型实例。
 //
@@ -4731,13 +4909,13 @@ func (c *Client) ModifyLoadBalancerSla(request *ModifyLoadBalancerSlaRequest) (r
 }
 
 // ModifyLoadBalancerSla
-// 本接口（ModifyLoadBalancerSla）用于将按量计费模式的共享型实例升级为性能容量型实例。<br/>
+// 本接口（ModifyLoadBalancerSla）用于调整按量计费模式实例的性能容量型规格，如共享型升级性能容量型，性能容量型实例规格调整。<br/>
 //
 // 限制条件：
 //
-// - 本接口只支持升级按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行升级。
+// - 本接口只支持调整按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行调整。
 //
-// - 升级为性能容量型实例后，不支持再回退到共享型实例。
+// - 共享型升级为性能容量型实例后，不支持再回退到共享型实例。
 //
 // - 传统型负载均衡实例不支持升级为性能容量型实例。
 //
@@ -4754,6 +4932,7 @@ func (c *Client) ModifyLoadBalancerSlaWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyLoadBalancerSlaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyLoadBalancerSla")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoadBalancerSla require credential")
@@ -4819,6 +4998,7 @@ func (c *Client) ModifyLoadBalancersProjectWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyLoadBalancersProjectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyLoadBalancersProject")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLoadBalancersProject require credential")
@@ -4853,7 +5033,7 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 // ModifyRule
 // ModifyRule 接口用来修改负载均衡七层监听器下的转发规则的各项属性，包括转发路径、健康检查属性、转发策略等。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4872,7 +5052,7 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 // ModifyRule
 // ModifyRule 接口用来修改负载均衡七层监听器下的转发规则的各项属性，包括转发路径、健康检查属性、转发策略等。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4888,6 +5068,7 @@ func (c *Client) ModifyRuleWithContext(ctx context.Context, request *ModifyRuleR
     if request == nil {
         request = NewModifyRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRule require credential")
@@ -4945,6 +5126,7 @@ func (c *Client) ModifyTargetGroupAttributeWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyTargetGroupAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyTargetGroupAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTargetGroupAttribute require credential")
@@ -5010,6 +5192,7 @@ func (c *Client) ModifyTargetGroupInstancesPortWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyTargetGroupInstancesPortRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyTargetGroupInstancesPort")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTargetGroupInstancesPort require credential")
@@ -5073,6 +5256,7 @@ func (c *Client) ModifyTargetGroupInstancesWeightWithContext(ctx context.Context
     if request == nil {
         request = NewModifyTargetGroupInstancesWeightRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyTargetGroupInstancesWeight")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTargetGroupInstancesWeight require credential")
@@ -5111,6 +5295,7 @@ func NewModifyTargetPortResponse() (response *ModifyTargetPortResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5129,6 +5314,7 @@ func (c *Client) ModifyTargetPort(request *ModifyTargetPortRequest) (response *M
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5140,6 +5326,7 @@ func (c *Client) ModifyTargetPortWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyTargetPortRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyTargetPort")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTargetPort require credential")
@@ -5174,10 +5361,11 @@ func NewModifyTargetWeightResponse() (response *ModifyTargetWeightResponse) {
 // ModifyTargetWeight
 // ModifyTargetWeight 接口用于修改负载均衡绑定的后端服务的转发权重。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5192,10 +5380,11 @@ func (c *Client) ModifyTargetWeight(request *ModifyTargetWeightRequest) (respons
 // ModifyTargetWeight
 // ModifyTargetWeight 接口用于修改负载均衡绑定的后端服务的转发权重。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5207,6 +5396,7 @@ func (c *Client) ModifyTargetWeightWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyTargetWeightRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ModifyTargetWeight")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTargetWeight require credential")
@@ -5245,7 +5435,7 @@ func NewRegisterFunctionTargetsResponse() (response *RegisterFunctionTargetsResp
 //
 // 限制说明：
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
 //
 // - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。 
 //
@@ -5260,6 +5450,8 @@ func NewRegisterFunctionTargetsResponse() (response *RegisterFunctionTargetsResp
 // - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
 //
 // - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+//
+// - 一个转发规则只支持绑定一个云函数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5289,7 +5481,7 @@ func (c *Client) RegisterFunctionTargets(request *RegisterFunctionTargetsRequest
 //
 // 限制说明：
 //
-// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、东京、硅谷地域支持绑定 SCF。
 //
 // - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。 
 //
@@ -5304,6 +5496,8 @@ func (c *Client) RegisterFunctionTargets(request *RegisterFunctionTargetsRequest
 // - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
 //
 // - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+//
+// - 一个转发规则只支持绑定一个云函数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5326,6 +5520,7 @@ func (c *Client) RegisterFunctionTargetsWithContext(ctx context.Context, request
     if request == nil {
         request = NewRegisterFunctionTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "RegisterFunctionTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RegisterFunctionTargets require credential")
@@ -5391,6 +5586,7 @@ func (c *Client) RegisterTargetGroupInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewRegisterTargetGroupInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "RegisterTargetGroupInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RegisterTargetGroupInstances require credential")
@@ -5425,10 +5621,11 @@ func NewRegisterTargetsResponse() (response *RegisterTargetsResponse) {
 // RegisterTargets
 // RegisterTargets 接口用来将一台或多台后端服务绑定到负载均衡的监听器（或7层转发规则），在此之前您需要先行创建相关的4层监听器或7层转发规则。对于四层监听器（TCP、UDP），只需指定监听器ID即可，对于七层监听器（HTTP、HTTPS），还需通过LocationId或者Domain+Url指定转发规则。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5446,10 +5643,11 @@ func (c *Client) RegisterTargets(request *RegisterTargetsRequest) (response *Reg
 // RegisterTargets
 // RegisterTargets 接口用来将一台或多台后端服务绑定到负载均衡的监听器（或7层转发规则），在此之前您需要先行创建相关的4层监听器或7层转发规则。对于四层监听器（TCP、UDP），只需指定监听器ID即可，对于七层监听器（HTTP、HTTPS），还需通过LocationId或者Domain+Url指定转发规则。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5464,6 +5662,7 @@ func (c *Client) RegisterTargetsWithContext(ctx context.Context, request *Regist
     if request == nil {
         request = NewRegisterTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "RegisterTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RegisterTargets require credential")
@@ -5529,6 +5728,7 @@ func (c *Client) RegisterTargetsWithClassicalLBWithContext(ctx context.Context, 
     if request == nil {
         request = NewRegisterTargetsWithClassicalLBRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "RegisterTargetsWithClassicalLB")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RegisterTargetsWithClassicalLB require credential")
@@ -5600,6 +5800,7 @@ func (c *Client) ReplaceCertForLoadBalancersWithContext(ctx context.Context, req
     if request == nil {
         request = NewReplaceCertForLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "ReplaceCertForLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReplaceCertForLoadBalancers require credential")
@@ -5636,6 +5837,7 @@ func NewSetCustomizedConfigForLoadBalancerResponse() (response *SetCustomizedCon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINCLONING = "FailedOperation.ResourceInCloning"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5654,6 +5856,7 @@ func (c *Client) SetCustomizedConfigForLoadBalancer(request *SetCustomizedConfig
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINCLONING = "FailedOperation.ResourceInCloning"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5667,6 +5870,7 @@ func (c *Client) SetCustomizedConfigForLoadBalancerWithContext(ctx context.Conte
     if request == nil {
         request = NewSetCustomizedConfigForLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "SetCustomizedConfigForLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetCustomizedConfigForLoadBalancer require credential")
@@ -5734,6 +5938,7 @@ func (c *Client) SetLoadBalancerClsLogWithContext(ctx context.Context, request *
     if request == nil {
         request = NewSetLoadBalancerClsLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "SetLoadBalancerClsLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetLoadBalancerClsLog require credential")
@@ -5766,7 +5971,7 @@ func NewSetLoadBalancerSecurityGroupsResponse() (response *SetLoadBalancerSecuri
 }
 
 // SetLoadBalancerSecurityGroups
-// SetLoadBalancerSecurityGroups 接口支持对一个公网负载均衡实例执行设置（绑定、解绑）安全组操作。查询一个负载均衡实例目前已绑定的安全组，可使用 DescribeLoadBalancers 接口。本接口是set语义，
+// SetLoadBalancerSecurityGroups 接口支持对一个公网负载均衡实例执行设置（绑定、解绑）安全组操作。查询一个负载均衡实例目前已绑定的安全组，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口。本接口是set语义，
 //
 // 绑定操作时，入参需要传入负载均衡实例要绑定的所有安全组（已绑定的+新增绑定的）。
 //
@@ -5787,7 +5992,7 @@ func (c *Client) SetLoadBalancerSecurityGroups(request *SetLoadBalancerSecurityG
 }
 
 // SetLoadBalancerSecurityGroups
-// SetLoadBalancerSecurityGroups 接口支持对一个公网负载均衡实例执行设置（绑定、解绑）安全组操作。查询一个负载均衡实例目前已绑定的安全组，可使用 DescribeLoadBalancers 接口。本接口是set语义，
+// SetLoadBalancerSecurityGroups 接口支持对一个公网负载均衡实例执行设置（绑定、解绑）安全组操作。查询一个负载均衡实例目前已绑定的安全组，可使用 [DescribeLoadBalancers](https://cloud.tencent.com/document/product/1108/48459) 接口。本接口是set语义，
 //
 // 绑定操作时，入参需要传入负载均衡实例要绑定的所有安全组（已绑定的+新增绑定的）。
 //
@@ -5807,6 +6012,7 @@ func (c *Client) SetLoadBalancerSecurityGroupsWithContext(ctx context.Context, r
     if request == nil {
         request = NewSetLoadBalancerSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "SetLoadBalancerSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetLoadBalancerSecurityGroups require credential")
@@ -5841,7 +6047,7 @@ func NewSetLoadBalancerStartStatusResponse() (response *SetLoadBalancerStartStat
 // SetLoadBalancerStartStatus
 // 启停负载均衡实例或者监听器。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
 //
@@ -5863,7 +6069,7 @@ func (c *Client) SetLoadBalancerStartStatus(request *SetLoadBalancerStartStatusR
 // SetLoadBalancerStartStatus
 // 启停负载均衡实例或者监听器。
 //
-// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以得到的 RequestID 为入参，调用  [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683)  接口查询本次任务是否成功。
 //
 // 该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
 //
@@ -5882,6 +6088,7 @@ func (c *Client) SetLoadBalancerStartStatusWithContext(ctx context.Context, requ
     if request == nil {
         request = NewSetLoadBalancerStartStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "SetLoadBalancerStartStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetLoadBalancerStartStatus require credential")
@@ -5914,10 +6121,11 @@ func NewSetSecurityGroupForLoadbalancersResponse() (response *SetSecurityGroupFo
 }
 
 // SetSecurityGroupForLoadbalancers
-// 绑定或解绑一个安全组到多个公网负载均衡实例。注意：内网负载均衡不支持绑定安全组。
+// 绑定或解绑一个安全组到多个公网负载均衡实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5930,10 +6138,11 @@ func (c *Client) SetSecurityGroupForLoadbalancers(request *SetSecurityGroupForLo
 }
 
 // SetSecurityGroupForLoadbalancers
-// 绑定或解绑一个安全组到多个公网负载均衡实例。注意：内网负载均衡不支持绑定安全组。
+// 绑定或解绑一个安全组到多个公网负载均衡实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5945,6 +6154,7 @@ func (c *Client) SetSecurityGroupForLoadbalancersWithContext(ctx context.Context
     if request == nil {
         request = NewSetSecurityGroupForLoadbalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "SetSecurityGroupForLoadbalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetSecurityGroupForLoadbalancers require credential")

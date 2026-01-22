@@ -63,8 +63,7 @@ func ResourceTencentCloudNatGateway() *schema.Resource {
 					ValidateFunc: tccommon.ValidateIp,
 				},
 				MinItems:    1,
-				MaxItems:    10,
-				Description: "EIP IP address set bound to the gateway. The value of at least 1 and at most 10.",
+				Description: "EIP IP address set bound to the gateway. The value of at least 1 and at most 10 if do not apply for a whitelist.",
 			},
 			"zone": {
 				Type:        schema.TypeString,

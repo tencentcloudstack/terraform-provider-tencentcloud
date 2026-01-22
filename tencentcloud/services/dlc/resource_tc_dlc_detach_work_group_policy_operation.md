@@ -1,21 +1,18 @@
-Provides a resource to create a dlc detach_work_group_policy_operation
+Provides a resource to create a DLC detach work group policy operation
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_detach_work_group_policy_operation" "detach_work_group_policy_operation" {
+resource "tencentcloud_dlc_detach_work_group_policy_operation" "example" {
   work_group_id = 23184
   policy_set {
-    database = "test_iac_keep"
-    catalog = "DataLakeCatalog"
-    table = ""
-    operation = "ASSAYER"
+    database    = "tf_example_db"
+    catalog     = "DataLakeCatalog"
+    table       = "tf_example_table"
+    operation   = "ASSAYER"
     policy_type = "DATABASE"
-    re_auth = false
-    source = "WORKGROUP"
-    mode = "COMMON"
-    operator = "100032669045"
-    id = 102535
+    source      = "USER"
+    mode        = "COMMON"
   }
 }
 ```

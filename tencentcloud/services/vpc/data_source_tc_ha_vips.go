@@ -136,7 +136,7 @@ func dataSourceTencentCloudHaVipsRead(d *schema.ResourceData, meta interface{}) 
 		params["subnet-id"] = v.(string)
 	}
 	if v, ok := d.GetOk("vpc_id"); ok {
-		params["vpc-ip"] = v.(string)
+		params["vpc-id"] = v.(string)
 	}
 	request.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {

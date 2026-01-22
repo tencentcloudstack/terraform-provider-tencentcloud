@@ -1,25 +1,24 @@
-Provides a resource to create a organization org_member
+Provides a resource to create a Organization member
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_organization_org_member" "org_member" {
-  name            = "terraform_test"
-  node_id         = 2003721
-  permission_ids  = [
+resource "tencentcloud_organization_org_member" "example" {
+  name    = "tf-example-dev"
+  node_id = 2013128
+  permission_ids = [
     1,
     2,
-    3,
     4,
   ]
-  policy_type     = "Financial"
-  remark          = "for terraform test"
+  policy_type          = "Financial"
+  remark               = "remark."
+  force_delete_account = false
 }
-
 ```
 Import
 
-organization org_member can be imported using the id, e.g.
+Organization member can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_organization_org_member.org_member orgMember_id
+terraform import tencentcloud_organization_org_member.example 100043985088
 ```

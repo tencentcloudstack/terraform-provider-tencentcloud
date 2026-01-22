@@ -40,7 +40,7 @@ func ResourceTencentCloudWafCcAutoStatus() *schema.Resource {
 			"status": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "cc auto status, 1 means open, 0 means close.",
+				Description: "cc auto status, 1(open), 0(close).",
 			},
 		},
 	}

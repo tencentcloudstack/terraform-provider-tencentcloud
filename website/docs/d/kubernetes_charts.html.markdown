@@ -4,17 +4,35 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_charts"
 sidebar_current: "docs-tencentcloud-datasource-kubernetes_charts"
 description: |-
-  Use this data source to query detailed information of kubernetes cluster addons.
+  Use this data source to query detailed information of kubernetes cluster charts.
 ---
 
 # tencentcloud_kubernetes_charts
 
-Use this data source to query detailed information of kubernetes cluster addons.
+Use this data source to query detailed information of kubernetes cluster charts.
 
 ## Example Usage
 
+### Query all kubernetes charts
+
 ```hcl
-data "tencentcloud_kubernetes_charts" "name" {}
+data "tencentcloud_kubernetes_charts" "example" {}
+```
+
+### Query kubernetes charts by filter
+
+```hcl
+data "tencentcloud_kubernetes_charts" "example" {
+  kind = "network"
+}
+
+data "tencentcloud_kubernetes_charts" "example" {
+  arch = "amd64"
+}
+
+data "tencentcloud_kubernetes_charts" "example" {
+  cluster_type = "tke"
+}
 ```
 
 ## Argument Reference

@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_dcdb_hourdb_instance: support modify `shard_memory`, `shard_storage`
+```

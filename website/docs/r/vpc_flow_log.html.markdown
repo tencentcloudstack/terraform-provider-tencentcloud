@@ -117,22 +117,22 @@ resource "tencentcloud_vpc_flow_log" "example" {
 
 The following arguments are supported:
 
-* `flow_log_name` - (Required, String) Specify flow log name.
-* `resource_id` - (Required, String) Specify resource unique Id of `resource_type` configured.
-* `resource_type` - (Required, String) Specify resource type. NOTE: Only support `NETWORKINTERFACE` for now. Values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, `DCG`.
-* `traffic_type` - (Required, String) Specify log traffic type, values: `ACCEPT`, `REJECT`, `ALL`.
-* `cloud_log_id` - (Optional, String) Specify flow log storage id, just set cls topic id.
-* `cloud_log_region` - (Optional, String) Specify flow log storage region, default using current.
-* `flow_log_description` - (Optional, String) Specify flow Log description.
-* `flow_log_storage` - (Optional, List) Specify consumer detail, required while `storage_type` is `ckafka`.
-* `storage_type` - (Optional, String) Specify consumer type, values: `cls`, `ckafka`.
+* `flow_log_name` - (Required, String) The name of the flow log instance.
+* `resource_id` - (Required, String) The unique ID of the resource.
+* `resource_type` - (Required, String) The type of resource associated with the flow log. Valid values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, and `DCG`.
+* `traffic_type` - (Required, String) Type of the flow logs to be collected. Valid values: `ACCEPT`, `REJECT` and `ALL`.
+* `cloud_log_id` - (Optional, String) The storage ID of the flow log.
+* `cloud_log_region` - (Optional, String) The region corresponding to the flow log storage ID. If not passed in, this field defaults to the current region.
+* `flow_log_description` - (Optional, String) The description of the flow log.
+* `flow_log_storage` - (Optional, List) Information of the flow log consumer, required while `storage_type` is `ckafka`.
+* `storage_type` - (Optional, String) Consumer types: `cls` and `ckafka`.
 * `tags` - (Optional, Map) Tag description list.
-* `vpc_id` - (Optional, String) Specify vpc Id, ignore while `resource_type` is `CCN` (unsupported) but required while other types.
+* `vpc_id` - (Optional, String) The VPC ID or unique ID of the resource. We recommend using the unique ID. This parameter is required unless the `ResourceType` is set to `CCN`.
 
 The `flow_log_storage` object supports the following:
 
-* `storage_id` - (Optional, String) Specify storage instance id, required while `storage_type` is `ckafka`.
-* `storage_topic` - (Optional, String) Specify storage topic id, required while `storage_type` is `ckafka`.
+* `storage_id` - (Optional, String) Storage instance ID, required while `storage_type` is `ckafka`.
+* `storage_topic` - (Optional, String) Topic ID, required while `storage_type` is `ckafka`.
 
 ## Attributes Reference
 
