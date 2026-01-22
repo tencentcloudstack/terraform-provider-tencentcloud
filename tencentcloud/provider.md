@@ -2396,7 +2396,7 @@ tencentcloud_sg_rule
 tencentcloud_cfw_cluster_vpc_fw_switch
 tencentcloud_cfw_ips_mode_switch
 
-Bastion Host(BH)
+Bastion Host(BH测试字符)
 Data Source
 tencentcloud_bh_account_groups
 tencentcloud_bh_source_types
