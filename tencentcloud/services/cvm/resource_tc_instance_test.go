@@ -1809,6 +1809,60 @@ resource "tencentcloud_instance" "foo" {
 
 `
 
+func TestAccTencentCloudInstanceResourceWithDisasterRecoverGroupIds(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceResource_WithDisasterRecoverGroupIdsCreate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "disaster_recover_group_ids.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+const testAccCvmInstanceResource_WithDisasterRecoverGroupIdsCreate = `
+
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_name_regex = "Final"
+    image_type = ["PUBLIC_IMAGE"]
+}
+data "tencentcloud_instance_types" "default" {
+    exclude_sold_out = true
+    
+    filter {
+        name = "instance-family"
+        values = ["S1","S2","S3","S4","S5"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-7"]
+    }
+    cpu_core_count = 2
+    memory_size = 2
+}
+resource "tencentcloud_instance" "foo" {
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+    system_disk_type = "CLOUD_PREMIUM"
+    disaster_recover_group_ids = ["ps-1y147q03"]
+    instance_name = "tf-ci-test-disaster-recover"
+    availability_zone = "ap-guangzhou-7"
+}
+
+`
+
 func TestAccTencentCloudInstanceResourceWithSpotpaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{

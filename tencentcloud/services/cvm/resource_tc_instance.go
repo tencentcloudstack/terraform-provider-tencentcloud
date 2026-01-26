@@ -114,6 +114,17 @@ func ResourceTencentCloudInstance() *schema.Resource {
 					CVM_STOP_MODE_STOP_CHARGING,
 				}),
 			},
+			"disaster_recover_group_ids": {
+				Type: schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional:      true,
+				Computed:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"placement_group_id"},
+				Description:   "Placement group ID.",
+			},
 			"placement_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -670,6 +681,15 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			} else {
 				return fmt.Errorf("cdh_host_id can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
+		}
+	}
+
+	// Check for disaster_recover_group_ids first (new field)
+	if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
+		disasterRecoverGroupIdsSet := v.(*schema.Set).List()
+		for i := range disasterRecoverGroupIdsSet {
+			disasterRecoverGroupId := disasterRecoverGroupIdsSet[i].(string)
+			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterRecoverGroupId)
 		}
 	}
 

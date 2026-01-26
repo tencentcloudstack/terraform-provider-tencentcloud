@@ -238,6 +238,37 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+Create CVM instance with disaster_recover_group_ids
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name              = "tf-example"
+  availability_zone          = "ap-guangzhou-6"
+  image_id                   = "img-eb30mz89"
+  instance_type              = "S5.MEDIUM4"
+  system_disk_size           = 50
+  system_disk_name           = "sys_disk_1"
+  hostname                   = "user"
+  project_id                 = 0
+  vpc_id                     = "vpc-i5yyodl9"
+  subnet_id                  = "subnet-hhi88a58"
+  disaster_recover_group_ids = ["ps-ejt4brtz"]
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+    data_disk_name = "data_disk_1"
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
+~> **NOTE:** The `disaster_recover_group_ids` field is a create-only parameter. Once the instance is created, this field will not be updated from the API.
+
 Create CVM instance with template
 
 ```hcl
