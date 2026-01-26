@@ -797,6 +797,11 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis update mem size fail , reason:%s\n", logId, err.Error())
 			return err
 		}
+
+		// temp solution for wait
+		if d.HasChange("redis_shard_num") || d.HasChange("redis_replicas_num") || d.HasChange("replica_zone_ids") || d.HasChange("type_id") {
+			time.Sleep(time.Minute * 2)
+		}
 	}
 
 	// MemSize, ShardNum and ReplicaNum can only change one for each upgrade invoke
@@ -825,12 +830,22 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis update shard num fail , reason:%s\n", logId, err.Error())
 			return err
 		}
+
+		// temp solution for wait
+		if d.HasChange("redis_replicas_num") || d.HasChange("replica_zone_ids") || d.HasChange("type_id") {
+			time.Sleep(time.Minute * 2)
+		}
 	}
 
 	if d.HasChange("redis_replicas_num") || d.HasChange("replica_zone_ids") {
 		err := resourceRedisNodeSetModify(ctx, &redisService, d)
 		if err != nil {
 			return err
+		}
+
+		// temp solution for wait
+		if d.HasChange("type_id") {
+			time.Sleep(time.Minute * 2)
 		}
 	}
 
