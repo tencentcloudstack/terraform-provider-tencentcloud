@@ -267,7 +267,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-~> **NOTE:** The `disaster_recover_group_ids` field is a create-only parameter. Once the instance is created, this field will not be updated from the API. If you need to modify the placement group after creation, use the `placement_group_id` field with `force_replace_placement_group_id` instead. The `disaster_recover_group_ids` field conflicts with `placement_group_id` and only one placement group ID is currently supported (MaxItems: 1).
+~> **NOTE:** The `disaster_recover_group_ids` field is a create-only parameter. Once the instance is created, this field will not be updated from the API.
 
 Create CVM instance with template
 

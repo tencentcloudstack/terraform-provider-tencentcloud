@@ -278,7 +278,7 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### and only one placement group ID is currently supported (MaxItems: 1).
+### field is a create-only parameter. Once the instance is created, this field will not be updated from the API.
 
 Create CVM instance with template
 
