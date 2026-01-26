@@ -18,8 +18,7 @@ resource "tencentcloud_clb_snat_ip" "foo" {
     ip = "172.16.0.1"
   }
   ips {
-  	subnet_id = "subnet-12345678"
-    ip = "172.16.0.2"
+  	subnet_id = "subnet-56789012"
   }
 }
 

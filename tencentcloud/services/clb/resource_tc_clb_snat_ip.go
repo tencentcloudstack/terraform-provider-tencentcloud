@@ -31,15 +31,16 @@ func ResourceTencentCloudClbSnatIp() *schema.Resource {
 				Description: "Snat IP address config.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"ip": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Snat IP.",
-						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Subnet ID.",
+						},
+						"ip": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Snat IP.",
 						},
 					},
 				},
@@ -113,7 +114,9 @@ func resourceTencentCloudClbSnatIpCreate(d *schema.ResourceData, meta interface{
 		ip := item["ip"].(string)
 		snatIp := &clb.SnatIp{
 			SubnetId: &subnetId,
-			Ip:       &ip,
+		}
+		if ip != "" {
+			snatIp.Ip = &ip
 		}
 		snatIps = append(snatIps, snatIp)
 	}
@@ -183,10 +186,13 @@ func resourceTencentCloudClbSnatIpUpdate(d *schema.ResourceData, meta interface{
 			item := add[i].(map[string]interface{})
 			ip := item["ip"].(string)
 			subnet := item["subnet_id"].(string)
-			addIps = append(addIps, &clb.SnatIp{
+			snatIp := &clb.SnatIp{
 				SubnetId: &subnet,
-				Ip:       &ip,
-			})
+			}
+			if ip != "" {
+				snatIp.Ip = &ip
+			}
+			addIps = append(addIps, snatIp)
 			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				taskId, err = service.CreateLoadBalancerSnatIps(ctx, clbId, addIps)
 				if err != nil {
