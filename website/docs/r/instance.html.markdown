@@ -249,7 +249,38 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
-### Create CVM instance with template
+### Create CVM instance with disaster_recover_group_ids
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name              = "tf-example"
+  availability_zone          = "ap-guangzhou-6"
+  image_id                   = "img-eb30mz89"
+  instance_type              = "S5.MEDIUM4"
+  system_disk_size           = 50
+  system_disk_name           = "sys_disk_1"
+  hostname                   = "user"
+  project_id                 = 0
+  vpc_id                     = "vpc-i5yyodl9"
+  subnet_id                  = "subnet-hhi88a58"
+  disaster_recover_group_ids = ["ps-ejt4brtz"]
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+    data_disk_name = "data_disk_1"
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
+### and only one placement group ID is currently supported (MaxItems: 1).
+
+Create CVM instance with template
 
 ```hcl
 resource "tencentcloud_instance" "example" {
@@ -336,6 +367,7 @@ The following arguments are supported:
 * `disable_automation_service` - (Optional, Bool) Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_security_service` - (Optional, Bool) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
+* `disaster_recover_group_ids` - (Optional, Set: [`String`], ForceNew) Placement group ID.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
 * `force_replace_placement_group_id` - (Optional, Bool) Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.
 * `hostname` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Changing the `hostname` will cause the instance system to restart.
