@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 )
@@ -77,6 +78,10 @@ func BuildToken() string {
 	buf := make([]byte, 16)
 	_, _ = rand.Read(buf)
 	return base64.StdEncoding.EncodeToString(buf)
+}
+
+func BuildUUID() string {
+	return uuid.New().String()
 }
 
 func FormatUnixTime(n uint64) string {

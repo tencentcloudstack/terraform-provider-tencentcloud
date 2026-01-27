@@ -331,6 +331,90 @@ func (c *Client) CreateGatherRuleWithContext(ctx context.Context, request *Creat
     return
 }
 
+func NewCreateInstanceRequest() (request *CreateInstanceRequest) {
+    request = &CreateInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("billing", APIVersion, "CreateInstance")
+    
+    
+    return
+}
+
+func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
+    response = &CreateInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateInstance
+// 创建一个实例资源，会创建一个新购实例资源的订单，并通过腾讯云账户余额自动支付。调用该接口的账号需要授予finace:trade的权限，否则无法支付成功。目前已接入并支持购买的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_DISTRIBUTEERROR = "FailedOperation.DistributeError"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_INVALIDGOODSCATEGORYID = "FailedOperation.InvalidGoodsCategoryId"
+//  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  FAILEDOPERATION_DEALCREATEWHITELISTERROR = "FailedOperation.dealCreateWhitelistError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *CreateInstanceResponse, err error) {
+    return c.CreateInstanceWithContext(context.Background(), request)
+}
+
+// CreateInstance
+// 创建一个实例资源，会创建一个新购实例资源的订单，并通过腾讯云账户余额自动支付。调用该接口的账号需要授予finace:trade的权限，否则无法支付成功。目前已接入并支持购买的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_DISTRIBUTEERROR = "FailedOperation.DistributeError"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_INVALIDGOODSCATEGORYID = "FailedOperation.InvalidGoodsCategoryId"
+//  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  FAILEDOPERATION_DEALCREATEWHITELISTERROR = "FailedOperation.dealCreateWhitelistError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) CreateInstanceWithContext(ctx context.Context, request *CreateInstanceRequest) (response *CreateInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "billing", APIVersion, "CreateInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteAllocationRuleRequest() (request *DeleteAllocationRuleRequest) {
     request = &DeleteAllocationRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2450,8 +2534,13 @@ func NewDescribeCostDetailResponse() (response *DescribeCostDetailResponse) {
 // 1. 对于消耗明细数据量级很大（例如每月消耗明细量级超过100w）的客户，通过 API 调用明细数据会有超时风险，建议您开通消耗账单数据存储功能，通过存储桶中获取账单文件进行分析。[账单存储至COS桶](https://cloud.tencent.com/document/product/555/61275)
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_QUERYCOUNTFAILED = "FailedOperation.QueryCountFailed"
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCostDetail(request *DescribeCostDetailRequest) (response *DescribeCostDetailResponse, err error) {
     return c.DescribeCostDetailWithContext(context.Background(), request)
 }
@@ -2466,8 +2555,13 @@ func (c *Client) DescribeCostDetail(request *DescribeCostDetailRequest) (respons
 // 1. 对于消耗明细数据量级很大（例如每月消耗明细量级超过100w）的客户，通过 API 调用明细数据会有超时风险，建议您开通消耗账单数据存储功能，通过存储桶中获取账单文件进行分析。[账单存储至COS桶](https://cloud.tencent.com/document/product/555/61275)
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_QUERYCOUNTFAILED = "FailedOperation.QueryCountFailed"
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCostDetailWithContext(ctx context.Context, request *DescribeCostDetailRequest) (response *DescribeCostDetailResponse, err error) {
     if request == nil {
         request = NewDescribeCostDetailRequest()
@@ -2508,8 +2602,13 @@ func NewDescribeCostExplorerSummaryResponse() (response *DescribeCostExplorerSum
 // 查看成本分析明细
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_QUERYCOUNTFAILED = "FailedOperation.QueryCountFailed"
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCostExplorerSummary(request *DescribeCostExplorerSummaryRequest) (response *DescribeCostExplorerSummaryResponse, err error) {
     return c.DescribeCostExplorerSummaryWithContext(context.Background(), request)
 }
@@ -2518,8 +2617,13 @@ func (c *Client) DescribeCostExplorerSummary(request *DescribeCostExplorerSummar
 // 查看成本分析明细
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_QUERYCOUNTFAILED = "FailedOperation.QueryCountFailed"
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCostExplorerSummaryWithContext(ctx context.Context, request *DescribeCostExplorerSummaryRequest) (response *DescribeCostExplorerSummaryResponse, err error) {
     if request == nil {
         request = NewDescribeCostExplorerSummaryRequest()
@@ -2560,7 +2664,10 @@ func NewDescribeCostSummaryByProductResponse() (response *DescribeCostSummaryByP
 // 获取按产品汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByProduct(request *DescribeCostSummaryByProductRequest) (response *DescribeCostSummaryByProductResponse, err error) {
     return c.DescribeCostSummaryByProductWithContext(context.Background(), request)
 }
@@ -2569,7 +2676,10 @@ func (c *Client) DescribeCostSummaryByProduct(request *DescribeCostSummaryByProd
 // 获取按产品汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByProductWithContext(ctx context.Context, request *DescribeCostSummaryByProductRequest) (response *DescribeCostSummaryByProductResponse, err error) {
     if request == nil {
         request = NewDescribeCostSummaryByProductRequest()
@@ -2610,7 +2720,10 @@ func NewDescribeCostSummaryByProjectResponse() (response *DescribeCostSummaryByP
 // 获取按项目汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByProject(request *DescribeCostSummaryByProjectRequest) (response *DescribeCostSummaryByProjectResponse, err error) {
     return c.DescribeCostSummaryByProjectWithContext(context.Background(), request)
 }
@@ -2619,7 +2732,10 @@ func (c *Client) DescribeCostSummaryByProject(request *DescribeCostSummaryByProj
 // 获取按项目汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByProjectWithContext(ctx context.Context, request *DescribeCostSummaryByProjectRequest) (response *DescribeCostSummaryByProjectResponse, err error) {
     if request == nil {
         request = NewDescribeCostSummaryByProjectRequest()
@@ -2660,7 +2776,10 @@ func NewDescribeCostSummaryByRegionResponse() (response *DescribeCostSummaryByRe
 // 获取按地域汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByRegion(request *DescribeCostSummaryByRegionRequest) (response *DescribeCostSummaryByRegionResponse, err error) {
     return c.DescribeCostSummaryByRegionWithContext(context.Background(), request)
 }
@@ -2669,7 +2788,10 @@ func (c *Client) DescribeCostSummaryByRegion(request *DescribeCostSummaryByRegio
 // 获取按地域汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByRegionWithContext(ctx context.Context, request *DescribeCostSummaryByRegionRequest) (response *DescribeCostSummaryByRegionResponse, err error) {
     if request == nil {
         request = NewDescribeCostSummaryByRegionRequest()
@@ -2710,7 +2832,10 @@ func NewDescribeCostSummaryByResourceResponse() (response *DescribeCostSummaryBy
 // 获取按资源汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByResource(request *DescribeCostSummaryByResourceRequest) (response *DescribeCostSummaryByResourceResponse, err error) {
     return c.DescribeCostSummaryByResourceWithContext(context.Background(), request)
 }
@@ -2719,7 +2844,10 @@ func (c *Client) DescribeCostSummaryByResource(request *DescribeCostSummaryByRes
 // 获取按资源汇总消耗详情
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeCostSummaryByResourceWithContext(ctx context.Context, request *DescribeCostSummaryByResourceRequest) (response *DescribeCostSummaryByResourceResponse, err error) {
     if request == nil {
         request = NewDescribeCostSummaryByResourceRequest()
@@ -2733,6 +2861,66 @@ func (c *Client) DescribeCostSummaryByResourceWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDescribeCostSummaryByResourceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCostSummaryByTagRequest() (request *DescribeCostSummaryByTagRequest) {
+    request = &DescribeCostSummaryByTagRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("billing", APIVersion, "DescribeCostSummaryByTag")
+    
+    
+    return
+}
+
+func NewDescribeCostSummaryByTagResponse() (response *DescribeCostSummaryByTagResponse) {
+    response = &DescribeCostSummaryByTagResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCostSummaryByTag
+// 获取按标签汇总消耗详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGKEYNOTEXIST = "FailedOperation.TagKeyNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeCostSummaryByTag(request *DescribeCostSummaryByTagRequest) (response *DescribeCostSummaryByTagResponse, err error) {
+    return c.DescribeCostSummaryByTagWithContext(context.Background(), request)
+}
+
+// DescribeCostSummaryByTag
+// 获取按标签汇总消耗详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGKEYNOTEXIST = "FailedOperation.TagKeyNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeCostSummaryByTagWithContext(ctx context.Context, request *DescribeCostSummaryByTagRequest) (response *DescribeCostSummaryByTagResponse, err error) {
+    if request == nil {
+        request = NewDescribeCostSummaryByTagRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "billing", APIVersion, "DescribeCostSummaryByTag")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCostSummaryByTag require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCostSummaryByTagResponse()
     err = c.Send(request, response)
     return
 }
@@ -3053,6 +3241,70 @@ func (c *Client) DescribeGatherRuleDetailWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeGatherRuleDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRenewInstancesRequest() (request *DescribeRenewInstancesRequest) {
+    request = &DescribeRenewInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("billing", APIVersion, "DescribeRenewInstances")
+    
+    
+    return
+}
+
+func NewDescribeRenewInstancesResponse() (response *DescribeRenewInstancesResponse) {
+    response = &DescribeRenewInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRenewInstances
+// 注意事项：
+//
+// 1、本接口支持查询已接入续费管理页的包年包月实例，包括运行中、已隔离（部分产品不支持）
+//
+// 2、子用户使用该接口时，应具备QcloudFinanceRenewManageFullAccess权限策略。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBOPERATERROR = "InternalError.DbOperatError"
+//  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeRenewInstances(request *DescribeRenewInstancesRequest) (response *DescribeRenewInstancesResponse, err error) {
+    return c.DescribeRenewInstancesWithContext(context.Background(), request)
+}
+
+// DescribeRenewInstances
+// 注意事项：
+//
+// 1、本接口支持查询已接入续费管理页的包年包月实例，包括运行中、已隔离（部分产品不支持）
+//
+// 2、子用户使用该接口时，应具备QcloudFinanceRenewManageFullAccess权限策略。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBOPERATERROR = "InternalError.DbOperatError"
+//  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeRenewInstancesWithContext(ctx context.Context, request *DescribeRenewInstancesRequest) (response *DescribeRenewInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeRenewInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "billing", APIVersion, "DescribeRenewInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRenewInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRenewInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -3581,6 +3833,168 @@ func (c *Client) PayDealsWithContext(ctx context.Context, request *PayDealsReque
     request.SetContext(ctx)
     
     response = NewPayDealsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRefundInstanceRequest() (request *RefundInstanceRequest) {
+    request = &RefundInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("billing", APIVersion, "RefundInstance")
+    
+    
+    return
+}
+
+func NewRefundInstanceResponse() (response *RefundInstanceResponse) {
+    response = &RefundInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RefundInstance
+// 退订不再需要的实例，只退还实付金额的部分，已使用的代金券不退还，退还的实付金额默认退到腾讯云账户余额中。调用该接口的账号需要授予finace:RefundInstance的权限，否则无法支付成功。目前已接入并支持退订的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_RESOURCELOCKED = "InvalidParameter.ResourceLocked"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) RefundInstance(request *RefundInstanceRequest) (response *RefundInstanceResponse, err error) {
+    return c.RefundInstanceWithContext(context.Background(), request)
+}
+
+// RefundInstance
+// 退订不再需要的实例，只退还实付金额的部分，已使用的代金券不退还，退还的实付金额默认退到腾讯云账户余额中。调用该接口的账号需要授予finace:RefundInstance的权限，否则无法支付成功。目前已接入并支持退订的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_RESOURCELOCKED = "InvalidParameter.ResourceLocked"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) RefundInstanceWithContext(ctx context.Context, request *RefundInstanceRequest) (response *RefundInstanceResponse, err error) {
+    if request == nil {
+        request = NewRefundInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "billing", APIVersion, "RefundInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RefundInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRefundInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
+    request = &RenewInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("billing", APIVersion, "RenewInstance")
+    
+    
+    return
+}
+
+func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
+    response = &RenewInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RenewInstance
+// 续费一台实例，调用该接口续费服务器时，您需要确保您的腾讯云账户余额充足，否则会续费失败。调用该接口的账号需要授予finace:trade的权限，否则无法续费成功。目前已接入并支持续费的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_DISTRIBUTEERROR = "FailedOperation.DistributeError"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_INVALIDGOODSCATEGORYID = "FailedOperation.InvalidGoodsCategoryId"
+//  FAILEDOPERATION_DEALCREATEWHITELISTERROR = "FailedOperation.dealCreateWhitelistError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_RESOURCELOCKED = "InvalidParameter.ResourceLocked"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewInstanceResponse, err error) {
+    return c.RenewInstanceWithContext(context.Background(), request)
+}
+
+// RenewInstance
+// 续费一台实例，调用该接口续费服务器时，您需要确保您的腾讯云账户余额充足，否则会续费失败。调用该接口的账号需要授予finace:trade的权限，否则无法续费成功。目前已接入并支持续费的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_DISTRIBUTEERROR = "FailedOperation.DistributeError"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_INVALIDGOODSCATEGORYID = "FailedOperation.InvalidGoodsCategoryId"
+//  FAILEDOPERATION_DEALCREATEWHITELISTERROR = "FailedOperation.dealCreateWhitelistError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_RESOURCELOCKED = "InvalidParameter.ResourceLocked"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) RenewInstanceWithContext(ctx context.Context, request *RenewInstanceRequest) (response *RenewInstanceResponse, err error) {
+    if request == nil {
+        request = NewRenewInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "billing", APIVersion, "RenewInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenewInstanceResponse()
     err = c.Send(request, response)
     return
 }

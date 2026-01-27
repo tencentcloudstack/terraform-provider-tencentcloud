@@ -175,3 +175,47 @@ func (me *BillingService) DescribeBillingBudgetOperationLogByFilter(ctx context.
 	}
 	return
 }
+
+func (me *BillingService) DescribeBillingInstanceById(ctx context.Context, instanceId string) (ret *billingv20180709.RenewInstance, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := billingv20180709.NewDescribeRenewInstancesRequest()
+	response := billingv20180709.NewDescribeRenewInstancesResponse()
+	request.MaxResults = helper.IntUint64(1)
+	request.InstanceIdList = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseBillingV20180709Client().DescribeRenewInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe billing renew instance failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.InstanceList) == 0 {
+		return
+	}
+
+	ret = response.Response.InstanceList[0]
+	return
+}
