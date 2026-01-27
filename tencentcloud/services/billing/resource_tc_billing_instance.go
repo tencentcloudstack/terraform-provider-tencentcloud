@@ -166,6 +166,11 @@ func resourceTencentCloudBillingInstanceCreate(d *schema.ResourceData, meta inte
 			return resource.NonRetryableError(fmt.Errorf("Create billing instance failed, Response is nil."))
 		}
 
+		// if null, need to retry, until get InstanceIdList
+		if len(result.Response.InstanceIdList) == 0 {
+			return resource.RetryableError(fmt.Errorf("InstanceIdList is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -173,10 +178,6 @@ func resourceTencentCloudBillingInstanceCreate(d *schema.ResourceData, meta inte
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s create billing instance failed, reason:%+v", logId, reqErr)
 		return reqErr
-	}
-
-	if len(response.Response.InstanceIdList) == 0 {
-		return fmt.Errorf("InstanceIdList is nil.")
 	}
 
 	instanceId = *response.Response.InstanceIdList[0]
@@ -195,6 +196,7 @@ func resourceTencentCloudBillingInstanceCreate(d *schema.ResourceData, meta inte
 	waitReq.Offset = helper.IntInt64(0)
 	waitReq.Limit = helper.IntInt64(1)
 	waitReq.OrderId = &orderId
+	waitReq.StatusSet = helper.Int64Slice2Int64PointerSlice([]int64{4, 6})
 	reqErr = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBillingV20180709Client().DescribeDealsByCondWithContext(ctx, waitReq)
 		if e != nil {
@@ -203,8 +205,12 @@ func resourceTencentCloudBillingInstanceCreate(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.Deals == nil || len(result.Response.Deals) == 0 {
+		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("Describe deals by cond failed, Response is nil."))
+		}
+
+		if len(result.Response.Deals) == 0 {
+			return resource.RetryableError(fmt.Errorf("Deals is nil."))
 		}
 
 		deal := result.Response.Deals[0]
@@ -214,6 +220,10 @@ func resourceTencentCloudBillingInstanceCreate(d *schema.ResourceData, meta inte
 
 		if *deal.Status == 4 {
 			return nil
+		}
+
+		if *deal.Status == 6 {
+			return resource.NonRetryableError(fmt.Errorf("Create billing instance failed, Status is 6."))
 		}
 
 		return resource.RetryableError(fmt.Errorf("Billing instance is still creating. Status is %d.", *deal.Status))
@@ -366,6 +376,7 @@ func resourceTencentCloudBillingInstanceUpdate(d *schema.ResourceData, meta inte
 		waitReq.Offset = helper.IntInt64(0)
 		waitReq.Limit = helper.IntInt64(1)
 		waitReq.OrderId = &orderId
+		waitReq.StatusSet = helper.Int64Slice2Int64PointerSlice([]int64{4, 6})
 		reqErr = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBillingV20180709Client().DescribeDealsByCondWithContext(ctx, waitReq)
 			if e != nil {
@@ -374,8 +385,12 @@ func resourceTencentCloudBillingInstanceUpdate(d *schema.ResourceData, meta inte
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
 			}
 
-			if result == nil || result.Response == nil || result.Response.Deals == nil || len(result.Response.Deals) == 0 {
+			if result == nil || result.Response == nil {
 				return resource.NonRetryableError(fmt.Errorf("Describe deals by cond failed, Response is nil."))
+			}
+
+			if len(result.Response.Deals) == 0 {
+				return resource.RetryableError(fmt.Errorf("Deals is nil."))
 			}
 
 			deal := result.Response.Deals[0]
@@ -385,6 +400,10 @@ func resourceTencentCloudBillingInstanceUpdate(d *schema.ResourceData, meta inte
 
 			if *deal.Status == 4 {
 				return nil
+			}
+
+			if *deal.Status == 6 {
+				return resource.NonRetryableError(fmt.Errorf("Update billing instance failed, Status is 6."))
 			}
 
 			return resource.RetryableError(fmt.Errorf("Billing instance is still updating. Status is %d.", *deal.Status))
@@ -463,6 +482,7 @@ func resourceTencentCloudBillingInstanceDelete(d *schema.ResourceData, meta inte
 	waitReq.Offset = helper.IntInt64(0)
 	waitReq.Limit = helper.IntInt64(1)
 	waitReq.OrderId = &orderId
+	waitReq.StatusSet = helper.Int64Slice2Int64PointerSlice([]int64{6, 7})
 	reqErr = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBillingV20180709Client().DescribeDealsByCondWithContext(ctx, waitReq)
 		if e != nil {
@@ -471,8 +491,12 @@ func resourceTencentCloudBillingInstanceDelete(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil || result.Response == nil || result.Response.Deals == nil || len(result.Response.Deals) == 0 {
+		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("Describe deals by cond failed, Response is nil."))
+		}
+
+		if len(result.Response.Deals) == 0 {
+			return resource.RetryableError(fmt.Errorf("Deals is nil."))
 		}
 
 		deal := result.Response.Deals[0]
@@ -482,6 +506,10 @@ func resourceTencentCloudBillingInstanceDelete(d *schema.ResourceData, meta inte
 
 		if *deal.Status == 6 {
 			return nil
+		}
+
+		if *deal.Status == 7 {
+			return resource.NonRetryableError(fmt.Errorf("Delete billing instance failed, Status is 6."))
 		}
 
 		return resource.RetryableError(fmt.Errorf("Billing instance is still deleting. Status is %d.", *deal.Status))
