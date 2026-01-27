@@ -4,54 +4,47 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_postgresql_parameters"
 sidebar_current: "docs-tencentcloud-resource-postgresql_parameters"
 description: |-
-  Use this resource to create postgresql parameter.
+  Use this resource to create PostgreSQL parameters.
 ---
 
 # tencentcloud_postgresql_parameters
 
-Use this resource to create postgresql parameter.
+Use this resource to create PostgreSQL parameters.
 
 ## Example Usage
 
 ```hcl
-variable "default_az" {
-  default = "ap-guangzhou-3"
-}
-
-data "tencentcloud_vpc_subnets" "gz3" {
-  availability_zone = var.default_az
-  is_default        = true
-}
-
-locals {
-  vpc_id    = data.tencentcloud_vpc_subnets.gz3.instance_list.0.vpc_id
-  subnet_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.subnet_id
-}
-
-data "tencentcloud_availability_zones_by_product" "zone" {
-  product = "postgres"
-}
-
-resource "tencentcloud_postgresql_instance" "test" {
-  name              = "tf_postsql_postpaid"
-  availability_zone = var.default_az
+resource "tencentcloud_postgresql_instance" "example" {
+  name              = "tf-example"
+  availability_zone = "ap-guangzhou-6"
   charge_type       = "POSTPAID_BY_HOUR"
-  period            = 1
-  vpc_id            = local.vpc_id
-  subnet_id         = local.subnet_id
-  engine_version    = "13.3"
-  root_password     = "t1qaA2k1wgvfa3?ZZZ"
-  security_groups   = ["sg-5275dorp"]
-  charset           = "LATIN1"
+  vpc_id            = "vpc-i5yyodl9"
+  subnet_id         = "subnet-hhi88a58"
+  db_major_version  = "17"
+  engine_version    = "17.4"
+  db_kernel_version = "v17.4_r1.4"
+  root_user         = "root123"
+  root_password     = "Root123$"
+  charset           = "UTF8"
   project_id        = 0
-  memory            = 2
-  storage           = 20
+  memory            = 4
+  cpu               = 2
+  storage           = 50
+  tags = {
+    CreateBy = "Terraform"
+  }
 }
-resource "tencentcloud_postgresql_parameters" "postgresql_parameters" {
-  db_instance_id = tencentcloud_postgresql_instance.test.id
+
+resource "tencentcloud_postgresql_parameters" "example" {
+  db_instance_id = tencentcloud_postgresql_instance.example.id
   param_list {
-    expected_value = "off"
     name           = "check_function_bodies"
+    expected_value = "off"
+  }
+
+  param_list {
+    name           = "max_standby_archive_delay"
+    expected_value = "35000"
   }
 }
 ```
@@ -61,7 +54,7 @@ resource "tencentcloud_postgresql_parameters" "postgresql_parameters" {
 The following arguments are supported:
 
 * `db_instance_id` - (Required, String, ForceNew) Instance ID.
-* `param_list` - (Required, List) Parameters to be modified and expected values.
+* `param_list` - (Required, Set) Parameters to be modified and expected values.
 
 The `param_list` object supports the following:
 
@@ -78,9 +71,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-postgresql parameters can be imported, e.g.
+PostgreSQL parameters can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_postgresql_parameters.example pgrogrp-lckioi2a
+terraform import tencentcloud_postgresql_parameters.example postgres-ckwcgdf1
 ```
 

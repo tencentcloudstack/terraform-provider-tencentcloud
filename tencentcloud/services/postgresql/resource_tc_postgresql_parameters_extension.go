@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	postgresv20170312 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -17,7 +18,7 @@ func resourceTencentCloudPostgresqlParametersReadPreHandleResponse0(ctx context.
 
 	if v, ok := d.GetOk("param_list"); ok {
 		paramList := []*postgresv20170312.ParamInfo{}
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			paramListMap := item.(map[string]interface{})
 			if name, ok := paramListMap["name"].(string); ok && v != "" {
 				if resp.Detail != nil {
@@ -38,17 +39,19 @@ func resourceTencentCloudPostgresqlParametersReadPreHandleResponse0(ctx context.
 
 func resourceTencentCloudPostgresqlParametersUpdateRequestOnError0(ctx context.Context, req *postgresv20170312.ModifyDBInstanceParametersRequest, e error) *resource.RetryError {
 	if e, ok := e.(*errors.TencentCloudSDKError); ok {
-		if e.GetCode() == "FailedOperation.FailedOperationError" {
-			change, err := resourceTencentCloudParamChange(ctx)
-			if err != nil || change {
-				return resource.NonRetryableError(err)
-			}
+		if e.GetCode() == "FailedOperation.FailedOperationError" && len(req.ParamList) == 1 {
 			return nil
 		}
+
+		if e.GetCode() == "FailedOperation.FailedOperationError" && len(req.ParamList) > 1 {
+			return resource.NonRetryableError(e)
+		}
 	}
+
 	if e != nil {
 		return resource.RetryableError(e)
 	}
+
 	return nil
 }
 
