@@ -120,7 +120,6 @@ func ResourceTencentCloudInstance() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Optional:      true,
-				Computed:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"placement_group_id"},
 				Description:   "Placement group ID.",
