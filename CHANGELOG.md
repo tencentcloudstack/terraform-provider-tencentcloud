@@ -2,6 +2,12 @@
 
 ENHANCEMENTS:
 
+* resource/tencentcloud_instance: remove computed `disaster_recover_group_ids` ([#3757](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3757))
+
+## 1.82.59(January 26, 2026)
+
+ENHANCEMENTS:
+
 * resource/tencentcloud_clb_snat_ip: mark `ip` optional ([#3755](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3755))
 * resource/tencentcloud_instance: add new param `disaster_recover_group_ids` ([#3754](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3754))
 * resource/tencentcloud_redis_instance: support update wait ([#3753](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3753))
