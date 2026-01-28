@@ -1,4 +1,4 @@
-Provides a resource to create a vpc notify_routes
+Provides a resource to create a VPC notify routes
 
 Example Usage
 
@@ -21,8 +21,8 @@ resource "tencentcloud_vpc_notify_routes" "example" {
 
 Import
 
-vpc notify_routes can be imported using the id, e.g.
+VPC notify routes can be imported using the routeTableId#routeItemId, e.g.
 
 ```
-terraform import tencentcloud_vpc_notify_routes.notify_routes route_table_id#route_item_id
+terraform import tencentcloud_vpc_notify_routes.example route_table_id#route_item_id
 ```
