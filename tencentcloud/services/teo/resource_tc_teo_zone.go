@@ -118,6 +118,27 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+
+			"work_mode_infos": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "Configuration group work mode. Each configuration module of the site can enable version control mode or immediate effect mode according to the configuration group dimension. For details, please refer to [Version Management](https://cloud.tencent.com/document/product/1552/113690).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"config_group_type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration group type. Valid values: `l7_acceleration`: L7 acceleration configuration group; `edge_functions`: Edge functions configuration group.",
+						},
+						"work_mode": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Work mode. Valid values: `immediate_effect`: Immediate effect mode; `version_control`: Version control mode.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -244,6 +265,21 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 
 	if respData.AliasZoneName != nil {
 		_ = d.Set("alias_zone_name", respData.AliasZoneName)
+	}
+
+	if respData.WorkModeInfos != nil && len(respData.WorkModeInfos) > 0 {
+		workModeInfosList := make([]map[string]interface{}, 0, len(respData.WorkModeInfos))
+		for _, workModeInfo := range respData.WorkModeInfos {
+			workModeInfoMap := make(map[string]interface{})
+			if workModeInfo.ConfigGroupType != nil {
+				workModeInfoMap["config_group_type"] = *workModeInfo.ConfigGroupType
+			}
+			if workModeInfo.WorkMode != nil {
+				workModeInfoMap["work_mode"] = *workModeInfo.WorkMode
+			}
+			workModeInfosList = append(workModeInfosList, workModeInfoMap)
+		}
+		_ = d.Set("work_mode_infos", workModeInfosList)
 	}
 
 	ownershipVerificationMap := map[string]interface{}{}
@@ -384,6 +420,46 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 		resourceName := tccommon.BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("work_mode_infos") {
+		if v, ok := d.GetOk("work_mode_infos"); ok {
+			workModeInfos := v.([]interface{})
+			if len(workModeInfos) > 0 {
+				request := teo.NewModifyZoneWorkModeRequest()
+				request.ZoneId = &zoneId
+
+				configGroupWorkModeInfos := make([]*teo.ConfigGroupWorkModeInfo, 0, len(workModeInfos))
+				for _, item := range workModeInfos {
+					workModeInfoMap := item.(map[string]interface{})
+					configGroupWorkModeInfo := &teo.ConfigGroupWorkModeInfo{}
+
+					if v, ok := workModeInfoMap["config_group_type"]; ok {
+						configGroupWorkModeInfo.ConfigGroupType = helper.String(v.(string))
+					}
+					if v, ok := workModeInfoMap["work_mode"]; ok {
+						configGroupWorkModeInfo.WorkMode = helper.String(v.(string))
+					}
+
+					configGroupWorkModeInfos = append(configGroupWorkModeInfos, configGroupWorkModeInfo)
+				}
+				request.WorkModeInfos = configGroupWorkModeInfos
+
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyZoneWorkModeWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s update teo zone work mode failed, reason:%+v", logId, err)
+					return err
+				}
+			}
 		}
 	}
 

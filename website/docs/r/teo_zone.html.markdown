@@ -13,6 +13,8 @@ Provides a resource to create a teo zone
 
 ## Example Usage
 
+### Basic Usage
+
 ```hcl
 resource "tencentcloud_teo_zone" "zone" {
   zone_name       = "tf-teo.com"
@@ -21,6 +23,32 @@ resource "tencentcloud_teo_zone" "zone" {
   alias_zone_name = "teo-test"
   paused          = false
   plan_id         = "edgeone-2kfv1h391n6w"
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+### Enable Version Control Mode
+
+```hcl
+resource "tencentcloud_teo_zone" "zone_with_version_control" {
+  zone_name       = "tf-teo-version.com"
+  type            = "partial"
+  area            = "overseas"
+  alias_zone_name = "teo-version-test"
+  paused          = false
+  plan_id         = "edgeone-2kfv1h391n6w"
+
+  work_mode_infos {
+    config_group_type = "l7_acceleration"
+    work_mode         = "immediate_effect"
+  }
+  work_mode_infos {
+    config_group_type = "edge_functions"
+    work_mode         = "immediate_effect"
+  }
+
   tags = {
     "createdBy" = "terraform"
   }
@@ -41,6 +69,12 @@ The following arguments are supported:
 * `alias_zone_name` - (Optional, String) Alias site identifier. Limit the input to a combination of numbers, English, - and _, within 20 characters. For details, refer to the alias site identifier. If there is no such usage scenario, leave this field empty.
 * `paused` - (Optional, Bool) Indicates whether the site is disabled.
 * `tags` - (Optional, Map) Tag description list.
+* `work_mode_infos` - (Optional, List) Configuration group work mode. Each configuration module of the site can enable version control mode or immediate effect mode according to the configuration group dimension. For details, please refer to [Version Management](https://cloud.tencent.com/document/product/1552/113690).
+
+The `work_mode_infos` object supports the following:
+
+* `config_group_type` - (Required, String) Configuration group type. Valid values: `l7_acceleration`: L7 acceleration configuration group; `edge_functions`: Edge functions configuration group.
+* `work_mode` - (Required, String) Work mode. Valid values: `immediate_effect`: Immediate effect mode; `version_control`: Version control mode.
 
 ## Attributes Reference
 

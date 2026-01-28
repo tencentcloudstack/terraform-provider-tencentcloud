@@ -97,6 +97,15 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.subdomain"),
 				),
 			},
+			{
+				Config: testAccTeoZoneWorkMode,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckZoneExists("tencentcloud_teo_zone.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "work_mode_infos.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "work_mode_infos.0.config_group_type", "l7_acceleration"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "work_mode_infos.0.work_mode", "version_control"),
+				),
+			},
 		},
 	})
 }
@@ -183,6 +192,32 @@ resource "tencentcloud_teo_zone" "basic" {
 	}
 	type      = "partial"
 	zone_name = var.zone_name
+  }
+
+`
+
+const testAccTeoZoneWorkMode = testAccTeoZoneVar + `
+
+resource "tencentcloud_teo_zone" "basic" {
+	area            = "overseas"
+	alias_zone_name = "tf-test-up"
+	paused          = true
+	plan_id         = var.plan_id
+	tags = {
+	  "勿动"  = "TF测试"
+	  "占用人" = "arunma"
+	}
+	type      = "partial"
+	zone_name = var.zone_name
+	
+	work_mode_infos {
+		config_group_type = "l7_acceleration"
+		work_mode         = "immediate_effect"
+	}
+	work_mode_infos {
+		config_group_type = "edge_functions"
+		work_mode         = "immediate_effect"
+	}
   }
 
 `
