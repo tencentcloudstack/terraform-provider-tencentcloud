@@ -1,3 +1,13 @@
+## 1.82.61(January 28, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_billing_instance` ([#3758](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3758))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_postgresql_parameters: support update `param_list` ([#3756](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3756))
+
 ## 1.82.60(January 27, 2026)
 
 ENHANCEMENTS:
