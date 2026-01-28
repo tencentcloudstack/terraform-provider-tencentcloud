@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ckafka_instance: optimize the code for `custom_ssl_cert_id`
+```

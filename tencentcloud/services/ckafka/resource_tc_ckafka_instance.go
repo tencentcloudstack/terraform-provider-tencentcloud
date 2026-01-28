@@ -381,7 +381,7 @@ func ckafkaRequestSetParams(request interface{}, d *schema.ResourceData) {
 	}
 
 	if v, ok := d.GetOk("custom_ssl_cert_id"); ok {
-		values.FieldByName("CustomSslCertId").Set(reflect.ValueOf(helper.String(v.(string))))
+		values.FieldByName("CustomSSLCertId").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 }
 
