@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc_notify_routes"
 sidebar_current: "docs-tencentcloud-resource-vpc_notify_routes"
 description: |-
-  Provides a resource to create a vpc notify_routes
+  Provides a resource to create a VPC notify routes
 ---
 
 # tencentcloud_vpc_notify_routes
 
-Provides a resource to create a vpc notify_routes
+Provides a resource to create a VPC notify routes
 
 ## Example Usage
 
@@ -36,20 +36,21 @@ The following arguments are supported:
 
 * `route_item_ids` - (Required, Set: [`String`], ForceNew) The unique ID of the routing policy.
 * `route_table_id` - (Required, String, ForceNew) The unique ID of the routing table.
+* `expected_published_status` - (Optional, Bool, ForceNew) Set the desired publication status: true: published; false: not published.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `published_to_vbc` - If published to vbc.
+* `published_to_vbc` - Whether to publish policies to vbc.
 
 
 ## Import
 
-vpc notify_routes can be imported using the id, e.g.
+VPC notify routes can be imported using the routeTableId#routeItemId, e.g.
 
 ```
-terraform import tencentcloud_vpc_notify_routes.notify_routes route_table_id#route_item_id
+terraform import tencentcloud_vpc_notify_routes.example route_table_id#route_item_id
 ```
 
