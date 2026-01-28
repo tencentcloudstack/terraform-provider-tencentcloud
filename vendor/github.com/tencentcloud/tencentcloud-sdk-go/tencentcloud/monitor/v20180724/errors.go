@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,9 @@ const (
 
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
+
+	// 云产品侧指标回调接口异常
+	FAILEDOPERATION_APITRANSLATEERROR = "FailedOperation.APITranslateError"
 
 	// 访问STS失败。
 	FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
@@ -133,6 +136,9 @@ const (
 
 	// DoTRPCTransferFailed
 	FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
+
+	// 网络调用报错
+	FAILEDOPERATION_DOTRPCTRANSFERFAILEDWITHCORRUPTIONDATA = "FailedOperation.DoTRPCTransferFailedWithCorruptionData"
 
 	// 查询分析数据失败。
 	FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
@@ -293,6 +299,9 @@ const (
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
 
+	// 请求受限，查询实例数受到限制或者触发限频等限制操作
+	LIMITEXCEEDED_LIMITEDACCESS = "LimitExceeded.LimitedAccess"
+
 	// 指标数量达到配额限制，禁止含有未注册指标的请求。
 	LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
 
@@ -328,6 +337,9 @@ const (
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 无Cam权限
+	UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
