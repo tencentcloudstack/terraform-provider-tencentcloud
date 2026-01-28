@@ -70,6 +70,7 @@ const (
 
 const (
 	MONGODB_STATUS_DELIVERY_SUCCESS = 4
+	MONGODB_STATUS_RETURN_SUCCESS   = 6
 )
 
 func TencentMongodbBasicInfo() map[string]*schema.Schema {
