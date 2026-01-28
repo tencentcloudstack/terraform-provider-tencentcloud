@@ -755,7 +755,7 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("customer_gateway_id", *connection.CustomerGatewayId)
 	_ = d.Set("pre_share_key", *connection.PreShareKey)
 	//set up SPD
-	if *connection.RouteType != svcvpc.ROUTE_TYPE_STATIC_ROUTE {
+	if *connection.RouteType != svcvpc.ROUTE_TYPE_STATIC_ROUTE && *connection.RouteType != svcvpc.ROUTE_TYPE_BGP {
 		_ = d.Set("security_group_policy", svcvpc.FlattenVpnSPDList(connection.SecurityPolicyDatabaseSet))
 	}
 
