@@ -42,7 +42,11 @@ resource "tencentcloud_teo_zone" "zone_with_version_control" {
 
   work_mode_infos {
     config_group_type = "l7_acceleration"
-    work_mode         = "version_control"
+    work_mode         = "immediate_effect"
+  }
+  work_mode_infos {
+    config_group_type = "edge_functions"
+    work_mode         = "immediate_effect"
   }
 
   tags = {

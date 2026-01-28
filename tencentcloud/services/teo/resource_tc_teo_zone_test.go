@@ -211,8 +211,12 @@ resource "tencentcloud_teo_zone" "basic" {
 	zone_name = var.zone_name
 	
 	work_mode_infos {
-	  config_group_type = "l7_acceleration"
-	  work_mode         = "version_control"
+		config_group_type = "l7_acceleration"
+		work_mode         = "immediate_effect"
+	}
+	work_mode_infos {
+		config_group_type = "edge_functions"
+		work_mode         = "immediate_effect"
 	}
   }
 

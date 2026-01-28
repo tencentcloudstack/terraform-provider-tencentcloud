@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_zone: Added `work_mode_infos`, supporting version management.
+```
