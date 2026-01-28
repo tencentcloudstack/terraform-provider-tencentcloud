@@ -2125,6 +2125,7 @@ tencentcloud_tse_cngw_network_access_control
 
 ClickHouse(CDWCH)
 Data Source
+tencentcloud_clickhouse_instances
 tencentcloud_clickhouse_backup_jobs
 tencentcloud_clickhouse_backup_job_detail
 tencentcloud_clickhouse_backup_tables
