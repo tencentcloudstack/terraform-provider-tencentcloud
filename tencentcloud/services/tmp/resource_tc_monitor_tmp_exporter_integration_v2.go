@@ -55,6 +55,13 @@ func ResourceTencentCloudMonitorTmpExporterIntegrationV2() *schema.Resource {
 				Optional:    true,
 				Description: "Cluster ID.",
 			},
+
+			"disable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Integration is disabled when the value is true. Default is false.",
+			},
 		},
 	}
 }
@@ -189,6 +196,120 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Create(d *schema.Resourc
 		d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, kind}, tccommon.FILED_SP))
 	}
 
+	// wait
+	waitReq := monitor.NewDescribeExporterIntegrationsRequest()
+	waitReq.InstanceId = request.InstanceId
+	waitReq.KubeType = request.KubeType
+	waitReq.ClusterId = request.ClusterId
+	waitReq.Kind = request.Kind
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeExporterIntegrations(waitReq)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.IntegrationSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeExporterIntegrations is nil"))
+		}
+
+		integration := result.Response.IntegrationSet[0]
+		if integration.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Status is nil"))
+		}
+
+		if *integration.Status == 2 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("Create exporter integration status is %d", *integration.Status))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	// set status
+	if v, ok := d.GetOkExists("disable"); ok {
+		if v.(bool) {
+			request := monitor.NewUpdateExporterIntegrationRequest()
+			if v, ok := d.GetOk("instance_id"); ok {
+				request.InstanceId = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("kind"); ok {
+				request.Kind = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("content"); ok {
+				request.Content = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOkExists("kube_type"); ok {
+				request.KubeType = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := d.GetOk("cluster_id"); ok && v.(string) != "" {
+				request.ClusterId = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOkExists("disable"); ok {
+				request.Disable = helper.Bool(v.(bool))
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpdateExporterIntegration(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+
+			// wait
+			waitReq := monitor.NewDescribeExporterIntegrationsRequest()
+			waitReq.InstanceId = request.InstanceId
+			waitReq.KubeType = request.KubeType
+			waitReq.ClusterId = request.ClusterId
+			waitReq.Kind = request.Kind
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeExporterIntegrations(waitReq)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil || result.Response.IntegrationSet == nil {
+					return resource.NonRetryableError(fmt.Errorf("DescribeExporterIntegrations is nil"))
+				}
+
+				integration := result.Response.IntegrationSet[0]
+				if integration.Status == nil {
+					return resource.NonRetryableError(fmt.Errorf("Status is nil"))
+				}
+
+				if *integration.Status == 5 {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("update exporter integration status is %d", *integration.Status))
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudMonitorTmpExporterIntegrationV2Read(d, meta)
 }
 
@@ -222,6 +343,15 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Read(d *schema.ResourceD
 		_ = d.Set("content", tmpExporterIntegration.Content)
 	}
 
+	if tmpExporterIntegration.Status != nil {
+		switch {
+		case *tmpExporterIntegration.Status == 2:
+			_ = d.Set("disable", false)
+		case *tmpExporterIntegration.Status == 5:
+			_ = d.Set("disable", true)
+		}
+	}
+
 	return nil
 }
 
@@ -241,6 +371,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Update(d *schema.Resourc
 		}
 	}
 
+	var disableFlag bool
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = helper.String(v.(string))
 	}
@@ -261,6 +392,11 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Update(d *schema.Resourc
 		request.ClusterId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("disable"); ok {
+		request.Disable = helper.Bool(v.(bool))
+		disableFlag = v.(bool)
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpdateExporterIntegration(request)
 		if e != nil {
@@ -271,6 +407,42 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Update(d *schema.Resourc
 		}
 
 		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	// wait
+	waitReq := monitor.NewDescribeExporterIntegrationsRequest()
+	waitReq.InstanceId = request.InstanceId
+	waitReq.KubeType = request.KubeType
+	waitReq.ClusterId = request.ClusterId
+	waitReq.Kind = request.Kind
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeExporterIntegrations(waitReq)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.IntegrationSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeExporterIntegrations is nil"))
+		}
+
+		integration := result.Response.IntegrationSet[0]
+		if integration.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Status is nil"))
+		}
+
+		if disableFlag && *integration.Status == 5 {
+			return nil
+		} else if !disableFlag && *integration.Status == 2 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("update exporter integration status is %d", *integration.Status))
 	})
 
 	if err != nil {

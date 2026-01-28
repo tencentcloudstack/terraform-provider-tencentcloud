@@ -124,6 +124,7 @@ The following arguments are supported:
 * `instance_id` - (Required, String) Instance ID.
 * `kind` - (Required, String) Type.
 * `cluster_id` - (Optional, String) Cluster ID.
+* `disable` - (Optional, Bool) Integration is disabled when the value is true. Default is false.
 * `kube_type` - (Optional, Int) Integration config. 1 - TKE; 2 - EKS; 3 - MEKS.
 
 ## Attributes Reference
