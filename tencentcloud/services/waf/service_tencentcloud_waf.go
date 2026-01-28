@@ -2312,7 +2312,7 @@ func (me *WafService) DescribeWafOwaspWhiteRuleById(ctx context.Context, domain,
 	return
 }
 
-func (me *WafService) DescribeWafObjectById(ctx context.Context, objectId string) (ret *waf.ClbObject, errRet error) {
+func (me *WafService) DescribeWafObjectById(ctx context.Context, objectId string, role *string) (ret *waf.ClbObject, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := waf.NewDescribeObjectsRequest()
@@ -2323,6 +2323,12 @@ func (me *WafService) DescribeWafObjectById(ctx context.Context, objectId string
 			Values:     common.StringPtrs([]string{objectId}),
 			ExactMatch: common.BoolPtr(true),
 		},
+	}
+
+	if *role == "Admin" || *role == "DelegatedAdmin" {
+		request.IsCrossAccount = common.Int64Ptr(1)
+	} else if *role == "Member" || *role == "NoMember" {
+		request.IsCrossAccount = common.Int64Ptr(0)
 	}
 
 	defer func() {
@@ -2358,5 +2364,43 @@ func (me *WafService) DescribeWafObjectById(ctx context.Context, objectId string
 	}
 
 	ret = response.Response.ClbObjects[0]
+	return
+}
+
+func (me *WafService) DescribeOrganizationRole(ctx context.Context) (ret *string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := waf.NewGetOrganizationRoleRequest()
+	response := waf.NewGetOrganizationRoleResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().GetOrganizationRole(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe organization role failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.Role
 	return
 }

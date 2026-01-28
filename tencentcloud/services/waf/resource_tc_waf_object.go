@@ -136,7 +136,16 @@ func resourceTencentCloudWafObjectRead(d *schema.ResourceData, meta interface{})
 		objectId = d.Id()
 	)
 
-	respData, err := service.DescribeWafObjectById(ctx, objectId)
+	role, err := service.DescribeOrganizationRole(ctx)
+	if err != nil {
+		return err
+	}
+
+	if role == nil {
+		role = helper.String("Member")
+	}
+
+	respData, err := service.DescribeWafObjectById(ctx, objectId, role)
 	if err != nil {
 		return err
 	}
