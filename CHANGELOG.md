@@ -1,3 +1,13 @@
+## 1.82.62(January 28, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: optimize the code for `custom_ssl_cert_id` ([#3764](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3764))
+* resource/tencentcloud_mongodb_instance: optimize code for upgrade intance ([#3765](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3765))
+* resource/tencentcloud_monitor_tmp_exporter_integration_v2: add new params `disable` ([#3760](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3760))
+* resource/tencentcloud_teo_zone: Added `work_mode_infos`, supporting version management. ([#3759](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3759))
+* resource/tencentcloud_vpn_connection: update code for `security_group_policy` ([#3763](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3763))
+
 ## 1.82.61(January 28, 2026)
 
 FEATURES:
