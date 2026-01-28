@@ -576,9 +576,14 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 					return resource.NonRetryableError(err)
 				}
 
-				if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS {
+				if dealResponseParams == nil || dealResponseParams.Status == nil {
+					return resource.NonRetryableError(fmt.Errorf("Status is nil"))
+				}
+
+				if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS && *dealResponseParams.Status != MONGODB_STATUS_RETURN_SUCCESS {
 					return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
 				}
+
 				return nil
 			})
 			if errUpdate != nil {
