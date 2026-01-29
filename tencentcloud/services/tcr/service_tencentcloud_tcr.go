@@ -488,7 +488,7 @@ func (me *TCRService) ModifyTCRRepository(ctx context.Context, instanceId string
 	return err
 }
 
-func (me *TCRService) DeleteTCRRepository(ctx context.Context, instanceId string, namespace string, repositoryName string) (errRet error) {
+func (me *TCRService) DeleteTCRRepository(ctx context.Context, instanceId string, namespace string, repositoryName string, forceDelete bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tcr.NewDeleteRepositoryRequest()
 	defer func() {
@@ -499,6 +499,7 @@ func (me *TCRService) DeleteTCRRepository(ctx context.Context, instanceId string
 	request.RegistryId = &instanceId
 	request.NamespaceName = &namespace
 	request.RepositoryName = &repositoryName
+	request.ForceDelete = &forceDelete
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTCRClient().DeleteRepository(request)

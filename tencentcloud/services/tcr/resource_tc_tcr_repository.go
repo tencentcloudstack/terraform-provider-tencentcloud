@@ -52,6 +52,11 @@ func ResourceTencentCloudTcrRepository() *schema.Resource {
 				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 1000),
 				Description:  "Description of the repository. Valid length is [1~1000].",
 			},
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "The default value is true, meaning that the repository will be deleted directly regardless of whether it contains any images; false means that the existence of images will be checked before deleting the repository.",
+			},
 			//computed
 			"is_public": {
 				Type:        schema.TypeBool,
@@ -238,11 +243,16 @@ func resourceTencentCLoudTcrRepositoryDelete(d *schema.ResourceData, meta interf
 
 	var inErr, outErr error
 	var has bool
+	var forceDelete bool = true
 
-	outErr = tcrService.DeleteTCRRepository(ctx, instanceId, namespaceName, repositoryName)
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		forceDelete = v.(bool)
+	}
+
+	outErr = tcrService.DeleteTCRRepository(ctx, instanceId, namespaceName, repositoryName, forceDelete)
 	if outErr != nil {
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr = tcrService.DeleteTCRRepository(ctx, instanceId, namespaceName, repositoryName)
+			inErr = tcrService.DeleteTCRRepository(ctx, instanceId, namespaceName, repositoryName, forceDelete)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}

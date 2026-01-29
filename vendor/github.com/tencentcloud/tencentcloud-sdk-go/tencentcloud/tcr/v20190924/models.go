@@ -1806,38 +1806,44 @@ func (r *CreateTagRetentionExecutionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateTagRetentionRuleRequestParams struct {
-	// 主实例iD
+	// <p>主实例iD</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的Id
+	// <p>命名空间的Id</p>
 	NamespaceId *int64 `json:"NamespaceId,omitnil,omitempty" name:"NamespaceId"`
 
-	// 保留策略
-	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
-
-	// 执行周期，当前只能选择： manual;daily;weekly;monthly
+	// <p>执行周期，当前只能选择： manual;daily;weekly;monthly</p>
 	CronSetting *string `json:"CronSetting,omitnil,omitempty" name:"CronSetting"`
 
-	// 是否禁用规则，默认值为false
+	// <p>保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
+
+	// <p>高级版本保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	AdvancedRuleItems []*RetentionRuleItem `json:"AdvancedRuleItems,omitnil,omitempty" name:"AdvancedRuleItems"`
+
+	// <p>是否禁用规则，默认值为false</p>
 	Disabled *bool `json:"Disabled,omitnil,omitempty" name:"Disabled"`
 }
 
 type CreateTagRetentionRuleRequest struct {
 	*tchttp.BaseRequest
 	
-	// 主实例iD
+	// <p>主实例iD</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的Id
+	// <p>命名空间的Id</p>
 	NamespaceId *int64 `json:"NamespaceId,omitnil,omitempty" name:"NamespaceId"`
 
-	// 保留策略
-	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
-
-	// 执行周期，当前只能选择： manual;daily;weekly;monthly
+	// <p>执行周期，当前只能选择： manual;daily;weekly;monthly</p>
 	CronSetting *string `json:"CronSetting,omitnil,omitempty" name:"CronSetting"`
 
-	// 是否禁用规则，默认值为false
+	// <p>保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
+
+	// <p>高级版本保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	AdvancedRuleItems []*RetentionRuleItem `json:"AdvancedRuleItems,omitnil,omitempty" name:"AdvancedRuleItems"`
+
+	// <p>是否禁用规则，默认值为false</p>
 	Disabled *bool `json:"Disabled,omitnil,omitempty" name:"Disabled"`
 }
 
@@ -1855,8 +1861,9 @@ func (r *CreateTagRetentionRuleRequest) FromJsonString(s string) error {
 	}
 	delete(f, "RegistryId")
 	delete(f, "NamespaceId")
-	delete(f, "RetentionRule")
 	delete(f, "CronSetting")
+	delete(f, "RetentionRule")
+	delete(f, "AdvancedRuleItems")
 	delete(f, "Disabled")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTagRetentionRuleRequest has unknown keys!", "")
@@ -3040,27 +3047,33 @@ func (r *DeleteRepositoryPersonalResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteRepositoryRequestParams struct {
-	// 实例Id
+	// <p>实例Id</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的名称
+	// <p>命名空间的名称</p>
 	NamespaceName *string `json:"NamespaceName,omitnil,omitempty" name:"NamespaceName"`
 
-	// 镜像仓库的名称
+	// <p>镜像仓库的名称</p>
 	RepositoryName *string `json:"RepositoryName,omitnil,omitempty" name:"RepositoryName"`
+
+	// <p>默认值为true，表示无论仓库是否存在镜像都直接删除；false代表删除仓库前需检查是否存在镜像。</p>
+	ForceDelete *bool `json:"ForceDelete,omitnil,omitempty" name:"ForceDelete"`
 }
 
 type DeleteRepositoryRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例Id
+	// <p>实例Id</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的名称
+	// <p>命名空间的名称</p>
 	NamespaceName *string `json:"NamespaceName,omitnil,omitempty" name:"NamespaceName"`
 
-	// 镜像仓库的名称
+	// <p>镜像仓库的名称</p>
 	RepositoryName *string `json:"RepositoryName,omitnil,omitempty" name:"RepositoryName"`
+
+	// <p>默认值为true，表示无论仓库是否存在镜像都直接删除；false代表删除仓库前需检查是否存在镜像。</p>
+	ForceDelete *bool `json:"ForceDelete,omitnil,omitempty" name:"ForceDelete"`
 }
 
 func (r *DeleteRepositoryRequest) ToJsonString() string {
@@ -3078,6 +3091,7 @@ func (r *DeleteRepositoryRequest) FromJsonString(s string) error {
 	delete(f, "RegistryId")
 	delete(f, "NamespaceName")
 	delete(f, "RepositoryName")
+	delete(f, "ForceDelete")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteRepositoryRequest has unknown keys!", "")
 	}
@@ -6208,32 +6222,32 @@ func (r *DescribeTagRetentionExecutionTaskResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type DescribeTagRetentionRulesRequestParams struct {
-	// 主实例iD
+	// <p>主实例iD</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的名称
+	// <p>命名空间的名称</p>
 	NamespaceName *string `json:"NamespaceName,omitnil,omitempty" name:"NamespaceName"`
 
-	// 分页PageSize
+	// <p>分页PageSize</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页Page
+	// <p>分页Page</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeTagRetentionRulesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 主实例iD
+	// <p>主实例iD</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的名称
+	// <p>命名空间的名称</p>
 	NamespaceName *string `json:"NamespaceName,omitnil,omitempty" name:"NamespaceName"`
 
-	// 分页PageSize
+	// <p>分页PageSize</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页Page
+	// <p>分页Page</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -6261,10 +6275,10 @@ func (r *DescribeTagRetentionRulesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTagRetentionRulesResponseParams struct {
-	// 版本保留策略列表
+	// <p>版本保留策略列表</p>
 	RetentionPolicyList []*RetentionPolicy `json:"RetentionPolicyList,omitnil,omitempty" name:"RetentionPolicyList"`
 
-	// 版本保留策略总数
+	// <p>版本保留策略总数</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6827,6 +6841,14 @@ type Filter struct {
 
 	// 属性值, 若同一个Filter存在多个Values，同一Filter下Values间的关系为逻辑或（OR）关系。
 	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
+}
+
+type FilterSelector struct {
+	// <p>过滤规则类型，在tag过滤中，可选值为matches（匹配），excludes(排除)，在仓库过滤中，可选值为repoMatches（仓库匹配），repoExcludes（仓库排除）</p>
+	Decoration *string `json:"Decoration,omitnil,omitempty" name:"Decoration"`
+
+	// <p>过滤表达式</p>
+	Pattern *string `json:"Pattern,omitnil,omitempty" name:"Pattern"`
 }
 
 type GCJobInfo struct {
@@ -7476,6 +7498,74 @@ func (r *ModifyInstanceResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyInstanceStorageRequestParams struct {
+	// <p>实例ID</p>
+	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
+
+	// <p>目标存储资源地域</p>
+	TargetRegion *string `json:"TargetRegion,omitnil,omitempty" name:"TargetRegion"`
+
+	// <p>目标存储资源名称</p>
+	TargetStorageName *string `json:"TargetStorageName,omitnil,omitempty" name:"TargetStorageName"`
+}
+
+type ModifyInstanceStorageRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID</p>
+	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
+
+	// <p>目标存储资源地域</p>
+	TargetRegion *string `json:"TargetRegion,omitnil,omitempty" name:"TargetRegion"`
+
+	// <p>目标存储资源名称</p>
+	TargetStorageName *string `json:"TargetStorageName,omitnil,omitempty" name:"TargetStorageName"`
+}
+
+func (r *ModifyInstanceStorageRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceStorageRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "TargetRegion")
+	delete(f, "TargetStorageName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceStorageRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceStorageResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyInstanceStorageResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceStorageResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceStorageResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceStorageResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyInstanceTokenRequestParams struct {
 	// 实例长期访问凭证 ID
 	TokenId *string `json:"TokenId,omitnil,omitempty" name:"TokenId"`
@@ -8111,44 +8201,50 @@ func (r *ModifyServiceAccountResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyTagRetentionRuleRequestParams struct {
-	// 主实例iD
+	// <p>主实例iD</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的Id，必须填写原有的命名空间id
+	// <p>命名空间的Id，必须填写原有的命名空间id</p>
 	NamespaceId *int64 `json:"NamespaceId,omitnil,omitempty" name:"NamespaceId"`
 
-	// 保留策略
-	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
-
-	// 执行周期，必须填写为原来的设置
+	// <p>执行周期，必须填写为原来的设置</p>
 	CronSetting *string `json:"CronSetting,omitnil,omitempty" name:"CronSetting"`
 
-	// 规则Id
+	// <p>规则Id</p>
 	RetentionId *int64 `json:"RetentionId,omitnil,omitempty" name:"RetentionId"`
 
-	// 是否禁用规则
+	// <p>保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
+
+	// <p>高级保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	AdvancedRuleItems []*RetentionRuleItem `json:"AdvancedRuleItems,omitnil,omitempty" name:"AdvancedRuleItems"`
+
+	// <p>是否禁用规则</p>
 	Disabled *bool `json:"Disabled,omitnil,omitempty" name:"Disabled"`
 }
 
 type ModifyTagRetentionRuleRequest struct {
 	*tchttp.BaseRequest
 	
-	// 主实例iD
+	// <p>主实例iD</p>
 	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
 
-	// 命名空间的Id，必须填写原有的命名空间id
+	// <p>命名空间的Id，必须填写原有的命名空间id</p>
 	NamespaceId *int64 `json:"NamespaceId,omitnil,omitempty" name:"NamespaceId"`
 
-	// 保留策略
-	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
-
-	// 执行周期，必须填写为原来的设置
+	// <p>执行周期，必须填写为原来的设置</p>
 	CronSetting *string `json:"CronSetting,omitnil,omitempty" name:"CronSetting"`
 
-	// 规则Id
+	// <p>规则Id</p>
 	RetentionId *int64 `json:"RetentionId,omitnil,omitempty" name:"RetentionId"`
 
-	// 是否禁用规则
+	// <p>保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	RetentionRule *RetentionRule `json:"RetentionRule,omitnil,omitempty" name:"RetentionRule"`
+
+	// <p>高级保留策略，当基本保留策略和高级保留策略同时配置时，优先使用高级保留策略</p>
+	AdvancedRuleItems []*RetentionRuleItem `json:"AdvancedRuleItems,omitnil,omitempty" name:"AdvancedRuleItems"`
+
+	// <p>是否禁用规则</p>
 	Disabled *bool `json:"Disabled,omitnil,omitempty" name:"Disabled"`
 }
 
@@ -8166,9 +8262,10 @@ func (r *ModifyTagRetentionRuleRequest) FromJsonString(s string) error {
 	}
 	delete(f, "RegistryId")
 	delete(f, "NamespaceId")
-	delete(f, "RetentionRule")
 	delete(f, "CronSetting")
 	delete(f, "RetentionId")
+	delete(f, "RetentionRule")
+	delete(f, "AdvancedRuleItems")
 	delete(f, "Disabled")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyTagRetentionRuleRequest has unknown keys!", "")
@@ -8777,22 +8874,25 @@ type RetentionExecution struct {
 }
 
 type RetentionPolicy struct {
-	// 版本保留策略Id
+	// <p>版本保留策略Id</p>
 	RetentionId *int64 `json:"RetentionId,omitnil,omitempty" name:"RetentionId"`
 
-	// 命名空间的名称
+	// <p>命名空间的名称</p>
 	NamespaceName *string `json:"NamespaceName,omitnil,omitempty" name:"NamespaceName"`
 
-	// 规则列表
+	// <p>规则列表</p>
 	RetentionRuleList []*RetentionRule `json:"RetentionRuleList,omitnil,omitempty" name:"RetentionRuleList"`
 
-	// 定期执行方式
+	// <p>高级保留规则列表</p>
+	AdvancedRuleItems []*RetentionRuleItem `json:"AdvancedRuleItems,omitnil,omitempty" name:"AdvancedRuleItems"`
+
+	// <p>定期执行方式</p>
 	CronSetting *string `json:"CronSetting,omitnil,omitempty" name:"CronSetting"`
 
-	// 是否启用规则
+	// <p>是否启用规则</p>
 	Disabled *bool `json:"Disabled,omitnil,omitempty" name:"Disabled"`
 
-	// 基于当前时间根据cronSetting后下一次任务要执行的时间，仅做参考使用
+	// <p>基于当前时间根据cronSetting后下一次任务要执行的时间，仅做参考使用</p>
 	NextExecutionTime *string `json:"NextExecutionTime,omitnil,omitempty" name:"NextExecutionTime"`
 }
 
@@ -8802,6 +8902,17 @@ type RetentionRule struct {
 
 	// 规则设置下的对应值
 	Value *int64 `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type RetentionRuleItem struct {
+	// <p>版本保留规则</p>
+	RetentionPolicy *RetentionRule `json:"RetentionPolicy,omitnil,omitempty" name:"RetentionPolicy"`
+
+	// <p>标签过滤器</p>
+	TagFilter *FilterSelector `json:"TagFilter,omitnil,omitempty" name:"TagFilter"`
+
+	// <p>仓库过滤器</p>
+	RepositoryFilter *FilterSelector `json:"RepositoryFilter,omitnil,omitempty" name:"RepositoryFilter"`
 }
 
 type RetentionTask struct {
@@ -9081,6 +9192,66 @@ type TcrRepositoryInfo struct {
 
 	// 更新时间，格式"2006-01-02 15:04:05.999999999 -0700 MST"
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
+// Predefined struct for user
+type TerminateGCJobRequestParams struct {
+	// <p>实例ID</p>
+	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
+}
+
+type TerminateGCJobRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID</p>
+	RegistryId *string `json:"RegistryId,omitnil,omitempty" name:"RegistryId"`
+}
+
+func (r *TerminateGCJobRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TerminateGCJobRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TerminateGCJobRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type TerminateGCJobResponseParams struct {
+	// <p>操作结果</p>枚举值：<ul><li> success： 操作成功</li><li> error： 操作失败</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>操作结果详细信息</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type TerminateGCJobResponse struct {
+	*tchttp.BaseResponse
+	Response *TerminateGCJobResponseParams `json:"Response"`
+}
+
+func (r *TerminateGCJobResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TerminateGCJobResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type TriggerInvokeCondition struct {

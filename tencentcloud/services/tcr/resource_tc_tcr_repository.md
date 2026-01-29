@@ -1,4 +1,4 @@
-Use this resource to create tcr repository.
+Use this resource to create TCR repository.
 
 Example Usage
 
@@ -6,36 +6,34 @@ Create a tcr repository instance
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr"
-  instance_type = "premium"
+  name          = "tf-example"
+  instance_type = "standard"
   delete_bucket = true
-}
-
-resource "tencentcloud_tcr_namespace" "example" {
-  instance_id    = tencentcloud_tcr_instance.example.id
-  name           = "tf_example_ns"
-  is_public      = true
-  is_auto_scan   = true
-  is_prevent_vul = true
-  severity       = "medium"
-  cve_whitelist_items {
-    cve_id = "cve-xxxxx"
+  tags = {
+    "createdBy" = "Terraform"
   }
 }
 
+resource "tencentcloud_tcr_namespace" "example" {
+  instance_id = tencentcloud_tcr_instance.example.id
+  name        = "tf_example"
+  severity    = "medium"
+}
+
 resource "tencentcloud_tcr_repository" "example" {
-  instance_id	 = tencentcloud_tcr_instance.example.id
+  instance_id    = tencentcloud_tcr_instance.example.id
   namespace_name = tencentcloud_tcr_namespace.example.name
-  name 	         = "test"
-  brief_desc 	 = "111"
-  description	 = "111111111111111111111111111111111111"
+  name           = "tf-example"
+  brief_desc     = "desc."
+  description    = "description."
+  force_delete   = true
 }
 ```
 
 Import
 
-tcr repository can be imported using the id, e.g.
+TCR repository can be imported using the instanceId#nameSpaceName#name, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_repository.foo instance_id#namespace_name#repository_name
+terraform import tencentcloud_tcr_repository.example tcr-s1jud21h#tf_example#tf-example
 ```
