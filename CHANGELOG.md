@@ -1,3 +1,18 @@
+## 1.82.63(January 29, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_waf_object` ([#3741](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3741))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dc_gateway: support set null string ([#3769](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3769))
+* resource/tencentcloud_kubernetes_cluster: remove the validation of `service_cidr` ([#3766](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3766))
+* resource/tencentcloud_kubernetes_scale_worker: support set multiple `disaster_recover_group_ids` ([#3766](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3766))
+* resource/tencentcloud_tcr_repository: support `force_delete` ([#3767](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3767))
+* resource/tencentcloud_tcr_tag_retention_rule: support `advanced_rule_items` ([#3767](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3767))
+* resource/tencentcloud_waf_clb_domain: add new params ([#3741](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3741))
+
 ## 1.82.62(January 28, 2026)
 
 ENHANCEMENTS:
