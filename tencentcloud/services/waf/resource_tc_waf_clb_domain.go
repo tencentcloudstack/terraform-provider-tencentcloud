@@ -119,6 +119,23 @@ func ResourceTencentCloudWafClbDomain() *schema.Resource {
 							Optional:    true,
 							Description: "Network type for load balancer.",
 						},
+						"load_balancer_domain": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Load-balanced domain name.",
+						},
+						"member_app_id": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "The ID of the member to whom the listener belongs.",
+						},
+						"member_uin": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Uin of the listener member.",
+						},
 					},
 				},
 			},
@@ -168,6 +185,18 @@ func ResourceTencentCloudWafClbDomain() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "When is_cdn=3, this parameter needs to be filled in to indicate a custom header.",
 			},
+			"cloud_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Cloud type. `public`: public cloud; `private`: private cloud; `hybrid`: hybrid cloud.",
+			},
+			"note": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Domain name notes.",
+			},
+			// computed
 			"domain_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -267,6 +296,18 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 						loadBalancer.LoadBalancerType = helper.String(v.(string))
 					}
 
+					if v, ok := loadBalancerSetMap["load_balancer_domain"]; ok {
+						loadBalancer.LoadBalancerDomain = helper.String(v.(string))
+					}
+
+					if v, ok := loadBalancerSetMap["member_app_id"]; ok {
+						loadBalancer.MemberAppId = helper.IntUint64(v.(int))
+					}
+
+					if v, ok := loadBalancerSetMap["member_uin"]; ok {
+						loadBalancer.MemberUin = helper.String(v.(string))
+					}
+
 					hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
 				}
 			} else {
@@ -297,6 +338,14 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 		} else {
 			return fmt.Errorf("If `is_cdn` is %d, not supported setting `ip_headers`.", isCdn)
 		}
+	}
+
+	if v, ok := d.GetOk("cloud_type"); ok {
+		hostRecord.CloudType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("note"); ok {
+		hostRecord.Note = helper.String(v.(string))
 	}
 
 	// check domain legal
@@ -565,8 +614,8 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 	}
 
 	if domainInfo == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_waf_clb_domain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `DescribeDomains` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -639,6 +688,18 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 						loadBalancerSetMap["load_balancer_type"] = loadBalancerSet.LoadBalancerType
 					}
 
+					if loadBalancerSet.LoadBalancerDomain != nil {
+						loadBalancerSetMap["load_balancer_domain"] = loadBalancerSet.LoadBalancerDomain
+					}
+
+					if loadBalancerSet.MemberAppId != nil {
+						loadBalancerSetMap["member_app_id"] = loadBalancerSet.MemberAppId
+					}
+
+					if loadBalancerSet.MemberUin != nil {
+						loadBalancerSetMap["member_uin"] = loadBalancerSet.MemberUin
+					}
+
 					loadBalancerSetList = append(loadBalancerSetList, loadBalancerSetMap)
 				}
 
@@ -673,6 +734,14 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 		_ = d.Set("api_safe_status", domainInfo.ApiStatus)
 	}
 
+	if domainInfo.CloudType != nil {
+		_ = d.Set("cloud_type", domainInfo.CloudType)
+	}
+
+	if domainInfo.Note != nil {
+		_ = d.Set("note", domainInfo.Note)
+	}
+
 	if domainInfo.DomainId != nil {
 		_ = d.Set("domain_id", domainInfo.DomainId)
 	}
@@ -683,8 +752,8 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 	}
 
 	if clbInfo == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_waf_clb_domain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `DescribeDomainDetailsClb` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -832,6 +901,18 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 						loadBalancer.LoadBalancerType = helper.String(v.(string))
 					}
 
+					if v, ok := loadBalancerSetMap["load_balancer_domain"]; ok {
+						loadBalancer.LoadBalancerDomain = helper.String(v.(string))
+					}
+
+					if v, ok := loadBalancerSetMap["member_app_id"]; ok {
+						loadBalancer.MemberAppId = helper.IntUint64(v.(int))
+					}
+
+					if v, ok := loadBalancerSetMap["member_uin"]; ok {
+						loadBalancer.MemberUin = helper.String(v.(string))
+					}
+
 					hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
 				}
 			} else {
@@ -858,6 +939,14 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 		} else {
 			return fmt.Errorf("If `is_cdn` is %d, not supported setting `ip_headers`.", isCdn)
 		}
+	}
+
+	if v, ok := d.GetOk("cloud_type"); ok {
+		hostRecord.CloudType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("note"); ok {
+		hostRecord.Note = helper.String(v.(string))
 	}
 
 	modifyHostRequest.Host = &hostRecord

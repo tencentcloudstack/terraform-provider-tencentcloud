@@ -2418,6 +2418,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_owasp_rule_type_config":                                               waf.ResourceTencentCloudWafOwaspRuleTypeConfig(),
 			"tencentcloud_waf_owasp_rule_status_config":                                             waf.ResourceTencentCloudWafOwaspRuleStatusConfig(),
 			"tencentcloud_waf_owasp_white_rule":                                                     waf.ResourceTencentCloudWafOwaspWhiteRule(),
+			"tencentcloud_waf_object":                                                               waf.ResourceTencentCloudWafObject(),
 			"tencentcloud_wedata_submit_task_operation":                                             wedata.ResourceTencentCloudWedataSubmitTaskOperation(),
 			"tencentcloud_wedata_task":                                                              wedata.ResourceTencentCloudWedataTask(),
 			"tencentcloud_wedata_workflow_folder":                                                   wedata.ResourceTencentCloudWedataWorkflowFolder(),
