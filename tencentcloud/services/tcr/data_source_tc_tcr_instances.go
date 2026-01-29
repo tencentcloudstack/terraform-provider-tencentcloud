@@ -2,7 +2,6 @@ package tcr
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -102,9 +101,6 @@ func dataSourceTencentCloudTCRInstancesRead(d *schema.ResourceData, meta interfa
 		instanceId = v.(string)
 	}
 
-	if instanceId == "" && name == "" {
-		return fmt.Errorf("instance_id or name must be set at least one.")
-	}
 	tcrService := TCRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	var outErr, inErr error
 	instances, outErr := tcrService.DescribeTCRInstances(ctx, instanceId, filters)
