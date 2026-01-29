@@ -185,11 +185,6 @@ func ResourceTencentCloudWafClbDomain() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "When is_cdn=3, this parameter needs to be filled in to indicate a custom header.",
 			},
-			"engine_type": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Rule engine type. 1: menshen 2: tiga.",
-			},
 			"cloud_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -343,10 +338,6 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 		} else {
 			return fmt.Errorf("If `is_cdn` is %d, not supported setting `ip_headers`.", isCdn)
 		}
-	}
-
-	if v, ok := d.GetOkExists("engine_type"); ok {
-		hostRecord.EngineType = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("cloud_type"); ok {
@@ -623,8 +614,8 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 	}
 
 	if domainInfo == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_waf_clb_domain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `DescribeDomains` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -761,8 +752,8 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 	}
 
 	if clbInfo == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_waf_clb_domain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `DescribeDomainDetailsClb` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -948,10 +939,6 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 		} else {
 			return fmt.Errorf("If `is_cdn` is %d, not supported setting `ip_headers`.", isCdn)
 		}
-	}
-
-	if v, ok := d.GetOkExists("engine_type"); ok {
-		hostRecord.EngineType = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("cloud_type"); ok {
