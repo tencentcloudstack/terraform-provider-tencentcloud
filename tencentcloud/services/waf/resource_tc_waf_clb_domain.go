@@ -127,11 +127,13 @@ func ResourceTencentCloudWafClbDomain() *schema.Resource {
 						"member_app_id": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "The ID of the member to whom the listener belongs.",
 						},
 						"member_uin": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Uin of the listener member.",
 						},
 					},
