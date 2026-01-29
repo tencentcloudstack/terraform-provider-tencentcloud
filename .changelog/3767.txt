@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_tcr_repository: support `force_delete`
+```
+
+```release-note:enhancement
+resource/tencentcloud_tcr_tag_retention_rule: support `advanced_rule_items`
+```
