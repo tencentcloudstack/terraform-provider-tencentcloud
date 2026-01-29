@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_scale_worker: support set multiple `disaster_recover_group_ids`
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: remove the validation of `service_cidr`
+```

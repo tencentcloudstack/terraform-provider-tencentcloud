@@ -282,7 +282,6 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							ForceNew:    true,
-							MaxItems:    1,
 							Description: "Disaster recover groups to which a CVM instance belongs. Only support maximum 1.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
