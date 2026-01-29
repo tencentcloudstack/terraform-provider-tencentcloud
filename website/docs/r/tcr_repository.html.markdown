@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcr_repository"
 sidebar_current: "docs-tencentcloud-resource-tcr_repository"
 description: |-
-  Use this resource to create tcr repository.
+  Use this resource to create TCR repository.
 ---
 
 # tencentcloud_tcr_repository
 
-Use this resource to create tcr repository.
+Use this resource to create TCR repository.
 
 ## Example Usage
 
@@ -17,29 +17,27 @@ Use this resource to create tcr repository.
 
 ```hcl
 resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr"
-  instance_type = "premium"
+  name          = "tf-example"
+  instance_type = "standard"
   delete_bucket = true
+  tags = {
+    "createdBy" = "Terraform"
+  }
 }
 
 resource "tencentcloud_tcr_namespace" "example" {
-  instance_id    = tencentcloud_tcr_instance.example.id
-  name           = "tf_example_ns"
-  is_public      = true
-  is_auto_scan   = true
-  is_prevent_vul = true
-  severity       = "medium"
-  cve_whitelist_items {
-    cve_id = "cve-xxxxx"
-  }
+  instance_id = tencentcloud_tcr_instance.example.id
+  name        = "tf_example"
+  severity    = "medium"
 }
 
 resource "tencentcloud_tcr_repository" "example" {
   instance_id    = tencentcloud_tcr_instance.example.id
   namespace_name = tencentcloud_tcr_namespace.example.name
-  name           = "test"
-  brief_desc     = "111"
-  description    = "111111111111111111111111111111111111"
+  name           = "tf-example"
+  brief_desc     = "desc."
+  description    = "description."
+  force_delete   = true
 }
 ```
 
@@ -52,6 +50,7 @@ The following arguments are supported:
 * `namespace_name` - (Required, String, ForceNew) Name of the TCR namespace.
 * `brief_desc` - (Optional, String) Brief description of the repository. Valid length is [1~100].
 * `description` - (Optional, String) Description of the repository. Valid length is [1~1000].
+* `force_delete` - (Optional, Bool) The default value is true, meaning that the repository will be deleted directly regardless of whether it contains any images; false means that the existence of images will be checked before deleting the repository.
 
 ## Attributes Reference
 
@@ -66,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-tcr repository can be imported using the id, e.g.
+TCR repository can be imported using the instanceId#nameSpaceName#name, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_repository.foo instance_id#namespace_name#repository_name
+terraform import tencentcloud_tcr_repository.example tcr-s1jud21h#tf_example#tf-example
 ```
 

@@ -86,7 +86,7 @@ func testSweepTCRRepository(r string) error {
 		if tcacctest.IsResourcePersist(repoName, nil) {
 			continue
 		}
-		err = tcrService.DeleteTCRRepository(ctx, instanceId, *n.Namespace, repoName)
+		err = tcrService.DeleteTCRRepository(ctx, instanceId, *n.Namespace, repoName, true)
 		if err != nil {
 			continue
 		}
