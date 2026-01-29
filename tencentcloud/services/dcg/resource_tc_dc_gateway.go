@@ -96,6 +96,8 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("network_instance_id"); ok {
 		request.NetworkInstanceId = helper.String(v.(string))
 		networkInstanceId = v.(string)
+	} else {
+		request.NetworkInstanceId = helper.String("")
 	}
 
 	if v, ok := d.GetOk("gateway_type"); ok {
@@ -107,9 +109,9 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("if `network_type` is '%s', the field `network_instance_id` must be a VPC resource", DCG_NETWORK_TYPE_VPC)
 	}
 
-	if networkType == DCG_NETWORK_TYPE_CCN && !strings.HasPrefix(networkInstanceId, "ccn") {
-		return fmt.Errorf("if `network_type` is '%s', the field `network_instance_id` must be a CCN resource", DCG_NETWORK_TYPE_CCN)
-	}
+	// if networkType == DCG_NETWORK_TYPE_CCN && !strings.HasPrefix(networkInstanceId, "ccn") {
+	// 	return fmt.Errorf("if `network_type` is '%s', the field `network_instance_id` must be a CCN resource", DCG_NETWORK_TYPE_CCN)
+	// }
 
 	if networkType == DCG_NETWORK_TYPE_CCN && gatewayType != DCG_GATEWAY_TYPE_NORMAL {
 		return fmt.Errorf("if `network_type` is '%s', the field `gateway_type` must be '%s'", DCG_NETWORK_TYPE_CCN, DCG_GATEWAY_TYPE_NORMAL)
