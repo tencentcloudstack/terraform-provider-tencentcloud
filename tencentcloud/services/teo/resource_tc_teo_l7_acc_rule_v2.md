@@ -1,5 +1,7 @@
 Provides a resource to create a TEO l7 acc rule v2
 
+~> **NOTE:** Compared to tencentcloud_teo_l7_acc_rule, tencentcloud_teo_l7_acc_rule_v2 is simpler to use but is limited to managing a single rule and lacks the ability to maintain rule ordering. It is best suited for scenarios where you need to manage multiple rules independently and priority/sequencing is not a concern.
+
 Example Usage
 
 ```hcl
