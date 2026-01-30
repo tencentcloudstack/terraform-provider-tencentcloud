@@ -1961,6 +1961,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_domain_alias":                                                      dnspod.ResourceTencentCloudDnspodDomainAlias(),
 			"tencentcloud_dnspod_record":                                                            dnspod.ResourceTencentCloudDnspodRecord(),
 			"tencentcloud_dnspod_record_group":                                                      dnspod.ResourceTencentCloudDnspodRecordGroup(),
+			"tencentcloud_dnspod_line_group":                                                        dnspod.ResourceTencentCloudDnspodLineGroup(),
 			"tencentcloud_dnspod_modify_domain_owner_operation":                                     dnspod.ResourceTencentCloudDnspodModifyDomainOwnerOperation(),
 			"tencentcloud_dnspod_modify_record_group_operation":                                     dnspod.ResourceTencentCloudDnspodModifyRecordGroupOperation(),
 			"tencentcloud_dnspod_download_snapshot_operation":                                       dnspod.ResourceTencentCloudDnspodDownloadSnapshotOperation(),
