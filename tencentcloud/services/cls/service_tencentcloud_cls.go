@@ -1606,3 +1606,67 @@ func (me *ClsService) DescribeClsTopicsByFilter(ctx context.Context, param map[s
 
 	return
 }
+
+// cls dashboard
+func (me *ClsService) DescribeClsDashboardById(ctx context.Context, dashboardId string) (dashboard *cls.DashboardInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeDashboardsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *cls.DescribeDashboardsResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseClsClient().DescribeDashboards(request)
+			if e != nil {
+				return tccommon.RetryError(e, tccommon.InternalError)
+			}
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.DashboardInfos) == 0 {
+			break
+		}
+
+		// Search for the target dashboard in the current page
+		for _, item := range response.Response.DashboardInfos {
+			if item.DashboardId != nil && *item.DashboardId == dashboardId {
+				dashboard = item
+				return
+			}
+		}
+
+		// If the number of returned results is less than limit, no more pages
+		if len(response.Response.DashboardInfos) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
