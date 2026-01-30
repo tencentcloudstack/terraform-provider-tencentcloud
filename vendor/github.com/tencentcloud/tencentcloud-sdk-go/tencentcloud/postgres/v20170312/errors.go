@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,6 +55,12 @@ const (
 
 	// 获取项目信息失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
+
+	// 检查数据库账号状态错误：账号已开启CAM验证，不支持当前操作。
+	FAILEDOPERATION_CHECKACCOUNTCAMCLOSEERROR = "FailedOperation.CheckAccountCAMCloseError"
+
+	// 检查数据库账号状态错误：账号未开启CAM验证，不支持当前操作。
+	FAILEDOPERATION_CHECKACCOUNTCAMOPENERROR = "FailedOperation.CheckAccountCAMOpenError"
 
 	// 不支持新增基础网络。
 	FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
@@ -254,6 +260,9 @@ const (
 	// 流程创建失败。
 	INTERNALERROR_FLOWERROR = "InternalError.FlowError"
 
+	// 服务异常，请稍后重试。
+	INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+
 	// 管控系统元数据访问异常，请联系客服处理。
 	INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
 
@@ -289,9 +298,6 @@ const (
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
-
-	// 实例名已存在。
-	INVALIDPARAMETER_INSTANCENAMEEXIST = "InvalidParameter.InstanceNameExist"
 
 	// 参数检查失败。
 	INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -343,9 +349,6 @@ const (
 
 	// 非法的Zone参数。
 	INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
-
-	// 当前账号已存在。
-	INVALIDPARAMETERVALUE_INSTANCENAMEEXIST = "InvalidParameterValue.InstanceNameExist"
 
 	// 当前实例不存在。
 	INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -419,9 +422,6 @@ const (
 	// 参数不满足规则，请修改后重试。
 	INVALIDPARAMETERVALUE_PARAMETERCHARACTERLIMITERROR = "InvalidParameterValue.ParameterCharacterLimitError"
 
-	// 参数前缀设置不符合规则要求，请修改后重试。
-	INVALIDPARAMETERVALUE_PARAMETERCHARACTERPRELIMITERROR = "InvalidParameterValue.ParameterCharacterPreLimitError"
-
 	// 参数处理失败，请检参数值设置是否有效。
 	INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 
@@ -448,6 +448,9 @@ const (
 
 	// 解析参数出错。
 	INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
+
+	// 传入地域不支持使用本接口功能。
+	INVALIDPARAMETERVALUE_UNSUPPORTEDREGIONERROR = "InvalidParameterValue.UnsupportedRegionError"
 
 	// PID参数输入错误。
 	INVALIDPID = "InvalidPid"
@@ -491,9 +494,6 @@ const (
 	// 内核版本过低，导致实例无法创建tencentDBSuper账号。如果您想使用此功能，请升级内核版本。
 	OPERATIONDENIED_KERNELVERSIONERROR = "OperationDenied.KernelVersionError"
 
-	// Serverless不支持当前可用区。
-	OPERATIONDENIED_NOTSUPPORTZONEERROR = "OperationDenied.NotSupportZoneError"
-
 	// 不支持的付费类型。
 	OPERATIONDENIED_PAYMODEERROR = "OperationDenied.PayModeError"
 
@@ -518,8 +518,8 @@ const (
 	// 用户未进行实名认证，请先进行实名认证才可购买。
 	OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
 
-	// Serverless不支持该版本。
-	OPERATIONDENIED_VERSIONNOTSUPPORTERROR = "OperationDenied.VersionNotSupportError"
+	// 用户不在白名单内。
+	OPERATIONDENIED_USERNOTINWHITELISTERROR = "OperationDenied.UserNotInWhiteListError"
 
 	// 您没有权限操作该VPC网络。
 	OPERATIONDENIED_VPCDENIEDERROR = "OperationDenied.VpcDeniedError"
@@ -559,6 +559,9 @@ const (
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
+
+	// 服务异常，请稍后重试。
+	UNKNOWNPARAMETER_HTTPERROR = "UnknownParameter.HttpError"
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
