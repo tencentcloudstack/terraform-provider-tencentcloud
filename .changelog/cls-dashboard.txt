@@ -1,3 +1,0 @@
-```release-note:feature
-resource/tencentcloud_cls_dashboard: new resource to manage CLS dashboards
-```
