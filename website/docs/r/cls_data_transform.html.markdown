@@ -77,13 +77,36 @@ The following arguments are supported:
 * `name` - (Required, String) Task name.
 * `src_topic_id` - (Required, String) Source topic ID.
 * `task_type` - (Required, Int) Task type. `1`: Use random data from the source log theme for processing preview; `2`: Use user-defined test data for processing preview; `3`: Create real machining tasks.
+* `backup_give_up_data` - (Optional, Bool) When `func_type` is `2`, whether to discard data when the number of dynamically created logsets and topics exceeds the product specification limit. Default is `false`. `false`: Create backup logset and topic and write logs to the backup topic; `true`: Discard log data.
+* `data_transform_sql_data_sources` - (Optional, List) Associated data source information.
+* `data_transform_type` - (Optional, Int) Data transform type. `0`: Standard data transform task; `1`: Pre-processing data transform task (process collected logs before writing to the log topic).
 * `dst_resources` - (Optional, List) Data transform des resources. If `func_type` is `1`, this parameter is required. If `func_type` is `2`, this parameter does not need to be filled in.
 * `enable_flag` - (Optional, Int) Task enable flag. `1`: enable, `2`: disable, Default is `1`.
+* `env_infos` - (Optional, List) Set environment variables.
+* `failure_log_key` - (Optional, String) Field name for failure logs.
+* `has_services_log` - (Optional, Int) Whether to enable service log delivery. `1`: disable; `2`: enable.
+* `keep_failure_log` - (Optional, Int) Keep failure log status. `1`: do not keep (default); `2`: keep.
+* `process_from_timestamp` - (Optional, Int) Specify the start time of processing data, in seconds-level timestamp. Any time range within the log topic lifecycle. If it exceeds the lifecycle, only the part with data within the lifecycle is processed.
+* `process_to_timestamp` - (Optional, Int) Specify the end time of processing data, in seconds-level timestamp. Cannot specify a future time. If not filled, it means continuous execution.
+
+The `data_transform_sql_data_sources` object supports the following:
+
+* `alias_name` - (Required, String) Alias. Used in data transform statements.
+* `data_source` - (Required, Int) Data source type. `1`: MySQL; `2`: Self-built MySQL; `3`: PostgreSQL.
+* `instance_id` - (Required, String) Instance ID. When DataSource is `1`, it represents the cloud database MySQL instance ID, such as: cdb-zxcvbnm.
+* `password` - (Required, String) MySQL access password.
+* `region` - (Required, String) InstanceId region. For example: ap-guangzhou.
+* `user` - (Required, String) MySQL access username.
 
 The `dst_resources` object supports the following:
 
 * `alias` - (Required, String) Alias.
 * `topic_id` - (Required, String) Dst topic ID.
+
+The `env_infos` object supports the following:
+
+* `key` - (Required, String) Environment variable name.
+* `value` - (Required, String) Environment variable value.
 
 ## Attributes Reference
 

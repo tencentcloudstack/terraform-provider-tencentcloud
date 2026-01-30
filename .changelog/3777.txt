@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_data_transform: support new params
+```
