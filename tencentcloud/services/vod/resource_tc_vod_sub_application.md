@@ -30,7 +30,7 @@ resource "tencentcloud_vod_sub_application" "with_tags" {
 # Modify the tags map to add, update, or remove tags
 ```
 
-## Import
+Import
 
 VOD sub application can be imported using the name and id separated by `#`, e.g.
 

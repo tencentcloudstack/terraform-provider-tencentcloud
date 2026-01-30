@@ -41,12 +41,6 @@ resource "tencentcloud_vod_sub_application" "with_tags" {
 # Modify the tags map to add, update, or remove tags
 ```
 
-### , e.g.
-
-```hcl
-$ terraform import tencentcloud_vod_sub_application.foo name #id
-```
-
 ## Argument Reference
 
 The following arguments are supported:
@@ -63,4 +57,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - The time when the sub application was created.
 
+
+## Import
+
+VOD sub application can be imported using the name and id separated by `#`, e.g.
+
+```
+$ terraform import tencentcloud_vod_sub_application.foo name#id
+```
 
