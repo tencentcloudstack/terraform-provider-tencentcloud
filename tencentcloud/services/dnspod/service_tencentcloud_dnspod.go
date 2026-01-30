@@ -829,3 +829,65 @@ func (me *DnspodService) DescribeSubdomainValidateStatusByFilter(ctx context.Con
 	status = 1
 	return
 }
+
+func (me *DnspodService) DescribeDnspodLineGroupById(ctx context.Context, domain string, lineGroupId uint64) (lineGroup *dnspod.LineGroupItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dnspod.NewDescribeLineGroupListRequest()
+	request.Domain = helper.String(domain)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		length uint64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Length = &length
+
+		var response *dnspod.DescribeLineGroupListResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseDnsPodClient().DescribeLineGroupList(request)
+			if e != nil {
+				return tccommon.RetryError(e, tccommon.InternalError)
+			}
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.LineGroups) == 0 {
+			break
+		}
+
+		// Search for the target line group in the current page
+		for _, item := range response.Response.LineGroups {
+			if item.Id != nil && *item.Id == lineGroupId {
+				lineGroup = item
+				return
+			}
+		}
+
+		// If the number of returned results is less than length, no more pages
+		if len(response.Response.LineGroups) < int(length) {
+			break
+		}
+
+		offset += length
+	}
+
+	return
+}
