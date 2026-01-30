@@ -1991,6 +1991,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_cos_recharge":                                                         cls.ResourceTencentCloudClsCosRecharge(),
 			"tencentcloud_cls_export":                                                               cls.ResourceTencentCloudClsExport(),
 			"tencentcloud_cls_data_transform":                                                       cls.ResourceTencentCloudClsDataTransform(),
+			"tencentcloud_cls_dashboard":                                                            cls.ResourceTencentCloudClsDashboard(),
 			"tencentcloud_cls_cloud_product_log_task":                                               cls.ResourceTencentCloudClsCloudProductLogTask(),
 			"tencentcloud_cls_notice_content":                                                       cls.ResourceTencentCloudClsNoticeContent(),
 			"tencentcloud_cls_web_callback":                                                         cls.ResourceTencentCloudClsWebCallback(),
