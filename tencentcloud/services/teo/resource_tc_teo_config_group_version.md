@@ -120,7 +120,7 @@ resource "tencentcloud_teo_config_group_version" "teo_config_group_version" {
   },
   "Rules": [
     {
-      "RuleName": "网站加速-cdn.defaultsetting.cn",
+      "RuleName": "Web Acceleration - cdn.defaultsetting.cn",
       "Branches": [
         {
           "Condition": "$${http.request.host} in ['cdn.defaultsetting.cn']",
@@ -185,7 +185,7 @@ resource "tencentcloud_teo_config_group_version" "teo_config_group_version" {
       ]
     },
     {
-      "RuleName": "网站加速-pages.migraine.com.cn",
+      "RuleName": "Web Acceleration - pages.migraine.com.cn",
       "Branches": [
         {
           "Condition": "$${http.request.host} in ['pages.migraine.com.cn']",
@@ -250,7 +250,7 @@ resource "tencentcloud_teo_config_group_version" "teo_config_group_version" {
       ]
     },
     {
-      "RuleName": "跳过pages鉴权验证",
+      "RuleName": "Skip Pages Authentication Verification",
       "Branches": [
         {
           "Condition": "$${http.request.host} in ['pages.migraine.com.cn']",
@@ -272,7 +272,7 @@ resource "tencentcloud_teo_config_group_version" "teo_config_group_version" {
       ]
     },
     {
-      "RuleName": "分地域回源",
+      "RuleName": "Regional Origin Pull",
       "Branches": [
         {
           "Condition": "$${http.request.host} in ['abc.migraine.com.cn']",

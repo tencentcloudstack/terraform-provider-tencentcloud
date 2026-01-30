@@ -6,7 +6,7 @@ Example Usage
 resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
   zone_id     = "zone-3fkff38fyw8s"
   description = ["description"]
-  rule_name   = "网站加速"
+  rule_name   = "Web Acceleration"
   status      = "enable"
   branches {
     condition = "$${http.request.host} in ['www.example.com']"

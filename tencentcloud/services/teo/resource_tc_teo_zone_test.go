@@ -63,8 +63,8 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "paused", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "plan_id", "edgeone-2kfv1h391n6w"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "type", "partial"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.勿动", "TF测试"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.占用人", "arunma"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.DoNotMove", "TF-Test"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.Owner", "arunma"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_type", "TXT"),
@@ -88,8 +88,8 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "paused", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "plan_id", "edgeone-2kfv1h391n6w"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "type", "partial"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.勿动", "TF测试"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.占用人", "arunma"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.DoNotMove", "TF-Test"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.Owner", "arunma"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_type", "TXT"),
@@ -170,8 +170,8 @@ resource "tencentcloud_teo_zone" "basic" {
 	paused          = false
 	plan_id         = var.plan_id
 	tags = {
-	  "勿动"  = "TF测试"
-	  "占用人" = "arunma"
+	  "DoNotMove"  = "TF-Test"
+	  "Owner" = "arunma"
 	}
 	type      = "partial"
 	zone_name = var.zone_name
@@ -187,8 +187,8 @@ resource "tencentcloud_teo_zone" "basic" {
 	paused          = true
 	plan_id         = var.plan_id
 	tags = {
-	  "勿动"  = "TF测试"
-	  "占用人" = "arunma"
+	  "DoNotMove"  = "TF-Test"
+	  "Owner" = "arunma"
 	}
 	type      = "partial"
 	zone_name = var.zone_name
@@ -204,8 +204,8 @@ resource "tencentcloud_teo_zone" "basic" {
 	paused          = true
 	plan_id         = var.plan_id
 	tags = {
-	  "勿动"  = "TF测试"
-	  "占用人" = "arunma"
+	  "DoNotMove"  = "TF-Test"
+	  "Owner" = "arunma"
 	}
 	type      = "partial"
 	zone_name = var.zone_name

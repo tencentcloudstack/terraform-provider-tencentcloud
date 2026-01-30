@@ -19,7 +19,7 @@ func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "zone_id", "zone-3fkff38fyw8s"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "description.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_name", "网站加速1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_name", "Web Acceleration 1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "status", "enable"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_priority"),
@@ -62,7 +62,7 @@ func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
 				Config: testAccTeoL7V2AccRuleUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "description.0", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_name", "网站加速2"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_name", "Web Acceleration 2"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.actions.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.sub_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "branches.0.actions.1.name", "OriginPullProtocol"),
@@ -83,7 +83,7 @@ const testAccTeoL7V2AccRule = `
 resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
   zone_id     = "zone-3fkff38fyw8s"
   description = ["1"]
-  rule_name   = "网站加速1"
+  rule_name   = "Web Acceleration 1"
   status = "enable"
   branches {
     condition = "$${http.request.host} in ['aaa.makn.cn']"
@@ -146,7 +146,7 @@ const testAccTeoL7V2AccRuleUpdate = `
 resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
   zone_id     = "zone-3fkff38fyw8s"
   description = ["2"]
-  rule_name   = "网站加速2"
+  rule_name   = "Web Acceleration 2"
   status = "enable"
   branches {
     condition = "$${http.request.host} in ['aaa.makn.cn']"

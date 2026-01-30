@@ -9,7 +9,7 @@ Basic usage
 ```hcl
 
 resource "tencentcloud_teo_web_security_template" "web_security_template" {
-  template_name = "tf测试"
+  template_name = "tf-test"
   zone_id       = "zone-3fkff38fyw8s"
   security_policy {
     bot_management {
@@ -66,7 +66,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         rules {
           condition = "$${http.request.uri.path} like ['/*'] and $${http.request.method} in ['get']"
           enabled   = "on"
-          name      = "拦截非浏览器爬虫访问"
+          name      = "Block Non-Browser Crawler Access"
           action {
             bot_session_validation {
               issue_new_bot_session_cookie = "on"
@@ -101,7 +101,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         rules {
           condition = "$${http.request.ip} in ['222.22.22.0/24'] and $${http.request.headers['user-agent']} contain ['cURL']"
           enabled   = "on"
-          name      = "登录接口请求突增防护"
+          name      = "Login API Request Surge Protection"
           priority  = 50
           action {
             weight = 100
@@ -124,7 +124,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
       rules {
         condition = "$${http.request.headers['user-agent']} contain ['curl/','Wget/','ApacheBench/']"
         enabled   = "on"
-        name      = "盗刷 User-Agent 黑名单"
+        name      = "Malicious User-Agent Blacklist"
         priority  = 50
         rule_type = "PreciseMatchRule"
         action {
@@ -134,7 +134,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
       rules {
         condition = "$${http.request.ip} in ['36']"
         enabled   = "on"
-        name      = "自定义规则"
+        name      = "Custom Rule"
         priority  = 0
         rule_type = "BasicAccessRule"
         action {
@@ -148,7 +148,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         enabled                            = "on"
         managed_rule_groups_for_exception  = []
         managed_rules_for_exception        = []
-        name                               = "高频 API 跳过速率限制1"
+        name                               = "High Frequency API Skip Rate Limit 1"
         skip_option                        = "SkipOnAllRequestFields"
         skip_scope                         = "WebSecurityModules"
         web_security_modules_for_exception = ["websec-mod-adaptive-control"]
@@ -158,7 +158,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         enabled                            = "on"
         managed_rule_groups_for_exception  = []
         managed_rules_for_exception        = []
-        name                               = "IP 白名单1"
+        name                               = "IP Whitelist 1"
         skip_option                        = "SkipOnAllRequestFields"
         skip_scope                         = "WebSecurityModules"
         web_security_modules_for_exception = ["websec-mod-adaptive-control", "websec-mod-bot", "websec-mod-custom-rules", "websec-mod-managed-rules", "websec-mod-rate-limiting"]
@@ -218,7 +218,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         counting_period       = "60s"
         enabled               = "on"
         max_request_threshold = 300
-        name                  = "单 IP 请求速率限制1"
+        name                  = "Single IP Request Rate Limit 1"
         priority              = 50
         action {
           name = "Challenge"

@@ -20,7 +20,7 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
   zone_id = "zone-36bjhygh1bxe"
   rules {
     description = ["1"]
-    rule_name   = "网站加速"
+    rule_name   = "Web Acceleration"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -81,7 +81,7 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 
   rules {
     description = ["2"]
-    rule_name   = "音视频直播"
+    rule_name   = "Live Video Streaming"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {
@@ -134,7 +134,7 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 
   rules {
     description = ["3"]
-    rule_name   = "大文件下载"
+    rule_name   = "Large File Download"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -188,7 +188,7 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 
   rules {
     description = ["4"]
-    rule_name   = "音视频点播"
+    rule_name   = "Video On Demand"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -242,7 +242,7 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 
   rules {
     description = ["5"]
-    rule_name   = "API 加速"
+    rule_name   = "API Acceleration"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       actions {
@@ -265,7 +265,7 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 
   rules {
     description = ["6"]
-    rule_name   = "WordPress 建站"
+    rule_name   = "WordPress Site"
     branches {
       condition = "$${http.request.host} in ['aaa.makn.cn']"
       sub_rules {

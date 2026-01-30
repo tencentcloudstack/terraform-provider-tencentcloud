@@ -17,7 +17,7 @@ Provides a resource to set TEO l7 acc rules priority
 resource "tencentcloud_teo_l7_acc_rule_v2" "rule1" {
   zone_id     = "zone-39quuimqg8r6"
   description = ["1"]
-  rule_name   = "网站加速1"
+  rule_name   = "Web Acceleration 1"
   status      = "enable"
   branches {
     condition = "$${http.request.host} in ['aaa.makn.cn']"
@@ -78,7 +78,7 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "rule1" {
 resource "tencentcloud_teo_l7_acc_rule_v2" "rule2" {
   zone_id     = "zone-39quuimqg8r6"
   description = ["2"]
-  rule_name   = "网站加速2"
+  rule_name   = "Web Acceleration 2"
   status      = "enable"
   branches {
     condition = "$${http.request.host} in ['aaa.makn.cn']"
