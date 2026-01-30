@@ -1,3 +1,20 @@
+## 1.82.64(January 30, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cls_dashboard` ([#3774](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3774))
+* **New Resource:** `tencentcloud_dnspod_line_group` ([#3771](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3771))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_postgresql_instances: deprecated `instance_list` from version 1.82.64. Please use `db_instance_set` instead. ([#3776](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3776))
+* resource/tencentcloud_clb_instance: INTERNAL clb support set `internet_bandwidth_max_out` ([#3772](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3772))
+* resource/tencentcloud_cls_data_transform: support new params ([#3777](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3777))
+* resource/tencentcloud_kubernetes_cluster: remove the validation of `cluster_cidr` ([#3773](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3773))
+* resource/tencentcloud_tcr_instances: support not set id ([#3770](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3770))
+* resource/tencentcloud_teo_l7_acc_rule_v2: add Use Case Scenarios ([#3775](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3775))
+* resource/tencentcloud_vod_sub_application: support `tags` ([#3778](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3778))
+
 ## 1.82.63(January 29, 2026)
 
 FEATURES:
