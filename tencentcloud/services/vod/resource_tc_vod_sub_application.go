@@ -1,11 +1,13 @@
 package vod
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -44,6 +46,12 @@ func ResourceTencentCloudVodSubApplication() *schema.Resource {
 				Optional:    true,
 				Description: "Sub application description.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Tag key-value pairs for resource management. Maximum 10 tags.",
+			},
 			//computed
 			"create_time": {
 				Type:        schema.TypeString,
@@ -71,6 +79,17 @@ func resourceTencentCloudVodSubApplicationCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("description"); ok {
 		request.Description = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		tags := v.(map[string]interface{})
+		for key, value := range tags {
+			tag := vod.ResourceTag{
+				TagKey:   helper.String(key),
+				TagValue: helper.String(value.(string)),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
 	}
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -130,25 +149,61 @@ func resourceTencentCloudVodSubApplicationRead(d *schema.ResourceData, meta inte
 	if len(idSplit) != 2 {
 		return fmt.Errorf("sub application id is borken, id is %s", d.Id())
 	}
-	subAppName := idSplit[0]
 	subAppId := idSplit[1]
 
-	request.Name = &subAppName
+	// Paginated query with retry logic
+	var offset uint64 = 0
+	var limit uint64 = 200
+	found := false
 
-	response, err := client.UseVodClient().DescribeSubAppIds(request)
-	if err != nil {
-		return err
-	}
-	infoSet := response.Response.SubAppIdInfoSet
-	if len(infoSet) == 0 {
-		d.SetId("")
-		return nil
-	}
+	for !found {
+		request.Offset = &offset
+		request.Limit = &limit
 
-	for _, info := range infoSet {
-		if helper.UInt64ToStr(helper.PUint64(info.SubAppId)) == subAppId {
-			appInfo = *info
-			break
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			response, err := client.UseVodClient().DescribeSubAppIds(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+
+			infoSet := response.Response.SubAppIdInfoSet
+			if len(infoSet) == 0 && offset == 0 {
+				// No sub applications found at all
+				d.SetId("")
+				found = true
+				return nil
+			}
+
+			// Search for the target sub application in current page
+			for _, info := range infoSet {
+				if helper.UInt64ToStr(helper.PUint64(info.SubAppId)) == subAppId {
+					appInfo = *info
+					found = true
+					return nil
+				}
+			}
+
+			// Check if we need to continue pagination
+			totalCount := response.Response.TotalCount
+			if totalCount == nil || offset+uint64(len(infoSet)) >= *totalCount {
+				// Reached the end without finding the sub application
+				d.SetId("")
+				found = true
+			} else {
+				// Continue to next page
+				offset += limit
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		// If ID was set to empty (not found), return early
+		if d.Id() == "" {
+			return nil
 		}
 	}
 	_ = d.Set("name", appInfo.Name)
@@ -157,6 +212,22 @@ func resourceTencentCloudVodSubApplicationRead(d *schema.ResourceData, meta inte
 	//_ = d.Set("status", appInfo.Status)
 	_ = d.Set("status", helper.String(d.Get("status").(string)))
 	_ = d.Set("create_time", appInfo.CreateTime)
+
+	// Set tags if returned by API
+	if appInfo.Tags != nil {
+		tags := make(map[string]string)
+		for _, tag := range appInfo.Tags {
+			if tag.TagKey != nil && tag.TagValue != nil {
+				tags[*tag.TagKey] = *tag.TagValue
+			}
+		}
+		_ = d.Set("tags", tags)
+	}
+
+	// Note: DescribeSubAppIds API does not return Type field
+	// Type is only set during creation and cannot be queried via API
+	// It is preserved in Terraform state (ForceNew field doesn't need to be updated)
+
 	return nil
 }
 
@@ -165,6 +236,7 @@ func resourceTencentCloudVodSubApplicationUpdate(d *schema.ResourceData, meta in
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request    = vod.NewModifySubAppIdInfoRequest()
 		changeFlag = false
 	)
@@ -226,6 +298,20 @@ func resourceTencentCloudVodSubApplicationUpdate(d *schema.ResourceData, meta in
 			return nil
 		})
 	}
+
+	// Handle tags update using unified tag service
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		region := tcClient.Region
+		resourceName := fmt.Sprintf("qcs::vod:%s:uin/:subAppId/%s", region, subAppId)
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudVodSubApplicationRead(d, meta)
 }
 
