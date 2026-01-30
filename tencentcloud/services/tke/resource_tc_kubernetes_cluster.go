@@ -407,11 +407,11 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			},
 
 			"cluster_cidr": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				Description:  "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
-				ValidateFunc: clusterCidrValidateFunc,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
+				// ValidateFunc: clusterCidrValidateFunc,
 			},
 
 			"ignore_cluster_cidr_conflict": {
