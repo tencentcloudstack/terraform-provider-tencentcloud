@@ -175,31 +175,6 @@ func (me *PostgresqlService) DescribeOrders(ctx context.Context, dealIds []*stri
 	return
 }
 
-func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanceId string, username string, password string, charset string) (errRet error) {
-	logId := tccommon.GetLogId(ctx)
-	request := postgresql.NewInitDBInstancesRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-	request.Charset = &charset
-	request.AdminName = &username
-	request.AdminPassword = &password
-	request.DBInstanceIdSet = []*string{&instanceId}
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UsePostgresqlClient().InitDBInstances(request)
-	if err != nil {
-		return err
-	}
-	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
-	}
-
-	return
-}
-
 func (me *PostgresqlService) DescribeSpecinfos(ctx context.Context, zone string) (specCodeList []*postgresql.SpecItemInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewDescribeProductConfigRequest()
