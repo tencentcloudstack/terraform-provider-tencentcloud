@@ -24,13 +24,28 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
-// create clb
-resource "tencentcloud_clb_instance" "example" {
+// create INTERNAL clb
+resource "tencentcloud_clb_instance" "example1" {
   network_type = "INTERNAL"
   clb_name     = "tf-example"
   project_id   = 0
   vpc_id       = tencentcloud_vpc.vpc.id
   subnet_id    = tencentcloud_subnet.subnet.id
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+
+// create INTERNAL clb by sla_type and internet_bandwidth_max_out
+resource "tencentcloud_clb_instance" "example2" {
+  network_type               = "INTERNAL"
+  clb_name                   = "tf-example"
+  project_id                 = 0
+  vpc_id                     = tencentcloud_vpc.vpc.id
+  subnet_id                  = tencentcloud_subnet.subnet.id
+  sla_type                   = "clb.c2.medium"
+  internet_bandwidth_max_out = 100
 
   tags = {
     tagKey = "tagValue"
@@ -521,5 +536,5 @@ Import
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_instance.example lb-7a0t6zqb
+terraform import tencentcloud_clb_instance.example lb-7a0t6zqb
 ```

@@ -365,7 +365,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	chargeType := v.(string)
 
 	//internet charge type
-	if ok || bok {
+	if ok {
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support internet charge type setting")
 		}
@@ -375,10 +375,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			request.InternetAccessible.InternetChargeType = helper.String(chargeType)
 		}
 
-		if bok {
-			request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
-		}
-
 		if pok {
 			if chargeType != svcas.INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
 				return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
@@ -386,6 +382,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 			request.BandwidthPackageId = helper.String(pv.(string))
 		}
+	}
+
+	// open or internal
+	if bok {
+		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
 	}
 
 	if v, ok := d.GetOk("master_zone_id"); ok {
@@ -840,11 +841,37 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		request.TargetRegionInfo = &targetRegionInfo
 	}
 
-	if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
-		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with internet setting", clbId)
+	if d.HasChange("sla_type") {
+		slaRequest := clb.NewModifyLoadBalancerSlaRequest()
+		param := clb.SlaUpdateParam{}
+		param.LoadBalancerId = &clbId
+		param.SlaType = helper.String(d.Get("sla_type").(string))
+		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
+		var taskId string
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerSla(slaRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			taskId = *result.Response.RequestId
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update clb instanceSlaConfig failed, reason:%+v", logId, err)
+			return err
 		}
 
+		retryErr := waitForTaskFinish(taskId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+		if retryErr != nil {
+			return retryErr
+		}
+	}
+
+	if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
 		changed = true
 		chargeType := d.Get("internet_charge_type").(string)
 		bandwidth := d.Get("internet_bandwidth_max_out").(int)
@@ -903,36 +930,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			log.Printf("[CRITAL]%s update CLB instance failed, reason:%+v", logId, err)
 			return err
-		}
-	}
-
-	if d.HasChange("sla_type") {
-		slaRequest := clb.NewModifyLoadBalancerSlaRequest()
-		param := clb.SlaUpdateParam{}
-		param.LoadBalancerId = &clbId
-		param.SlaType = helper.String(d.Get("sla_type").(string))
-		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
-		var taskId string
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerSla(slaRequest)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			taskId = *result.Response.RequestId
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update clb instanceSlaConfig failed, reason:%+v", logId, err)
-			return err
-		}
-
-		retryErr := waitForTaskFinish(taskId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
-		if retryErr != nil {
-			return retryErr
 		}
 	}
 
