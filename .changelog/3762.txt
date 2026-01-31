@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_vpc_notify_routes: add new params `expected_published_status`
+```
