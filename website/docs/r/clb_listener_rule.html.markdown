@@ -100,7 +100,7 @@ The following arguments are supported:
 * `quic` - (Optional, Bool) Whether to enable QUIC. Note: QUIC can be enabled only for HTTPS domain names.
 * `scheduler` - (Optional, String) Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is `WRR`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `session_expire_time` - (Optional, Int) Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
-* `target_type` - (Optional, String, ForceNew) Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group.
+* `target_type` - (Optional, String, ForceNew) Backend target type. Valid values: `NODE`, `TARGETGROUP`, `TARGETGROUP-V2`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group.
 
 The `multi_cert_info` object supports the following:
 

@@ -208,8 +208,8 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      CLB_TARGET_TYPE_NODE,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP}),
-				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group.",
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP, CLB_TARGET_TYPE_TARGETGROUP_V2}),
+				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`, `TARGETGROUP-V2`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group.",
 			},
 			"forward_type": {
 				Type:         schema.TypeString,
