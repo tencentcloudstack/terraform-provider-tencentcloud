@@ -863,6 +863,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vod_image_sprite_templates":                            vod.DataSourceTencentCloudVodImageSpriteTemplates(),
 			"tencentcloud_vod_procedure_templates":                               vod.DataSourceTencentCloudVodProcedureTemplates(),
 			"tencentcloud_vod_snapshot_by_time_offset_templates":                 vod.DataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(),
+			"tencentcloud_vod_sub_applications":                                  vod.DataSourceTencentCloudVodSubApplications(),
 			"tencentcloud_vod_super_player_configs":                              vod.DataSourceTencentCloudVodSuperPlayerConfigs(),
 			"tencentcloud_sqlserver_publish_subscribes":                          sqlserver.DataSourceTencentCloudSqlserverPublishSubscribes(),
 			"tencentcloud_sqlserver_instance_param_records":                      sqlserver.DataSourceTencentCloudSqlserverInstanceParamRecords(),
