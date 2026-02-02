@@ -1015,6 +1015,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_log_export_list":                                   rum.DataSourceTencentCloudRumLogExportList(),
 			"tencentcloud_dnspod_records":                                        dnspod.DataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_dnspod_domain_list":                                    dnspod.DataSourceTencentCloudDnspodDomainList(),
+			"tencentcloud_dnspod_domain_instances":                               dnspod.DataSourceTencentCloudDnspodDomainInstances(),
 			"tencentcloud_dnspod_domain_analytics":                               dnspod.DataSourceTencentCloudDnspodDomainAnalytics(),
 			"tencentcloud_dnspod_domain_log_list":                                dnspod.DataSourceTencentCloudDnspodDomainLogList(),
 			"tencentcloud_dnspod_record_analytics":                               dnspod.DataSourceTencentCloudDnspodRecordAnalytics(),
