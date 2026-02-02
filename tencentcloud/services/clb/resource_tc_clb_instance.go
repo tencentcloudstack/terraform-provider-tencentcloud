@@ -369,19 +369,22 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support internet charge type setting")
 		}
+	}
 
+	if ok || bok || pok {
 		request.InternetAccessible = &clb.InternetAccessible{}
-		if ok {
-			request.InternetAccessible.InternetChargeType = helper.String(chargeType)
+	}
+
+	if ok {
+		request.InternetAccessible.InternetChargeType = helper.String(chargeType)
+	}
+
+	if pok {
+		if chargeType != svcas.INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
 		}
 
-		if pok {
-			if chargeType != svcas.INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
-				return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
-			}
-
-			request.BandwidthPackageId = helper.String(pv.(string))
-		}
+		request.BandwidthPackageId = helper.String(pv.(string))
 	}
 
 	// open or internal
