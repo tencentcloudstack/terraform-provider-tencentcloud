@@ -144,6 +144,8 @@ func dataSourceTencentCloudDnspodDomainInstancesRead(d *schema.ResourceData, met
 	}
 
 	d.SetId(helper.DataResourceIdsHash([]string{domain}))
+	_ = d.Set("instance_list", tmpList)
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
