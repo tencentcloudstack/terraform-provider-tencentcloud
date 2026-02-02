@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clb_instance: optimize code logic 
+```
