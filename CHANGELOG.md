@@ -1,3 +1,11 @@
+## 1.82.65(February 2, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: optimize code logic ([#3779](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3779))
+* resource/tencentcloud_clb_listener: support `TARGETGROUP-V2` for `target_type` ([#3780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3780))
+* resource/tencentcloud_clb_listener_rule: support `TARGETGROUP-V2` for `target_type` ([#3780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3780))
+
 ## 1.82.64(January 30, 2026)
 
 FEATURES:
