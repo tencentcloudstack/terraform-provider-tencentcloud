@@ -155,6 +155,66 @@ func DataSourceTencentCloudInstanceTypes() *schema.Resource {
 							Computed:    true,
 							Description: "Sell status of the instance.",
 						},
+						"network_card": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Network card type, for example: 25 represents 25G network card.",
+						},
+						"type_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance type display name.",
+						},
+						"sold_out_reason": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Reason for sold out status.",
+						},
+						"instance_bandwidth": {
+							Type:        schema.TypeFloat,
+							Computed:    true,
+							Description: "Internal network bandwidth, unit: Gbps.",
+						},
+						"instance_pps": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Network packet forwarding capacity, unit: 10K PPS.",
+						},
+						"storage_block_amount": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of local storage blocks.",
+						},
+						"cpu_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Processor model.",
+						},
+						"fpga": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of FPGA cores.",
+						},
+						"gpu_count": {
+							Type:        schema.TypeFloat,
+							Computed:    true,
+							Description: "Physical GPU card count mapped to instance. vGPU type is less than 1, direct-attach GPU type is greater than or equal to 1.",
+						},
+						"frequency": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CPU frequency information.",
+						},
+						"status_category": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Stock status category. Valid values: EnoughStock, NormalStock, UnderStock, WithoutStock.",
+						},
+						"remark": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance remark information.",
+						},
 						"cbs_configs": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -224,6 +284,143 @@ func DataSourceTencentCloudInstanceTypes() *schema.Resource {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "The maximum configurable cloud disk size, in GB.",
+									},
+								},
+							},
+						},
+						"local_disk_type_list": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "List of local disk specifications. Empty if instance type does not support local disks.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Local disk type.",
+									},
+									"partition_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Local disk partition type.",
+									},
+									"min_size": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Minimum size of local disk, in GB.",
+									},
+									"max_size": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Maximum size of local disk, in GB.",
+									},
+									"required": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Whether local disk is required when purchasing. Valid values: REQUIRED, OPTIONAL.",
+									},
+								},
+							},
+						},
+						"price": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Instance pricing information.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"unit_price": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Subsequent unit price, used in postpaid mode, unit: CNY.",
+									},
+									"charge_unit": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Subsequent billing unit. Valid values: HOUR, GB.",
+									},
+									"original_price": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Original price for prepaid mode, unit: CNY.",
+									},
+									"discount_price": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Discount price for prepaid mode, unit: CNY.",
+									},
+									"discount": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Discount rate. For example, 20.0 means 20% off.",
+									},
+									"unit_price_discount": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Subsequent discount unit price, used in postpaid mode, unit: CNY.",
+									},
+									"unit_price_second_step": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Subsequent unit price for time range (96, 360) hours in postpaid mode, unit: CNY.",
+									},
+									"unit_price_discount_second_step": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Subsequent discount unit price for time range (96, 360) hours in postpaid mode, unit: CNY.",
+									},
+									"unit_price_third_step": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Specifies the original price of subsequent total costs with a usage time interval exceeding 360 hr in postpaid billing mode. measurement unit: usd.",
+									},
+									"unit_price_discount_third_step": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Discounted price of subsequent total cost for usage time interval exceeding 360 hr in postpaid billing mode. measurement unit: usd.",
+									},
+								},
+							},
+						},
+						"externals": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Extended attributes.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"release_address": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Whether to release address.",
+									},
+									"unsupport_networks": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Unsupported network types. Valid values: BASIC (basic network), VPC1.0 (VPC 1.0).",
+									},
+									"storage_block_attr": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "HDD local storage attributes.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"type": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Storage block type.",
+												},
+												"min_size": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Minimum size of storage block, in GB.",
+												},
+												"max_size": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Maximum size of storage block, in GB.",
+												},
+											},
+										},
 									},
 								},
 							},
@@ -309,7 +506,73 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 				"instance_type":        instanceType.InstanceType,
 				"instance_charge_type": instanceType.InstanceChargeType,
 				"status":               instanceType.Status,
+				"network_card":         instanceType.NetworkCard,
+				"type_name":            instanceType.TypeName,
+				"sold_out_reason":      instanceType.SoldOutReason,
+				"instance_bandwidth":   instanceType.InstanceBandwidth,
+				"instance_pps":         instanceType.InstancePps,
+				"storage_block_amount": instanceType.StorageBlockAmount,
+				"cpu_type":             instanceType.CpuType,
+				"fpga":                 instanceType.Fpga,
+				"gpu_count":            instanceType.GpuCount,
+				"frequency":            instanceType.Frequency,
+				"status_category":      instanceType.StatusCategory,
+				"remark":               instanceType.Remark,
 			}
+
+			// Map local_disk_type_list
+			localDiskList := make([]interface{}, 0)
+			for _, localDisk := range instanceType.LocalDiskTypeList {
+				localDiskList = append(localDiskList, map[string]interface{}{
+					"type":           localDisk.Type,
+					"partition_type": localDisk.PartitionType,
+					"min_size":       localDisk.MinSize,
+					"max_size":       localDisk.MaxSize,
+					"required":       localDisk.Required,
+				})
+			}
+			mapping["local_disk_type_list"] = localDiskList
+
+			// Map price
+			priceList := make([]interface{}, 0)
+			if instanceType.Price != nil {
+				priceList = append(priceList, map[string]interface{}{
+					"unit_price":                      instanceType.Price.UnitPrice,
+					"charge_unit":                     instanceType.Price.ChargeUnit,
+					"original_price":                  instanceType.Price.OriginalPrice,
+					"discount_price":                  instanceType.Price.DiscountPrice,
+					"discount":                        instanceType.Price.Discount,
+					"unit_price_discount":             instanceType.Price.UnitPriceDiscount,
+					"unit_price_second_step":          instanceType.Price.UnitPriceSecondStep,
+					"unit_price_discount_second_step": instanceType.Price.UnitPriceDiscountSecondStep,
+					"unit_price_third_step":           instanceType.Price.UnitPriceThirdStep,
+					"unit_price_discount_third_step":  instanceType.Price.UnitPriceDiscountThirdStep,
+				})
+			}
+			mapping["price"] = priceList
+
+			// Map externals
+			externalsList := make([]interface{}, 0)
+			if instanceType.Externals != nil {
+				externalsMap := map[string]interface{}{
+					"release_address":    instanceType.Externals.ReleaseAddress,
+					"unsupport_networks": instanceType.Externals.UnsupportNetworks,
+				}
+
+				// Map storage_block_attr
+				storageBlockList := make([]interface{}, 0)
+				if instanceType.Externals.StorageBlockAttr != nil {
+					storageBlockList = append(storageBlockList, map[string]interface{}{
+						"type":     instanceType.Externals.StorageBlockAttr.Type,
+						"min_size": instanceType.Externals.StorageBlockAttr.MinSize,
+						"max_size": instanceType.Externals.StorageBlockAttr.MaxSize,
+					})
+				}
+				externalsMap["storage_block_attr"] = storageBlockList
+				externalsList = append(externalsList, externalsMap)
+			}
+			mapping["externals"] = externalsList
+
 			typeList = append(typeList, mapping)
 			ids = append(ids, *instanceType.InstanceType)
 		}
