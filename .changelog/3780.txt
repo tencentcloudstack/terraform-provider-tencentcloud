@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_clb_listener: support `TARGETGROUP-V2` for `target_type`
+```
+
+```release-note:enhancement
+resource/tencentcloud_clb_listener_rule: support `TARGETGROUP-V2` for `target_type`
+```
