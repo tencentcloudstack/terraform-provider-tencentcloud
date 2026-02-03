@@ -707,3 +707,78 @@ func (me *VodService) DescribeVodEventConfig(ctx context.Context, subAppId uint6
 	eventConfig = response.Response
 	return
 }
+
+func (me *VodService) DescribeSubApplicationsByFilter(ctx context.Context, filters map[string]interface{}) (subAppInfos []*vod.SubAppIdInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vod.NewDescribeSubAppIdsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	// Set filter parameters
+	if v, ok := filters["name"]; ok {
+		request.Name = helper.String(v.(string))
+	}
+	if v, ok := filters["tags"]; ok {
+		tags := v.([]*vod.ResourceTag)
+		request.Tags = tags
+	}
+
+	// Initialize pagination
+	var offset uint64 = 0
+	var limit uint64 = 200
+	if v, ok := filters["offset"]; ok {
+		offset = uint64(v.(int))
+	}
+	if v, ok := filters["limit"]; ok {
+		limit = uint64(v.(int))
+	}
+
+	subAppInfos = make([]*vod.SubAppIdInfo, 0)
+
+	// Pagination loop
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *vod.DescribeSubAppIdsResponse
+		var err error
+
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err = me.client.UseVodClient().DescribeSubAppIds(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if len(response.Response.SubAppIdInfoSet) == 0 {
+			break
+		}
+
+		subAppInfos = append(subAppInfos, response.Response.SubAppIdInfoSet...)
+
+		// Check if we've retrieved all results
+		if response.Response.TotalCount == nil || uint64(len(subAppInfos)) >= *response.Response.TotalCount {
+			break
+		}
+
+		// Move to next page
+		offset += limit
+	}
+
+	return
+}
