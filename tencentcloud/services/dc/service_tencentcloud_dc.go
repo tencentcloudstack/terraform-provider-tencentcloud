@@ -632,10 +632,15 @@ func (me *DcService) waitCreateDirectConnectTunnelAvailable(ctx context.Context,
 		if item.State == nil {
 			return resource.NonRetryableError(fmt.Errorf("tunnel state is nil"))
 		}
-		if *item.State != "AVAILABLE" {
-			return resource.RetryableError(fmt.Errorf("tunnel status is not ready, status is %s ", *item.State))
+		// Exit retry loop when tunnel reaches terminal states:
+		// AVAILABLE: ready or connected
+		// ALLOCATED: configuration complete
+		// COMFIRMING: waiting for acceptance
+		// REJECTED: rejected
+		if *item.State == "AVAILABLE" || *item.State == "ALLOCATED" || *item.State == "COMFIRMING" || *item.State == "REJECTED" {
+			return nil
 		}
-		return nil
+		return resource.RetryableError(fmt.Errorf("tunnel status is not ready, status is %s ", *item.State))
 	})
 	if err != nil {
 		return
