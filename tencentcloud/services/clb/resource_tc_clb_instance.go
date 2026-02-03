@@ -232,6 +232,97 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				Description: "The associated terminal node ID; passing an empty string indicates unassociating the node.",
 			},
+			"exclusive_cluster": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "Information about the dedicated CLB instance. You must specify this parameter when you create a dedicated CLB instance in a private network.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"l4_clusters": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Layer-4 dedicated cluster list\nNote: this field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"cluster_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Unique cluster ID.",
+									},
+									"cluster_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Cluster name.",
+									},
+									"zone": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Cluster AZ, such as ap-guangzhou-1\nNote: this field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
+						"l7_clusters": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Layer-7 dedicated cluster list\nNote: this field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"cluster_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Unique cluster ID.",
+									},
+									"cluster_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Cluster name.",
+									},
+									"zone": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Cluster AZ, such as ap-guangzhou-1\nNote: this field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
+						"classical_cluster": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "vpcgw cluster\nNote: this field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"cluster_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Unique cluster ID.",
+									},
+									"cluster_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Cluster name.",
+									},
+									"zone": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Cluster AZ, such as ap-guangzhou-1\nNote: this field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"domain": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -437,6 +528,68 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				TagValue: &tmpValue,
 			})
 		}
+	}
+
+	if exclusiveClusterMap, ok := helper.InterfacesHeadMap(d, "exclusive_cluster"); ok {
+		exclusiveCluster := clb.ExclusiveCluster{}
+		if v, ok := exclusiveClusterMap["l4_clusters"]; ok {
+			for _, item := range v.(*schema.Set).List() {
+				l4ClustersMap := item.(map[string]interface{})
+				clusterItem := clb.ClusterItem{}
+				if v, ok := l4ClustersMap["cluster_id"].(string); ok && v != "" {
+					clusterItem.ClusterId = helper.String(v)
+				}
+
+				if v, ok := l4ClustersMap["cluster_name"].(string); ok && v != "" {
+					clusterItem.ClusterName = helper.String(v)
+				}
+
+				if v, ok := l4ClustersMap["zone"].(string); ok && v != "" {
+					clusterItem.Zone = helper.String(v)
+				}
+
+				exclusiveCluster.L4Clusters = append(exclusiveCluster.L4Clusters, &clusterItem)
+			}
+		}
+
+		if v, ok := exclusiveClusterMap["l7_clusters"]; ok {
+			for _, item := range v.(*schema.Set).List() {
+				l7ClustersMap := item.(map[string]interface{})
+				clusterItem := clb.ClusterItem{}
+				if v, ok := l7ClustersMap["cluster_id"].(string); ok && v != "" {
+					clusterItem.ClusterId = helper.String(v)
+				}
+
+				if v, ok := l7ClustersMap["cluster_name"].(string); ok && v != "" {
+					clusterItem.ClusterName = helper.String(v)
+				}
+
+				if v, ok := l7ClustersMap["zone"].(string); ok && v != "" {
+					clusterItem.Zone = helper.String(v)
+				}
+
+				exclusiveCluster.L7Clusters = append(exclusiveCluster.L7Clusters, &clusterItem)
+			}
+		}
+
+		if classicalClusterMap, ok := helper.ConvertInterfacesHeadToMap(exclusiveClusterMap["classical_cluster"]); ok {
+			clusterItem := clb.ClusterItem{}
+			if v, ok := classicalClusterMap["cluster_id"].(string); ok && v != "" {
+				clusterItem.ClusterId = helper.String(v)
+			}
+
+			if v, ok := classicalClusterMap["cluster_name"].(string); ok && v != "" {
+				clusterItem.ClusterName = helper.String(v)
+			}
+
+			if v, ok := classicalClusterMap["zone"].(string); ok && v != "" {
+				clusterItem.Zone = helper.String(v)
+			}
+
+			exclusiveCluster.ClassicalCluster = &clusterItem
+		}
+
+		request.ExclusiveCluster = &exclusiveCluster
 	}
 
 	var response *clb.CreateLoadBalancerResponse
@@ -770,6 +923,72 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 
 	if instance.AssociateEndpoint != nil {
 		_ = d.Set("associate_endpoint", instance.AssociateEndpoint)
+	}
+
+	if instance.ExclusiveCluster != nil {
+		exclusiveClusterMap := map[string]interface{}{}
+		if instance.ExclusiveCluster.L4Clusters != nil {
+			l4ClustersList := make([]map[string]interface{}, 0, len(instance.ExclusiveCluster.L4Clusters))
+			for _, l4Clusters := range instance.ExclusiveCluster.L4Clusters {
+				l4ClustersMap := map[string]interface{}{}
+				if l4Clusters.ClusterId != nil {
+					l4ClustersMap["cluster_id"] = l4Clusters.ClusterId
+				}
+
+				if l4Clusters.ClusterName != nil {
+					l4ClustersMap["cluster_name"] = l4Clusters.ClusterName
+				}
+
+				if l4Clusters.Zone != nil {
+					l4ClustersMap["zone"] = l4Clusters.Zone
+				}
+
+				l4ClustersList = append(l4ClustersList, l4ClustersMap)
+			}
+
+			exclusiveClusterMap["l4_clusters"] = l4ClustersList
+		}
+
+		if instance.ExclusiveCluster.L7Clusters != nil {
+			l7ClustersList := make([]map[string]interface{}, 0, len(instance.ExclusiveCluster.L7Clusters))
+			for _, l7Clusters := range instance.ExclusiveCluster.L7Clusters {
+				l7ClustersMap := map[string]interface{}{}
+				if l7Clusters.ClusterId != nil {
+					l7ClustersMap["cluster_id"] = l7Clusters.ClusterId
+				}
+
+				if l7Clusters.ClusterName != nil {
+					l7ClustersMap["cluster_name"] = l7Clusters.ClusterName
+				}
+
+				if l7Clusters.Zone != nil {
+					l7ClustersMap["zone"] = l7Clusters.Zone
+				}
+
+				l7ClustersList = append(l7ClustersList, l7ClustersMap)
+			}
+
+			exclusiveClusterMap["l7_clusters"] = l7ClustersList
+		}
+
+		if instance.ExclusiveCluster.ClassicalCluster != nil {
+			classicalClusterMap := map[string]interface{}{}
+			if instance.ExclusiveCluster.ClassicalCluster.ClusterId != nil {
+				classicalClusterMap["cluster_id"] = instance.ExclusiveCluster.ClassicalCluster.ClusterId
+			}
+
+			if instance.ExclusiveCluster.ClassicalCluster.ClusterName != nil {
+				classicalClusterMap["cluster_name"] = instance.ExclusiveCluster.ClassicalCluster.ClusterName
+			}
+
+			if instance.ExclusiveCluster.ClassicalCluster.Zone != nil {
+				classicalClusterMap["zone"] = instance.ExclusiveCluster.ClassicalCluster.Zone
+			}
+
+			exclusiveClusterMap["classical_cluster"] = []interface{}{classicalClusterMap}
+		}
+
+		_ = d.Set("exclusive_cluster", []interface{}{exclusiveClusterMap})
 	}
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
