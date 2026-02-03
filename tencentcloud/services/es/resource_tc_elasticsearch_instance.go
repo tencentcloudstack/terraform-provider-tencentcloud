@@ -736,18 +736,6 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	}
 	_ = d.Set("multi_zone_infos", multiZoneInfos)
 
-	if len(multiZoneInfos) > 0 {
-		if _, ok := d.GetOk("availability_zone"); ok {
-			if instance.Zone != nil && *instance.Zone == "-" {
-				_ = d.Set("availability_zone", multiZoneInfos[0]["availability_zone"])
-			}
-		}
-		if _, ok := d.GetOk("subnet_id"); ok {
-			if instance.SubnetUid != nil && *instance.SubnetUid == "-" {
-				_ = d.Set("subnet_id", multiZoneInfos[0]["subnet_id"])
-			}
-		}
-	}
 	nodeInfoList := make([]map[string]interface{}, 0, len(instance.NodeInfoList))
 	for _, item := range instance.NodeInfoList {
 		// this will not keep longer as long as cloud api response update
