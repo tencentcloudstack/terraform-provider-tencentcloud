@@ -555,6 +555,7 @@ The following arguments are supported:
 * `delete_protect` - (Optional, Bool) Whether to enable delete protection.
 * `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
 * `eip_address_id` - (Optional, String) The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.
+* `exclusive_cluster` - (Optional, List, ForceNew) Information about the dedicated CLB instance. You must specify this parameter when you create a dedicated CLB instance in a private network.
 * `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is Mbps.
 * `internet_charge_type` - (Optional, String) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional, Bool) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
@@ -575,6 +576,36 @@ The following arguments are supported:
 * `vip` - (Optional, String, ForceNew) Specifies the VIP for the application of a CLB instance. This parameter is optional. If you do not specify this parameter, the system automatically assigns a value for the parameter. IPv4 and IPv6 CLB instances support this parameter, but IPv6 NAT64 CLB instances do not.
 * `vpc_id` - (Optional, String, ForceNew) VPC ID of the CLB.
 * `zone_id` - (Optional, String) Available zone id, only applicable to open CLB.
+
+The `classical_cluster` object of `exclusive_cluster` supports the following:
+
+* `cluster_id` - (Required, String) Unique cluster ID.
+* `cluster_name` - (Optional, String) Cluster name.
+* `zone` - (Optional, String) Cluster AZ, such as ap-guangzhou-1
+Note: this field may return null, indicating that no valid values can be obtained.
+
+The `exclusive_cluster` object supports the following:
+
+* `classical_cluster` - (Optional, List) vpcgw cluster
+Note: this field may return null, indicating that no valid values can be obtained.
+* `l4_clusters` - (Optional, Set) Layer-4 dedicated cluster list
+Note: this field may return null, indicating that no valid values can be obtained.
+* `l7_clusters` - (Optional, Set) Layer-7 dedicated cluster list
+Note: this field may return null, indicating that no valid values can be obtained.
+
+The `l4_clusters` object of `exclusive_cluster` supports the following:
+
+* `cluster_id` - (Required, String) Unique cluster ID.
+* `cluster_name` - (Optional, String) Cluster name.
+* `zone` - (Optional, String) Cluster AZ, such as ap-guangzhou-1
+Note: this field may return null, indicating that no valid values can be obtained.
+
+The `l7_clusters` object of `exclusive_cluster` supports the following:
+
+* `cluster_id` - (Required, String) Unique cluster ID.
+* `cluster_name` - (Optional, String) Cluster name.
+* `zone` - (Optional, String) Cluster AZ, such as ap-guangzhou-1
+Note: this field may return null, indicating that no valid values can be obtained.
 
 The `snat_ips` object supports the following:
 
