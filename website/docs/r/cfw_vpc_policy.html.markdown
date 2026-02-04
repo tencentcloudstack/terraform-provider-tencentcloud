@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfw_vpc_policy"
 sidebar_current: "docs-tencentcloud-resource-cfw_vpc_policy"
 description: |-
-  Provides a resource to create a cfw vpc_policy
+  Provides a resource to create a CFW vpc policy
 ---
 
 # tencentcloud_cfw_vpc_policy
 
-Provides a resource to create a cfw vpc_policy
+Provides a resource to create a CFW vpc policy
 
 ## Example Usage
 
@@ -58,9 +58,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cfw vpc_policy can be imported using the id, e.g.
+CFW vpc policy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfw_vpc_policy.vpc_policy vpc_policy_id
+terraform import tencentcloud_cfw_vpc_policy.example 11321
 ```
 

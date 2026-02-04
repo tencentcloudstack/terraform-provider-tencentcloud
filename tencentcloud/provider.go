@@ -2475,6 +2475,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_policy_order_config":                                              cfw.ResourceTencentCloudCfwNatPolicyOrderConfig(),
 			"tencentcloud_cfw_vpc_instance":                                                         cfw.ResourceTencentCloudCfwVpcInstance(),
 			"tencentcloud_cfw_vpc_policy":                                                           cfw.ResourceTencentCloudCfwVpcPolicy(),
+			"tencentcloud_cfw_vpc_policy_order_config":                                              cfw.ResourceTencentCloudCfwVpcPolicyOrderConfig(),
 			"tencentcloud_cfw_sync_asset":                                                           cfw.ResourceTencentCloudCfwSyncAsset(),
 			"tencentcloud_cfw_sync_route":                                                           cfw.ResourceTencentCloudCfwSyncRoute(),
 			"tencentcloud_cfw_nat_firewall_switch":                                                  cfw.ResourceTencentCloudCfwNatFirewallSwitch(),
