@@ -40,13 +40,13 @@ func ResourceTencentCloudEventsAuditTrack() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "Storage type of shipped data. Valid values: `cos`, `cls`.",
+				Description: "Storage type of shipped data. Valid values: `cos`, `cls` and `ckafka`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"storage_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Storage type (Valid values: cos, cls).",
+							Description: "Storage type (Valid values: cos, cls, ckafka).",
 						},
 						"storage_region": {
 							Type:        schema.TypeString,

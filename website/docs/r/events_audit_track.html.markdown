@@ -54,7 +54,7 @@ The following arguments are supported:
 * `filters` - (Required, List) Data filtering criteria.
 * `name` - (Required, String, ForceNew) Tracking set name, which can only contain 3-48 letters, digits, hyphens, and underscores.
 * `status` - (Required, Int) Tracking set status (0: Not enabled; 1: Enabled).
-* `storage` - (Required, List) Storage type of shipped data. Valid values: `cos`, `cls`.
+* `storage` - (Required, List) Storage type of shipped data. Valid values: `cos`, `cls` and `ckafka`.
 * `track_for_all_members` - (Optional, Int) Whether to enable the feature of shipping organization members operation logs to the organization admin account or the trusted service admin account (0: Not enabled; 1: Enabled. This feature can only be enabled by the organization admin account or the trusted service admin account).
 
 The `filters` object supports the following:
@@ -72,7 +72,7 @@ The `storage` object supports the following:
 * `storage_name` - (Required, String) Storage name. For COS, the storage name is the custom bucket name, which can contain up to 50 lowercase letters, digits, and hyphens. It cannot contain "-APPID" and cannot start or end with a hyphen. For CLS, the storage name is the log topic ID, which can contain 1-50 characters.
 * `storage_prefix` - (Required, String) Storage directory prefix. The COS log file prefix can only contain 3-40 letters and digits.
 * `storage_region` - (Required, String) StorageRegion *string `json:'StorageRegion,omitnil,omitempty' name: 'StorageRegion'`.
-* `storage_type` - (Required, String) Storage type (Valid values: cos, cls).
+* `storage_type` - (Required, String) Storage type (Valid values: cos, cls, ckafka).
 * `storage_account_id` - (Optional, String) Designated to store user ID.
 * `storage_app_id` - (Optional, String) Designated to store user app ID.
 

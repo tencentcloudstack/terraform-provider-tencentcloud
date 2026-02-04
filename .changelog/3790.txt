@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_events_audit_track: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_audit_track: update doc
+```
