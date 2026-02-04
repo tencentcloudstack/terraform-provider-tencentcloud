@@ -1,3 +1,23 @@
+## 1.82.66(February 4, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_vod_sub_applications` ([#3783](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3783))
+* **New Resource:** `tencentcloud_cfw_vpc_policy_order_config` ([#3789](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3789))
+* **New Resource:** `tencentcloud_dnspod_package_order` ([#3792](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3792))
+* **New Resource:** `tencentcloud_vpc_replace_routes_with_route_policy_config` ([#3787](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3787))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_instance_types: return details of instance types ([#3781](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3781))
+* resource/tencentcloud_audit_track: update doc ([#3790](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3790))
+* resource/tencentcloud_cos_bucket: support disable `log_enable` ([#3786](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3786))
+* resource/tencentcloud_dc_gateway: support `tags` ([#3788](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3788))
+* resource/tencentcloud_dcx: add no retryable status ([#3782](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3782))
+* resource/tencentcloud_elasticsearch_instance: optmize `multi_zone_infos` logic ([#3784](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3784))
+* resource/tencentcloud_events_audit_track: update doc ([#3790](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3790))
+* resource/tencentcloud_redis_instance: optimize field `replicas_read_only` not support update ([#3791](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3791))
+
 ## 1.82.65(February 2, 2026)
 
 ENHANCEMENTS:
