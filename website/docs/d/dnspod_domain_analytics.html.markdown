@@ -1,5 +1,5 @@
 ---
-subcategory: "DNSPOD"
+subcategory: "DNSPod"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dnspod_domain_analytics"
 sidebar_current: "docs-tencentcloud-datasource-dnspod_domain_analytics"

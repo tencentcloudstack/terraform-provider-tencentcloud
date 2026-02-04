@@ -1,5 +1,5 @@
 ---
-subcategory: "DNSPOD"
+subcategory: "DNSPod"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dnspod_download_snapshot_operation"
 sidebar_current: "docs-tencentcloud-resource-dnspod_download_snapshot_operation"

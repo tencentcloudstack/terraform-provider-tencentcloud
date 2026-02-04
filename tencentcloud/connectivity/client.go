@@ -17,6 +17,7 @@ import (
 	clbintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
 	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
+	dnspodintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/dnspod/v20210323"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
 	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
@@ -173,6 +174,7 @@ type TencentCloudClient struct {
 	emrConn             *emr.Client
 	clsConn             *cls.Client
 	dnsPodConn          *dnspod.Client
+	dnsPodIntlConn      *dnspodintl.Client
 	privateDnsConn      *privatedns.Client
 	antiddosConn        *antiddos.Client
 	domainConn          *domain.Client
@@ -1151,6 +1153,18 @@ func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
 	me.dnsPodConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dnsPodConn
+}
+
+// UseDnsPodClient return DnsPod intl client for service
+func (me *TencentCloudClient) UseDnsPodIntlClient() *dnspodintl.Client {
+	if me.dnsPodIntlConn != nil {
+		return me.dnsPodIntlConn
+	}
+	cpf := me.NewClientIntlProfile(300)
+	me.dnsPodIntlConn, _ = dnspodintl.NewClient(me.Credential, me.Region, cpf)
+	me.dnsPodIntlConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dnsPodIntlConn
 }
 
 // UsePrivateDnsClient return PrivateDns client for service
