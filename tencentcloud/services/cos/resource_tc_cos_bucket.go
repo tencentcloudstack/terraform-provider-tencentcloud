@@ -1089,13 +1089,9 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 			}
 		}
 	} else {
-		if logEnable {
-			_ = d.Set("log_target_bucket", logTargetBucket)
-			_ = d.Set("log_prefix", logPrefix)
-		} else {
-			_ = d.Set("log_target_bucket", nil)
-			_ = d.Set("log_prefix", nil)
-		}
+		_ = d.Set("log_enable", logEnable)
+		_ = d.Set("log_target_bucket", logTargetBucket)
+		_ = d.Set("log_prefix", logPrefix)
 	}
 
 	// read the tags
