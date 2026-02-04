@@ -1567,6 +1567,21 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 					},
 				},
 			},
+			"https_billing": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "HTTPS service is enabled by default (this is a paid service; please refer to the billing information and product documentation for details).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "HTTPS service configuration switch, possible values are: on: Enabled (default setting), will incur charges; off: Disabled, will block HTTPS requests.",
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -2454,6 +2469,13 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		}
 		if v, ok := v["bucket"].(string); ok && v != "" {
 			request.OthersPrivateAccess.Bucket = &v
+		}
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "https_billing"); ok {
+		vSwitch := v["switch"].(string)
+		request.HttpsBilling = &cdn.HttpsBilling{
+			Switch: &vSwitch,
 		}
 	}
 
@@ -3979,6 +4001,12 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		if v, ok := v["bucket"].(string); ok && v != "" {
 			request.OthersPrivateAccess.Bucket = &v
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "https_billing"); ok {
+		vSwitch := v["switch"].(string)
+		request.HttpsBilling = &cdn.HttpsBilling{
+			Switch: &vSwitch,
 		}
 	}
 
