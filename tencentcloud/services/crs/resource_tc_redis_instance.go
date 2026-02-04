@@ -743,6 +743,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		"prepaid_period",
 		"product_version",
 		"redis_cluster_id",
+		"replicas_read_only",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
