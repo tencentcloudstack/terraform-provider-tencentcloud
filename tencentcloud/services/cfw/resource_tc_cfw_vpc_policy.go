@@ -128,6 +128,11 @@ func ResourceTencentCloudCfwVpcPolicy() *schema.Resource {
 				Computed:    true,
 				Description: "Parameter template Name. Note: This field may return null, indicating that no valid value can be obtained.",
 			},
+			"order_index": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Execution order.",
+			},
 		},
 	}
 }
@@ -196,7 +201,7 @@ func resourceTencentCloudCfwVpcPolicyCreate(d *schema.ResourceData, meta interfa
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result.Response == nil || len(result.Response.RuleUuids) != 1 {
+		if result == nil || result.Response == nil || len(result.Response.RuleUuids) != 1 {
 			e = fmt.Errorf("create cfw vpcPolicy failed")
 			return resource.NonRetryableError(e)
 		}
@@ -234,8 +239,8 @@ func resourceTencentCloudCfwVpcPolicyRead(d *schema.ResourceData, meta interface
 	}
 
 	if vpcPolicy == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_vpc_policy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CfwVpcPolicy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -322,6 +327,10 @@ func resourceTencentCloudCfwVpcPolicyRead(d *schema.ResourceData, meta interface
 		_ = d.Set("param_template_name", vpcPolicy.ParamTemplateName)
 	}
 
+	if vpcPolicy.OrderIndex != nil {
+		_ = d.Set("order_index", vpcPolicy.OrderIndex)
+	}
+
 	return nil
 }
 
@@ -380,9 +389,7 @@ func resourceTencentCloudCfwVpcPolicyUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	vpcRuleItem.EdgeId = helper.String("all")
-
 	request.Rules = append(request.Rules, &vpcRuleItem)
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyVpcAcRule(request)
 		if e != nil {

@@ -1,4 +1,4 @@
-Provides a resource to create a cfw vpc_policy
+Provides a resource to create a CFW vpc policy
 
 Example Usage
 
@@ -19,8 +19,8 @@ resource "tencentcloud_cfw_vpc_policy" "example" {
 
 Import
 
-cfw vpc_policy can be imported using the id, e.g.
+CFW vpc policy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfw_vpc_policy.vpc_policy vpc_policy_id
+terraform import tencentcloud_cfw_vpc_policy.example 11321
 ```

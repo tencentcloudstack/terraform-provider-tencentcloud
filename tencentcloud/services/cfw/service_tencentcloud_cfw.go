@@ -1073,6 +1073,57 @@ func (me *CfwService) DescribeCfwNatPolicyOrderConfigById(ctx context.Context, u
 	return
 }
 
+func (me *CfwService) DescribeCfwVpcPolicyOrderConfigById(ctx context.Context, uuid string) (vpcPolicy *cfw.VpcRuleItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeVpcAcRuleRequest()
+	response := cfw.NewDescribeVpcAcRuleResponse()
+	request.Limit = common.Uint64Ptr(100)
+	request.Offset = common.Uint64Ptr(0)
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("Id"),
+			Values:       common.StringPtrs([]string{uuid}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeVpcAcRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe vpc ac rule failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	vpcPolicy = response.Response.Data[0]
+	return
+}
+
 func (me *CfwService) DescribeCfwNatPolicyOrderConfigs(ctx context.Context) (ret []*cfw.DescAcItem, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -1104,6 +1155,63 @@ func (me *CfwService) DescribeCfwNatPolicyOrderConfigs(ctx context.Context) (ret
 
 			if result == nil || result.Response == nil || result.Response.Data == nil {
 				return resource.NonRetryableError(fmt.Errorf("Describe nat ac rule failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.Data) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwVpcPolicyOrderConfigs(ctx context.Context) (ret []*cfw.VpcRuleItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeVpcAcRuleRequest()
+	response := cfw.NewDescribeVpcAcRuleResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCfwClient().DescribeVpcAcRule(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Data == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe vpc ac rule failed, Response is nil."))
 			}
 
 			response = result
