@@ -1451,6 +1451,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_route_policy":                                                         vpc.ResourceTencentCloudVpcRoutePolicy(),
 			"tencentcloud_vpc_route_policy_entries":                                                 vpc.ResourceTencentCloudVpcRoutePolicyEntries(),
 			"tencentcloud_vpc_route_policy_association":                                             vpc.ResourceTencentCloudVpcRoutePolicyAssociation(),
+			"tencentcloud_vpc_replace_routes_with_route_policy_config":                              vpc.ResourceTencentCloudVpcReplaceRoutesWithRoutePolicyConfig(),
 			"tencentcloud_oceanus_job":                                                              oceanus.ResourceTencentCloudOceanusJob(),
 			"tencentcloud_oceanus_job_config":                                                       oceanus.ResourceTencentCloudOceanusJobConfig(),
 			"tencentcloud_oceanus_job_copy":                                                         oceanus.ResourceTencentCloudOceanusJobCopy(),

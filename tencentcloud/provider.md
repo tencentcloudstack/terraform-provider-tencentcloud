@@ -1334,6 +1334,7 @@ tencentcloud_elastic_public_ipv6_attachment
 tencentcloud_vpc_route_policy
 tencentcloud_vpc_route_policy_entries
 tencentcloud_vpc_route_policy_association
+tencentcloud_vpc_replace_routes_with_route_policy_config
 
 Private Link(PLS)
 Resource
