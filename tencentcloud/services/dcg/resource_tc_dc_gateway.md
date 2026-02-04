@@ -17,6 +17,11 @@ resource "tencentcloud_dc_gateway" "example" {
   network_instance_id = tencentcloud_vpc.vpc.id
   network_type        = "VPC"
   gateway_type        = "NORMAL"
+  
+  tags = {
+    Environment = "production"
+    Owner       = "ops-team"
+  }
 }
 ```
 
@@ -41,12 +46,35 @@ resource "tencentcloud_dc_gateway" "example" {
   network_instance_id = tencentcloud_ccn.ccn.id
   network_type        = "CCN"
   gateway_type        = "NORMAL"
+  
+  tags = {
+    Team     = "networking"
+    Purpose  = "production"
+  }
+}
+```
+
+Update tags
+
+```hcl
+resource "tencentcloud_dc_gateway" "example" {
+  name                = "tf-example"
+  network_instance_id = tencentcloud_ccn.ccn.id
+  network_type        = "CCN"
+  gateway_type        = "NORMAL"
+  
+  # Tags can be updated without recreating the gateway
+  tags = {
+    Environment = "staging"
+    Team        = "devops"
+    CostCenter  = "IT-001"
+  }
 }
 ```
 
 Import
 
-Direct connect gateway instance can be imported, e.g.
+Direct connect gateway instance can be imported, e.g. Tags will be imported automatically.
 
 ```
 $ terraform import tencentcloud_dc_gateway.example dcg-dr1y0hu7

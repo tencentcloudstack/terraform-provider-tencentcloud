@@ -65,6 +65,44 @@ func TestAccTencentCloudDcgV3InstancesBasic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudDcgV3InstancesTags(t *testing.T) {
+	t.Parallel()
+
+	var rKey = "tencentcloud_dc_gateway.tags_test"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccTencentCloudCdgInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: TestAccTencentCloudDcgInstancesWithTags,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudCdgInstanceExists(rKey),
+					resource.TestCheckResourceAttr(rKey, "name", "ci-cdg-tags-test"),
+					resource.TestCheckResourceAttr(rKey, "tags.Environment", "test"),
+					resource.TestCheckResourceAttr(rKey, "tags.Owner", "terraform"),
+				),
+			},
+			{
+				Config: TestAccTencentCloudDcgInstancesUpdateTags,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudCdgInstanceExists(rKey),
+					resource.TestCheckResourceAttr(rKey, "name", "ci-cdg-tags-test"),
+					resource.TestCheckResourceAttr(rKey, "tags.Environment", "production"),
+					resource.TestCheckResourceAttr(rKey, "tags.Team", "ops"),
+					resource.TestCheckNoResourceAttr(rKey, "tags.Owner"),
+				),
+			},
+			{
+				ResourceName:      rKey,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccTencentCloudCdgInstanceExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -151,5 +189,45 @@ resource "tencentcloud_dc_gateway" "ccn_main" {
   network_instance_id = tencentcloud_ccn.main.id
   network_type        = "CCN"
   gateway_type        = "NORMAL"
+}
+`
+
+const TestAccTencentCloudDcgInstancesWithTags = `
+resource "tencentcloud_ccn" "tags_main" {
+  name        = "ci-temp-test-ccn-tags"
+  description = "ci-temp-test-ccn-tags-des"
+  qos         = "AG"
+}
+
+resource "tencentcloud_dc_gateway" "tags_test" {
+  name                = "ci-cdg-tags-test"
+  network_instance_id = tencentcloud_ccn.tags_main.id
+  network_type        = "CCN"
+  gateway_type        = "NORMAL"
+  
+  tags = {
+    Environment = "test"
+    Owner       = "terraform"
+  }
+}
+`
+
+const TestAccTencentCloudDcgInstancesUpdateTags = `
+resource "tencentcloud_ccn" "tags_main" {
+  name        = "ci-temp-test-ccn-tags"
+  description = "ci-temp-test-ccn-tags-des"
+  qos         = "AG"
+}
+
+resource "tencentcloud_dc_gateway" "tags_test" {
+  name                = "ci-cdg-tags-test"
+  network_instance_id = tencentcloud_ccn.tags_main.id
+  network_type        = "CCN"
+  gateway_type        = "NORMAL"
+  
+  tags = {
+    Environment = "production"
+    Team        = "ops"
+  }
 }
 `
