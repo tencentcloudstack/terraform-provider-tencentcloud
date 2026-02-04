@@ -670,13 +670,11 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 			"log_target_bucket": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
 				Description: "The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.",
 			},
 			"log_prefix": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
 				Description: "The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.",
 			},
 			"multi_az": {
@@ -1091,9 +1089,13 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 			}
 		}
 	} else {
-		_ = d.Set("log_enable", logEnable)
-		_ = d.Set("log_target_bucket", logTargetBucket)
-		_ = d.Set("log_prefix", logPrefix)
+		if logEnable {
+			_ = d.Set("log_target_bucket", logTargetBucket)
+			_ = d.Set("log_prefix", logPrefix)
+		} else {
+			_ = d.Set("log_target_bucket", nil)
+			_ = d.Set("log_prefix", nil)
+		}
 	}
 
 	// read the tags
