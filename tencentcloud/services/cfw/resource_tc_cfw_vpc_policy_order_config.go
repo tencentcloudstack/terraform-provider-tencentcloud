@@ -144,6 +144,7 @@ func resourceTencentCloudCfwVpcPolicyOrderConfigUpdate(d *schema.ResourceData, m
 				orderIndex := k + 1
 				modifyRuleItem.OrderIndex = helper.IntInt64(orderIndex)
 				modifyRuleItem.Uuid = helper.IntInt64(item.(int))
+				modifyRuleItem.EdgeId = helper.String("all")
 				request.Rules = append(request.Rules, &modifyRuleItem)
 				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwV20190904Client().ModifyVpcAcRuleWithContext(ctx, request)

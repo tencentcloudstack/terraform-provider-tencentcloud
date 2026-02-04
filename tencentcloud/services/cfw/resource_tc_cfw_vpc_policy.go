@@ -128,6 +128,11 @@ func ResourceTencentCloudCfwVpcPolicy() *schema.Resource {
 				Computed:    true,
 				Description: "Parameter template Name. Note: This field may return null, indicating that no valid value can be obtained.",
 			},
+			"order_index": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Execution order.",
+			},
 		},
 	}
 }
@@ -320,6 +325,10 @@ func resourceTencentCloudCfwVpcPolicyRead(d *schema.ResourceData, meta interface
 
 	if vpcPolicy.ParamTemplateName != nil {
 		_ = d.Set("param_template_name", vpcPolicy.ParamTemplateName)
+	}
+
+	if vpcPolicy.OrderIndex != nil {
+		_ = d.Set("order_index", vpcPolicy.OrderIndex)
 	}
 
 	return nil

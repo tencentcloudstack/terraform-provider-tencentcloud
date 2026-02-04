@@ -39,9 +39,9 @@ func TestAccTencentCloudCfwVpcPolicyOrderConfigResource_basic(t *testing.T) {
 
 const testAccCfwVpcPolicyOrderConfig = `
 resource "tencentcloud_cfw_vpc_policy" "example1" {
-  source_content = "0.0.0.0/0"
+  source_content = "1.1.1.1/0"
   source_type    = "net"
-  dest_content   = "192.168.0.2"
+  dest_content   = "192.168.0.1"
   dest_type      = "net"
   protocol       = "ANY"
   rule_action    = "log"
@@ -52,7 +52,7 @@ resource "tencentcloud_cfw_vpc_policy" "example1" {
 }
 
 resource "tencentcloud_cfw_vpc_policy" "example2" {
-  source_content = "0.0.0.0/0"
+  source_content = "2.2.2.2/0"
   source_type    = "net"
   dest_content   = "192.168.0.2"
   dest_type      = "net"
@@ -65,9 +65,9 @@ resource "tencentcloud_cfw_vpc_policy" "example2" {
 }
 
 resource "tencentcloud_cfw_vpc_policy" "example3" {
-  source_content = "0.0.0.0/0"
+  source_content = "3.3.3.3/0"
   source_type    = "net"
-  dest_content   = "192.168.0.2"
+  dest_content   = "192.168.0.3"
   dest_type      = "net"
   protocol       = "ANY"
   rule_action    = "log"
@@ -77,20 +77,20 @@ resource "tencentcloud_cfw_vpc_policy" "example3" {
   fw_group_id    = "ALL"
 }
 
-resource "tencentcloud_cfw_nat_policy_order_config" "example" {
+resource "tencentcloud_cfw_vpc_policy_order_config" "example" {
   rule_uuid_list = [
-    tencentcloud_cfw_vpc_policy.in_example3.uuid,
-    tencentcloud_cfw_vpc_policy.in_example1.uuid,
-    tencentcloud_cfw_vpc_policy.in_example2.uuid,
+    tencentcloud_cfw_vpc_policy.example3.uuid,
+    tencentcloud_cfw_vpc_policy.example1.uuid,
+    tencentcloud_cfw_vpc_policy.example2.uuid,
   ]
 }
 `
 
 const testAccCfwVpcPolicyOrderConfigUpdate = `
 resource "tencentcloud_cfw_vpc_policy" "example1" {
-  source_content = "0.0.0.0/0"
+  source_content = "1.1.1.1/0"
   source_type    = "net"
-  dest_content   = "192.168.0.2"
+  dest_content   = "192.168.0.1"
   dest_type      = "net"
   protocol       = "ANY"
   rule_action    = "log"
@@ -101,7 +101,7 @@ resource "tencentcloud_cfw_vpc_policy" "example1" {
 }
 
 resource "tencentcloud_cfw_vpc_policy" "example2" {
-  source_content = "0.0.0.0/0"
+  source_content = "2.2.2.2/0"
   source_type    = "net"
   dest_content   = "192.168.0.2"
   dest_type      = "net"
@@ -114,9 +114,9 @@ resource "tencentcloud_cfw_vpc_policy" "example2" {
 }
 
 resource "tencentcloud_cfw_vpc_policy" "example3" {
-  source_content = "0.0.0.0/0"
+  source_content = "3.3.3.3/0"
   source_type    = "net"
-  dest_content   = "192.168.0.2"
+  dest_content   = "192.168.0.3"
   dest_type      = "net"
   protocol       = "ANY"
   rule_action    = "log"
@@ -126,11 +126,11 @@ resource "tencentcloud_cfw_vpc_policy" "example3" {
   fw_group_id    = "ALL"
 }
 
-resource "tencentcloud_cfw_nat_policy_order_config" "example" {
+resource "tencentcloud_cfw_vpc_policy_order_config" "example" {
   rule_uuid_list = [
-    tencentcloud_cfw_vpc_policy.in_example2.uuid,
-    tencentcloud_cfw_vpc_policy.in_example3.uuid,
-    tencentcloud_cfw_vpc_policy.in_example1.uuid,
+    tencentcloud_cfw_vpc_policy.example2.uuid,
+    tencentcloud_cfw_vpc_policy.example3.uuid,
+    tencentcloud_cfw_vpc_policy.example1.uuid,
   ]
 }
 `
