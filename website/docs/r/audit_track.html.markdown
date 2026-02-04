@@ -66,7 +66,7 @@ The following arguments are supported:
 * `name` - (Required, String) Track name.
 * `resource_type` - (Required, String) Track product, optional:- `*`: All product- Single product, such as `cos`.
 * `status` - (Required, Int) Track status, optional:- `0`: Close- `1`: Open.
-* `storage` - (Required, List) Track Storage, support `cos` and `cls`.
+* `storage` - (Required, List) Track Storage, support `cos`, `cls` and `ckafka`.
 * `track_for_all_members` - (Optional, Int) Whether to enable the delivery of group member operation logs to the group management account or trusted service management account, optional:- `0`: Close- `1`: Open.
 
 The `storage` object supports the following:
@@ -74,7 +74,7 @@ The `storage` object supports the following:
 * `storage_name` - (Required, String) Track Storage name:- when StorageType is `cls`, StorageName is cls topicId- when StorageType is `cos`, StorageName is cos bucket name that does not contain `-APPID`.
 * `storage_prefix` - (Required, String) Storage path prefix.
 * `storage_region` - (Required, String) Storage region.
-* `storage_type` - (Required, String) Track Storage type, optional:- `cos`- `cls`.
+* `storage_type` - (Required, String) Track Storage type, optional:- `cos`- `cls`- `ckafka`.
 * `storage_account_id` - (Optional, String) Designated to store user ID.
 * `storage_app_id` - (Optional, String) Designated to store user appid.
 

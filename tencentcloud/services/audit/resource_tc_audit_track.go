@@ -61,13 +61,13 @@ func ResourceTencentCloudAuditTrack() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Required:    true,
-				Description: "Track Storage, support `cos` and `cls`.",
+				Description: "Track Storage, support `cos`, `cls` and `ckafka`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"storage_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Track Storage type, optional:- `cos`- `cls`.",
+							Description: "Track Storage type, optional:- `cos`- `cls`- `ckafka`.",
 						},
 						"storage_region": {
 							Type:        schema.TypeString,
