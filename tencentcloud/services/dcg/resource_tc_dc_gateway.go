@@ -9,6 +9,7 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -50,6 +51,11 @@ func ResourceTencentCloudDcGatewayInstance() *schema.Resource {
 				Default:      DCG_GATEWAY_TYPE_NORMAL,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(DCG_GATEWAY_TYPES),
 				Description:  "Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag key-value pairs for the DC gateway. Multiple tags can be set.",
 			},
 
 			//compute
@@ -103,6 +109,22 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("gateway_type"); ok {
 		request.GatewayType = helper.String(v.(string))
 		gatewayType = v.(string)
+	}
+
+	// Extract tags from schema
+	var tags []*vpc.Tag
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		for k, v := range temp {
+			tags = append(tags, &vpc.Tag{
+				Key:   helper.String(k),
+				Value: helper.String(v),
+			})
+		}
+	}
+
+	// Set tags in request if present
+	if len(tags) > 0 {
+		request.Tags = tags
 	}
 
 	if networkType == DCG_NETWORK_TYPE_VPC && !strings.HasPrefix(networkInstanceId, "vpc") {
@@ -180,6 +202,15 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
+	// Retrieve tags using tag service
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(tcClient)
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "dcg", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -188,6 +219,7 @@ func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{
 
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		dcgId = d.Id()
 	)
 
@@ -210,6 +242,18 @@ func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{
 
 		if err != nil {
 			log.Printf("[CRITAL]%s update direct connect gateway failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	// Handle tag changes
+	if d.HasChange("tags") {
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		resourceName := tccommon.BuildTagResourceName("vpc", "dcg", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 	}

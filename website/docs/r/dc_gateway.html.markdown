@@ -28,6 +28,11 @@ resource "tencentcloud_dc_gateway" "example" {
   network_instance_id = tencentcloud_vpc.vpc.id
   network_type        = "VPC"
   gateway_type        = "NORMAL"
+
+  tags = {
+    Environment = "production"
+    Owner       = "ops-team"
+  }
 }
 ```
 
@@ -52,6 +57,29 @@ resource "tencentcloud_dc_gateway" "example" {
   network_instance_id = tencentcloud_ccn.ccn.id
   network_type        = "CCN"
   gateway_type        = "NORMAL"
+
+  tags = {
+    Team    = "networking"
+    Purpose = "production"
+  }
+}
+```
+
+### Update tags
+
+```hcl
+resource "tencentcloud_dc_gateway" "example" {
+  name                = "tf-example"
+  network_instance_id = tencentcloud_ccn.ccn.id
+  network_type        = "CCN"
+  gateway_type        = "NORMAL"
+
+  # Tags can be updated without recreating the gateway
+  tags = {
+    Environment = "staging"
+    Team        = "devops"
+    CostCenter  = "IT-001"
+  }
 }
 ```
 
@@ -63,6 +91,7 @@ The following arguments are supported:
 * `network_instance_id` - (Required, String, ForceNew) If the `network_type` value is `VPC`, the available value is VPC ID. But when the `network_type` value is `CCN`, the available value is CCN instance ID.
 * `network_type` - (Required, String, ForceNew) Type of associated network. Valid value: `VPC` and `CCN`.
 * `gateway_type` - (Optional, String, ForceNew) Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.
+* `tags` - (Optional, Map) Tag key-value pairs for the DC gateway. Multiple tags can be set.
 
 ## Attributes Reference
 
@@ -76,7 +105,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Direct connect gateway instance can be imported, e.g.
+Direct connect gateway instance can be imported, e.g. Tags will be imported automatically.
 
 ```
 $ terraform import tencentcloud_dc_gateway.example dcg-dr1y0hu7
