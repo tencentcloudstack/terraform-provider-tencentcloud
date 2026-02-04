@@ -817,8 +817,8 @@ github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c h1:+aPplB
 github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c/go.mod h1:SbErYREK7xXdsRiigaQiQkI9McGRzYMvlKYaP3Nimdk=
 github.com/tdakkota/asciicheck v0.2.0 h1:o8jvnUANo0qXtnslk2d3nMKTFNlOnJjRrNcj0j9qkHM=
 github.com/tdakkota/asciicheck v0.2.0/go.mod h1:Qb7Y9EgjCLJGup51gDHFzbI08/gbGhL/UVhYIPWG2rg=
-github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1320+incompatible h1:i5nhRIbi+RNJlgyE0HSbZfbKYDoZAD35XhKDdcrFcyg=
-github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1320+incompatible/go.mod h1:72Wo6Gt6F8d8V+njrAmduVoT9QjPwCyXktpqCWr7PUc=
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1352+incompatible h1:qSTrU8fyMxYuF8jUuuq+MAQWjgbmPNlIwbXKY8oUOaw=
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1352+incompatible/go.mod h1:72Wo6Gt6F8d8V+njrAmduVoT9QjPwCyXktpqCWr7PUc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.15 h1:DdrPthuku3ezHa/PqNECpCgs6vFQSzwtQ9EwZIiQPhc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.15/go.mod h1:7nCseYwhSiY0roKtd1Q3IJbBcT30oeBV8Ba06nd2+HM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285 h1:gFmukRGLtYiXVBVvg/5DP/0fM1+dKpwDjT+khtDVLmc=

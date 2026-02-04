@@ -1,5 +1,5 @@
 ---
-subcategory: "DNSPOD"
+subcategory: "DNSPod"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dnspod_modify_domain_owner_operation"
 sidebar_current: "docs-tencentcloud-resource-dnspod_modify_domain_owner_operation"

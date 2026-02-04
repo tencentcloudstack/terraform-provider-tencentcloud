@@ -118,10 +118,10 @@ type AVTemplate struct {
 	// Quantity limit 0-20 Valid when MultiAudioTrackEnabled is turned on.
 	AudioTracks []*AudioTrackInfo `json:"AudioTracks,omitnil,omitempty" name:"AudioTracks"`
 
-
+	// Do you want to enable video enhancement? 1: Enable 0: Do not enable.
 	VideoEnhanceEnabled *uint64 `json:"VideoEnhanceEnabled,omitnil,omitempty" name:"VideoEnhanceEnabled"`
 
-
+	// Video enhancement configuration array.
 	VideoEnhanceSettings []*VideoEnhanceSetting `json:"VideoEnhanceSettings,omitnil,omitempty" name:"VideoEnhanceSettings"`
 
 	// Key frame interval, 300-10000, optional.
@@ -132,11 +132,79 @@ type AVTemplate struct {
 
 	// Color space setting.
 	ColorSpaceSettings *ColorSpaceSetting `json:"ColorSpaceSettings,omitnil,omitempty" name:"ColorSpaceSettings"`
+
+	// Traceability watermark.
+	ForensicWatermarkIds []*string `json:"ForensicWatermarkIds,omitnil,omitempty" name:"ForensicWatermarkIds"`
+}
+
+type AbWatermarkDetectionInfo struct {
+	// Task ID
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// Types of testing
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// State
+	State *string `json:"State,omitnil,omitempty" name:"State"`
+
+	// Result
+	Result *string `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// Error code
+	ErrorCode *int64 `json:"ErrorCode,omitnil,omitempty" name:"ErrorCode"`
+
+	// Error message
+	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
+
+	// Input information
+	InputInfo *AbWatermarkInputInfo `json:"InputInfo,omitnil,omitempty" name:"InputInfo"`
+
+	// Task notification configuration
+	TaskNotifyConfig *TaskNotifyConfig `json:"TaskNotifyConfig,omitnil,omitempty" name:"TaskNotifyConfig"`
+
+	// Create time
+	CreateTime *int64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// Update time
+	UpdateTime *int64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// Input file information
+	InputFileInfo *InputFileInfo `json:"InputFileInfo,omitnil,omitempty" name:"InputFileInfo"`
+}
+
+type AbWatermarkInputInfo struct {
+	// Input type, optional URL/COS, currently only supports URL
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// URL input information
+	UrlInputInfo *UrlInputInfo `json:"UrlInputInfo,omitnil,omitempty" name:"UrlInputInfo"`
 }
 
 type AbWatermarkSettingsReq struct {
-
+	// Optional values: A/B.
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
+type AbWatermarkSettingsResp struct {
+	// AB watermark type.
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// Watermark payload.
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+}
+
+type AdBreakSetting struct {
+	// Advertising type, currently supports L-SQUEEZE
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// Duration, in milliseconds, requires 1000<duration<=600000. The current accuracy is seconds, which is a multiple of 1000
+	Duration *uint64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// L-type compression recovery configuration
+	LSqueezeSetting *LSqueezeSetting `json:"LSqueezeSetting,omitnil,omitempty" name:"LSqueezeSetting"`
+
+	// AdSource type, supports UPLOAD_CREATIVES
+	AdSource *string `json:"AdSource,omitnil,omitempty" name:"AdSource"`
 }
 
 type AdditionalRateSetting struct {
@@ -309,6 +377,12 @@ type ChannelAlertInfos struct {
 
 	// Alarm details of pipeline 1 under this channel.
 	Pipeline1 []*ChannelPipelineAlerts `json:"Pipeline1,omitnil,omitempty" name:"Pipeline1"`
+
+	// Pipeline 0 total active alarm count
+	PipelineAActiveAlerts *int64 `json:"PipelineAActiveAlerts,omitnil,omitempty" name:"PipelineAActiveAlerts"`
+
+	// Pipeline 1 total active alarm count
+	PipelineBActiveAlerts *int64 `json:"PipelineBActiveAlerts,omitnil,omitempty" name:"PipelineBActiveAlerts"`
 }
 
 type ChannelInputStatistics struct {
@@ -377,18 +451,18 @@ type CreateImageSettings struct {
 	// Origin. Valid values: TOP_LEFT, BOTTOM_LEFT, TOP_RIGHT, BOTTOM_RIGHT.
 	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
 
-	// The watermark’s horizontal distance from the origin as a percentage of the video width. Value range: 0-100. Default: 10.
+	// The watermark's horizontal distance from the origin as a percentage of the video width. Value range: 0-100. Default: 10.
 	XPos *int64 `json:"XPos,omitnil,omitempty" name:"XPos"`
 
-	// The watermark’s vertical distance from the origin as a percentage of the video height. Value range: 0-100. Default: 10.
+	// The watermark's vertical distance from the origin as a percentage of the video height. Value range: 0-100. Default: 10.
 	YPos *int64 `json:"YPos,omitnil,omitempty" name:"YPos"`
 
-	// The watermark image’s width as a percentage of the video width. Value range: 0-100. Default: 10.
+	// The watermark image's width as a percentage of the video width. Value range: 0-100. Default: 10.
 	// `0` means to scale the width proportionally to the height.
 	// You cannot set both `Width` and `Height` to `0`.
 	Width *int64 `json:"Width,omitnil,omitempty" name:"Width"`
 
-	// The watermark image’s height as a percentage of the video height. Value range: 0-100. Default: 10.
+	// The watermark image's height as a percentage of the video height. Value range: 0-100. Default: 10.
 	// `0` means to scale the height proportionally to the width.
 	// You cannot set both `Width` and `Height` to `0`.
 	Height *int64 `json:"Height,omitnil,omitempty" name:"Height"`
@@ -859,10 +933,10 @@ type CreateTextSettings struct {
 	// Origin. Valid values: TOP_LEFT, BOTTOM_LEFT, TOP_RIGHT, BOTTOM_RIGHT.
 	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
 
-	// The watermark’s horizontal distance from the origin as a percentage of the video width. Value range: 0-100. Default: 10.
+	// The watermark's horizontal distance from the origin as a percentage of the video width. Value range: 0-100. Default: 10.
 	XPos *int64 `json:"XPos,omitnil,omitempty" name:"XPos"`
 
-	// The watermark’s vertical distance from the origin as a percentage of the video height. Value range: 0-100. Default: 10.
+	// The watermark's vertical distance from the origin as a percentage of the video height. Value range: 0-100. Default: 10.
 	YPos *int64 `json:"YPos,omitnil,omitempty" name:"YPos"`
 
 	// Font size. Value range: 25-50.
@@ -870,6 +944,84 @@ type CreateTextSettings struct {
 
 	// Font color, which is an RGB color value. Default value: 0x000000.
 	FontColor *string `json:"FontColor,omitnil,omitempty" name:"FontColor"`
+}
+
+// Predefined struct for user
+type CreateWatermarkDetectionRequestParams struct {
+	// Task type, currently supports ExtractVideoABWatermarkId
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// Input information
+	InputInfo *AbWatermarkInputInfo `json:"InputInfo,omitnil,omitempty" name:"InputInfo"`
+
+	// Input file information
+	InputFileInfo *InputFileInfo `json:"InputFileInfo,omitnil,omitempty" name:"InputFileInfo"`
+
+	// Input notification configuration
+	TaskNotifyConfig *TaskNotifyConfig `json:"TaskNotifyConfig,omitnil,omitempty" name:"TaskNotifyConfig"`
+}
+
+type CreateWatermarkDetectionRequest struct {
+	*tchttp.BaseRequest
+	
+	// Task type, currently supports ExtractVideoABWatermarkId
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// Input information
+	InputInfo *AbWatermarkInputInfo `json:"InputInfo,omitnil,omitempty" name:"InputInfo"`
+
+	// Input file information
+	InputFileInfo *InputFileInfo `json:"InputFileInfo,omitnil,omitempty" name:"InputFileInfo"`
+
+	// Input notification configuration
+	TaskNotifyConfig *TaskNotifyConfig `json:"TaskNotifyConfig,omitnil,omitempty" name:"TaskNotifyConfig"`
+}
+
+func (r *CreateWatermarkDetectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateWatermarkDetectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Type")
+	delete(f, "InputInfo")
+	delete(f, "InputFileInfo")
+	delete(f, "TaskNotifyConfig")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateWatermarkDetectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateWatermarkDetectionResponseParams struct {
+	// Task ID
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// The unique request ID, generated by the server, will be returned for every request (if the request fails to reach the server for other reasons, the request will not obtain a RequestId). RequestId is required for locating a problem.
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateWatermarkDetectionResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateWatermarkDetectionResponseParams `json:"Response"`
+}
+
+func (r *CreateWatermarkDetectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateWatermarkDetectionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DashRemuxSettingsInfo struct {
@@ -2160,10 +2312,10 @@ type DescribeTextSettings struct {
 	// Origin
 	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
 
-	// The watermark image’s horizontal distance from the origin as a percentage of the video width
+	// The watermark image's horizontal distance from the origin as a percentage of the video width
 	XPos *int64 `json:"XPos,omitnil,omitempty" name:"XPos"`
 
-	// The watermark image’s vertical distance from the origin as a percentage of the video height
+	// The watermark image's vertical distance from the origin as a percentage of the video height
 	YPos *int64 `json:"YPos,omitnil,omitempty" name:"YPos"`
 
 	// Font size
@@ -2207,6 +2359,144 @@ type DescribeTranscodeDetailInfo struct {
 	Resolution *string `json:"Resolution,omitnil,omitempty" name:"Resolution"`
 }
 
+// Predefined struct for user
+type DescribeWatermarkDetectionRequestParams struct {
+	// Task Id
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+type DescribeWatermarkDetectionRequest struct {
+	*tchttp.BaseRequest
+	
+	// Task Id
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+func (r *DescribeWatermarkDetectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeWatermarkDetectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWatermarkDetectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeWatermarkDetectionResponseParams struct {
+	// Detecting task related information
+	TaskInfo *AbWatermarkDetectionInfo `json:"TaskInfo,omitnil,omitempty" name:"TaskInfo"`
+
+	// The unique request ID, generated by the server, will be returned for every request (if the request fails to reach the server for other reasons, the request will not obtain a RequestId). RequestId is required for locating a problem.
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeWatermarkDetectionResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeWatermarkDetectionResponseParams `json:"Response"`
+}
+
+func (r *DescribeWatermarkDetectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeWatermarkDetectionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeWatermarkDetectionsRequestParams struct {
+	// Start time, 2022-12-04T16:50:00+08:00
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// End time, 2022-12-04T17:50:00+08:00, maximum supported query range of 7 days
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// Number of pages queried
+	PageNum *int64 `json:"PageNum,omitnil,omitempty" name:"PageNum"`
+
+	// Single page quantity, 1-100
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+}
+
+type DescribeWatermarkDetectionsRequest struct {
+	*tchttp.BaseRequest
+	
+	// Start time, 2022-12-04T16:50:00+08:00
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// End time, 2022-12-04T17:50:00+08:00, maximum supported query range of 7 days
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// Number of pages queried
+	PageNum *int64 `json:"PageNum,omitnil,omitempty" name:"PageNum"`
+
+	// Single page quantity, 1-100
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+}
+
+func (r *DescribeWatermarkDetectionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeWatermarkDetectionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "PageNum")
+	delete(f, "PageSize")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWatermarkDetectionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeWatermarkDetectionsResponseParams struct {
+	// Watermark detection information
+	TaskInfos []*AbWatermarkDetectionInfo `json:"TaskInfos,omitnil,omitempty" name:"TaskInfos"`
+
+	// number of tasks
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// The unique request ID, generated by the server, will be returned for every request (if the request fails to reach the server for other reasons, the request will not obtain a RequestId). RequestId is required for locating a problem.
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeWatermarkDetectionsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeWatermarkDetectionsResponseParams `json:"Response"`
+}
+
+func (r *DescribeWatermarkDetectionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeWatermarkDetectionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeWatermarkInfo struct {
 	// Watermark ID
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
@@ -2232,6 +2522,9 @@ type DescribeWatermarkInfo struct {
 	// List of channel IDs the watermark is bound to
 	// Note: This field may return `null`, indicating that no valid value was found.
 	AttachedChannels []*string `json:"AttachedChannels,omitnil,omitempty" name:"AttachedChannels"`
+
+	// AB watermark configuration.
+	AbWatermarkSettings *AbWatermarkSettingsResp `json:"AbWatermarkSettings,omitnil,omitempty" name:"AbWatermarkSettings"`
 }
 
 type DestinationInfo struct {
@@ -2374,6 +2667,9 @@ type EventSettingsReq struct {
 
 	// Dynamic graphic overlay activate configuration
 	MotionGraphicsActivateSetting *MotionGraphicsActivateSetting `json:"MotionGraphicsActivateSetting,omitnil,omitempty" name:"MotionGraphicsActivateSetting"`
+
+	// Ad Settings
+	AdBreakSetting *AdBreakSetting `json:"AdBreakSetting,omitnil,omitempty" name:"AdBreakSetting"`
 }
 
 type EventSettingsResp struct {
@@ -2415,6 +2711,9 @@ type EventSettingsResp struct {
 
 	// Dynamic graphic overlay activate configuration.
 	MotionGraphicsActivateSetting *MotionGraphicsActivateSetting `json:"MotionGraphicsActivateSetting,omitnil,omitempty" name:"MotionGraphicsActivateSetting"`
+
+	// Ad Settings
+	AdBreakSetting *AdBreakSetting `json:"AdBreakSetting,omitnil,omitempty" name:"AdBreakSetting"`
 }
 
 type FailOverSettings struct {
@@ -2610,6 +2909,11 @@ type InputAnalysisInfo struct {
 	HighlightSetting *HighlightInfo `json:"HighlightSetting,omitnil,omitempty" name:"HighlightSetting"`
 }
 
+type InputFileInfo struct {
+	// Segment duration, in milliseconds, ranging from 1000-10000, must be a multiple of 1000. The input video duration should be between SegmentDuration * 90 and SegmentDuration * 180
+	SegmentDuration *int64 `json:"SegmentDuration,omitnil,omitempty" name:"SegmentDuration"`
+}
+
 type InputInfo struct {
 	// Input region.
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
@@ -2738,6 +3042,26 @@ type InputTrack struct {
 type InputTracks struct {
 	// Audio track configuration information.
 	Tracks []*InputTrack `json:"Tracks,omitnil,omitempty" name:"Tracks"`
+}
+
+type LSqueezeSetting struct {
+	// Advertising benchmark position, 0 top left, 1 top right, 2 bottom right, 3 bottom left, default value 0, corresponding TOP_LEFT,TOP_RIGHT,BOTTOM_RIGHT,BOTTOM_LEFT
+	Location *uint64 `json:"Location,omitnil,omitempty" name:"Location"`
+
+	// The default value for the percentage in the X-axis direction is 20, with a range of 0-50
+	OffsetX *uint64 `json:"OffsetX,omitnil,omitempty" name:"OffsetX"`
+
+	// The default value for the percentage in the Y-axis direction is 20, with a range of 0-50
+	OffsetY *uint64 `json:"OffsetY,omitnil,omitempty" name:"OffsetY"`
+
+	// Background image URL, starting with http/https and ending in jpg/jpeg/png
+	BackgroundImgUrl *string `json:"BackgroundImgUrl,omitnil,omitempty" name:"BackgroundImgUrl"`
+
+	// Compress time. Unit ms, default value 2000, range: 500-10000, SqueezeInPeriod+SqueezeOutPeriod cannot be greater than duration, included in duration
+	SqueezeInPeriod *uint64 `json:"SqueezeInPeriod,omitnil,omitempty" name:"SqueezeInPeriod"`
+
+	// Restore to full screen time. Unit ms, default value 2000, range 500-10000, SqueezeInPeriod+SqueezeOutPeriod cannot be greater than duration, included in duration
+	SqueezeOutPeriod *uint64 `json:"SqueezeOutPeriod,omitnil,omitempty" name:"SqueezeOutPeriod"`
 }
 
 type LogInfo struct {
@@ -3199,6 +3523,9 @@ type OutputInfo struct {
 
 	// Frame capture template name array. Quantity limit: [0,1].
 	FrameCaptureTemplateNames []*string `json:"FrameCaptureTemplateNames,omitnil,omitempty" name:"FrameCaptureTemplateNames"`
+
+	// Name modification for sub m3u8.
+	NameModifier *string `json:"NameModifier,omitnil,omitempty" name:"NameModifier"`
 }
 
 type OutputsStatistics struct {
@@ -3230,6 +3557,15 @@ type PipelineInputStatistics struct {
 	// For `rtp/udp` input, the quantity is the number of `Pid` of the input audio.
 	// For other inputs, the quantity is 1.
 	Audio []*AudioPipelineInputStatistics `json:"Audio,omitnil,omitempty" name:"Audio"`
+
+	// Session ID
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// Rtt time, in milliseconds
+	RTT *int64 `json:"RTT,omitnil,omitempty" name:"RTT"`
+
+	// Is the Network parameter valid? 0 indicates invalid, 1 indicates valid
+	NetworkValid *int64 `json:"NetworkValid,omitnil,omitempty" name:"NetworkValid"`
 }
 
 type PipelineLogInfo struct {
@@ -3249,6 +3585,9 @@ type PipelineOutputStatistics struct {
 
 	// Output bandwidth in bps.
 	NetworkOut *uint64 `json:"NetworkOut,omitnil,omitempty" name:"NetworkOut"`
+
+	// Is the Network parameter valid? 0 indicates invalid, 1 indicates valid
+	NetworkValid *int64 `json:"NetworkValid,omitnil,omitempty" name:"NetworkValid"`
 }
 
 type PlanReq struct {
@@ -3303,14 +3642,14 @@ type QueryDispatchInputInfo struct {
 
 // Predefined struct for user
 type QueryInputStreamStateRequestParams struct {
-	// The StreamLive input ID.
+	// The StreamLive input ID.Currently, only RTMP_PUSH and RTMPS_PUSH are supported
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 type QueryInputStreamStateRequest struct {
 	*tchttp.BaseRequest
 	
-	// The StreamLive input ID.
+	// The StreamLive input ID.Currently, only RTMP_PUSH and RTMPS_PUSH are supported
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
@@ -3417,7 +3756,7 @@ type SegmentationDescriptorInfo struct {
 	// Corresponds to SCTE-35 segmentation_type_id.
 	TypeID *uint64 `json:"TypeID,omitnil,omitempty" name:"TypeID"`
 
-	// Corresponds to SCTE-35 segment_num。This field provides support for numbering segments within a given collection of segments.
+	// Corresponds to SCTE-35 segment_num. This field provides support for numbering segments within a given collection of segments.
 	Num *uint64 `json:"Num,omitnil,omitempty" name:"Num"`
 
 	// Corresponds to SCTE-35 segment_expected.This field provides a count of the expected number of individual segments within a collection of segments.
@@ -3452,7 +3791,7 @@ type SegmentationDescriptorRespInfo struct {
 	// Corresponds to SCTE-35 segmentation_type_id.
 	TypeID *uint64 `json:"TypeID,omitnil,omitempty" name:"TypeID"`
 
-	// Corresponds to SCTE-35 segment_num。This field provides support for numbering segments within a given collection of segments.
+	// Corresponds to SCTE-35 segment_num. This field provides support for numbering segments within a given collection of segments.
 	Num *uint64 `json:"Num,omitnil,omitempty" name:"Num"`
 
 	// Corresponds to SCTE-35 segment_expected.This field provides a count of the expected number of individual segments within a collection of segments.
@@ -3888,6 +4227,14 @@ type Tag struct {
 	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
 }
 
+type TaskNotifyConfig struct {
+	// Notification type. Currently only supports URLs
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// Callback URL. Starting with http/https, supporting a maximum of 512 characters
+	NotifyUrl *string `json:"NotifyUrl,omitnil,omitempty" name:"NotifyUrl"`
+}
+
 type ThumbnailSettings struct {
 	// Generate thumbnail ,0: Disabled ,1: Enabled , Default: 0
 	ThumbnailEnabled *int64 `json:"ThumbnailEnabled,omitnil,omitempty" name:"ThumbnailEnabled"`
@@ -3963,6 +4310,11 @@ type TimingSettingsResp struct {
 	PTS *uint64 `json:"PTS,omitnil,omitempty" name:"PTS"`
 }
 
+type UrlInputInfo struct {
+	// Video URL, starting with http/https, supports up to 512 characters, currently only supports complete single file videos, does not support streaming formats based on playlists and segments (such as HLS or DASH)
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+}
+
 type VideoCodecDetail struct {
 	// The three image quality levels of h264 include: BASELINE, HIGH, and MAIN. The default option is MAIN.
 	Profile *string `json:"Profile,omitnil,omitempty" name:"Profile"`
@@ -3981,10 +4333,10 @@ type VideoCodecDetail struct {
 }
 
 type VideoEnhanceSetting struct {
-
+	// Video enhancement types, optional: "GameEnhance", "ColorEnhance", "Debur", "Comprehensive", "Denoising", "SR", "OutdoorSportsCompetitions", "IndoorSportsCompetitions", "ShowEnhance"
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-
+	// Video enhancement intensity, 0-1.0, granularity 0.1
 	Strength *float64 `json:"Strength,omitnil,omitempty" name:"Strength"`
 }
 
@@ -4055,14 +4407,17 @@ type VideoTemplateInfo struct {
 	// Video encoding configuration.
 	VideoCodecDetails *VideoCodecDetail `json:"VideoCodecDetails,omitnil,omitempty" name:"VideoCodecDetails"`
 
-
+	// Video enhancement switch, 1: on 0: off.
 	VideoEnhanceEnabled *uint64 `json:"VideoEnhanceEnabled,omitnil,omitempty" name:"VideoEnhanceEnabled"`
 
-
+	// Video enhancement parameter array.
 	VideoEnhanceSettings []*VideoEnhanceSetting `json:"VideoEnhanceSettings,omitnil,omitempty" name:"VideoEnhanceSettings"`
 
 	// Color space setting.
 	ColorSpaceSettings *ColorSpaceSetting `json:"ColorSpaceSettings,omitnil,omitempty" name:"ColorSpaceSettings"`
+
+	// Traceability watermark.
+	ForensicWatermarkIds []*string `json:"ForensicWatermarkIds,omitnil,omitempty" name:"ForensicWatermarkIds"`
 }
 
 type WebVTTFontStyle struct {

@@ -10,6 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	dnspodintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/dnspod/v20210323"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 
@@ -889,5 +890,42 @@ func (me *DnspodService) DescribeDnspodLineGroupById(ctx context.Context, domain
 		offset += length
 	}
 
+	return
+}
+
+func (me *DnspodService) DescribeDnspodPackageOrderById(ctx context.Context, domain string) (ret *dnspodintl.DomainInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dnspodintl.NewDescribeDomainRequest()
+	response := dnspodintl.NewDescribeDomainResponse()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDnsPodIntlClient().DescribeDomain(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe domain failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.DomainInfo
 	return
 }

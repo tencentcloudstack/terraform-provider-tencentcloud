@@ -1,5 +1,5 @@
 ---
-subcategory: "DNSPOD"
+subcategory: "DNSPod"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dnspod_custom_line"
 sidebar_current: "docs-tencentcloud-resource-dnspod_custom_line"

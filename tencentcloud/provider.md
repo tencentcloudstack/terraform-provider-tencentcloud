@@ -1388,7 +1388,7 @@ tencentcloud_emr_yarn
 tencentcloud_emr_deploy_yarn_operation
 tencentcloud_emr_auto_scale_strategy
 
-DNSPOD
+DNSPod
 Resource
 tencentcloud_dnspod_domain_instance
 tencentcloud_dnspod_domain_alias
@@ -1402,6 +1402,7 @@ tencentcloud_dnspod_line_group
 tencentcloud_dnspod_snapshot_config
 tencentcloud_dnspod_domain_lock
 tencentcloud_subdomain_validate_txt_value_operation
+tencentcloud_dnspod_package_order
 
 Data Source
 tencentcloud_dnspod_records

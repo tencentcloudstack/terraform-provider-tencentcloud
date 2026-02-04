@@ -1087,7 +1087,7 @@ github.com/t-yuki/gocover-cobertura
 # github.com/tdakkota/asciicheck v0.2.0
 ## explicit; go 1.18
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1320+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1352+incompatible
 ## explicit
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common
@@ -1097,6 +1097,7 @@ github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/json
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/regions
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312
+github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/dnspod/v20210323
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.15

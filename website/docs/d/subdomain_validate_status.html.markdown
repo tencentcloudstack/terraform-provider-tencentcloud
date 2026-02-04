@@ -1,5 +1,5 @@
 ---
-subcategory: "DNSPOD"
+subcategory: "DNSPod"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_subdomain_validate_status"
 sidebar_current: "docs-tencentcloud-datasource-subdomain_validate_status"

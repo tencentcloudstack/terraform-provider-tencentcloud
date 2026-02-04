@@ -357,6 +357,66 @@ func (c *Client) CreateStreamLiveWatermarkWithContext(ctx context.Context, reque
     return
 }
 
+func NewCreateWatermarkDetectionRequest() (request *CreateWatermarkDetectionRequest) {
+    request = &CreateWatermarkDetectionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mdl", APIVersion, "CreateWatermarkDetection")
+    
+    
+    return
+}
+
+func NewCreateWatermarkDetectionResponse() (response *CreateWatermarkDetectionResponse) {
+    response = &CreateWatermarkDetectionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateWatermarkDetection
+// Create a watermark detection task
+//
+// error code that may be returned:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_IMAGESETTINGS = "InvalidParameter.ImageSettings"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+//  INVALIDPARAMETER_TEXTSETTINGS = "InvalidParameter.TextSettings"
+//  INVALIDPARAMETER_TYPE = "InvalidParameter.Type"
+func (c *Client) CreateWatermarkDetection(request *CreateWatermarkDetectionRequest) (response *CreateWatermarkDetectionResponse, err error) {
+    return c.CreateWatermarkDetectionWithContext(context.Background(), request)
+}
+
+// CreateWatermarkDetection
+// Create a watermark detection task
+//
+// error code that may be returned:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_IMAGESETTINGS = "InvalidParameter.ImageSettings"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+//  INVALIDPARAMETER_TEXTSETTINGS = "InvalidParameter.TextSettings"
+//  INVALIDPARAMETER_TYPE = "InvalidParameter.Type"
+func (c *Client) CreateWatermarkDetectionWithContext(ctx context.Context, request *CreateWatermarkDetectionRequest) (response *CreateWatermarkDetectionResponse, err error) {
+    if request == nil {
+        request = NewCreateWatermarkDetectionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mdl", APIVersion, "CreateWatermarkDetection")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateWatermarkDetection require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateWatermarkDetectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteStreamLiveChannelRequest() (request *DeleteStreamLiveChannelRequest) {
     request = &DeleteStreamLiveChannelRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -773,6 +833,7 @@ func NewDescribeStreamLiveChannelInputStatisticsResponse() (response *DescribeSt
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+//  INVALIDPARAMETER_PERIOD = "InvalidParameter.Period"
 //  INVALIDPARAMETER_STARTTIME = "InvalidParameter.StartTime"
 func (c *Client) DescribeStreamLiveChannelInputStatistics(request *DescribeStreamLiveChannelInputStatisticsRequest) (response *DescribeStreamLiveChannelInputStatisticsResponse, err error) {
     return c.DescribeStreamLiveChannelInputStatisticsWithContext(context.Background(), request)
@@ -785,6 +846,7 @@ func (c *Client) DescribeStreamLiveChannelInputStatistics(request *DescribeStrea
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+//  INVALIDPARAMETER_PERIOD = "InvalidParameter.Period"
 //  INVALIDPARAMETER_STARTTIME = "InvalidParameter.StartTime"
 func (c *Client) DescribeStreamLiveChannelInputStatisticsWithContext(ctx context.Context, request *DescribeStreamLiveChannelInputStatisticsRequest) (response *DescribeStreamLiveChannelInputStatisticsResponse, err error) {
     if request == nil {
@@ -886,6 +948,7 @@ func NewDescribeStreamLiveChannelOutputStatisticsResponse() (response *DescribeS
 //  INVALIDPARAMETER_ENDTIME = "InvalidParameter.EndTime"
 //  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+//  INVALIDPARAMETER_PERIOD = "InvalidParameter.Period"
 //  INVALIDPARAMETER_STARTTIME = "InvalidParameter.StartTime"
 func (c *Client) DescribeStreamLiveChannelOutputStatistics(request *DescribeStreamLiveChannelOutputStatisticsRequest) (response *DescribeStreamLiveChannelOutputStatisticsResponse, err error) {
     return c.DescribeStreamLiveChannelOutputStatisticsWithContext(context.Background(), request)
@@ -899,6 +962,7 @@ func (c *Client) DescribeStreamLiveChannelOutputStatistics(request *DescribeStre
 //  INVALIDPARAMETER_ENDTIME = "InvalidParameter.EndTime"
 //  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+//  INVALIDPARAMETER_PERIOD = "InvalidParameter.Period"
 //  INVALIDPARAMETER_STARTTIME = "InvalidParameter.StartTime"
 func (c *Client) DescribeStreamLiveChannelOutputStatisticsWithContext(ctx context.Context, request *DescribeStreamLiveChannelOutputStatisticsRequest) (response *DescribeStreamLiveChannelOutputStatisticsResponse, err error) {
     if request == nil {
@@ -1445,6 +1509,114 @@ func (c *Client) DescribeStreamLiveWatermarksWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDescribeStreamLiveWatermarksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeWatermarkDetectionRequest() (request *DescribeWatermarkDetectionRequest) {
+    request = &DescribeWatermarkDetectionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mdl", APIVersion, "DescribeWatermarkDetection")
+    
+    
+    return
+}
+
+func NewDescribeWatermarkDetectionResponse() (response *DescribeWatermarkDetectionResponse) {
+    response = &DescribeWatermarkDetectionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeWatermarkDetection
+// Describe watermark detection task
+//
+// error code that may be returned:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+func (c *Client) DescribeWatermarkDetection(request *DescribeWatermarkDetectionRequest) (response *DescribeWatermarkDetectionResponse, err error) {
+    return c.DescribeWatermarkDetectionWithContext(context.Background(), request)
+}
+
+// DescribeWatermarkDetection
+// Describe watermark detection task
+//
+// error code that may be returned:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+func (c *Client) DescribeWatermarkDetectionWithContext(ctx context.Context, request *DescribeWatermarkDetectionRequest) (response *DescribeWatermarkDetectionResponse, err error) {
+    if request == nil {
+        request = NewDescribeWatermarkDetectionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mdl", APIVersion, "DescribeWatermarkDetection")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeWatermarkDetection require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeWatermarkDetectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeWatermarkDetectionsRequest() (request *DescribeWatermarkDetectionsRequest) {
+    request = &DescribeWatermarkDetectionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mdl", APIVersion, "DescribeWatermarkDetections")
+    
+    
+    return
+}
+
+func NewDescribeWatermarkDetectionsResponse() (response *DescribeWatermarkDetectionsResponse) {
+    response = &DescribeWatermarkDetectionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeWatermarkDetections
+// Batch Describe watermark detection task
+//
+// error code that may be returned:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+func (c *Client) DescribeWatermarkDetections(request *DescribeWatermarkDetectionsRequest) (response *DescribeWatermarkDetectionsResponse, err error) {
+    return c.DescribeWatermarkDetectionsWithContext(context.Background(), request)
+}
+
+// DescribeWatermarkDetections
+// Batch Describe watermark detection task
+//
+// error code that may be returned:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_NOTFOUND = "InvalidParameter.NotFound"
+func (c *Client) DescribeWatermarkDetectionsWithContext(ctx context.Context, request *DescribeWatermarkDetectionsRequest) (response *DescribeWatermarkDetectionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeWatermarkDetectionsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mdl", APIVersion, "DescribeWatermarkDetections")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeWatermarkDetections require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeWatermarkDetectionsResponse()
     err = c.Send(request, response)
     return
 }

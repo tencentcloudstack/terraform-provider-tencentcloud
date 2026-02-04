@@ -77,6 +77,9 @@ const (
 	// Page number error.
 	INVALIDPARAMETER_PAGENUM = "InvalidParameter.PageNum"
 
+	// 
+	INVALIDPARAMETER_PERIOD = "InvalidParameter.Period"
+
 	// Invalid `Plan` parameter
 	INVALIDPARAMETER_PLAN = "InvalidParameter.Plan"
 
