@@ -56,7 +56,7 @@ func ResourceTencentCloudVpcInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Indicates whether VPC multicast is enabled. The default value is 'true'.",
+				Description: "Indicates whether VPC multicast is enabled. The default value is 'true'. Multicast are whitelist-restricted. We recommend disabling these features if they are not applicable to your environment.",
 			},
 			"assistant_cidrs": {
 				Type:        schema.TypeSet,

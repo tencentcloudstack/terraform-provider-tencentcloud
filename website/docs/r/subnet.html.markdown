@@ -19,8 +19,9 @@ Provide a resource to create a VPC subnet.
 data "tencentcloud_availability_zones" "zones" {}
 
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
+  name         = "vpc-example"
+  cidr_block   = "10.0.0.0/16"
+  is_multicast = false
 }
 
 resource "tencentcloud_subnet" "subnet" {
@@ -38,8 +39,9 @@ resource "tencentcloud_subnet" "subnet" {
 data "tencentcloud_availability_zones" "zones" {}
 
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
+  name         = "vpc-example"
+  cidr_block   = "10.0.0.0/16"
+  is_multicast = false
 }
 
 resource "tencentcloud_subnet" "subnet" {
@@ -61,7 +63,7 @@ The following arguments are supported:
 * `name` - (Required, String) The name of subnet to be created.
 * `vpc_id` - (Required, String, ForceNew) ID of the VPC to be associated.
 * `cdc_id` - (Optional, String, ForceNew) ID of CDC instance.
-* `is_multicast` - (Optional, Bool) Indicates whether multicast is enabled. The default value is 'true'.
+* `is_multicast` - (Optional, Bool) Indicates whether multicast is enabled. The default value is 'true'. We recommend disabling these features if they are not applicable to your environment.
 * `route_table_id` - (Optional, String) ID of a routing table to which the subnet should be associated.
 * `tags` - (Optional, Map) Tags of the subnet.
 

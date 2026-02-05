@@ -55,7 +55,7 @@ func ResourceTencentCloudVpcSubnet() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Indicates whether multicast is enabled. The default value is 'true'.",
+				Description: "Indicates whether multicast is enabled. The default value is 'true'. We recommend disabling these features if they are not applicable to your environment.",
 			},
 			"cdc_id": {
 				Type:        schema.TypeString,
