@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	privatednsIntlv20201028 "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 
 	intlSdkError "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/errors"
@@ -594,4 +595,156 @@ func (me *PrivatednsService) DescribePrivateDnsInboundEndpointById(ctx context.C
 
 	ret = response.Response.InboundEndpointSet[0]
 	return
+}
+
+func (me *PrivateDnsService) DescribePrivateDnsAccountByUin(ctx context.Context, uin string) (account *privatedns.PrivateDNSAccount, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := privatedns.NewDescribePrivateDNSAccountListRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	// Set filter to query by UIN
+	request.Filters = []*privatedns.Filter{
+		{
+			Name:   helper.String("AccountUin"),
+			Values: []*string{helper.String(uin)},
+		},
+	}
+
+	// Pagination parameters
+	var (
+		limit  int64 = 100
+		offset int64 = 0
+	)
+
+	// Loop through all pages to find the matching account
+	for {
+		request.Limit = &limit
+		request.Offset = &offset
+
+		var response *privatedns.DescribePrivateDNSAccountListResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UsePrivateDnsClient().DescribePrivateDNSAccountList(request)
+			if e != nil {
+				return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+			}
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s read private dns account failed, reason: %v", logId, err)
+			return nil, err
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		// Search for matching account in current page
+		if response.Response.AccountSet != nil {
+			for _, acc := range response.Response.AccountSet {
+				if acc.Uin != nil && *acc.Uin == uin {
+					return acc, nil
+				}
+			}
+		}
+
+		// Check if there are more pages
+		if response.Response.TotalCount == nil || offset+limit >= *response.Response.TotalCount {
+			break
+		}
+		offset += limit
+	}
+
+	// Account not found
+	return nil, nil
+}
+
+func (me *PrivateDnsService) CreatePrivateDnsAccount(ctx context.Context, uin string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := privatedns.NewCreatePrivateDNSAccountRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Account = &privatedns.PrivateDNSAccount{
+		Uin: helper.String(uin),
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivateDnsClient().CreatePrivateDNSAccount(request)
+		if e != nil {
+			// Treat account already exists as success (idempotent)
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameter.AccountExist" {
+					log.Printf("[DEBUG]%s account %s already exists, treating as success", logId, uin)
+					return nil
+				}
+			}
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create private dns account failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *PrivateDnsService) DeletePrivateDnsAccount(ctx context.Context, uin string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := privatedns.NewDeletePrivateDNSAccountRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Account = &privatedns.PrivateDNSAccount{
+		Uin: helper.String(uin),
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePrivateDnsClient().DeletePrivateDNSAccount(request)
+		if e != nil {
+			// Handle VPC binding error
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkErr.Code == "UnsupportedOperation.ExistBoundVpc" {
+					return resource.NonRetryableError(fmt.Errorf("cannot delete Private DNS account association: "+
+						"the account %s has VPC resources bound to it. "+
+						"Please unbind all VPCs from this account before deleting the association", uin))
+				}
+			}
+			return tccommon.RetryError(e, PRIVATEDNS_CUSTOM_RETRY_SDK_ERROR...)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete private dns account failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
 }

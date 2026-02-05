@@ -1974,6 +1974,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_package_order":                                                     dnspod.ResourceTencentCloudDnspodPackageOrder(),
 			"tencentcloud_private_dns_zone":                                                         privatedns.ResourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                                       privatedns.ResourceTencentCloudPrivateDnsRecord(),
+			"tencentcloud_private_dns_account":                                                      privatedns.ResourceTencentCloudPrivateDnsAccount(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                                          privatedns.ResourceTencentCloudPrivateDnsZoneVpcAttachment(),
 			"tencentcloud_subscribe_private_zone_service":                                           privatedns.ResourceTencentCloudSubscribePrivateZoneService(),
 			"tencentcloud_private_dns_forward_rule":                                                 privatedns.ResourceTencentCloudPrivateDnsForwardRule(),
