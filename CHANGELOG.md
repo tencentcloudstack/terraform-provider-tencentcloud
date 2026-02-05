@@ -1,3 +1,17 @@
+## 1.82.67(February 5, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_private_dns_account` ([#3796](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3796))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_postgresql_instances: ignore read account error ([#3797](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3797))
+* resource/tencentcloud_cdn_domain: support `https_billing` ([#3794](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3794))
+* resource/tencentcloud_dnspod_domain_instance: add more computed fields ([#3799](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3799))
+* resource/tencentcloud_kubernetes_encryption_protection: support default key ID（TKE-KMS） ([#3798](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3798))
+* resource/tencentcloud_security_group: support custom delete timeout ([#3795](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3795))
+
 ## 1.82.66(February 4, 2026)
 
 FEATURES:
