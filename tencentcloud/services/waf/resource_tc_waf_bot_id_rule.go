@@ -202,7 +202,7 @@ func resourceTencentCloudWafBotIdRuleUpdate(d *schema.ResourceData, meta interfa
 	sceneId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"data", "global_switch", "status", "rule_action", "global_redirect", "protect_level"}
+	mutableArgs := []string{"data", "global_switch", "protect_level"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
