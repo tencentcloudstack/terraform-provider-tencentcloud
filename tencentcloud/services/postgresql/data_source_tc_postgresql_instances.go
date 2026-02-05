@@ -568,7 +568,7 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		if v.DBInstanceId != nil && strings.HasPrefix(*v.DBInstanceId, "postgres-") {
 			accounts, outErr := service.DescribeRootUser(ctx, *v.DBInstanceId)
 			if outErr != nil {
-				return outErr
+				continue
 			}
 
 			if len(accounts) > 0 {
@@ -888,7 +888,7 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		if dBInstanceSet.DBInstanceId != nil && strings.HasPrefix(*dBInstanceSet.DBInstanceId, "postgres-") {
 			accounts, outErr := service.DescribeRootUser(ctx, *dBInstanceSet.DBInstanceId)
 			if outErr != nil {
-				return outErr
+				continue
 			}
 
 			if len(accounts) > 0 {
