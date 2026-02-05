@@ -1570,6 +1570,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"https_billing": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "HTTPS service is enabled by default (this is a paid service; please refer to the billing information and product documentation for details).",
 				Elem: &schema.Resource{
@@ -3126,6 +3127,13 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			"region":     dc.OthersPrivateAccess.Region,
 		})
 	}
+	if dc.HttpsBilling != nil {
+		if dc.HttpsBilling.Switch != nil {
+			tmpMap := map[string]interface{}{}
+			tmpMap["switch"] = dc.HttpsBilling.Switch
+			_ = d.Set("https_billing", []interface{}{tmpMap})
+		}
+	}
 
 	tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 	if errRet != nil {
@@ -4004,6 +4012,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 	if v, ok := helper.InterfacesHeadMap(d, "https_billing"); ok {
+		updateAttrs = append(updateAttrs, "https_billing")
 		vSwitch := v["switch"].(string)
 		request.HttpsBilling = &cdn.HttpsBilling{
 			Switch: &vSwitch,

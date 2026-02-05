@@ -55,7 +55,6 @@ resource "tencentcloud_cdn_domain" "foo" {
   domain       = "xxxx.com"
   service_type = "web"
   area         = "mainland"
-  # full_url_cache = true # Deprecated, use cache_key below.
   cache_key {
     full_url_cache = "on"
   }
@@ -160,6 +159,7 @@ The following arguments are supported:
 * `explicit_using_dry_run` - (Optional, Bool) Used for validate only by store arguments to request json string as expected, WARNING: if set to `true`, NO Cloud Api will be invoked but store as local data, do not use this argument unless you really know what you are doing.
 * `follow_redirect_switch` - (Optional, String) 301/302 redirect following switch, available values: `on`, `off` (default).
 * `full_url_cache` - (Optional, Bool, **Deprecated**) Use `cache_key` -> `full_url_cache` instead. Whether to enable full-path cache. Default value is `true`.
+* `https_billing` - (Optional, List) HTTPS service is enabled by default (this is a paid service; please refer to the billing information and product documentation for details).
 * `https_config` - (Optional, List) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `hw_private_access` - (Optional, List) Access authentication for OBS origin.
 * `ip_filter` - (Optional, List) Specify Ip filter configurations.
@@ -290,6 +290,10 @@ The `header_rules` object of `response_header` supports the following:
 * `header_value` - (Required, String) response header value of rule.
 * `rule_paths` - (Required, List) response rule paths of rule.
 * `rule_type` - (Required, String) response rule type of rule.
+
+The `https_billing` object supports the following:
+
+* `switch` - (Required, String) HTTPS service configuration switch, possible values are: on: Enabled (default setting), will incur charges; off: Disabled, will block HTTPS requests.
 
 The `https_config` object supports the following:
 
