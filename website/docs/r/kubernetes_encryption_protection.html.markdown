@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_encryption_protection"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_encryption_protection"
 description: |-
-  Provides a resource to create a tke encryption_protection
+  Provides a resource to create a TKE encryption protection
 ---
 
 # tencentcloud_kubernetes_encryption_protection
 
-Provides a resource to create a tke encryption_protection
+Provides a resource to create a TKE encryption protection
 
 ## Example Usage
 
@@ -68,8 +68,8 @@ The following arguments are supported:
 
 The `kms_configuration` object supports the following:
 
-* `key_id` - (Optional, String) kms id.
-* `kms_region` - (Optional, String) kms region.
+* `key_id` - (Optional, String) Custom key: If no KeyId is specified, a default key will be generated (TKE-KMS).
+* `kms_region` - (Optional, String) Generate keys with default settings or customize key region information.
 
 ## Attributes Reference
 
