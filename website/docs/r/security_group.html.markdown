@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_security_group"
 sidebar_current: "docs-tencentcloud-resource-security_group"
 description: |-
-  Provides a resource to create security group.
+  Provides a resource to create Security group.
 ---
 
 # tencentcloud_security_group
 
-Provides a resource to create security group.
+Provides a resource to create Security group.
 
 ## Example Usage
 
@@ -17,7 +17,7 @@ Provides a resource to create security group.
 
 ```hcl
 resource "tencentcloud_security_group" "example" {
-  name        = "tf-example-sg"
+  name        = "tf-example"
   description = "sg test"
 }
 ```
@@ -26,12 +26,12 @@ resource "tencentcloud_security_group" "example" {
 
 ```hcl
 resource "tencentcloud_security_group" "example" {
-  name        = "tf-example-sg"
+  name        = "tf-example"
   description = "sg test"
   project_id  = 0
 
   tags = {
-    "example" = "test"
+    "createdBy" = "Terraform"
   }
 }
 ```
@@ -52,12 +52,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `delete` - (Defaults to `3m`) Used when deleting the resource.
 
 ## Import
 
 Security group can be imported using the id, e.g.
 
 ```
-  $ terraform import tencentcloud_security_group.sglab sg-ey3wmiz1
+terraform import tencentcloud_security_group.example sg-ey3wmiz1
 ```
 

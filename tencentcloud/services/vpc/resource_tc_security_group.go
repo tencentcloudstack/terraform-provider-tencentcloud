@@ -1,6 +1,8 @@
 package vpc
 
 import (
+	"time"
+
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
@@ -25,7 +27,9 @@ func ResourceTencentCloudSecurityGroup() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
+		Timeouts: &schema.ResourceTimeout{
+			Delete: schema.DefaultTimeout(3 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
@@ -241,7 +245,7 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 		return err
 	}
 
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
 		e := vpcService.DeleteSecurityGroup(ctx, id)
 		if e != nil {
 			return resource.RetryableError(fmt.Errorf("security group delete failed: %v", e))
