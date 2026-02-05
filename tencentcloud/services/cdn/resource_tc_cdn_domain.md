@@ -41,31 +41,30 @@ Example Usage of cdn uses cache and request headers
 
 ```hcl
 resource "tencentcloud_cdn_domain" "foo" {
-  domain         = "xxxx.com"
-  service_type   = "web"
-  area           = "mainland"
-  # full_url_cache = true # Deprecated, use cache_key below.
+  domain       = "xxxx.com"
+  service_type = "web"
+  area         = "mainland"
   cache_key {
     full_url_cache = "on"
   }
   range_origin_switch = "off"
 
-  rule_cache{
-  	cache_time = 10000
-  	no_cache_switch="on"
-  	re_validate="on"
+  rule_cache {
+    cache_time      = 10000
+    no_cache_switch = "on"
+    re_validate     = "on"
   }
 
-  request_header{
-  	switch = "on"
+  request_header {
+    switch = "on"
 
-  	header_rules {
-  		header_mode = "add"
-  		header_name = "tf-header-name"
-  		header_value = "tf-header-value"
-  		rule_type = "all"
-  		rule_paths = ["*"]
-  	}
+    header_rules {
+      header_mode  = "add"
+      header_name  = "tf-header-name"
+      header_value = "tf-header-value"
+      rule_type    = "all"
+      rule_paths   = ["*"]
+    }
   }
 
   origin {
