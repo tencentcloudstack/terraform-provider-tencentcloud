@@ -8,8 +8,9 @@ Create a normal VPC subnet
 data "tencentcloud_availability_zones" "zones" {}
 
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
+  name         = "vpc-example"
+  cidr_block   = "10.0.0.0/16"
+  is_multicast = false
 }
 
 resource "tencentcloud_subnet" "subnet" {
@@ -27,8 +28,9 @@ Create a CDC instance VPC subnet
 data "tencentcloud_availability_zones" "zones" {}
 
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
+  name         = "vpc-example"
+  cidr_block   = "10.0.0.0/16"
+  is_multicast = false
 }
 
 resource "tencentcloud_subnet" "subnet" {
@@ -39,6 +41,7 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
   is_multicast      = false
 }
+
 ```
 
 Import
