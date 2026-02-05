@@ -1,4 +1,4 @@
-Provides a resource to create a tke encryption_protection
+Provides a resource to create a TKE encryption protection
 
 Example Usage
 
