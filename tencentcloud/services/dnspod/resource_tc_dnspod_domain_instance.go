@@ -70,6 +70,21 @@ func ResourceTencentCloudDnspodDomainInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Is secondary DNS enabled.",
 			},
+			"record_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of DNS records under this domain.",
+			},
+			"grade": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The DNS plan/package grade of the domain (e.g., DP_Free, DP_Plus).",
+			},
+			"updated_on": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Last modification time of the domain.",
+			},
 		},
 	}
 }
@@ -168,6 +183,18 @@ func resourceTencentCloudDnspodDomainInstanceRead(d *schema.ResourceData, meta i
 			} else {
 				_ = d.Set("status", info.Status)
 			}
+		}
+
+		if info.RecordCount != nil {
+			_ = d.Set("record_count", int(*info.RecordCount))
+		}
+
+		if info.Grade != nil {
+			_ = d.Set("grade", info.Grade)
+		}
+
+		if info.UpdatedOn != nil {
+			_ = d.Set("updated_on", info.UpdatedOn)
 		}
 
 		if info.Remark != nil {
