@@ -1061,6 +1061,65 @@ func (me *LightHouseService) DescribeLighthouseInstanceBlueprintByFilter(ctx con
 	return
 }
 
+func (me *LightHouseService) DescribeLighthouseBlueprintsByFilter(ctx context.Context, param map[string]interface{}) (blueprints []*lighthouse.Blueprint, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = lighthouse.NewDescribeBlueprintsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	// Map BlueprintIds parameter
+	if v, ok := param["BlueprintIds"]; ok {
+		blueprintIds := v.([]*string)
+		request.BlueprintIds = blueprintIds
+	}
+
+	// Map Filters parameter
+	if v, ok := param["Filters"]; ok {
+		filters := v.([]*lighthouse.Filter)
+		request.Filters = filters
+	}
+
+	// Pagination loop - automatically fetch all results
+	var offset int64 = 0
+	var pageSize int64 = 100
+	blueprints = make([]*lighthouse.Blueprint, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseLighthouseClient().DescribeBlueprints(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.BlueprintSet) < 1 {
+			break
+		}
+
+		blueprints = append(blueprints, response.Response.BlueprintSet...)
+
+		if len(response.Response.BlueprintSet) < int(pageSize) {
+			break
+		}
+
+		offset += pageSize
+	}
+
+	return
+}
+
 func (me *LightHouseService) DescribeLighthouseDiskConfigByFilter(ctx context.Context, param map[string]interface{}) (diskConfig []*lighthouse.DiskConfig, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
