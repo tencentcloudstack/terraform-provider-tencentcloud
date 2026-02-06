@@ -138,6 +138,36 @@ resource "tencentcloud_ssm_product_secret" "example" {
 }
 ```
 
+### Ssm secret for mongodb
+
+```hcl
+resource "tencentcloud_ssm_product_secret" "example" {
+  secret_name      = "tf-mongodb-example"
+  user_name_prefix = "ssm"
+  product_name     = "MongoDB"
+  instance_id      = "cmgo-xxxxxx"
+  domains          = ["%"]
+  privileges_list {
+    privilege_name = "GlobalPrivileges"
+    privileges     = ["READ_ONLY"]
+  }
+  privileges_list {
+    privilege_name = "DatabasePrivileges"
+    database       = "admin"
+    privileges     = ["READ_WRITE"]
+  }
+  description         = "MongoDB secret"
+  status              = "Enabled"
+  enable_rotation     = true
+  rotation_begin_time = "2026-02-04 00:00:00"
+  rotation_frequency  = 30
+
+  tags = {
+    "env" = "test"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
