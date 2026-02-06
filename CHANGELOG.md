@@ -1,3 +1,15 @@
+## 1.82.68(February 6, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_lighthouse_blueprints` ([#3803](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3803))
+* **New Resource:** `tencentcloud_waf_bot_id_rule` ([#3800](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3800))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_lighthouse_key_pair: return private key ([#3804](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3804))
+* resource/tencentcloud_ssm_product_secret: add mongodb secret demo ([#3805](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3805))
+
 ## 1.82.67(February 5, 2026)
 
 FEATURES:
