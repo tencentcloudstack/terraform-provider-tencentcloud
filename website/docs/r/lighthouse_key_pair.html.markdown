@@ -17,6 +17,10 @@ Provides a resource to create a lighthouse key_pair
 resource "tencentcloud_lighthouse_key_pair" "key_pair" {
   key_name = "key_name_test"
 }
+
+output "private_key" {
+  value = tencentcloud_lighthouse_key_pair.key_pair.private_key
+}
 ```
 
 ## Argument Reference
