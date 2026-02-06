@@ -75,6 +75,11 @@ func createKeyPair(ctx context.Context, d *schema.ResourceData, meta interface{}
 		return
 	}
 	keyId = *response.Response.KeyPair.KeyId
+
+	if response.Response.KeyPair.PrivateKey != nil {
+		_ = d.Set("private_key", *response.Response.KeyPair.PrivateKey)
+	}
+
 	return
 }
 
@@ -157,7 +162,9 @@ func resourceTencentCloudLighthouseKeyPairRead(d *schema.ResourceData, meta inte
 
 	_ = d.Set("key_name", keyPair.KeyName)
 	_ = d.Set("public_key", keyPair.PublicKey)
-	_ = d.Set("private_key", keyPair.PrivateKey)
+	if keyPair.PrivateKey != nil {
+		_ = d.Set("private_key", keyPair.PrivateKey)
+	}
 	_ = d.Set("created_time", keyPair.CreatedTime)
 
 	return nil

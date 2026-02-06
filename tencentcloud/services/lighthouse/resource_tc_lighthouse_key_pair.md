@@ -6,6 +6,10 @@ Example Usage
 resource "tencentcloud_lighthouse_key_pair" "key_pair" {
   key_name = "key_name_test"
 }
+
+output "private_key" {
+  value = tencentcloud_lighthouse_key_pair.key_pair.private_key
+}
 ```
 
 Import
