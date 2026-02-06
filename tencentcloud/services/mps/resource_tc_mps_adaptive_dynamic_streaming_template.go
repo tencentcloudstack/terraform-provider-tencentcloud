@@ -2,6 +2,7 @@ package mps
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -157,6 +158,20 @@ func ResourceTencentCloudMpsAdaptiveDynamicStreamingTemplate() *schema.Resource 
 				Type:        schema.TypeString,
 				Description: "Template description information, length limit: 256 characters.",
 			},
+
+			"pure_audio": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Indicates whether it is audio-only. 0 means video template, 1 means audio-only template.\nWhen the value is 1.\n1. StreamInfos.N.RemoveVideo=1\n2. StreamInfos.N.RemoveAudio=0\n3. StreamInfos.N.Video.Codec=copy\nWhen the value is 0.\n1. StreamInfos.N.Video.Codec cannot be copy.\n2. StreamInfos.N.Video.Fps cannot be null.\nNote: This value only distinguishes template types. The task uses the values of RemoveAudio and RemoveVideo.",
+			},
+
+			"segment_type": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Segment type. Valid values: \nts-segment: HLS+TS segment\nts-byterange: HLS+TS byte range\nmp4-segment: HLS+MP4 segment\nmp4-byterange: HLS/DASH+MP4 byte range\nts-packed-audio: HLS+TS+Packed Audio segment\nmp4-packed-audio: HLS+MP4+Packed Audio segment\nts-ts-segment: HLS+TS+TS segment\nts-ts-byterange: HLS+TS+TS byte range\nmp4-mp4-segment: HLS+MP4+MP4 segment\nmp4-mp4-byterange: HLS/DASH+MP4+MP4 byte range\nts-packed-audio-byterange: HLS+TS+Packed Audio byte range\nmp4-packed-audio-byterange: HLS+MP4+Packed Audio byte range.\n Default value: ts-segment. Note: The segment format for adaptive bitrate streaming is determined by this field. For DASH format, SegmentType can only be mp4-byterange or mp4-mp4-byterange.",
+			},
 		},
 	}
 }
@@ -165,13 +180,13 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 	defer tccommon.LogElapsed("resource.tencentcloud_mps_adaptive_dynamic_streaming_template.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = mps.NewCreateAdaptiveDynamicStreamingTemplateRequest()
 		response   = mps.NewCreateAdaptiveDynamicStreamingTemplateResponse()
 		definition uint64
 	)
+
 	if v, ok := d.GetOk("format"); ok {
 		request.Format = helper.String(v.(string))
 	}
@@ -185,54 +200,71 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 				if v, ok := videoMap["codec"]; ok {
 					videoTemplateInfo.Codec = helper.String(v.(string))
 				}
+
 				if v, ok := videoMap["fps"]; ok {
 					videoTemplateInfo.Fps = helper.IntInt64(v.(int))
 				}
+
 				if v, ok := videoMap["bitrate"]; ok {
 					videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 				}
+
 				if v, ok := videoMap["resolution_adaptive"]; ok {
 					videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
 				}
+
 				if v, ok := videoMap["width"]; ok {
 					videoTemplateInfo.Width = helper.IntUint64(v.(int))
 				}
+
 				if v, ok := videoMap["height"]; ok {
 					videoTemplateInfo.Height = helper.IntUint64(v.(int))
 				}
+
 				if v, ok := videoMap["gop"]; ok {
 					videoTemplateInfo.Gop = helper.IntUint64(v.(int))
 				}
+
 				if v, ok := videoMap["fill_type"]; ok {
 					videoTemplateInfo.FillType = helper.String(v.(string))
 				}
+
 				if v, ok := videoMap["vcrf"]; ok {
 					videoTemplateInfo.Vcrf = helper.IntUint64(v.(int))
 				}
+
 				adaptiveStreamTemplate.Video = &videoTemplateInfo
 			}
+
 			if audioMap, ok := helper.InterfaceToMap(dMap, "audio"); ok {
 				audioTemplateInfo := mps.AudioTemplateInfo{}
 				if v, ok := audioMap["codec"]; ok {
 					audioTemplateInfo.Codec = helper.String(v.(string))
 				}
+
 				if v, ok := audioMap["bitrate"]; ok {
 					audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 				}
+
 				if v, ok := audioMap["sample_rate"]; ok {
 					audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
 				}
+
 				if v, ok := audioMap["audio_channel"]; ok {
 					audioTemplateInfo.AudioChannel = helper.IntInt64(v.(int))
 				}
+
 				adaptiveStreamTemplate.Audio = &audioTemplateInfo
 			}
+
 			if v, ok := dMap["remove_audio"]; ok {
 				adaptiveStreamTemplate.RemoveAudio = helper.IntUint64(v.(int))
 			}
+
 			if v, ok := dMap["remove_video"]; ok {
 				adaptiveStreamTemplate.RemoveVideo = helper.IntUint64(v.(int))
 			}
+
 			request.StreamInfos = append(request.StreamInfos, &adaptiveStreamTemplate)
 		}
 	}
@@ -253,6 +285,14 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 		request.Comment = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("pure_audio"); ok {
+		request.PureAudio = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("segment_type"); ok {
+		request.SegmentType = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMpsClient().CreateAdaptiveDynamicStreamingTemplate(request)
 		if e != nil {
@@ -260,12 +300,22 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create mps adaptive dynamic streaming template failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create mps adaptiveDynamicStreamingTemplate failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.Definition == nil {
+		return fmt.Errorf("Definition is nil.")
 	}
 
 	definition = *response.Response.Definition
@@ -278,13 +328,12 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 	defer tccommon.LogElapsed("resource.tencentcloud_mps_adaptive_dynamic_streaming_template.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := MpsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	definition := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = MpsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		definition = d.Id()
+	)
 
 	adaptiveDynamicStreamingTemplate, err := service.DescribeMpsAdaptiveDynamicStreamingTemplateById(ctx, definition)
 	if err != nil {
@@ -292,8 +341,8 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 	}
 
 	if adaptiveDynamicStreamingTemplate == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_mps_adaptive_dynamic_streaming_template` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `MpsAdaptiveDynamicStreamingTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -305,10 +354,8 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 		streamInfosList := []interface{}{}
 		for _, streamInfos := range adaptiveDynamicStreamingTemplate.StreamInfos {
 			streamInfosMap := map[string]interface{}{}
-
 			if streamInfos.Video != nil {
 				videoMap := map[string]interface{}{}
-
 				if streamInfos.Video.Codec != nil {
 					videoMap["codec"] = streamInfos.Video.Codec
 				}
@@ -350,7 +397,6 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 
 			if streamInfos.Audio != nil {
 				audioMap := map[string]interface{}{}
-
 				if streamInfos.Audio.Codec != nil {
 					audioMap["codec"] = streamInfos.Audio.Codec
 				}
@@ -401,6 +447,14 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 		_ = d.Set("comment", adaptiveDynamicStreamingTemplate.Comment)
 	}
 
+	if adaptiveDynamicStreamingTemplate.PureAudio != nil {
+		_ = d.Set("pure_audio", adaptiveDynamicStreamingTemplate.PureAudio)
+	}
+
+	if adaptiveDynamicStreamingTemplate.SegmentType != nil {
+		_ = d.Set("segment_type", adaptiveDynamicStreamingTemplate.SegmentType)
+	}
+
 	return nil
 }
 
@@ -408,18 +462,14 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 	defer tccommon.LogElapsed("resource.tencentcloud_mps_adaptive_dynamic_streaming_template.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := mps.NewModifyAdaptiveDynamicStreamingTemplateRequest()
-
-	definition := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		request    = mps.NewModifyAdaptiveDynamicStreamingTemplateRequest()
+		definition = d.Id()
+	)
 
 	needChange := false
-
-	request.Definition = helper.StrToUint64Point(definition)
-
-	mutableArgs := []string{"format", "stream_infos", "name", "disable_higher_video_bitrate", "disable_higher_video_resolution", "comment"}
-
+	mutableArgs := []string{"format", "stream_infos", "name", "disable_higher_video_bitrate", "disable_higher_video_resolution", "comment", "pure_audio", "segment_type"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -428,7 +478,6 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 	}
 
 	if needChange {
-
 		if v, ok := d.GetOk("format"); ok {
 			request.Format = helper.String(v.(string))
 		}
@@ -442,54 +491,71 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 					if v, ok := videoMap["codec"]; ok {
 						videoTemplateInfo.Codec = helper.String(v.(string))
 					}
+
 					if v, ok := videoMap["fps"]; ok {
 						videoTemplateInfo.Fps = helper.IntInt64(v.(int))
 					}
+
 					if v, ok := videoMap["bitrate"]; ok {
 						videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 					}
+
 					if v, ok := videoMap["resolution_adaptive"]; ok {
 						videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
 					}
+
 					if v, ok := videoMap["width"]; ok {
 						videoTemplateInfo.Width = helper.IntUint64(v.(int))
 					}
+
 					if v, ok := videoMap["height"]; ok {
 						videoTemplateInfo.Height = helper.IntUint64(v.(int))
 					}
+
 					if v, ok := videoMap["gop"]; ok {
 						videoTemplateInfo.Gop = helper.IntUint64(v.(int))
 					}
+
 					if v, ok := videoMap["fill_type"]; ok {
 						videoTemplateInfo.FillType = helper.String(v.(string))
 					}
+
 					if v, ok := videoMap["vcrf"]; ok {
 						videoTemplateInfo.Vcrf = helper.IntUint64(v.(int))
 					}
+
 					adaptiveStreamTemplate.Video = &videoTemplateInfo
 				}
+
 				if audioMap, ok := helper.InterfaceToMap(adaptiveStreamTemplateMap, "audio"); ok {
 					audioTemplateInfo := mps.AudioTemplateInfo{}
 					if v, ok := audioMap["codec"]; ok {
 						audioTemplateInfo.Codec = helper.String(v.(string))
 					}
+
 					if v, ok := audioMap["bitrate"]; ok {
 						audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 					}
+
 					if v, ok := audioMap["sample_rate"]; ok {
 						audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
 					}
+
 					if v, ok := audioMap["audio_channel"]; ok {
 						audioTemplateInfo.AudioChannel = helper.IntInt64(v.(int))
 					}
+
 					adaptiveStreamTemplate.Audio = &audioTemplateInfo
 				}
+
 				if v, ok := adaptiveStreamTemplateMap["remove_audio"]; ok {
 					adaptiveStreamTemplate.RemoveAudio = helper.IntUint64(v.(int))
 				}
+
 				if v, ok := adaptiveStreamTemplateMap["remove_video"]; ok {
 					adaptiveStreamTemplate.RemoveVideo = helper.IntUint64(v.(int))
 				}
+
 				request.StreamInfos = append(request.StreamInfos, &adaptiveStreamTemplate)
 			}
 		}
@@ -510,6 +576,15 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 			request.Comment = helper.String(v.(string))
 		}
 
+		if v, ok := d.GetOkExists("pure_audio"); ok {
+			request.PureAudio = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("segment_type"); ok {
+			request.SegmentType = helper.String(v.(string))
+		}
+
+		request.Definition = helper.StrToUint64Point(definition)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMpsClient().ModifyAdaptiveDynamicStreamingTemplate(request)
 			if e != nil {
@@ -517,8 +592,10 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update mps adaptiveDynamicStreamingTemplate failed, reason:%+v", logId, err)
 			return err
@@ -532,11 +609,12 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateDelete(d *schema.Res
 	defer tccommon.LogElapsed("resource.tencentcloud_mps_adaptive_dynamic_streaming_template.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := MpsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	definition := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = MpsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		definition = d.Id()
+	)
 
 	if err := service.DeleteMpsAdaptiveDynamicStreamingTemplateById(ctx, definition); err != nil {
 		return err

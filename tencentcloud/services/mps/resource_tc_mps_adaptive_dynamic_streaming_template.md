@@ -1,15 +1,16 @@
-Provides a resource to create a mps adaptive_dynamic_streaming_template
+Provides a resource to create a MPS adaptive dynamic streaming template
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynamic_streaming_template" {
+resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "example" {
+  name                            = "tf-example"
   comment                         = "terrraform test"
   disable_higher_video_bitrate    = 0
   disable_higher_video_resolution = 1
   format                          = "HLS"
-  name                            = "terrraform-test"
-
+  pure_audio                      = 0
+  segment_type                    = "ts-segment"
   stream_infos {
     remove_audio = 0
     remove_video = 0
@@ -33,6 +34,7 @@ resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynami
       width               = 145
     }
   }
+
   stream_infos {
     remove_audio = 0
     remove_video = 0
@@ -57,13 +59,12 @@ resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynami
     }
   }
 }
-
 ```
 
 Import
 
-mps adaptive_dynamic_streaming_template can be imported using the id, e.g.
+MPS adaptive dynamic streaming template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mps_adaptive_dynamic_streaming_template.adaptive_dynamic_streaming_template adaptive_dynamic_streaming_template_id
+terraform import tencentcloud_mps_adaptive_dynamic_streaming_template.example 1636009
 ```
