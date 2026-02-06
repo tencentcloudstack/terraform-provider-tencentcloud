@@ -4,23 +4,24 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mps_adaptive_dynamic_streaming_template"
 sidebar_current: "docs-tencentcloud-resource-mps_adaptive_dynamic_streaming_template"
 description: |-
-  Provides a resource to create a mps adaptive_dynamic_streaming_template
+  Provides a resource to create a MPS adaptive dynamic streaming template
 ---
 
 # tencentcloud_mps_adaptive_dynamic_streaming_template
 
-Provides a resource to create a mps adaptive_dynamic_streaming_template
+Provides a resource to create a MPS adaptive dynamic streaming template
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynamic_streaming_template" {
+resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "example" {
+  name                            = "tf-example"
   comment                         = "terrraform test"
   disable_higher_video_bitrate    = 0
   disable_higher_video_resolution = 1
   format                          = "HLS"
-  name                            = "terrraform-test"
-
+  pure_audio                      = 0
+  segment_type                    = "ts-segment"
   stream_infos {
     remove_audio = 0
     remove_video = 0
@@ -44,6 +45,7 @@ resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynami
       width               = 145
     }
   }
+
   stream_infos {
     remove_audio = 0
     remove_video = 0
@@ -80,6 +82,29 @@ The following arguments are supported:
 * `disable_higher_video_bitrate` - (Optional, Int) Whether to prohibit video from low bit rate to high bit rate, value range:0: no.1: yes.Default value: 0.
 * `disable_higher_video_resolution` - (Optional, Int) Whether to prohibit the conversion of video resolution to high resolution, value range:0: no.1: yes.Default value: 0.
 * `name` - (Optional, String) Template name, length limit: 64 characters.
+* `pure_audio` - (Optional, Int) Indicates whether it is audio-only. 0 means video template, 1 means audio-only template.
+When the value is 1.
+1. StreamInfos.N.RemoveVideo=1
+2. StreamInfos.N.RemoveAudio=0
+3. StreamInfos.N.Video.Codec=copy
+When the value is 0.
+1. StreamInfos.N.Video.Codec cannot be copy.
+2. StreamInfos.N.Video.Fps cannot be null.
+Note: This value only distinguishes template types. The task uses the values of RemoveAudio and RemoveVideo.
+* `segment_type` - (Optional, String) Segment type. Valid values: 
+ts-segment: HLS+TS segment
+ts-byterange: HLS+TS byte range
+mp4-segment: HLS+MP4 segment
+mp4-byterange: HLS/DASH+MP4 byte range
+ts-packed-audio: HLS+TS+Packed Audio segment
+mp4-packed-audio: HLS+MP4+Packed Audio segment
+ts-ts-segment: HLS+TS+TS segment
+ts-ts-byterange: HLS+TS+TS byte range
+mp4-mp4-segment: HLS+MP4+MP4 segment
+mp4-mp4-byterange: HLS/DASH+MP4+MP4 byte range
+ts-packed-audio-byterange: HLS+TS+Packed Audio byte range
+mp4-packed-audio-byterange: HLS+MP4+Packed Audio byte range.
+ Default value: ts-segment. Note: The segment format for adaptive bitrate streaming is determined by this field. For DASH format, SegmentType can only be mp4-byterange or mp4-mp4-byterange.
 
 The `audio` object of `stream_infos` supports the following:
 
@@ -117,9 +142,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-mps adaptive_dynamic_streaming_template can be imported using the id, e.g.
+MPS adaptive dynamic streaming template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mps_adaptive_dynamic_streaming_template.adaptive_dynamic_streaming_template adaptive_dynamic_streaming_template_id
+terraform import tencentcloud_mps_adaptive_dynamic_streaming_template.example 1636009
 ```
 
