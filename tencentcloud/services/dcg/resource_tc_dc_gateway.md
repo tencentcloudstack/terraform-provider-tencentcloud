@@ -1,5 +1,7 @@
 Provides a resource to creating direct connect gateway instance.
 
+~> **NOTE:** Currently, it is not supported to set `cnn_route_type` to `BGP` simultaneously during the creation of resource `tencentcloud_dc_gateway`; This feature requires contacting the VPC product team to be added to the whitelist.
+
 Example Usage
 
 If network_type is VPC
@@ -77,5 +79,5 @@ Import
 Direct connect gateway instance can be imported, e.g. Tags will be imported automatically.
 
 ```
-$ terraform import tencentcloud_dc_gateway.example dcg-dr1y0hu7
+terraform import tencentcloud_dc_gateway.example dcg-dr1y0hu7
 ```
