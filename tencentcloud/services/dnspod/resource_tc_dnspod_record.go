@@ -89,7 +89,7 @@ func ResourceTencentCloudDnspodRecord() *schema.Resource {
 				Description: "The Remark of record.",
 			},
 			"record_id": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "ID of the record.",
 			},
