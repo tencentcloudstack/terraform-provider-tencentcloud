@@ -566,11 +566,7 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 
 		// rootUser
 		if v.DBInstanceId != nil && strings.HasPrefix(*v.DBInstanceId, "postgres-") {
-			accounts, outErr := service.DescribeRootUser(ctx, *v.DBInstanceId)
-			if outErr != nil {
-				continue
-			}
-
+			accounts, _ := service.DescribeRootUser(ctx, *v.DBInstanceId)
 			if len(accounts) > 0 {
 				listItem["root_user"] = accounts[0].UserName
 			}
