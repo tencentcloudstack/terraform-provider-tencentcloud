@@ -59,6 +59,11 @@ func DataSourceTencentCloudDnspodDomainInstances() *schema.Resource {
 							Description: "The remark of Domain.",
 						},
 						//computed
+						"id": {
+							Computed:    true,
+							Type:        schema.TypeString,
+							Description: "ID of the domain.",
+						},
 						"domain_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -112,6 +117,7 @@ func dataSourceTencentCloudDnspodDomainInstancesRead(d *schema.ResourceData, met
 		info := response.Response.DomainInfo
 		domainMap := make(map[string]interface{})
 
+		domainMap["id"] = info.DomainId
 		domainMap["domain_id"] = info.DomainId
 		domainMap["domain"] = info.Domain
 		domainMap["create_time"] = info.CreatedOn
