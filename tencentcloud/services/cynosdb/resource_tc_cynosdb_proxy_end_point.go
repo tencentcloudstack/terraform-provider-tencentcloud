@@ -265,6 +265,8 @@ func resourceTencentCloudCynosdbProxyEndPointCreate(d *schema.ResourceData, meta
 			}
 
 		} else if v.(string) == RO_TYPE {
+			request.RwType = helper.String(v.(string))
+
 			if _, ok := d.GetOk("consistency_type"); ok {
 				return fmt.Errorf("consistency_type invalid parameter")
 			}
