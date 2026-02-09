@@ -117,7 +117,7 @@ func dataSourceTencentCloudDnspodDomainInstancesRead(d *schema.ResourceData, met
 		info := response.Response.DomainInfo
 		domainMap := make(map[string]interface{})
 
-		domainMap["id"] = info.DomainId
+		domainMap["id"] = info.Domain
 		domainMap["domain_id"] = info.DomainId
 		domainMap["domain"] = info.Domain
 		domainMap["create_time"] = info.CreatedOn
