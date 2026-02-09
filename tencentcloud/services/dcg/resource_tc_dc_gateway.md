@@ -1,6 +1,6 @@
 Provides a resource to creating direct connect gateway instance.
 
-~> **NOTE:** Currently, it is not supported to set `cnn_route_type` to `BGP` simultaneously during the creation of resource `tencentcloud_dc_gateway`; This feature requires contacting the VPC product team to be added to the whitelist.
+~> **NOTE:** Currently, it is not supported to set `cnn_route_type` to `BGP` simultaneously during the creation of resource `tencentcloud_dc_gateway`(only configuration modification is supported); This feature requires contacting the VPC product team to be added to the whitelist.
 
 Example Usage
 
