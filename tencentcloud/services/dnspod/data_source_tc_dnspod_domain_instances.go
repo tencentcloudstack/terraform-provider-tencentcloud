@@ -30,32 +30,27 @@ func DataSourceTencentCloudDnspodDomainInstances() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"domain": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "The Domain.",
 						},
 						"group_id": {
 							Type:        schema.TypeInt,
-							Optional:    true,
-							ForceNew:    true,
+							Computed:    true,
 							Description: "The Group Id of Domain.",
 						},
 						"is_mark": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Computed:     true,
-							ForceNew:     true,
-							ValidateFunc: tccommon.ValidateAllowedStringValue(DNSPOD_DOMAIN_MARK_TYPE),
-							Description:  "Whether to Mark the Domain.",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Whether to Mark the Domain.",
 						},
 						"status": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: tccommon.ValidateAllowedStringValue(DNSPOD_DOMAIN_STATUS_TYPE),
-							Description:  "The status of Domain.",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The status of Domain.",
 						},
 						"remark": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "The remark of Domain.",
 						},
 						//computed
