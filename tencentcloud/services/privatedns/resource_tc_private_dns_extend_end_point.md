@@ -24,11 +24,14 @@ resource "tencentcloud_private_dns_extend_end_point" "example" {
   end_point_name   = "tf-example"
   end_point_region = "ap-jakarta"
   forward_ip {
-    access_type       = "CCN"
-    host              = "1.1.1.1"
+    access_type = "CCN"
+    hosts = [
+      "1.1.1.1",
+      "2.2.2.2"
+    ]
     port              = 8080
-    vpc_id            = "vpc-2qjckjg2"
-    access_gateway_id = "ccn-eo13f8ub"
+    vpc_id            = "vpc-h70u60bi"
+    access_gateway_id = "ccn-4s3g3yg5"
   }
 }
 ```

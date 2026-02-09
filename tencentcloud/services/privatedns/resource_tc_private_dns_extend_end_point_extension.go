@@ -17,8 +17,8 @@ func resourceTencentCloudPrivateDnsExtendEndPointReadPreHandleResponse0(ctx cont
 	}
 
 	if resp.OutboundEndpointSet == nil && len(resp.OutboundEndpointSet) < 1 {
+		log.Printf("[WARN]%s resource `tencentcloud_private_dns_extend_end_point` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `private_dns_extend_end_point` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -32,15 +32,22 @@ func resourceTencentCloudPrivateDnsExtendEndPointReadPreHandleResponse0(ctx cont
 		}
 
 		if item.EndpointServiceSet != nil {
-			tmpList := make([]map[string]interface{}, 0, len(item.EndpointServiceSet))
+			dMap := make(map[string]interface{}, 0)
+			hostList := make([]string, 0, len(item.EndpointServiceSet))
 			for _, v := range item.EndpointServiceSet {
-				dMap := make(map[string]interface{}, 0)
 				if v.AccessType != nil {
 					dMap["access_type"] = v.AccessType
 				}
 
-				if v.Pip != nil {
-					dMap["host"] = v.Pip
+				if len(item.EndpointServiceSet) > 1 {
+					if v.Pip != nil {
+						tmpStr := *v.Pip
+						hostList = append(hostList, tmpStr)
+					}
+				} else {
+					if v.Pip != nil {
+						dMap["host"] = v.Pip
+					}
 				}
 
 				if v.Pport != nil {
@@ -78,11 +85,13 @@ func resourceTencentCloudPrivateDnsExtendEndPointReadPreHandleResponse0(ctx cont
 				if v.SnatVipSet != nil {
 					dMap["snat_vip_set"] = v.SnatVipSet
 				}
-
-				tmpList = append(tmpList, dMap)
 			}
 
-			_ = d.Set("forward_ip", tmpList)
+			if len(hostList) > 0 {
+				dMap["hosts"] = hostList
+			}
+
+			_ = d.Set("forward_ip", []interface{}{dMap})
 		}
 	}
 
