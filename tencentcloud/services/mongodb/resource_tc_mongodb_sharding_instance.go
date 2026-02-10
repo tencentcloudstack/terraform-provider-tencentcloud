@@ -566,8 +566,6 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	d.Partial(false)
-
 	if d.HasChange("engine_version") {
 		request := mongodb.NewUpgradeDbInstanceVersionRequest()
 		response := mongodb.NewUpgradeDbInstanceVersionResponse()
@@ -602,6 +600,8 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
+
+	d.Partial(false)
 
 	return resourceMongodbShardingInstanceRead(d, meta)
 }
