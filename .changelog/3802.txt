@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_mps_adaptive_dynamic_streaming_template: support new params
+```
+
+```release-note:enhancement
+resource/tencentcloud_mps_transcode_template: deprecated `sharp_enhance` and `face_enhance`
+```

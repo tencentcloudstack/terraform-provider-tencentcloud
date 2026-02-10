@@ -305,6 +305,10 @@ func ResourceTencentCloudMpsTranscodeTemplate() *schema.Resource {
 										MaxItems:    1,
 										Optional:    true,
 										Description: "Detail Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.",
+										Deprecated:  "It has been deprecated from version v1.82.67. Please do not use this again.",
+										DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+											return true
+										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
@@ -325,6 +329,10 @@ func ResourceTencentCloudMpsTranscodeTemplate() *schema.Resource {
 										MaxItems:    1,
 										Optional:    true,
 										Description: "Face Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.",
+										Deprecated:  "It has been deprecated from version v1.82.67. Please do not use this again.",
+										DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+											return true
+										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
@@ -568,26 +576,26 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 				}
 				videoEnhanceConfig.ColorEnhance = &colorEnhanceConfig
 			}
-			if sharpEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "sharp_enhance"); ok {
-				sharpEnhanceConfig := mps.SharpEnhanceConfig{}
-				if v, ok := sharpEnhanceMap["switch"]; ok {
-					sharpEnhanceConfig.Switch = helper.String(v.(string))
-				}
-				if v, ok := sharpEnhanceMap["intensity"]; ok {
-					sharpEnhanceConfig.Intensity = helper.Float64(v.(float64))
-				}
-				videoEnhanceConfig.SharpEnhance = &sharpEnhanceConfig
-			}
-			if faceEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "face_enhance"); ok {
-				faceEnhanceConfig := mps.FaceEnhanceConfig{}
-				if v, ok := faceEnhanceMap["switch"]; ok {
-					faceEnhanceConfig.Switch = helper.String(v.(string))
-				}
-				if v, ok := faceEnhanceMap["intensity"]; ok {
-					faceEnhanceConfig.Intensity = helper.Float64(v.(float64))
-				}
-				videoEnhanceConfig.FaceEnhance = &faceEnhanceConfig
-			}
+			// if sharpEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "sharp_enhance"); ok {
+			// 	sharpEnhanceConfig := mps.SharpEnhanceConfig{}
+			// 	if v, ok := sharpEnhanceMap["switch"]; ok {
+			// 		sharpEnhanceConfig.Switch = helper.String(v.(string))
+			// 	}
+			// 	if v, ok := sharpEnhanceMap["intensity"]; ok {
+			// 		sharpEnhanceConfig.Intensity = helper.Float64(v.(float64))
+			// 	}
+			// 	videoEnhanceConfig.SharpEnhance = &sharpEnhanceConfig
+			// }
+			// if faceEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "face_enhance"); ok {
+			// 	faceEnhanceConfig := mps.FaceEnhanceConfig{}
+			// 	if v, ok := faceEnhanceMap["switch"]; ok {
+			// 		faceEnhanceConfig.Switch = helper.String(v.(string))
+			// 	}
+			// 	if v, ok := faceEnhanceMap["intensity"]; ok {
+			// 		faceEnhanceConfig.Intensity = helper.Float64(v.(float64))
+			// 	}
+			// 	videoEnhanceConfig.FaceEnhance = &faceEnhanceConfig
+			// }
 			if lowLightEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "low_light_enhance"); ok {
 				lowLightEnhanceConfig := mps.LowLightEnhanceConfig{}
 				if v, ok := lowLightEnhanceMap["switch"]; ok {
@@ -859,33 +867,33 @@ func resourceTencentCloudMpsTranscodeTemplateRead(d *schema.ResourceData, meta i
 				videoEnhanceMap["color_enhance"] = []interface{}{colorEnhanceMap}
 			}
 
-			if transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance != nil {
-				sharpEnhanceMap := map[string]interface{}{}
+			// if transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance != nil {
+			// 	sharpEnhanceMap := map[string]interface{}{}
 
-				if transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Switch != nil {
-					sharpEnhanceMap["switch"] = transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Switch
-				}
+			// 	if transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Switch != nil {
+			// 		sharpEnhanceMap["switch"] = transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Switch
+			// 	}
 
-				if transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Intensity != nil {
-					sharpEnhanceMap["intensity"] = transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Intensity
-				}
+			// 	if transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Intensity != nil {
+			// 		sharpEnhanceMap["intensity"] = transcodeTemplate.EnhanceConfig.VideoEnhance.SharpEnhance.Intensity
+			// 	}
 
-				videoEnhanceMap["sharp_enhance"] = []interface{}{sharpEnhanceMap}
-			}
+			// 	videoEnhanceMap["sharp_enhance"] = []interface{}{sharpEnhanceMap}
+			// }
 
-			if transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance != nil {
-				faceEnhanceMap := map[string]interface{}{}
+			// if transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance != nil {
+			// 	faceEnhanceMap := map[string]interface{}{}
 
-				if transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Switch != nil {
-					faceEnhanceMap["switch"] = transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Switch
-				}
+			// 	if transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Switch != nil {
+			// 		faceEnhanceMap["switch"] = transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Switch
+			// 	}
 
-				if transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Intensity != nil {
-					faceEnhanceMap["intensity"] = transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Intensity
-				}
+			// 	if transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Intensity != nil {
+			// 		faceEnhanceMap["intensity"] = transcodeTemplate.EnhanceConfig.VideoEnhance.FaceEnhance.Intensity
+			// 	}
 
-				videoEnhanceMap["face_enhance"] = []interface{}{faceEnhanceMap}
-			}
+			// 	videoEnhanceMap["face_enhance"] = []interface{}{faceEnhanceMap}
+			// }
 
 			if transcodeTemplate.EnhanceConfig.VideoEnhance.LowLightEnhance != nil {
 				lowLightEnhanceMap := map[string]interface{}{}
@@ -1114,26 +1122,26 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 					}
 					videoEnhanceConfig.ColorEnhance = &colorEnhanceConfig
 				}
-				if sharpEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "sharp_enhance"); ok {
-					sharpEnhanceConfig := mps.SharpEnhanceConfig{}
-					if v, ok := sharpEnhanceMap["switch"]; ok {
-						sharpEnhanceConfig.Switch = helper.String(v.(string))
-					}
-					if v, ok := sharpEnhanceMap["intensity"]; ok {
-						sharpEnhanceConfig.Intensity = helper.Float64(v.(float64))
-					}
-					videoEnhanceConfig.SharpEnhance = &sharpEnhanceConfig
-				}
-				if faceEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "face_enhance"); ok {
-					faceEnhanceConfig := mps.FaceEnhanceConfig{}
-					if v, ok := faceEnhanceMap["switch"]; ok {
-						faceEnhanceConfig.Switch = helper.String(v.(string))
-					}
-					if v, ok := faceEnhanceMap["intensity"]; ok {
-						faceEnhanceConfig.Intensity = helper.Float64(v.(float64))
-					}
-					videoEnhanceConfig.FaceEnhance = &faceEnhanceConfig
-				}
+				// if sharpEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "sharp_enhance"); ok {
+				// 	sharpEnhanceConfig := mps.SharpEnhanceConfig{}
+				// 	if v, ok := sharpEnhanceMap["switch"]; ok {
+				// 		sharpEnhanceConfig.Switch = helper.String(v.(string))
+				// 	}
+				// 	if v, ok := sharpEnhanceMap["intensity"]; ok {
+				// 		sharpEnhanceConfig.Intensity = helper.Float64(v.(float64))
+				// 	}
+				// 	videoEnhanceConfig.SharpEnhance = &sharpEnhanceConfig
+				// }
+				// if faceEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "face_enhance"); ok {
+				// 	faceEnhanceConfig := mps.FaceEnhanceConfig{}
+				// 	if v, ok := faceEnhanceMap["switch"]; ok {
+				// 		faceEnhanceConfig.Switch = helper.String(v.(string))
+				// 	}
+				// 	if v, ok := faceEnhanceMap["intensity"]; ok {
+				// 		faceEnhanceConfig.Intensity = helper.Float64(v.(float64))
+				// 	}
+				// 	videoEnhanceConfig.FaceEnhance = &faceEnhanceConfig
+				// }
 				if lowLightEnhanceMap, ok := helper.InterfaceToMap(videoEnhanceMap, "low_light_enhance"); ok {
 					lowLightEnhanceConfig := mps.LowLightEnhanceConfig{}
 					if v, ok := lowLightEnhanceMap["switch"]; ok {

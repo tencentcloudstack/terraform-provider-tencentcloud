@@ -4,19 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mps_transcode_template"
 sidebar_current: "docs-tencentcloud-resource-mps_transcode_template"
 description: |-
-  Provides a resource to create a mps transcode_template
+  Provides a resource to create a MPS transcode template
 ---
 
 # tencentcloud_mps_transcode_template
 
-Provides a resource to create a mps transcode_template
+Provides a resource to create a MPS transcode template
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mps_transcode_template" "transcode_template" {
+resource "tencentcloud_mps_transcode_template" "example" {
   container    = "mp4"
-  name         = "tf_transcode_template"
+  name         = "tf-example"
   remove_audio = 0
   remove_video = 0
 
@@ -132,13 +132,13 @@ The `video_enhance` object of `enhance_config` supports the following:
 * `artifact_repair` - (Optional, List) De-artifact (glitch) configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `color_enhance` - (Optional, List) Color Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `denoise` - (Optional, List) Video Noise Reduction Configuration.Note: This field may return null, indicating that no valid value can be obtained.
-* `face_enhance` - (Optional, List) Face Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.
+* `face_enhance` - (Optional, List, **Deprecated**) It has been deprecated from version v1.82.67. Please do not use this again. Face Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `frame_rate` - (Optional, List) Interpolation frame rate configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `hdr` - (Optional, List) HDR configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `image_quality_enhance` - (Optional, List) Comprehensive Enhanced Configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `low_light_enhance` - (Optional, List) Low Light Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `scratch_repair` - (Optional, List) De-scratch configuration.Note: This field may return null, indicating that no valid value can be obtained.
-* `sharp_enhance` - (Optional, List) Detail Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.
+* `sharp_enhance` - (Optional, List, **Deprecated**) It has been deprecated from version v1.82.67. Please do not use this again. Detail Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.
 * `super_resolution` - (Optional, List) Super resolution configuration.Note: This field may return null, indicating that no valid value can be obtained.
 
 The `video_template` object supports the following:
@@ -163,9 +163,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-mps transcode_template can be imported using the id, e.g.
+MPS transcode template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mps_transcode_template.transcode_template transcode_template_id
+terraform import tencentcloud_mps_transcode_template.example 1638607
 ```
 
