@@ -23,6 +23,9 @@ type DcgInstanceInfo struct {
 	cnnRouteType      string
 	createTime        string
 	enableBGP         bool
+	modeType          string
+	gatewayAsn        uint64
+	zone              string
 }
 
 // info for direct connect gateway[ ccn type] route.
@@ -132,6 +135,15 @@ getMoreData:
 		basicInfo.networkType = *item.NetworkType
 		basicInfo.networkInstanceId = *item.NetworkInstanceId
 		basicInfo.enableBGP = *item.EnableBGP
+		if item.ModeType != nil {
+			basicInfo.modeType = *item.ModeType
+		}
+		if item.GatewayAsn != nil {
+			basicInfo.gatewayAsn = *item.GatewayAsn
+		}
+		if item.Zone != nil {
+			basicInfo.modeType = *item.Zone
+		}
 
 		if basicInfo.networkType != DCG_NETWORK_TYPE_VPC &&
 			basicInfo.networkType != DCG_NETWORK_TYPE_CCN {

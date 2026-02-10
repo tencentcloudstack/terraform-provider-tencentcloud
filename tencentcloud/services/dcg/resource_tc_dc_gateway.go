@@ -52,18 +52,44 @@ func ResourceTencentCloudDcGatewayInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(DCG_GATEWAY_TYPES),
 				Description:  "Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.",
 			},
+			"mode_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "CCN route publishing method. Valid values: standard and exquisite. This parameter is only valid for the CCN direct connect gateway.",
+			},
+			"gateway_asn": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Dedicated connection gateway custom ASN, range: 45090, 64512-65534 and 4200000000-4294967294.",
+			},
+			"zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Availability zone where the direct connect gateway resides.",
+			},
+			"ha_zone_group_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "ID of DC highly available placement group.",
+			},
+			"cnn_route_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Type of CCN route. Valid value: `BGP` and `STATIC`. The property is available when the DCG type is CCN gateway and BGP enabled.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tag key-value pairs for the DC gateway. Multiple tags can be set.",
 			},
-
 			//compute
-			"cnn_route_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Type of CCN route. Valid value: `BGP` and `STATIC`. The property is available when the DCG type is CCN gateway and BGP enabled.",
-			},
 			"enable_bgp": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -109,6 +135,22 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("gateway_type"); ok {
 		request.GatewayType = helper.String(v.(string))
 		gatewayType = v.(string)
+	}
+
+	if v, ok := d.GetOk("mode_type"); ok {
+		request.ModeType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("gateway_asn"); ok {
+		request.GatewayAsn = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zone = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("ha_zone_group_id"); ok {
+		request.HaZoneGroupId = helper.String(v.(string))
 	}
 
 	// Extract tags from schema
@@ -165,6 +207,29 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 
 	d.SetId(*response.Response.DirectConnectGateway.DirectConnectGatewayId)
 
+	// set ccn route type
+	if v, ok := d.GetOk("cnn_route_type"); ok {
+		if v.(string) != "" && v.(string) != "STATIC" {
+			request := vpc.NewModifyDirectConnectGatewayAttributeRequest()
+			request.CcnRouteType = helper.String(v.(string))
+			request.DirectConnectGatewayId = helper.String(d.Id())
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyDirectConnectGatewayAttribute(request)
+				if e != nil {
+					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+					return tccommon.RetryError(e)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update direct connect gateway failed, reason:%s\n", logId, err.Error())
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudDcGatewayRead(d, meta)
 }
 
@@ -195,6 +260,15 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("cnn_route_type", info.cnnRouteType)
 		_ = d.Set("enable_bgp", info.enableBGP)
 		_ = d.Set("create_time", info.createTime)
+		if info.modeType != "" {
+			_ = d.Set("mode_type", info.modeType)
+		}
+		if info.gatewayAsn != 0 {
+			_ = d.Set("gateway_asn", info.gatewayAsn)
+		}
+		if info.zone != "" {
+			_ = d.Set("zone", info.zone)
+		}
 		return nil
 	})
 
@@ -223,13 +297,27 @@ func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{
 		dcgId = d.Id()
 	)
 
-	if d.HasChange("name") {
+	if d.HasChange("name") || d.HasChange("mode_type") || d.HasChange("cnn_route_type") {
 		request := vpc.NewModifyDirectConnectGatewayAttributeRequest()
-		request.DirectConnectGatewayId = helper.String(dcgId)
-		if v, ok := d.GetOk("name"); ok {
-			request.DirectConnectGatewayName = helper.String(v.(string))
+		if d.HasChange("name") {
+			if v, ok := d.GetOk("name"); ok {
+				request.DirectConnectGatewayName = helper.String(v.(string))
+			}
 		}
 
+		if d.HasChange("mode_type") {
+			if v, ok := d.GetOk("mode_type"); ok {
+				request.ModeType = helper.String(v.(string))
+			}
+		}
+
+		if d.HasChange("cnn_route_type") {
+			if v, ok := d.GetOk("cnn_route_type"); ok {
+				request.CcnRouteType = helper.String(v.(string))
+			}
+		}
+
+		request.DirectConnectGatewayId = helper.String(dcgId)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyDirectConnectGatewayAttribute(request)
 			if e != nil {
