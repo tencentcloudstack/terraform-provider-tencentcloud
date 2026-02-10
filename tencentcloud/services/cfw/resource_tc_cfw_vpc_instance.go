@@ -448,26 +448,30 @@ func resourceTencentCloudCfwVpcInstanceRead(d *schema.ResourceData, meta interfa
 						fwDeployMap["width"] = fwCvm.BandWidth
 					}
 
-					if fwCvm.ZoneZh != nil {
-						zone = ZONE_MAP_CN2EN[*fwCvm.ZoneZh]
+					if fwCvm.Zone != nil {
+						zone = *fwCvm.Zone
 					}
 
-					if fwCvm.ZoneZhBack != nil {
-						zoneBak = ZONE_MAP_CN2EN[*fwCvm.ZoneZhBack]
+					if fwCvm.ZoneBak != nil {
+						zoneBak = *fwCvm.ZoneBak
 					}
 
 					if zone == zoneBak {
 						fwDeployMap["cross_a_zone"] = CROSS_A_ZONE_0
+						zoneList := []string{
+							zone,
+						}
 
+						fwDeployMap["zone_set"] = zoneList
 					} else {
 						fwDeployMap["cross_a_zone"] = CROSS_A_ZONE_1
-					}
+						zoneList := []string{
+							zone,
+							zoneBak,
+						}
 
-					zoneList := []string{
-						zone,
-						zoneBak,
+						fwDeployMap["zone_set"] = zoneList
 					}
-					fwDeployMap["zone_set"] = zoneList
 
 					tmpList = append(tmpList, fwDeployMap)
 				}
