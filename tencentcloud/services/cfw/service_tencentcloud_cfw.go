@@ -2,9 +2,11 @@ package cfw
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -1551,4 +1553,141 @@ func (me *CfwService) DescribeCfwIpsModeSwitchById(ctx context.Context) (ret *cf
 
 	ret = response.Response
 	return
+}
+
+func (me *CfwService) DescribeCfwEdgePolicyOrderConfigs(ctx context.Context) (ret []*cfw.DescAcItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeAclRuleRequest()
+	response := cfw.NewDescribeAclRuleResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCfwClient().DescribeAclRule(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Data == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ac rule failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.Data) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwEdgePolicyOrderConfigById(ctx context.Context, uuid string) (edgePolicy *cfw.DescAcItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cfw.NewDescribeAclRuleRequest()
+	response := cfw.NewDescribeAclRuleResponse()
+	request.Limit = common.Uint64Ptr(100)
+	request.Offset = common.Uint64Ptr(0)
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("Id"),
+			Values:       common.StringPtrs([]string{uuid}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeAclRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe ac rule failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	edgePolicy = response.Response.Data[0]
+	return
+}
+
+func (me *CfwService) SplitAndFormat(input string) (string, error) {
+	if strings.TrimSpace(input) == "" {
+		return "", fmt.Errorf("input is empty")
+	}
+
+	parts := strings.Split(input, "|")
+
+	if len(parts) != 2 {
+		return "", fmt.Errorf("input does not contain exactly one '|'")
+	}
+
+	type KeyValue struct {
+		Key   string `json:"Key"`
+		Value string `json:"Value"`
+	}
+
+	kv := KeyValue{
+		Key:   strings.TrimSpace(parts[0]),
+		Value: strings.TrimSpace(parts[1]),
+	}
+
+	jsonBytes, err := json.Marshal(kv)
+	if err != nil {
+		return "", err
+	}
+
+	return string(jsonBytes), nil
 }
