@@ -306,6 +306,9 @@ func ResourceTencentCloudMpsTranscodeTemplate() *schema.Resource {
 										Optional:    true,
 										Description: "Detail Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.",
 										Deprecated:  "It has been deprecated from version v1.82.67. Please do not use this again.",
+										DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+											return true
+										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
@@ -327,6 +330,9 @@ func ResourceTencentCloudMpsTranscodeTemplate() *schema.Resource {
 										Optional:    true,
 										Description: "Face Enhancement Configuration.Note: This field may return null, indicating that no valid value can be obtained.",
 										Deprecated:  "It has been deprecated from version v1.82.67. Please do not use this again.",
+										DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+											return true
+										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
