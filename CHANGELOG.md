@@ -1,3 +1,21 @@
+## 1.82.69(February 10, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_advisor_authorization_operation` ([#3811](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3811))
+* **New Resource:** `tencentcloud_cfw_edge_policy_order_config` ([#3810](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3810))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfw_vpc_instance: optmize `zone_set` ([#3813](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3813))
+* resource/tencentcloud_cynosdb_proxy_end_point: optmize code for `rw_type` ([#3809](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3809))
+* resource/tencentcloud_dc_gateway: spport new params ([#3806](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3806))
+* resource/tencentcloud_mongodb_sharding_instance: spport modify `engine_version` ([#3814](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3814))
+* resource/tencentcloud_mps_adaptive_dynamic_streaming_template: support new params ([#3802](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3802))
+* resource/tencentcloud_mps_transcode_template: deprecated `sharp_enhance` and `face_enhance` ([#3802](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3802))
+* resource/tencentcloud_private_dns_extend_end_point: support new params ([#3807](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3807))
+* resource/tencentcloud_redis_instance: support modify `replicas_read_only` ([#3812](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3812))
+
 ## 1.82.68(February 6, 2026)
 
 FEATURES:
