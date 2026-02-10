@@ -244,7 +244,7 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 	} else {
 		_ = d.Set("status", "ENABLE")
 	}
-	_ = d.Set("record_id", recordId)
+	_ = d.Set("record_id", items[1])
 	return nil
 }
 
