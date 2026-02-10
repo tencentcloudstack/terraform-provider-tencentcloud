@@ -15,18 +15,18 @@ Provide a resource to create a Mongodb sharding instance.
 
 ```hcl
 resource "tencentcloud_mongodb_sharding_instance" "example" {
-  instance_name   = "mongodb"
+  instance_name   = "tf-example"
   shard_quantity  = 2
   nodes_per_shard = 3
   memory          = 4
   volume          = 100
-  engine_version  = "MONGO_36_WT"
+  engine_version  = "MONGO_40_WT"
   machine_type    = "HIO10G"
-  available_zone  = "ap-guangzhou-3"
-  vpc_id          = "vpc-mz3efvbw"
-  subnet_id       = "subnet-lk0svi3p"
+  available_zone  = "ap-guangzhou-6"
+  vpc_id          = "vpc-i5yyodl9"
+  subnet_id       = "subnet-hhi88a58"
   project_id      = 0
-  password        = "Password123"
+  password        = "Password@123"
   mongos_cpu      = 1
   mongos_memory   = 2
   mongos_node_num = 3
