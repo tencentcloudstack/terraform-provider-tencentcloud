@@ -53,7 +53,6 @@ func DataSourceTencentCloudDnspodDomainInstances() *schema.Resource {
 							Computed:    true,
 							Description: "The remark of Domain.",
 						},
-						//computed
 						"id": {
 							Computed:    true,
 							Type:        schema.TypeString,
@@ -73,6 +72,21 @@ func DataSourceTencentCloudDnspodDomainInstances() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Is secondary DNS enabled.",
+						},
+						"record_count": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of DNS records under this domain.",
+						},
+						"grade": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The DNS plan/package grade of the domain (e.g., DP_Free, DP_Plus).",
+						},
+						"updated_on": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Last modification time of the domain.",
 						},
 					},
 				},
@@ -118,6 +132,9 @@ func dataSourceTencentCloudDnspodDomainInstancesRead(d *schema.ResourceData, met
 		domainMap["create_time"] = info.CreatedOn
 		domainMap["is_mark"] = info.IsMark
 		domainMap["slave_dns"] = info.SlaveDNS
+		domainMap["record_count"] = info.RecordCount
+		domainMap["grade"] = info.Grade
+		domainMap["updated_on"] = info.UpdatedOn
 
 		if info.Status != nil {
 			if *info.Status == "pause" {
