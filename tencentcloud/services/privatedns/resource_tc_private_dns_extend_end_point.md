@@ -26,8 +26,8 @@ resource "tencentcloud_private_dns_extend_end_point" "example" {
   forward_ip {
     access_type = "CCN"
     hosts = [
-      "1.1.1.1",
-      "2.2.2.2"
+      "1.1.1.1:8080",
+      "2.2.2.2:9090",
     ]
     port              = 8080
     vpc_id            = "vpc-h70u60bi"

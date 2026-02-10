@@ -37,8 +37,8 @@ resource "tencentcloud_private_dns_extend_end_point" "example" {
   forward_ip {
     access_type = "CCN"
     hosts = [
-      "1.1.1.1",
-      "2.2.2.2"
+      "1.1.1.1:8080",
+      "2.2.2.2:9090",
     ]
     port              = 8080
     vpc_id            = "vpc-h70u60bi"
@@ -58,7 +58,7 @@ The following arguments are supported:
 The `forward_ip` object supports the following:
 
 * `access_type` - (Required, String, ForceNew) Forwarding target IP network access type. CLB: The forwarding IP is the internal CLB VIP. CCN: Forwarding IP through CCN routing.
-* `port` - (Required, Int, ForceNew) Specifies the forwarding IP port number.
+* `port` - (Required, Int, ForceNew) Specifies the forwarding IP port number. This only applies when configuring `host`; if using `hosts`, you can choose any port value from `hosts`.
 * `vpc_id` - (Required, String, ForceNew) Unique VPC ID.
 * `access_gateway_id` - (Optional, String, ForceNew) CCN id. Required when the access type is CCN.
 * `host` - (Optional, String, ForceNew) Forwarding target IP address.

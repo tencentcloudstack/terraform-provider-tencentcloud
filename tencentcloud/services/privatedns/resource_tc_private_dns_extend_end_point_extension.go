@@ -39,19 +39,21 @@ func resourceTencentCloudPrivateDnsExtendEndPointReadPreHandleResponse0(ctx cont
 					dMap["access_type"] = v.AccessType
 				}
 
+				var port string
+				if v.Pport != nil {
+					dMap["port"] = v.Pport
+					port = fmt.Sprintf("%d", *v.Pport)
+				}
+
 				if len(item.EndpointServiceSet) > 1 {
 					if v.Pip != nil {
-						tmpStr := *v.Pip
+						tmpStr := *v.Pip + ":" + port
 						hostList = append(hostList, tmpStr)
 					}
 				} else {
 					if v.Pip != nil {
 						dMap["host"] = v.Pip
 					}
-				}
-
-				if v.Pport != nil {
-					dMap["port"] = v.Pport
 				}
 
 				if v.VpcId != nil {
