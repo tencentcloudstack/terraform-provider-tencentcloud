@@ -677,8 +677,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	d.Partial(false)
-
 	if d.HasChange("engine_version") {
 		request := mongodb.NewUpgradeDbInstanceVersionRequest()
 		response := mongodb.NewUpgradeDbInstanceVersionResponse()
@@ -713,6 +711,8 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 	}
+
+	d.Partial(false)
 
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
