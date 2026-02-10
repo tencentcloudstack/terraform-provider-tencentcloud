@@ -4,19 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mps_transcode_template"
 sidebar_current: "docs-tencentcloud-resource-mps_transcode_template"
 description: |-
-  Provides a resource to create a mps transcode_template
+  Provides a resource to create a MPS transcode template
 ---
 
 # tencentcloud_mps_transcode_template
 
-Provides a resource to create a mps transcode_template
+Provides a resource to create a MPS transcode template
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mps_transcode_template" "transcode_template" {
+resource "tencentcloud_mps_transcode_template" "example" {
   container    = "mp4"
-  name         = "tf_transcode_template"
+  name         = "tf-example"
   remove_audio = 0
   remove_video = 0
 
@@ -163,9 +163,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-mps transcode_template can be imported using the id, e.g.
+MPS transcode template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mps_transcode_template.transcode_template transcode_template_id
+terraform import tencentcloud_mps_transcode_template.example 1638607
 ```
 
