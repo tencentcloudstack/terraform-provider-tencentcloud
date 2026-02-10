@@ -819,6 +819,8 @@ github.com/tdakkota/asciicheck v0.2.0 h1:o8jvnUANo0qXtnslk2d3nMKTFNlOnJjRrNcj0j9
 github.com/tdakkota/asciicheck v0.2.0/go.mod h1:Qb7Y9EgjCLJGup51gDHFzbI08/gbGhL/UVhYIPWG2rg=
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1352+incompatible h1:qSTrU8fyMxYuF8jUuuq+MAQWjgbmPNlIwbXKY8oUOaw=
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1352+incompatible/go.mod h1:72Wo6Gt6F8d8V+njrAmduVoT9QjPwCyXktpqCWr7PUc=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37 h1:vywXw9k0AkKYKvsNSvcrhrsphh5zntrNXtIrjmxUosw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37/go.mod h1:aUkwCIWA45p5MBiJXVp9xb9lxYAi8UFYkwgBFS45QSo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.15 h1:DdrPthuku3ezHa/PqNECpCgs6vFQSzwtQ9EwZIiQPhc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.15/go.mod h1:7nCseYwhSiY0roKtd1Q3IJbBcT30oeBV8Ba06nd2+HM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285 h1:gFmukRGLtYiXVBVvg/5DP/0fM1+dKpwDjT+khtDVLmc=
@@ -940,6 +942,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.32/go.mod h
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.33/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.34/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.36/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.37/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.38/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.39/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.40 h1:QcZ92TjQptjGe2Is7HVVXGXZpxJaW2kVNLHH0u0jXcA=

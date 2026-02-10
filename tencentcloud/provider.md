@@ -2567,3 +2567,7 @@ Resource
 tencentcloud_vcube_application_and_video
 tencentcloud_vcube_application_and_web_player_license
 tencentcloud_vcube_renew_video_operation
+
+Advisor
+Resource
+tencentcloud_advisor_authorization_operation
