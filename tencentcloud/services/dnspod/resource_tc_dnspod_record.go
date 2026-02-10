@@ -145,7 +145,7 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 		}
 		recordId = *response.Response.RecordId
 
-		d.SetId(domain + tccommon.FILED_SP + fmt.Sprint(recordId))
+		d.SetId(domain + tccommon.FILED_SP + strconv.FormatUint(recordId, 10))
 		return nil
 	})
 	if err != nil {
