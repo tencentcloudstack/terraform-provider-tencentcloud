@@ -114,20 +114,30 @@ func resourceTencentCloudCfwNatPolicyOrderConfigUpdate(d *schema.ResourceData, m
 				}
 
 				modifyRuleItem := cfwv20190904.CreateNatRuleItem{}
-				if natPolicy.SourceContent != nil {
-					modifyRuleItem.SourceContent = natPolicy.SourceContent
-				}
-
 				if natPolicy.SourceType != nil {
 					modifyRuleItem.SourceType = natPolicy.SourceType
 				}
 
-				if natPolicy.TargetContent != nil {
-					modifyRuleItem.TargetContent = natPolicy.TargetContent
+				if natPolicy.SourceContent != nil {
+					if natPolicy.SourceType != nil && *natPolicy.SourceType == "tag" {
+						ref, _ := service.SplitAndFormat(*natPolicy.SourceContent)
+						modifyRuleItem.SourceContent = &ref
+					} else {
+						modifyRuleItem.SourceContent = natPolicy.SourceContent
+					}
 				}
 
 				if natPolicy.TargetType != nil {
 					modifyRuleItem.TargetType = natPolicy.TargetType
+				}
+
+				if natPolicy.TargetContent != nil {
+					if natPolicy.TargetType != nil && *natPolicy.TargetType == "tag" {
+						ref, _ := service.SplitAndFormat(*natPolicy.TargetContent)
+						modifyRuleItem.TargetContent = &ref
+					} else {
+						modifyRuleItem.TargetContent = natPolicy.TargetContent
+					}
 				}
 
 				if natPolicy.Protocol != nil {
@@ -200,20 +210,30 @@ func resourceTencentCloudCfwNatPolicyOrderConfigUpdate(d *schema.ResourceData, m
 				}
 
 				modifyRuleItem := cfwv20190904.CreateNatRuleItem{}
-				if natPolicy.SourceContent != nil {
-					modifyRuleItem.SourceContent = natPolicy.SourceContent
-				}
-
 				if natPolicy.SourceType != nil {
 					modifyRuleItem.SourceType = natPolicy.SourceType
 				}
 
-				if natPolicy.TargetContent != nil {
-					modifyRuleItem.TargetContent = natPolicy.TargetContent
+				if natPolicy.SourceContent != nil {
+					if natPolicy.SourceType != nil && *natPolicy.SourceType == "tag" {
+						ref, _ := service.SplitAndFormat(*natPolicy.SourceContent)
+						modifyRuleItem.SourceContent = &ref
+					} else {
+						modifyRuleItem.SourceContent = natPolicy.SourceContent
+					}
 				}
 
 				if natPolicy.TargetType != nil {
 					modifyRuleItem.TargetType = natPolicy.TargetType
+				}
+
+				if natPolicy.TargetContent != nil {
+					if natPolicy.TargetType != nil && *natPolicy.TargetType == "tag" {
+						ref, _ := service.SplitAndFormat(*natPolicy.TargetContent)
+						modifyRuleItem.TargetContent = &ref
+					} else {
+						modifyRuleItem.TargetContent = natPolicy.TargetContent
+					}
 				}
 
 				if natPolicy.Protocol != nil {

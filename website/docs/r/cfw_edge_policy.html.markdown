@@ -69,6 +69,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `order_index` - Execution order.
 * `uuid` - The unique id corresponding to the rule, no need to fill in when creating the rule.
 
 

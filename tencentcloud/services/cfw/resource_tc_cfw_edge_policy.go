@@ -68,11 +68,6 @@ func ResourceTencentCloudCfwEdgePolicy() *schema.Resource {
 				Required:    true,
 				Description: "Rule direction: 1, inbound; 0, outbound.",
 			},
-			"uuid": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "The unique id corresponding to the rule, no need to fill in when creating the rule.",
-			},
 			"enable": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -97,6 +92,17 @@ func ResourceTencentCloudCfwEdgePolicy() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Parameter template id.",
+			},
+			// computed
+			"uuid": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The unique id corresponding to the rule, no need to fill in when creating the rule.",
+			},
+			"order_index": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Execution order.",
 			},
 		},
 	}
@@ -293,6 +299,10 @@ func resourceTencentCloudCfwEdgePolicyRead(d *schema.ResourceData, meta interfac
 
 	if edgePolicy.ParamTemplateId != nil {
 		_ = d.Set("param_template_id", edgePolicy.ParamTemplateId)
+	}
+
+	if edgePolicy.OrderIndex != nil {
+		_ = d.Set("order_index", edgePolicy.OrderIndex)
 	}
 
 	return nil
