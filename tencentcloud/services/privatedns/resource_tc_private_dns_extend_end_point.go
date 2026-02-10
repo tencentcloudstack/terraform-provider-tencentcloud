@@ -49,22 +49,40 @@ func ResourceTencentCloudPrivateDnsExtendEndPoint() *schema.Resource {
 							Description: "Forwarding target IP network access type. CLB: The forwarding IP is the internal CLB VIP. CCN: Forwarding IP through CCN routing.",
 						},
 						"host": {
-							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
-							Description: "Forwarding target IP address.",
+							Type:          schema.TypeString,
+							Optional:      true,
+							ForceNew:      true,
+							ConflictsWith: []string{"forward_ip.0.hosts"},
+							Description:   "Forwarding target IP address.",
+						},
+						"hosts": {
+							Type:          schema.TypeSet,
+							Optional:      true,
+							ForceNew:      true,
+							MinItems:      2,
+							ConflictsWith: []string{"forward_ip.0.host"},
+							Description:   "Forwarding target IPs address.",
+							Elem:          &schema.Schema{Type: schema.TypeString},
 						},
 						"port": {
-							Type:        schema.TypeInt,
-							Required:    true,
-							ForceNew:    true,
-							Description: "Specifies the forwarding IP port number.",
+							Type:     schema.TypeInt,
+							Required: true,
+							ForceNew: true,
+							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+								forwardIpList := d.Get("forward_ip").([]interface{})
+								if len(forwardIpList) == 0 {
+									return false
+								}
+
+								_, hostsExplicitlySet := d.GetOkExists("forward_ip.0.hosts")
+								if hostsExplicitlySet {
+									return true
+								}
+
+								return false
+							},
+							Description: "Specifies the forwarding IP port number. This only applies when configuring `host`; if using `hosts`, you can choose any port value from `hosts`.",
 						},
-						// "ip_num": {
-						// 	Type:        schema.TypeInt,
-						// 	Required:    true,
-						// 	Description: "Specifies the number of outbound endpoints. Minimum 1, maximum 6.",
-						// },
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Required:    true,
@@ -141,19 +159,24 @@ func resourceTencentCloudPrivateDnsExtendEndPointCreate(d *schema.ResourceData, 
 			forwardIp.AccessType = helper.String(v.(string))
 		}
 
-		if v, ok := dMap["host"]; ok {
-			forwardIp.Host = helper.String(v.(string))
+		if v, ok := dMap["host"].(string); ok && v != "" {
+			forwardIp.Host = helper.String(v)
+			forwardIp.IpNum = helper.IntInt64(1)
+		}
+
+		if v, ok := dMap["hosts"].(*schema.Set); ok && len(v.List()) > 0 {
+			var tmpStr string
+			for _, item := range v.List() {
+				tmpStr += item.(string) + ";"
+			}
+
+			forwardIp.Host = helper.String(tmpStr[:len(tmpStr)-1])
+			forwardIp.IpNum = helper.IntInt64(len(v.List()))
 		}
 
 		if v, ok := dMap["port"]; ok {
 			forwardIp.Port = helper.IntInt64(v.(int))
 		}
-
-		// if v, ok := dMap["ip_num"]; ok {
-		// 	forwardIp.IpNum = helper.IntInt64(v.(int))
-		// }
-
-		forwardIp.IpNum = helper.IntInt64(1)
 
 		if v, ok := dMap["vpc_id"]; ok {
 			forwardIp.VpcId = helper.String(v.(string))
@@ -217,8 +240,8 @@ func resourceTencentCloudPrivateDnsExtendEndPointRead(d *schema.ResourceData, me
 	}
 
 	if respData == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `tencentcloud_private_dns_extend_end_point` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
 
