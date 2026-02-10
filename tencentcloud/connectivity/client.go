@@ -20,6 +20,8 @@ import (
 	dnspodintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/dnspod/v20210323"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
 	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
+	advisorv20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
+	v20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
@@ -251,6 +253,7 @@ type TencentCloudClient struct {
 	igtmv20231024Conn           *igtmv20231024.Client
 	bhv20230418Conn             *bhv20230418.Client
 	vcubev20220410Conn          *vcubev20220410.Client
+	advisorv20200721Conn        *advisorv20200721.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2191,4 +2194,16 @@ func (me *TencentCloudClient) UseVcubeV20220410Client() *vcubev20220410.Client {
 	me.vcubev20220410Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.vcubev20220410Conn
+}
+
+// UseAdvisorV20200721Client return ADVISOR client for service
+func (me *TencentCloudClient) UseAdvisorV20200721Client() *advisorv20200721.Client {
+	if me.advisorv20200721Conn != nil {
+		return me.advisorv20200721Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.advisorv20200721Conn, _ = v20200721.NewClient(me.Credential, me.Region, cpf)
+	me.advisorv20200721Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.advisorv20200721Conn
 }

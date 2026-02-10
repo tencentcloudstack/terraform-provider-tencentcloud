@@ -107,6 +107,7 @@ require (
 
 require (
 	github.com/hashicorp/go-uuid v1.0.3
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.21
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149

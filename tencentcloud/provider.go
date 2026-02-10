@@ -21,6 +21,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/advisor"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
@@ -2586,6 +2587,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vcube_application_and_video":                                              vcube.ResourceTencentCloudVcubeApplicationAndVideo(),
 			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
+			"tencentcloud_advisor_authorization_operation":                                          advisor.ResourceTencentCloudAdvisorAuthorizationOperation(),
 		},
 
 		ConfigureFunc: providerConfigure,
