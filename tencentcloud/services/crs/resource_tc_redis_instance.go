@@ -743,7 +743,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		"prepaid_period",
 		"product_version",
 		"redis_cluster_id",
-		"replicas_read_only",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
@@ -1075,6 +1074,90 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		err := resourceRedisWanAddressModify(ctx, &redisService, meta, d.Id(), d.Get("wan_address_switch").(string))
 		if err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("replicas_read_only") {
+		if v, ok := d.GetOkExists("replicas_read_only"); ok {
+			var taskId int64
+			if v.(bool) {
+				// enable
+				request := redis.NewEnableReplicaReadonlyRequest()
+				request.InstanceId = &id
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().EnableReplicaReadonly(request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.TaskId == nil {
+						return resource.RetryableError(fmt.Errorf("Enable replica read only fail, Response is nil."))
+					}
+
+					taskId = *result.Response.TaskId
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s enable replica read only failed, reason:%+v", logId, err)
+					return err
+				}
+			} else {
+				// disable
+				request := redis.NewDisableReplicaReadonlyRequest()
+				request.InstanceId = &id
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().DisableReplicaReadonly(request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.TaskId == nil {
+						return resource.RetryableError(fmt.Errorf("Disable replica read only fail, Response is nil."))
+					}
+
+					taskId = *result.Response.TaskId
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s disable replica read only failed, reason:%+v", logId, err)
+					return err
+				}
+			}
+
+			// wait
+			request := redis.NewDescribeTaskInfoRequest()
+			request.TaskId = helper.Int64Uint64(taskId)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().DescribeTaskInfo(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil || result.Response.Status == nil {
+					return resource.RetryableError(fmt.Errorf("Describe task info fail, Response is nil."))
+				}
+
+				if *result.Response.Status == "succeed" {
+					return nil
+				} else if *result.Response.Status == "failed" || *result.Response.Status == "error" {
+					return resource.NonRetryableError(fmt.Errorf("Replica read only fail, task status is %v", *result.Response.Status))
+				} else {
+					return resource.RetryableError(fmt.Errorf("Replica read only is still in progress...Status is %v", *result.Response.Status))
+				}
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s replica read only failed, reason:%+v", logId, err)
+				return err
+			}
 		}
 	}
 
