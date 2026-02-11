@@ -1,3 +1,14 @@
+## 1.82.70(February 11, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_postgresql_parameter_template_config` ([#3815](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3815))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_emr_cluster: optmize field `disk_size` ([#3817](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3817))
+* resource/tencentcloud_waf_clb_domain: optmize field `vip` ([#3816](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3816))
+
 ## 1.82.69(February 10, 2026)
 
 FEATURES:
