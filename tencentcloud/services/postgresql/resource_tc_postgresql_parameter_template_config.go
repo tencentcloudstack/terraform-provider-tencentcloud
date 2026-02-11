@@ -33,7 +33,7 @@ func ResourceTencentCloudPostgresqlParameterTemplateConfig() *schema.Resource {
 			"modify_param_entry_set": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "The set of parameters to be modified or added. A parameter cannot be put to `modify_param_entry_set` and `delete_param_set` at the same time, that is, it cannot be modified/added and deleted at the same time.",
+				Description: "The set of parameters to be modified or added.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -47,15 +47,6 @@ func ResourceTencentCloudPostgresqlParameterTemplateConfig() *schema.Resource {
 							Description: "The new value to which the parameter will be modified. When this parameter is used as an input parameter, its value must be a string, such as `0.1` (decimal), `1000` (integer), and `replica` (enum).",
 						},
 					},
-				},
-			},
-
-			"delete_param_set": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "The set of parameters to be deleted in the template. A parameter cannot be put to `modify_param_entry_set` and `delete_param_set` at the same time, that is, it cannot be modified/added and deleted at the same time.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
 				},
 			},
 		},
@@ -125,14 +116,48 @@ func resourceTencentCloudPostgresqlParameterTemplateConfigUpdate(d *schema.Resou
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		request    = postgresv20170312.NewModifyParameterTemplateRequest()
 		templateId = d.Id()
 	)
 
 	if d.HasChange("modify_param_entry_set") {
-		if v, ok := d.GetOk("modify_param_entry_set"); ok {
-			modifyParamSet := v.(*schema.Set).List()
-			for _, item := range modifyParamSet {
+		oldInterface, newInterface := d.GetChange("modify_param_entry_set")
+		olds := oldInterface.(*schema.Set)
+		news := newInterface.(*schema.Set)
+		remove := olds.Difference(news).List()
+		add := news.Difference(olds).List()
+		if len(remove) > 0 {
+			request := postgresv20170312.NewModifyParameterTemplateRequest()
+			for _, item := range remove {
+				dMap := item.(map[string]interface{})
+				var name string
+				if v, ok := dMap["name"]; ok {
+					name = v.(string)
+				}
+
+				request.DeleteParamSet = append(request.DeleteParamSet, &name)
+			}
+
+			request.TemplateId = &templateId
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyParameterTemplate(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update postgresql parameter template failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+		}
+
+		if len(add) > 0 {
+			request := postgresv20170312.NewModifyParameterTemplateRequest()
+			for _, item := range add {
 				dMap := item.(map[string]interface{})
 				paramEntry := postgresql.ParamEntry{}
 				if v, ok := dMap["name"]; ok {
@@ -145,35 +170,23 @@ func resourceTencentCloudPostgresqlParameterTemplateConfigUpdate(d *schema.Resou
 
 				request.ModifyParamEntrySet = append(request.ModifyParamEntrySet, &paramEntry)
 			}
-		}
-	}
 
-	if d.HasChange("delete_param_set") {
-		if v, ok := d.GetOk("delete_param_set"); ok {
-			deleteParamSetSet := v.(*schema.Set).List()
-			for i := range deleteParamSetSet {
-				deleteParamSet := deleteParamSetSet[i].(string)
-				request.DeleteParamSet = append(request.DeleteParamSet, &deleteParamSet)
+			request.TemplateId = &templateId
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyParameterTemplate(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update postgresql parameter template failed, reason:%+v", logId, reqErr)
+				return reqErr
 			}
-		}
-	}
-
-	if len(request.ModifyParamEntrySet) > 0 || len(request.DeleteParamSet) > 0 {
-		request.TemplateId = &templateId
-		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyParameterTemplate(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			return nil
-		})
-
-		if reqErr != nil {
-			log.Printf("[CRITAL]%s update postgresql parameter template failed, reason:%+v", logId, reqErr)
-			return reqErr
 		}
 	}
 

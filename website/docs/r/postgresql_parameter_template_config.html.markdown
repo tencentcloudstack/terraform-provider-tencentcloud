@@ -47,8 +47,7 @@ resource "tencentcloud_postgresql_parameter_template_config" "example" {
 The following arguments are supported:
 
 * `template_id` - (Required, String, ForceNew) Specifies the parameter template ID, which uniquely identifies the parameter template and cannot be modified. it can be obtained through the api [DescribeParameterTemplates](https://www.tencentcloud.comom/document/api/409/84067?from_cn_redirect=1).
-* `delete_param_set` - (Optional, Set: [`String`]) The set of parameters to be deleted in the template. A parameter cannot be put to `modify_param_entry_set` and `delete_param_set` at the same time, that is, it cannot be modified/added and deleted at the same time.
-* `modify_param_entry_set` - (Optional, Set) The set of parameters to be modified or added. A parameter cannot be put to `modify_param_entry_set` and `delete_param_set` at the same time, that is, it cannot be modified/added and deleted at the same time.
+* `modify_param_entry_set` - (Optional, Set) The set of parameters to be modified or added.
 
 The `modify_param_entry_set` object supports the following:
 
