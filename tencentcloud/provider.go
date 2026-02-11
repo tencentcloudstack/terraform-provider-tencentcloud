@@ -1785,6 +1785,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_readonly_group":                                                postgresql.ResourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":                                           postgresql.ResourceTencentCloudPostgresqlReadonlyAttachment(),
 			"tencentcloud_postgresql_parameter_template":                                            postgresql.ResourceTencentCloudPostgresqlParameterTemplate(),
+			"tencentcloud_postgresql_parameter_template_config":                                     postgresql.ResourceTencentCloudPostgresqlParameterTemplateConfig(),
 			"tencentcloud_postgresql_base_backup":                                                   postgresql.ResourceTencentCloudPostgresqlBaseBackup(),
 			"tencentcloud_postgresql_backup_plan_config":                                            postgresql.ResourceTencentCloudPostgresqlBackupPlanConfig(),
 			"tencentcloud_postgresql_security_group_config":                                         postgresql.ResourceTencentCloudPostgresqlSecurityGroupConfig(),
