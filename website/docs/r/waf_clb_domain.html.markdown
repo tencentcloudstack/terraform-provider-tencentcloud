@@ -139,7 +139,6 @@ The `load_balancer_set` object supports the following:
 * `load_balancer_name` - (Required, String) LoadBalancer name.
 * `protocol` - (Required, String) Protocol of listener, http or https.
 * `region` - (Required, String) LoadBalancer region.
-* `vip` - (Required, String) LoadBalancer IP.
 * `vport` - (Required, Int) LoadBalancer port.
 * `zone` - (Required, String) LoadBalancer zone.
 * `load_balancer_domain` - (Optional, String) Load-balanced domain name.
@@ -147,6 +146,7 @@ The `load_balancer_set` object supports the following:
 * `member_app_id` - (Optional, Int) The ID of the member to whom the listener belongs.
 * `member_uin` - (Optional, String) Uin of the listener member.
 * `numerical_vpc_id` - (Optional, Int) VPCID for load balancer, public network is -1, and internal network is filled in according to actual conditions.
+* `vip` - (Optional, String) LoadBalancer IP.
 
 ## Attributes Reference
 
