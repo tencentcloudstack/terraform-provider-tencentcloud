@@ -46,6 +46,42 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   }
 }
 ```
+
+Example with custom timezone:
+
+```hcl
+resource "tencentcloud_sqlserver_basic_instance" "example_timezone" {
+  name                   = "tf-example-utc"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  time_zone              = "UTC"
+}
+```
+
+Example with disk encryption enabled:
+
+```hcl
+resource "tencentcloud_sqlserver_basic_instance" "example_encrypted" {
+  name                   = "tf-example-encrypted"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_SSD"
+  disk_encrypt_flag      = 1
+  time_zone              = "China Standard Time"
+}
+```
+
 Import
 
 SQL Server basic instance can be imported using the id, e.g.
