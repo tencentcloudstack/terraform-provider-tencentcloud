@@ -375,6 +375,39 @@ func (me *SqlserverService) DescribeSqlserverInstanceById(ctx context.Context, i
 	return
 }
 
+func (me *SqlserverService) DescribeSqlserverInstanceAttributeById(ctx context.Context, instanceId string) (
+	attribute *sqlserver.DescribeDBInstancesAttributeResponseParams,
+	errRet error,
+) {
+	logId := tccommon.GetLogId(ctx)
+	request := sqlserver.NewDescribeDBInstancesAttributeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstancesAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil {
+		attribute = response.Response
+	}
+
+	return
+}
+
 func (me *SqlserverService) DescribeMaintenanceSpan(ctx context.Context, instanceId string) (weekSet []int, startTime string, timeSpan int, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := sqlserver.NewDescribeMaintenanceSpanRequest()
@@ -1428,6 +1461,17 @@ func (me *SqlserverService) CreateSqlserverBasicInstance(ctx context.Context, pa
 	request.AutoVoucher = helper.IntInt64(autoVoucher)
 	request.Zone = &zone
 	request.Collation = &collation
+
+	// time_zone
+	if v, ok := paramMap["time_zone"]; ok {
+		request.TimeZone = helper.String(v.(string))
+	}
+
+	// disk_encrypt_flag
+	if v, ok := paramMap["disk_encrypt_flag"]; ok {
+		request.DiskEncryptFlag = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := paramMap["projectId"]; ok {
 		projectId := v.(int)
 		request.ProjectId = helper.IntUint64(projectId)

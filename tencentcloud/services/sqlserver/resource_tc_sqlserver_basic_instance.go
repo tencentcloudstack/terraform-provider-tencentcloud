@@ -7,6 +7,7 @@ import (
 
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -79,6 +80,21 @@ func ResourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				Optional:    true,
 				Default:     "2008R2",
 				Description: "Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
+			},
+			"time_zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "System timezone for the SQL Server instance. Default is `China Standard Time`. This setting cannot be changed after creation.",
+			},
+			"disk_encrypt_flag": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: tccommon.ValidateIntegerInRange(0, 1),
+				Description:  "Disk encryption flag. `0` - Disabled (default), `1` - Enabled. Disk encryption cannot be changed after instance creation.",
 			},
 			"period": {
 				Type:         schema.TypeInt,
@@ -231,6 +247,16 @@ func resourceTencentCloudSqlserverBasicInstanceCreate(d *schema.ResourceData, me
 	paramMap["availabilityZone"] = d.Get("availability_zone").(string)
 	paramMap["collation"] = d.Get("collation").(string)
 
+	// time_zone
+	if v, ok := d.GetOk("time_zone"); ok {
+		paramMap["time_zone"] = v.(string)
+	}
+
+	// disk_encrypt_flag
+	if v, ok := d.GetOkExists("disk_encrypt_flag"); ok {
+		paramMap["disk_encrypt_flag"] = v.(int)
+	}
+
 	if v, ok := d.GetOk("project_id"); ok {
 		paramMap["projectId"] = v.(int)
 	}
@@ -351,6 +377,30 @@ func resourceTencentCloudSqlserverBasicInstanceRead(d *schema.ResourceData, meta
 		_ = d.Set("tgw_wan_vport", instance.TgwWanVPort)
 	}
 
+	// time_zone
+	if instance.TimeZone != nil {
+		_ = d.Set("time_zone", instance.TimeZone)
+	}
+
+	// Get disk encryption flag from attributes API
+	var attribute *sqlserver.DescribeDBInstancesAttributeResponseParams
+	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		attribute, inErr = sqlserverService.DescribeSqlserverInstanceAttributeById(ctx, instanceId)
+		if inErr != nil {
+			return tccommon.RetryError(inErr)
+		}
+		return nil
+	})
+	if outErr != nil {
+		log.Printf("[WARN]%s describe sqlserver instance attribute failed, reason: %v", logId, outErr)
+		// Don't fail the entire read, just log the warning
+	}
+
+	// disk_encrypt_flag
+	if attribute != nil && attribute.IsDiskEncryptFlag != nil {
+		_ = d.Set("disk_encrypt_flag", int(*attribute.IsDiskEncryptFlag))
+	}
+
 	//maintanence
 	var weekSet []int
 	var startTime string
@@ -404,7 +454,7 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 	region := client.Region
 	payType := d.Get("charge_type").(string)
 
-	immutableArgs := []string{"collation"}
+	immutableArgs := []string{"collation", "time_zone", "disk_encrypt_flag"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
