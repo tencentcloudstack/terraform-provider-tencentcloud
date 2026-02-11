@@ -86,7 +86,8 @@ func ResourceTencentCloudWafClbDomain() *schema.Resource {
 						},
 						"vip": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
+							Computed:    true,
 							Description: "LoadBalancer IP.",
 						},
 						"vport": {
@@ -268,7 +269,7 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 						loadBalancer.ListenerName = helper.String(v.(string))
 					}
 
-					if v, ok := loadBalancerSetMap["vip"]; ok {
+					if v, ok := loadBalancerSetMap["vip"]; ok && v.(string) != "" {
 						loadBalancer.Vip = helper.String(v.(string))
 					}
 
@@ -873,7 +874,7 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 						loadBalancer.ListenerName = helper.String(v.(string))
 					}
 
-					if v, ok := loadBalancerSetMap["vip"]; ok {
+					if v, ok := loadBalancerSetMap["vip"]; ok && v.(string) != "" {
 						loadBalancer.Vip = helper.String(v.(string))
 					}
 

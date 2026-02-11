@@ -15,11 +15,11 @@ resource "tencentcloud_waf_clb_domain" "example" {
     listener_id        = "lbl-nonkgvc2"
     listener_name      = "example-listener"
     vip                = "106.55.220.8"
-    vport              = "80"
+    vport              = 80
     region             = "gz"
     protocol           = "HTTP"
     zone               = "ap-guangzhou-6"
-    numerical_vpc_id   = "-1"
+    numerical_vpc_id   = -1
     load_balancer_type = "OPEN"
   }
 
@@ -45,11 +45,11 @@ resource "tencentcloud_waf_clb_domain" "example" {
     listener_id        = "lbl-nonkgvc2"
     listener_name      = "example-listener"
     vip                = "106.55.220.8"
-    vport              = "80"
+    vport              = 80
     region             = "gz"
     protocol           = "HTTP"
     zone               = "ap-guangzhou-6"
-    numerical_vpc_id   = "-1"
+    numerical_vpc_id   = -1
     load_balancer_type = "OPEN"
   }
 
