@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -937,9 +938,14 @@ func buildResourceSpec(instance *emr.ClusterInstancesInfo, clusterNodeMap map[st
 		masterResourceSpec := make(map[string]interface{})
 		masterResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
 		masterResourceSpec["cpu"] = v.CpuNum
+		if v.DiskSize != nil {
+			var diskSize int
+			diskSize, _ = extractIntBeforeDecimal(*v.DiskSize)
+			masterResourceSpec["disk_size"] = diskSize
+		}
+
 		if instance.Config.MasterResource != nil {
 			masterResource := instance.Config.MasterResource
-			masterResourceSpec["disk_size"] = masterResource.DiskSize
 			masterResourceSpec["multi_disks"] = fetchMultiDisks(v, masterResource)
 
 		}
@@ -959,9 +965,13 @@ func buildResourceSpec(instance *emr.ClusterInstancesInfo, clusterNodeMap map[st
 		coreResourceSpec := make(map[string]interface{})
 		coreResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
 		coreResourceSpec["cpu"] = v.CpuNum
+		if v.DiskSize != nil {
+			var diskSize int
+			diskSize, _ = extractIntBeforeDecimal(*v.DiskSize)
+			coreResourceSpec["disk_size"] = diskSize
+		}
 		if instance.Config.CoreResource != nil {
 			coreResource := instance.Config.CoreResource
-			coreResourceSpec["disk_size"] = coreResource.DiskSize
 			coreResourceSpec["multi_disks"] = fetchMultiDisks(v, coreResource)
 		}
 		if v.StorageType != nil {
@@ -980,9 +990,13 @@ func buildResourceSpec(instance *emr.ClusterInstancesInfo, clusterNodeMap map[st
 		taskResourceSpec := make(map[string]interface{})
 		taskResourceSpec["mem_size"] = int(*v.MemSize / 1024 / 1024)
 		taskResourceSpec["cpu"] = v.CpuNum
+		if v.DiskSize != nil {
+			var diskSize int
+			diskSize, _ = extractIntBeforeDecimal(*v.DiskSize)
+			taskResourceSpec["disk_size"] = diskSize
+		}
 		if instance.Config.TaskResource != nil {
 			taskResource := instance.Config.TaskResource
-			taskResourceSpec["disk_size"] = taskResource.DiskSize
 			taskResourceSpec["multi_disks"] = fetchMultiDisks(v, taskResource)
 		}
 		if v.StorageType != nil {
@@ -1158,4 +1172,35 @@ func buildMultiZoneSettingList(instance *emr.ClusterInstancesInfo, clusterNodeMa
 	}
 
 	return multiZoneSettingList
+}
+
+func extractIntBeforeDecimal(input string) (int, error) {
+	if strings.TrimSpace(input) == "" {
+		return 0, fmt.Errorf("DiskSize is empty")
+	}
+
+	var cleaned strings.Builder
+	for _, r := range input {
+		if unicode.IsDigit(r) || r == '.' {
+			cleaned.WriteRune(r)
+		}
+	}
+
+	cleanedStr := cleaned.String()
+	if cleanedStr == "" {
+		return 0, fmt.Errorf("DiskSize is error")
+	}
+
+	parts := strings.Split(cleanedStr, ".")
+	integerPart := parts[0]
+	if integerPart == "" {
+		return 0, fmt.Errorf("DiskSize is error")
+	}
+
+	num, err := strconv.Atoi(integerPart)
+	if err != nil {
+		return 0, fmt.Errorf("Get DiskSize num error: %w", err)
+	}
+
+	return num, nil
 }
