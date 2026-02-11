@@ -52,6 +52,7 @@ func ResourceTencentCloudPostgresqlParameterTemplate() *schema.Resource {
 
 			"modify_param_entry_set": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeSet,
 				Description: "The set of parameters that need to be modified or added. Note: the same parameter cannot appear in the set of modifying and adding and deleting at the same time.",
 				Elem: &schema.Resource{
@@ -304,7 +305,7 @@ func resourceTencentCloudPostgresqlParameterTemplateUpdate(d *schema.ResourceDat
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s update postgresql ParameterTemplate in create method failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s update postgresql parameter template failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
