@@ -397,17 +397,26 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 		return fmt.Errorf("cos force clean object error: the list of objects is truncated and the bucket[%s] needs to be deleted manually!!!", bucket)
 	}
 
+	// Get all object list
+	listObjects, err := me.ListObjects(ctx, bucket)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s]\n",
+			logId, "ListObjects", resp.Body, err.Error())
+		return fmt.Errorf("cos force clean object error: %s, bucket: %s", err.Error(), bucket)
+	}
+
 	verCnt := len(objList.Version)
 	markerCnt := len(objList.DeleteMarker)
-	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, get [%v] versions of object, get [%v] deleteMarker, versioned[%v].\n", logId, "GetObjectVersions", verCnt, markerCnt, versioned)
+	listObjCnt := len(listObjects)
+	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, get [%v] versions of object, get [%v] deleteMarker, get [%v] listObjects. versioned[%v], multiAzed[%v].\n", logId, "GetObjectVersions", verCnt, markerCnt, listObjCnt, versioned, multiAz)
 
-	delCnt := verCnt + markerCnt
+	delCnt := verCnt + markerCnt + listObjCnt
 	if delCnt == 0 {
 		return nil
 	}
 
 	delObjs := make([]cos.Object, 0, delCnt)
-	if versioned || multiAz {
+	if versioned {
 		//add the versions
 		for _, v := range objList.Version {
 			delObjs = append(delObjs, cos.Object{
@@ -430,8 +439,19 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 		}
 	}
 
+	if multiAz {
+		// add obj list
+		for _, v := range listObjects {
+			if v.Key != nil {
+				delObjs = append(delObjs, cos.Object{
+					Key: *v.Key,
+				})
+			}
+		}
+	}
+
 	opt := cos.ObjectDeleteMultiOptions{
-		Quiet:   true,
+		Quiet:   false,
 		Objects: delObjs,
 	}
 
@@ -482,6 +502,34 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 
 	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, [%v] objects have been cleaned.\n",
 		logId, "ForceCleanObject", len(result.DeletedObjects))
+
+	// wait
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	fmt.Println(11111111111)
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		listObjects, e := me.ListObjects(ctx, bucket)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s]\n",
+				logId, "ListObjects", resp.Body, e.Error())
+			return tccommon.RetryError(e)
+		}
+
+		listObjCount := len(listObjects)
+		if listObjCount == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("waiting objects deleting. still has %d item. retry...", listObjCount))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s get COS objects failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return nil
 }
 
