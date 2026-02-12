@@ -53,6 +53,7 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 			"records": {
 				Type:        schema.TypeSet,
 				Required:    true,
+				Set:         teoOriginGroupRecordsHash,
 				Description: "Origin site records.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -68,7 +69,6 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 						},
 						"record_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
 							Computed:    true,
 							Description: "Origin record ID.",
 						},
@@ -289,23 +289,23 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 			recordsMap := map[string]interface{}{}
 
 			if records.Record != nil {
-				recordsMap["record"] = records.Record
+				recordsMap["record"] = *records.Record
 			}
 
 			if records.Type != nil {
-				recordsMap["type"] = records.Type
+				recordsMap["type"] = *records.Type
 			}
 
 			if records.RecordId != nil {
-				recordsMap["record_id"] = records.RecordId
+				recordsMap["record_id"] = *records.RecordId
 			}
 
 			if records.Weight != nil {
-				recordsMap["weight"] = records.Weight
+				recordsMap["weight"] = int(*records.Weight)
 			}
 
 			if records.Private != nil {
-				recordsMap["private"] = records.Private
+				recordsMap["private"] = *records.Private
 			}
 
 			privateParametersList := make([]map[string]interface{}, 0, len(records.PrivateParameters))
@@ -314,11 +314,11 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 					privateParametersMap := map[string]interface{}{}
 
 					if privateParameters.Name != nil {
-						privateParametersMap["name"] = privateParameters.Name
+						privateParametersMap["name"] = *privateParameters.Name
 					}
 
 					if privateParameters.Value != nil {
-						privateParametersMap["value"] = privateParameters.Value
+						privateParametersMap["value"] = *privateParameters.Value
 					}
 
 					privateParametersList = append(privateParametersList, privateParametersMap)
