@@ -2499,6 +2499,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_bh_asset_sync_flag_config":                                                bh.ResourceTencentCloudBhAssetSyncFlagConfig(),
 			"tencentcloud_bh_resource":                                                              bh.ResourceTencentCloudBhResource(),
 			"tencentcloud_bh_reconnection_setting_config":                                           bh.ResourceTencentCloudBhReconnectionSettingConfig(),
+			"tencentcloud_bh_auth_mode_setting_config":                                              bh.ResourceTencentCloudBhAuthModeSettingConfig(),
 			"tencentcloud_bh_user":                                                                  bh.ResourceTencentCloudBhUser(),
 			"tencentcloud_bh_user_group":                                                            bh.ResourceTencentCloudBhUserGroup(),
 			"tencentcloud_bh_user_directory":                                                        bh.ResourceTencentCloudBhUserDirectory(),
