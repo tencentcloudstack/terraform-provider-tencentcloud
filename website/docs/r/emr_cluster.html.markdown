@@ -122,8 +122,15 @@ The following arguments are supported:
 	- 50: represents KAFKA-V2.0.0
 	- 51: represents STARROCKS-V1.4.0
 	- 53: represents EMR-V3.6.0
-	- 54: represents STARROCKS-V2.0.0.
-* `softwares` - (Required, Set: [`String`], ForceNew) The softwares of a EMR instance.
+	- 54: represents STARROCKS-V2.0.0
+	- 57: represents EMR-V2.8.0
+	- 58: represents EMR-V3.6.1
+	- 66: represents RSS-V1.0.0
+	- 69: represents EMR-AI-V1.1.0
+	- 70: represents STARROCKS-V2.2.1
+	- 71: represents EMR-V3.7.0.
+	For the latest product version information, please refer to [EMR Product Documentation](https://cloud.tencent.com/document/product/589/66338).
+* `softwares` - (Required, Set: [`String`], ForceNew) The softwares of a EMR instance. Available software components vary by product version, common examples include: `hdfs-3.3.4`, `yarn-3.3.4`, `zookeeper-3.8.4`, `openldap-2.4.44`, `knox-1.6.1`, `hive-3.1.3`, `spark-3.5.3`, `flink_apache-1.18.1`, `trino-435`, `impala-4.1.1`, `hbase-2.4.5`, `ranger-2.3.0`, `hue-4.10.0`, `kafka-2.4.1`, `starrocks-3.3.13`, etc. For the complete list of available software components for each product version, please refer to [EMR Product Documentation](https://cloud.tencent.com/document/product/589/66338).
 * `support_ha` - (Required, Int, ForceNew) The flag whether the instance support high availability.(0=>not support, 1=>support).
 * `vpc_settings` - (Required, Map, ForceNew) The private net config of EMR instance.
 * `auto_renew` - (Optional, Int) 0 means turn off automatic renewal, 1 means turn on automatic renewal. Default is 0.
@@ -141,10 +148,16 @@ The following arguments are supported:
 * `pre_executed_file_settings` - (Optional, List, ForceNew) Pre executed file settings. It can only be set at the time of creation, and cannot be modified.
 * `resource_spec` - (Optional, List) Resource specification of EMR instance.
 * `scene_name` - (Optional, String) Scene-based value:
+	- Hadoop-Default
 	- Hadoop-Kudu
 	- Hadoop-Zookeeper
 	- Hadoop-Presto
-	- Hadoop-Hbase.
+	- Hadoop-Hbase
+	- Kafka-Default
+	- RSS-Default
+	- StarRocks-Default
+	- StarRocks-Shared-Data
+	- EMR-AI-Default.
 * `sg_id` - (Optional, String, ForceNew) The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.
 * `tags` - (Optional, Map) Tag description list.
 * `terminate_node_info` - (Optional, List) Terminate nodes. Note: it only works when the number of nodes decreases.
