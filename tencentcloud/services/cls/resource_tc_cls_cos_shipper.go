@@ -168,6 +168,41 @@ func ResourceTencentCloudClsCosShipper() *schema.Resource {
 							},
 							Description: "JSON format content description.Note: this field may return null, indicating that no valid values can be obtained.",
 						},
+						"parquet": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"parquet_key_info": {
+										Type:     schema.TypeList,
+										Required: true,
+										MinItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"key_name": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Key name (column name) written to Parquet header.",
+												},
+												"key_type": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Supported: string, boolean, int32, int64, float, double.",
+												},
+												"key_non_existing_field": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Default value when parsing fails / field missing.",
+												},
+											},
+										},
+										Description: "Parquet schema definition (list of keys/columns).",
+									},
+								},
+							},
+							Description: "Parquet format content description.",
+						},
 					},
 				},
 			},
@@ -308,6 +343,25 @@ func resourceTencentCloudClsCosShipperCreate(d *schema.ResourceData, meta interf
 					content.Json = &jsonInfo
 				}
 			}
+			if v, ok := dMap["parquet"]; ok {
+				if len(v.([]interface{})) == 1 {
+					parquet := v.([]interface{})[0].(map[string]interface{})
+
+					parquetInfo := cls.ParquetInfo{}
+					keyInfosRaw := parquet["parquet_key_info"].([]interface{})
+					for _, ki := range keyInfosRaw {
+						m := ki.(map[string]interface{})
+						kiObj := cls.ParquetKeyInfo{
+							KeyName:             helper.String(m["key_name"].(string)),
+							KeyType:             helper.String(m["key_type"].(string)),
+							KeyNonExistingField: helper.String(m["key_non_existing_field"].(string)),
+						}
+						parquetInfo.ParquetKeyInfo = append(parquetInfo.ParquetKeyInfo, &kiObj)
+					}
+
+					content.Parquet = &parquetInfo
+				}
+			}
 			contents = append(contents, &content)
 		}
 		request.Content = contents[0]
@@ -435,6 +489,20 @@ func resourceTencentCloudClsCosShipperRead(d *schema.ResourceData, meta interfac
 				"meta_fields": shipper.Content.Json.MetaFields,
 			}
 			content["json"] = []interface{}{json}
+		}
+		if shipper.Content.Parquet != nil {
+			pkis := make([]interface{}, 0, len(shipper.Content.Parquet.ParquetKeyInfo))
+			for _, pki := range shipper.Content.Parquet.ParquetKeyInfo {
+				pkis = append(pkis, map[string]interface{}{
+					"key_name":               pki.KeyName,
+					"key_type":               pki.KeyType,
+					"key_non_existing_field": pki.KeyNonExistingField,
+				})
+			}
+			parquet := map[string]interface{}{
+				"parquet_key_info": pkis,
+			}
+			content["parquet"] = []interface{}{parquet}
 		}
 		_ = d.Set("content", []interface{}{content})
 	}
@@ -585,6 +653,25 @@ func resourceTencentCloudClsCosShipperUpdate(d *schema.ResourceData, meta interf
 							jsonInfo.MetaFields = append(jsonInfo.MetaFields, helper.String(metaField.(string)))
 						}
 						content.Json = &jsonInfo
+					}
+				}
+				if v, ok := dMap["parquet"]; ok {
+					if len(v.([]interface{})) == 1 {
+						parquet := v.([]interface{})[0].(map[string]interface{})
+
+						parquetInfo := cls.ParquetInfo{}
+						keyInfosRaw := parquet["parquet_key_info"].([]interface{})
+						for _, ki := range keyInfosRaw {
+							m := ki.(map[string]interface{})
+							kiObj := cls.ParquetKeyInfo{
+								KeyName:             helper.String(m["key_name"].(string)),
+								KeyType:             helper.String(m["key_type"].(string)),
+								KeyNonExistingField: helper.String(m["key_non_existing_field"].(string)),
+							}
+							parquetInfo.ParquetKeyInfo = append(parquetInfo.ParquetKeyInfo, &kiObj)
+						}
+
+						content.Parquet = &parquetInfo
 					}
 				}
 				contents = append(contents, &content)

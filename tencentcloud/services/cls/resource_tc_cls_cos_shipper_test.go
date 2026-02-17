@@ -97,15 +97,19 @@ resource "tencentcloud_cls_cos_shipper" "shipper" {
   }
 
   content {
-    format = "json"
+    format = "parquet"
 
-    json {
-      enable_tag  = true
-      meta_fields = [
-        "__FILENAME__",
-        "__SOURCE__",
-        "__TIMESTAMP__",
-      ]
+    parquet {
+      parquet_key_info {
+        key_name              = "level"
+        key_type              = "string"
+        key_non_existing_field = "NULL"
+      }
+      parquet_key_info {
+        key_name              = "status"
+        key_type              = "int32"
+        key_non_existing_field = "0"
+      }
     }
   }
 }

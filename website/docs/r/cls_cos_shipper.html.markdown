@@ -98,9 +98,10 @@ The `compress` object supports the following:
 
 The `content` object supports the following:
 
-* `format` - (Required, String) Content format. Valid values: json, csv.
+* `format` - (Required, String) Content format. Valid values: json, csv, parquet.
 * `csv` - (Optional, List) CSV format content description.Note: this field may return null, indicating that no valid values can be obtained.
 * `json` - (Optional, List) JSON format content description.Note: this field may return null, indicating that no valid values can be obtained.
+* `parquet` - (Optional, List) Parquet format content description.Note: this field may return null, indicating that no valid values can be obtained.
 
 The `csv` object of `content` supports the following:
 
@@ -121,6 +122,16 @@ The `json` object of `content` supports the following:
 * `enable_tag` - (Required, Bool) Enablement flag.
 * `meta_fields` - (Required, Set) Metadata information list
 Note: this field may return null, indicating that no valid values can be obtained..
+
+The `parquet` object of `content` supports the following:
+
+* `parquet_key_info` - (Required, List) Definition of Parquet fields.
+
+The `parquet_key_info` object of `parquet` supports the following:
+
+* `key_name` - (Required, String) Name of the field (column name) written to the Parquet file.
+* `key_type` - (Required, String) Data type of the field. Supported values: string, boolean, int32, int64, float, double.
+* `key_non_existing_field` - (Required, String) Default value used when the field does not exist or parsing fails.
 
 ## Attributes Reference
 
