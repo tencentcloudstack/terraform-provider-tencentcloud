@@ -17,13 +17,15 @@ func TestAccTencentCloudKubernetesUpgradeTaskDetailDataSource_basic(t *testing.T
 		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{{
 			Config: testAccKubernetesUpgradeTaskDetailDataSource,
-			Check:  resource.ComposeTestCheckFunc(resource.AccCheckTencentCloudDataSourceID("data.tencentcloud_kubernetes_upgrade_task_detail.kubernetes_upgrade_task_detail")),
+			Check: resource.ComposeTestCheckFunc(
+				tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_kubernetes_upgrade_task_detail.example"),
+			),
 		}},
 	})
 }
 
 const testAccKubernetesUpgradeTaskDetailDataSource = `
-
-data "tencentcloud_kubernetes_upgrade_task_detail" "kubernetes_upgrade_task_detail" {
+data "tencentcloud_kubernetes_upgrade_task_detail" "example" {
+  task_id = 21
 }
 `
