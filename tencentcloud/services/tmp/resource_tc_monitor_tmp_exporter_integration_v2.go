@@ -40,7 +40,7 @@ func ResourceTencentCloudMonitorTmpExporterIntegrationV2() *schema.Resource {
 			"content": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Integration config. For more details, please refer to [Cloud Monitoring](https://www.tencentcloud.com/document/product/248/63002?lang=en&pg=).",
+				Description: "Integration config. For more details, please refer to [Cloud Monitoring](https://www.tencentcloud.com/document/product/248/63002?lang=en&pg=). PS: `spec.instanceSpec.restart` is used in Terraform to restart integration or update integration version. It is an integer, and the value can be a timestamp in seconds, optional.",
 			},
 
 			"kube_type": {
