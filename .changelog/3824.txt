@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_proxy_end_point: optimize code for `rw_type` for updating
+
+```

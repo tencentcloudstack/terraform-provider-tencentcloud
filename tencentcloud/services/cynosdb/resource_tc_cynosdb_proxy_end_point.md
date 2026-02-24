@@ -1,15 +1,17 @@
-Provides a resource to create a cynosdb proxy_end_point
+Provides a resource to create a CynosDB proxy end point
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
-  cluster_id       = "cynosdbmysql-bws8h88b"
-  unique_vpc_id    = "vpc-4owdpnwr"
-  unique_subnet_id = "subnet-dwj7ipnc"
+resource "tencentcloud_cynosdb_proxy_end_point" "example" {
+  cluster_id           = "cynosdbmysql-phxwek8d"
+  unique_vpc_id        = "vpc-i5yyodl9"
+  unique_subnet_id     = "subnet-5rrirqyc"
+  open_connection_pool = "no"
+  rw_type              = "READONLY"
   instance_weights {
-    instance_id = "cynosdbmysql-ins-afqx1hy0"
-    weight      = 1
+    instance_id = "cynosdbmysql-ins-239owfiu"
+    weight      = 2
   }
 }
 ```
@@ -17,7 +19,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 Set `vip` and `vport`
 
 ```hcl
-resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
+resource "tencentcloud_cynosdb_proxy_end_point" "example" {
   cluster_id       = "cynosdbmysql-bws8h88b"
   unique_vpc_id    = "vpc-4owdpnwr"
   unique_subnet_id = "subnet-dwj7ipnc"
@@ -33,7 +35,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 Open connection pool
 
 ```hcl
-resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
+resource "tencentcloud_cynosdb_proxy_end_point" "example" {
   cluster_id               = "cynosdbmysql-bws8h88b"
   unique_vpc_id            = "vpc-4owdpnwr"
   unique_subnet_id         = "subnet-dwj7ipnc"
@@ -52,7 +54,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 Close connection pool
 
 ```hcl
-resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
+resource "tencentcloud_cynosdb_proxy_end_point" "example" {
   cluster_id               = "cynosdbmysql-bws8h88b"
   unique_vpc_id            = "vpc-4owdpnwr"
   unique_subnet_id         = "subnet-dwj7ipnc"
@@ -69,7 +71,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 if `rw_type` is `READWRITE`
 
 ```hcl
-resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
+resource "tencentcloud_cynosdb_proxy_end_point" "example" {
   cluster_id               = "cynosdbmysql-bws8h88b"
   unique_vpc_id            = "vpc-4owdpnwr"
   unique_subnet_id         = "subnet-dwj7ipnc"
@@ -90,7 +92,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 if `rw_type` is `READONLY`
 
 ```hcl
-resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
+resource "tencentcloud_cynosdb_proxy_end_point" "example" {
   cluster_id               = "cynosdbmysql-bws8h88b"
   unique_vpc_id            = "vpc-4owdpnwr"
   unique_subnet_id         = "subnet-dwj7ipnc"
@@ -108,7 +110,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 Comprehensive parameter examples
 
 ```hcl
-resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
+resource "tencentcloud_cynosdb_proxy_end_point" "example" {
   cluster_id               = "cynosdbmysql-bws8h88b"
   unique_vpc_id            = "vpc-4owdpnwr"
   unique_subnet_id         = "subnet-dwj7ipnc"
