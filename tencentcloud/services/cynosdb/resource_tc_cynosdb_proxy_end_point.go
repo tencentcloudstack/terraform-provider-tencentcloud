@@ -609,29 +609,27 @@ func resourceTencentCloudCynosdbProxyEndPointUpdate(d *schema.ResourceData, meta
 			}
 		}
 
-		if d.HasChange("rw_type") {
-			if v, ok := d.GetOk("rw_type"); ok {
-				if v.(string) == RW_TYPE {
-					modifyProxyRwSplitRequest.RwType = helper.String(v.(string))
+		if v, ok := d.GetOk("rw_type"); ok {
+			if v.(string) == RW_TYPE {
+				modifyProxyRwSplitRequest.RwType = helper.String(v.(string))
 
-					if v, ok := d.GetOk("fail_over"); ok {
-						modifyProxyRwSplitRequest.FailOver = helper.String(v.(string))
-					}
-
-					if v, ok := d.GetOk("consistency_type"); ok {
-						modifyProxyRwSplitRequest.ConsistencyType = helper.String(v.(string))
-					}
-
-					if v, ok := d.GetOkExists("consistency_time_out"); ok {
-						modifyProxyRwSplitRequest.ConsistencyTimeOut = helper.String(v.(string))
-					}
-
-				} else if v.(string) == RO_TYPE {
-					modifyProxyRwSplitRequest.RwType = helper.String(v.(string))
-
-				} else {
-					return fmt.Errorf("rw_type invalid parameter")
+				if v, ok := d.GetOk("fail_over"); ok {
+					modifyProxyRwSplitRequest.FailOver = helper.String(v.(string))
 				}
+
+				if v, ok := d.GetOk("consistency_type"); ok {
+					modifyProxyRwSplitRequest.ConsistencyType = helper.String(v.(string))
+				}
+
+				if v, ok := d.GetOkExists("consistency_time_out"); ok {
+					modifyProxyRwSplitRequest.ConsistencyTimeOut = helper.String(v.(string))
+				}
+
+			} else if v.(string) == RO_TYPE {
+				modifyProxyRwSplitRequest.RwType = helper.String(v.(string))
+
+			} else {
+				return fmt.Errorf("rw_type invalid parameter")
 			}
 		}
 
