@@ -3988,3 +3988,212 @@ func (me *TkeService) DescribeKubernetesUserPermissionsById(ctx context.Context,
 	ret = response.Response
 	return
 }
+
+func (me *TkeService) DescribeKubernetesGlobalMaintenanceWindowAndExclusionById(ctx context.Context, rID string) (ret *tke.GlobalMaintenanceWindowAndExclusion, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tke.NewDescribeGlobalMaintenanceWindowAndExclusionsRequest()
+	response := tke.NewDescribeGlobalMaintenanceWindowAndExclusionsResponse()
+	request.Filters = []*tke.Filter{
+		{
+			Name:   common.StringPtr("ID"),
+			Values: common.StringPtrs([]string{rID}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeGlobalMaintenanceWindowAndExclusions(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || len(result.Response.MaintenanceWindowAndExclusions) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe global maintenance window and exclusion failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.MaintenanceWindowAndExclusions[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterMaintenanceWindowAndExclusionById(ctx context.Context, clusterId string) (ret *tke.MaintenanceWindowAndExclusion, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterMaintenanceWindowAndExclusionsRequest()
+	response := tke.NewDescribeClusterMaintenanceWindowAndExclusionsResponse()
+	request.Filters = []*tke.Filter{
+		{
+			Name:   common.StringPtr("ClusterID"),
+			Values: common.StringPtrs([]string{clusterId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeClusterMaintenanceWindowAndExclusions(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || len(result.Response.MaintenanceWindowAndExclusions) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe cluster maintenance window and exclusion failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.MaintenanceWindowAndExclusions[0]
+	return
+}
+
+func (me *TkeService) DescribeKubernetesUpgradeTasksByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.UpgradeTask, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = tke.NewDescribeUpgradeTasksRequest()
+		response = tke.NewDescribeUpgradeTasksResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeV20180525Client().DescribeUpgradeTasks(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe upgrade tasks failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.UpgradeTasks) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.UpgradeTasks...)
+		if len(response.Response.UpgradeTasks) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TkeService) DescribeKubernetesUpgradeTaskDetailByFilter(ctx context.Context, param map[string]interface{}) (ret []*tke.UpgradePlan, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = tke.NewDescribeUpgradeTaskDetailRequest()
+		response = tke.NewDescribeUpgradeTaskDetailResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeV20180525Client().DescribeUpgradeTaskDetail(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe upgrade task detail failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.UpgradePlans) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.UpgradePlans...)
+		if len(response.Response.UpgradePlans) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
