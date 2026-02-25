@@ -579,32 +579,32 @@ The following arguments are supported:
 
 The `classical_cluster` object of `exclusive_cluster` supports the following:
 
-* `cluster_id` - (Required, String) Unique cluster ID.
-* `cluster_name` - (Optional, String) Cluster name.
-* `zone` - (Optional, String) Cluster AZ, such as ap-guangzhou-1
+* `cluster_id` - (Required, String, ForceNew) Unique cluster ID.
+* `cluster_name` - (Optional, String, ForceNew) Cluster name.
+* `zone` - (Optional, String, ForceNew) Cluster AZ, such as ap-guangzhou-1
 Note: this field may return null, indicating that no valid values can be obtained.
 
 The `exclusive_cluster` object supports the following:
 
-* `classical_cluster` - (Optional, List) vpcgw cluster
+* `classical_cluster` - (Optional, List, ForceNew) vpcgw cluster
 Note: this field may return null, indicating that no valid values can be obtained.
-* `l4_clusters` - (Optional, Set) Layer-4 dedicated cluster list
+* `l4_clusters` - (Optional, Set, ForceNew) Layer-4 dedicated cluster list
 Note: this field may return null, indicating that no valid values can be obtained.
-* `l7_clusters` - (Optional, Set) Layer-7 dedicated cluster list
+* `l7_clusters` - (Optional, Set, ForceNew) Layer-7 dedicated cluster list
 Note: this field may return null, indicating that no valid values can be obtained.
 
 The `l4_clusters` object of `exclusive_cluster` supports the following:
 
-* `cluster_id` - (Required, String) Unique cluster ID.
-* `cluster_name` - (Optional, String) Cluster name.
-* `zone` - (Optional, String) Cluster AZ, such as ap-guangzhou-1
+* `cluster_id` - (Required, String, ForceNew) Unique cluster ID.
+* `cluster_name` - (Optional, String, ForceNew) Cluster name.
+* `zone` - (Optional, String, ForceNew) Cluster AZ, such as ap-guangzhou-1
 Note: this field may return null, indicating that no valid values can be obtained.
 
 The `l7_clusters` object of `exclusive_cluster` supports the following:
 
-* `cluster_id` - (Required, String) Unique cluster ID.
-* `cluster_name` - (Optional, String) Cluster name.
-* `zone` - (Optional, String) Cluster AZ, such as ap-guangzhou-1
+* `cluster_id` - (Required, String, ForceNew) Unique cluster ID.
+* `cluster_name` - (Optional, String, ForceNew) Cluster name.
+* `zone` - (Optional, String, ForceNew) Cluster AZ, such as ap-guangzhou-1
 Note: this field may return null, indicating that no valid values can be obtained.
 
 The `snat_ips` object supports the following:

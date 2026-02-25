@@ -244,24 +244,28 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 						"l4_clusters": {
 							Type:        schema.TypeSet,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Layer-4 dedicated cluster list\nNote: this field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"cluster_id": {
 										Type:        schema.TypeString,
 										Required:    true,
+										ForceNew:    true,
 										Description: "Unique cluster ID.",
 									},
 									"cluster_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
+										ForceNew:    true,
 										Description: "Cluster name.",
 									},
 									"zone": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
+										ForceNew:    true,
 										Description: "Cluster AZ, such as ap-guangzhou-1\nNote: this field may return null, indicating that no valid values can be obtained.",
 									},
 								},
@@ -270,24 +274,28 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 						"l7_clusters": {
 							Type:        schema.TypeSet,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Layer-7 dedicated cluster list\nNote: this field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"cluster_id": {
 										Type:        schema.TypeString,
 										Required:    true,
+										ForceNew:    true,
 										Description: "Unique cluster ID.",
 									},
 									"cluster_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
+										ForceNew:    true,
 										Description: "Cluster name.",
 									},
 									"zone": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
+										ForceNew:    true,
 										Description: "Cluster AZ, such as ap-guangzhou-1\nNote: this field may return null, indicating that no valid values can be obtained.",
 									},
 								},
@@ -296,6 +304,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 						"classical_cluster": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							ForceNew:    true,
 							MaxItems:    1,
 							Description: "vpcgw cluster\nNote: this field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
@@ -303,18 +312,21 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 									"cluster_id": {
 										Type:        schema.TypeString,
 										Required:    true,
+										ForceNew:    true,
 										Description: "Unique cluster ID.",
 									},
 									"cluster_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
+										ForceNew:    true,
 										Description: "Cluster name.",
 									},
 									"zone": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
+										ForceNew:    true,
 										Description: "Cluster AZ, such as ap-guangzhou-1\nNote: this field may return null, indicating that no valid values can be obtained.",
 									},
 								},
