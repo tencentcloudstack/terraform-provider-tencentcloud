@@ -377,6 +377,10 @@ func resourceTencentCloudCfwEdgePolicyUpdate(d *schema.ResourceData, meta interf
 		modifyRuleItem.ParamTemplateId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("order_index"); ok {
+		modifyRuleItem.OrderIndex = helper.IntInt64(v.(int))
+	}
+
 	request.Rules = append(request.Rules, &modifyRuleItem)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

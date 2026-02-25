@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_cfw_edge_policy: optimize field `order_index`
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfw_vpc_policy: optimize field `order_index`
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfw_nat_policy: optimize field `order_index`
+```
