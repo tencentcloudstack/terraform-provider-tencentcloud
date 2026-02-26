@@ -73,6 +73,41 @@ resource "tencentcloud_cls_cos_shipper" "example" {
 }
 ```
 
+### Example with Parquet format:
+
+```hcl
+resource "tencentcloud_cls_cos_shipper" "parquet_example" {
+  bucket       = tencentcloud_cos_bucket.example.id
+  topic_id     = tencentcloud_cls_topic.example.id
+  interval     = 300
+  max_size     = 256
+  partition    = "/%Y/%m/%d/%H/"
+  prefix       = "logs/parquet/"
+  shipper_name = "parquet-shipper"
+
+  compress {
+    format = "gzip"
+  }
+
+  content {
+    format = "parquet"
+
+    parquet {
+      parquet_key_info {
+        key_name               = "level"
+        key_type               = "string"
+        key_non_existing_field = "INFO"
+      }
+      parquet_key_info {
+        key_name               = "user_id"
+        key_type               = "int64"
+        key_non_existing_field = "0"
+      }
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -98,9 +133,10 @@ The `compress` object supports the following:
 
 The `content` object supports the following:
 
-* `format` - (Required, String) Content format. Valid values: json, csv.
+* `format` - (Required, String) Content format. Valid values: json, csv, parquet.
 * `csv` - (Optional, List) CSV format content description.Note: this field may return null, indicating that no valid values can be obtained.
 * `json` - (Optional, List) JSON format content description.Note: this field may return null, indicating that no valid values can be obtained.
+* `parquet` - (Optional, List) Parquet format content description.Note: this field may return null, indicating that no valid values can be obtained.
 
 The `csv` object of `content` supports the following:
 
@@ -121,6 +157,16 @@ The `json` object of `content` supports the following:
 * `enable_tag` - (Required, Bool) Enablement flag.
 * `meta_fields` - (Required, Set) Metadata information list
 Note: this field may return null, indicating that no valid values can be obtained..
+
+The `parquet_key_info` object of `parquet` supports the following:
+
+* `key_name` - (Required, String) Column name in the Parquet file.
+* `key_type` - (Required, String) Data type of the column. Valid values: string, boolean, int32, int64, float, double.
+* `key_non_existing_field` - (Optional, String) Value to assign when the field does not exist or parsing fails.
+
+The `parquet` object of `content` supports the following:
+
+* `parquet_key_info` - (Required, List) Array of Parquet column definitions.
 
 ## Attributes Reference
 

@@ -109,7 +109,7 @@ func ResourceTencentCloudClsCosShipper() *schema.Resource {
 						"format": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Content format. Valid values: json, csv.",
+							Description: "Content format. Valid values: json, csv, parquet.",
 						},
 						"csv": {
 							Type:     schema.TypeList,
@@ -167,6 +167,42 @@ func ResourceTencentCloudClsCosShipper() *schema.Resource {
 								},
 							},
 							Description: "JSON format content description.Note: this field may return null, indicating that no valid values can be obtained.",
+						},
+						"parquet": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"parquet_key_info": {
+										Type:        schema.TypeList,
+										Required:    true,
+										MinItems:    1,
+										Description: "Array of Parquet column definitions.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"key_name": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Column name in the Parquet file.",
+												},
+												"key_type": {
+													Type:         schema.TypeString,
+													Required:     true,
+													ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"string", "boolean", "int32", "int64", "float", "double"}),
+													Description:  "Data type of the column. Valid values: string, boolean, int32, int64, float, double.",
+												},
+												"key_non_existing_field": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Value to assign when the field does not exist or parsing fails.",
+												},
+											},
+										},
+									},
+								},
+							},
+							Description: "Parquet format content description.Note: this field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
@@ -308,6 +344,30 @@ func resourceTencentCloudClsCosShipperCreate(d *schema.ResourceData, meta interf
 					content.Json = &jsonInfo
 				}
 			}
+			if v, ok := dMap["parquet"]; ok {
+				if len(v.([]interface{})) == 1 {
+					parquet := v.([]interface{})[0].(map[string]interface{})
+					parquetInfo := cls.ParquetInfo{}
+
+					if keyInfos, ok := parquet["parquet_key_info"]; ok {
+						parquetKeyInfoList := keyInfos.([]interface{})
+						parquetInfo.ParquetKeyInfo = make([]*cls.ParquetKeyInfo, 0, len(parquetKeyInfoList))
+
+						for _, keyInfo := range parquetKeyInfoList {
+							keyInfoMap := keyInfo.(map[string]interface{})
+							parquetKeyInfo := &cls.ParquetKeyInfo{
+								KeyName: helper.String(keyInfoMap["key_name"].(string)),
+								KeyType: helper.String(keyInfoMap["key_type"].(string)),
+							}
+							if v, ok := keyInfoMap["key_non_existing_field"]; ok {
+								parquetKeyInfo.KeyNonExistingField = helper.String(v.(string))
+							}
+							parquetInfo.ParquetKeyInfo = append(parquetInfo.ParquetKeyInfo, parquetKeyInfo)
+						}
+					}
+					content.Parquet = &parquetInfo
+				}
+			}
 			contents = append(contents, &content)
 		}
 		request.Content = contents[0]
@@ -435,6 +495,25 @@ func resourceTencentCloudClsCosShipperRead(d *schema.ResourceData, meta interfac
 				"meta_fields": shipper.Content.Json.MetaFields,
 			}
 			content["json"] = []interface{}{json}
+		}
+		if shipper.Content.Parquet != nil {
+			parquetKeyInfoList := make([]interface{}, 0, len(shipper.Content.Parquet.ParquetKeyInfo))
+
+			for _, keyInfo := range shipper.Content.Parquet.ParquetKeyInfo {
+				parquetKeyInfoMap := map[string]interface{}{
+					"key_name": keyInfo.KeyName,
+					"key_type": keyInfo.KeyType,
+				}
+				if keyInfo.KeyNonExistingField != nil {
+					parquetKeyInfoMap["key_non_existing_field"] = keyInfo.KeyNonExistingField
+				}
+				parquetKeyInfoList = append(parquetKeyInfoList, parquetKeyInfoMap)
+			}
+
+			parquet := map[string]interface{}{
+				"parquet_key_info": parquetKeyInfoList,
+			}
+			content["parquet"] = []interface{}{parquet}
 		}
 		_ = d.Set("content", []interface{}{content})
 	}
@@ -585,6 +664,30 @@ func resourceTencentCloudClsCosShipperUpdate(d *schema.ResourceData, meta interf
 							jsonInfo.MetaFields = append(jsonInfo.MetaFields, helper.String(metaField.(string)))
 						}
 						content.Json = &jsonInfo
+					}
+				}
+				if v, ok := dMap["parquet"]; ok {
+					if len(v.([]interface{})) == 1 {
+						parquet := v.([]interface{})[0].(map[string]interface{})
+						parquetInfo := cls.ParquetInfo{}
+
+						if keyInfos, ok := parquet["parquet_key_info"]; ok {
+							parquetKeyInfoList := keyInfos.([]interface{})
+							parquetInfo.ParquetKeyInfo = make([]*cls.ParquetKeyInfo, 0, len(parquetKeyInfoList))
+
+							for _, keyInfo := range parquetKeyInfoList {
+								keyInfoMap := keyInfo.(map[string]interface{})
+								parquetKeyInfo := &cls.ParquetKeyInfo{
+									KeyName: helper.String(keyInfoMap["key_name"].(string)),
+									KeyType: helper.String(keyInfoMap["key_type"].(string)),
+								}
+								if v, ok := keyInfoMap["key_non_existing_field"]; ok {
+									parquetKeyInfo.KeyNonExistingField = helper.String(v.(string))
+								}
+								parquetInfo.ParquetKeyInfo = append(parquetInfo.ParquetKeyInfo, parquetKeyInfo)
+							}
+						}
+						content.Parquet = &parquetInfo
 					}
 				}
 				contents = append(contents, &content)
