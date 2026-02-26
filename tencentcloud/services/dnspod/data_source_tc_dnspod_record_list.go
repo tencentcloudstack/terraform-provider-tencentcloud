@@ -209,7 +209,7 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"record_id": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Record ID.",
 						},
