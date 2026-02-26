@@ -3,7 +3,6 @@ package tke
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -27,6 +26,7 @@ func ResourceTencentCloudKubernetesAuthAttachment() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "ID of clusters.",
 			},
 
@@ -259,15 +259,7 @@ func resourceTencentCloudKubernetesAuthAttachmentUpdate(d *schema.ResourceData, 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	immutableArgs := []string{"cluster_id"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 	clusterId := d.Id()
 
 	needChange := false

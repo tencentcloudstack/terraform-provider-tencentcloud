@@ -178,7 +178,7 @@ output "identity_url" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) ID of clusters.
+* `cluster_id` - (Required, String, ForceNew) ID of clusters.
 * `auto_create_client_id` - (Optional, Set: [`String`]) Creating ClientId of the identity provider.
 * `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
 * `auto_create_oidc_config` - (Optional, Bool) Creating an identity provider.
