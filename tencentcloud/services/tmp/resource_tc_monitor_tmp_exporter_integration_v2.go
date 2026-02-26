@@ -24,6 +24,9 @@ func ResourceTencentCloudMonitorTmpExporterIntegrationV2() *schema.Resource {
 		Read:   resourceTencentCloudMonitorTmpExporterIntegrationV2Read,
 		Update: resourceTencentCloudMonitorTmpExporterIntegrationV2Update,
 		Delete: resourceTencentCloudMonitorTmpExporterIntegrationV2Delete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -324,6 +327,25 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Read(d *schema.ResourceD
 		tmpExporterIntegrationId = d.Id()
 	)
 
+	var (
+		instanceId string
+		kubeType   string
+		clusterId  string
+	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 3 {
+		instanceId = idSplit[1]
+	} else if len(idSplit) == 5 {
+		instanceId = idSplit[1]
+		kubeType = idSplit[2]
+		clusterId = idSplit[3]
+		_ = d.Set("kube_type", helper.StrToInt(kubeType))
+		_ = d.Set("cluster_id", clusterId)
+	} else {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+
 	tmpExporterIntegration, err := service.DescribeMonitorTmpExporterIntegration(ctx, tmpExporterIntegrationId)
 	if err != nil {
 		return err
@@ -334,6 +356,8 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Read(d *schema.ResourceD
 		d.SetId("")
 		return nil
 	}
+
+	_ = d.Set("instance_id", instanceId)
 
 	if tmpExporterIntegration.Kind != nil {
 		_ = d.Set("kind", tmpExporterIntegration.Kind)
