@@ -3,6 +3,7 @@ package dnspod
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -297,7 +298,7 @@ func DataSourceTencentCloudDnspodRecordList() *schema.Resource {
 							Description: "Domain.",
 						},
 						"record_id": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Record ID.",
 						},
@@ -553,8 +554,8 @@ func dataSourceTencentCloudDnspodRecordListRead(d *schema.ResourceData, meta int
 			instanceListItemMap := map[string]interface{}{}
 			instanceListItemMap["domain"] = domain
 			if recordListItem.RecordId != nil {
-				recordListItemMap["record_id"] = recordListItem.RecordId
-				instanceListItemMap["record_id"] = recordListItem.RecordId
+				recordListItemMap["record_id"] = strconv.FormatUint(*recordListItem.RecordId, 10)
+				instanceListItemMap["record_id"] = strconv.FormatUint(*recordListItem.RecordId, 10)
 				instanceListItemMap["id"] = domain + tccommon.FILED_SP + helper.UInt64ToStr(*recordListItem.RecordId)
 			}
 
