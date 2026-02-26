@@ -687,7 +687,7 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 			if v, ok := dMap["delete_with_instance"]; ok {
 				dataDisk.DeleteWithInstance = helper.Bool(v.(bool))
 			}
-			if v, ok := dMap["snapshot_id"]; ok {
+			if v, ok := dMap["snapshot_id"]; ok && v.(string) != "" {
 				dataDisk.SnapshotId = helper.String(v.(string))
 			}
 			if v, ok := dMap["encrypt"]; ok {
