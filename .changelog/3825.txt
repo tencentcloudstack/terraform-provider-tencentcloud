@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_backup_config: optimize field `logic_backup_config`
+```

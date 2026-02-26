@@ -68,6 +68,7 @@ func ResourceTencentCloudCynosdbBackupConfig() *schema.Resource {
 			"logic_backup_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Logical backup configuration. Do not set this field if it is not enabled. Example value: [{\"LogicBackupEnable\": \"ON\",\"LogicBackupTimeBeg\": \"2023-04-24 15:06:04\",\"LogicBackupTimeEnd\": \"2024-04-24 15:06:04\",\"LogicReserveDuration\": \"60\",\"LogicCrossRegionsEnable\": \"ON\",\"LogicCrossRegions\": [\"ap-guangzhou\"]}].",
 				Elem: &schema.Resource{
