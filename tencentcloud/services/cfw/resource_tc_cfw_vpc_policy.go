@@ -388,6 +388,10 @@ func resourceTencentCloudCfwVpcPolicyUpdate(d *schema.ResourceData, meta interfa
 		vpcRuleItem.FwGroupId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("order_index"); ok {
+		vpcRuleItem.OrderIndex = helper.IntInt64(v.(int))
+	}
+
 	vpcRuleItem.EdgeId = helper.String("all")
 	request.Rules = append(request.Rules, &vpcRuleItem)
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
