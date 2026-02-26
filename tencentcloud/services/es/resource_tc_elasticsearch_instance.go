@@ -232,6 +232,12 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedIntValue(ES_BASIC_SECURITY_TYPE),
 				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only take effect on `basic` license.",
 			},
+			"scene_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Scenario based template type. 0: Not enabled; 1: Universal; 2: Log; 3: Search.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -419,6 +425,9 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		if licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
 			request.BasicSecurityType = helper.IntUint64(v.(int))
 		}
+	}
+	if v, ok := d.GetOkExists("scene_type"); ok {
+		request.SceneType = helper.IntInt64(v.(int))
 	}
 	if v, ok := d.GetOk("web_node_type_info"); ok {
 		infos := v.([]interface{})
@@ -717,6 +726,9 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	if licenseType != nil && *licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
 		_ = d.Set("basic_security_type", instance.SecurityType)
 	}
+	if instance.SceneType != nil {
+		_ = d.Set("scene_type", instance.SceneType)
+	}
 	_ = d.Set("elasticsearch_domain", instance.EsDomain)
 	_ = d.Set("elasticsearch_vip", instance.EsVip)
 	_ = d.Set("elasticsearch_port", instance.EsPort)
@@ -986,6 +998,28 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 
 		if err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("scene_type") {
+		if v, ok := d.GetOkExists("scene_type"); ok {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstanceSceneType(ctx, instanceId, helper.IntInt64(v.(int)))
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
