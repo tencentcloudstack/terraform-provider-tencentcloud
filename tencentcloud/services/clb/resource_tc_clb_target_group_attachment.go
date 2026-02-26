@@ -233,14 +233,25 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 		return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 	}
 
-	request.Associations = []*clb.TargetGroupAssociation{
-		{
-			TargetGroupId:  &ids[0],
-			ListenerId:     &ids[1],
-			LoadBalancerId: &ids[2],
-			LocationId:     &ids[3],
-		},
+	if ids[3] != "" {
+		request.Associations = []*clb.TargetGroupAssociation{
+			{
+				TargetGroupId:  &ids[0],
+				ListenerId:     &ids[1],
+				LoadBalancerId: &ids[2],
+				LocationId:     &ids[3],
+			},
+		}
+	} else {
+		request.Associations = []*clb.TargetGroupAssociation{
+			{
+				TargetGroupId:  &ids[0],
+				ListenerId:     &ids[1],
+				LoadBalancerId: &ids[2],
+			},
+		}
 	}
+
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().DisassociateTargetGroups(request)
 		if e != nil {
