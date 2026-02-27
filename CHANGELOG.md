@@ -1,3 +1,29 @@
+## 1.82.71(February 27, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_kubernetes_upgrade_task_detail` ([#3821](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3821))
+* **New Data Source:** `tencentcloud_kubernetes_upgrade_tasks` ([#3821](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3821))
+* **New Resource:** `tencentcloud_kubernetes_cancel_upgrade_plan_operation` ([#3821](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3821))
+* **New Resource:** `tencentcloud_kubernetes_cluster_maintenance_window_and_exclusion` ([#3821](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3821))
+* **New Resource:** `tencentcloud_kubernetes_global_maintenance_window_and_exclusion` ([#3821](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3821))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ccn_attachment_v2: optimize field `route_ids` ([#3828](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3828))
+* resource/tencentcloud_cfw_edge_policy: optimize field `order_index` ([#3826](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3826))
+* resource/tencentcloud_cfw_nat_policy: optimize field `order_index` ([#3826](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3826))
+* resource/tencentcloud_cfw_vpc_policy: optimize field `order_index` ([#3826](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3826))
+* resource/tencentcloud_clb_instance: support `exclusive_cluster` ([#3785](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3785))
+* resource/tencentcloud_clb_target_group_attachment: optimize destroy function ([#3820](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3820))
+* resource/tencentcloud_cls_cos_shipper: support to set `parquet` ([#3831](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3831))
+* resource/tencentcloud_cvm_launch_template: optimize field `snapshot_id` for create step ([#3823](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3823))
+* resource/tencentcloud_cynosdb_backup_config: optimize field `logic_backup_config` ([#3825](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3825))
+* resource/tencentcloud_cynosdb_proxy_end_point: optimize code for `rw_type` for updating ([#3824](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3824))
+* resource/tencentcloud_kubernetes_auth_attachment: optimize field `cluster_id` ([#3827](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3827))
+* resource/tencentcloud_monitor_tmp_exporter_integration_v2: support import ([#3830](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3830))
+* resource/tencentcloud_monitor_tmp_exporter_integration_v2: update doc ([#3822](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3822))
+
 ## 1.82.70(February 11, 2026)
 
 FEATURES:
