@@ -62,6 +62,41 @@ resource "tencentcloud_cls_cos_shipper" "example" {
 }
 ```
 
+Example with Parquet format:
+
+```hcl
+resource "tencentcloud_cls_cos_shipper" "parquet_example" {
+  bucket       = tencentcloud_cos_bucket.example.id
+  topic_id     = tencentcloud_cls_topic.example.id
+  interval     = 300
+  max_size     = 256
+  partition    = "/%Y/%m/%d/%H/"
+  prefix       = "logs/parquet/"
+  shipper_name = "parquet-shipper"
+
+  compress {
+    format = "gzip"
+  }
+
+  content {
+    format = "parquet"
+
+    parquet {
+      parquet_key_info {
+        key_name = "level"
+        key_type = "string"
+        key_non_existing_field = "INFO"
+      }
+      parquet_key_info {
+        key_name = "user_id"
+        key_type = "int64"
+        key_non_existing_field = "0"
+      }
+    }
+  }
+}
+```
+
 Import
 
 cls cos shipper can be imported using the id, e.g.
