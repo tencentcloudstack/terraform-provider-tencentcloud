@@ -161,6 +161,21 @@ func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, 
 	return nil
 }
 
+func (me *ElasticsearchService) UpdateInstanceSceneType(ctx context.Context, instanceId string, sceneType *int64) error {
+	logId := tccommon.GetLogId(ctx)
+	request := es.NewUpdateInstanceRequest()
+	request.InstanceId = &instanceId
+	request.SceneType = sceneType
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseEsClient().UpdateInstance(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	return nil
+}
+
 func (me *ElasticsearchService) UpdateInstanceVersion(ctx context.Context, instanceId, version string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := es.NewUpgradeInstanceRequest()
