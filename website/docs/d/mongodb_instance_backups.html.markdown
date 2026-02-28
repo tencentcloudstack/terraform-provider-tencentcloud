@@ -33,13 +33,17 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `backup_list` - backup list.
+  * `back_id` - Backup record ID.
   * `backup_desc` - Remark of backup.
   * `backup_method` - Backup method.
   * `backup_name` - Backup mode name.
+  * `backup_region` - Region where the backup is stored (for cross-region backups).
   * `backup_size` - Size of backup(KN).
   * `backup_type` - Backup mode type.
+  * `delete_time` - Scheduled deletion time for the backup.
   * `end_time` - end time of backup.
   * `instance_id` - Instance ID.
+  * `restore_time` - Time point supported for backup restore.
   * `start_time` - start time of backup.
   * `status` - Backup status.
 
