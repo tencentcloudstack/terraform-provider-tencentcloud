@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_mongodb_instance_backups: add `back_id`, `delete_time`, `backup_region`, `restore_time` fields
+```
