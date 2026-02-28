@@ -124,7 +124,7 @@ func resourceTencentCloudMongodbInstanceTransparentDataEncryptionCreate(d *schem
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s enable transparent data encryption failed, reason:%+v", logId, err)
-		return nil
+		return err
 	}
 
 	flowId := *response.Response.FlowId
