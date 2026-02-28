@@ -1,3 +1,14 @@
+## 1.82.72(February 28, 2026)
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_mongodb_instance_backups: add `back_id`, `delete_time`, `backup_region`, `restore_time` fields ([#3832](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3832))
+* resource/tencentcloud_elasticsearch_instance: support `scene_type` ([#3829](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3829))
+
+BUG FIXES:
+
+* resource/tencentcloud_mongodb_instance_transparent_data_encryption: fix error not returned when enable transparent data encryption failed ([#3833](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3833))
+
 ## 1.82.71(February 27, 2026)
 
 FEATURES:
