@@ -687,6 +687,7 @@ func (me *MongodbService) DescribeMongodbInstanceBackupsByFilter(ctx context.Con
 
 	ratelimit.Check(request.GetAction())
 
+	// Automatically fetch all backups with internal pagination
 	var (
 		offset uint64 = 0
 		limit  uint64 = 20

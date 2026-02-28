@@ -19,7 +19,32 @@ func TestAccTencentCloudMongodbInstanceBackupsDataSource_basic(t *testing.T) {
 			{
 				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
 				Config:    testAccMongodbInstanceBackupsDataSource,
-				Check:     resource.ComposeTestCheckFunc(tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_backups.instance_backups")),
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_backups.instance_backups"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instance_backups.instance_backups", "backup_list.#"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudMongodbInstanceBackupsDataSource_newFields(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbInstanceBackupsDataSource,
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_backups.instance_backups"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instance_backups.instance_backups", "backup_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instance_backups.instance_backups", "backup_list.0.back_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instance_backups.instance_backups", "backup_list.0.instance_id"),
+				),
 			},
 		},
 	})

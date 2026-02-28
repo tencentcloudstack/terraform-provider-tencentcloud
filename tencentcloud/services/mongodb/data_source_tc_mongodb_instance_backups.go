@@ -79,6 +79,26 @@ func DataSourceTencentCloudMongodbInstanceBackups() *schema.Resource {
 							Computed:    true,
 							Description: "Backup method.",
 						},
+						"back_id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Backup record ID.",
+						},
+						"delete_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Scheduled deletion time for the backup.",
+						},
+						"backup_region": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Region where the backup is stored (for cross-region backups).",
+						},
+						"restore_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Time point supported for backup restore.",
+						},
 					},
 				},
 			},
@@ -166,6 +186,22 @@ func dataSourceTencentCloudMongodbInstanceBackupsRead(d *schema.ResourceData, me
 
 			if backupInfo.BackupMethod != nil {
 				backupInfoMap["backup_method"] = backupInfo.BackupMethod
+			}
+
+			if backupInfo.BackId != nil {
+				backupInfoMap["back_id"] = backupInfo.BackId
+			}
+
+			if backupInfo.DeleteTime != nil {
+				backupInfoMap["delete_time"] = backupInfo.DeleteTime
+			}
+
+			if backupInfo.BackupRegion != nil {
+				backupInfoMap["backup_region"] = backupInfo.BackupRegion
+			}
+
+			if backupInfo.RestoreTime != nil {
+				backupInfoMap["restore_time"] = backupInfo.RestoreTime
 			}
 
 			ids = append(ids, *backupInfo.InstanceId)
