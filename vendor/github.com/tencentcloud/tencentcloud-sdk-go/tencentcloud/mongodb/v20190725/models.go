@@ -165,6 +165,64 @@ type AuditInstance struct {
 	RealStorage *float64 `json:"RealStorage,omitnil,omitempty" name:"RealStorage"`
 }
 
+type AuditLog struct {
+	// 影响行数
+	AffectRows *uint64 `json:"AffectRows,omitnil,omitempty" name:"AffectRows"`
+
+	// 操作类型。如：grantRolesToRole、dropRole等。
+	Atype *string `json:"Atype,omitnil,omitempty" name:"Atype"`
+
+	// 执行时间。单位为：ms。
+	ExecTime *uint64 `json:"ExecTime,omitnil,omitempty" name:"ExecTime"`
+
+	// 客户端地址。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 操作参数。包含操作的详细参数信息。
+	Param *string `json:"Param,omitnil,omitempty" name:"Param"`
+
+	// 执行结果。0表示成功，非0表示失败。
+	Result *int64 `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 用户角色列表。格式为：role@db,role@db。
+	Roles *string `json:"Roles,omitnil,omitempty" name:"Roles"`
+
+	// 操作时间戳。格式为：YYYY-MM-DD HH:mm:ss。
+	Timestamp *string `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
+
+	// 用户名。格式为：user@db。
+	User *string `json:"User,omitnil,omitempty" name:"User"`
+}
+
+type AuditLogFile struct {
+	// 审计日志文件名称。
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 审计日志文件创建时间。格式为 : "2019-03-20 17:09:13"。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 文件状态值。可能返回的值为：
+	// "creating" - 生成中；
+	// "failed" - 创建失败；
+	// "success" - 已生成。
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 文件大小，单位为 KB。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FileSize *uint64 `json:"FileSize,omitnil,omitempty" name:"FileSize"`
+
+	// 审计日志下载地址。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DownloadUrl *string `json:"DownloadUrl,omitnil,omitempty" name:"DownloadUrl"`
+
+	// 错误信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
+
+	// 下载进度
+	ProgressRate *uint64 `json:"ProgressRate,omitnil,omitempty" name:"ProgressRate"`
+}
+
 type AuditLogFilter struct {
 	// 客户端地址。
 	Host []*string `json:"Host,omitnil,omitempty" name:"Host"`
@@ -316,6 +374,17 @@ type BackupInfo struct {
 	RestoreTime *string `json:"RestoreTime,omitnil,omitempty" name:"RestoreTime"`
 }
 
+type BackupTotalSize struct {
+	// 全量备份总大小，单位字节
+	SnapshotSize *int64 `json:"SnapshotSize,omitnil,omitempty" name:"SnapshotSize"`
+
+	// 增量备份总大小
+	OplogSize *int64 `json:"OplogSize,omitnil,omitempty" name:"OplogSize"`
+
+	// 免费额度
+	FreeQuota *int64 `json:"FreeQuota,omitnil,omitempty" name:"FreeQuota"`
+}
+
 type ClientConnection struct {
 	// 连接的客户端 IP。
 	IP *string `json:"IP,omitnil,omitempty" name:"IP"`
@@ -325,6 +394,60 @@ type ClientConnection struct {
 
 	// 是否为内部 IP。
 	InternalService *bool `json:"InternalService,omitnil,omitempty" name:"InternalService"`
+}
+
+// Predefined struct for user
+type CloseAuditServiceRequestParams struct {
+	// 实例ID，格式如：cmgo-test1234，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type CloseAuditServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID，格式如：cmgo-test1234，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *CloseAuditServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseAuditServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloseAuditServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloseAuditServiceResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CloseAuditServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *CloseAuditServiceResponseParams `json:"Response"`
+}
+
+func (r *CloseAuditServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseAuditServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -704,6 +827,7 @@ type CreateDBInstanceHourRequestParams struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 产品规格类型。
@@ -833,6 +957,7 @@ type CreateDBInstanceHourRequest struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 产品规格类型。
@@ -1024,6 +1149,7 @@ type CreateDBInstanceParamTplRequestParams struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 实例类型。当 MirrorTplId 为空值时，该参数必填。
@@ -1057,6 +1183,7 @@ type CreateDBInstanceParamTplRequest struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 实例类型。当 MirrorTplId 为空值时，该参数必填。
@@ -1144,6 +1271,7 @@ type CreateDBInstanceRequestParams struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 实例数量, 最小值1，最大值为30。
@@ -1284,6 +1412,7 @@ type CreateDBInstanceRequest struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 实例数量, 最小值1，最大值为30。
@@ -1997,6 +2126,90 @@ func (r *DescribeAsyncRequestInfoResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeAuditConfigRequestParams struct {
+	// 实例 ID，格式如：cmgo-xftsghuy，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeAuditConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，格式如：cmgo-xftsghuy，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeAuditConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAuditConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAuditConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAuditConfigResponseParams struct {
+	// 实例id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 实例名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
+
+	// true表示全审计，false表示规则审计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AuditAll *bool `json:"AuditAll,omitnil,omitempty" name:"AuditAll"`
+
+	// 该实例开通数据库审计的时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 审计日志保存时长。
+	// 单位：天。目前支持的保存时长包括：0、30、180、365，1095、1825。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogExpireDay *int64 `json:"LogExpireDay,omitnil,omitempty" name:"LogExpireDay"`
+
+	// 审计日志存储类型。目前仅支持storage：存储型。
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// 是否正在关闭审计功能。
+	// <ul><li>true：是。</li><li>false：否。</li></ul>
+	IsClosing *string `json:"IsClosing,omitnil,omitempty" name:"IsClosing"`
+
+	// 是否正在开启审计功能。<ul><li>true：是。</li><li>false：否。</li></ul>
+	IsOpening *string `json:"IsOpening,omitnil,omitempty" name:"IsOpening"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAuditConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAuditConfigResponseParams `json:"Response"`
+}
+
+func (r *DescribeAuditConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAuditConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeAuditInstanceListRequestParams struct {
 	// 指明待查询的实例为已开通审计或未开通审计。<ul><li>1：已开通审计功能。</li><li>0：未开通审计功能。</li></ul>
 	AuditSwitch *uint64 `json:"AuditSwitch,omitnil,omitempty" name:"AuditSwitch"`
@@ -2082,6 +2295,206 @@ func (r *DescribeAuditInstanceListResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAuditInstanceListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAuditLogFilesRequestParams struct {
+	// 实例 ID，格式如：cmgo-xfts****，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 分页大小参数。默认值为 20，取值范围[1,100]。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 审计日志文件名。该接口将根据此参数过滤相关的审计日志文件。
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+}
+
+type DescribeAuditLogFilesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，格式如：cmgo-xfts****，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 分页大小参数。默认值为 20，取值范围[1,100]。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 审计日志文件名。该接口将根据此参数过滤相关的审计日志文件。
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+}
+
+func (r *DescribeAuditLogFilesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAuditLogFilesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "FileName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAuditLogFilesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAuditLogFilesResponseParams struct {
+	// 符合条件的审计日志文件个数。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 审计日志文件详情。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*AuditLogFile `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAuditLogFilesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAuditLogFilesResponseParams `json:"Response"`
+}
+
+func (r *DescribeAuditLogFilesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAuditLogFilesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAuditLogsRequestParams struct {
+	// 实例ID，格式如：cmgo-xftsghuy，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 开始时间，格式为："2017-07-12 10:29:20"。
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间，格式为："2017-07-12 10:29:20"。
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 过滤条件，可按设置的过滤条件过滤日志。
+	Filter *AuditLogFilter `json:"Filter,omitnil,omitempty" name:"Filter"`
+
+	// 分页参数，指单次返回的数据条数。默认值为100，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 审计日志的排序方式。
+	// <ul><li>ASC：升序。</li><li>DESC：降序。</li></ul>
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 审计日志的排序字段，包括：
+	// <ul><li>timestamp：时间戳。</li>
+	// <li>affectRows：影响行数。</li>
+	// <li>execTime：执行时间。</li></ul>
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+}
+
+type DescribeAuditLogsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID，格式如：cmgo-xftsghuy，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 开始时间，格式为："2017-07-12 10:29:20"。
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间，格式为："2017-07-12 10:29:20"。
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 过滤条件，可按设置的过滤条件过滤日志。
+	Filter *AuditLogFilter `json:"Filter,omitnil,omitempty" name:"Filter"`
+
+	// 分页参数，指单次返回的数据条数。默认值为100，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 审计日志的排序方式。
+	// <ul><li>ASC：升序。</li><li>DESC：降序。</li></ul>
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// 审计日志的排序字段，包括：
+	// <ul><li>timestamp：时间戳。</li>
+	// <li>affectRows：影响行数。</li>
+	// <li>execTime：执行时间。</li></ul>
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+}
+
+func (r *DescribeAuditLogsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAuditLogsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Filter")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Order")
+	delete(f, "OrderBy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAuditLogsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAuditLogsResponseParams struct {
+	// 符合条件的审计日志条数。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 审计日志详情。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*AuditLog `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAuditLogsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAuditLogsResponseParams `json:"Response"`
+}
+
+func (r *DescribeAuditLogsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAuditLogsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2256,13 +2669,44 @@ type DescribeBackupRulesResponseParams struct {
 	// 备份数据保留期限。单位为：天。
 	BackupSaveTime *uint64 `json:"BackupSaveTime,omitnil,omitempty" name:"BackupSaveTime"`
 
+	// 备份频率。备份时间间隔，单位小时。取值12，24
+	BackupFrequency *int64 `json:"BackupFrequency,omitnil,omitempty" name:"BackupFrequency"`
+
 	// 自动备份开始时间。
 	BackupTime *uint64 `json:"BackupTime,omitnil,omitempty" name:"BackupTime"`
 
 	// 备份方式。
 	// - 0：逻辑备份。
 	// - 1：物理备份。
+	// - 3：快照备份。
+	// **说明**:
+	// 1. 通用版实例支持逻辑备份与物理备份。云盘版实例支持物理备份与快照备份，暂不支持逻辑备份。
+	// 2. 实例开通存储加密，则备份方式不能为物理备份。
 	BackupMethod *uint64 `json:"BackupMethod,omitnil,omitempty" name:"BackupMethod"`
+
+	// 周几备份，0-6，逗号分割
+	ActiveWeekdays *string `json:"ActiveWeekdays,omitnil,omitempty" name:"ActiveWeekdays"`
+
+	// 长期备份周期。weekly-按周，monthly-按月，空不开启。
+	LongTermInterval *string `json:"LongTermInterval,omitnil,omitempty" name:"LongTermInterval"`
+
+	// 长期备份的日期，周0-6，月1-31
+	LongTermActiveDays *string `json:"LongTermActiveDays,omitnil,omitempty" name:"LongTermActiveDays"`
+
+	// 长期备份保留时间
+	LongTermExpiredDays *int64 `json:"LongTermExpiredDays,omitnil,omitempty" name:"LongTermExpiredDays"`
+
+	// 增量备份保留时间
+	OplogExpiredDays *int64 `json:"OplogExpiredDays,omitnil,omitempty" name:"OplogExpiredDays"`
+
+	// 备份版本号。0-旧备份方式，1-高级备份
+	BackupVersion *int64 `json:"BackupVersion,omitnil,omitempty" name:"BackupVersion"`
+
+	// 备份大小
+	BackupTotalSize *BackupTotalSize `json:"BackupTotalSize,omitnil,omitempty" name:"BackupTotalSize"`
+
+	// 告警额度
+	AlertThreshold *int64 `json:"AlertThreshold,omitnil,omitempty" name:"AlertThreshold"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -2933,6 +3377,7 @@ type DescribeDBInstanceParamTplDetailResponseParams struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 模板适配集群类型。
@@ -2980,6 +3425,7 @@ type DescribeDBInstanceParamTplRequestParams struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion []*string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 指定查询的模板类型。
@@ -3005,6 +3451,7 @@ type DescribeDBInstanceParamTplRequest struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion []*string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 指定查询的模板类型。
@@ -3836,6 +4283,63 @@ func (r *DescribeMongodbLogsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSRVConnectionDomainRequestParams struct {
+	// 实例 ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeSRVConnectionDomainRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeSRVConnectionDomainRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSRVConnectionDomainRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSRVConnectionDomainRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSRVConnectionDomainResponseParams struct {
+	// 实例当前的srv域名信息。
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSRVConnectionDomainResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSRVConnectionDomainResponseParams `json:"Response"`
+}
+
+func (r *DescribeSRVConnectionDomainResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSRVConnectionDomainResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSecurityGroupRequestParams struct {
 	// 实例 ID。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -4233,6 +4737,63 @@ func (r *DescribeTransparentDataEncryptionStatusResponse) FromJsonString(s strin
 }
 
 // Predefined struct for user
+type DisableSRVConnectionUrlRequestParams struct {
+	// 实例 ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DisableSRVConnectionUrlRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DisableSRVConnectionUrlRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableSRVConnectionUrlRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableSRVConnectionUrlRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisableSRVConnectionUrlResponseParams struct {
+	// 开启任务ID。
+	FlowId *uint64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DisableSRVConnectionUrlResponse struct {
+	*tchttp.BaseResponse
+	Response *DisableSRVConnectionUrlResponseParams `json:"Response"`
+}
+
+func (r *DisableSRVConnectionUrlResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableSRVConnectionUrlResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DropDBInstanceParamTplRequestParams struct {
 	// 参数模板 ID。请通过接口 [DescribeDBInstanceParamTpl](https://cloud.tencent.com/document/product/240/109155) 获取模板 ID。
 	TplId *string `json:"TplId,omitnil,omitempty" name:"TplId"`
@@ -4283,6 +4844,63 @@ func (r *DropDBInstanceParamTplResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DropDBInstanceParamTplResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableSRVConnectionUrlRequestParams struct {
+	// 实例 ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type EnableSRVConnectionUrlRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *EnableSRVConnectionUrlRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableSRVConnectionUrlRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableSRVConnectionUrlRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableSRVConnectionUrlResponseParams struct {
+	// 开启任务ID。
+	FlowId *uint64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type EnableSRVConnectionUrlResponse struct {
+	*tchttp.BaseResponse
+	Response *EnableSRVConnectionUrlResponseParams `json:"Response"`
+}
+
+func (r *EnableSRVConnectionUrlResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableSRVConnectionUrlResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4367,7 +4985,7 @@ type FBKeyValue struct {
 
 type Filters struct {
 	// 搜索字段，目前支持：
-	// "InstanceId"：实例Id，例如：cmgo-****）
+	// "InstanceId"：实例Id，例如：cmgo-****
 	// "InstanceName"：实例名称
 	// "ClusterId"：实例组Id，例如：cmgo-****
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
@@ -4556,6 +5174,7 @@ type InquirePriceCreateDBInstancesRequestParams struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 产品规格类型。
@@ -4630,6 +5249,7 @@ type InquirePriceCreateDBInstancesRequest struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 产品规格类型。
@@ -4970,6 +5590,7 @@ type InstanceDetail struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 实例内存规格，单位：MB。
@@ -6068,6 +6689,70 @@ type ModifyNetworkAddress struct {
 	OldIpAddress *string `json:"OldIpAddress,omitnil,omitempty" name:"OldIpAddress"`
 }
 
+// Predefined struct for user
+type ModifySRVConnectionUrlRequestParams struct {
+	// 实例 ID。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 自定义的实例的访问域名。
+	CustomDomain *string `json:"CustomDomain,omitnil,omitempty" name:"CustomDomain"`
+}
+
+type ModifySRVConnectionUrlRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 自定义的实例的访问域名。
+	CustomDomain *string `json:"CustomDomain,omitnil,omitempty" name:"CustomDomain"`
+}
+
+func (r *ModifySRVConnectionUrlRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySRVConnectionUrlRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "CustomDomain")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifySRVConnectionUrlRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifySRVConnectionUrlResponseParams struct {
+	// 开启任务ID。
+	FlowId *uint64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifySRVConnectionUrlResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifySRVConnectionUrlResponseParams `json:"Response"`
+}
+
+func (r *ModifySRVConnectionUrlResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySRVConnectionUrlResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type NodeProperty struct {
 	// 节点所在的可用区。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
@@ -6289,6 +6974,7 @@ type ParamTpl struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
 	// 参数模板适用的数据库类型。
@@ -6735,7 +7421,7 @@ func (r *SetAccountUserPrivilegeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SetBackupRulesRequestParams struct {
-	// 实例id，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	// 实例 ID。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 备份方式。
@@ -6750,7 +7436,9 @@ type SetBackupRulesRequestParams struct {
 	// 设置自动备份开始时间。取值范围为：[0,23]，例如：该参数设置为2，表示02:00开始备份。
 	BackupTime *uint64 `json:"BackupTime,omitnil,omitempty" name:"BackupTime"`
 
-	// 自动备份频率，内部展示，默认取值为24h。
+	// 指定每日自动备份频率。
+	// - 12: 每日备份2次，间隔约12小时。
+	// - 24: 每日备份1次（默认），间隔约24小时。
 	BackupFrequency *uint64 `json:"BackupFrequency,omitnil,omitempty" name:"BackupFrequency"`
 
 	// 设置自动备份发生错误时，是否发送失败告警。
@@ -6758,35 +7446,53 @@ type SetBackupRulesRequestParams struct {
 	// - false：不发送。
 	Notify *bool `json:"Notify,omitnil,omitempty" name:"Notify"`
 
-	// 指定备份数据保存天数。默认为 7 天，支持设置为7、30、90、180、365。
+	// 指定备份数据保留时长。
+	// - 单位：天，默认为 7 天。
+	// - 取值范围：[7,365]。
 	BackupRetentionPeriod *uint64 `json:"BackupRetentionPeriod,omitnil,omitempty" name:"BackupRetentionPeriod"`
 
-	// 周几备份，0-6，逗号分割。仅对高级备份生效
+	// 指定每周内执行自动备份的具体日期。
+	// - 格式：请输入 0-6 之间的数字代表周日至周六（例如：1 代表周一），多个日期请用英文逗号 , 分隔。
+	// - 示例：输入 1,3,5 表示系统将在每周的周一、周三、周五执行备份。
+	// - 默认值：不设置，则默认为全周期 (0,1,2,3,4,5,6)，即每日执行备份。
 	ActiveWeekdays *string `json:"ActiveWeekdays,omitnil,omitempty" name:"ActiveWeekdays"`
 
-	// 长期保留周期，周weekly，月monthly，空不开启
+	// 长期保留周期。支持按周或按月选择特定日期的备份（例如，每月1日、15日的备份数据），将其保留更长周期。- 不开启（默认）：不启用长期保留功能。- 按周保留： 指定为 weekly。- 按月保留： 指定为 monthly。待废弃，使用LongTermInterval
 	LongTermUnit *string `json:"LongTermUnit,omitnil,omitempty" name:"LongTermUnit"`
 
-	// 长期保留哪些天的，周0-6，月1-31，逗号分割
+	// 指定用于长期保留的具体备份日期。此设置仅在 **LongTermUnit** 被设为**weekly** 或 **monthly** 时生效。
+	// - 按周（weekly）保留：请输入 0-6 之间的数字来代表周日至周六。多个日期请用英文逗号分隔。
+	// - 按月（monthly）保留：请输入 1-31 之间的数字来代表月份中的具体日期。多个日期请用英文逗号分隔。
 	LongTermActiveDays *string `json:"LongTermActiveDays,omitnil,omitempty" name:"LongTermActiveDays"`
 
-	// 长期备份保留多少天
+	// 长期备份保留时长。取值范围[30,1075]。
 	LongTermExpiredDays *int64 `json:"LongTermExpiredDays,omitnil,omitempty" name:"LongTermExpiredDays"`
 
-	// 增量保留多少天
+	// 增量备份保留时长。
+	// - 单位：天。
+	// - 默认值：7天。
+	// - 取值范围：[7,365]。
 	OplogExpiredDays *int64 `json:"OplogExpiredDays,omitnil,omitempty" name:"OplogExpiredDays"`
 
-	// 备份版本。旧版本备份为0，高级备份为1。开启高级备份此值传1
+	// 指定备份版本。
+	// - 旧版本备份：0。
+	// - 开启高级备份：1。
 	BackupVersion *int64 `json:"BackupVersion,omitnil,omitempty" name:"BackupVersion"`
 
-	// 告警额度。50-300
+	// 设置备份数据集存储空间使用率的告警阈值。- 单位：%。-  默认值：100。- 取值范围：[50,300]。待废弃,使用AlertThreshold
 	AlarmWaterLevel *int64 `json:"AlarmWaterLevel,omitnil,omitempty" name:"AlarmWaterLevel"`
+
+	// 长期保留周期。支持按周或按月选择特定日期的备份（例如，每月1日、15日的备份数据），将其保留更长周期。- 不开启（默认）：不启用长期保留功能。- 按周保留： 指定为 weekly。- 按月保留： 指定为 monthly。
+	LongTermInterval *string `json:"LongTermInterval,omitnil,omitempty" name:"LongTermInterval"`
+
+	// 设置备份数据集存储空间使用率的告警阈值。- 单位：%。-  默认值：100。- 取值范围：[50,300]。
+	AlertThreshold *int64 `json:"AlertThreshold,omitnil,omitempty" name:"AlertThreshold"`
 }
 
 type SetBackupRulesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例id，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	// 实例 ID。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 备份方式。
@@ -6801,7 +7507,9 @@ type SetBackupRulesRequest struct {
 	// 设置自动备份开始时间。取值范围为：[0,23]，例如：该参数设置为2，表示02:00开始备份。
 	BackupTime *uint64 `json:"BackupTime,omitnil,omitempty" name:"BackupTime"`
 
-	// 自动备份频率，内部展示，默认取值为24h。
+	// 指定每日自动备份频率。
+	// - 12: 每日备份2次，间隔约12小时。
+	// - 24: 每日备份1次（默认），间隔约24小时。
 	BackupFrequency *uint64 `json:"BackupFrequency,omitnil,omitempty" name:"BackupFrequency"`
 
 	// 设置自动备份发生错误时，是否发送失败告警。
@@ -6809,29 +7517,47 @@ type SetBackupRulesRequest struct {
 	// - false：不发送。
 	Notify *bool `json:"Notify,omitnil,omitempty" name:"Notify"`
 
-	// 指定备份数据保存天数。默认为 7 天，支持设置为7、30、90、180、365。
+	// 指定备份数据保留时长。
+	// - 单位：天，默认为 7 天。
+	// - 取值范围：[7,365]。
 	BackupRetentionPeriod *uint64 `json:"BackupRetentionPeriod,omitnil,omitempty" name:"BackupRetentionPeriod"`
 
-	// 周几备份，0-6，逗号分割。仅对高级备份生效
+	// 指定每周内执行自动备份的具体日期。
+	// - 格式：请输入 0-6 之间的数字代表周日至周六（例如：1 代表周一），多个日期请用英文逗号 , 分隔。
+	// - 示例：输入 1,3,5 表示系统将在每周的周一、周三、周五执行备份。
+	// - 默认值：不设置，则默认为全周期 (0,1,2,3,4,5,6)，即每日执行备份。
 	ActiveWeekdays *string `json:"ActiveWeekdays,omitnil,omitempty" name:"ActiveWeekdays"`
 
-	// 长期保留周期，周weekly，月monthly，空不开启
+	// 长期保留周期。支持按周或按月选择特定日期的备份（例如，每月1日、15日的备份数据），将其保留更长周期。- 不开启（默认）：不启用长期保留功能。- 按周保留： 指定为 weekly。- 按月保留： 指定为 monthly。待废弃，使用LongTermInterval
 	LongTermUnit *string `json:"LongTermUnit,omitnil,omitempty" name:"LongTermUnit"`
 
-	// 长期保留哪些天的，周0-6，月1-31，逗号分割
+	// 指定用于长期保留的具体备份日期。此设置仅在 **LongTermUnit** 被设为**weekly** 或 **monthly** 时生效。
+	// - 按周（weekly）保留：请输入 0-6 之间的数字来代表周日至周六。多个日期请用英文逗号分隔。
+	// - 按月（monthly）保留：请输入 1-31 之间的数字来代表月份中的具体日期。多个日期请用英文逗号分隔。
 	LongTermActiveDays *string `json:"LongTermActiveDays,omitnil,omitempty" name:"LongTermActiveDays"`
 
-	// 长期备份保留多少天
+	// 长期备份保留时长。取值范围[30,1075]。
 	LongTermExpiredDays *int64 `json:"LongTermExpiredDays,omitnil,omitempty" name:"LongTermExpiredDays"`
 
-	// 增量保留多少天
+	// 增量备份保留时长。
+	// - 单位：天。
+	// - 默认值：7天。
+	// - 取值范围：[7,365]。
 	OplogExpiredDays *int64 `json:"OplogExpiredDays,omitnil,omitempty" name:"OplogExpiredDays"`
 
-	// 备份版本。旧版本备份为0，高级备份为1。开启高级备份此值传1
+	// 指定备份版本。
+	// - 旧版本备份：0。
+	// - 开启高级备份：1。
 	BackupVersion *int64 `json:"BackupVersion,omitnil,omitempty" name:"BackupVersion"`
 
-	// 告警额度。50-300
+	// 设置备份数据集存储空间使用率的告警阈值。- 单位：%。-  默认值：100。- 取值范围：[50,300]。待废弃,使用AlertThreshold
 	AlarmWaterLevel *int64 `json:"AlarmWaterLevel,omitnil,omitempty" name:"AlarmWaterLevel"`
+
+	// 长期保留周期。支持按周或按月选择特定日期的备份（例如，每月1日、15日的备份数据），将其保留更长周期。- 不开启（默认）：不启用长期保留功能。- 按周保留： 指定为 weekly。- 按月保留： 指定为 monthly。
+	LongTermInterval *string `json:"LongTermInterval,omitnil,omitempty" name:"LongTermInterval"`
+
+	// 设置备份数据集存储空间使用率的告警阈值。- 单位：%。-  默认值：100。- 取值范围：[50,300]。
+	AlertThreshold *int64 `json:"AlertThreshold,omitnil,omitempty" name:"AlertThreshold"`
 }
 
 func (r *SetBackupRulesRequest) ToJsonString() string {
@@ -6859,6 +7585,8 @@ func (r *SetBackupRulesRequest) FromJsonString(s string) error {
 	delete(f, "OplogExpiredDays")
 	delete(f, "BackupVersion")
 	delete(f, "AlarmWaterLevel")
+	delete(f, "LongTermInterval")
+	delete(f, "AlertThreshold")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SetBackupRulesRequest has unknown keys!", "")
 	}
@@ -7082,7 +7810,7 @@ type SpecItem struct {
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
 	// 售卖规格有效标志，取值范围如下：
-	// - 0：停止售卖，
+	// - 0：停止售卖。
 	// - 1：开放售卖。
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
@@ -7114,15 +7842,25 @@ type SpecItem struct {
 	// - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
 	// - MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
 	// - MONGO_70_WT：MongoDB 7.0 WiredTiger存储引擎版本。
+	// - MONGO_80_WT：MongoDB 8.0 WiredTiger存储引擎版本。
 	MongoVersionCode *string `json:"MongoVersionCode,omitnil,omitempty" name:"MongoVersionCode"`
 
 	// 实例版本对应的数字版本。
+	// - MongoDB 3.2 版本：2。
+	// - MongoDB 3.6 版本：4。
+	// - MongoDB 4.0 版本：5。
+	// - MongoDB 4.2 版本：9。
+	// - MongoDB 4.4 版本：10。
+	// - MongoDB 5.0 版本：11。
+	// - MongoDB 6.0 版本：12。
+	// - MongoDB 7.0 版本：13。
+	// - MongoDB 8.0 版本：14。
 	MongoVersionValue *uint64 `json:"MongoVersionValue,omitnil,omitempty" name:"MongoVersionValue"`
 
-	// 实例版本信息。支持：4.2、4.4、5.0、6.0、7.0。
+	// 实例版本信息。支持：4.2、4.4、5.0、6.0、7.0、8.0。
 	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 存储引擎。
+	// 存储引擎，仅支持 WiredTiger。
 	EngineName *string `json:"EngineName,omitnil,omitempty" name:"EngineName"`
 
 	// 集群类型，取值如下：
@@ -7333,10 +8071,19 @@ type UpgradeDbInstanceVersionRequestParams struct {
 	// 实例ID列表，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 新升级的数据库版本，当前仅支持MONGO_40_WT（MongoDB 4.0 WiredTiger存储引擎版本）及MONGO_42_WT（MongoDB 4.0 WiredTiger存储引擎版本）。
+	// 新升级的数据库版本。当前支持版本如下所示，支持旧版本向高版本升级，不支持跨版本升级。
+	// - MONGO_40_WT：4.0 版本。
+	// - MONGO_42_WT：4.2 版本。
+	// - MONGO_44_WT：4.4 版本
+	// - MONGO_50_WT：5.0 版本
+	// - MONGO_60_WT：6.0 版本。
+	// - MONGO_70_WT：7.0 版本。
+	// - MONGO_80_WT：8.0 版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
-	// 是否在维护时间内升级。0-立即升级 1-维护时间内升级
+	// 指定升级操作是否在维护时间内进行。
+	// - 0：立即升级。
+	// - 1：维护时间窗升级。
 	InMaintenance *int64 `json:"InMaintenance,omitnil,omitempty" name:"InMaintenance"`
 }
 
@@ -7346,10 +8093,19 @@ type UpgradeDbInstanceVersionRequest struct {
 	// 实例ID列表，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 新升级的数据库版本，当前仅支持MONGO_40_WT（MongoDB 4.0 WiredTiger存储引擎版本）及MONGO_42_WT（MongoDB 4.0 WiredTiger存储引擎版本）。
+	// 新升级的数据库版本。当前支持版本如下所示，支持旧版本向高版本升级，不支持跨版本升级。
+	// - MONGO_40_WT：4.0 版本。
+	// - MONGO_42_WT：4.2 版本。
+	// - MONGO_44_WT：4.4 版本
+	// - MONGO_50_WT：5.0 版本
+	// - MONGO_60_WT：6.0 版本。
+	// - MONGO_70_WT：7.0 版本。
+	// - MONGO_80_WT：8.0 版本。
 	MongoVersion *string `json:"MongoVersion,omitnil,omitempty" name:"MongoVersion"`
 
-	// 是否在维护时间内升级。0-立即升级 1-维护时间内升级
+	// 指定升级操作是否在维护时间内进行。
+	// - 0：立即升级。
+	// - 1：维护时间窗升级。
 	InMaintenance *int64 `json:"InMaintenance,omitnil,omitempty" name:"InMaintenance"`
 }
 

@@ -110,6 +110,9 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 接口不存在，请确认请求的接口名称是否正确。
+	INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+
 	// 当前实例不支持设置参数。
 	INVALIDPARAMETER_CURRENTINSTANCENOTSUPPORTMODIFYPARAMS = "InvalidParameter.CurrentInstanceNotSupportModifyParams"
 
@@ -148,6 +151,9 @@ const (
 
 	// 无效的实例类型。
 	INVALIDPARAMETERVALUE_CLUSTERTYPEERROR = "InvalidParameterValue.ClusterTypeError"
+
+	// 数据转换失败
+	INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 
 	// 非法的实例名。
 	INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
