@@ -2351,7 +2351,7 @@ func getBucketPutOptions(d *schema.ResourceData) (useCosService bool, options *c
 	maz, hasMAZ := d.GetOk("multi_az")
 	ofs, hasOFS := d.GetOk("chdfs_ofs")
 
-	if !hasGrantHeaders && !hasMAZ {
+	if !hasGrantHeaders && !hasMAZ && !hasOFS {
 		return false, opt
 	}
 
