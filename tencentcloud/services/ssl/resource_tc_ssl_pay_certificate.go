@@ -254,7 +254,6 @@ func ResourceTencentCloudSSLInstance() *schema.Resource {
 			"dv_auths": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Optional:    true,
 				Description: "DV certification information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
