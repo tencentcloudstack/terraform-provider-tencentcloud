@@ -1805,7 +1805,7 @@ func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket st
 	intelligentTieringResult, response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.GetIntelligentTiering(ctx)
 
 	resp, _ := json.Marshal(response.Response.Body)
-	if response.StatusCode == 404 {
+	if response.StatusCode == 404 || response.StatusCode == 501 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetIntelligentTiering", response.StatusCode)
 		return
 	}
@@ -1827,7 +1827,7 @@ func (me *CosService) BucketGetIntelligentTieringArchivingRuleList(ctx context.C
 	intelligentTieringResult, response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.ListIntelligentTiering(ctx)
 
 	resp, _ := json.Marshal(response.Response.Body)
-	if response.StatusCode == 404 {
+	if response.StatusCode == 404 || response.StatusCode == 501 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "ListIntelligentTiering", response.StatusCode)
 		return
 	}
@@ -1909,7 +1909,7 @@ func (me *CosService) BucketGetObjectLockConfiguration(ctx context.Context, buck
 	ratelimit.Check("GetObjectLockConfiguration")
 	result, response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.GetObjectLockConfiguration(ctx)
 	resp, _ := json.Marshal(response.Response.Body)
-	if response.StatusCode == 404 {
+	if response.StatusCode == 404 || response.StatusCode == 400 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetObjectLockConfiguration", response.StatusCode)
 		return
 	}
