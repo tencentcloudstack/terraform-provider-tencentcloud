@@ -1,3 +1,3 @@
-```release-note:enhancement
-resource/tencentcloud_mongodb_instance_srv_connection: Add new resource to manage MongoDB instance SRV connection URL configuration
+```release-note:new-resource
+tencentcloud_mongodb_instance_srv_connection
 ```
