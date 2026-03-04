@@ -839,6 +839,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_acls":                                           ckafka.DataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                                         ckafka.DataSourceTencentCloudCkafkaTopics(),
 			"tencentcloud_ckafka_instances":                                      ckafka.DataSourceTencentCloudCkafkaInstances(),
+			"tencentcloud_ckafka_instances_v2":                                   ckafka.DataSourceTencentCloudCkafkaInstancesV2(),
 			"tencentcloud_ckafka_connect_resource":                               ckafka.DataSourceTencentCloudCkafkaConnectResource(),
 			"tencentcloud_ckafka_region":                                         ckafka.DataSourceTencentCloudCkafkaRegion(),
 			"tencentcloud_ckafka_datahub_topic":                                  ckafka.DataSourceTencentCloudCkafkaDatahubTopic(),

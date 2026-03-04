@@ -212,6 +212,7 @@ tencentcloud_ckafka_users
 tencentcloud_ckafka_acls
 tencentcloud_ckafka_topics
 tencentcloud_ckafka_instances
+tencentcloud_ckafka_instances_v2
 tencentcloud_ckafka_connect_resource
 tencentcloud_ckafka_region
 tencentcloud_ckafka_datahub_topic

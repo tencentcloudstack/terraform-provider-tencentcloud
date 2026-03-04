@@ -1859,3 +1859,125 @@ func (me *CkafkaService) DescribeCkafkaVersionByFilter(ctx context.Context, inst
 	instanceVersion = response.Response.Result
 	return
 }
+
+func (me *CkafkaService) DescribeInstancesDetailByFilter(ctx context.Context, paramMap map[string]interface{}) (instances []*ckafka.InstanceDetail, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ckafka.NewDescribeInstancesDetailRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	// Handle top-level query parameters
+	if v, ok := paramMap["InstanceId"]; ok {
+		request.InstanceId = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["SearchWord"]; ok {
+		request.SearchWord = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["Status"]; ok {
+		statusList := v.([]interface{})
+		request.Status = make([]*int64, 0, len(statusList))
+		for _, status := range statusList {
+			request.Status = append(request.Status, helper.IntInt64(status.(int)))
+		}
+	}
+
+	if v, ok := paramMap["TagKey"]; ok {
+		request.TagKey = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["InstanceIdList"]; ok {
+		idList := v.([]interface{})
+		request.InstanceIdList = make([]*string, 0, len(idList))
+		for _, id := range idList {
+			request.InstanceIdList = append(request.InstanceIdList, helper.String(id.(string)))
+		}
+	}
+
+	if v, ok := paramMap["TagList"]; ok {
+		tagList := v.([]interface{})
+		request.TagList = make([]*ckafka.Tag, 0, len(tagList))
+		for _, tag := range tagList {
+			tagMap := tag.(map[string]interface{})
+			request.TagList = append(request.TagList, &ckafka.Tag{
+				TagKey:   helper.String(tagMap["tag_key"].(string)),
+				TagValue: helper.String(tagMap["tag_value"].(string)),
+			})
+		}
+	}
+
+	// Handle Filters parameter (supports: Ip, VpcId, SubNetId, InstanceType, InstanceId)
+	if v, ok := paramMap["Filters"]; ok {
+		filters := v.([]interface{})
+		request.Filters = make([]*ckafka.Filter, 0, len(filters))
+		for _, filter := range filters {
+			filterMap := filter.(map[string]interface{})
+			name := filterMap["name"].(string)
+			values := filterMap["values"].([]interface{})
+
+			filterValues := make([]*string, 0, len(values))
+			for _, value := range values {
+				filterValues = append(filterValues, helper.String(value.(string)))
+			}
+
+			request.Filters = append(request.Filters, &ckafka.Filter{
+				Name:   helper.String(name),
+				Values: filterValues,
+			})
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+
+	instances = make([]*ckafka.InstanceDetail, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ckafka.DescribeInstancesDetailResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCkafkaClient().DescribeInstancesDetail(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Result == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe instances detail failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		if len(response.Response.Result.InstanceList) < 1 {
+			break
+		}
+
+		instances = append(instances, response.Response.Result.InstanceList...)
+		if len(response.Response.Result.InstanceList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
