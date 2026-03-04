@@ -168,7 +168,19 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		info, has, e := service.DescribeRouteTable(ctx, items[1])
+		resp, has, e := service.DescribeRouteTable(ctx, items[1])
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		// get vpcId(required)
+		vpcId := resp.vpcId
+		info, has, e := service.DescribeRouteTableByParams(ctx, items[1], vpcId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
