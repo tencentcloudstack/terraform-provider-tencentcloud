@@ -1251,6 +1251,7 @@ func (me *MongodbService) DisableSRVConnectionUrl(ctx context.Context, instanceI
 		}
 	}()
 
+	var flowIdString string
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().DisableSRVConnectionUrl(request)
@@ -1258,6 +1259,9 @@ func (me *MongodbService) DisableSRVConnectionUrl(ctx context.Context, instanceI
 			return tccommon.RetryError(e, tccommon.InternalError)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if result.Response.FlowId != nil {
+			flowIdString = helper.UInt64ToStr(*result.Response.FlowId)
+		}
 		return nil
 	})
 
@@ -1265,6 +1269,14 @@ func (me *MongodbService) DisableSRVConnectionUrl(ctx context.Context, instanceI
 		log.Printf("[CRITAL]%s disable srv connection url failed, reason: %v", logId, err)
 		errRet = err
 		return
+	}
+
+	// Wait for async task completion
+	if flowIdString != "" {
+		timeout := 3 * tccommon.ReadRetryTimeout
+		if err = me.DescribeAsyncRequestInfo(ctx, flowIdString, timeout); err != nil {
+			return err
+		}
 	}
 
 	return
