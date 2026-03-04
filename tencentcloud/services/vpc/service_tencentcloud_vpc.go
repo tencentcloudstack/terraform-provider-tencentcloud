@@ -874,6 +874,24 @@ func (me *VpcService) DescribeRouteTable(ctx context.Context, routeTableId strin
 	info = infos[0]
 	return
 }
+
+func (me *VpcService) DescribeRouteTableByParams(ctx context.Context, routeTableId, vpcId string) (info VpcRouteTableBasicInfo, has int, errRet error) {
+
+	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", vpcId, nil, nil, "")
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	has = len(infos)
+
+	if has == 0 {
+		return
+	}
+	info = infos[0]
+	return
+}
+
 func (me *VpcService) DescribeRouteTables(ctx context.Context,
 	routeTableId,
 	routeTableName,
