@@ -2699,3 +2699,58 @@ func (me *MonitorService) DescribePolicyObjectCount(ctx context.Context, groupId
 
 	return
 }
+
+func (me *MonitorService) DescribeMonitorNoticeContentTmplById(ctx context.Context, tmplId, tmplName string) (noticeContentTmpl *monitorv20180724.NoticeContentTmpl, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitorv20180724.NewDescribeNoticeContentTmplRequest()
+	request.TmplIDs = []*string{&tmplId}
+	if tmplName != "" {
+		request.TmplName = &tmplName
+	}
+	request.PageNumber = helper.IntInt64(1)
+	request.PageSize = helper.IntInt64(10)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 10
+	)
+
+	for {
+		request.PageNumber = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseMonitorClient().DescribeNoticeContentTmpl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response.Response == nil || len(response.Response.NoticeContentTmplList) < 1 {
+			break
+		}
+
+		for _, tmpl := range response.Response.NoticeContentTmplList {
+			if tmpl.TmplID != nil && *tmpl.TmplID == tmplId {
+				noticeContentTmpl = tmpl
+				return
+			}
+		}
+
+		if len(response.Response.NoticeContentTmplList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

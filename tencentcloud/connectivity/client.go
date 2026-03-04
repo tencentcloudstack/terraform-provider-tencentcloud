@@ -75,6 +75,7 @@ import (
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	monitorv20230616 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20230616"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	mqtt "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt/v20240516"
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
@@ -161,6 +162,7 @@ type TencentCloudClient struct {
 	tcaplusConn         *tcaplusdb.Client
 	cdnConn             *cdn.Client
 	monitorConn         *monitor.Client
+	monitorv20230616Conn *monitorv20230616.Client
 	esConn              *es.Client
 	sqlserverConn       *sqlserver.Client
 	postgreConn         *postgre.Client
@@ -888,6 +890,19 @@ func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 	me.monitorConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.monitorConn
+}
+
+// UseMonitorV20230616Client returns monitor v20230616 client for service
+func (me *TencentCloudClient) UseMonitorV20230616Client() *monitorv20230616.Client {
+	if me.monitorv20230616Conn != nil {
+		return me.monitorv20230616Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.monitorv20230616Conn, _ = monitorv20230616.NewClient(me.Credential, me.Region, cpf)
+	me.monitorv20230616Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.monitorv20230616Conn
 }
 
 func (me *TencentCloudClient) UseMonitorClientRegion(region string) *monitor.Client {
