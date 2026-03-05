@@ -1,32 +1,30 @@
-Use this resource to create monitor notice content template.
+Use this resource to create Monitor notice content template.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_notice_content_tmpl" "example" {
-  tmpl_name     = "tf-example-template"
+  tmpl_name     = "tf-example"
   monitor_type  = "MT_QCE"
-  tmpl_language = "zh"
-  tmpl_contents = jsonencode({
-    "MatchingStatus" : ["Trigger"],
-    "Template" : {
-      "WeWorkRobot" : {
-        "TitleTmpl" : "告警通知",
-        "ContentTmpl" : "告警详情：{{.Content}}"
-      },
-      "DingDingRobot" : {
-        "TitleTmpl" : "告警通知",
-        "ContentTmpl" : "告警详情：{{.Content}}"
+  tmpl_language = "en"
+  tmpl_contents {
+    qcloud_yehe {
+      matching_status = ["Trigger"]
+      template {
+        email {
+          content_tmpl = base64encode("AlarmContent: {{.AlarmContent}}")
+          title_tmpl   =  base64encode("AlarmTitle: {{.AlarmTitle}}")
+        }
       }
     }
-  })
+  }
 }
 ```
 
 Import
 
-Monitor notice content template can be imported using the id (format: `tmplID#tmplName`), e.g.
+Monitor notice content template can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_monitor_notice_content_tmpl.example ntpl-3r1spzjn#tf-example-template
+terraform import tencentcloud_monitor_notice_content_tmpl.example ntpl-3r1spzjn
 ```

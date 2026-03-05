@@ -863,6 +863,7 @@ tencentcloud_monitor_binding_receiver
 tencentcloud_monitor_alarm_policy
 tencentcloud_monitor_alarm_notice
 tencentcloud_monitor_alarm_policy_set_default
+tencentcloud_monitor_notice_content_tmpl
 
 Managed Service for Prometheus(TMP)
 Data Source
