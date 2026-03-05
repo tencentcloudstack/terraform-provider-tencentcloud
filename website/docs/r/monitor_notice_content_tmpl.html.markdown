@@ -20,12 +20,39 @@ resource "tencentcloud_monitor_notice_content_tmpl" "example" {
   tmpl_language = "en"
   tmpl_contents {
     qcloud_yehe {
-      matching_status = ["Trigger"]
+      matching_status = ["Trigger", "Recovery"]
       template {
         email {
-          content_tmpl = base64encode("AlarmContent: {{.AlarmContent}}")
-          title_tmpl   = base64encode("AlarmTitle: {{.AlarmTitle}}")
+          title_tmpl   = base64encode("AlarmTitle{{.AlarmName}}")
+          content_tmpl = base64encode("AlarmContent{{.AlarmContent}}")
         }
+
+        sms {
+          content_tmpl = base64encode("Alarm: {{.AlarmName}}")
+        }
+      }
+    }
+
+    we_work_robot {
+      matching_status = ["Trigger"]
+      template {
+        content_tmpl = base64encode("AlarmContent: {{.AlarmName}}")
+      }
+    }
+
+    ding_ding_robot {
+      matching_status = ["Trigger"]
+      template {
+        title_tmpl   = base64encode("AlarmTitle: {{.AlarmName}}")
+        content_tmpl = base64encode("AlarmContent: {{.AlarmContent}}")
+      }
+    }
+
+    fei_shu_robot {
+      matching_status = ["Trigger"]
+      template {
+        title_tmpl   = base64encode("AlarmTitle: {{.AlarmName}}")
+        content_tmpl = base64encode("AlarmContent: {{.AlarmContent}}")
       }
     }
   }
