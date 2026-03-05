@@ -38,6 +38,7 @@ func ResourceTencentCloudGwlbTargetGroup() *schema.Resource {
 			"port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Default port of the target group, which can be used when servers are added later. Either 'Port' or 'TargetGroupInstances.N.port' must be filled in.",
 			},
 
