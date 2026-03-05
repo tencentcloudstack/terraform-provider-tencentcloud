@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_clb_instances: add `zones` field to `clb_list` output and improve reliability with retry logic in underlying API calls
+```
