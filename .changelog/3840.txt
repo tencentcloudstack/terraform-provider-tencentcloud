@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_organization_org_member_email: Add retry logic
+
+```
