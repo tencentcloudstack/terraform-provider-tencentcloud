@@ -1,6 +1,8 @@
 package ckafka
 
 import (
+	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 
@@ -60,13 +62,13 @@ func DataSourceTencentCloudCkafkaInstances() *schema.Resource {
 			"offset": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
+				Deprecated:  "This parameter is deprecated and will be removed in a future version. The data source now automatically retrieves all instances.",
 				Description: "The page start offset, default is `0`.",
 			},
 			"limit": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     10,
+				Deprecated:  "This parameter is deprecated and will be removed in a future version. The data source now automatically retrieves all instances.",
 				Description: "The number of pages, default is `10`.",
 			},
 			"result_output_file": {
@@ -271,21 +273,24 @@ func DataSourceTencentCloudCkafkaInstances() *schema.Resource {
 func dataSourceTencentCloudCkafkaInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("data_source.tencentcloud_ckafka_instances.read")()
 
+	ctx := context.Background()
 	ckafkaService := CkafkaService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
-	request := ckafka.NewDescribeInstancesDetailRequest()
+
+	// Build param map for service function
+	param := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_ids"); ok {
-		request.InstanceIdList = helper.InterfacesStringsPoint(v.([]interface{}))
+		param["instance_ids"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 	if v, ok := d.GetOk("search_word"); ok {
-		request.SearchWord = helper.String(v.(string))
+		param["search_word"] = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("tag_key"); ok {
-		request.TagKey = helper.String(v.(string))
+		param["tag_key"] = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("status"); ok {
-		request.Status = helper.InterfacesIntInt64Point(v.([]interface{}))
+		param["status"] = helper.InterfacesIntInt64Point(v.([]interface{}))
 	}
 	if v, ok := d.GetOk("filters"); ok {
 		filterParams := v.([]interface{})
@@ -297,23 +302,17 @@ func dataSourceTencentCloudCkafkaInstancesRead(d *schema.ResourceData, meta inte
 				Values: helper.InterfacesStringsPoint(filterParamMap["values"].([]interface{})),
 			})
 		}
-		request.Filters = filters
-	}
-	if v, ok := d.GetOk("offset"); ok {
-		request.Offset = helper.IntInt64(v.(int))
-	}
-	if v, ok := d.GetOk("limit"); ok {
-		request.Limit = helper.IntInt64(v.(int))
+		param["filters"] = filters
 	}
 
-	response, err := ckafkaService.client.UseCkafkaClient().DescribeInstancesDetail(request)
+	// Note: offset and limit are deprecated and ignored - function always retrieves all results
+
+	// Call service function with automatic pagination and retry
+	kafkaInstanceDetails, err := ckafkaService.DescribeInstancesByFilter(ctx, param)
 	if err != nil {
 		return err
 	}
-	var kafkaInstanceDetails []*ckafka.InstanceDetail
-	if response.Response.Result != nil {
-		kafkaInstanceDetails = response.Response.Result.InstanceList
-	}
+
 	result := make([]map[string]interface{}, 0)
 	ids := make([]string, 0)
 	for _, kafkaInstanceDetail := range kafkaInstanceDetails {
