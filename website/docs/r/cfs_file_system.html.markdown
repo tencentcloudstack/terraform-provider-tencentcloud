@@ -53,6 +53,10 @@ resource "tencentcloud_cfs_file_system" "foo" {
   capacity          = 20480
   ccn_id            = "ccn-39lqkygf"
   cidr_block        = "11.0.0.0/24"
+
+  timeouts {
+    create = "30m"
+  }
 }
 ```
 
@@ -69,6 +73,10 @@ resource "tencentcloud_cfs_file_system" "foo" {
   capacity          = 10240
   ccn_id            = "ccn-39lqkygf"
   cidr_block        = "11.0.0.0/24"
+
+  timeouts {
+    create = "30m"
+  }
 }
 ```
 
@@ -98,6 +106,11 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the file system.
 * `fs_id` - Mount root-directory.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `20m`) Used when creating the resource.
 
 ## Import
 

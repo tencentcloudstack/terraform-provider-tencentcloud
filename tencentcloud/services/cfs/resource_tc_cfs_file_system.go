@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -24,6 +25,10 @@ func ResourceTencentCloudCfsFileSystem() *schema.Resource {
 		Delete: resourceTencentCloudCfsFileSystemDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -193,7 +198,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	d.SetId(fsId)
 
 	// wait for success status
-	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		fileSystems, errRet := cfsService.DescribeFileSystem(ctx, fsId, "", "")
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
