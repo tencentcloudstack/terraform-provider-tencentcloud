@@ -1,4 +1,4 @@
 ```release-note:enhancement
-tco: Add retry logic to DescribeOrganizationMemberEmailBind API call in service layer
+resource/tencentcloud_organization_org_member_email: Add retry logic
 
 ```
