@@ -471,20 +471,27 @@ func (me *OrganizationService) DescribeOrganizationOrgMemberEmailById(ctx contex
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseOrganizationClient().DescribeOrganizationMemberEmailBind(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		response, e := me.client.UseOrganizationClient().DescribeOrganizationMemberEmailBind(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return nil
+		}
+		if *response.Response.BindId != bindId {
+			return nil
+		}
+		orgMemberEmail = response.Response
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil {
-		return
-	}
-	if *response.Response.BindId != bindId {
-		return
-	}
-	orgMemberEmail = response.Response
 	return
 }
 

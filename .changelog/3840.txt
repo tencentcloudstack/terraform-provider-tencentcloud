@@ -1,0 +1,4 @@
+```release-note:enhancement
+tco: Add retry logic to DescribeOrganizationMemberEmailBind API call in service layer
+
+```
