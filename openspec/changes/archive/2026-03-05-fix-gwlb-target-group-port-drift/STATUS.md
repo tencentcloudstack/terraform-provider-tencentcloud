@@ -1,13 +1,19 @@
 # Status: Fix GWLB Target Group Port Field Drift
 
 **Change ID**: fix-gwlb-target-group-port-drift  
-**Status**: Completed  
+**Status**: Archived ✅  
 **Created**: 2026-03-05  
 **Completed**: 2026-03-05  
+**Archived**: 2026-03-05  
 **Author**: AI Assistant
 
 ## Overview
 Fix configuration drift issue caused by the `port` field in `tencentcloud_gwlb_target_group` resource by adding the `Computed` attribute.
+
+## Archive Notes
+This change has been successfully completed and archived. All implementation tasks were finished, tested, and the fix is ready for deployment.
+
+**Archive Location**: `openspec/changes/archive/2026-03-05-fix-gwlb-target-group-port-drift/`
 
 ## Current State
 - ✅ Proposal created and approved
