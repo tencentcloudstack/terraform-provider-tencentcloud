@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cfs_file_system: support capacity expansion for Turbo file systems (TB/TP)
+```

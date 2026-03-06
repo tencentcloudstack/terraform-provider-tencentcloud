@@ -38,7 +38,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.1.27
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.1010
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.627
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.3.49
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.3.33
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.8
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.40
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.48
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.49
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1206
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.32
