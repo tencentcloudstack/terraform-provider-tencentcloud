@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_ckafka_instances: deprecate `offset` and `limit` parameters, add automatic pagination with retry logic
+```

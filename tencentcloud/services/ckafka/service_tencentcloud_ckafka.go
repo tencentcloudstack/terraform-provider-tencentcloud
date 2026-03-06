@@ -1859,3 +1859,76 @@ func (me *CkafkaService) DescribeCkafkaVersionByFilter(ctx context.Context, inst
 	instanceVersion = response.Response.Result
 	return
 }
+
+func (me *CkafkaService) DescribeInstancesByFilter(ctx context.Context, param map[string]interface{}) (ret []*ckafka.InstanceDetail, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = ckafka.NewDescribeInstancesDetailRequest()
+		response = ckafka.NewDescribeInstancesDetailResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	// Build request from param map
+	for k, v := range param {
+		if k == "instance_ids" {
+			request.InstanceIdList = v.([]*string)
+		}
+		if k == "search_word" {
+			request.SearchWord = v.(*string)
+		}
+		if k == "tag_key" {
+			request.TagKey = v.(*string)
+		}
+		if k == "status" {
+			request.Status = v.([]*int64)
+		}
+		if k == "filters" {
+			request.Filters = v.([]*ckafka.Filter)
+		}
+	}
+
+	// Automatic pagination with retry logic
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseCkafkaClient().DescribeInstancesDetail(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Result == nil || result.Response.Result.InstanceList == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe instances failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		ret = append(ret, response.Response.Result.InstanceList...)
+		if len(response.Response.Result.InstanceList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

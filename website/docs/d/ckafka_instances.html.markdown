@@ -13,9 +13,27 @@ Use this data source to query detailed instance information of Ckafka
 
 ## Example Usage
 
+### Query all Ckafka instances
+
 ```hcl
-data "tencentcloud_ckafka_instances" "foo" {
-  instance_ids = ["ckafka-vv7wpvae"]
+data "tencentcloud_ckafka_instances" "example" {}
+```
+
+### Query Ckafka instances by filters
+
+```hcl
+data "tencentcloud_ckafka_instances" "example" {
+  instance_ids = [
+    "ckafka-7k5nbnem",
+    "ckafka-8j4raxv8"
+  ]
+
+  status = [0, 1, 2]
+
+  filters {
+    name   = "InstanceType"
+    values = ["profession"]
+  }
 }
 ```
 
@@ -25,8 +43,8 @@ The following arguments are supported:
 
 * `filters` - (Optional, List) Filter. filter.name supports ('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId'), filter.values can pass up to 10 values.
 * `instance_ids` - (Optional, List: [`String`]) Filter by instance ID.
-* `limit` - (Optional, Int) The number of pages, default is `10`.
-* `offset` - (Optional, Int) The page start offset, default is `0`.
+* `limit` - (Optional, Int, **Deprecated**) This parameter is deprecated and will be removed in a future version. The data source now automatically retrieves all instances. The number of pages, default is `10`.
+* `offset` - (Optional, Int, **Deprecated**) This parameter is deprecated and will be removed in a future version. The data source now automatically retrieves all instances. The page start offset, default is `0`.
 * `result_output_file` - (Optional, String) Used to save results.
 * `search_word` - (Optional, String) Filter by instance name, support fuzzy query.
 * `status` - (Optional, List: [`Int`]) (Filter Criteria) The status of the instance. 0: Create, 1: Run, 2: Delete, do not fill the default return all.
