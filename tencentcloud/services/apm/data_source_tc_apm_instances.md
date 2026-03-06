@@ -1,4 +1,4 @@
-Use this data source to query APM (Application Performance Management) instances.
+Use this data source to query APM (Application Performance Management) instances. It returns all fields from the DescribeApmInstances API, including instance basic info, billing, log configuration, security detection settings, and more.
 
 Example Usage
 
