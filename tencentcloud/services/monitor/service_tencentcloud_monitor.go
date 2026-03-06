@@ -15,6 +15,7 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	monitorv20180724 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	monitorv20230616 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20230616"
 	"gopkg.in/yaml.v2"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -2696,6 +2697,170 @@ func (me *MonitorService) DescribePolicyObjectCount(ctx context.Context, groupId
 		errRet = err
 		return
 	}
+
+	return
+}
+
+func (me *MonitorService) CreateNoticeContentTmpl(ctx context.Context, request *monitorv20230616.CreateNoticeContentTmplRequest) (tmplID string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorV20230616Client().CreateNoticeContentTmpl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.TmplID != nil {
+		tmplID = *response.Response.TmplID
+	}
+
+	return
+}
+
+func (me *MonitorService) DescribeNoticeContentTmplByFilter(ctx context.Context, tmplIDs []*string, tmplName *string) (noticeContentTmpls []*monitorv20230616.NoticeContentTmpl, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitorv20230616.NewDescribeNoticeContentTmplRequest()
+	pageNumber := uint64(1)
+	pageSize := uint64(100)
+	request.PageNumber = &pageNumber
+	request.PageSize = &pageSize
+
+	if len(tmplIDs) > 0 {
+		request.TmplIDs = tmplIDs
+	}
+	if tmplName != nil {
+		request.TmplName = tmplName
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *monitorv20230616.DescribeNoticeContentTmplResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorV20230616Client().DescribeNoticeContentTmpl(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.NoticeContentTmpls != nil {
+		noticeContentTmpls = response.Response.NoticeContentTmpls
+	}
+
+	return
+}
+
+func (me *MonitorService) DescribeNoticeContentTmplById(ctx context.Context, tmplID string) (noticeContentTmpl *monitorv20230616.NoticeContentTmpl, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitorv20230616.NewDescribeNoticeContentTmplRequest()
+	pageNumber := uint64(1)
+	pageSize := uint64(1)
+	request.PageNumber = &pageNumber
+	request.PageSize = &pageSize
+	request.TmplIDs = []*string{&tmplID}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *monitorv20230616.DescribeNoticeContentTmplResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorV20230616Client().DescribeNoticeContentTmpl(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.NoticeContentTmpls != nil && len(response.Response.NoticeContentTmpls) > 0 {
+		noticeContentTmpl = response.Response.NoticeContentTmpls[0]
+	}
+
+	return
+}
+
+func (me *MonitorService) ModifyNoticeContentTmpl(ctx context.Context, request *monitorv20230616.ModifyNoticeContentTmplRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorV20230616Client().ModifyNoticeContentTmpl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DeleteNoticeContentTmpl(ctx context.Context, tmplID string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitorv20230616.NewDeleteNoticeContentTmplsRequest()
+	request.TmplIDs = []*string{&tmplID}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorV20230616Client().DeleteNoticeContentTmpls(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

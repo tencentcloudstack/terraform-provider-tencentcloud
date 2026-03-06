@@ -75,6 +75,7 @@ import (
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	monitorv20230616 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20230616"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	mqtt "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt/v20240516"
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
@@ -134,93 +135,94 @@ type TencentCloudClient struct {
 	Domain     string
 	CosDomain  string
 
-	cosConn             *s3.S3
-	tencentCosConn      *cos.Client
-	mysqlConn           *cdb.Client
-	redisConn           *redis.Client
-	asConn              *as.Client
-	vpcConn             *vpc.Client
-	cbsConn             *cbs.Client
-	cvmv20170312Conn    *cvmv20170312.Client
-	cvmIntlConn         *cvmintl.Client
-	clbConn             *clb.Client
-	clbIntlConn         *clbintl.Client
-	dayuConn            *dayu.Client
-	dcConn              *dc.Client
-	tagConn             *tag.Client
-	mongodbConn         *mongodb.Client
-	tkev20180525Conn    *tkev20180525.Client
-	tdmqConn            *tdmq.Client
-	tcrConn             *tcr.Client
-	camConn             *cam.Client
-	stsConn             *sts.Client
-	gaapConn            *gaap.Client
-	sslConn             *ssl.Client
-	cfsConn             *cfs.Client
-	scfConn             *scf.Client
-	tcaplusConn         *tcaplusdb.Client
-	cdnConn             *cdn.Client
-	monitorConn         *monitor.Client
-	esConn              *es.Client
-	sqlserverConn       *sqlserver.Client
-	postgreConn         *postgre.Client
-	ckafkaConn          *ckafka.Client
-	auditConn           *audit.Client
-	cynosConn           *cynosdb.Client
-	vodConn             *vod.Client
-	apiGatewayConn      *apigateway.Client
-	sslCertificateConn  *sslCertificate.Client
-	kmsConn             *kms.Client
-	ssmConn             *ssm.Client
-	apiConn             *api.Client
-	emrConn             *emr.Client
-	clsConn             *cls.Client
-	dnsPodConn          *dnspod.Client
-	dnsPodIntlConn      *dnspodintl.Client
-	privateDnsConn      *privatedns.Client
-	antiddosConn        *antiddos.Client
-	domainConn          *domain.Client
-	lighthouseConn      *lighthouse.Client
-	temConn             *tem.Client
-	teoConn             *teo.Client
-	tcmConn             *tcm.Client
-	cssConn             *css.Client
-	sesConn             *ses.Client
-	dcdbConn            *dcdb.Client
-	smsConn             *sms.Client
-	catConn             *cat.Client
-	mariadbConn         *mariadb.Client
-	rumConn             *rum.Client
-	ptsConn             *pts.Client
-	tatConn             *tat.Client
-	organizationConn    *organization.Client
-	tdcpgConn           *tdcpg.Client
-	dbbrainConn         *dbbrain.Client
-	dtsConn             *dts.Client
-	ciConn              *cos.Client
-	cosBatchConn        *cos.Client
-	tsfConn             *tsf.Client
-	mpsConn             *mps.Client
-	cwpConn             *cwp.Client
-	chdfsConn           *chdfs.Client
-	mdlConn             *mdl.Client
-	apmConn             *apm.Client
-	ciamConn            *ciam.Client
-	tseConn             *tse.Client
-	cdwchConn           *cdwch.Client
-	ebConn              *eb.Client
-	dlcConn             *dlc.Client
-	wedataConn          *wedata.Client
-	wedatav20250806Conn *wedatav20250806.Client
-	wafConn             *waf.Client
-	cfwConn             *cfw.Client
-	oceanusConn         *oceanus.Client
-	dasbConn            *dasb.Client
-	trocketConn         *trocket.Client
-	biConn              *bi.Client
-	cdwpgConn           *cdwpg.Client
-	csipConn            *csip.Client
-	regionConn          *region.Client
+	cosConn              *s3.S3
+	tencentCosConn       *cos.Client
+	mysqlConn            *cdb.Client
+	redisConn            *redis.Client
+	asConn               *as.Client
+	vpcConn              *vpc.Client
+	cbsConn              *cbs.Client
+	cvmv20170312Conn     *cvmv20170312.Client
+	cvmIntlConn          *cvmintl.Client
+	clbConn              *clb.Client
+	clbIntlConn          *clbintl.Client
+	dayuConn             *dayu.Client
+	dcConn               *dc.Client
+	tagConn              *tag.Client
+	mongodbConn          *mongodb.Client
+	tkev20180525Conn     *tkev20180525.Client
+	tdmqConn             *tdmq.Client
+	tcrConn              *tcr.Client
+	camConn              *cam.Client
+	stsConn              *sts.Client
+	gaapConn             *gaap.Client
+	sslConn              *ssl.Client
+	cfsConn              *cfs.Client
+	scfConn              *scf.Client
+	tcaplusConn          *tcaplusdb.Client
+	cdnConn              *cdn.Client
+	monitorConn          *monitor.Client
+	monitorv20230616Conn *monitorv20230616.Client
+	esConn               *es.Client
+	sqlserverConn        *sqlserver.Client
+	postgreConn          *postgre.Client
+	ckafkaConn           *ckafka.Client
+	auditConn            *audit.Client
+	cynosConn            *cynosdb.Client
+	vodConn              *vod.Client
+	apiGatewayConn       *apigateway.Client
+	sslCertificateConn   *sslCertificate.Client
+	kmsConn              *kms.Client
+	ssmConn              *ssm.Client
+	apiConn              *api.Client
+	emrConn              *emr.Client
+	clsConn              *cls.Client
+	dnsPodConn           *dnspod.Client
+	dnsPodIntlConn       *dnspodintl.Client
+	privateDnsConn       *privatedns.Client
+	antiddosConn         *antiddos.Client
+	domainConn           *domain.Client
+	lighthouseConn       *lighthouse.Client
+	temConn              *tem.Client
+	teoConn              *teo.Client
+	tcmConn              *tcm.Client
+	cssConn              *css.Client
+	sesConn              *ses.Client
+	dcdbConn             *dcdb.Client
+	smsConn              *sms.Client
+	catConn              *cat.Client
+	mariadbConn          *mariadb.Client
+	rumConn              *rum.Client
+	ptsConn              *pts.Client
+	tatConn              *tat.Client
+	organizationConn     *organization.Client
+	tdcpgConn            *tdcpg.Client
+	dbbrainConn          *dbbrain.Client
+	dtsConn              *dts.Client
+	ciConn               *cos.Client
+	cosBatchConn         *cos.Client
+	tsfConn              *tsf.Client
+	mpsConn              *mps.Client
+	cwpConn              *cwp.Client
+	chdfsConn            *chdfs.Client
+	mdlConn              *mdl.Client
+	apmConn              *apm.Client
+	ciamConn             *ciam.Client
+	tseConn              *tse.Client
+	cdwchConn            *cdwch.Client
+	ebConn               *eb.Client
+	dlcConn              *dlc.Client
+	wedataConn           *wedata.Client
+	wedatav20250806Conn  *wedatav20250806.Client
+	wafConn              *waf.Client
+	cfwConn              *cfw.Client
+	oceanusConn          *oceanus.Client
+	dasbConn             *dasb.Client
+	trocketConn          *trocket.Client
+	biConn               *bi.Client
+	cdwpgConn            *cdwpg.Client
+	csipConn             *csip.Client
+	regionConn           *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tkev20220501Conn  *tkev20220501.Client
@@ -888,6 +890,19 @@ func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 	me.monitorConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.monitorConn
+}
+
+// UseMonitorV20230616Client returns monitor v20230616 client for service
+func (me *TencentCloudClient) UseMonitorV20230616Client() *monitorv20230616.Client {
+	if me.monitorv20230616Conn != nil {
+		return me.monitorv20230616Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.monitorv20230616Conn, _ = monitorv20230616.NewClient(me.Credential, me.Region, cpf)
+	me.monitorv20230616Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.monitorv20230616Conn
 }
 
 func (me *TencentCloudClient) UseMonitorClientRegion(region string) *monitor.Client {

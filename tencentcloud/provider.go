@@ -1741,6 +1741,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_policy":                                                     monitor.ResourceTencentCloudMonitorAlarmPolicy(),
 			"tencentcloud_monitor_alarm_notice":                                                     monitor.ResourceTencentCloudMonitorAlarmNotice(),
 			"tencentcloud_monitor_alarm_policy_set_default":                                         monitor.ResourceTencentCloudMonitorAlarmPolicySetDefault(),
+			"tencentcloud_monitor_notice_content_tmpl":                                              monitor.ResourceTencentCloudMonitorNoticeContentTmpl(),
 			"tencentcloud_monitor_tmp_instance":                                                     tmp.ResourceTencentCloudMonitorTmpInstance(),
 			"tencentcloud_monitor_tmp_cvm_agent":                                                    tmp.ResourceTencentCloudMonitorTmpCvmAgent(),
 			"tencentcloud_monitor_tmp_scrape_job":                                                   tmp.ResourceTencentCloudMonitorTmpScrapeJob(),
