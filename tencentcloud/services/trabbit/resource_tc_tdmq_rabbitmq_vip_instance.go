@@ -88,6 +88,36 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.",
 			},
+			"resource_tags": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Instance resource tags. Each tag is a key-value pair for resource identification and management.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The key of tag.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The value of tag.",
+						},
+					},
+				},
+			},
+			"band_width": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Public network bandwidth in Mbps.",
+			},
+			"enable_public_access": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable public network access. Default is false.",
+			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -189,6 +219,28 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOk("cluster_version"); ok {
 		request.ClusterVersion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("resource_tags"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			tag := tdmq.Tag{}
+			if v, ok := dMap["tag_key"]; ok {
+				tag.TagKey = helper.String(v.(string))
+			}
+			if v, ok := dMap["tag_value"]; ok {
+				tag.TagValue = helper.String(v.(string))
+			}
+			request.ResourceTags = append(request.ResourceTags, &tag)
+		}
+	}
+
+	if v, ok := d.GetOkExists("band_width"); ok {
+		request.Bandwidth = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("enable_public_access"); ok {
+		request.EnablePublicAccess = helper.Bool(v.(bool))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -297,12 +349,36 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("storage_size", rabbitmqVipInstance.ClusterSpecInfo.MaxStorage)
 	}
 
+	if rabbitmqVipInstance.ClusterSpecInfo.PublicNetworkTps != nil {
+		_ = d.Set("band_width", rabbitmqVipInstance.ClusterSpecInfo.PublicNetworkTps)
+	}
+
 	if rabbitmqVipInstance.ClusterInfo.PayMode != nil {
 		_ = d.Set("pay_mode", rabbitmqVipInstance.ClusterInfo.PayMode)
 	}
 
 	if rabbitmqVipInstance.ClusterInfo.ClusterVersion != nil {
 		_ = d.Set("cluster_version", rabbitmqVipInstance.ClusterInfo.ClusterVersion)
+	}
+
+	if rabbitmqVipInstance.ClusterNetInfo != nil && rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus != nil {
+		enablePublicAccess := *rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus == "ON"
+		_ = d.Set("enable_public_access", enablePublicAccess)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo != nil && len(rabbitmqVipInstance.ClusterInfo.Tags) > 0 {
+		resourceTagsList := []interface{}{}
+		for _, resourceTags := range rabbitmqVipInstance.ClusterInfo.Tags {
+			resourceTagsMap := map[string]interface{}{}
+			if resourceTags.TagKey != nil {
+				resourceTagsMap["tag_key"] = resourceTags.TagKey
+			}
+			if resourceTags.TagValue != nil {
+				resourceTagsMap["tag_value"] = resourceTags.TagValue
+			}
+			resourceTagsList = append(resourceTagsList, resourceTagsMap)
+		}
+		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
 	paramMap := make(map[string]interface{})
@@ -385,6 +461,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
 		"storage_size", "enable_create_default_ha_mirror_queue",
 		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
+		"band_width", "enable_public_access",
 	}
 
 	for _, v := range immutableArgs {
@@ -393,12 +470,38 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 
+	request.InstanceId = &instanceId
+	needUpdate := false
+
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
+			needUpdate = true
 		}
+	}
 
-		request.InstanceId = &instanceId
+	if d.HasChange("resource_tags") {
+		if v, ok := d.GetOk("resource_tags"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				tag := tdmq.Tag{}
+				if v, ok := dMap["tag_key"]; ok {
+					tag.TagKey = helper.String(v.(string))
+				}
+				if v, ok := dMap["tag_value"]; ok {
+					tag.TagValue = helper.String(v.(string))
+				}
+				request.Tags = append(request.Tags, &tag)
+			}
+			needUpdate = true
+		} else {
+			// If resource_tags is removed, set RemoveAllTags to true
+			request.RemoveAllTags = helper.Bool(true)
+			needUpdate = true
+		}
+	}
+
+	if needUpdate {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
 			if e != nil {
