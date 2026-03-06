@@ -122,6 +122,12 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 					},
 				},
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -189,6 +195,15 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOk("cluster_version"); ok {
 		request.ClusterVersion = helper.String(v.(string))
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			request.ResourceTags = append(request.ResourceTags, &tdmq.Tag{
+				TagKey:   helper.String(k),
+				TagValue: helper.String(v),
+			})
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -359,6 +374,16 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			_ = d.Set("vpcs", tmpList)
 		}
 
+		if result[0].Tags != nil {
+			tags := make(map[string]string, len(result[0].Tags))
+			for _, tag := range result[0].Tags {
+				if tag.TagKey != nil && tag.TagValue != nil {
+					tags[*tag.TagKey] = *tag.TagValue
+				}
+			}
+			_ = d.Set("tags", tags)
+		}
+
 		return nil
 	})
 
@@ -393,11 +418,28 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 
+	needUpdate := false
+
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
 		}
+		needUpdate = true
+	}
 
+	if d.HasChange("tags") {
+		if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+			for k, v := range tags {
+				request.Tags = append(request.Tags, &tdmq.Tag{
+					TagKey:   helper.String(k),
+					TagValue: helper.String(v),
+				})
+			}
+		}
+		needUpdate = true
+	}
+
+	if needUpdate {
 		request.InstanceId = &instanceId
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)

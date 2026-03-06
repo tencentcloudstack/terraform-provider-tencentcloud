@@ -44,6 +44,9 @@ const (
 	// 创建命名空间失败。
 	FAILEDOPERATION_CREATENAMESPACE = "FailedOperation.CreateNamespace"
 
+	// 当前地域不支持 sdk 创建
+	FAILEDOPERATION_CREATEPROCLUSTERREGIONNOTEXIST = "FailedOperation.CreateProClusterRegionNotExist"
+
 	// 创建producer出错。
 	FAILEDOPERATION_CREATEPRODUCERERROR = "FailedOperation.CreateProducerError"
 
@@ -107,7 +110,7 @@ const (
 	// 存量公网禁止修改
 	FAILEDOPERATION_INVALIDEXISTPUBLICACCESSPOINTERROR = "FailedOperation.InvalidExistPublicAccessPointError"
 
-	// 参数不合法
+	// 白名单列表不合法，格式错误或者数量超限
 	FAILEDOPERATION_INVALIDWHITELISTERROR = "FailedOperation.InvalidWhiteListError"
 
 	// 当前集群不支持设置该参数
@@ -172,6 +175,9 @@ const (
 
 	// 设置消息TTL失败。
 	FAILEDOPERATION_SETTTL = "FailedOperation.SetTTL"
+
+	// 存储规格选择错误，请选择正确存储规格
+	FAILEDOPERATION_STORAGESIZEERROR = "FailedOperation.StorageSizeError"
 
 	// 必须先清除关联主题数据才能继续操作。
 	FAILEDOPERATION_TOPICINUSE = "FailedOperation.TopicInUse"
@@ -392,6 +398,9 @@ const (
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
 
+	// 延迟消息策略未知入参
+	UNKNOWNPARAMETER_DELAYMESSAGEPOLICY = "UnknownParameter.DelayMessagePolicy"
+
 	// Policy 参数错误
 	UNKNOWNPARAMETER_POLICY = "UnknownParameter.Policy"
 
@@ -400,6 +409,9 @@ const (
 
 	// 该实例不支持降配操作。
 	UNSUPPORTEDOPERATION_INSTANCEDOWNGRADE = "UnsupportedOperation.InstanceDowngrade"
+
+	// 不支持设置主题延迟消息策略操作
+	UNSUPPORTEDOPERATION_TOPICDELAYMESSAGE = "UnsupportedOperation.TopicDelayMessage"
 
 	// 当前集群不支持Unack 操作
 	UNSUPPORTEDOPERATION_TOPICUNACK = "UnsupportedOperation.TopicUnack"
