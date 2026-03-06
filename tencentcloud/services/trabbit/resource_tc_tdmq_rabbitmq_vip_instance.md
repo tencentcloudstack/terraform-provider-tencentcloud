@@ -50,6 +50,35 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
   time_span                             = 1
   pay_mode                              = 0
   cluster_version                       = "3.11.8"
+  resource_tags {
+    tag_key   = "tagKey"
+    tag_value = "tagValue"
+  }
+}
+```
+
+Enable public network access
+
+```hcl
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [100006]
+  vpc_id                                = "vpc-i5yyodl9"
+  subnet_id                             = "subnet-hhi88a58"
+  cluster_name                          = "tf-example"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  pay_mode                              = 0
+  cluster_version                       = "3.11.8"
+  enable_public_access                  = true
+  band_width                            = 100
+
+  resource_tags {
+    tag_key   = "tagKey"
+    tag_value = "tagValue"
+  }
 }
 ```
 

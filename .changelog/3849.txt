@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_tdmq_rabbitmq_vip_instance: add `resource_tags`, `band_width` and `enable_public_access`
+```
