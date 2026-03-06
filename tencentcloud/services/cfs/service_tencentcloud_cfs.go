@@ -57,6 +57,29 @@ func (me *CfsService) DescribeFileSystem(ctx context.Context, fsId, vpcId, subne
 	return
 }
 
+func (me *CfsService) DescribeFileSystemById(ctx context.Context, fsId string) (fsInfo *cfs.FileSystemInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cfs.NewDescribeCfsFileSystemsRequest()
+	request.FileSystemId = &fsId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCfsClient().DescribeCfsFileSystems(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.FileSystems) == 0 {
+		return
+	}
+	fsInfo = response.Response.FileSystems[0]
+	return
+}
+
 func (me *CfsService) DescribeMountTargets(ctx context.Context, fsId string) (targets []*cfs.MountInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cfs.NewDescribeMountTargetsRequest()
@@ -104,6 +127,25 @@ func (me *CfsService) ModifyFileSystemAccessGroup(ctx context.Context, fsId, acc
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCfsClient().UpdateCfsFileSystemPGroup(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CfsService) ScaleUpFileSystem(ctx context.Context, fsId string, targetCapacity uint64) error {
+	logId := tccommon.GetLogId(ctx)
+	request := cfs.NewScaleUpFileSystemRequest()
+	request.FileSystemId = &fsId
+	request.TargetCapacity = &targetCapacity
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCfsClient().ScaleUpFileSystem(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

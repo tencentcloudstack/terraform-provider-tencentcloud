@@ -45,6 +45,7 @@ resource "tencentcloud_cfs_file_system" "foo" {
 
   timeouts {
     create = "30m"
+    update = "30m"
   }
 }
 ```
@@ -65,6 +66,7 @@ resource "tencentcloud_cfs_file_system" "foo" {
 
   timeouts {
     create = "30m"
+    update = "30m"
   }
 }
 ```
