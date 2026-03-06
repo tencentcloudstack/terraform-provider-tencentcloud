@@ -182,6 +182,12 @@ func DataSourceTencentCloudClbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "VPC ID in a numeric form. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
+						"zones": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Zones where rules are deployed for VPC internal load balancers with nearby access mode. Note: This field may return null, indicating no valid values can be obtained.",
+						},
 					},
 				},
 			},
@@ -284,6 +290,10 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 
 		if clbInstance.NumericalVpcId != nil {
 			mapping["numerical_vpc_id"] = clbInstance.NumericalVpcId
+		}
+
+		if clbInstance.Zones != nil {
+			mapping["zones"] = helper.StringsInterfaces(clbInstance.Zones)
 		}
 
 		clbList = append(clbList, mapping)

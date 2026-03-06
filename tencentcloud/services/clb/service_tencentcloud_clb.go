@@ -103,16 +103,32 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 	for {
 		request.Offset = &(offset)
 		request.Limit = &(pageSize)
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
+
+		var response *clb.DescribeLoadBalancersResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseClbClient().DescribeLoadBalancers(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result == nil || result.Response == nil || result.Response.LoadBalancerSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeLoadBalancers response is nil"))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
-			errRet = errors.WithStack(err)
+			log.Printf("[CRITAL]%s DescribeLoadBalancerByFilter failed, reason:%+v", logId, err)
+			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.LoadBalancerSet) < 1 {
+		if len(response.Response.LoadBalancerSet) < 1 {
 			break
 		}
 

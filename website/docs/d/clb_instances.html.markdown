@@ -14,12 +14,12 @@ Use this data source to query detailed information of CLB
 ## Example Usage
 
 ```hcl
-data "tencentcloud_clb_instances" "foo" {
+data "tencentcloud_clb_instances" "example" {
   clb_id             = "lb-k2zjp9lv"
   network_type       = "OPEN"
-  clb_name           = "myclb"
+  clb_name           = "tf-example"
   project_id         = 0
-  result_output_file = "mytestpath"
+  result_output_file = "myOutputPath"
 }
 ```
 
@@ -64,5 +64,6 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_name` - Available zone name, This field maybe null, means cannot get a valid value.
   * `zone_region` - Region that this available zone belong to, This field maybe null, means cannot get a valid value.
   * `zone` - Available zone unique id(string representation), This field maybe null, means cannot get a valid value.
+  * `zones` - Zones where rules are deployed for VPC internal load balancers with nearby access mode. Note: This field may return null, indicating no valid values can be obtained.
 
 
