@@ -20,6 +20,12 @@ func TestAccTencentCloudApmInstancesDataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_apm_instances.instances"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_apm_instances.instances", "instance_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_apm_instances.instances", "instance_list.0.instance_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_apm_instances.instances", "instance_list.0.name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_apm_instances.instances", "instance_list.0.trace_duration"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_apm_instances.instances", "instance_list.0.pay_mode"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_apm_instances.instances", "instance_list.0.metric_duration"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_apm_instances.instances", "instance_list.0.token"),
 				),
 			},
 		},
