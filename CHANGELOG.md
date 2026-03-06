@@ -1,3 +1,27 @@
+## 1.82.73(March 6 , 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mongodb_instance_srv_connection` ([#3834](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3834))
+* **New Resource:** `tencentcloud_monitor_notice_content_tmpl` ([#3835](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3835))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_ckafka_instances: deprecate `offset` and `limit` parameters, add automatic pagination with retry logic ([#3844](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3844))
+* data-source/tencentcloud_clb_instances: add `zones` field to `clb_list` output and improve reliability with retry logic in underlying API calls ([#3843](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3843))
+* datasource/tencentcloud_apm_instances: output more parameters, like `token`. ([#3847](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3847))
+* resource/tencentcloud_cfs_file_system: support capacity expansion for Turbo file systems (TB/TP) ([#3846](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3846))
+* resource/tencentcloud_cfs_file_system: support timeouts block ([#3841](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3841))
+* resource/tencentcloud_cos_bucket: optimize params `chdfs_ofs` ([#3836](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3836))
+* resource/tencentcloud_organization_org_member_email: Add retry logic ([#3840](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3840))
+* resource/tencentcloud_route_table_entry: optimize read function support `vpc-id` ([#3837](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3837))
+* resource/tencentcloud_ssl_pay_certificate: remove optional `dv_auths` ([#3839](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3839))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: add `resource_tags`, `band_width` and `enable_public_access` ([#3849](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3849))
+
+BUG FIXES:
+
+* resource/tencentcloud_gwlb_target_group: fix `port` field drift issue by adding `Computed: true` attribute ([#3842](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3842))
+
 ## 1.82.72(February 28, 2026)
 
 ENHANCEMENTS:
