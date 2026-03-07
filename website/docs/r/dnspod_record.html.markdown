@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `monitor_status` - The monitoring status of the record.
+* `record_id` - ID of the record.
 
 
 ## Import

@@ -88,6 +88,11 @@ func ResourceTencentCloudDnspodRecord() *schema.Resource {
 				Optional:    true,
 				Description: "The Remark of record.",
 			},
+			"record_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ID of the record.",
+			},
 		},
 		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
 			// weight设置后不能单独关闭
@@ -140,7 +145,7 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 		}
 		recordId = *response.Response.RecordId
 
-		d.SetId(domain + tccommon.FILED_SP + fmt.Sprint(recordId))
+		d.SetId(domain + tccommon.FILED_SP + strconv.FormatUint(recordId, 10))
 		return nil
 	})
 	if err != nil {
@@ -239,7 +244,7 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 	} else {
 		_ = d.Set("status", "ENABLE")
 	}
-
+	_ = d.Set("record_id", items[1])
 	return nil
 }
 
