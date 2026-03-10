@@ -23,6 +23,11 @@ resource "tencentcloud_tcr_namespace" "example" {
   cve_whitelist_items	{
     cve_id = "cve-xxxxx"
   }
+  
+  tags = {
+    "env"       = "production"
+    "createdBy" = "terraform"
+  }
 }
 ```
 
