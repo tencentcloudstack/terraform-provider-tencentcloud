@@ -45,6 +45,70 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewAssociateCustomizedConfigRequest() (request *AssociateCustomizedConfigRequest) {
+    request = &AssociateCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "AssociateCustomizedConfig")
+    
+    
+    return
+}
+
+func NewAssociateCustomizedConfigResponse() (response *AssociateCustomizedConfigResponse) {
+    response = &AssociateCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AssociateCustomizedConfig
+// 关联配置到server或location，根据配置类型关联到server或location。准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AssociateCustomizedConfig(request *AssociateCustomizedConfigRequest) (response *AssociateCustomizedConfigResponse, err error) {
+    return c.AssociateCustomizedConfigWithContext(context.Background(), request)
+}
+
+// AssociateCustomizedConfig
+// 关联配置到server或location，根据配置类型关联到server或location。准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) AssociateCustomizedConfigWithContext(ctx context.Context, request *AssociateCustomizedConfigRequest) (response *AssociateCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewAssociateCustomizedConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "AssociateCustomizedConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAssociateCustomizedConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAssociateTargetGroupsRequest() (request *AssociateTargetGroupsRequest) {
     request = &AssociateTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3545,6 +3609,76 @@ func (c *Client) DescribeRewriteWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeTargetGroupInstanceStatusRequest() (request *DescribeTargetGroupInstanceStatusRequest) {
+    request = &DescribeTargetGroupInstanceStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetGroupInstanceStatus")
+    
+    
+    return
+}
+
+func NewDescribeTargetGroupInstanceStatusResponse() (response *DescribeTargetGroupInstanceStatusResponse) {
+    response = &DescribeTargetGroupInstanceStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTargetGroupInstanceStatus
+// 查询目标组后端服务状态。目前仅支持网关负载均衡类型的目标组支持查询后端服务状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeTargetGroupInstanceStatus(request *DescribeTargetGroupInstanceStatusRequest) (response *DescribeTargetGroupInstanceStatusResponse, err error) {
+    return c.DescribeTargetGroupInstanceStatusWithContext(context.Background(), request)
+}
+
+// DescribeTargetGroupInstanceStatus
+// 查询目标组后端服务状态。目前仅支持网关负载均衡类型的目标组支持查询后端服务状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeTargetGroupInstanceStatusWithContext(ctx context.Context, request *DescribeTargetGroupInstanceStatusRequest) (response *DescribeTargetGroupInstanceStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeTargetGroupInstanceStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DescribeTargetGroupInstanceStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTargetGroupInstanceStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTargetGroupInstanceStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTargetGroupInstancesRequest() (request *DescribeTargetGroupInstancesRequest) {
     request = &DescribeTargetGroupInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3903,6 +4037,70 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeTaskStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDisassociateCustomizedConfigRequest() (request *DisassociateCustomizedConfigRequest) {
+    request = &DisassociateCustomizedConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DisassociateCustomizedConfig")
+    
+    
+    return
+}
+
+func NewDisassociateCustomizedConfigResponse() (response *DisassociateCustomizedConfigResponse) {
+    response = &DisassociateCustomizedConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisassociateCustomizedConfig
+// 去关联个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DisassociateCustomizedConfig(request *DisassociateCustomizedConfigRequest) (response *DisassociateCustomizedConfigResponse, err error) {
+    return c.DisassociateCustomizedConfigWithContext(context.Background(), request)
+}
+
+// DisassociateCustomizedConfig
+// 去关联个性化配置，准备下线，请使用SetCustomizedConfigForLoadBalancer。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DisassociateCustomizedConfigWithContext(ctx context.Context, request *DisassociateCustomizedConfigRequest) (response *DisassociateCustomizedConfigResponse, err error) {
+    if request == nil {
+        request = NewDisassociateCustomizedConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "DisassociateCustomizedConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateCustomizedConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisassociateCustomizedConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -5737,6 +5935,64 @@ func (c *Client) RegisterTargetsWithClassicalLBWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewRegisterTargetsWithClassicalLBResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRenewLoadBalancersRequest() (request *RenewLoadBalancersRequest) {
+    request = &RenewLoadBalancersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "RenewLoadBalancers")
+    
+    
+    return
+}
+
+func NewRenewLoadBalancersResponse() (response *RenewLoadBalancersResponse) {
+    response = &RenewLoadBalancersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RenewLoadBalancers
+// 本接口 (RenewLoadBalancers) 用于续费包年包月实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) RenewLoadBalancers(request *RenewLoadBalancersRequest) (response *RenewLoadBalancersResponse, err error) {
+    return c.RenewLoadBalancersWithContext(context.Background(), request)
+}
+
+// RenewLoadBalancers
+// 本接口 (RenewLoadBalancers) 用于续费包年包月实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) RenewLoadBalancersWithContext(ctx context.Context, request *RenewLoadBalancersRequest) (response *RenewLoadBalancersResponse, err error) {
+    if request == nil {
+        request = NewRenewLoadBalancersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "clb", APIVersion, "RenewLoadBalancers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewLoadBalancers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenewLoadBalancersResponse()
     err = c.Send(request, response)
     return
 }
