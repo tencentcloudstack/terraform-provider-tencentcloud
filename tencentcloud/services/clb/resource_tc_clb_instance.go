@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcas "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
@@ -30,6 +31,10 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 		Delete: resourceTencentCloudClbInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(10 * time.Minute),
+			Update: schema.DefaultTimeout(10 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"network_type": {
@@ -605,7 +610,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 
 	var response *clb.CreateLoadBalancerResponse
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().CreateLoadBalancer(request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -628,7 +633,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	// wait
 	requestId := *response.Response.RequestId
-	clbId, err := waitForTaskFinishGetID(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+	clbId, err := waitForTaskFinishGetIDWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return err
 	}
@@ -652,7 +657,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			}
 		}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 			sgResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().SetLoadBalancerSecurityGroups(sgRequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -660,7 +665,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
 				requestId := *sgResponse.Response.RequestId
-				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutCreate))
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
@@ -681,7 +686,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			logRequest.LoadBalancerId = helper.String(clbId)
 			logRequest.LogSetId = helper.String(v.(string))
 			logRequest.LogTopicId = helper.String(u.(string))
-			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 				logResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().SetLoadBalancerClsLog(logRequest)
 				if e != nil {
 					return tccommon.RetryError(e)
@@ -689,7 +694,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
 					requestId := *logResponse.Response.RequestId
-					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+					retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutCreate))
 					if retryErr != nil {
 						return tccommon.RetryError(errors.WithStack(retryErr))
 					}
@@ -719,7 +724,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		mRequest.LoadBalancerId = helper.String(clbId)
 		mRequest.TargetRegionInfo = &targetRegionInfo
 		mRequest.LoadBalancerPassToTarget = &isLoadBalancePassToTgt
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 			mResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerAttributes(mRequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -727,7 +732,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
 				requestId := *mResponse.Response.RequestId
-				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutCreate))
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
@@ -748,7 +753,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 			mRequest.LoadBalancerId = helper.String(clbId)
 			mRequest.DeleteProtect = &isDeleteProect
-			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 				mResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerAttributes(mRequest)
 				if e != nil {
 					return tccommon.RetryError(e)
@@ -756,7 +761,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
 					requestId := *mResponse.Response.RequestId
-					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+					retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutCreate))
 					if retryErr != nil {
 						return tccommon.RetryError(errors.WithStack(retryErr))
 					}
@@ -778,7 +783,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 			mRequest.LoadBalancerId = helper.String(clbId)
 			mRequest.AssociateEndpoint = &endpointId
-			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 				mResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerAttributes(mRequest)
 				if e != nil {
 					return tccommon.RetryError(e)
@@ -789,7 +794,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					}
 
 					requestId := *mResponse.Response.RequestId
-					retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+					retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutCreate))
 					if retryErr != nil {
 						return tccommon.RetryError(errors.WithStack(retryErr))
 					}
@@ -1082,7 +1087,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		param.SlaType = helper.String(d.Get("sla_type").(string))
 		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
 		var taskId string
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerSla(slaRequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -1099,7 +1104,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		retryErr := waitForTaskFinish(taskId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+		retryErr := waitForTaskFinishWithTimeout(taskId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutUpdate))
 		if retryErr != nil {
 			return retryErr
 		}
@@ -1144,7 +1149,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if changed {
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerAttributes(request)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -1152,7 +1157,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				requestId := *response.Response.RequestId
-				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutUpdate))
 				if retryErr != nil {
 					return tccommon.RetryError(retryErr)
 				}
@@ -1178,7 +1183,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			}
 		}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			sgResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().SetLoadBalancerSecurityGroups(sgRequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -1186,7 +1191,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
 				requestId := *sgResponse.Response.RequestId
-				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutUpdate))
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
@@ -1208,7 +1213,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		logRequest.LoadBalancerId = helper.String(clbId)
 		logRequest.LogSetId = helper.String(logSetId.(string))
 		logRequest.LogTopicId = helper.String(logTopicId.(string))
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			logResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().SetLoadBalancerClsLog(logRequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -1216,7 +1221,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
 				requestId := *logResponse.Response.RequestId
-				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutUpdate))
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
@@ -1240,7 +1245,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		pRequest := clb.NewModifyLoadBalancersProjectRequest()
 		pRequest.LoadBalancerIds = []*string{&clbId}
 		pRequest.ProjectId = helper.IntUint64(projectId)
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			pResponse, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancersProject(pRequest)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -1248,7 +1253,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, pRequest.GetAction(), pRequest.ToJsonString(), pResponse.ToJsonString())
 				requestId := *pResponse.Response.RequestId
-				retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient())
+				retryErr := waitForTaskFinishWithTimeout(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient(), d.Timeout(schema.TimeoutUpdate))
 				if retryErr != nil {
 					return tccommon.RetryError(errors.WithStack(retryErr))
 				}
@@ -1271,7 +1276,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if oldEipStr != "" {
 			request := vpc.NewDisassociateAddressRequest()
 			request.AddressId = helper.String(oldEipStr)
-			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DisassociateAddress(request)
 				if e != nil {
 					return tccommon.RetryError(e)
@@ -1288,7 +1293,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			// wait
 			eipRequest := vpc.NewDescribeAddressesRequest()
 			eipRequest.AddressIds = helper.Strings([]string{oldEipStr})
-			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeAddresses(eipRequest)
 				if e != nil {
 					return tccommon.RetryError(e)
@@ -1317,7 +1322,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			request := vpc.NewAssociateAddressRequest()
 			request.AddressId = helper.String(newEipStr)
 			request.InstanceId = helper.String(clbId)
-			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().AssociateAddress(request)
 				if e != nil {
 					return tccommon.RetryError(e)
@@ -1334,7 +1339,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			// wait
 			eipRequest := vpc.NewDescribeAddressesRequest()
 			eipRequest.AddressIds = helper.Strings([]string{newEipStr})
-			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeAddresses(eipRequest)
 				if e != nil {
 					return tccommon.RetryError(e)
