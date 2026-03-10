@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -74,6 +76,12 @@ func ResourceTencentCloudTcrNamespace() *schema.Resource {
 					},
 				},
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag key-value pairs for the TCR namespace.",
+			},
 		},
 	}
 }
@@ -94,11 +102,12 @@ func resourceTencentCloudTcrNamespaceCreate(d *schema.ResourceData, meta interfa
 		isPreventVUL   = d.Get("is_prevent_vul").(bool)
 		severity       = d.Get("severity").(string)
 		whitelistItems = d.Get("cve_whitelist_items").([]interface{})
+		tags           = helper.GetTags(d, "tags")
 		outErr, inErr  error
 	)
 
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		inErr = tcrService.CreateTCRNameSpace(ctx, instanceId, name, isPublic, isAutoScan, isPreventVUL, severity, whitelistItems)
+		inErr = tcrService.CreateTCRNameSpace(ctx, instanceId, name, isPublic, isAutoScan, isPreventVUL, severity, whitelistItems, tags)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
@@ -150,6 +159,21 @@ func resourceTencentCloudTcrNamespaceUpdate(d *schema.ResourceData, meta interfa
 	}
 	if outErr != nil {
 		return outErr
+	}
+
+	// Handle tags update using unified tag API (ModifyNamespace doesn't support TagSpecification)
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		region := tcClient.Region
+		resourceName := tccommon.BuildTagResourceName("tcr", "repository", region, instanceId+"/"+namespaceName)
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTcrNamespaceRead(d, meta)
@@ -209,6 +233,17 @@ func resourceTencentCloudTcrNamespaceRead(d *schema.ResourceData, meta interface
 		}
 	}
 	_ = d.Set("cve_whitelist_items", whiteList)
+
+	// Read tags from TagSpecification
+	tags := make(map[string]interface{})
+	if namespace.TagSpecification != nil && namespace.TagSpecification.Tags != nil {
+		for _, tag := range namespace.TagSpecification.Tags {
+			if tag.Key != nil && tag.Value != nil {
+				tags[*tag.Key] = *tag.Value
+			}
+		}
+	}
+	_ = d.Set("tags", tags)
 
 	return nil
 }

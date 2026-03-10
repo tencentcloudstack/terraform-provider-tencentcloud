@@ -262,7 +262,7 @@ func (me *TCRService) DeleteTCRInstance(ctx context.Context, instanceId string, 
 // long term token
 
 // name space
-func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic, isAutoScan, isPreventVUL bool, severity string, whitelistItems []interface{}) (errRet error) {
+func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic, isAutoScan, isPreventVUL bool, severity string, whitelistItems []interface{}, tags map[string]string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tcr.NewCreateNamespaceRequest()
 	defer func() {
@@ -288,6 +288,23 @@ func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string,
 			}
 			request.CVEWhitelistItems = append(request.CVEWhitelistItems, &whitelistItemItem)
 		}
+	}
+
+	// Add tags through TagSpecification
+	if len(tags) > 0 {
+		tagSpec := tcr.TagSpecification{
+			ResourceType: helper.String("namespace"),
+			Tags:         make([]*tcr.Tag, 0, len(tags)),
+		}
+		for k, v := range tags {
+			key, value := k, v
+			tag := tcr.Tag{
+				Key:   &key,
+				Value: &value,
+			}
+			tagSpec.Tags = append(tagSpec.Tags, &tag)
+		}
+		request.TagSpecification = &tagSpec
 	}
 
 	ratelimit.Check(request.GetAction())

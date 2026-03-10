@@ -34,6 +34,11 @@ resource "tencentcloud_tcr_namespace" "example" {
   cve_whitelist_items {
     cve_id = "cve-xxxxx"
   }
+
+  tags = {
+    "env"       = "production"
+    "createdBy" = "terraform"
+  }
 }
 ```
 
@@ -48,6 +53,7 @@ The following arguments are supported:
 * `is_prevent_vul` - (Optional, Bool) Blocking switch, `True` is open, `False` is closed. Default is `false`.
 * `is_public` - (Optional, Bool) Indicate that the namespace is public or not. Default is `false`.
 * `severity` - (Optional, String) Block vulnerability level, currently only supports `low`, `medium`, `high`.
+* `tags` - (Optional, Map) Tag key-value pairs for the TCR namespace.
 
 The `cve_whitelist_items` object supports the following:
 
