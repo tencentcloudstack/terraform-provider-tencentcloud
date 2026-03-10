@@ -1262,7 +1262,10 @@ func clbNewTarget(instanceId, eniIp, port, weight interface{}) *clb.Target {
 }
 
 func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string, port uint64,
-	targetGroupInstances []*clb.TargetGroupInstance, targetGroupType string, protocol string) (targetGroupId string, err error) {
+	targetGroupInstances []*clb.TargetGroupInstance, targetGroupType string, protocol string,
+	healthCheck *clb.TargetGroupHealthCheck, scheduleAlgorithm string, tags []*clb.TagInfo,
+	weight *uint64, fullListenSwitch *bool, keepaliveEnable *bool,
+	sessionExpireTime *uint64, ipVersion string) (targetGroupId string, err error) {
 	var response *clb.CreateTargetGroupResponse
 
 	request := clb.NewCreateTargetGroupRequest()
@@ -1279,6 +1282,32 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 
 	if protocol != "" {
 		request.Protocol = &protocol
+	}
+
+	// Set new parameters
+	if healthCheck != nil {
+		request.HealthCheck = healthCheck
+	}
+	if scheduleAlgorithm != "" {
+		request.ScheduleAlgorithm = &scheduleAlgorithm
+	}
+	if len(tags) > 0 {
+		request.Tags = tags
+	}
+	if weight != nil {
+		request.Weight = weight
+	}
+	if fullListenSwitch != nil {
+		request.FullListenSwitch = fullListenSwitch
+	}
+	if keepaliveEnable != nil {
+		request.KeepaliveEnable = keepaliveEnable
+	}
+	if sessionExpireTime != nil {
+		request.SessionExpireTime = sessionExpireTime
+	}
+	if ipVersion != "" {
+		request.IpVersion = &ipVersion
 	}
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -1330,6 +1359,21 @@ func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId, targ
 	request.TargetGroupName = &targetGroupName
 	request.Port = &port
 
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().ModifyTargetGroupAttribute(request)
+		if err != nil {
+			return tccommon.RetryError(err, tccommon.InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *ClbService) ModifyTargetGroupAttribute(ctx context.Context, request *clb.ModifyTargetGroupAttributeRequest) (err error) {
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		_, err := me.client.UseClbClient().ModifyTargetGroupAttribute(request)
 		if err != nil {
