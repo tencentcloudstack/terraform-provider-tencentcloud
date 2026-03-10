@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcssl "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
@@ -1178,6 +1179,24 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	return
 }
 
+func waitForTaskFinishWithTimeout(requestId string, meta *clb.Client, timeout time.Duration) (err error) {
+	taskQueryRequest := clb.NewDescribeTaskStatusRequest()
+	taskQueryRequest.TaskId = &requestId
+	err = resource.Retry(timeout, func() *resource.RetryError {
+		taskResponse, e := meta.DescribeTaskStatus(taskQueryRequest)
+		if e != nil {
+			return resource.NonRetryableError(errors.WithStack(e))
+		}
+		if *taskResponse.Response.Status == int64(CLB_TASK_EXPANDING) {
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(expanding), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		} else if *taskResponse.Response.Status == int64(CLB_TASK_FAIL) {
+			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(failed), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		}
+		return nil
+	})
+	return
+}
+
 func waitForTaskFinishIntl(requestId string, meta *clbintl.Client) (err error) {
 	taskQueryRequest := clbintl.NewDescribeTaskStatusRequest()
 	taskQueryRequest.TaskId = &requestId
@@ -1200,6 +1219,35 @@ func waitForTaskFinishGetID(requestId string, meta *clb.Client) (clbID string, e
 	request := clb.NewDescribeTaskStatusRequest()
 	request.TaskId = &requestId
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.DescribeTaskStatus(request)
+		if e != nil {
+			return resource.NonRetryableError(errors.WithStack(e))
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe task status failed, Response is nil."))
+		}
+
+		if *result.Response.Status == int64(CLB_TASK_EXPANDING) {
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(expanding), requestId is %s", *result.Response.Status, *result.Response.RequestId)))
+		} else if *result.Response.Status == int64(CLB_TASK_FAIL) {
+			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(failed), requestId is %s", *result.Response.Status, *result.Response.RequestId)))
+		}
+
+		if *result.Response.Status == CLB_TASK_SUCCESS && len(result.Response.LoadBalancerIds) == 1 {
+			clbID = *result.Response.LoadBalancerIds[0]
+		}
+
+		return nil
+	})
+
+	return
+}
+
+func waitForTaskFinishGetIDWithTimeout(requestId string, meta *clb.Client, timeout time.Duration) (clbID string, err error) {
+	request := clb.NewDescribeTaskStatusRequest()
+	request.TaskId = &requestId
+	err = resource.Retry(timeout, func() *resource.RetryError {
 		result, e := meta.DescribeTaskStatus(request)
 		if e != nil {
 			return resource.NonRetryableError(errors.WithStack(e))

@@ -531,6 +531,13 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
+Timeouts
+
+This resource provides the following Timeouts configuration options:
+
+- `create` - (Default `10 minutes`) Used for creating CLB instance.
+- `update` - (Default `10 minutes`) Used for updating CLB instance.
+
 Import
 
 CLB instance can be imported using the id, e.g.
