@@ -622,6 +622,12 @@ In addition to all arguments above, the following attributes are exported:
 * `domain` - Domain name of the CLB instance.
 * `ipv6_mode` - This field is meaningful when the IP address version is ipv6, `IPv6Nat64` | `IPv6FullChain`.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `10m`) Used when creating the resource.
+* `update` - (Defaults to `10m`) Used when updating the resource.
 
 ## Import
 

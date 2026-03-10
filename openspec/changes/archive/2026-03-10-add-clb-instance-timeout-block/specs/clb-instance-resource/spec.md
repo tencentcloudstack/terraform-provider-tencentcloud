@@ -15,7 +15,7 @@
 - **WHEN** 用户配置 `timeouts { update = "15m" }` 更新 CLB 实例属性
 - **THEN** Update 操作中所有异步任务等待使用用户指定的 15 分钟超时
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Create Operation Timeout Handling
 `resourceTencentCloudClbInstanceCreate` 中所有异步任务等待（包括创建 CLB、设置安全组、设置日志、修改 target_region_info、设置 delete_protect、关联 endpoint）MUST 使用 `d.Timeout(schema.TimeoutCreate)` 替代硬编码超时。
