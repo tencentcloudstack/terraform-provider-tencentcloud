@@ -62,28 +62,28 @@ func ResourceTencentCloudTcrNamespace() *schema.Resource {
 				Description: "Block vulnerability level, currently only supports `low`, `medium`, `high`.",
 			},
 
-		"cve_whitelist_items": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			Description: "Vulnerability Whitelist.",
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"cve_id": {
-						Type:        schema.TypeString,
-						Optional:    true,
-						Description: "Vulnerability Whitelist ID.",
+			"cve_whitelist_items": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Vulnerability Whitelist.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cve_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Vulnerability Whitelist ID.",
+						},
 					},
 				},
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag key-value pairs for the TCR namespace.",
+			},
 		},
-		"tags": {
-			Type:        schema.TypeMap,
-			Optional:    true,
-			Computed:    true,
-			Description: "Tag key-value pairs for the TCR namespace.",
-		},
-	},
-}
+	}
 }
 
 func resourceTencentCloudTcrNamespaceCreate(d *schema.ResourceData, meta interface{}) error {
@@ -166,11 +166,11 @@ func resourceTencentCloudTcrNamespaceUpdate(d *schema.ResourceData, meta interfa
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
 		region := tcClient.Region
-		resourceName := tccommon.BuildTagResourceName("tcr", "namespace", region, instanceId+"/"+namespaceName)
-		
+		resourceName := tccommon.BuildTagResourceName("tcr", "repository", region, instanceId+"/"+namespaceName)
+
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
-		
+
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
