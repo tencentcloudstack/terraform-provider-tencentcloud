@@ -134,23 +134,27 @@ func ResourceTencentCloudClbTargetGroup() *schema.Resource {
 						"good_limit": {
 							Type:         schema.TypeInt,
 							Optional:     true,
+							Computed:     true,
 							ValidateFunc: validation.IntBetween(2, 10),
 							Description:  "Healthy threshold. Number of consecutive successful health checks required before marking the backend as healthy. Range: [2, 10]. Default: 3.",
 						},
 						"bad_limit": {
 							Type:         schema.TypeInt,
 							Optional:     true,
+							Computed:     true,
 							ValidateFunc: validation.IntBetween(2, 10),
 							Description:  "Unhealthy threshold. Number of consecutive failed health checks required before marking the backend as unhealthy. Range: [2, 10]. Default: 3.",
 						},
 						"http_code": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "HTTP status codes indicating health. For HTTP/HTTPS protocol. Example: 1 (1xx), 2 (2xx), 4 (3xx), 8 (4xx), 16 (5xx). Multiple values can be combined, e.g., 7 (1xx, 2xx, 3xx).",
 						},
 						"http_check_path": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Health check path. For HTTP/HTTPS protocol. Must start with /. If not specified, / is used by default.",
 						},
 						"http_check_domain": {
@@ -161,6 +165,7 @@ func ResourceTencentCloudClbTargetGroup() *schema.Resource {
 						"http_check_method": {
 							Type:         schema.TypeString,
 							Optional:     true,
+							Computed:     true,
 							ValidateFunc: validation.StringInSlice([]string{"HEAD", "GET"}, false),
 							Description:  "Health check HTTP method. For HTTP/HTTPS protocol. Valid values: HEAD, GET. Default: HEAD.",
 						},
@@ -503,19 +508,19 @@ func expandHealthCheck(l []interface{}) *clb.TargetGroupHealthCheck {
 		hc.Port = helper.IntInt64(v)
 	}
 
-	if v, ok := hcMap["timeout"].(int); ok {
+	if v, ok := hcMap["timeout"].(int); ok && v > 0 {
 		hc.Timeout = helper.IntInt64(v)
 	}
 
-	if v, ok := hcMap["gap_time"].(int); ok {
+	if v, ok := hcMap["gap_time"].(int); ok && v > 0 {
 		hc.GapTime = helper.IntInt64(v)
 	}
 
-	if v, ok := hcMap["good_limit"].(int); ok {
+	if v, ok := hcMap["good_limit"].(int); ok && v > 0 {
 		hc.GoodLimit = helper.IntInt64(v)
 	}
 
-	if v, ok := hcMap["bad_limit"].(int); ok {
+	if v, ok := hcMap["bad_limit"].(int); ok && v > 0 {
 		hc.BadLimit = helper.IntInt64(v)
 	}
 
