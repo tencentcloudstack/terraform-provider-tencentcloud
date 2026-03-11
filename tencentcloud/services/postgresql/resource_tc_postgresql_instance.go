@@ -57,6 +57,7 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"auto_renew_flag": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.",
 			},
 			"auto_voucher": {
@@ -900,6 +901,10 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
 	} else {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
+	}
+
+	if instance.AutoRenew != nil {
+		_ = d.Set("auto_renew_flag", int(*instance.AutoRenew))
 	}
 
 	// security groups
