@@ -3,6 +3,9 @@
 ## Requirement: External Cluster Resource Management
 Terraform Provider SHALL support managing Prometheus external clusters through the `tencentcloud_monitor_external_cluster` resource.
 
+## Requirement: External Cluster Register Command DataSource
+Terraform Provider SHALL support querying Prometheus external cluster register commands through the `tencentcloud_monitor_external_cluster_register_command` data source.
+
 ### Scenario: Register external cluster to TMP instance
 - **WHEN** user creates a `tencentcloud_monitor_external_cluster` resource with valid `instance_id` and `cluster_region`
 - **THEN** the provider SHALL call `CreateExternalCluster` API
@@ -110,3 +113,44 @@ The implementation SHALL follow project coding standards and reference implement
 - **THEN** `defer tccommon.InconsistentCheck(d, meta)()` SHALL be called to validate state consistency
 - **AND** any inconsistencies SHALL be detected and reported
 - **AND** Terraform state SHALL remain valid after all operations
+
+## DataSource Specifications
+
+### Scenario: Query register command with valid parameters
+- **WHEN** user queries `tencentcloud_monitor_external_cluster_register_command` data source with valid `instance_id` and `cluster_id`
+- **THEN** the provider SHALL call `DescribeExternalClusterRegisterCommand` API with retry logic
+- **AND** the provider SHALL return the complete register command information
+- **AND** the data source SHALL set ID to `{instanceId}#{clusterId}` format
+
+### Scenario: DataSource required parameters validation
+- **WHEN** user defines the data source without `instance_id` or `cluster_id`
+- **THEN** Terraform validation SHALL fail with appropriate error message
+- **AND** the API call SHALL not be executed
+
+### Scenario: Register command data mapping
+- **WHEN** API successfully returns register command data
+- **THEN** the `command` field SHALL be correctly mapped to data source computed attribute
+- **AND** users SHALL be able to reference this value in Terraform configurations
+
+### Scenario: DataSource export to file support
+- **WHEN** user specifies `result_output_file` parameter
+- **THEN** the provider SHALL write the query result to the specified file using `tccommon.WriteToFile()`
+- **AND** the file SHALL contain valid JSON representation of the data
+
+### Scenario: DataSource API transient error retry
+- **WHEN** `DescribeExternalClusterRegisterCommand` API call fails with retryable error
+- **THEN** the provider SHALL retry the operation using `resource.Retry` with `tccommon.ReadRetryTimeout`
+- **AND** the provider SHALL log each retry attempt with appropriate log level
+- **AND** if retry succeeds, the operation SHALL complete normally
+
+### Scenario: DataSource resource not found handling
+- **WHEN** `DescribeExternalClusterRegisterCommand` returns nil or empty result
+- **THEN** the provider SHALL return an error indicating the cluster or instance does not exist
+- **AND** Terraform SHALL report the error to user with descriptive message
+
+### Scenario: DataSource code structure compliance
+- **WHEN** reviewing the data source implementation code
+- **THEN** the code structure SHALL follow `data_source_tc_igtm_instance_list.go` patterns
+- **AND** function naming SHALL follow convention `dataSourceTencentCloudMonitorExternalClusterRegisterCommandRead`
+- **AND** SHALL use `tccommon.LogElapsed` defer pattern for operation logging
+- **AND** SHALL use `defer tccommon.InconsistentCheck(d, meta)()` for state validation
