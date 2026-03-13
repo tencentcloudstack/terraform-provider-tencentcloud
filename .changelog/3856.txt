@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_monitor_external_cluster_register_command
+```
+
+```release-note:new-resource
+tencentcloud_monitor_external_cluster
+```

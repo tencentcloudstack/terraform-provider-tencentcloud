@@ -855,6 +855,7 @@ tencentcloud_monitor_alarm_conditions_template
 tencentcloud_monitor_alarm_notice_callbacks
 tencentcloud_monitor_alarm_all_namespaces
 tencentcloud_monitor_alarm_monitor_type
+tencentcloud_monitor_external_cluster_register_command
 
 Resource
 tencentcloud_monitor_binding_object
@@ -864,6 +865,7 @@ tencentcloud_monitor_alarm_policy
 tencentcloud_monitor_alarm_notice
 tencentcloud_monitor_alarm_policy_set_default
 tencentcloud_monitor_notice_content_tmpl
+tencentcloud_monitor_external_cluster
 
 Managed Service for Prometheus(TMP)
 Data Source
