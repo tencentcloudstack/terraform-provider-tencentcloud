@@ -806,6 +806,15 @@ func mysqlDrInstanceSet(ctx context.Context, requestInter interface{}, d *schema
 		}
 	}
 
+	if v, ok := d.GetOk("disk_type"); ok {
+		diskType := helper.String(v.(string))
+		if okByMonth {
+			requestByMonth.DiskType = diskType
+		} else {
+			requestByUse.DiskType = diskType
+		}
+	}
+
 	if engineType := instance.EngineType; engineType != nil {
 		if okByMonth {
 			requestByMonth.EngineType = engineType

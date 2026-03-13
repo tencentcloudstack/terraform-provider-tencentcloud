@@ -530,6 +530,16 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 			requestByUse.DeviceType = deviceType
 		}
 	}
+
+	if v, ok := d.GetOk("disk_type"); ok {
+		diskType := helper.String(v.(string))
+		if okByMonth {
+			requestByMonth.DiskType = diskType
+		} else {
+			requestByUse.DiskType = diskType
+		}
+	}
+
 	return nil
 
 }
