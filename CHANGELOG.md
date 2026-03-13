@@ -1,3 +1,17 @@
+## 1.82.74(March 13 , 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_monitor_external_cluster_register_command` ([#3856](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3856))
+* **New Resource:** `tencentcloud_monitor_external_cluster` ([#3856](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3856))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: support `timeout` block ([#3854](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3854))
+* resource/tencentcloud_clb_target_group: support `health_check` (with `http_version` field), `schedule_algorithm`, `tags`, `weight`, `full_listen_switch`, `keepalive_enable`, `session_expire_time`, and `ip_version` parameters ([#3852](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3852))
+* resource/tencentcloud_postgresql_instance: output `auto_renew_flag` ([#3855](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3855))
+* resource/tencentcloud_tcr_namespace: support `tags` parameter for tag management ([#3853](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3853))
+
 ## 1.82.73(March 6 , 2026)
 
 FEATURES:
