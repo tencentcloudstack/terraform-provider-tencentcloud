@@ -2864,3 +2864,105 @@ func (me *MonitorService) DeleteNoticeContentTmpl(ctx context.Context, tmplID st
 
 	return
 }
+
+func (me *MonitorService) DescribeMonitorExternalClusterById(ctx context.Context, instanceId, clusterId string) (cluster *monitor.PrometheusAgentOverview, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = monitor.NewDescribePrometheusClusterAgentsRequest()
+		response = monitor.NewDescribePrometheusClusterAgentsResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	clusterIds := []*string{&clusterId}
+	request.ClusterIds = clusterIds
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorClient().DescribePrometheusClusterAgents(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribePrometheusClusterAgents failed, Response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Agents) < 1 {
+		return
+	}
+
+	// Find the cluster by ID
+	for _, v := range response.Response.Agents {
+		if v.ClusterId != nil && *v.ClusterId == clusterId {
+			return v, nil
+		}
+	}
+
+	return
+}
+
+func (me *MonitorService) DescribeExternalClusterRegisterCommandById(ctx context.Context, instanceId, clusterId string) (command *string, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = monitor.NewDescribeExternalClusterRegisterCommandRequest()
+		response = monitor.NewDescribeExternalClusterRegisterCommandResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.ClusterId = &clusterId
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorClient().DescribeExternalClusterRegisterCommand(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeExternalClusterRegisterCommand failed, Response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Command != nil {
+		command = response.Response.Command
+	}
+
+	return
+}
