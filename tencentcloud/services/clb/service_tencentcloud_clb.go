@@ -2626,7 +2626,7 @@ func (me *ClbService) SetClbSecurityGroup(ctx context.Context, securityGroup str
 func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context, targetGroups []string, associationsSet map[string]struct{}) (targetGroupAttachments []string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := clb.NewDescribeTargetGroupListRequest()
+	request := clb.NewDescribeTargetGroupsRequest()
 	request.TargetGroupIds = helper.Strings(targetGroups)
 
 	defer func() {
@@ -2637,7 +2637,7 @@ func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context,
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseClbClient().DescribeTargetGroupList(request)
+	response, err := me.client.UseClbClient().DescribeTargetGroups(request)
 	if err != nil {
 		errRet = err
 		return
