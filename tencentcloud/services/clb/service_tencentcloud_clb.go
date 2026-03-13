@@ -1528,7 +1528,7 @@ func (me *ClbService) DeleteTarget(ctx context.Context, targetGroupId string) er
 
 func (me *ClbService) DescribeTargetGroups(ctx context.Context, targetGroupId string, filters map[string]string) (targetGroupInfos []*clb.TargetGroupInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	request := clb.NewDescribeTargetGroupsRequest()
+	request := clb.NewDescribeTargetGroupListRequest()
 	if targetGroupId != "" {
 		request.TargetGroupIds = []*string{&targetGroupId}
 	}
@@ -1546,7 +1546,7 @@ func (me *ClbService) DescribeTargetGroups(ctx context.Context, targetGroupId st
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClbClient().DescribeTargetGroups(request)
+		response, err := me.client.UseClbClient().DescribeTargetGroupList(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
