@@ -240,6 +240,13 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 				},
 			},
 		},
+		"disk_type": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "Disk Type: This parameter can be specified for Single-Node (Cloud Disk) or Cloud Disk Edition instances. `CLOUD_SSD` designates an SSD cloud disk; `CLOUD_HSSD` designates an Enhanced SSD cloud disk; and `CLOUD_PREMIUM` designates a High-Performance cloud disk. Note: The regions that support the disk types for Single-Node (Cloud Disk) and Cloud Disk Edition instances vary slightly; please refer to `Regions and Availability Zones` for specific support details.",
+		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -946,6 +953,9 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
 	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
 	_ = d.Set("device_type", mysqlInfo.DeviceType)
+	if mysqlInfo.DiskType != nil {
+		_ = d.Set("disk_type", mysqlInfo.DiskType)
+	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {

@@ -379,6 +379,9 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
 	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
 	_ = d.Set("device_type", mysqlInfo.DeviceType)
+	if mysqlInfo.DiskType != nil {
+		_ = d.Set("disk_type", mysqlInfo.DiskType)
+	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
