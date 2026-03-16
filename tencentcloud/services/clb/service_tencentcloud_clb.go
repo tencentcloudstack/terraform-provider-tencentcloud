@@ -1528,6 +1528,48 @@ func (me *ClbService) DeleteTarget(ctx context.Context, targetGroupId string) er
 
 func (me *ClbService) DescribeTargetGroups(ctx context.Context, targetGroupId string, filters map[string]string) (targetGroupInfos []*clb.TargetGroupInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
+	request := clb.NewDescribeTargetGroupsRequest()
+	if targetGroupId != "" {
+		request.TargetGroupIds = []*string{&targetGroupId}
+	}
+	for k, v := range filters {
+		tmpFilter := clb.Filter{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &tmpFilter)
+	}
+
+	var offset uint64 = 0
+	var pageSize = uint64(CLB_PAGE_LIMIT)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClbClient().DescribeTargetGroups(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.TargetGroupSet) < 1 {
+			break
+		}
+		targetGroupInfos = append(targetGroupInfos, response.Response.TargetGroupSet...)
+		if len(response.Response.TargetGroupSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *ClbService) DescribeTargetGroupList(ctx context.Context, targetGroupId string, filters map[string]string) (targetGroupInfos []*clb.TargetGroupInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
 	request := clb.NewDescribeTargetGroupListRequest()
 	if targetGroupId != "" {
 		request.TargetGroupIds = []*string{&targetGroupId}
