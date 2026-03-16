@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_mysql_instance: support `disk_type` parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_mysql_readonly_instance: support `disk_type` parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_mysql_dr_instance: support `disk_type` parameter
+```

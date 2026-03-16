@@ -207,6 +207,13 @@ func ResourceTencentCloudMysqlDrInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Instance tags.",
 			},
+			"disk_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Disk Type: This parameter can be specified for Single-Node (Cloud Disk) or Cloud Disk Edition instances. `CLOUD_SSD` designates an SSD cloud disk; `CLOUD_HSSD` designates an Enhanced SSD cloud disk; and `CLOUD_PREMIUM` designates a High-Performance cloud disk. Note: The regions that support the disk types for Single-Node (Cloud Disk) and Cloud Disk Edition instances vary slightly; please refer to `Regions and Availability Zones` for specific support details.",
+			},
 
 			// Computed values
 			"intranet_ip": {
@@ -387,6 +394,9 @@ func resourceTencentCloudMysqlDrInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("slave_deploy_mode", mysqlInfo.DeployMode)
 	_ = d.Set("slave_sync_mode", mysqlInfo.ProtectMode)
 	_ = d.Set("project_id", mysqlInfo.ProjectId)
+	if mysqlInfo.DiskType != nil {
+		_ = d.Set("disk_type", mysqlInfo.DiskType)
+	}
 
 	if mysqlInfo.SlaveInfo != nil && mysqlInfo.SlaveInfo.First != nil {
 		_ = d.Set("first_slave_zone", mysqlInfo.SlaveInfo.First.Zone)
@@ -793,6 +803,15 @@ func mysqlDrInstanceSet(ctx context.Context, requestInter interface{}, d *schema
 			requestByMonth.ProtectMode = slaveSyncMode
 		} else {
 			requestByUse.ProtectMode = slaveSyncMode
+		}
+	}
+
+	if v, ok := d.GetOk("disk_type"); ok {
+		diskType := helper.String(v.(string))
+		if okByMonth {
+			requestByMonth.DiskType = diskType
+		} else {
+			requestByUse.DiskType = diskType
 		}
 	}
 
