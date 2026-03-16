@@ -226,6 +226,16 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 									//	Optional:    true,
 									//	Description: "Mount directory.",
 									//},
+									"encrypt": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Encrypt System Drive. Allow value: `ENCRYPT`.",
+									},
+									"kms_key_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Kms key ID.",
+									},
 								},
 							},
 						},
@@ -727,6 +737,12 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 			//if v, ok := systemDiskMap["mount_target"]; ok {
 			//	disk.MountTarget = helper.String(v.(string))
 			//}
+			if v, ok := systemDiskMap["encrypt"]; ok {
+				disk.Encrypt = helper.String(v.(string))
+			}
+			if v, ok := systemDiskMap["kms_key_id"]; ok {
+				disk.KmsKeyId = helper.String(v.(string))
+			}
 			createNativeNodePoolParam.SystemDisk = &disk
 		}
 		if v, ok := nativeMap["instance_types"]; ok {
@@ -1226,6 +1242,14 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 			//	systemDiskMap["mount_target"] = respData.Native.SystemDisk.MountTarget
 			//}
 
+			if respData.Native.SystemDisk.Encrypt != nil {
+				systemDiskMap["encrypt"] = respData.Native.SystemDisk.Encrypt
+			}
+
+			if respData.Native.SystemDisk.KmsKeyId != nil {
+				systemDiskMap["kms_key_id"] = respData.Native.SystemDisk.KmsKeyId
+			}
+
 			nativeMap["system_disk"] = []interface{}{systemDiskMap}
 		}
 
@@ -1615,6 +1639,12 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 				//if v, ok := systemDiskMap["mount_target"]; ok {
 				//	disk.MountTarget = helper.String(v.(string))
 				//}
+				if v, ok := systemDiskMap["encrypt"]; ok {
+					disk.Encrypt = helper.String(v.(string))
+				}
+				if v, ok := systemDiskMap["kms_key_id"]; ok {
+					disk.KmsKeyId = helper.String(v.(string))
+				}
 				updateNativeNodePoolParam.SystemDisk = &disk
 			}
 			if managementMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["management"]); ok {
