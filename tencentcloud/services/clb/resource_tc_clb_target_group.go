@@ -326,7 +326,7 @@ func resourceTencentCloudClbTargetRead(d *schema.ResourceData, meta interface{})
 		id         = d.Id()
 	)
 	filters := make(map[string]string)
-	targetGroupInfos, err := clbService.DescribeTargetGroups(ctx, id, filters)
+	targetGroupInfos, err := clbService.DescribeTargetGroupList(ctx, id, filters)
 	if err != nil {
 		return err
 	}

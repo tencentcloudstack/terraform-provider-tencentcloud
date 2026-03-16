@@ -1,23 +1,16 @@
 Provides a resource to create a CLB target group.
 
+~> **NOTE:** Currently, `v1` target group is not supported set `health_check` anymore, Please use `v2` target group.
+
 Example Usage
 
-Create V1 target group with health check and tags
+Create V1 target group and tags
 
 ```hcl
 resource "tencentcloud_clb_target_group" "test" {
   target_group_name = "test-v1"
   port              = 80
   type              = "v1"
-
-  health_check {
-    health_switch    = true
-    protocol         = "TCP"
-    timeout          = 5
-    gap_time         = 10
-    good_limit       = 3
-    bad_limit        = 3
-  }
 
   tags = {
     "createdBy" = "terraform"
