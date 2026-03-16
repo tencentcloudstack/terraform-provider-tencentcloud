@@ -1,3 +1,12 @@
+## 1.82.75(March 16 , 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_target_group_attachment: optimize read function ([#3860](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3860))
+* resource/tencentcloud_mysql_dr_instance: support `disk_type` parameter ([#3857](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3857))
+* resource/tencentcloud_mysql_instance: support `disk_type` parameter ([#3857](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3857))
+* resource/tencentcloud_mysql_readonly_instance: support `disk_type` parameter ([#3857](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3857))
+
 ## 1.82.74(March 13 , 2026)
 
 FEATURES:
