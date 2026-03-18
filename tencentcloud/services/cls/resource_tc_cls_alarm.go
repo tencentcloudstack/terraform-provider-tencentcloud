@@ -239,6 +239,12 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 				},
 			},
 
+			"classifications": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Alarm classification information map. Key must match regex `^[a-z]([a-z0-9_]{0,49})$`, value length cannot exceed 200 characters. Maximum 20 entries.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -414,6 +420,17 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 			}
 
 			request.Analysis = append(request.Analysis, &analysisDimensional)
+		}
+	}
+
+	if v, ok := d.GetOk("classifications"); ok {
+		classificationsMap := v.(map[string]interface{})
+		for key, value := range classificationsMap {
+			classification := cls.AlarmClassification{
+				Key:   helper.String(key),
+				Value: helper.String(value.(string)),
+			}
+			request.Classifications = append(request.Classifications, &classification)
 		}
 	}
 
@@ -632,6 +649,16 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 
 	}
 
+	if len(alarm.Classifications) > 0 {
+		classificationsMap := make(map[string]interface{})
+		for _, classification := range alarm.Classifications {
+			if classification.Key != nil && classification.Value != nil {
+				classificationsMap[*classification.Key] = *classification.Value
+			}
+		}
+		_ = d.Set("classifications", classificationsMap)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "cls", "alarm", tcClient.Region, d.Id())
@@ -659,7 +686,7 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 	mutableArgs := []string{
 		"name", "alarm_targets", "monitor_time", "condition", "alarm_level",
 		"multi_conditions", "trigger_count", "alarm_period", "alarm_notice_ids",
-		"status", "message_template", "call_back", "analysis",
+		"status", "message_template", "call_back", "analysis", "classifications",
 	}
 
 	for _, v := range mutableArgs {
@@ -825,6 +852,19 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 				}
 
 				request.Analysis = append(request.Analysis, &analysisDimensional)
+			}
+		}
+
+		if d.HasChange("classifications") {
+			if v, ok := d.GetOk("classifications"); ok {
+				classificationsMap := v.(map[string]interface{})
+				for key, value := range classificationsMap {
+					classification := cls.AlarmClassification{
+						Key:   helper.String(key),
+						Value: helper.String(value.(string)),
+					}
+					request.Classifications = append(request.Classifications, &classification)
+				}
 			}
 		}
 

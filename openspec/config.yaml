@@ -39,3 +39,5 @@ rules:
     - 数据源变更必须包含:schema 定义、Read 函数、service 层、测试、文档
     - 代码修改任务和验证任务(build/lint/test)分开列
     - 异步操作(Create/Update/Delete)需要等待时,必须在 schema 中添加 Timeouts 块
+    - 修改资源/数据源代码后,必须同步更新对应的 .md 示例文件(resource_tc_<service>_<name>.md 或 data_source_tc_<service>_<name>.md)
+    - 文档生成流程:使用 make doc 命令自动生成 website/docs/ 下的 markdown 文档,禁止手动编写文档文件
