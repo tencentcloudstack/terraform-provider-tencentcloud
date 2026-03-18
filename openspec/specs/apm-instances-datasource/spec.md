@@ -1,5 +1,8 @@
-## MODIFIED Requirements
+# apm-instances-datasource Specification
 
+## Purpose
+TBD - created by archiving change expose-apm-instances-all-fields. Update Purpose after archive.
+## Requirements
 ### Requirement: APM Instances Data Source Fields
 The `tencentcloud_apm_instances` data source SHALL expose all fields returned by the `DescribeApmInstances` API in the `instance_list` output attribute, including storage usage, billing info, log configuration, security detection switches, metric duration, dashboard association, and URL convergence thresholds.
 
@@ -11,3 +14,4 @@ The `tencentcloud_apm_instances` data source SHALL expose all fields returned by
 - **WHEN** existing Terraform configurations reference `tencentcloud_apm_instances`
 - **THEN** all previously available fields continue to work unchanged
 - **AND** new fields are available as additional Computed attributes
+

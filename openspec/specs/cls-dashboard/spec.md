@@ -1,8 +1,9 @@
-# CLS Dashboard Resource Spec
+# cls-dashboard Specification
 
-## ADDED Requirements
-
-### Req-1: 支持创建仪表盘
+## Purpose
+TBD - created by archiving change add-cls-dashboard-resource. Update Purpose after archive.
+## Requirements
+### Requirement: 支持创建仪表盘
 
 #### Scenario: 创建基础仪表盘
 **Given** 用户提供了仪表盘名称  
@@ -37,7 +38,7 @@
 
 ---
 
-### Req-2: 支持查询仪表盘信息
+### Requirement: 支持查询仪表盘信息
 
 #### Scenario: 查询存在的仪表盘
 **Given** 仪表盘 ID 为 "dashboard-xxxx"  
@@ -68,7 +69,7 @@
 
 ---
 
-### Req-3: 支持修改仪表盘
+### Requirement: 支持修改仪表盘
 
 #### Scenario: 修改仪表盘名称
 **Given** 仪表盘 ID 为 "dashboard-xxxx"  
@@ -106,7 +107,7 @@
 
 ---
 
-### Req-4: 支持删除仪表盘
+### Requirement: 支持删除仪表盘
 
 #### Scenario: 删除存在的仪表盘
 **Given** 仪表盘 ID 为 "dashboard-xxxx"  
@@ -128,7 +129,7 @@
 
 ---
 
-### Req-5: 支持导入现有仪表盘
+### Requirement: 支持导入现有仪表盘
 
 #### Scenario: 通过 dashboard_id 导入
 **Given** 已存在仪表盘 ID 为 "dashboard-xxxx"  
@@ -150,7 +151,7 @@
 
 ---
 
-### Req-6: 支持标签管理
+### Requirement: 支持标签管理
 
 #### Scenario: 添加标签到新仪表盘
 **Given** 创建新仪表盘时提供标签  
@@ -180,7 +181,7 @@
 
 ---
 
-### Req-7: 错误处理和重试机制
+### Requirement: 错误处理和重试机制
 
 #### Scenario: 处理 API 频率限制
 **Given** API 返回频率限制错误  
@@ -217,3 +218,4 @@
 **When** 超过 WriteRetryTimeout（5 分钟）  
 **Then** 停止重试  
 **And** 返回最后的错误信息
+

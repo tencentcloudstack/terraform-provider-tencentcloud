@@ -1,11 +1,8 @@
-# CLB Target Group Query API 规格
+# clb-target-group-query Specification
 
-本规格定义了 CLB(负载均衡) Target Group(目标组)资源的查询 API 行为。
-
----
-
-## MODIFIED Requirements
-
+## Purpose
+TBD - created by archiving change replace-clb-target-group-api. Update Purpose after archive.
+## Requirements
 ### Requirement: REQ-CLB-TG-QUERY-001 - 使用 DescribeTargetGroupList API 查询目标组
 
 The `tencentcloud_clb_target_group` resource and related services MUST use the `DescribeTargetGroupList` API instead of `DescribeTargetGroups` API when querying target groups.
@@ -215,20 +212,3 @@ API 替换不应导致性能下降,日志应正确反映新 API 调用。
 
 ---
 
-## 实施注意事项
-
-1. **函数签名不变**: `DescribeTargetGroups` 函数签名保持不变,仅内部实现替换 API
-2. **向后兼容**: 不影响现有 Terraform 配置和 State
-3. **测试覆盖**: 现有单元测试和验收测试无需修改,可直接复用
-4. **文档更新**: 通常不需要更新用户文档,这是内部 API 替换
-5. **监控**: 实施后应监控 API 调用成功率和响应时间
-
-## 回滚计划
-
-如果新 API 出现问题:
-
-1. 还原代码修改,恢复 `DescribeTargetGroups` API 调用
-2. 重新编译和部署
-3. 验证功能恢复正常
-
-**预计回滚时间**: < 1 小时
