@@ -43,6 +43,11 @@ resource "tencentcloud_cls_alarm" "example" {
     type = "Period"
   }
 
+  classifications = {
+    env     = "production"
+    service = "api-gateway"
+  }
+
   tags = {
     createdBy = "terraform"
   }
@@ -96,6 +101,11 @@ resource "tencentcloud_cls_alarm" "example" {
   monitor_time {
     time = 1
     type = "Period"
+  }
+
+  classifications = {
+    env     = "staging"
+    service = "data-pipeline"
   }
 
   tags = {

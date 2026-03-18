@@ -54,6 +54,11 @@ resource "tencentcloud_cls_alarm" "example" {
     type = "Period"
   }
 
+  classifications = {
+    env     = "production"
+    service = "api-gateway"
+  }
+
   tags = {
     createdBy = "terraform"
   }
@@ -109,6 +114,11 @@ resource "tencentcloud_cls_alarm" "example" {
     type = "Period"
   }
 
+  classifications = {
+    env     = "staging"
+    service = "data-pipeline"
+  }
+
   tags = {
     createdBy = "terraform"
   }
@@ -128,6 +138,7 @@ The following arguments are supported:
 * `alarm_level` - (Optional, Int) Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.
 * `analysis` - (Optional, List) multidimensional analysis.
 * `call_back` - (Optional, List) user define callback.
+* `classifications` - (Optional, Map) Alarm classification information map. Key must match regex `^[a-z]([a-z0-9_]{0,49})$`, value length cannot exceed 200 characters. Maximum 20 entries.
 * `condition` - (Optional, String) Trigger condition.
 * `message_template` - (Optional, String) user define alarm notice.
 * `multi_conditions` - (Optional, List) Multiple triggering conditions.

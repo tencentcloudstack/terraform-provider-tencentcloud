@@ -42,6 +42,52 @@ func TestAccTencentCloudClsAlarmResource_basic(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudClsAlarmResource_classifications -v
+func TestAccTencentCloudClsAlarmResource_classifications(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClsAlarmWithClassifications,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_alarm.alarm", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "name", "tf-example-classifications"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "classifications.%", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "classifications.category", "application"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "classifications.severity", "high"),
+				),
+			},
+			{
+				Config: testAccClsAlarmWithClassificationsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_alarm.alarm", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "name", "tf-example-classifications"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "classifications.%", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "classifications.category", "application"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "classifications.severity", "critical"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "classifications.environment", "production"),
+				),
+			},
+			{
+				Config: testAccClsAlarmWithoutClassifications,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_alarm.alarm", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "name", "tf-example-no-classifications"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cls_alarm.alarm",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 const testAccClsAlarm = `
 resource "tencentcloud_cls_alarm" "alarm" {
   name             = "tf-example"
@@ -121,6 +167,105 @@ resource "tencentcloud_cls_alarm" "alarm" {
       key   = "QueryIndex"
       value = "1"
     }
+  }
+
+  monitor_time {
+    time = 1
+    type = "Period"
+  }
+}
+`
+
+const testAccClsAlarmWithClassifications = `
+resource "tencentcloud_cls_alarm" "alarm" {
+  name             = "tf-example-classifications"
+  alarm_notice_ids = [
+    "notice-d365c616-1ae2-4a77-863a-9777453ab9d5",
+  ]
+  alarm_period     = 15
+  condition        = "test"
+  alarm_level      = 0
+  message_template = "{{.Label}}"
+  status           = true
+  trigger_count    = 1
+  classifications = {
+    category = "application"
+    severity = "high"
+  }
+
+  alarm_targets {
+    end_time_offset   = 0
+    logset_id         = "dac3e1a9-d22c-403b-a129-f94f666a33af"
+    number            = 1
+    query             = "status:>500 | select count(*) as errorCounts"
+    start_time_offset = -15
+    topic_id          = "775c0bc2-2246-43a0-8eb2-f5bc248be183"
+    syntax_rule       = 0
+  }
+
+  monitor_time {
+    time = 1
+    type = "Period"
+  }
+}
+`
+
+const testAccClsAlarmWithClassificationsUpdate = `
+resource "tencentcloud_cls_alarm" "alarm" {
+  name             = "tf-example-classifications"
+  alarm_notice_ids = [
+    "notice-d365c616-1ae2-4a77-863a-9777453ab9d5",
+  ]
+  alarm_period     = 15
+  condition        = "test"
+  alarm_level      = 0
+  message_template = "{{.Label}}"
+  status           = true
+  trigger_count    = 1
+  classifications = {
+    category    = "application"
+    severity    = "critical"
+    environment = "production"
+  }
+
+  alarm_targets {
+    end_time_offset   = 0
+    logset_id         = "dac3e1a9-d22c-403b-a129-f94f666a33af"
+    number            = 1
+    query             = "status:>500 | select count(*) as errorCounts"
+    start_time_offset = -15
+    topic_id          = "775c0bc2-2246-43a0-8eb2-f5bc248be183"
+    syntax_rule       = 0
+  }
+
+  monitor_time {
+    time = 1
+    type = "Period"
+  }
+}
+`
+
+const testAccClsAlarmWithoutClassifications = `
+resource "tencentcloud_cls_alarm" "alarm" {
+  name             = "tf-example-no-classifications"
+  alarm_notice_ids = [
+    "notice-d365c616-1ae2-4a77-863a-9777453ab9d5",
+  ]
+  alarm_period     = 15
+  condition        = "test"
+  alarm_level      = 0
+  message_template = "{{.Label}}"
+  status           = true
+  trigger_count    = 1
+
+  alarm_targets {
+    end_time_offset   = 0
+    logset_id         = "dac3e1a9-d22c-403b-a129-f94f666a33af"
+    number            = 1
+    query             = "status:>500 | select count(*) as errorCounts"
+    start_time_offset = -15
+    topic_id          = "775c0bc2-2246-43a0-8eb2-f5bc248be183"
+    syntax_rule       = 0
   }
 
   monitor_time {
