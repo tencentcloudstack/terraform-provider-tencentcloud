@@ -334,7 +334,9 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		}
 
 		scheduler = v.(string)
-		rule.Scheduler = helper.String(scheduler)
+		if *rule.TargetType != CLB_TARGET_TYPE_TARGETGROUP_V2 {
+			rule.Scheduler = helper.String(scheduler)
+		}
 	}
 
 	if v, ok := d.GetOkExists("session_expire_time"); ok {
