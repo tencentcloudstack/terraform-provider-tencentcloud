@@ -7,6 +7,10 @@ context: |
   - 资源: resource_tc_<service>_<name>.go
   - 数据源: data_source_tc_<service>_<name>.go
   - 服务层: service_tencentcloud_<service>.go
+  - 资源测试: resource_tc_<service>_<name>_test.go
+  - 数据源测试: data_source_tc_<service>_<name>_test.go
+  - 资源样例: resource_tc_<service>_<name>.md
+  - 数据源样例: data_source_tc_<service>_<name>.md
   
   关键模式:
   - 通过 tencentcloud-sdk-go 调用云 API (按服务拆分包)
@@ -19,6 +23,7 @@ context: |
   - 不能修改已有资源的 schema(除非只新增 Optional 字段)
   - 所有资源/数据源必须有 website/docs/ 文档
   - vendor 模式管理依赖
+  - 异步操作必须支持 Timeouts:在 schema 中声明 Timeouts 块,在 CRUD 函数中使用 ctx
   
   测试: TF_ACC=1 运行验收测试,需要 TENCENTCLOUD_SECRET_ID/KEY 环境变量
 
@@ -33,3 +38,4 @@ rules:
     - 资源变更必须包含:schema 定义、CRUD 函数、service 层、测试、文档
     - 数据源变更必须包含:schema 定义、Read 函数、service 层、测试、文档
     - 代码修改任务和验证任务(build/lint/test)分开列
+    - 异步操作(Create/Update/Delete)需要等待时,必须在 schema 中添加 Timeouts 块
