@@ -257,11 +257,13 @@ $ terraform plan
 
 ### Assume role with OIDC
 
-If provided with an assume role with OIDC, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn`, `session_name`, `session_duration` and `web_identity_token` or `web_identity_token_file` in-line in the tencentcloud provider block:
+If provided with an assume role with OIDC, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `role_arn` or `role_arn_file`, `session_name`, `session_duration` and `web_identity_token` or `web_identity_token_file` in-line in the tencentcloud provider block:
 
 -> **Note:** Assume-role-with-OIDC is a no-AK auth type, and there is no need setting secret_id and secret_key while using it.
 
 -> **Note:** If both `web_identity_token` and `web_identity_token_file` are configured, `web_identity_token` will be used preferentially(overriding `web_identity_token_file`).
+
+-> **Note:** If both `role_arn` and `role_arn_file` are configured, `role_arn` will be used preferentially(overriding `role_arn_file`).
 
 Content formatting guidelines of `web_identity_token_file`:
 
@@ -270,6 +272,16 @@ The file content must be in JSON format and must contain the key: `web_identity_
 ```json
 {
     "web_identity_token": "eyJ0eXAiOiJKV1QiLCJh......E8T0qyVA7hWM55_g"
+}
+```
+
+Content formatting guidelines of `role_arn_file`:
+
+The file content must be in JSON format and must contain the key: `role_arn`.
+
+```json
+{
+    "role_arn": "my-role-arn"
 }
 ```
 
@@ -303,13 +315,29 @@ provider "tencentcloud" {
 }
 ```
 
-The `provider_id`, `role_arn`, `session_name`, `session_duration`, `web_identity_token`, `web_identity_token_file` can also provided via `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` and `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE` environment variables.
+Use role_arn_file
+
+```hcl
+provider "tencentcloud" {
+  assume_role_with_web_identity {
+    provider_id        = "OIDC"
+    role_arn_file      = "/AbsolutePath/to/your/secrets/role-arn-file"
+    session_name       = "my-session-name"
+    session_duration   = 3600
+    web_identity_token = "my-web-identity-token"
+  }
+}
+```
+
+The `provider_id`, `role_arn`, `role_arn_file`, `session_name`, `session_duration`, `web_identity_token`, `web_identity_token_file` can also provided via `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_ARN_FILE`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`, `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN` and `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE` environment variables.
 
 Usage:
 
 ```shell
 $ export TENCENTCLOUD_SECRET_ID="my-secret-id"
 $ export TENCENTCLOUD_SECRET_KEY="my-secret-key"
+$ export TENCENTCLOUD_ASSUME_ROLE_ARN="my-role-arn"
+$ export TENCENTCLOUD_ASSUME_ROLE_ARNN_FILE="/AbsolutePath/to/your/secrets/role-arn-file"
 $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
 $ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN="my-web-identity-token"
 $ export TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE="/AbsolutePath/to/your/secrets/web-identity-token-file"

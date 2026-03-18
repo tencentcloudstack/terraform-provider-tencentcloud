@@ -136,6 +136,7 @@ const (
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	PROVIDER_ASSUME_ROLE_ARN                     = "TENCENTCLOUD_ASSUME_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_ARN_FILE                = "TENCENTCLOUD_ASSUME_ROLE_ARNN_FILE"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME            = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION        = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
 	PROVIDER_ASSUME_ROLE_EXTERNAL_ID             = "TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID"
@@ -372,9 +373,15 @@ func Provider() *schema.Provider {
 						},
 						"role_arn": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
-							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`. One of `role_arn` or `role_arn_file` is required.",
+						},
+						"role_arn_file": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN_FILE, nil),
+							Description: "File containin the ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARNN_FILE`. One of `role_arn` or `role_arn_file` is required.",
 						},
 						"session_name": {
 							Type:        schema.TypeString,
@@ -2719,6 +2726,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	var (
 		assumeRoleArn             string
+		assumeRoleArnFile         string
 		assumeRoleSessionName     string
 		assumeRoleSessionDuration int
 		assumeRolePolicy          string
@@ -2863,9 +2871,24 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleWithWebIdentity := assumeRoleWithWebIdentityList[0].(map[string]interface{})
 			assumeRoleWebIdentityTokenFile = assumeRoleWithWebIdentity["web_identity_token_file"].(string)
 			assumeRoleArn = assumeRoleWithWebIdentity["role_arn"].(string)
+			assumeRoleArnFile = assumeRoleWithWebIdentity["role_arn_file"].(string)
 			assumeRoleSessionName = assumeRoleWithWebIdentity["session_name"].(string)
 			assumeRoleSessionDuration = assumeRoleWithWebIdentity["session_duration"].(int)
 			assumeRoleProviderId = assumeRoleWithWebIdentity["provider_id"].(string)
+
+			// get role arn with priority: field first, then file
+			if assumeRoleArn == "" && assumeRoleArnFile != "" {
+				config, err := getConfigFromRoleArnFile(assumeRoleArnFile)
+				if err != nil {
+					return nil, err
+				}
+
+				assumeRoleArn = config["role_arn"].(string)
+			}
+
+			if assumeRoleArn == "" {
+				return nil, fmt.Errorf("`role_arn` can not be empty. you can choose to set it in `role_arn` or `role_arn_file`.\n")
+			}
 
 			// get token with priority: field first, then file
 			assumeRoleWebIdentityToken = assumeRoleWithWebIdentity["web_identity_token"].(string)
@@ -3362,6 +3385,31 @@ func verifyAccountIDAllowed(indentity *sdksts.GetCallerIdentityResponseParams, a
 	}
 
 	return nil
+}
+
+func getConfigFromRoleArnFile(filePath string) (map[string]interface{}, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read `role_arn_file` %s: %w", filePath, err)
+	}
+
+	var config struct {
+		RoleArn string `json:"role_arn"`
+	}
+
+	if err := json.Unmarshal(data, &config); err != nil {
+		return nil, fmt.Errorf("failed to parse `role_arn_file` JSON from %s: %w", filePath, err)
+	}
+
+	if config.RoleArn == "" {
+		return nil, fmt.Errorf("field `role_arn` in `role_arn_file` is empty in %s", filePath)
+	}
+
+	result := map[string]interface{}{
+		"role_arn": config.RoleArn,
+	}
+
+	return result, nil
 }
 
 func getConfigFromWebIdentityTokenFile(filePath string) (map[string]interface{}, error) {
