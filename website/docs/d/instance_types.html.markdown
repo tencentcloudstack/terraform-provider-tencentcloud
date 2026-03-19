@@ -146,7 +146,7 @@ The `cbs_filter` object supports the following:
 
 The `filter` object supports the following:
 
-* `name` - (Required, String) The filter name. Valid values: `zone`, `instance-family` and `instance-charge-type`.
+* `name` - (Required, String) The filter name. Valid values: `zone`, `instance-family`, `instance-type`, `instance-charge-type` and `sort-keys`.
 * `values` - (Required, List) The filter values.
 
 ## Attributes Reference
