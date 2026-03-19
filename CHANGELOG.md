@@ -1,3 +1,13 @@
+## 1.82.76(March 19 , 2026)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_instance_types: update description of `filter.name`. ([#3869](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3869))
+* provider: `assume_role_with_web_identity` supports `role_arn_file` ([#3867](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3867))
+* resource/tencentcloud_clb_listener_rule: update `scheduler` default logic ([#3866](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3866))
+* resource/tencentcloud_cls_alarm: add `classifications` ([#3868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3868))
+* resource/tencentcloud_sqlserver_basic_instance:  add field `time_zone` and `disk_encrypt_flag` ([#3818](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3818))
+
 ## 1.82.75(March 16 , 2026)
 
 ENHANCEMENTS:
