@@ -199,9 +199,9 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      CLB_LISTENER_SCHEDULER_WRR,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is `WRR`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+				Description:  "Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is `WRR` when `target_type` is not `TARGETGROUP-V2`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
 			},
 			"target_type": {
 				Type:         schema.TypeString,
@@ -328,6 +328,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		rule.ForwardType = helper.String(v.(string))
 	}
 	scheduler := ""
+	targetType := d.Get("target_type").(string)
 	if v, ok := d.GetOk("scheduler"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			return fmt.Errorf("[CHECK][CLB listener rule][Create] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS")
@@ -335,6 +336,12 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 
 		scheduler = v.(string)
 		rule.Scheduler = helper.String(scheduler)
+	} else {
+		// Apply default value WRR only when target_type is not TARGETGROUP-V2
+		if targetType != CLB_TARGET_TYPE_TARGETGROUP_V2 {
+			scheduler = CLB_LISTENER_SCHEDULER_WRR
+			rule.Scheduler = helper.String(scheduler)
+		}
 	}
 
 	if v, ok := d.GetOkExists("session_expire_time"); ok {
@@ -741,10 +748,14 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 	if d.HasChange("scheduler") {
 		changed = true
 		scheduler = d.Get("scheduler").(string)
+		targetType := d.Get("target_type").(string)
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			return fmt.Errorf("[CHECK][CLB listener rule %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS", locationId)
 		}
-		request.Scheduler = helper.String(scheduler)
+		// Only set scheduler when target_type is not TARGETGROUP-V2
+		if targetType != CLB_TARGET_TYPE_TARGETGROUP_V2 {
+			request.Scheduler = helper.String(scheduler)
+		}
 	}
 
 	if d.HasChange("session_expire_time") {
