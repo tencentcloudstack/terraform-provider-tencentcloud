@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -83,11 +84,13 @@ func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 						"spec_name": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Spec name.",
 						},
 						"count": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Data spec count.",
 						},
 						"disk_size": {
@@ -137,11 +140,13 @@ func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 						"spec_name": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Spec name.",
 						},
 						"count": {
 							Type:        schema.TypeInt,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Node count. NOTE: Only support value 3.",
 						},
 						"disk_size": {
@@ -473,14 +478,85 @@ func resourceTencentCloudClickhouseInstanceUpdate(d *schema.ResourceData, meta i
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		instanceId = d.Id()
 	)
 
-	immutableArgs := []string{"zone", "ha_flag", "vpc_id", "subnet_id", "product_version", "instance_name", "charge_type", "renew_flag", "time_span", "data_spec", "cls_log_set_id", "cos_bucket_name", "mount_disk_type", "ha_zk", "common_spec", "secondary_zone_info", "ck_default_user_pwd"}
+	immutableArgs := []string{"zone", "ha_flag", "vpc_id", "subnet_id", "product_version", "instance_name", "charge_type", "renew_flag", "time_span", "cls_log_set_id", "cos_bucket_name", "mount_disk_type", "ha_zk", "secondary_zone_info", "ck_default_user_pwd"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("data_spec.0.disk_size") {
+		request := cdwch.NewResizeDiskRequest()
+		if v, ok := d.GetOk("data_spec.0.disk_size"); ok {
+			request.DiskSize = helper.IntInt64(v.(int))
+		}
+
+		request.InstanceId = &instanceId
+		request.Type = helper.String("DATA")
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ResizeDisk(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Resize data disk failed, Response is nil."))
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s resize data disk failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait
+		err = waitInstanceState(d, meta, instanceId)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("common_spec.0.disk_size") {
+		request := cdwch.NewResizeDiskRequest()
+		if v, ok := d.GetOk("common_spec.0.disk_size"); ok {
+			request.DiskSize = helper.IntInt64(v.(int))
+		}
+
+		request.InstanceId = &instanceId
+		request.Type = helper.String("COMMON")
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ResizeDisk(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Resize common disk failed, Response is nil."))
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s resize common disk failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait
+		err = waitInstanceState(d, meta, instanceId)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -559,4 +635,42 @@ func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta i
 type secondaryZoneInfo struct {
 	SecondaryZone   string `json:"SecondaryZone"`
 	SecondarySubnet string `json:"SecondarySubnet"`
+}
+
+func waitInstanceState(d *schema.ResourceData, meta interface{}, instanceId string) error {
+	// time sleep first, with 20s for data sync
+	time.Sleep(20 * time.Second)
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	request := cdwch.NewDescribeInstanceStateRequest()
+	request.InstanceId = &instanceId
+	err := resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().DescribeInstanceState(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.InstanceState == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe instance state failed, Response is nil."))
+		}
+
+		if *result.Response.InstanceState == "Changing" {
+			resource.RetryableError(fmt.Errorf("Instance is still updating. current status: %s", *result.Response.InstanceState))
+		}
+
+		if *result.Response.InstanceState == "Serving" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("Instance is still updating. current progress: %f", *result.Response.FlowProgress))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe instance state failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return nil
 }
