@@ -638,8 +638,8 @@ type secondaryZoneInfo struct {
 }
 
 func waitInstanceState(d *schema.ResourceData, meta interface{}, instanceId string) error {
-	// time sleep first, with 20s for data sync
-	time.Sleep(20 * time.Second)
+	// time sleep first, with 10s for data sync
+	time.Sleep(10 * time.Second)
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := cdwch.NewDescribeInstanceStateRequest()
