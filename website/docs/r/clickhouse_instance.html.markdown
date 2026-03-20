@@ -152,15 +152,15 @@ The following arguments are supported:
 
 The `common_spec` object supports the following:
 
-* `count` - (Required, Int) Node count. NOTE: Only support value 3.
+* `count` - (Required, Int, ForceNew) Node count. NOTE: Only support value 3.
 * `disk_size` - (Required, Int) Disk size.
-* `spec_name` - (Required, String) Spec name.
+* `spec_name` - (Required, String, ForceNew) Spec name.
 
 The `data_spec` object supports the following:
 
-* `count` - (Required, Int) Data spec count.
+* `count` - (Required, Int, ForceNew) Data spec count.
 * `disk_size` - (Required, Int) Disk size.
-* `spec_name` - (Required, String) Spec name.
+* `spec_name` - (Required, String, ForceNew) Spec name.
 
 The `secondary_zone_info` object supports the following:
 
