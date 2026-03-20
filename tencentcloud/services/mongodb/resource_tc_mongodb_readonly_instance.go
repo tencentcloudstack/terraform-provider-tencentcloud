@@ -161,7 +161,7 @@ func mongodbAllReadOnlyInstanceReqSet(requestInter interface{}, d *schema.Resour
 		value.FieldByName("AutoRenewFlag").Set(reflect.ValueOf(helper.IntUint64(d.Get("auto_renew_flag").(int))))
 	}
 	if v, ok := d.GetOk("availability_zone_list"); ok {
-		availabilityZoneList := helper.InterfacesStringsPoint(v.([]interface{}))
+		availabilityZoneList := helper.InterfacesStringsPoint(v.(*schema.Set).List())
 		value.FieldByName("AvailabilityZoneList").Set(reflect.ValueOf(availabilityZoneList))
 	}
 	if v, ok := d.GetOk("hidden_zone"); ok {

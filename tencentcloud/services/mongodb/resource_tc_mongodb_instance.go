@@ -103,7 +103,7 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			},
 		},
 		"availability_zone_list": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			Computed: true,
 			Elem: &schema.Schema{
@@ -233,7 +233,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		value.FieldByName("AutoRenewFlag").Set(reflect.ValueOf(helper.IntUint64(d.Get("auto_renew_flag").(int))))
 	}
 	if v, ok := d.GetOk("availability_zone_list"); ok {
-		availabilityZoneList := helper.InterfacesStringsPoint(v.([]interface{}))
+		availabilityZoneList := helper.InterfacesStringsPoint(v.(*schema.Set).List())
 		value.FieldByName("AvailabilityZoneList").Set(reflect.ValueOf(availabilityZoneList))
 	}
 	if v, ok := d.GetOk("hidden_zone"); ok {
@@ -474,7 +474,7 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	}
 	if len(replicateSets) > 0 {
 		var hiddenZone string
-		availabilityZoneList := make([]string, 0, 3)
+		availabilityZoneList := make([]interface{}, 0, 3)
 		for _, replicate := range replicateSets[0].Nodes {
 			itemZone := *replicate.Zone
 			if *replicate.Hidden {
