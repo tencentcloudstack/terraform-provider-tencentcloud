@@ -28,18 +28,6 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
 }
 ```
 
-### Open intranet access with security group for kubernetes cluster
-
-```hcl
-resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
-  cluster_id                      = "cls-fdy7hm1q"
-  cluster_intranet                = true
-  cluster_intranet_subnet_id      = "subnet-7nl0sswi"
-  cluster_intranet_security_group = "sg-xxxxxxxx"
-  cluster_intranet_domain         = "intranet_demo.com"
-}
-```
-
 ### Open internet access for kubernetes cluster
 
 ```hcl
@@ -67,7 +55,7 @@ The following arguments are supported:
 * `cluster_internet_security_group` - (Optional, String) Security group ID for internet cluster endpoint. NOTE: This argument must not be empty if cluster internet enabled.
 * `cluster_internet` - (Optional, Bool) Open internet access or not.
 * `cluster_intranet_domain` - (Optional, String) Domain name for cluster Kube-apiserver intranet access. Be careful if you modify value of this parameter, the pgw_endpoint value may be changed automatically too.
-* `cluster_intranet_security_group` - (Optional, String, ForceNew) Security group ID for intranet cluster endpoint. **Note**: Changing this parameter will recreate the resource as modification is not currently supported by the API.
+* `cluster_intranet_security_group` - (Optional, String, ForceNew) Security group ID for intranet cluster endpoint.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not.
 * `extensive_parameters` - (Optional, String, ForceNew) The LB parameter. Only used for public network access.
