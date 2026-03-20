@@ -1,3 +1,11 @@
+## 1.82.77(March 20 , 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clickhouse_instance: support resize `disk_size` ([#3871](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3871))
+* resource/tencentcloud_cls_alarm: add `monitor_notice` ([#3873](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3873))
+* resource/tencentcloud_kubernetes_cluster_endpoint: add `cluster_intranet_security_group` field to support security group configuration for intranet cluster endpoints ([#3845](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3845))
+
 ## 1.82.76(March 19 , 2026)
 
 ENHANCEMENTS:
