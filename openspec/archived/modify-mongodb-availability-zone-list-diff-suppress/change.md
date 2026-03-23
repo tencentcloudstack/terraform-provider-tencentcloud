@@ -45,7 +45,7 @@ func mongodbAvailabilityZoneListDiffSuppress(k, old, new string, d *schema.Resou
 ```
 
 **实现逻辑**:
-1. 只在列表级别比较(忽略子元素级别的调用)
+1. **关键**: 对所有相关的 key (包括元素级别) 都进行完整列表比较
 2. 获取配置和状态中的完整列表
 3. 处理 nil 和空列表情况
 4. 长度不同 → 返回 false(有实际变更)
@@ -53,8 +53,16 @@ func mongodbAvailabilityZoneListDiffSuppress(k, old, new string, d *schema.Resou
 6. 内容相同但顺序不同 → 返回 true(抑制 diff)
 7. 内容不同 → 返回 false(显示 diff)
 
+**⚠️ 重要发现**: Terraform 对 `TypeList` 会在**元素级别**调用 `DiffSuppressFunc`,必须在每个元素级别的调用中都返回正确的结果才能完全抑制 diff。
+
 **关键代码**:
 ```go
+// 关键修复: 对所有 availability_zone_list 相关的 key 都进行处理
+// 包括元素级别: "availability_zone_list.0", "availability_zone_list.1" 等
+if !strings.Contains(k, "availability_zone_list") {
+    return false
+}
+
 // 获取完整列表
 oldList, newList := d.GetChange("availability_zone_list")
 
@@ -257,16 +265,37 @@ func TestMongodbAvailabilityZoneListDiffSuppress_SubElements(t *testing.T)
 **调用方式**:
 ```
 DiffSuppressFunc 会被多次调用:
-1. "availability_zone_list" (列表根)
-2. "availability_zone_list.#" (列表长度)
-3. "availability_zone_list.0" (第一个元素)
-4. "availability_zone_list.1" (第二个元素)
+1. "availability_zone_list.#" (列表长度)
+2. "availability_zone_list.0" (第一个元素)
+3. "availability_zone_list.1" (第二个元素)
 ...
 ```
 
-**我们的处理**:
-- 只在 "availability_zone_list" 或 "availability_zone_list.#" 时进行比较
-- 子元素级别直接返回 false,避免重复比较
+**⚠️ 关键发现**: 
+- Terraform 对 `TypeList` 会在**元素级别**调用 `DiffSuppressFunc`
+- 参数 `old` 和 `new` 是**单个字符串值**,而非完整列表
+- 如果在元素级别返回 `false`,即使列表级别返回 `true`,diff 仍然会触发
+- **必须在每个元素级别的调用中都获取完整列表并比较,返回统一的结果**
+
+**错误做法** ❌:
+```go
+// 错误: 只在列表级别处理,元素级别返回 false
+if !strings.HasSuffix(k, "availability_zone_list") && !strings.HasSuffix(k, ".#") {
+    return false  // 元素级别会触发 diff!
+}
+```
+
+**正确做法** ✅:
+```go
+// 正确: 对所有相关 key 都进行完整列表比较
+if !strings.Contains(k, "availability_zone_list") {
+    return false
+}
+// 获取完整列表并比较
+oldList, newList := d.GetChange("availability_zone_list")
+// ... 排序比较逻辑
+return true  // 所有级别都返回相同结果
+```
 
 ### 2. 为什么不用 TypeSet
 
@@ -278,7 +307,37 @@ DiffSuppressFunc 会被多次调用:
 | 创建时要求 | ❌ 不满足 | ✅ 满足 |
 | 破坏性 | ❌ Breaking | ✅ 非破坏性 |
 
-### 3. 边界情况处理
+### 3. 调试经验与关键发现
+
+**问题现象**:
+```
+配置: [ap-guangzhou-6, ap-guangzhou-5, ap-guangzhou-4]
+状态: [ap-guangzhou-6, ap-guangzhou-4, ap-guangzhou-5]
+结果: terraform plan 仍然提示 change
+```
+
+**调试过程**:
+1. **初始假设** ❌: 认为只需要在列表级别 (`k = "availability_zone_list.#"`) 返回 `true`
+2. **实际发现** ✅: Terraform 在元素级别 (`k = "availability_zone_list.0"`) 调用时,`old` 和 `new` 是单个字符串
+3. **根本原因**: 元素级别返回 `false` 导致 Terraform 使用默认比较,触发 diff
+
+**验证方法**:
+```go
+// 添加调试日志
+log.Printf("[DEBUG] DiffSuppress called with k=%s, old=%s, new=%s", k, old, new)
+```
+
+**调用序列示例**:
+```
+k="availability_zone_list.#",  old="3", new="3"       -> 返回 true
+k="availability_zone_list.0",  old="ap-guangzhou-6", new="ap-guangzhou-6" -> 必须返回 true
+k="availability_zone_list.1",  old="ap-guangzhou-5", new="ap-guangzhou-4" -> 必须返回 true
+k="availability_zone_list.2",  old="ap-guangzhou-4", new="ap-guangzhou-5" -> 必须返回 true
+```
+
+如果在元素级别返回 `false`,Terraform 会比较 `old != new` 并触发 diff!
+
+### 4. 边界情况处理
 
 ```go
 // 1. 处理 nil
@@ -355,13 +414,15 @@ No changes. Infrastructure is up-to-date.
 ### 1. DiffSuppressFunc 设计原则
 
 ✅ **应该做**:
-- 只在根字段级别比较完整数据
+- **在所有相关的 key (包括元素级别) 上进行完整数据比较**
+- 使用 `d.GetChange()` 获取完整列表,而不是依赖 `old`/`new` 参数
 - 处理所有边界情况(nil, empty, different length)
 - 添加清晰的注释说明意图
 - 编写全面的单元测试
 
 ❌ **不应该做**:
-- 在子元素级别重复比较
+- **在元素级别返回 false (会导致 diff 仍然触发)**
+- 依赖 `old`/`new` 参数进行复杂逻辑判断
 - 忽略异常情况
 - 修改原始数据
 - 执行重量级操作(如 API 调用)

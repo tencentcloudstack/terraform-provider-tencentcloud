@@ -48,23 +48,67 @@
 ### DiffSuppressFunc 实现
 ```go
 func mongodbAvailabilityZoneListDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+    // 关键: 对所有相关 key (包括元素级别) 都进行完整列表比较
+    if !strings.Contains(k, "availability_zone_list") {
+        return false
+    }
+    
     // 获取完整列表
-    oldList := d.Get("availability_zone_list").([]interface{})
-    newList := d.GetRawConfig().GetAttr("availability_zone_list")
+    oldList, newList := d.GetChange("availability_zone_list")
+    oldZones := helper.InterfacesStrings(oldList.([]interface{}))
+    newZones := helper.InterfacesStrings(newList.([]interface{}))
     
     // 长度不同则有变更
-    if len(oldList) != len(newList) {
+    if len(oldZones) != len(newZones) {
         return false
     }
     
     // 排序后比较
-    oldSorted := sortStringList(oldList)
-    newSorted := sortStringList(newList)
+    oldSorted := make([]string, len(oldZones))
+    newSorted := make([]string, len(newZones))
+    copy(oldSorted, oldZones)
+    copy(newSorted, newZones)
+    sort.Strings(oldSorted)
+    sort.Strings(newSorted)
     
     // 内容相同但顺序不同 -> 忽略 diff
-    return reflect.DeepEqual(oldSorted, newSorted)
+    for i := range oldSorted {
+        if oldSorted[i] != newSorted[i] {
+            return false
+        }
+    }
+    return true
 }
 ```
+
+### 💡 关键技术发现
+
+**Terraform DiffSuppressFunc 在 TypeList 上的行为**:
+- ⚠️ Terraform 会在**元素级别**调用 `DiffSuppressFunc`
+- ⚠️ 参数 `old` 和 `new` 是**单个字符串**,而非完整列表  
+- ⚠️ 如果在元素级别返回 `false`,即使列表级别返回 `true`,diff 仍然会触发
+- ✅ **必须在每个调用中都获取完整列表并比较,返回统一的结果**
+
+**错误的实现** ❌:
+```go
+// 只在列表级别处理,元素级别返回 false
+if !strings.HasSuffix(k, "availability_zone_list") && !strings.HasSuffix(k, ".#") {
+    return false  // 这会导致元素级别触发 diff!
+}
+```
+
+**正确的实现** ✅:
+```go
+// 对所有相关 key 都进行完整列表比较
+if !strings.Contains(k, "availability_zone_list") {
+    return false
+}
+// 获取完整列表并比较,返回统一结果
+oldList, newList := d.GetChange("availability_zone_list")
+// ... 比较逻辑
+```
+
+这个发现对其他使用 `TypeList` + `DiffSuppressFunc` 的场景同样适用。
 
 ### 变更对比
 

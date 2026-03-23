@@ -15,11 +15,15 @@ import (
 // - The API returns unordered list when reading resources
 // - Without this suppression, users would see unnecessary diffs due to order differences
 func mongodbAvailabilityZoneListDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
-	// Only compare at the list level, not at individual element level
-	// DiffSuppressFunc is called for both "availability_zone_list" and "availability_zone_list.#"
-	// as well as for each element like "availability_zone_list.0", "availability_zone_list.1", etc.
-	// We only want to do the comparison once at the list level
-	if !strings.HasSuffix(k, "availability_zone_list") && !strings.HasSuffix(k, "availability_zone_list.#") {
+	// This function is called for every key related to availability_zone_list:
+	// - "availability_zone_list" or "availability_zone_list.#" (list level)
+	// - "availability_zone_list.0", "availability_zone_list.1", etc (element level)
+	//
+	// For TypeList, Terraform calls DiffSuppressFunc at BOTH list and element levels.
+	// We need to compare the FULL lists for all these calls and return the same result.
+
+	// Only process keys related to availability_zone_list
+	if !strings.Contains(k, "availability_zone_list") {
 		return false
 	}
 
