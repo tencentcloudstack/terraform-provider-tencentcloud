@@ -2950,7 +2950,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 		_ = helper.SetMapInterfaces(d, "downstream_capping", dMap)
 	}
-	if _, ok := d.GetOk("response_header_cache_switch"); ok && dc.ResponseHeaderCache != nil {
+	if dc.ResponseHeaderCache != nil {
 		_ = d.Set("response_header_cache_switch", dc.ResponseHeaderCache.Switch)
 	}
 	if ok := checkCdnInfoWritable(d, "origin_pull_optimization", dc.OriginPullOptimization); ok {
@@ -2960,7 +2960,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 		_ = helper.SetMapInterfaces(d, "origin_pull_optimization", dMap)
 	}
-	if _, ok := d.GetOk("seo_switch"); ok && dc.Seo != nil {
+	if dc.Seo != nil {
 		_ = d.Set("seo_switch", dc.Seo.Switch)
 	}
 	if ok := checkCdnInfoWritable(d, "referer", dc.Referer); ok {
@@ -2984,7 +2984,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 		_ = helper.SetMapInterfaces(d, "referer", dMap)
 	}
-	if _, ok := d.GetOk("video_seek_switch"); ok && dc.VideoSeek != nil {
+	if dc.VideoSeek != nil {
 		_ = d.Set("video_seek_switch", dc.VideoSeek.Switch)
 	}
 	if ok := checkCdnInfoWritable(d, "max_age", dc.MaxAge); ok {
@@ -3079,10 +3079,10 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		fullUrlCache := *dc.CacheKey.FullUrlCache == CDN_SWITCH_ON
 		_ = d.Set("full_url_cache", fullUrlCache)
 	}
-	if _, ok := d.GetOk("offline_cache_switch"); ok && dc.OfflineCache != nil {
+	if dc.OfflineCache != nil {
 		_ = d.Set("offline_cache_switch", dc.OfflineCache.Switch)
 	}
-	if _, ok := d.GetOk("quic_switch"); ok && dc.Quic != nil {
+	if dc.Quic != nil {
 		_ = d.Set("quic_switch", dc.Quic.Switch)
 	}
 	if ok := checkCdnInfoWritable(d, "aws_private_access", dc.AwsPrivateAccess); ok {
@@ -4208,6 +4208,5 @@ func checkCdnHeadMapOkAndChanged(d *schema.ResourceData, key string) (v map[stri
 }
 
 func checkCdnInfoWritable(d *schema.ResourceData, key string, val interface{}) bool {
-	_, ok := helper.InterfacesHeadMap(d, key)
-	return val != nil && ok
+	return val != nil
 }
