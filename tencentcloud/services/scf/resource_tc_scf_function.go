@@ -1278,6 +1278,25 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		functionInfo.l5Enable = helper.Bool(d.Get("l5_enable").(bool))
 	}
 
+	if d.HasChange("layers") {
+		updateAttrs = append(updateAttrs, "layers")
+		if v, ok := d.GetOk("layers"); ok {
+			layers := make([]*scf.LayerVersionSimple, 0, 10)
+			for _, item := range v.([]interface{}) {
+				m := item.(map[string]interface{})
+				layer := scf.LayerVersionSimple{
+					LayerName:    helper.String(m["layer_name"].(string)),
+					LayerVersion: helper.IntInt64(m["layer_version"].(int)),
+				}
+				layers = append(layers, &layer)
+			}
+			functionInfo.layers = layers
+		} else {
+			// If layers block is removed from configuration, clear all layers
+			functionInfo.layers = []*scf.LayerVersionSimple{}
+		}
+	}
+
 	if d.HasChange("enable_public_net") {
 		updateAttrs = append(updateAttrs, "enable_public_net")
 	}
