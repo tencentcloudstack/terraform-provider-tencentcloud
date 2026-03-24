@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_attachment: update param `docker_graph_path` default value
+
+```
