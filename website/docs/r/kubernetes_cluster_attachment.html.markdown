@@ -13,6 +13,8 @@ Provide a resource to attach an existing  cvm to kubernetes cluster.
 
 ~> **NOTE:** Use `unschedulable` to set whether the join node participates in the schedule. The `is_schedule` of 'worker_config' and 'worker_config_overrides' was deprecated.
 
+~> **NOTE:** Starting from version `1.24`, Kubernetes has abandoned Docker, so after version `1.24`, the default value of the `docker_graph_path` field is `/var/lib/containerd`. For details, please visit the link [Kubernetes blog](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/).
+
 ## Example Usage
 
 ```hcl
@@ -166,7 +168,7 @@ The `worker_config_overrides` object supports the following:
 
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
-* `docker_graph_path` - (Optional, String, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Docker graph path. Default is `/var/lib/docker`.
+* `docker_graph_path` - (Optional, String, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Docker graph path. Default is `/var/lib/containerd`.
 * `extra_args` - (Optional, List, ForceNew, **Deprecated**) This argument was no longer supported by TencentCloud TKE. Custom parameter information related to the node. This is a white-list parameter.
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew, **Deprecated**) This argument was deprecated, use `unschedulable` instead. Indicate to schedule the adding node or not. Default is true.
@@ -178,7 +180,7 @@ The `worker_config` object supports the following:
 
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
-* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/containerd.
 * `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew, **Deprecated**) This argument was deprecated, use `unschedulable` instead. Indicate to schedule the adding node or not. Default is true.
