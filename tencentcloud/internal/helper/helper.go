@@ -139,6 +139,16 @@ func StringsContain(ss []string, str string) bool {
 }
 
 func DiffSupressJSON(k, olds, news string, d *schema.ResourceData) bool {
+	// If both are empty, no diff
+	if olds == "" && news == "" {
+		return true
+	}
+
+	// If only one is empty, there is a diff
+	if olds == "" || news == "" {
+		return false
+	}
+
 	var oldJson interface{}
 	err := json.Unmarshal([]byte(olds), &oldJson)
 	if err != nil {
