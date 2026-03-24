@@ -81,3 +81,10 @@ In addition to all arguments above, the following attributes are exported:
 * `reason` - Reason of addon failed.
 
 
+## Import
+
+kubernetes cluster addon config can be imported using the clusterId#addonName, e.g.
+```
+terraform import tencentcloud_kubernetes_addon_config.example cls-5yezvaxo#cluster-autoscaler
+```
+

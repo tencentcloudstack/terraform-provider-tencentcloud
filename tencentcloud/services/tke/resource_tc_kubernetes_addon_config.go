@@ -22,6 +22,9 @@ func ResourceTencentCloudKubernetesAddonConfig() *schema.Resource {
 		Read:   resourceTencentCloudKubernetesAddonConfigRead,
 		Update: resourceTencentCloudKubernetesAddonConfigUpdate,
 		Delete: resourceTencentCloudKubernetesAddonConfigDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,

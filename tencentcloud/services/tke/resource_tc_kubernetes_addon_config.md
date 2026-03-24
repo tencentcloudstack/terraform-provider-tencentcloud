@@ -51,3 +51,10 @@ resource "tencentcloud_kubernetes_addon_config" "example" {
   })
 }
 ```
+
+Import
+
+kubernetes cluster addon config can be imported using the clusterId#addonName, e.g.
+```
+terraform import tencentcloud_kubernetes_addon_config.example cls-5yezvaxo#cluster-autoscaler
+```
