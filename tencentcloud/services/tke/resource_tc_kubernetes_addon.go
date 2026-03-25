@@ -54,9 +54,10 @@ func ResourceTencentCloudKubernetesAddon() *schema.Resource {
 			},
 
 			"raw_values": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Params of addon, base64 encoded json format.",
+				Type:             schema.TypeString,
+				Optional:         true,
+				Description:      "Params of addon, base64 encoded json format.",
+				DiffSuppressFunc: helper.DiffSupressJSON,
 			},
 
 			"phase": {
