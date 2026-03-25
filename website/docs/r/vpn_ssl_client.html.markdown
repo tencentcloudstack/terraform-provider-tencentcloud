@@ -13,10 +13,27 @@ Provide a resource to create a VPN SSL Client.
 
 ## Example Usage
 
+### Basic Configuration
+
 ```hcl
 resource "tencentcloud_vpn_ssl_client" "client" {
   ssl_vpn_server_id   = "vpns-aog5xcjj"
   ssl_vpn_client_name = "hello"
+}
+```
+
+### With Tags
+
+```hcl
+resource "tencentcloud_vpn_ssl_client" "client" {
+  ssl_vpn_server_id   = "vpns-aog5xcjj"
+  ssl_vpn_client_name = "my-ssl-client"
+
+  # Tags for resource management
+  tags = {
+    Environment = "production"
+    Owner       = "team-a"
+  }
 }
 ```
 
@@ -26,6 +43,7 @@ The following arguments are supported:
 
 * `ssl_vpn_client_name` - (Required, String, ForceNew) The name of ssl vpn client to be created.
 * `ssl_vpn_server_id` - (Required, String, ForceNew) VPN ssl server id.
+* `tags` - (Optional, Map) Tags of the VPN SSL client.
 
 ## Attributes Reference
 
