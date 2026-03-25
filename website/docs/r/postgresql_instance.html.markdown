@@ -63,6 +63,11 @@ resource "tencentcloud_postgresql_instance" "example" {
   tags = {
     CreateBy = "Terraform"
   }
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+  }
 }
 ```
 
@@ -296,6 +301,11 @@ resource "tencentcloud_postgresql_instance" "example" {
   tags = {
     CreateBy = "Terraform"
   }
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+  }
 }
 ```
 
@@ -364,6 +374,12 @@ In addition to all arguments above, the following attributes are exported:
 * `public_access_port` - Port for public access.
 * `uid` - Uid of the postgresql instance.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `1h0m`) Used when creating the resource.
+* `update` - (Defaults to `1h0m`) Used when updating the resource.
 
 ## Import
 

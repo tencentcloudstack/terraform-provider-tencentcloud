@@ -52,6 +52,11 @@ resource "tencentcloud_postgresql_instance" "example" {
   tags = {
     CreateBy = "Terraform"
   }
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+  }
 }
 ```
 
@@ -284,6 +289,11 @@ resource "tencentcloud_postgresql_instance" "example" {
 
   tags = {
     CreateBy = "Terraform"
+  }
+
+  timeouts {
+    create = "60m"
+    update = "60m"
   }
 }
 ```

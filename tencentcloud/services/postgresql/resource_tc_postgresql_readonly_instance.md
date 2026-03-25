@@ -89,6 +89,11 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   security_groups_ids   = [
     tencentcloud_security_group.example.id,
   ]
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+  }
 }
 ```
 
@@ -191,6 +196,11 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   security_groups_ids = [
     tencentcloud_security_group.example.id,
   ]
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+  }
 }
 ```
 
