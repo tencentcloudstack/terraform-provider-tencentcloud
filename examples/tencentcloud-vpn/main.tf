@@ -156,3 +156,21 @@ resource "tencentcloud_vpn_ssl_server" "with_policy" {
 #   sso_enabled    = true
 #   saml_data      = "<Your SAML configuration data>"
 # }
+
+# VPN SSL Client examples
+# Basic SSL Client
+resource "tencentcloud_vpn_ssl_client" "basic" {
+  ssl_vpn_server_id   = tencentcloud_vpn_ssl_server.basic.id
+  ssl_vpn_client_name = "basic-ssl-client"
+}
+
+# SSL Client with Tags
+resource "tencentcloud_vpn_ssl_client" "with_tags" {
+  ssl_vpn_server_id   = tencentcloud_vpn_ssl_server.with_dns_tags.id
+  ssl_vpn_client_name = "ssl-client-with-tags"
+
+  tags = {
+    Environment = "production"
+    Owner       = "team-a"
+  }
+}

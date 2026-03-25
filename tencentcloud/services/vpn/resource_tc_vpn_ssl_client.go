@@ -2,6 +2,7 @@ package vpn
 
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"context"
@@ -20,6 +21,7 @@ func ResourceTencentCloudVpnSslClient() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnSslClientCreate,
 		Read:   resourceTencentCloudVpnSslClientRead,
+		Update: resourceTencentCloudVpnSslClientUpdate,
 		Delete: resourceTencentCloudVpnSslClientDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -37,6 +39,11 @@ func ResourceTencentCloudVpnSslClient() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "The name of ssl vpn client to be created.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the VPN SSL client.",
 			},
 		},
 	}
@@ -61,6 +68,19 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("ssl_vpn_client_name"); ok {
 		sslVpnClientName = v.(string)
 		request.SslVpnClientName = helper.String(sslVpnClientName)
+	}
+
+	// Set tags if provided
+	if v, ok := d.GetOk("tags"); ok {
+		tags := v.(map[string]interface{})
+		request.Tags = make([]*vpc.Tag, 0, len(tags))
+		for key, value := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(key),
+				Value: helper.String(value.(string)),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
 	}
 
 	var (
@@ -103,6 +123,8 @@ func resourceTencentCloudVpnSslClientRead(d *schema.ResourceData, meta interface
 
 	sslClientId := d.Id()
 	vpcService := svcvpc.NewVpcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		has, info, e := vpcService.DescribeVpnSslClientById(ctx, sslClientId)
@@ -116,12 +138,47 @@ func resourceTencentCloudVpnSslClientRead(d *schema.ResourceData, meta interface
 
 		_ = d.Set("ssl_vpn_server_id", info.SslVpnServerId)
 		_ = d.Set("ssl_vpn_client_name", info.Name)
+
+		// Query and set tags
+		tags, e := tagService.DescribeResourceTags(ctx, "vpc", "vpnc", region, sslClientId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if tags != nil {
+			_ = d.Set("tags", tags)
+		}
+
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func resourceTencentCloudVpnSslClientUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_vpn_ssl_client.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	sslClientId := d.Id()
+
+	// Handle tags using Tag Service
+	if d.HasChange("tags") {
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("vpc", "vpnc", region, sslClientId)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudVpnSslClientRead(d, meta)
 }
 
 func resourceTencentCloudVpnSslClientDelete(d *schema.ResourceData, meta interface{}) error {
