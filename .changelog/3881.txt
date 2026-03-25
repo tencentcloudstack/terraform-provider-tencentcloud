@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: support custom `timeouts`
+```
+
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_instance: support custom `timeouts`
+```
