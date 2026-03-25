@@ -99,7 +99,7 @@ The following arguments are supported:
 * `remote_address` - (Required, String) Remote CIDR for client.
 * `ssl_vpn_server_name` - (Required, String) The name of ssl vpn server to be created.
 * `vpn_gateway_id` - (Required, String, ForceNew) VPN gateway ID.
-* `access_policy_enabled` - (Optional, Bool) Enable access policy control. Default: false.
+* `access_policy_enabled` - (Optional, Bool, ForceNew) Enable access policy control. Default: false.
 * `compress` - (Optional, Bool) Need compressed. Currently is not supports compress. Default value: False.
 * `dns_servers` - (Optional, List) DNS server configuration.
 * `encrypt_algorithm` - (Optional, String) The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC.Default value: AES-128-CBC.

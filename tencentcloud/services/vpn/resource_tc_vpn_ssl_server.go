@@ -94,6 +94,7 @@ func ResourceTencentCloudVpnSslServer() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "Enable access policy control. Default: false.",
 			},
 			"saml_data": {
@@ -285,11 +286,15 @@ func resourceTencentCloudVpnSslServerRead(d *schema.ResourceData, meta interface
 			_ = d.Set("compress", true)
 		}
 
-		// SSO authentication
-		_ = d.Set("sso_enabled", info.SsoEnabled)
+		// SSO authentication - convert uint64 to bool
+		if info.SsoEnabled != nil {
+			_ = d.Set("sso_enabled", *info.SsoEnabled != 0)
+		}
 
-		// Access policy control
-		_ = d.Set("access_policy_enabled", info.AccessPolicyEnabled)
+		// Access policy control - convert uint64 to bool
+		if info.AccessPolicyEnabled != nil {
+			_ = d.Set("access_policy_enabled", *info.AccessPolicyEnabled != 0)
+		}
 
 		// Note: SamlData is not returned by DescribeVpnGatewaySslServers API
 		// It will remain as configured by user (Computed attribute)
