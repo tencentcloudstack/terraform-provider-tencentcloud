@@ -813,6 +813,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_tmp_regions":                                   tmp.DataSourceTencentCloudMonitorTmpRegions(),
 			"tencentcloud_monitor_tmp_instances":                                 tmp.DataSourceTencentCloudMonitorTmpInstances(),
 			"tencentcloud_monitor_external_cluster_register_command":             monitor.DataSourceTencentCloudMonitorExternalClusterRegisterCommand(),
+			"tencentcloud_monitor_notice_content_tmpls":                          monitor.DataSourceTencentCloudMonitorNoticeContentTmpls(),
 			"tencentcloud_postgresql_instances":                                  postgresql.DataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                                  postgresql.DataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                                      postgresql.DataSourceTencentCloudPostgresqlXlogs(),
