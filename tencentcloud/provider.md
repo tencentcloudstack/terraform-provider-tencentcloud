@@ -1474,6 +1474,7 @@ tencentcloud_cls_machines
 tencentcloud_cls_machine_group_configs
 tencentcloud_cls_logsets
 tencentcloud_cls_topics
+tencentcloud_cls_alarm_notices
 
 TencentCloud Lighthouse(Lighthouse)
 Resource

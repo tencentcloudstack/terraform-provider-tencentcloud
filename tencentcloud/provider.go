@@ -1185,6 +1185,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_machine_group_configs":                             cls.DataSourceTencentCloudClsMachineGroupConfigs(),
 			"tencentcloud_cls_logsets":                                           cls.DataSourceTencentCloudClsLogsets(),
 			"tencentcloud_cls_topics":                                            cls.DataSourceTencentCloudClsTopics(),
+			"tencentcloud_cls_alarm_notices":                                     cls.DataSourceTencentCloudClsAlarmNotices(),
 			"tencentcloud_eb_search":                                             eb.DataSourceTencentCloudEbSearch(),
 			"tencentcloud_eb_bus":                                                eb.DataSourceTencentCloudEbBus(),
 			"tencentcloud_eb_event_rules":                                        eb.DataSourceTencentCloudEbEventRules(),
