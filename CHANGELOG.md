@@ -1,3 +1,21 @@
+## 1.82.78(March 25 , 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cls_alarm_notices` ([#3878](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3878))
+* **New Data Source:** `tencentcloud_monitor_notice_content_tmpls` ([#3880](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3880))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_clb_instances: return full parmaters, such as `sla_type` ([#3883](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3883))
+* resource/tencentcloud_kubernetes_addon: optimize field `raw_values` for json data order issue ([#3879](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3879))
+* resource/tencentcloud_kubernetes_addon_config: optimize field `raw_values` for json data order issue and support import ([#3876](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3876))
+* resource/tencentcloud_postgresql_instance: support custom `timeouts` ([#3881](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3881))
+* resource/tencentcloud_postgresql_readonly_instance: support custom `timeouts` ([#3881](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3881))
+* resource/tencentcloud_scf_function: support `layers` update ([#3877](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3877))
+* resource/tencentcloud_vpn_ssl_client: add `tags` ([#3882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3882))
+* resource/tencentcloud_vpn_ssl_server: add `access_policy_enabled`, `sso_enabled`, `saml_data`, `dns_servers`, `tags` ([#3874](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3874))
+
 ## 1.82.77(March 20 , 2026)
 
 ENHANCEMENTS:
