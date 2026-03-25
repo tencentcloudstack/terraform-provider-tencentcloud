@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_vpn_ssl_server: add `access_policy_enabled`, `sso_enabled`, `saml_data`, `dns_servers`, `tags`
+```
