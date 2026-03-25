@@ -29,6 +29,11 @@ func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(60 * time.Minute),
+			Update: schema.DefaultTimeout(60 * time.Minute),
+		},
+
 		Schema: map[string]*schema.Schema{
 			"db_version": {
 				Type:        schema.TypeString,
@@ -343,7 +348,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	d.SetId(instanceId)
 
 	// check creation done
-	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return tccommon.RetryError(err)
@@ -577,7 +582,8 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if waitSwitch == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
 			time.Sleep(time.Second * 5)
 			// check update storage and memory done
-			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+			timeoutMinutes := int(d.Timeout(schema.TimeoutUpdate).Minutes())
+			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 			if checkErr != nil {
 				return checkErr
 			}

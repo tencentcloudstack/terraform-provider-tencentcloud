@@ -36,6 +36,11 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			}),
 		},
 
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(60 * time.Minute),
+			Update: schema.DefaultTimeout(60 * time.Minute),
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
@@ -598,7 +603,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 	// check creation done
-	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return tccommon.RetryError(err)
@@ -621,7 +626,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check init status
-	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	timeoutMinutes := int(d.Timeout(schema.TimeoutCreate).Minutes())
+	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 	if checkErr != nil {
 		return checkErr
 	}
@@ -648,7 +654,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check creation done
-	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	timeoutMinutes = int(d.Timeout(schema.TimeoutCreate).Minutes())
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 	if checkErr != nil {
 		return checkErr
 	}
@@ -668,7 +675,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check creation done
-	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	timeoutMinutes = int(d.Timeout(schema.TimeoutCreate).Minutes())
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 	if checkErr != nil {
 		return checkErr
 	}
@@ -1445,7 +1453,8 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 			time.Sleep(time.Second * 5)
 			// check update storage and memory done
-			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, 60)
+			timeoutMinutes := int(d.Timeout(schema.TimeoutUpdate).Minutes())
+			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 			if checkErr != nil {
 				return checkErr
 			}
