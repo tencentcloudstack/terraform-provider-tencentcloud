@@ -264,7 +264,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	var allowVersion, allowSpec []string
 	var specVersion, specCode string
 	err := resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
+		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone, "")
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}

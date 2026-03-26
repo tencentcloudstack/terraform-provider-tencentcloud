@@ -34,6 +34,12 @@ func DataSourceTencentCloudPostgresqlDbInstanceClasses() *schema.Resource {
 				Description: "Major version of a database, such as 12 or 13, which can be obtained through the `DescribeDBVersions` API.",
 			},
 
+			"storage_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Storage type filter. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).",
+			},
+
 			"class_info_set": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -102,6 +108,10 @@ func dataSourceTencentCloudPostgresqlDbInstanceClassesRead(d *schema.ResourceDat
 
 	if v, ok := d.GetOk("db_major_version"); ok {
 		paramMap["DBMajorVersion"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("storage_type"); ok {
+		paramMap["StorageType"] = helper.String(v.(string))
 	}
 
 	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}

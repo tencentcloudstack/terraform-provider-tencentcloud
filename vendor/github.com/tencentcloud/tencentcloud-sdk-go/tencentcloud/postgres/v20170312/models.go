@@ -274,22 +274,22 @@ type BaseBackup struct {
 }
 
 type ClassInfo struct {
-	// 规格ID
+	// <p>规格ID</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// CPU核数
+	// <p>CPU核数</p>
 	CPU *uint64 `json:"CPU,omitnil,omitempty" name:"CPU"`
 
-	// 内存大小，单位：MB
+	// <p>内存大小，单位：MB</p>
 	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 该规格所支持最大存储容量，单位：GB
+	// <p>该规格所支持最大存储容量，单位：GB</p>
 	MaxStorage *uint64 `json:"MaxStorage,omitnil,omitempty" name:"MaxStorage"`
 
-	// 该规格所支持最小存储容量，单位：GB
+	// <p>该规格所支持最小存储容量，单位：GB</p>
 	MinStorage *uint64 `json:"MinStorage,omitnil,omitempty" name:"MinStorage"`
 
-	// 该规格的预估QPS
+	// <p>该规格的预估QPS</p>
 	QPS *uint64 `json:"QPS,omitnil,omitempty" name:"QPS"`
 }
 
@@ -1127,301 +1127,207 @@ func (r *CreateDatabaseResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstancesRequestParams struct {
-	// 实例所属主可用区， 如：ap-guangzhou-3；若需要支持多可用区，在DBNodeSet.N字段中进行添加主可用区和备可用区信息；
-	// 可用区信息可以通过调用 [DescribeZones](https://cloud.tencent.com/document/api/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>实例所属主可用区， 如：ap-guangzhou-3；若需要支持多可用区，在DBNodeSet.N字段中进行添加主可用区和备可用区信息；<br>可用区信息可以通过调用 <a href="https://cloud.tencent.com/document/api/409/16769">DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 售卖规格码。该参数可以通过调用[DescribeClasses](https://cloud.tencent.com/document/api/409/89019)的返回值中的SpecCode字段来获取。
+	// <p>售卖规格码。该参数可以通过调用<a href="https://cloud.tencent.com/document/api/409/89019">DescribeClasses</a>的返回值中的SpecCode字段来获取。</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// 实例磁盘容量大小，单位：GB。该参数的设置步长为10。
+	// <p>实例磁盘容量大小，单位：GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 购买实例数量，取值范围：[1-10]。一次性购买支持最大数量10个，若超过该数量，可进行多次调用进行购买。
+	// <p>购买实例数量，取值范围：[1-10]。一次性购买支持最大数量10个，若超过该数量，可进行多次调用进行购买。</p>
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 购买时长，单位：月。
-	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li>
-	// <li>后付费：只支持1</li>
+	// <p>购买时长，单位：月。</p><li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li><li>后付费：只支持1</li>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 实例字符集，目前只支持：
-	// <li> UTF8</li>
-	// <li> LATIN1</li>
+	// <p>实例字符集，目前只支持：</p><li> UTF8</li><li> LATIN1</li>
 	Charset *string `json:"Charset,omitnil,omitempty" name:"Charset"`
 
-	// 实例根账号用户名，具体规范如下：
-	// <li>用户名需要1-16个字符，只能由字母、数字或下划线组成</li>
-	// <li>不能为postgres</li>
-	// <li>不能由数字和pg_开头</li>
-	// <li>所有规则均不区分大小写</li>
+	// <p>实例根账号用户名，具体规范如下：</p><li>用户名需要1-16个字符，只能由字母、数字或下划线组成</li><li>不能为postgres</li><li>不能由数字和pg_开头</li><li>所有规则均不区分大小写</li>
 	AdminName *string `json:"AdminName,omitnil,omitempty" name:"AdminName"`
 
-	// 实例根账号用户名对应的密码，长度8 ~ 32位，推荐使用12位以上的密码;不能以" / "开头;
-	// 必须包含以下四项，字符种类:
-	// <li>小写字母： [a ~ z]</li>
-	// <li>大写字母：[A ～ Z]</li>
-	// <li>数字：0 - 9</li>
-	// <li>特殊字符：()`~!@#$%^&*-+=_|{}[]:;'<>,.?/</li>
+	// <p>实例根账号用户名对应的密码，长度8 ~ 32位，推荐使用12位以上的密码;不能以&quot; / &quot;开头;<br>必须包含以下四项，字符种类:</p><li>小写字母： [a ~ z]</li><li>大写字母：[A ～ Z]</li><li>数字：0 - 9</li><li>特殊字符：()`~!@#$%^&amp;*-+=_|{}[]:;'&lt;&gt;,.?/</li>
 	AdminPassword *string `json:"AdminPassword,omitnil,omitempty" name:"AdminPassword"`
 
-	// PostgreSQL大版本号（该参数当前必传），版本信息可从[DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018)获取。目前支持10，11，12，13，14，15这几个大版本，详情见[内核版本概述](https://cloud.tencent.com/document/product/409/67018)。
-	// 输入该参数时，会基于此大版本号创建对应的最新小版本的最新内核版本号实例。
+	// <p>PostgreSQL大版本号（该参数当前必传），版本信息可从<a href="https://cloud.tencent.com/document/api/409/89018">DescribeDBVersions</a>获取。目前支持10，11，12，13，14，15这几个大版本，详情见<a href="https://cloud.tencent.com/document/product/409/67018">内核版本概述</a>。<br>输入该参数时，会基于此大版本号创建对应的最新小版本的最新内核版本号实例。</p>
 	DBMajorVersion *string `json:"DBMajorVersion,omitnil,omitempty" name:"DBMajorVersion"`
 
-	// PostgreSQL社区大版本+小版本号。
-	// 一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新小版本号。
+	// <p>PostgreSQL社区大版本+小版本号。<br>一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新小版本号。</p>
 	DBVersion *string `json:"DBVersion,omitnil,omitempty" name:"DBVersion"`
 
-	// PostgreSQL内核版本号。
-	// 一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新内核版本号。
+	// <p>PostgreSQL内核版本号。<br>一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新内核版本号。</p>
 	DBKernelVersion *string `json:"DBKernelVersion,omitnil,omitempty" name:"DBKernelVersion"`
 
-	// 实例计费类型，目前支持：
-	// <li>PREPAID：预付费，即包年包月</li>
-	// <li>POSTPAID_BY_HOUR：后付费，即按量计费</li>
-	// 默认值：PREPAID
+	// <p>实例计费类型，目前支持：</p><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：后付费，即按量计费</li>默认值：PREPAID
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
+	// <p>私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/1372">DescribeVpcEx</a> ，从接口返回中的unVpcId字段获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
+	// <p>私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/15784">DescribeSubnets </a>，从接口返回中的unSubnetId字段获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 实例节点部署信息，支持多可用区部署时需要指定每个节点的部署可用区信息。
-	// 可用区信息可以通过调用 [DescribeZones](https://cloud.tencent.com/document/api/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>实例节点部署信息，支持多可用区部署时需要指定每个节点的部署可用区信息。<br>可用区信息可以通过调用 <a href="https://cloud.tencent.com/document/api/409/16769">DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	DBNodeSet []*DBNode `json:"DBNodeSet,omitnil,omitempty" name:"DBNodeSet"`
 
-	// 续费标记：
-	// <li>0：手动续费</li>
-	// <li>1：自动续费</li>
-	// 默认值：0
+	// <p>续费标记：</p><li>0：手动续费</li><li>1：自动续费</li>默认值：0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 是否自动使用代金券：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否自动使用代金券：</p><li>0：否</li><li>1：是</li>默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
-	// 代金券ID列表，目前仅支持指定一张代金券。
+	// <p>代金券ID列表，目前仅支持指定一张代金券。</p>
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
-	// 项目ID。默认取之为0，表示归属默认项目。
+	// <p>项目ID。默认取之为0，表示归属默认项目。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 活动ID。
+	// <p>活动ID。</p>
 	ActivityId *int64 `json:"ActivityId,omitnil,omitempty" name:"ActivityId"`
 
-	// 实例名称，仅支持长度小于60的中文/英文/数字/"_"/"-"，不指定实例名称则默认显示"未命名"。
+	// <p>实例名称，仅支持长度小于60的中文/英文/数字/&quot;_&quot;/&quot;-&quot;，不指定实例名称则默认显示&quot;未命名&quot;。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 实例需要绑定的Tag信息，默认为空；可以通过调用 [DescribeTags](https://cloud.tencent.com/document/api/651/35316) 返回值中的 Tags 字段来获取。
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
 	TagList []*Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 
-	// 实例所属安全组，该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。
+	// <p>实例所属安全组，该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 是否需要支持数据透明加密：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
-	// 参考[数据透明加密概述](https://cloud.tencent.com/document/product/409/71748)
+	// <p>是否需要支持数据透明加密：</p><li>0：否</li><li>1：是</li>默认值：0参考[数据透明加密概述](https://cloud.tencent.com/document/product/409/71748)
 	NeedSupportTDE *uint64 `json:"NeedSupportTDE,omitnil,omitempty" name:"NeedSupportTDE"`
 
-	// 自定义密钥的KeyId，若选择自定义密匙加密，则需要传入自定义密匙的KeyId，KeyId是CMK的唯一标识。
-	// KeyId创建获取相关参考[开启透明数据加密](https://cloud.tencent.com/document/product/409/71749)
+	// <p>自定义密钥的KeyId，若选择自定义密匙加密，则需要传入自定义密匙的KeyId，KeyId是CMK的唯一标识。<br>KeyId创建获取相关参考<a href="https://cloud.tencent.com/document/product/409/71749">开启透明数据加密</a></p>
 	KMSKeyId *string `json:"KMSKeyId,omitnil,omitempty" name:"KMSKeyId"`
 
-	// 使用KMS服务的地域，KMSRegion为空默认使用本地域的KMS，本地域不支持的情况下需自选其他KMS支持的地域。
-	// KMSRegion相关介绍参考[开启透明数据加密](https://cloud.tencent.com/document/product/409/71749)
+	// <p>使用KMS服务的地域，KMSRegion为空默认使用本地域的KMS，本地域不支持的情况下需自选其他KMS支持的地域。<br>KMSRegion相关介绍参考<a href="https://cloud.tencent.com/document/product/409/71749">开启透明数据加密</a></p>
 	KMSRegion *string `json:"KMSRegion,omitnil,omitempty" name:"KMSRegion"`
 
-	// 指定KMS服务的集群，KMSClusterId为空使用默认集群的KMS，若选择指定KMS集群，则需要传入KMSClusterId。 KMSClusterId相关介绍参考开启透明数据加密
+	// <p>指定KMS服务的集群，KMSClusterId为空使用默认集群的KMS，若选择指定KMS集群，则需要传入KMSClusterId。 KMSClusterId相关介绍参考开启透明数据加密</p>
 	KMSClusterId *string `json:"KMSClusterId,omitnil,omitempty" name:"KMSClusterId"`
 
-	// 数据库引擎，支持：
-	// <li>postgresql：云数据库PostgreSQL</li>
-	// <li>mssql_compatible：MSSQL兼容-云数据库PostgreSQL</li>
-	// 默认值：postgresql
+	// <p>数据库引擎，支持：</p><li>postgresql：云数据库PostgreSQL</li><li>mssql_compatible：MSSQL兼容-云数据库PostgreSQL</li>默认值：postgresql
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
 
-	// 数据库引擎的配置信息，配置格式如下：
-	// {"$key1":"$value1", "$key2":"$value2"}
-	// 各引擎支持如下：
-	// mssql_compatible引擎：
-	// <li>migrationMode：数据库模式，可选参数，可取值：single-db（单数据库模式），multi-db（多数据库模式）。默认为single-db。</li>
-	// <li>defaultLocale：排序区域规则，可选参数，在初始化后不可修改，默认为en_US，可选值如下：
-	// "af_ZA", "sq_AL", "ar_DZ", "ar_BH", "ar_EG", "ar_IQ", "ar_JO", "ar_KW", "ar_LB", "ar_LY", "ar_MA", "ar_OM", "ar_QA", "ar_SA", "ar_SY", "ar_TN", "ar_AE", "ar_YE", "hy_AM", "az_Cyrl_AZ", "az_Latn_AZ", "eu_ES", "be_BY", "bg_BG", "ca_ES", "zh_HK", "zh_MO", "zh_CN", "zh_SG", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_BE", "nl_NL", "en_AU", "en_BZ", "en_CA", "en_IE", "en_JM", "en_NZ", "en_PH", "en_ZA", "en_TT", "en_GB", "en_US", "en_ZW", "et_EE", "fo_FO", "fa_IR", "fi_FI", "fr_BE", "fr_CA", "fr_FR", "fr_LU", "fr_MC", "fr_CH", "mk_MK", "ka_GE", "de_AT", "de_DE", "de_LI", "de_LU", "de_CH", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "it_CH", "ja_JP", "kn_IN", "kok_IN", "ko_KR", "ky_KG", "lv_LV", "lt_LT", "ms_BN", "ms_MY", "mr_IN", "mn_MN", "nb_NO", "nn_NO", "pl_PL", "pt_BR", "pt_PT", "pa_IN", "ro_RO", "ru_RU", "sa_IN", "sr_Cyrl_RS", "sr_Latn_RS", "sk_SK", "sl_SI", "es_AR", "es_BO", "es_CL", "es_CO", "es_CR", "es_DO", "es_EC", "es_SV", "es_GT", "es_HN", "es_MX", "es_NI", "es_PA", "es_PY","es_PE", "es_PR", "es_ES", "es_TRADITIONAL", "es_UY", "es_VE", "sw_KE", "sv_FI", "sv_SE", "tt_RU", "te_IN", "th_TH", "tr_TR", "uk_UA", "ur_IN", "ur_PK", "uz_Cyrl_UZ", "uz_Latn_UZ", "vi_VN"。</li>
-	// <li>serverCollationName：排序规则名称，可选参数，在初始化后不可修改，默认为sql_latin1_general_cp1_ci_as，可选值如下："bbf_unicode_general_ci_as", "bbf_unicode_cp1_ci_as", "bbf_unicode_CP1250_ci_as", "bbf_unicode_CP1251_ci_as", "bbf_unicode_cp1253_ci_as", "bbf_unicode_cp1254_ci_as", "bbf_unicode_cp1255_ci_as", "bbf_unicode_cp1256_ci_as", "bbf_unicode_cp1257_ci_as", "bbf_unicode_cp1258_ci_as", "bbf_unicode_cp874_ci_as", "sql_latin1_general_cp1250_ci_as", "sql_latin1_general_cp1251_ci_as", "sql_latin1_general_cp1_ci_as", "sql_latin1_general_cp1253_ci_as", "sql_latin1_general_cp1254_ci_as", "sql_latin1_general_cp1255_ci_as","sql_latin1_general_cp1256_ci_as", "sql_latin1_general_cp1257_ci_as", "sql_latin1_general_cp1258_ci_as", "chinese_prc_ci_as", "cyrillic_general_ci_as", "finnish_swedish_ci_as", "french_ci_as", "japanese_ci_as", "korean_wansung_ci_as", "latin1_general_ci_as", "modern_spanish_ci_as", "polish_ci_as", "thai_ci_as", "traditional_spanish_ci_as", "turkish_ci_as", "ukrainian_ci_as", "vietnamese_ci_as"。</li>
+	// <p>数据库引擎的配置信息，配置格式如下：<br>{&quot;$key1&quot;:&quot;$value1&quot;, &quot;$key2&quot;:&quot;$value2&quot;}<br>各引擎支持如下：<br>mssql_compatible引擎：</p><li>migrationMode：数据库模式，可选参数，可取值：single-db（单数据库模式），multi-db（多数据库模式）。默认为single-db。</li><li>defaultLocale：排序区域规则，可选参数，在初始化后不可修改，默认为en_US，可选值如下："af_ZA", "sq_AL", "ar_DZ", "ar_BH", "ar_EG", "ar_IQ", "ar_JO", "ar_KW", "ar_LB", "ar_LY", "ar_MA", "ar_OM", "ar_QA", "ar_SA", "ar_SY", "ar_TN", "ar_AE", "ar_YE", "hy_AM", "az_Cyrl_AZ", "az_Latn_AZ", "eu_ES", "be_BY", "bg_BG", "ca_ES", "zh_HK", "zh_MO", "zh_CN", "zh_SG", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_BE", "nl_NL", "en_AU", "en_BZ", "en_CA", "en_IE", "en_JM", "en_NZ", "en_PH", "en_ZA", "en_TT", "en_GB", "en_US", "en_ZW", "et_EE", "fo_FO", "fa_IR", "fi_FI", "fr_BE", "fr_CA", "fr_FR", "fr_LU", "fr_MC", "fr_CH", "mk_MK", "ka_GE", "de_AT", "de_DE", "de_LI", "de_LU", "de_CH", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "it_CH", "ja_JP", "kn_IN", "kok_IN", "ko_KR", "ky_KG", "lv_LV", "lt_LT", "ms_BN", "ms_MY", "mr_IN", "mn_MN", "nb_NO", "nn_NO", "pl_PL", "pt_BR", "pt_PT", "pa_IN", "ro_RO", "ru_RU", "sa_IN", "sr_Cyrl_RS", "sr_Latn_RS", "sk_SK", "sl_SI", "es_AR", "es_BO", "es_CL", "es_CO", "es_CR", "es_DO", "es_EC", "es_SV", "es_GT", "es_HN", "es_MX", "es_NI", "es_PA", "es_PY","es_PE", "es_PR", "es_ES", "es_TRADITIONAL", "es_UY", "es_VE", "sw_KE", "sv_FI", "sv_SE", "tt_RU", "te_IN", "th_TH", "tr_TR", "uk_UA", "ur_IN", "ur_PK", "uz_Cyrl_UZ", "uz_Latn_UZ", "vi_VN"。</li><li>serverCollationName：排序规则名称，可选参数，在初始化后不可修改，默认为sql_latin1_general_cp1_ci_as，可选值如下："bbf_unicode_general_ci_as", "bbf_unicode_cp1_ci_as", "bbf_unicode_CP1250_ci_as", "bbf_unicode_CP1251_ci_as", "bbf_unicode_cp1253_ci_as", "bbf_unicode_cp1254_ci_as", "bbf_unicode_cp1255_ci_as", "bbf_unicode_cp1256_ci_as", "bbf_unicode_cp1257_ci_as", "bbf_unicode_cp1258_ci_as", "bbf_unicode_cp874_ci_as", "sql_latin1_general_cp1250_ci_as", "sql_latin1_general_cp1251_ci_as", "sql_latin1_general_cp1_ci_as", "sql_latin1_general_cp1253_ci_as", "sql_latin1_general_cp1254_ci_as", "sql_latin1_general_cp1255_ci_as","sql_latin1_general_cp1256_ci_as", "sql_latin1_general_cp1257_ci_as", "sql_latin1_general_cp1258_ci_as", "chinese_prc_ci_as", "cyrillic_general_ci_as", "finnish_swedish_ci_as", "french_ci_as", "japanese_ci_as", "korean_wansung_ci_as", "latin1_general_ci_as", "modern_spanish_ci_as", "polish_ci_as", "thai_ci_as", "traditional_spanish_ci_as", "turkish_ci_as", "ukrainian_ci_as", "vietnamese_ci_as"。</li>
 	DBEngineConfig *string `json:"DBEngineConfig,omitnil,omitempty" name:"DBEngineConfig"`
 
-	// 主从同步方式，支持： 
-	// <li>Semi-sync：半同步</li>
-	// <li>Async：异步</li>
-	// 主实例默认值：Semi-sync
-	// 只读实例默认值：Async
+	// <p>主从同步方式，支持： </p><li>Semi-sync：半同步</li><li>Async：异步</li>主实例默认值：Semi-sync只读实例默认值：Async
 	SyncMode *string `json:"SyncMode,omitnil,omitempty" name:"SyncMode"`
 
-	// 是否需要支持Ipv6：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否需要支持Ipv6：</p><li>0：否</li><li>1：是</li>默认值：0
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitnil,omitempty" name:"NeedSupportIpv6"`
 
-	// 实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。
+	// <p>实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
+
+	// <p>实例存储类型，可选值：PHYSICAL_LOCAL_SSD：物理机本地ssd硬盘 CLOUD_PREMIUM：高性能云硬盘 CLOUD_SSD：ssd云硬盘 CLOUD_HSSD：增强型ssd云硬盘</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 type CreateInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例所属主可用区， 如：ap-guangzhou-3；若需要支持多可用区，在DBNodeSet.N字段中进行添加主可用区和备可用区信息；
-	// 可用区信息可以通过调用 [DescribeZones](https://cloud.tencent.com/document/api/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>实例所属主可用区， 如：ap-guangzhou-3；若需要支持多可用区，在DBNodeSet.N字段中进行添加主可用区和备可用区信息；<br>可用区信息可以通过调用 <a href="https://cloud.tencent.com/document/api/409/16769">DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 售卖规格码。该参数可以通过调用[DescribeClasses](https://cloud.tencent.com/document/api/409/89019)的返回值中的SpecCode字段来获取。
+	// <p>售卖规格码。该参数可以通过调用<a href="https://cloud.tencent.com/document/api/409/89019">DescribeClasses</a>的返回值中的SpecCode字段来获取。</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// 实例磁盘容量大小，单位：GB。该参数的设置步长为10。
+	// <p>实例磁盘容量大小，单位：GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 购买实例数量，取值范围：[1-10]。一次性购买支持最大数量10个，若超过该数量，可进行多次调用进行购买。
+	// <p>购买实例数量，取值范围：[1-10]。一次性购买支持最大数量10个，若超过该数量，可进行多次调用进行购买。</p>
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 购买时长，单位：月。
-	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li>
-	// <li>后付费：只支持1</li>
+	// <p>购买时长，单位：月。</p><li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li><li>后付费：只支持1</li>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 实例字符集，目前只支持：
-	// <li> UTF8</li>
-	// <li> LATIN1</li>
+	// <p>实例字符集，目前只支持：</p><li> UTF8</li><li> LATIN1</li>
 	Charset *string `json:"Charset,omitnil,omitempty" name:"Charset"`
 
-	// 实例根账号用户名，具体规范如下：
-	// <li>用户名需要1-16个字符，只能由字母、数字或下划线组成</li>
-	// <li>不能为postgres</li>
-	// <li>不能由数字和pg_开头</li>
-	// <li>所有规则均不区分大小写</li>
+	// <p>实例根账号用户名，具体规范如下：</p><li>用户名需要1-16个字符，只能由字母、数字或下划线组成</li><li>不能为postgres</li><li>不能由数字和pg_开头</li><li>所有规则均不区分大小写</li>
 	AdminName *string `json:"AdminName,omitnil,omitempty" name:"AdminName"`
 
-	// 实例根账号用户名对应的密码，长度8 ~ 32位，推荐使用12位以上的密码;不能以" / "开头;
-	// 必须包含以下四项，字符种类:
-	// <li>小写字母： [a ~ z]</li>
-	// <li>大写字母：[A ～ Z]</li>
-	// <li>数字：0 - 9</li>
-	// <li>特殊字符：()`~!@#$%^&*-+=_|{}[]:;'<>,.?/</li>
+	// <p>实例根账号用户名对应的密码，长度8 ~ 32位，推荐使用12位以上的密码;不能以&quot; / &quot;开头;<br>必须包含以下四项，字符种类:</p><li>小写字母： [a ~ z]</li><li>大写字母：[A ～ Z]</li><li>数字：0 - 9</li><li>特殊字符：()`~!@#$%^&amp;*-+=_|{}[]:;'&lt;&gt;,.?/</li>
 	AdminPassword *string `json:"AdminPassword,omitnil,omitempty" name:"AdminPassword"`
 
-	// PostgreSQL大版本号（该参数当前必传），版本信息可从[DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018)获取。目前支持10，11，12，13，14，15这几个大版本，详情见[内核版本概述](https://cloud.tencent.com/document/product/409/67018)。
-	// 输入该参数时，会基于此大版本号创建对应的最新小版本的最新内核版本号实例。
+	// <p>PostgreSQL大版本号（该参数当前必传），版本信息可从<a href="https://cloud.tencent.com/document/api/409/89018">DescribeDBVersions</a>获取。目前支持10，11，12，13，14，15这几个大版本，详情见<a href="https://cloud.tencent.com/document/product/409/67018">内核版本概述</a>。<br>输入该参数时，会基于此大版本号创建对应的最新小版本的最新内核版本号实例。</p>
 	DBMajorVersion *string `json:"DBMajorVersion,omitnil,omitempty" name:"DBMajorVersion"`
 
-	// PostgreSQL社区大版本+小版本号。
-	// 一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新小版本号。
+	// <p>PostgreSQL社区大版本+小版本号。<br>一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新小版本号。</p>
 	DBVersion *string `json:"DBVersion,omitnil,omitempty" name:"DBVersion"`
 
-	// PostgreSQL内核版本号。
-	// 一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新内核版本号。
+	// <p>PostgreSQL内核版本号。<br>一般场景不推荐传入该参数。如需指定，只能传当前大版本号下最新内核版本号。</p>
 	DBKernelVersion *string `json:"DBKernelVersion,omitnil,omitempty" name:"DBKernelVersion"`
 
-	// 实例计费类型，目前支持：
-	// <li>PREPAID：预付费，即包年包月</li>
-	// <li>POSTPAID_BY_HOUR：后付费，即按量计费</li>
-	// 默认值：PREPAID
+	// <p>实例计费类型，目前支持：</p><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：后付费，即按量计费</li>默认值：PREPAID
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
+	// <p>私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/1372">DescribeVpcEx</a> ，从接口返回中的unVpcId字段获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
+	// <p>私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/15784">DescribeSubnets </a>，从接口返回中的unSubnetId字段获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 实例节点部署信息，支持多可用区部署时需要指定每个节点的部署可用区信息。
-	// 可用区信息可以通过调用 [DescribeZones](https://cloud.tencent.com/document/api/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>实例节点部署信息，支持多可用区部署时需要指定每个节点的部署可用区信息。<br>可用区信息可以通过调用 <a href="https://cloud.tencent.com/document/api/409/16769">DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	DBNodeSet []*DBNode `json:"DBNodeSet,omitnil,omitempty" name:"DBNodeSet"`
 
-	// 续费标记：
-	// <li>0：手动续费</li>
-	// <li>1：自动续费</li>
-	// 默认值：0
+	// <p>续费标记：</p><li>0：手动续费</li><li>1：自动续费</li>默认值：0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 是否自动使用代金券：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否自动使用代金券：</p><li>0：否</li><li>1：是</li>默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
-	// 代金券ID列表，目前仅支持指定一张代金券。
+	// <p>代金券ID列表，目前仅支持指定一张代金券。</p>
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
-	// 项目ID。默认取之为0，表示归属默认项目。
+	// <p>项目ID。默认取之为0，表示归属默认项目。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 活动ID。
+	// <p>活动ID。</p>
 	ActivityId *int64 `json:"ActivityId,omitnil,omitempty" name:"ActivityId"`
 
-	// 实例名称，仅支持长度小于60的中文/英文/数字/"_"/"-"，不指定实例名称则默认显示"未命名"。
+	// <p>实例名称，仅支持长度小于60的中文/英文/数字/&quot;_&quot;/&quot;-&quot;，不指定实例名称则默认显示&quot;未命名&quot;。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 实例需要绑定的Tag信息，默认为空；可以通过调用 [DescribeTags](https://cloud.tencent.com/document/api/651/35316) 返回值中的 Tags 字段来获取。
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
 	TagList []*Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 
-	// 实例所属安全组，该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。
+	// <p>实例所属安全组，该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 是否需要支持数据透明加密：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
-	// 参考[数据透明加密概述](https://cloud.tencent.com/document/product/409/71748)
+	// <p>是否需要支持数据透明加密：</p><li>0：否</li><li>1：是</li>默认值：0参考[数据透明加密概述](https://cloud.tencent.com/document/product/409/71748)
 	NeedSupportTDE *uint64 `json:"NeedSupportTDE,omitnil,omitempty" name:"NeedSupportTDE"`
 
-	// 自定义密钥的KeyId，若选择自定义密匙加密，则需要传入自定义密匙的KeyId，KeyId是CMK的唯一标识。
-	// KeyId创建获取相关参考[开启透明数据加密](https://cloud.tencent.com/document/product/409/71749)
+	// <p>自定义密钥的KeyId，若选择自定义密匙加密，则需要传入自定义密匙的KeyId，KeyId是CMK的唯一标识。<br>KeyId创建获取相关参考<a href="https://cloud.tencent.com/document/product/409/71749">开启透明数据加密</a></p>
 	KMSKeyId *string `json:"KMSKeyId,omitnil,omitempty" name:"KMSKeyId"`
 
-	// 使用KMS服务的地域，KMSRegion为空默认使用本地域的KMS，本地域不支持的情况下需自选其他KMS支持的地域。
-	// KMSRegion相关介绍参考[开启透明数据加密](https://cloud.tencent.com/document/product/409/71749)
+	// <p>使用KMS服务的地域，KMSRegion为空默认使用本地域的KMS，本地域不支持的情况下需自选其他KMS支持的地域。<br>KMSRegion相关介绍参考<a href="https://cloud.tencent.com/document/product/409/71749">开启透明数据加密</a></p>
 	KMSRegion *string `json:"KMSRegion,omitnil,omitempty" name:"KMSRegion"`
 
-	// 指定KMS服务的集群，KMSClusterId为空使用默认集群的KMS，若选择指定KMS集群，则需要传入KMSClusterId。 KMSClusterId相关介绍参考开启透明数据加密
+	// <p>指定KMS服务的集群，KMSClusterId为空使用默认集群的KMS，若选择指定KMS集群，则需要传入KMSClusterId。 KMSClusterId相关介绍参考开启透明数据加密</p>
 	KMSClusterId *string `json:"KMSClusterId,omitnil,omitempty" name:"KMSClusterId"`
 
-	// 数据库引擎，支持：
-	// <li>postgresql：云数据库PostgreSQL</li>
-	// <li>mssql_compatible：MSSQL兼容-云数据库PostgreSQL</li>
-	// 默认值：postgresql
+	// <p>数据库引擎，支持：</p><li>postgresql：云数据库PostgreSQL</li><li>mssql_compatible：MSSQL兼容-云数据库PostgreSQL</li>默认值：postgresql
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
 
-	// 数据库引擎的配置信息，配置格式如下：
-	// {"$key1":"$value1", "$key2":"$value2"}
-	// 各引擎支持如下：
-	// mssql_compatible引擎：
-	// <li>migrationMode：数据库模式，可选参数，可取值：single-db（单数据库模式），multi-db（多数据库模式）。默认为single-db。</li>
-	// <li>defaultLocale：排序区域规则，可选参数，在初始化后不可修改，默认为en_US，可选值如下：
-	// "af_ZA", "sq_AL", "ar_DZ", "ar_BH", "ar_EG", "ar_IQ", "ar_JO", "ar_KW", "ar_LB", "ar_LY", "ar_MA", "ar_OM", "ar_QA", "ar_SA", "ar_SY", "ar_TN", "ar_AE", "ar_YE", "hy_AM", "az_Cyrl_AZ", "az_Latn_AZ", "eu_ES", "be_BY", "bg_BG", "ca_ES", "zh_HK", "zh_MO", "zh_CN", "zh_SG", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_BE", "nl_NL", "en_AU", "en_BZ", "en_CA", "en_IE", "en_JM", "en_NZ", "en_PH", "en_ZA", "en_TT", "en_GB", "en_US", "en_ZW", "et_EE", "fo_FO", "fa_IR", "fi_FI", "fr_BE", "fr_CA", "fr_FR", "fr_LU", "fr_MC", "fr_CH", "mk_MK", "ka_GE", "de_AT", "de_DE", "de_LI", "de_LU", "de_CH", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "it_CH", "ja_JP", "kn_IN", "kok_IN", "ko_KR", "ky_KG", "lv_LV", "lt_LT", "ms_BN", "ms_MY", "mr_IN", "mn_MN", "nb_NO", "nn_NO", "pl_PL", "pt_BR", "pt_PT", "pa_IN", "ro_RO", "ru_RU", "sa_IN", "sr_Cyrl_RS", "sr_Latn_RS", "sk_SK", "sl_SI", "es_AR", "es_BO", "es_CL", "es_CO", "es_CR", "es_DO", "es_EC", "es_SV", "es_GT", "es_HN", "es_MX", "es_NI", "es_PA", "es_PY","es_PE", "es_PR", "es_ES", "es_TRADITIONAL", "es_UY", "es_VE", "sw_KE", "sv_FI", "sv_SE", "tt_RU", "te_IN", "th_TH", "tr_TR", "uk_UA", "ur_IN", "ur_PK", "uz_Cyrl_UZ", "uz_Latn_UZ", "vi_VN"。</li>
-	// <li>serverCollationName：排序规则名称，可选参数，在初始化后不可修改，默认为sql_latin1_general_cp1_ci_as，可选值如下："bbf_unicode_general_ci_as", "bbf_unicode_cp1_ci_as", "bbf_unicode_CP1250_ci_as", "bbf_unicode_CP1251_ci_as", "bbf_unicode_cp1253_ci_as", "bbf_unicode_cp1254_ci_as", "bbf_unicode_cp1255_ci_as", "bbf_unicode_cp1256_ci_as", "bbf_unicode_cp1257_ci_as", "bbf_unicode_cp1258_ci_as", "bbf_unicode_cp874_ci_as", "sql_latin1_general_cp1250_ci_as", "sql_latin1_general_cp1251_ci_as", "sql_latin1_general_cp1_ci_as", "sql_latin1_general_cp1253_ci_as", "sql_latin1_general_cp1254_ci_as", "sql_latin1_general_cp1255_ci_as","sql_latin1_general_cp1256_ci_as", "sql_latin1_general_cp1257_ci_as", "sql_latin1_general_cp1258_ci_as", "chinese_prc_ci_as", "cyrillic_general_ci_as", "finnish_swedish_ci_as", "french_ci_as", "japanese_ci_as", "korean_wansung_ci_as", "latin1_general_ci_as", "modern_spanish_ci_as", "polish_ci_as", "thai_ci_as", "traditional_spanish_ci_as", "turkish_ci_as", "ukrainian_ci_as", "vietnamese_ci_as"。</li>
+	// <p>数据库引擎的配置信息，配置格式如下：<br>{&quot;$key1&quot;:&quot;$value1&quot;, &quot;$key2&quot;:&quot;$value2&quot;}<br>各引擎支持如下：<br>mssql_compatible引擎：</p><li>migrationMode：数据库模式，可选参数，可取值：single-db（单数据库模式），multi-db（多数据库模式）。默认为single-db。</li><li>defaultLocale：排序区域规则，可选参数，在初始化后不可修改，默认为en_US，可选值如下："af_ZA", "sq_AL", "ar_DZ", "ar_BH", "ar_EG", "ar_IQ", "ar_JO", "ar_KW", "ar_LB", "ar_LY", "ar_MA", "ar_OM", "ar_QA", "ar_SA", "ar_SY", "ar_TN", "ar_AE", "ar_YE", "hy_AM", "az_Cyrl_AZ", "az_Latn_AZ", "eu_ES", "be_BY", "bg_BG", "ca_ES", "zh_HK", "zh_MO", "zh_CN", "zh_SG", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_BE", "nl_NL", "en_AU", "en_BZ", "en_CA", "en_IE", "en_JM", "en_NZ", "en_PH", "en_ZA", "en_TT", "en_GB", "en_US", "en_ZW", "et_EE", "fo_FO", "fa_IR", "fi_FI", "fr_BE", "fr_CA", "fr_FR", "fr_LU", "fr_MC", "fr_CH", "mk_MK", "ka_GE", "de_AT", "de_DE", "de_LI", "de_LU", "de_CH", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "it_CH", "ja_JP", "kn_IN", "kok_IN", "ko_KR", "ky_KG", "lv_LV", "lt_LT", "ms_BN", "ms_MY", "mr_IN", "mn_MN", "nb_NO", "nn_NO", "pl_PL", "pt_BR", "pt_PT", "pa_IN", "ro_RO", "ru_RU", "sa_IN", "sr_Cyrl_RS", "sr_Latn_RS", "sk_SK", "sl_SI", "es_AR", "es_BO", "es_CL", "es_CO", "es_CR", "es_DO", "es_EC", "es_SV", "es_GT", "es_HN", "es_MX", "es_NI", "es_PA", "es_PY","es_PE", "es_PR", "es_ES", "es_TRADITIONAL", "es_UY", "es_VE", "sw_KE", "sv_FI", "sv_SE", "tt_RU", "te_IN", "th_TH", "tr_TR", "uk_UA", "ur_IN", "ur_PK", "uz_Cyrl_UZ", "uz_Latn_UZ", "vi_VN"。</li><li>serverCollationName：排序规则名称，可选参数，在初始化后不可修改，默认为sql_latin1_general_cp1_ci_as，可选值如下："bbf_unicode_general_ci_as", "bbf_unicode_cp1_ci_as", "bbf_unicode_CP1250_ci_as", "bbf_unicode_CP1251_ci_as", "bbf_unicode_cp1253_ci_as", "bbf_unicode_cp1254_ci_as", "bbf_unicode_cp1255_ci_as", "bbf_unicode_cp1256_ci_as", "bbf_unicode_cp1257_ci_as", "bbf_unicode_cp1258_ci_as", "bbf_unicode_cp874_ci_as", "sql_latin1_general_cp1250_ci_as", "sql_latin1_general_cp1251_ci_as", "sql_latin1_general_cp1_ci_as", "sql_latin1_general_cp1253_ci_as", "sql_latin1_general_cp1254_ci_as", "sql_latin1_general_cp1255_ci_as","sql_latin1_general_cp1256_ci_as", "sql_latin1_general_cp1257_ci_as", "sql_latin1_general_cp1258_ci_as", "chinese_prc_ci_as", "cyrillic_general_ci_as", "finnish_swedish_ci_as", "french_ci_as", "japanese_ci_as", "korean_wansung_ci_as", "latin1_general_ci_as", "modern_spanish_ci_as", "polish_ci_as", "thai_ci_as", "traditional_spanish_ci_as", "turkish_ci_as", "ukrainian_ci_as", "vietnamese_ci_as"。</li>
 	DBEngineConfig *string `json:"DBEngineConfig,omitnil,omitempty" name:"DBEngineConfig"`
 
-	// 主从同步方式，支持： 
-	// <li>Semi-sync：半同步</li>
-	// <li>Async：异步</li>
-	// 主实例默认值：Semi-sync
-	// 只读实例默认值：Async
+	// <p>主从同步方式，支持： </p><li>Semi-sync：半同步</li><li>Async：异步</li>主实例默认值：Semi-sync只读实例默认值：Async
 	SyncMode *string `json:"SyncMode,omitnil,omitempty" name:"SyncMode"`
 
-	// 是否需要支持Ipv6：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否需要支持Ipv6：</p><li>0：否</li><li>1：是</li>默认值：0
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitnil,omitempty" name:"NeedSupportIpv6"`
 
-	// 实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。
+	// <p>实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
+
+	// <p>实例存储类型，可选值：PHYSICAL_LOCAL_SSD：物理机本地ssd硬盘 CLOUD_PREMIUM：高性能云硬盘 CLOUD_SSD：ssd云硬盘 CLOUD_HSSD：增强型ssd云硬盘</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 func (r *CreateInstancesRequest) ToJsonString() string {
@@ -1468,6 +1374,7 @@ func (r *CreateInstancesRequest) FromJsonString(s string) error {
 	delete(f, "SyncMode")
 	delete(f, "NeedSupportIpv6")
 	delete(f, "DeletionProtection")
+	delete(f, "StorageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstancesRequest has unknown keys!", "")
 	}
@@ -1476,13 +1383,13 @@ func (r *CreateInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstancesResponseParams struct {
-	// 订单号列表。每个实例对应一个订单号。
+	// <p>订单号列表。每个实例对应一个订单号。</p>
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
-	// 冻结流水号。
+	// <p>冻结流水号。</p>
 	BillId *string `json:"BillId,omitnil,omitempty" name:"BillId"`
 
-	// 创建成功的实例ID集合，只在后付费情景下有返回值。
+	// <p>创建成功的实例ID集合，只在后付费情景下有返回值。</p>
 	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitnil,omitempty" name:"DBInstanceIdSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1585,172 +1492,142 @@ func (r *CreateParameterTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateReadOnlyDBInstanceRequestParams struct {
-	// 实例所属主可用区， 如：ap-guangzhou-3；
-	// 可用区信息可以通过调用 [DescribeZones](https://cloud.tencent.com/document/api/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>实例所属主可用区， 如：ap-guangzhou-3；<br>可用区信息可以通过调用 <a href="https://cloud.tencent.com/document/api/409/16769">DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 只读实例的主实例ID。可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取
+	// <p>只读实例的主实例ID。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
 	MasterDBInstanceId *string `json:"MasterDBInstanceId,omitnil,omitempty" name:"MasterDBInstanceId"`
 
-	// 售卖规格码。该参数可以通过调用[DescribeClasses](https://cloud.tencent.com/document/api/409/89019)的返回值中的SpecCode字段来获取。
+	// <p>售卖规格码。该参数可以通过调用<a href="https://cloud.tencent.com/document/api/409/89019">DescribeClasses</a>的返回值中的SpecCode字段来获取。</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// 实例硬盘容量大小，单位：GB。该参数的设置步长为10。
+	// <p>实例硬盘容量大小，单位：GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 购买实例数量，取值范围：[1-6]。购买支持最大数量6个。
+	// <p>购买实例数量，取值范围：[1-6]。购买支持最大数量6个。</p>
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 购买时长，单位：月。
-	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li>
-	// <li>后付费：只支持1</li>
+	// <p>购买时长，单位：月。</p><li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li><li>后付费：只支持1</li>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
+	// <p>私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/1372">DescribeVpcEx</a> ，从接口返回中的unVpcId字段获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
+	// <p>私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/15784">DescribeSubnets </a>，从接口返回中的unSubnetId字段获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 实例计费类型，目前支持：
-	// <li>PREPAID：预付费，即包年包月。</li>
-	// <li>POSTPAID_BY_HOUR：后付费，即按量计费。</li>
-	// 默认值：PREPAID。如果主实例为后付费，只读实例必须也为后付费。
+	// <p>实例计费类型，目前支持：</p><li>PREPAID：预付费，即包年包月。</li><li>POSTPAID_BY_HOUR：后付费，即按量计费。</li>默认值：PREPAID。如果主实例为后付费，只读实例必须也为后付费。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 是否自动使用代金券：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否自动使用代金券：</p><li>0：否</li><li>1：是</li>默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
-	// 代金券ID列表，目前仅支持指定一张代金券。
+	// <p>代金券ID列表，目前仅支持指定一张代金券。</p>
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
-	// 续费标记：
-	// <li>0：手动续费</li>
-	// <li>1：自动续费</li>
-	// 默认值：0
+	// <p>续费标记：</p><li>0：手动续费</li><li>1：自动续费</li>默认值：0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 项目ID。默认值为0，表示归属默认项目。
+	// <p>项目ID。默认值为0，表示归属默认项目。</p>
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 优惠活动ID
+	// <p>优惠活动ID</p>
 	ActivityId *int64 `json:"ActivityId,omitnil,omitempty" name:"ActivityId"`
 
-	// 只读组ID。
+	// <p>只读组ID。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 
-	// 实例需要绑定的Tag信息，默认为空；可以通过调用 [DescribeTags](https://cloud.tencent.com/document/api/651/35316) 返回值中的 Tags 字段来获取。
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
 	TagList *Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 
-	// 实例所属安全组，该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。
+	// <p>实例所属安全组，该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 是否需要支持Ipv6：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否需要支持Ipv6：</p><li>0：否</li><li>1：是</li>默认值：0
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitnil,omitempty" name:"NeedSupportIpv6"`
 
-	// 实例名。仅支持长度小于60的中文/英文/数字/"_"/"-"
+	// <p>实例名。仅支持长度小于60的中文/英文/数字/&quot;_&quot;/&quot;-&quot;</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 不再需要指定，内核版本号与主实例保持一致
+	// <p>不再需要指定，内核版本号与主实例保持一致</p>
 	//
 	// Deprecated: DBVersion is deprecated.
 	DBVersion *string `json:"DBVersion,omitnil,omitempty" name:"DBVersion"`
 
-	// 专属集群ID
+	// <p>专属集群ID</p>
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 
-	// 实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。
+	// <p>实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 }
 
 type CreateReadOnlyDBInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例所属主可用区， 如：ap-guangzhou-3；
-	// 可用区信息可以通过调用 [DescribeZones](https://cloud.tencent.com/document/api/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>实例所属主可用区， 如：ap-guangzhou-3；<br>可用区信息可以通过调用 <a href="https://cloud.tencent.com/document/api/409/16769">DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 只读实例的主实例ID。可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取
+	// <p>只读实例的主实例ID。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
 	MasterDBInstanceId *string `json:"MasterDBInstanceId,omitnil,omitempty" name:"MasterDBInstanceId"`
 
-	// 售卖规格码。该参数可以通过调用[DescribeClasses](https://cloud.tencent.com/document/api/409/89019)的返回值中的SpecCode字段来获取。
+	// <p>售卖规格码。该参数可以通过调用<a href="https://cloud.tencent.com/document/api/409/89019">DescribeClasses</a>的返回值中的SpecCode字段来获取。</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// 实例硬盘容量大小，单位：GB。该参数的设置步长为10。
+	// <p>实例硬盘容量大小，单位：GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 购买实例数量，取值范围：[1-6]。购买支持最大数量6个。
+	// <p>购买实例数量，取值范围：[1-6]。购买支持最大数量6个。</p>
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 购买时长，单位：月。
-	// <li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li>
-	// <li>后付费：只支持1</li>
+	// <p>购买时长，单位：月。</p><li>预付费：支持1,2,3,4,5,6,7,8,9,10,11,12,24,36</li><li>后付费：只支持1</li>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcEx](https://cloud.tencent.com/document/api/215/1372) ，从接口返回中的unVpcId字段获取。
+	// <p>私有网络ID，形如vpc-xxxxxxxx（该参数当前必传）。有效的VpcId可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/1372">DescribeVpcEx</a> ，从接口返回中的unVpcId字段获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
+	// <p>私有网络子网ID，形如subnet-xxxxxxxx（该参数当前必传）。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/15784">DescribeSubnets </a>，从接口返回中的unSubnetId字段获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 实例计费类型，目前支持：
-	// <li>PREPAID：预付费，即包年包月。</li>
-	// <li>POSTPAID_BY_HOUR：后付费，即按量计费。</li>
-	// 默认值：PREPAID。如果主实例为后付费，只读实例必须也为后付费。
+	// <p>实例计费类型，目前支持：</p><li>PREPAID：预付费，即包年包月。</li><li>POSTPAID_BY_HOUR：后付费，即按量计费。</li>默认值：PREPAID。如果主实例为后付费，只读实例必须也为后付费。
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 是否自动使用代金券：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否自动使用代金券：</p><li>0：否</li><li>1：是</li>默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
-	// 代金券ID列表，目前仅支持指定一张代金券。
+	// <p>代金券ID列表，目前仅支持指定一张代金券。</p>
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
-	// 续费标记：
-	// <li>0：手动续费</li>
-	// <li>1：自动续费</li>
-	// 默认值：0
+	// <p>续费标记：</p><li>0：手动续费</li><li>1：自动续费</li>默认值：0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 项目ID。默认值为0，表示归属默认项目。
+	// <p>项目ID。默认值为0，表示归属默认项目。</p>
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 优惠活动ID
+	// <p>优惠活动ID</p>
 	ActivityId *int64 `json:"ActivityId,omitnil,omitempty" name:"ActivityId"`
 
-	// 只读组ID。
+	// <p>只读组ID。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 
-	// 实例需要绑定的Tag信息，默认为空；可以通过调用 [DescribeTags](https://cloud.tencent.com/document/api/651/35316) 返回值中的 Tags 字段来获取。
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
 	TagList *Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 
-	// 实例所属安全组，该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。
+	// <p>实例所属安全组，该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 是否需要支持Ipv6：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否需要支持Ipv6：</p><li>0：否</li><li>1：是</li>默认值：0
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitnil,omitempty" name:"NeedSupportIpv6"`
 
-	// 实例名。仅支持长度小于60的中文/英文/数字/"_"/"-"
+	// <p>实例名。仅支持长度小于60的中文/英文/数字/&quot;_&quot;/&quot;-&quot;</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 不再需要指定，内核版本号与主实例保持一致
+	// <p>不再需要指定，内核版本号与主实例保持一致</p>
 	DBVersion *string `json:"DBVersion,omitnil,omitempty" name:"DBVersion"`
 
-	// 专属集群ID
+	// <p>专属集群ID</p>
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 
-	// 实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。
+	// <p>实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 }
 
@@ -1796,16 +1673,16 @@ func (r *CreateReadOnlyDBInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateReadOnlyDBInstanceResponseParams struct {
-	// 订单号列表。每个实例对应一个订单号
+	// <p>订单号列表。每个实例对应一个订单号</p>
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
-	// 冻结流水号
+	// <p>冻结流水号</p>
 	BillId *string `json:"BillId,omitnil,omitempty" name:"BillId"`
 
-	// 创建成功的实例ID集合，只在后付费情景下有返回值
+	// <p>创建成功的实例ID集合，只在后付费情景下有返回值</p>
 	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitnil,omitempty" name:"DBInstanceIdSet"`
 
-	// 入参有BillingParameters值时，出参才有值，值为商品下单的参数。
+	// <p>入参有BillingParameters值时，出参才有值，值为商品下单的参数。</p>
 	BillingParameters *string `json:"BillingParameters,omitnil,omitempty" name:"BillingParameters"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2088,160 +1965,133 @@ type DBBackup struct {
 }
 
 type DBInstance struct {
-	// 实例所属地域，如: ap-guangzhou，对应RegionSet的Region字段。
+	// <p>实例所属地域，如: ap-guangzhou，对应RegionSet的Region字段。</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 实例所属可用区， 如：ap-guangzhou-3，对应ZoneSet的Zone字段。
+	// <p>实例所属可用区， 如：ap-guangzhou-3，对应ZoneSet的Zone字段。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 私有网络ID，形如vpc-e6w23k31。有效的VpcId可通过登录控制台查询；也可以调用接口 [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) ，从接口返回中的unVpcId字段获取。
+	// <p>私有网络ID，形如vpc-e6w23k31。有效的VpcId可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/15778">DescribeVpcs</a> ，从接口返回中的unVpcId字段获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络子网ID，形如subnet-51lcif9y。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 [DescribeSubnets ](https://cloud.tencent.com/document/api/215/15784)，从接口返回中的unSubnetId字段获取。
+	// <p>私有网络子网ID，形如subnet-51lcif9y。有效的私有网络子网ID可通过登录控制台查询；也可以调用接口 <a href="https://cloud.tencent.com/document/api/215/15784">DescribeSubnets </a>，从接口返回中的unSubnetId字段获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 实例ID。
+	// <p>实例ID。</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 实例名称。
+	// <p>实例名称。</p>
 	DBInstanceName *string `json:"DBInstanceName,omitnil,omitempty" name:"DBInstanceName"`
 
-	// 实例状态，分别为：applying（申请中）、init(待初始化)、initing(初始化中)、running(运行中)、limited run（受限运行）、isolating（隔离中）、isolated（已隔离）、disisolating（解隔离中）、recycling（回收中）、recycled（已回收）、job running（任务执行中）、offline（下线）、migrating（迁移中）、expanding（扩容中）、waitSwitch（等待切换）、switching（切换中）、readonly（只读）、restarting（重启中）、network changing（网络变更中）、upgrading（内核版本升级中）、audit-switching（审计状态变更中）、primary-switching（主备切换中）、offlining(下线中)、deployment changing（可用区变更中）、cloning（恢复数据中）、parameter modifying（参数修改中）、log-switching（日志状态变更中）、restoring（恢复中）、expanding（变配中）
+	// <p>实例状态，分别为：applying（申请中）、init(待初始化)、initing(初始化中)、running(运行中)、limited run（受限运行）、isolating（隔离中）、isolated（已隔离）、disisolating（解隔离中）、recycling（回收中）、recycled（已回收）、job running（任务执行中）、offline（下线）、migrating（迁移中）、expanding（扩容中）、waitSwitch（等待切换）、switching（切换中）、readonly（只读）、restarting（重启中）、network changing（网络变更中）、upgrading（内核版本升级中）、audit-switching（审计状态变更中）、primary-switching（主备切换中）、offlining(下线中)、deployment changing（可用区变更中）、cloning（恢复数据中）、parameter modifying（参数修改中）、log-switching（日志状态变更中）、restoring（恢复中）、expanding（变配中）</p>
 	DBInstanceStatus *string `json:"DBInstanceStatus,omitnil,omitempty" name:"DBInstanceStatus"`
 
-	// 实例分配的内存大小，单位：GB
+	// <p>实例分配的内存大小，单位：GB</p>
 	DBInstanceMemory *uint64 `json:"DBInstanceMemory,omitnil,omitempty" name:"DBInstanceMemory"`
 
-	// 实例分配的存储空间大小，单位：GB
+	// <p>实例分配的存储空间大小，单位：GB</p>
 	DBInstanceStorage *uint64 `json:"DBInstanceStorage,omitnil,omitempty" name:"DBInstanceStorage"`
 
-	// 实例分配的CPU数量，单位：个
+	// <p>实例分配的CPU数量，单位：个</p>
 	DBInstanceCpu *uint64 `json:"DBInstanceCpu,omitnil,omitempty" name:"DBInstanceCpu"`
 
-	// 售卖规格ID
+	// <p>售卖规格ID</p>
 	DBInstanceClass *string `json:"DBInstanceClass,omitnil,omitempty" name:"DBInstanceClass"`
 
-	// PostgreSQL大版本号，版本信息可从[DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018)获取，目前支持10，11，12，13，14，15这几个大版本。
+	// <p>PostgreSQL大版本号，版本信息可从<a href="https://cloud.tencent.com/document/api/409/89018">DescribeDBVersions</a>获取，目前支持10，11，12，13，14，15这几个大版本。</p>
 	DBMajorVersion *string `json:"DBMajorVersion,omitnil,omitempty" name:"DBMajorVersion"`
 
-	// PostgreSQL社区大版本+小版本号，如12.4，版本信息可从[DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018)获取。
+	// <p>PostgreSQL社区大版本+小版本号，如12.4，版本信息可从<a href="https://cloud.tencent.com/document/api/409/89018">DescribeDBVersions</a>获取。</p>
 	DBVersion *string `json:"DBVersion,omitnil,omitempty" name:"DBVersion"`
 
-	// PostgreSQL内核版本号，如v12.7_r1.8，版本信息可从[DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018)获取。
+	// <p>PostgreSQL内核版本号，如v12.7_r1.8，版本信息可从<a href="https://cloud.tencent.com/document/api/409/89018">DescribeDBVersions</a>获取。</p>
 	DBKernelVersion *string `json:"DBKernelVersion,omitnil,omitempty" name:"DBKernelVersion"`
 
-	// 实例类型，类型有：
-	// <li>primary：主实例</li>
-	// <li>readonly：只读实例</li>
-	// <li>guard：灾备实例</li>
-	// <li>temp：临时实例</li>
+	// <p>实例类型，类型有：</p><li>primary：主实例</li><li>readonly：只读实例</li><li>guard：灾备实例</li><li>temp：临时实例</li>
 	DBInstanceType *string `json:"DBInstanceType,omitnil,omitempty" name:"DBInstanceType"`
 
-	// 实例版本，目前只支持standard（双机高可用版, 一主一从）。
+	// <p>实例版本，目前只支持standard（双机高可用版, 一主一从）。</p>
 	DBInstanceVersion *string `json:"DBInstanceVersion,omitnil,omitempty" name:"DBInstanceVersion"`
 
-	// 实例字符集，目前只支持：
-	// <li> UTF8</li>
-	// <li> LATIN1</li>
+	// <p>实例字符集，目前只支持：</p><li> UTF8</li><li> LATIN1</li>
 	DBCharset *string `json:"DBCharset,omitnil,omitempty" name:"DBCharset"`
 
-	// 实例创建时间。
+	// <p>实例创建时间。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 实例执行最后一次更新的时间。
+	// <p>实例执行最后一次更新的时间。</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 实例到期时间。
+	// <p>实例到期时间。</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 实例隔离时间。
+	// <p>实例隔离时间。</p>
 	IsolatedTime *string `json:"IsolatedTime,omitnil,omitempty" name:"IsolatedTime"`
 
-	// 计费模式：
-	// <li>prepaid：包年包月,预付费</li>
-	// <li>postpaid：按量计费，后付费</li>
+	// <p>计费模式：</p><li>prepaid：包年包月,预付费</li><li>postpaid：按量计费，后付费</li>
 	PayType *string `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 是否自动续费：
-	// <li>0：手动续费</li>
-	// <li>1：自动续费</li>
-	// 默认值：0
+	// <p>是否自动续费：</p><li>0：手动续费</li><li>1：自动续费</li>默认值：0
 	AutoRenew *uint64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 
-	// 实例网络连接信息。
+	// <p>实例网络连接信息。</p>
 	DBInstanceNetInfo []*DBInstanceNetInfo `json:"DBInstanceNetInfo,omitnil,omitempty" name:"DBInstanceNetInfo"`
 
-	// 机器类型。
+	// <p>机器类型。</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 用户的AppId。
+	// <p>用户的AppId。</p>
 	AppId *uint64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 实例的Uid。
+	// <p>实例的Uid。</p>
 	Uid *uint64 `json:"Uid,omitnil,omitempty" name:"Uid"`
 
-	// 项目ID。
+	// <p>项目ID。</p>
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 实例绑定的标签信息。
+	// <p>实例绑定的标签信息。</p>
 	TagList []*Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 
-	// 主实例信息，仅在实例为只读实例时返回。
+	// <p>主实例信息，仅在实例为只读实例时返回。</p>
 	MasterDBInstanceId *string `json:"MasterDBInstanceId,omitnil,omitempty" name:"MasterDBInstanceId"`
 
-	// 只读实例数量。
+	// <p>只读实例数量。</p>
 	ReadOnlyInstanceNum *int64 `json:"ReadOnlyInstanceNum,omitnil,omitempty" name:"ReadOnlyInstanceNum"`
 
-	// 只读实例在只读组中的状态。
+	// <p>只读实例在只读组中的状态。</p>
 	StatusInReadonlyGroup *string `json:"StatusInReadonlyGroup,omitnil,omitempty" name:"StatusInReadonlyGroup"`
 
-	// 下线时间。
+	// <p>下线时间。</p>
 	OfflineTime *string `json:"OfflineTime,omitnil,omitempty" name:"OfflineTime"`
 
-	// 实例的节点信息。
+	// <p>实例的节点信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DBNodeSet []*DBNode `json:"DBNodeSet,omitnil,omitempty" name:"DBNodeSet"`
 
-	// 实例是否支持TDE数据加密：
-	// <li>0：不支持</li>
-	// <li>1：支持</li>
-	// 默认值：0
-	// TDE数据加密可参考[数据透明加密概述](https://cloud.tencent.com/document/product/409/71748)
+	// <p>实例是否支持TDE数据加密：</p><li>0：不支持</li><li>1：支持</li>默认值：0TDE数据加密可参考[数据透明加密概述](https://cloud.tencent.com/document/product/409/71748)
 	IsSupportTDE *int64 `json:"IsSupportTDE,omitnil,omitempty" name:"IsSupportTDE"`
 
-	// 数据库引擎，支持：
-	// <li>postgresql：云数据库PostgreSQL</li>
-	// <li>mssql_compatible：MSSQL兼容-云数据库PostgreSQL</li>
-	// 默认值：postgresql
+	// <p>数据库引擎，支持：</p><li>postgresql：云数据库PostgreSQL</li><li>mssql_compatible：MSSQL兼容-云数据库PostgreSQL</li>默认值：postgresql
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
 
-	// 数据库引擎的配置信息，配置格式如下：
-	// {"$key1":"$value1", "$key2":"$value2"}
-	// 各引擎支持如下：
-	// mssql_compatible引擎：
-	// <li>migrationMode：数据库模式，可选参数，可取值：single-db（单数据库模式），multi-db（多数据库模式）。默认为single-db。</li>
-	// <li>defaultLocale：排序区域规则，可选参数，在初始化后不可修改，默认为en_US，可选值如下：
-	// "af_ZA", "sq_AL", "ar_DZ", "ar_BH", "ar_EG", "ar_IQ", "ar_JO", "ar_KW", "ar_LB", "ar_LY", "ar_MA", "ar_OM", "ar_QA", "ar_SA", "ar_SY", "ar_TN", "ar_AE", "ar_YE", "hy_AM", "az_Cyrl_AZ", "az_Latn_AZ", "eu_ES", "be_BY", "bg_BG", "ca_ES", "zh_HK", "zh_MO", "zh_CN", "zh_SG", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_BE", "nl_NL", "en_AU", "en_BZ", "en_CA", "en_IE", "en_JM", "en_NZ", "en_PH", "en_ZA", "en_TT", "en_GB", "en_US", "en_ZW", "et_EE", "fo_FO", "fa_IR", "fi_FI", "fr_BE", "fr_CA", "fr_FR", "fr_LU", "fr_MC", "fr_CH", "mk_MK", "ka_GE", "de_AT", "de_DE", "de_LI", "de_LU", "de_CH", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "it_CH", "ja_JP", "kn_IN", "kok_IN", "ko_KR", "ky_KG", "lv_LV", "lt_LT", "ms_BN", "ms_MY", "mr_IN", "mn_MN", "nb_NO", "nn_NO", "pl_PL", "pt_BR", "pt_PT", "pa_IN", "ro_RO", "ru_RU", "sa_IN", "sr_Cyrl_RS", "sr_Latn_RS", "sk_SK", "sl_SI", "es_AR", "es_BO", "es_CL", "es_CO", "es_CR", "es_DO", "es_EC", "es_SV", "es_GT", "es_HN", "es_MX", "es_NI", "es_PA", "es_PY","es_PE", "es_PR", "es_ES", "es_TRADITIONAL", "es_UY", "es_VE", "sw_KE", "sv_FI", "sv_SE", "tt_RU", "te_IN", "th_TH", "tr_TR", "uk_UA", "ur_IN", "ur_PK", "uz_Cyrl_UZ", "uz_Latn_UZ", "vi_VN"。</li>
-	// <li>serverCollationName：排序规则名称，可选参数，在初始化后不可修改，默认为sql_latin1_general_cp1_ci_as，可选值如下："bbf_unicode_general_ci_as", "bbf_unicode_cp1_ci_as", "bbf_unicode_CP1250_ci_as", "bbf_unicode_CP1251_ci_as", "bbf_unicode_cp1253_ci_as", "bbf_unicode_cp1254_ci_as", "bbf_unicode_cp1255_ci_as", "bbf_unicode_cp1256_ci_as", "bbf_unicode_cp1257_ci_as", "bbf_unicode_cp1258_ci_as", "bbf_unicode_cp874_ci_as", "sql_latin1_general_cp1250_ci_as", "sql_latin1_general_cp1251_ci_as", "sql_latin1_general_cp1_ci_as", "sql_latin1_general_cp1253_ci_as", "sql_latin1_general_cp1254_ci_as", "sql_latin1_general_cp1255_ci_as","sql_latin1_general_cp1256_ci_as", "sql_latin1_general_cp1257_ci_as", "sql_latin1_general_cp1258_ci_as", "chinese_prc_ci_as", "cyrillic_general_ci_as", "finnish_swedish_ci_as", "french_ci_as", "japanese_ci_as", "korean_wansung_ci_as", "latin1_general_ci_as", "modern_spanish_ci_as", "polish_ci_as", "thai_ci_as", "traditional_spanish_ci_as", "turkish_ci_as", "ukrainian_ci_as", "vietnamese_ci_as"。</li>
+	// <p>数据库引擎的配置信息，配置格式如下：<br>{&quot;$key1&quot;:&quot;$value1&quot;, &quot;$key2&quot;:&quot;$value2&quot;}<br>各引擎支持如下：<br>mssql_compatible引擎：</p><li>migrationMode：数据库模式，可选参数，可取值：single-db（单数据库模式），multi-db（多数据库模式）。默认为single-db。</li><li>defaultLocale：排序区域规则，可选参数，在初始化后不可修改，默认为en_US，可选值如下："af_ZA", "sq_AL", "ar_DZ", "ar_BH", "ar_EG", "ar_IQ", "ar_JO", "ar_KW", "ar_LB", "ar_LY", "ar_MA", "ar_OM", "ar_QA", "ar_SA", "ar_SY", "ar_TN", "ar_AE", "ar_YE", "hy_AM", "az_Cyrl_AZ", "az_Latn_AZ", "eu_ES", "be_BY", "bg_BG", "ca_ES", "zh_HK", "zh_MO", "zh_CN", "zh_SG", "zh_TW", "hr_HR", "cs_CZ", "da_DK", "nl_BE", "nl_NL", "en_AU", "en_BZ", "en_CA", "en_IE", "en_JM", "en_NZ", "en_PH", "en_ZA", "en_TT", "en_GB", "en_US", "en_ZW", "et_EE", "fo_FO", "fa_IR", "fi_FI", "fr_BE", "fr_CA", "fr_FR", "fr_LU", "fr_MC", "fr_CH", "mk_MK", "ka_GE", "de_AT", "de_DE", "de_LI", "de_LU", "de_CH", "el_GR", "gu_IN", "he_IL", "hi_IN", "hu_HU", "is_IS", "id_ID", "it_IT", "it_CH", "ja_JP", "kn_IN", "kok_IN", "ko_KR", "ky_KG", "lv_LV", "lt_LT", "ms_BN", "ms_MY", "mr_IN", "mn_MN", "nb_NO", "nn_NO", "pl_PL", "pt_BR", "pt_PT", "pa_IN", "ro_RO", "ru_RU", "sa_IN", "sr_Cyrl_RS", "sr_Latn_RS", "sk_SK", "sl_SI", "es_AR", "es_BO", "es_CL", "es_CO", "es_CR", "es_DO", "es_EC", "es_SV", "es_GT", "es_HN", "es_MX", "es_NI", "es_PA", "es_PY","es_PE", "es_PR", "es_ES", "es_TRADITIONAL", "es_UY", "es_VE", "sw_KE", "sv_FI", "sv_SE", "tt_RU", "te_IN", "th_TH", "tr_TR", "uk_UA", "ur_IN", "ur_PK", "uz_Cyrl_UZ", "uz_Latn_UZ", "vi_VN"。</li><li>serverCollationName：排序规则名称，可选参数，在初始化后不可修改，默认为sql_latin1_general_cp1_ci_as，可选值如下："bbf_unicode_general_ci_as", "bbf_unicode_cp1_ci_as", "bbf_unicode_CP1250_ci_as", "bbf_unicode_CP1251_ci_as", "bbf_unicode_cp1253_ci_as", "bbf_unicode_cp1254_ci_as", "bbf_unicode_cp1255_ci_as", "bbf_unicode_cp1256_ci_as", "bbf_unicode_cp1257_ci_as", "bbf_unicode_cp1258_ci_as", "bbf_unicode_cp874_ci_as", "sql_latin1_general_cp1250_ci_as", "sql_latin1_general_cp1251_ci_as", "sql_latin1_general_cp1_ci_as", "sql_latin1_general_cp1253_ci_as", "sql_latin1_general_cp1254_ci_as", "sql_latin1_general_cp1255_ci_as","sql_latin1_general_cp1256_ci_as", "sql_latin1_general_cp1257_ci_as", "sql_latin1_general_cp1258_ci_as", "chinese_prc_ci_as", "cyrillic_general_ci_as", "finnish_swedish_ci_as", "french_ci_as", "japanese_ci_as", "korean_wansung_ci_as", "latin1_general_ci_as", "modern_spanish_ci_as", "polish_ci_as", "thai_ci_as", "traditional_spanish_ci_as", "turkish_ci_as", "ukrainian_ci_as", "vietnamese_ci_as"。</li>
 	DBEngineConfig *string `json:"DBEngineConfig,omitnil,omitempty" name:"DBEngineConfig"`
 
-	// 实例网络信息列表（此字段已废弃）
+	// <p>实例网络信息列表（此字段已废弃）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetworkAccessList []*NetworkAccess `json:"NetworkAccessList,omitnil,omitempty" name:"NetworkAccessList"`
 
-	// 实例是否支持Ipv6：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>实例是否支持Ipv6：</p><li>0：否</li><li>1：是</li>默认值：0
 	SupportIpv6 *uint64 `json:"SupportIpv6,omitnil,omitempty" name:"SupportIpv6"`
 
-	// 实例已经弹性扩容的cpu核数
+	// <p>实例已经弹性扩容的cpu核数</p>
 	ExpandedCpu *uint64 `json:"ExpandedCpu,omitnil,omitempty" name:"ExpandedCpu"`
 
-	// 实例是否开启删除保护，取值如下：
-	// - true：开启删除保护
-	// - false：关闭删除保护
+	// <p>实例是否开启删除保护，取值如下：</p><ul><li>true：开启删除保护</li><li>false：关闭删除保护</li></ul>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
+
+	// <p>实例存储类型，可选值：PHYSICAL_LOCAL_SSD：物理机本地ssd硬盘 CLOUD_PREMIUM：高性能云硬盘 CLOUD_SSD：ssd云硬盘 CLOUD_HSSD：增强型ssd云硬盘</p>
+	DBInstanceStorageType *string `json:"DBInstanceStorageType,omitnil,omitempty" name:"DBInstanceStorageType"`
 }
 
 type DBInstanceNetInfo struct {
@@ -3605,31 +3455,33 @@ func (r *DescribeBaseBackupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClassesRequestParams struct {
-	// 可用区名称。可以通过接口[DescribeZones](https://cloud.tencent.com/document/product/409/16769)获取。
+	// <p>可用区名称。可以通过接口<a href="https://cloud.tencent.com/document/product/409/16769">DescribeZones</a>获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 数据库引擎，支持：
-	// 1、postgresql（云数据库PostgreSQL）；
-	// 2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；
+	// <p>数据库引擎，支持：<br>1、postgresql（云数据库PostgreSQL）；<br>2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；</p>
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
 
-	// 数据库主版本号。例如12，13，可以通过接口[DescribeDBVersions](https://cloud.tencent.com/document/product/409/89018)获取。
+	// <p>数据库主版本号。例如12，13，可以通过接口<a href="https://cloud.tencent.com/document/product/409/89018">DescribeDBVersions</a>获取。</p>
 	DBMajorVersion *string `json:"DBMajorVersion,omitnil,omitempty" name:"DBMajorVersion"`
+
+	// <p>实例存储类型，根据存储类型返回支持的规格。</p><p>枚举值：</p><ul><li>PHYSICAL_LOCAL_SSD： 物理机本地ssd硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li><li>CLOUD_SSD： ssd云硬盘</li><li>CLOUD_HSSD： 增强型ssd云硬盘</li></ul><p>默认值：PHYSICAL_LOCAL_SSD</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 type DescribeClassesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区名称。可以通过接口[DescribeZones](https://cloud.tencent.com/document/product/409/16769)获取。
+	// <p>可用区名称。可以通过接口<a href="https://cloud.tencent.com/document/product/409/16769">DescribeZones</a>获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 数据库引擎，支持：
-	// 1、postgresql（云数据库PostgreSQL）；
-	// 2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；
+	// <p>数据库引擎，支持：<br>1、postgresql（云数据库PostgreSQL）；<br>2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；</p>
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
 
-	// 数据库主版本号。例如12，13，可以通过接口[DescribeDBVersions](https://cloud.tencent.com/document/product/409/89018)获取。
+	// <p>数据库主版本号。例如12，13，可以通过接口<a href="https://cloud.tencent.com/document/product/409/89018">DescribeDBVersions</a>获取。</p>
 	DBMajorVersion *string `json:"DBMajorVersion,omitnil,omitempty" name:"DBMajorVersion"`
+
+	// <p>实例存储类型，根据存储类型返回支持的规格。</p><p>枚举值：</p><ul><li>PHYSICAL_LOCAL_SSD： 物理机本地ssd硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li><li>CLOUD_SSD： ssd云硬盘</li><li>CLOUD_HSSD： 增强型ssd云硬盘</li></ul><p>默认值：PHYSICAL_LOCAL_SSD</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 func (r *DescribeClassesRequest) ToJsonString() string {
@@ -3647,6 +3499,7 @@ func (r *DescribeClassesRequest) FromJsonString(s string) error {
 	delete(f, "Zone")
 	delete(f, "DBEngine")
 	delete(f, "DBMajorVersion")
+	delete(f, "StorageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClassesRequest has unknown keys!", "")
 	}
@@ -3655,7 +3508,7 @@ func (r *DescribeClassesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClassesResponseParams struct {
-	// 数据库规格列表
+	// <p>数据库规格列表</p>
 	ClassInfoSet []*ClassInfo `json:"ClassInfoSet,omitnil,omitempty" name:"ClassInfoSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4389,12 +4242,15 @@ func (r *DescribeDBInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBVersionsRequestParams struct {
-
+	// <p>实例存储类型，根据磁盘类型返回支持的版本</p><p>枚举值：</p><ul><li>PHYSICAL_LOCAL_SSD： 物理机本地ssd硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li><li>CLOUD_SSD： ssd云硬盘</li><li>CLOUD_HSSD： 增强型ssd云硬盘</li></ul><p>默认值：PHYSICAL_LOCAL_SSD</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 type DescribeDBVersionsRequest struct {
 	*tchttp.BaseRequest
 	
+	// <p>实例存储类型，根据磁盘类型返回支持的版本</p><p>枚举值：</p><ul><li>PHYSICAL_LOCAL_SSD： 物理机本地ssd硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li><li>CLOUD_SSD： ssd云硬盘</li><li>CLOUD_HSSD： 增强型ssd云硬盘</li></ul><p>默认值：PHYSICAL_LOCAL_SSD</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 func (r *DescribeDBVersionsRequest) ToJsonString() string {
@@ -4409,7 +4265,7 @@ func (r *DescribeDBVersionsRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "StorageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBVersionsRequest has unknown keys!", "")
 	}
@@ -4418,7 +4274,7 @@ func (r *DescribeDBVersionsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBVersionsResponseParams struct {
-	// 数据库版本号信息列表
+	// <p>数据库版本号信息列表</p>
 	VersionSet []*Version `json:"VersionSet,omitnil,omitempty" name:"VersionSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5364,27 +5220,27 @@ func (r *DescribeParamsEventResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeProductConfigRequestParams struct {
-	// 可用区名称
+	// <p>可用区名称</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 数据库引擎，支持：
-	// 1、postgresql（云数据库PostgreSQL）；
-	// 2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；
-	// 如不指定默认使用postgresql。
+	// <p>数据库引擎，支持：<br>1、postgresql（云数据库PostgreSQL）；<br>2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；<br>如不指定默认使用postgresql。</p>
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
+
+	// <p>实例存储类型，根据存储类型返回支持的版本和规格</p><p>枚举值：</p><ul><li>PHYSICAL_LOCAL_SSD： 物理机本地ssd硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li><li>CLOUD_SSD： ssd云硬盘</li><li>CLOUD_HSSD： 增强型ssd云硬盘</li></ul><p>默认值：PHYSICAL_LOCAL_SSD</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 type DescribeProductConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区名称
+	// <p>可用区名称</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 数据库引擎，支持：
-	// 1、postgresql（云数据库PostgreSQL）；
-	// 2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；
-	// 如不指定默认使用postgresql。
+	// <p>数据库引擎，支持：<br>1、postgresql（云数据库PostgreSQL）；<br>2、mssql_compatible（MSSQL兼容-云数据库PostgreSQL）；<br>如不指定默认使用postgresql。</p>
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
+
+	// <p>实例存储类型，根据存储类型返回支持的版本和规格</p><p>枚举值：</p><ul><li>PHYSICAL_LOCAL_SSD： 物理机本地ssd硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li><li>CLOUD_SSD： ssd云硬盘</li><li>CLOUD_HSSD： 增强型ssd云硬盘</li></ul><p>默认值：PHYSICAL_LOCAL_SSD</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 func (r *DescribeProductConfigRequest) ToJsonString() string {
@@ -5401,6 +5257,7 @@ func (r *DescribeProductConfigRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Zone")
 	delete(f, "DBEngine")
+	delete(f, "StorageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProductConfigRequest has unknown keys!", "")
 	}
@@ -5409,7 +5266,7 @@ func (r *DescribeProductConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeProductConfigResponseParams struct {
-	// 售卖规格列表。
+	// <p>售卖规格列表。</p>
 	SpecInfoList []*SpecInfo `json:"SpecInfoList,omitnil,omitempty" name:"SpecInfoList"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6209,73 +6066,69 @@ type Filter struct {
 
 // Predefined struct for user
 type InquiryPriceCreateDBInstancesRequestParams struct {
-	// 可用区名称。该参数可以通过调用[ DescribeZones](https://cloud.tencent.com/document/product/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>可用区名称。该参数可以通过调用<a href="https://cloud.tencent.com/document/product/409/16769"> DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 规格ID。该参数可以通过调用[DescribeClasses](https://cloud.tencent.com/document/product/409/89019)接口的返回值中的SpecCode字段来获取。
+	// <p>规格ID。该参数可以通过调用<a href="https://cloud.tencent.com/document/product/409/89019">DescribeClasses</a>接口的返回值中的SpecCode字段来获取。</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// 存储容量大小，单位：GB。该参数的设置步长为10。
+	// <p>存储容量大小，单位：GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 实例数量。目前最大数量不超过100，如需一次性创建更多实例，请联系客服支持。
+	// <p>实例数量。目前最大数量不超过100，如需一次性创建更多实例，请联系客服支持。</p>
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 购买时长，单位：月。目前只支持1,2,3,4,5,6,7,8,9,10,11,12,24,36这些值。
+	// <p>购买时长，单位：月。目前只支持1,2,3,4,5,6,7,8,9,10,11,12,24,36这些值。</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 【弃字段，不再生效】，计费ID。该参数可以通过调用DescribeProductConfig接口的返回值中的Pid字段来获取。
+	// <p>【弃字段，不再生效】，计费ID。该参数可以通过调用DescribeProductConfig接口的返回值中的Pid字段来获取。</p>
 	Pid *uint64 `json:"Pid,omitnil,omitempty" name:"Pid"`
 
-	// 实例计费类型。目前支持：PREPAID（预付费，即包年包月）和 POSTPAID（按量计费）。
-	// 默认值：PREPAID
+	// <p>实例计费类型。目前支持：PREPAID（预付费，即包年包月）和 POSTPAID（按量计费）。<br>默认值：PREPAID</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 实例类型，默认primary，支持如下：
-	// primary（双机高可用（一主一从））
-	// readonly（只读实例）
+	// <p>实例类型，默认primary，支持如下：<br>primary（双机高可用（一主一从））<br>readonly（只读实例）</p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// DB引擎，默认postgresql，支持如下：
-	// postgresql（云数据库PostgreSQL）
-	// mssql_compatible（MSSQL兼容-云数据库PostgreSQL）
+	// <p>DB引擎，默认postgresql，支持如下：<br>postgresql（云数据库PostgreSQL）<br>mssql_compatible（MSSQL兼容-云数据库PostgreSQL）</p>
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
+
+	// <p>实例存储类型，可选值：PHYSICAL_LOCAL_SSD：物理机本地ssd硬盘 CLOUD_PREMIUM：高性能云硬盘 CLOUD_SSD：ssd云硬盘 CLOUD_HSSD：增强型ssd云硬盘</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 type InquiryPriceCreateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区名称。该参数可以通过调用[ DescribeZones](https://cloud.tencent.com/document/product/409/16769) 接口的返回值中的Zone字段来获取。
+	// <p>可用区名称。该参数可以通过调用<a href="https://cloud.tencent.com/document/product/409/16769"> DescribeZones</a> 接口的返回值中的Zone字段来获取。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 规格ID。该参数可以通过调用[DescribeClasses](https://cloud.tencent.com/document/product/409/89019)接口的返回值中的SpecCode字段来获取。
+	// <p>规格ID。该参数可以通过调用<a href="https://cloud.tencent.com/document/product/409/89019">DescribeClasses</a>接口的返回值中的SpecCode字段来获取。</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// 存储容量大小，单位：GB。该参数的设置步长为10。
+	// <p>存储容量大小，单位：GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 实例数量。目前最大数量不超过100，如需一次性创建更多实例，请联系客服支持。
+	// <p>实例数量。目前最大数量不超过100，如需一次性创建更多实例，请联系客服支持。</p>
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 购买时长，单位：月。目前只支持1,2,3,4,5,6,7,8,9,10,11,12,24,36这些值。
+	// <p>购买时长，单位：月。目前只支持1,2,3,4,5,6,7,8,9,10,11,12,24,36这些值。</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 【弃字段，不再生效】，计费ID。该参数可以通过调用DescribeProductConfig接口的返回值中的Pid字段来获取。
+	// <p>【弃字段，不再生效】，计费ID。该参数可以通过调用DescribeProductConfig接口的返回值中的Pid字段来获取。</p>
 	Pid *uint64 `json:"Pid,omitnil,omitempty" name:"Pid"`
 
-	// 实例计费类型。目前支持：PREPAID（预付费，即包年包月）和 POSTPAID（按量计费）。
-	// 默认值：PREPAID
+	// <p>实例计费类型。目前支持：PREPAID（预付费，即包年包月）和 POSTPAID（按量计费）。<br>默认值：PREPAID</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 实例类型，默认primary，支持如下：
-	// primary（双机高可用（一主一从））
-	// readonly（只读实例）
+	// <p>实例类型，默认primary，支持如下：<br>primary（双机高可用（一主一从））<br>readonly（只读实例）</p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// DB引擎，默认postgresql，支持如下：
-	// postgresql（云数据库PostgreSQL）
-	// mssql_compatible（MSSQL兼容-云数据库PostgreSQL）
+	// <p>DB引擎，默认postgresql，支持如下：<br>postgresql（云数据库PostgreSQL）<br>mssql_compatible（MSSQL兼容-云数据库PostgreSQL）</p>
 	DBEngine *string `json:"DBEngine,omitnil,omitempty" name:"DBEngine"`
+
+	// <p>实例存储类型，可选值：PHYSICAL_LOCAL_SSD：物理机本地ssd硬盘 CLOUD_PREMIUM：高性能云硬盘 CLOUD_SSD：ssd云硬盘 CLOUD_HSSD：增强型ssd云硬盘</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 func (r *InquiryPriceCreateDBInstancesRequest) ToJsonString() string {
@@ -6299,6 +6152,7 @@ func (r *InquiryPriceCreateDBInstancesRequest) FromJsonString(s string) error {
 	delete(f, "InstanceChargeType")
 	delete(f, "InstanceType")
 	delete(f, "DBEngine")
+	delete(f, "StorageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceCreateDBInstancesRequest has unknown keys!", "")
 	}
@@ -6307,13 +6161,13 @@ func (r *InquiryPriceCreateDBInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquiryPriceCreateDBInstancesResponseParams struct {
-	// 刊例价，单位：分
+	// <p>刊例价，单位：分</p>
 	OriginalPrice *uint64 `json:"OriginalPrice,omitnil,omitempty" name:"OriginalPrice"`
 
-	// 折后实际付款金额，单位：分
+	// <p>折后实际付款金额，单位：分</p>
 	Price *uint64 `json:"Price,omitnil,omitempty" name:"Price"`
 
-	// 币种。例如，CNY：人民币。
+	// <p>币种。例如，CNY：人民币。</p>
 	Currency *string `json:"Currency,omitnil,omitempty" name:"Currency"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8369,20 +8223,20 @@ func (r *ModifyReadOnlyGroupConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifySwitchTimePeriodRequestParams struct {
-	// 处于等待切换状态中的实例ID。可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取
+	// <p>处于等待切换状态中的实例ID。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 入参取值为 0 ，代表立即切换。
+	// <p>入参取值为 0 ，代表立即切换。</p>
 	SwitchTag *uint64 `json:"SwitchTag,omitnil,omitempty" name:"SwitchTag"`
 }
 
 type ModifySwitchTimePeriodRequest struct {
 	*tchttp.BaseRequest
 	
-	// 处于等待切换状态中的实例ID。可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取
+	// <p>处于等待切换状态中的实例ID。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 入参取值为 0 ，代表立即切换。
+	// <p>入参取值为 0 ，代表立即切换。</p>
 	SwitchTag *uint64 `json:"SwitchTag,omitnil,omitempty" name:"SwitchTag"`
 }
 
@@ -9448,43 +9302,43 @@ type SpecInfo struct {
 }
 
 type SpecItemInfo struct {
-	// 规格ID
+	// <p>规格ID</p>
 	SpecCode *string `json:"SpecCode,omitnil,omitempty" name:"SpecCode"`
 
-	// PostgreSQL的版本编号
+	// <p>PostgreSQL的版本编号</p>
 	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 内核编号对应的完整版本名称
+	// <p>内核编号对应的完整版本名称</p>
 	VersionName *string `json:"VersionName,omitnil,omitempty" name:"VersionName"`
 
-	// CPU核数
+	// <p>CPU核数</p>
 	Cpu *uint64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 内存大小，单位：MB
+	// <p>内存大小，单位：MB</p>
 	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 该规格所支持最大存储容量，单位：GB
+	// <p>该规格所支持最大存储容量，单位：GB</p>
 	MaxStorage *uint64 `json:"MaxStorage,omitnil,omitempty" name:"MaxStorage"`
 
-	// 该规格所支持最小存储容量，单位：GB
+	// <p>该规格所支持最小存储容量，单位：GB</p>
 	MinStorage *uint64 `json:"MinStorage,omitnil,omitempty" name:"MinStorage"`
 
-	// 该规格的预估QPS
+	// <p>该规格的预估QPS</p>
 	Qps *uint64 `json:"Qps,omitnil,omitempty" name:"Qps"`
 
-	// 【该字段废弃】
+	// <p>【该字段废弃】</p>
 	Pid *uint64 `json:"Pid,omitnil,omitempty" name:"Pid"`
 
-	// 机器类型
+	// <p>机器类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// PostgreSQL的主要版本编号
+	// <p>PostgreSQL的主要版本编号</p>
 	MajorVersion *string `json:"MajorVersion,omitnil,omitempty" name:"MajorVersion"`
 
-	// PostgreSQL的内核版本编号
+	// <p>PostgreSQL的内核版本编号</p>
 	KernelVersion *string `json:"KernelVersion,omitnil,omitempty" name:"KernelVersion"`
 
-	// 是否支持TDE数据加密功能，0-不支持，1-支持
+	// <p>是否支持TDE数据加密功能，0-不支持，1-支持</p>
 	IsSupportTDE *int64 `json:"IsSupportTDE,omitnil,omitempty" name:"IsSupportTDE"`
 }
 
