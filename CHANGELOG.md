@@ -1,3 +1,15 @@
+## 1.82.79(March 27 , 2026)
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_kubernetes_addons: add new params ([#3890](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3890))
+* data-source/tencentcloud_postgresql_db_instance_classes: add `storage_type` ([#3884](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3884))
+* data-source/tencentcloud_postgresql_db_instance_versions: add `storage_type` ([#3884](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3884))
+* data-source/tencentcloud_postgresql_instances: add `storage_type` ([#3884](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3884))
+* data-source/tencentcloud_postgresql_specinfos: add `storage_type` ([#3884](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3884))
+* datasource/tencentcloud_clb_instances: optimize `backup_zone_set` field ([#3885](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3885))
+* resource/tencentcloud_postgresql_instance: add `storage_type` ([#3884](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3884))
+
 ## 1.82.78(March 25 , 2026)
 
 FEATURES:
