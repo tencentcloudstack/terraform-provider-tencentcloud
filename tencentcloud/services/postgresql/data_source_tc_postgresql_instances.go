@@ -90,6 +90,11 @@ func DataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Volume size(in GB).",
 						},
+						"storage_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Storage type. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).",
+						},
 						"memory": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -203,6 +208,11 @@ func DataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Assigned instance storage capacity in GB.",
+						},
+						"db_instance_storage_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Storage type. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).",
 						},
 						"db_instance_cpu": {
 							Type:        schema.TypeInt,
@@ -546,6 +556,9 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		listItem["auto_renew_flag"] = v.AutoRenew
 		listItem["project_id"] = v.ProjectId
 		listItem["storage"] = v.DBInstanceStorage
+		if v.DBInstanceStorageType != nil {
+			listItem["storage_type"] = v.DBInstanceStorageType
+		}
 		listItem["memory"] = v.DBInstanceMemory
 		listItem["availability_zone"] = v.Zone
 		listItem["create_time"] = v.CreateTime
@@ -642,6 +655,10 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 
 		if dBInstanceSet.DBInstanceStorage != nil {
 			dBInstanceSetMap["db_instance_storage"] = dBInstanceSet.DBInstanceStorage
+		}
+
+		if dBInstanceSet.DBInstanceStorageType != nil {
+			dBInstanceSetMap["db_instance_storage_type"] = dBInstanceSet.DBInstanceStorageType
 		}
 
 		if dBInstanceSet.DBInstanceCpu != nil {

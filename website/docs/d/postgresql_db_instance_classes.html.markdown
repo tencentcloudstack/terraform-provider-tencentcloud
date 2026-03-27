@@ -4,20 +4,21 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_postgresql_db_instance_classes"
 sidebar_current: "docs-tencentcloud-datasource-postgresql_db_instance_classes"
 description: |-
-  Use this data source to query detailed information of postgresql db_instance_classes
+  Use this data source to query detailed information of PostgreSQL db instance classes
 ---
 
 # tencentcloud_postgresql_db_instance_classes
 
-Use this data source to query detailed information of postgresql db_instance_classes
+Use this data source to query detailed information of PostgreSQL db instance classes
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_postgresql_db_instance_classes" "db_instance_classes" {
+data "tencentcloud_postgresql_db_instance_classes" "example" {
   zone             = "ap-guangzhou-7"
   db_engine        = "postgresql"
   db_major_version = "13"
+  storage_type     = "CLOUD_HSSD"
 }
 ```
 
@@ -29,6 +30,7 @@ The following arguments are supported:
 * `db_major_version` - (Required, String) Major version of a database, such as 12 or 13, which can be obtained through the `DescribeDBVersions` API.
 * `zone` - (Required, String) AZ ID, which can be obtained through the `DescribeZones` API.
 * `result_output_file` - (Optional, String) Used to save results.
+* `storage_type` - (Optional, String) Storage type filter. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).
 
 ## Attributes Reference
 

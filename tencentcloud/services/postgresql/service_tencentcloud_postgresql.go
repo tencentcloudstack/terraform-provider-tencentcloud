@@ -38,6 +38,7 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 	username, password, charset string,
 	dbNodeSet []*postgresql.DBNode,
 	needSupportTde int, kmsKeyId, kmsRegion string, kmsClusterId string, autoVoucher int, voucherIds []*string,
+	storageType string,
 ) (instanceId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewCreateInstancesRequest()
@@ -98,6 +99,10 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 
 	if len(voucherIds) > 0 {
 		request.VoucherIds = voucherIds
+	}
+
+	if storageType != "" {
+		request.StorageType = helper.String(storageType)
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -175,7 +180,7 @@ func (me *PostgresqlService) DescribeOrders(ctx context.Context, dealIds []*stri
 	return
 }
 
-func (me *PostgresqlService) DescribeSpecinfos(ctx context.Context, zone string) (specCodeList []*postgresql.SpecItemInfo, errRet error) {
+func (me *PostgresqlService) DescribeSpecinfos(ctx context.Context, zone string, storageType string) (specCodeList []*postgresql.SpecItemInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewDescribeProductConfigRequest()
 	defer func() {
@@ -184,6 +189,10 @@ func (me *PostgresqlService) DescribeSpecinfos(ctx context.Context, zone string)
 		}
 	}()
 	request.Zone = &zone
+
+	if storageType != "" {
+		request.StorageType = &storageType
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().DescribeProductConfig(request)
@@ -1892,6 +1901,9 @@ func (me *PostgresqlService) DescribePostgresqlDbInstanceClassesByFilter(ctx con
 		if k == "DBMajorVersion" {
 			request.DBMajorVersion = v.(*string)
 		}
+		if k == "StorageType" {
+			request.StorageType = v.(*string)
+		}
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -2013,33 +2025,13 @@ func (me *PostgresqlService) DescribePostgresqlRegionsByFilter(ctx context.Conte
 	return
 }
 
-func (me *PostgresqlService) DescribePostgresqlDbInstanceVersionsByFilter(ctx context.Context) (DbInstanceVersions []*postgresql.Version, errRet error) {
-	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = postgresql.NewDescribeDBVersionsRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UsePostgresqlClient().DescribeDBVersions(request)
-	if err != nil {
-		errRet = err
-		return
+func (me *PostgresqlService) DescribePostgresqlDbInstanceVersionsByFilter(ctx context.Context, paramMap ...map[string]interface{}) (DbInstanceVersions []*postgresql.Version, errRet error) {
+	// deprecated method, use DescribePostgresqlDbVersionsByFilter instead
+	param := make(map[string]interface{})
+	if len(paramMap) > 0 {
+		param = paramMap[0]
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || len(response.Response.VersionSet) < 1 {
-		return
-	}
-	DbInstanceVersions = response.Response.VersionSet
-
-	return
+	return me.DescribePostgresqlDbVersionsByFilter(ctx, param)
 }
 
 func (me *PostgresqlService) DescribePostgresqlZonesByFilter(ctx context.Context) (Zones []*postgresql.ZoneInfo, errRet error) {
@@ -2347,6 +2339,11 @@ func (me *PostgresqlService) DescribePostgresqlDbVersionsByFilter(ctx context.Co
 		dBMajorVersion  string
 		dBKernelVersion string
 	)
+
+	// add StorageType support
+	if v, ok := param["StorageType"]; ok {
+		request.StorageType = helper.String(v.(string))
+	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

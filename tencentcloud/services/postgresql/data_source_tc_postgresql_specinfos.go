@@ -18,6 +18,11 @@ func DataSourceTencentCloudPostgresqlSpecinfos() *schema.Resource {
 				Required:    true,
 				Description: "The zone of the postgresql instance to query.",
 			},
+			"storage_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Storage type filter. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -87,9 +92,13 @@ func dataSourceTencentCloudPostgresqlSpecinfosRead(d *schema.ResourceData, meta 
 	}
 
 	zone := d.Get("availability_zone").(string)
-	speccodes, err := service.DescribeSpecinfos(ctx, zone)
+	storageType := ""
+	if v, ok := d.GetOk("storage_type"); ok {
+		storageType = v.(string)
+	}
+	speccodes, err := service.DescribeSpecinfos(ctx, zone, storageType)
 	if err != nil {
-		speccodes, err = service.DescribeSpecinfos(ctx, zone)
+		speccodes, err = service.DescribeSpecinfos(ctx, zone, storageType)
 	}
 	if err != nil {
 		return err
