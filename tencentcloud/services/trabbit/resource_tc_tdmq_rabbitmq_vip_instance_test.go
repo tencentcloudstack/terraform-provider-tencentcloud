@@ -70,6 +70,45 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 	})
 }
 
+// Test updating mutable fields (auto_renew_flag, enable_public_access, band_width, resource_tags)
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_updateMutableFields(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceUpdateMutableFields_step1,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_public_access", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "band_width", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "resource_tags.#", "0"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceUpdateMutableFields_step2,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "cluster_name", "tf-example-rabbitmq-update-test-updated"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_public_access", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "band_width", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "resource_tags.#", "2"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "resource_tags.*.tag_key", "Environment"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "resource_tags.*.tag_value", "Production"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTdmqRabbitmqVipInstanceExists(re string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -195,5 +234,85 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+}
+`
+
+// Test updating mutable fields
+const testAccTdmqRabbitmqVipInstanceUpdateMutableFields_step1 = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-update-test"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  enable_public_access                  = false
+  band_width                            = 10
+  resource_tags                         = []
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceUpdateMutableFields_step2 = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-update-test-updated"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+  enable_public_access                  = true
+  band_width                            = 20
+  resource_tags                         = [
+    {
+      tag_key   = "Environment"
+      tag_value = "Production"
+    },
+    {
+      tag_key   = "Owner"
+      tag_value = "Team-A"
+    },
+  ]
 }
 `

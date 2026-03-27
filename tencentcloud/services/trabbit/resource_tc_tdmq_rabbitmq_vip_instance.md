@@ -90,3 +90,50 @@ TDMQ rabbitmq vip instance can be imported using the id, e.g.
 terraform import tencentcloud_tdmq_rabbitmq_vip_instance.example amqp-mok52gmn
 ```
 
+## Field Updates
+
+The following fields support dynamic update without recreating the instance:
+
+- `cluster_name` - Cluster name
+- `auto_renew_flag` - Automatic renewal flag
+- `enable_public_access` - Public network access switch
+- `band_width` - Public network bandwidth (Mbps)
+- `resource_tags` - Resource tags
+
+Example of updating mutable fields:
+
+```hcl
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  # ... other configurations ...
+
+  # Update from false to true
+  auto_renew_flag    = true
+
+  # Enable public network access and set bandwidth
+  enable_public_access = true
+  band_width          = 20
+
+  # Update resource tags
+  resource_tags = [
+    {
+      tag_key   = "Environment"
+      tag_value = "Production"
+    }
+  ]
+}
+```
+
+## Immutable Fields
+
+The following fields cannot be changed after instance creation. To update these fields, you need to recreate the instance using `terraform taint` or `terraform apply -replace`:
+
+- `zone_ids` - Availability zones
+- `vpc_id` - VPC ID
+- `subnet_id` - Subnet ID
+- `time_span` - Purchase duration
+- `pay_mode` - Payment mode
+- `cluster_version` - Cluster version
+- `node_spec` - Node specification
+- `node_num` - Number of nodes
+- `storage_size` - Storage size
+- `enable_create_default_ha_mirror_queue` - HA mirror queue setting

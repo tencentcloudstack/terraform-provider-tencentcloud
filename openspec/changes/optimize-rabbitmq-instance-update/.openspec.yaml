@@ -1,0 +1,21 @@
+{
+  "name": "optimize-rabbitmq-instance-update",
+  "title": "优化 RabbitMQ 实例的 update 逻辑",
+  "description": "优化 tencentcloud_tdmq_rabbitmq_vip_instance 资源的 update 逻辑,支持更多字段的动态更新,包括自动续费标志、公网访问开关、带宽等,减少不必要的实例重建。",
+  "author": "CodeBuddy Code",
+  "created": "2025-03-27",
+  "status": "proposed",
+  "type": "enhancement",
+  "specs": [
+    "specs/rabbitmq-instance-update/spec.md"
+  ],
+  "related_resources": [
+    "tencentcloud_tdmq_rabbitmq_vip_instance"
+  ],
+  "tags": [
+    "tdmq",
+    "rabbitmq",
+    "update",
+    "optimization"
+  ]
+}

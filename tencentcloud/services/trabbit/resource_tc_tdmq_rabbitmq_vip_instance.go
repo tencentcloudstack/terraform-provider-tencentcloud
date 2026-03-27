@@ -453,55 +453,86 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		request    = tdmq.NewModifyRabbitMQVipInstanceRequest()
 		instanceId = d.Id()
 	)
 
+	// 真正不可变的字段 - 这些字段在实例创建后无法修改
 	immutableArgs := []string{
-		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
-		"storage_size", "enable_create_default_ha_mirror_queue",
-		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
+		"zone_ids", "vpc_id", "subnet_id",
+		"time_span", "pay_mode", "cluster_version",
 	}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+			return fmt.Errorf("argument `%s` cannot be changed. To update this field, you need to recreate the instance using `terraform taint` or `terraform apply -replace`.", v)
 		}
 	}
 
-	request.InstanceId = &instanceId
-	needUpdate := false
+	// 暂时不支持动态更新的字段 - 需要重建实例
+	temporarilyImmutableArgs := []string{
+		"node_spec", "node_num", "storage_size", "enable_create_default_ha_mirror_queue",
+	}
 
-	if d.HasChange("cluster_name") {
-		if v, ok := d.GetOk("cluster_name"); ok {
-			request.ClusterName = helper.String(v.(string))
-			needUpdate = true
+	for _, v := range temporarilyImmutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed. To update this field, you need to recreate the instance using `terraform taint` or `terraform apply -replace`.", v)
 		}
 	}
 
-	if d.HasChange("resource_tags") {
-		if v, ok := d.GetOk("resource_tags"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				tag := tdmq.Tag{}
-				if v, ok := dMap["tag_key"]; ok {
-					tag.TagKey = helper.String(v.(string))
-				}
-				if v, ok := dMap["tag_value"]; ok {
-					tag.TagValue = helper.String(v.(string))
-				}
-				request.Tags = append(request.Tags, &tag)
+	// 检查是否有可变字段的变更
+	hasMutableChange := d.HasChange("cluster_name") ||
+		d.HasChange("auto_renew_flag") ||
+		d.HasChange("enable_public_access") ||
+		d.HasChange("band_width") ||
+		d.HasChange("resource_tags")
+
+	if hasMutableChange {
+		request := tdmq.NewModifyRabbitMQVipInstanceRequest()
+		request.InstanceId = &instanceId
+
+		if d.HasChange("cluster_name") {
+			if v, ok := d.GetOk("cluster_name"); ok {
+				request.ClusterName = helper.String(v.(string))
 			}
-			needUpdate = true
-		} else {
-			// If resource_tags is removed, set RemoveAllTags to true
-			request.RemoveAllTags = helper.Bool(true)
-			needUpdate = true
 		}
-	}
 
-	if needUpdate {
+		if d.HasChange("auto_renew_flag") {
+			if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+				request.AutoRenewFlag = helper.Bool(v.(bool))
+			}
+		}
+
+		if d.HasChange("band_width") {
+			if v, ok := d.GetOkExists("band_width"); ok {
+				request.Bandwidth = helper.IntUint64(v.(int))
+			}
+		}
+
+		if d.HasChange("enable_public_access") {
+			if v, ok := d.GetOkExists("enable_public_access"); ok {
+				request.EnablePublicAccess = helper.Bool(v.(bool))
+			}
+		}
+
+		if d.HasChange("resource_tags") {
+			if v, ok := d.GetOk("resource_tags"); ok {
+				for _, item := range v.([]interface{}) {
+					dMap := item.(map[string]interface{})
+					tag := tdmq.Tag{}
+					if v, ok := dMap["tag_key"]; ok {
+						tag.TagKey = helper.String(v.(string))
+					}
+					if v, ok := dMap["tag_value"]; ok {
+						tag.TagValue = helper.String(v.(string))
+					}
+					request.Tags = append(request.Tags, &tag)
+				}
+			} else {
+				// If resource_tags is removed, set RemoveAllTags to true
+				request.RemoveAllTags = helper.Bool(true)
+			}
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
 			if e != nil {
@@ -515,7 +546,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 		if err != nil {
 			log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
-			return err
+			return fmt.Errorf("failed to update RabbitMQ instance %s: %v", instanceId, err)
 		}
 	}
 
