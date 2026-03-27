@@ -453,10 +453,12 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		request    = tdmq.NewModifyRabbitMQVipInstanceRequest()
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		instanceId = d.Id()
 	)
 
+	// 真正不可变的字段 - 根据当前 API 能力调整
 	immutableArgs := []string{
 		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
 		"storage_size", "enable_create_default_ha_mirror_queue",
@@ -470,38 +472,35 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	request.InstanceId = &instanceId
-	needUpdate := false
+	// 1. 修改基本配置（名称、标签）
+	if d.HasChange("cluster_name") || d.HasChange("resource_tags") {
+		request := tdmq.NewModifyRabbitMQVipInstanceRequest()
+		request.InstanceId = &instanceId
 
-	if d.HasChange("cluster_name") {
-		if v, ok := d.GetOk("cluster_name"); ok {
-			request.ClusterName = helper.String(v.(string))
-			needUpdate = true
-		}
-	}
-
-	if d.HasChange("resource_tags") {
-		if v, ok := d.GetOk("resource_tags"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				tag := tdmq.Tag{}
-				if v, ok := dMap["tag_key"]; ok {
-					tag.TagKey = helper.String(v.(string))
-				}
-				if v, ok := dMap["tag_value"]; ok {
-					tag.TagValue = helper.String(v.(string))
-				}
-				request.Tags = append(request.Tags, &tag)
+		if d.HasChange("cluster_name") {
+			if v, ok := d.GetOk("cluster_name"); ok {
+				request.ClusterName = helper.String(v.(string))
 			}
-			needUpdate = true
-		} else {
-			// If resource_tags is removed, set RemoveAllTags to true
-			request.RemoveAllTags = helper.Bool(true)
-			needUpdate = true
 		}
-	}
 
-	if needUpdate {
+		if d.HasChange("resource_tags") {
+			if v, ok := d.GetOk("resource_tags"); ok {
+				for _, item := range v.([]interface{}) {
+					dMap := item.(map[string]interface{})
+					tag := tdmq.Tag{}
+					if v, ok := dMap["tag_key"]; ok {
+						tag.TagKey = helper.String(v.(string))
+					}
+					if v, ok := dMap["tag_value"]; ok {
+						tag.TagValue = helper.String(v.(string))
+					}
+					request.Tags = append(request.Tags, &tag)
+				}
+			} else {
+				request.RemoveAllTags = helper.Bool(true)
+			}
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
 			if e != nil {
@@ -514,10 +513,24 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance basic config failed, reason:%+v", logId, err)
 			return err
 		}
 	}
+
+	// TODO: 以下字段当前 SDK 版本不支持通过 API 修改
+	// - node_spec, node_num, storage_size: 需要等待 SDK 提供 ModifyRabbitMQVipInstanceSpec API
+	// - band_width, enable_public_access: 需要等待 SDK 提供 ModifyRabbitMQVipInstancePublicAccess API
+	//
+	// 当 SDK 提供这些 API 后，可以在这里添加相应的调用逻辑
+	// 示例：
+	// if d.HasChange("node_spec") || d.HasChange("node_num") || d.HasChange("storage_size") {
+	//     request := tdmq.NewModifyRabbitMQVipInstanceSpecRequest()
+	//     request.InstanceId = &instanceId
+	//     // ... 设置参数
+	//     // ... 调用 API
+	//     // ... 等待状态
+	// }
 
 	return resourceTencentCloudTdmqRabbitmqVipInstanceRead(d, meta)
 }

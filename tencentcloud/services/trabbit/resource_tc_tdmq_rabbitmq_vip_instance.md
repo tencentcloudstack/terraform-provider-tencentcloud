@@ -90,3 +90,25 @@ TDMQ rabbitmq vip instance can be imported using the id, e.g.
 terraform import tencentcloud_tdmq_rabbitmq_vip_instance.example amqp-mok52gmn
 ```
 
+## Update
+
+The following fields can be updated after creation:
+- `cluster_name` - Cluster name
+- `resource_tags` - Resource tags
+
+**Note**: The following fields cannot be changed after creation and require recreation of the resource:
+- `zone_ids` - Availability zones
+- `vpc_id`, `subnet_id` - Network configuration
+- `node_spec` - Node specification
+- `node_num` - Number of nodes
+- `storage_size` - Storage size
+- `cluster_version` - Cluster version
+- `band_width` - Public network bandwidth
+- `enable_public_access` - Enable public network access
+- `auto_renew_flag` - Auto renew flag
+- `time_span` - Purchase duration
+- `pay_mode` - Payment mode
+- `enable_create_default_ha_mirror_queue` - Enable default HA mirror queue
+
+**Known Limitations**: As of the current SDK version, the Tencent Cloud API does not support updating `node_spec`, `node_num`, `storage_size`, `band_width`, and `enable_public_access` after creation. These fields are marked as immutable for now. If the Tencent Cloud API adds support for updating these fields in the future, this resource will be updated accordingly.
+

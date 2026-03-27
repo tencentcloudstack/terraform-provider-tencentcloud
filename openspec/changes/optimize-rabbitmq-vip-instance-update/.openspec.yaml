@@ -1,0 +1,43 @@
+schema: spec-driven
+
+context: |
+  Terraform Provider for TencentCloud (Go 1.17+, Terraform Plugin SDK v2)
+
+  文件组织: tencentcloud/services/<service>/
+  - 资源: resource_tc_<service>_<name>.go
+  - 数据源: data_source_tc_<service>_<name>.go
+  - 服务层: service_tencentcloud_<service>.go
+  - 资源测试: resource_tc_<service>_<name>_test.go
+  - 数据源测试: data_source_tc_<service>_<name>_test.go
+  - 资源样例: resource_tc_<service>_<name>.md
+  - 数据源样例: data_source_tc_<service>_<name>.md
+
+  关键模式:
+  - 通过 tencentcloud-sdk-go 调用云 API (按服务拆分包)
+  - 最终一致性重试: helper.Retry()
+  - 复合 ID 用分隔符: "instanceId#userId"
+  - 错误处理: defer tccommon.LogElapsed(), defer tccommon.InconsistentCheck()
+
+  硬约束(经常被忽略):
+  - 必须保持向后兼容:不能破坏现有 TF 配置和 state
+  - 不能修改已有资源的 schema(除非只新增 Optional 字段)
+  - 所有资源/数据源必须有 website/docs/ 文档
+  - vendor 模式管理依赖
+  - 异步操作必须支持 Timeouts:在 schema 中声明 Timeouts 块,在 CRUD 函数中使用 ctx
+
+  测试: TF_ACC=1 运行验收测试,需要 TENCENTCLOUD_SECRET_ID/KEY 环境变量
+
+rules:
+  spec:
+    - 必须使用标准格式 "### Requirement:" (不能用 "### Req-1:" 等缩写)
+    - 新增 spec 用 "## ADDED Requirements",修改已有 spec 用 "## MODIFIED Requirements"
+    - 每个 requirement 至少需要一个 "#### Scenario:" 块
+    - API 变更必须明确说明:旧 API 名称 → 新 API 名称
+
+  tasks:
+    - 资源变更必须包含:schema 定义、CRUD 函数、service 层、测试、文档
+    - 数据源变更必须包含:schema 定义、Read 函数、service 层、测试、文档
+    - 代码修改任务和验证任务(build/lint/test)分开列
+    - 异步操作(Create/Update/Delete)需要等待时,必须在 schema 中添加 Timeouts 块
+    - 修改资源/数据源代码后,必须同步更新对应的 .md 示例文件(resource_tc_<service>_<name>.md 或 data_source_tc_<service>_<name>.md)
+    - 文档生成流程:使用 make doc 命令自动生成 website/docs/ 下的 markdown 文档,禁止手动编写文档文件
