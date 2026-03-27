@@ -51,6 +51,11 @@ In addition to all arguments above, the following attributes are exported:
   * `attribute_flags` - CLB attribute flags array.
   * `available_zone_affinity_info` - Available zone forwarding affinity information (JSON format).
   * `backup_zone_set` - Backup zone list, each element contains zone_id/zone/zone_name/zone_region/local_zone.
+    * `local_zone` - Whether this available zone is local zone.
+    * `zone_id` - Available zone unique id (numerical representation).
+    * `zone_name` - Available zone name.
+    * `zone_region` - Region that this available zone belongs to.
+    * `zone` - Available zone unique id (string representation).
   * `charge_type` - Billing type, PREPAID: Prepaid, POSTPAID_BY_HOUR: Pay-as-you-go.
   * `clb_id` - ID of CLB.
   * `clb_name` - Name of CLB.

@@ -360,8 +360,36 @@ func DataSourceTencentCloudClbInstances() *schema.Resource {
 						"backup_zone_set": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Elem:        &schema.Schema{Type: schema.TypeMap},
 							Description: "Backup zone list, each element contains zone_id/zone/zone_name/zone_region/local_zone.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"zone_id": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Available zone unique id (numerical representation).",
+									},
+									"zone": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Available zone unique id (string representation).",
+									},
+									"zone_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Available zone name.",
+									},
+									"zone_region": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Region that this available zone belongs to.",
+									},
+									"local_zone": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Whether this available zone is local zone.",
+									},
+								},
+							},
 						},
 						"available_zone_affinity_info": {
 							Type:        schema.TypeString,
