@@ -98,19 +98,19 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
 The following arguments are supported:
 
 * `cluster_name` - (Required, String) cluster name.
-* `subnet_id` - (Required, String) Private network SubnetId.
-* `vpc_id` - (Required, String) Private network VpcId.
-* `zone_ids` - (Required, Set: [`Int`]) availability zone.
+* `subnet_id` - (Required, ForceNew) Private network SubnetId. Changing this will create a new instance.
+* `vpc_id` - (Required, ForceNew) Private network VpcId. Changing this will create a new instance.
+* `zone_ids` - (Required, ForceNew, Set: [`Int`]) Availability zone. Changing this will create a new instance.
 * `auto_renew_flag` - (Optional, Bool) Automatic renewal, the default is true.
-* `band_width` - (Optional, Int) Public network bandwidth in Mbps.
-* `cluster_version` - (Optional, String) Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.
+* `band_width` - (Optional, ForceNew, Int) Public network bandwidth in Mbps. Changing this will create a new instance.
+* `cluster_version` - (Optional, ForceNew) Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`. Changing this will create a new instance.
 * `enable_create_default_ha_mirror_queue` - (Optional, Bool) Mirrored queue, the default is false.
-* `enable_public_access` - (Optional, Bool) Whether to enable public network access. Default is false.
-* `node_num` - (Optional, Int) The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3.
-* `node_spec` - (Optional, String) Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.
+* `enable_public_access` - (Optional, ForceNew) Whether to enable public network access. Default is false. Changing this will create a new instance.
+* `node_num` - (Optional, ForceNew, Int) The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3. Changing this will create a new instance.
+* `node_spec` - (Optional, ForceNew) Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves. Changing this will create a new instance.
 * `pay_mode` - (Optional, Int) Payment method: 0 indicates postpaid; 1 indicates prepaid. Default: prepaid.
 * `resource_tags` - (Optional, List) Instance resource tags. Each tag is a key-value pair for resource identification and management.
-* `storage_size` - (Optional, Int) Single node storage specification, the default is 200G.
+* `storage_size` - (Optional, ForceNew, Int) Single node storage specification, the default is 200G. Changing this will create a new instance.
 * `time_span` - (Optional, Int) Purchase duration, the default is 1 (month).
 
 The `resource_tags` object supports the following:

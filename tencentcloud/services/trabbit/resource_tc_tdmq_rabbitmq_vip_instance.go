@@ -29,17 +29,20 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeInt},
-				Description: "availability zone.",
+				ForceNew:    true,
+				Description: "Availability zone. Changing this will create a new instance.",
 			},
 			"vpc_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Private network VpcId.",
+				ForceNew:    true,
+				Description: "Private network VpcId. Changing this will create a new instance.",
 			},
 			"subnet_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Private network SubnetId.",
+				ForceNew:    true,
+				Description: "Private network SubnetId. Changing this will create a new instance.",
 			},
 			"cluster_name": {
 				Required:    true,
@@ -49,17 +52,23 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 			"node_spec": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.",
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves. Changing this will create a new instance.",
 			},
 			"node_num": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3.",
+				ForceNew:    true,
+				Computed:    true,
+				Description: "The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3. Changing this will create a new instance.",
 			},
 			"storage_size": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Single node storage specification, the default is 200G.",
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Single node storage specification, the default is 200G. Changing this will create a new instance.",
 			},
 			"enable_create_default_ha_mirror_queue": {
 				Optional:    true,
@@ -86,7 +95,8 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.",
+				ForceNew:    true,
+				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`. Changing this will create a new instance.",
 			},
 			"resource_tags": {
 				Optional:    true,
@@ -111,12 +121,14 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Public network bandwidth in Mbps.",
+				ForceNew:    true,
+				Description: "Public network bandwidth in Mbps. Changing this will create a new instance.",
 			},
 			"enable_public_access": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to enable public network access. Default is false.",
+				ForceNew:    true,
+				Description: "Whether to enable public network access. Default is false. Changing this will create a new instance.",
 			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
@@ -458,10 +470,8 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	)
 
 	immutableArgs := []string{
-		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
-		"storage_size", "enable_create_default_ha_mirror_queue",
-		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
+		"enable_create_default_ha_mirror_queue",
+		"auto_renew_flag", "time_span", "pay_mode",
 	}
 
 	for _, v := range immutableArgs {
