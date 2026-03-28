@@ -2,6 +2,7 @@
 
 ENHANCEMENTS:
 
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: support dynamic updates for node_spec, node_num, storage_size, auto_renew_flag, band_width, and enable_public_access
 * data-source/tencentcloud_kubernetes_addons: add new params ([#3890](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3890))
 * data-source/tencentcloud_postgresql_db_instance_classes: add `storage_type` ([#3884](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3884))
 * data-source/tencentcloud_postgresql_db_instance_versions: add `storage_type` ([#3884](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3884))
