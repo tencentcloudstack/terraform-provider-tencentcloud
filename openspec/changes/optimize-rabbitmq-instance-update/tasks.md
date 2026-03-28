@@ -20,68 +20,68 @@
 
 ## 3. Post-Update State Verification
 
-- [ ] 3.1 Add retry logic wrapper around Read operation after update with ReadRetryTimeout*10
-- [ ] 3.2 Implement state comparison logic to verify updated fields reflect new values
-- [ ] 3.3 Add logging for state verification process (attempts, success, timeout)
-- [ ] 3.4 Handle eventual consistency scenarios where Read returns stale data
+- [x] 3.1 Add retry logic wrapper around Read operation after update with ReadRetryTimeout*10
+- [x] 3.2 Implement state comparison logic to verify updated fields reflect new values
+- [x] 3.3 Add logging for state verification process (attempts, success, timeout)
+- [x] 3.4 Handle eventual consistency scenarios where Read returns stale data
 
 ## 4. Update Documentation
 
-- [ ] 4.1 Review current documentation in `website/docs/r/tdmq_rabbitmq_vip_instance.html.markdown`
-- [ ] 4.2 Update field descriptions to indicate auto_renew_flag and time_span are now updatable
-- [ ] 4.3 Add notes about update constraints (prepaid instances only for auto_renew_flag and time_span)
-- [ ] 4.4 Add example usage for update operations showing auto_renew_flag and time_span updates
-- [ ] 4.5 Document the retry and state verification behavior
-- [ ] 4.6 Run `make doc` to regenerate documentation from code comments
+- [x] 4.1 Review current documentation in `website/docs/r/tdmq_rabbitmq_vip_instance.html.markdown`
+- [x] 4.2 Update field descriptions to indicate auto_renew_flag and time_span are now updatable
+- [x] 4.3 Add notes about update constraints (prepaid instances only for auto_renew_flag and time_span)
+- [x] 4.4 Add example usage for update operations showing auto_renew_flag and time_span updates
+- [x] 4.5 Document the retry and state verification behavior
+- [x] 4.6 Run `make doc` to regenerate documentation from code comments
 
 ## 5. Unit Tests
 
-- [ ] 5.1 Add unit test for auto_renew_flag update on prepaid instance (positive case)
-- [ ] 5.2 Add unit test for auto_renew_flag update validation failure on postpaid instance (negative case)
-- [ ] 5.3 Add unit test for time_span update on prepaid instance (positive case)
-- [ ] 5.4 Add unit test for time_span update validation failure on postpaid instance (negative case)
-- [ ] 5.5 Add unit test for differential updates (only changed fields sent to API)
-- [ ] 5.6 Add unit test for retry logic on transient API errors
-- [ ] 5.7 Add unit test for post-update state verification
-- [ ] 5.8 Add unit test for error handling with detailed error messages
-- [ ] 5.9 Run `go test ./tencentcloud/services/trabbit/` to verify unit tests pass
+- [x] 5.1 Add unit test for auto_renew_flag update on prepaid instance (positive case)
+- [x] 5.2 Add unit test for auto_renew_flag update validation failure on postpaid instance (negative case)
+- [x] 5.3 Add unit test for time_span update on prepaid instance (positive case)
+- [x] 5.4 Add unit test for time_span update validation failure on postpaid instance (negative case)
+- [x] 5.5 Add unit test for differential updates (only changed fields sent to API)
+- [x] 5.6 Add unit test for retry logic on transient API errors
+- [x] 5.7 Add unit test for post-update state verification
+- [x] 5.8 Add unit test for error handling with detailed error messages
+- [x] 5.9 Run `go test ./tencentcloud/services/trabbit/` to verify unit tests pass
 
 ## 6. Acceptance Tests
 
-- [ ] 6.1 Add acceptance test for auto_renew_flag update with TF_ACC=1
-- [ ] 6.2 Add acceptance test for time_span update with TF_ACC=1
-- [ ] 6.3 Add acceptance test for concurrent updates (multiple fields) with TF_ACC=1
-- [ ] 6.4 Add acceptance test for update validation errors with TF_ACC=1
-- [ ] 6.5 Run full acceptance test suite: `TF_ACC=1 go test ./tencentcloud/services/trabbit/ -v`
-- [ ] 6.6 Verify all acceptance tests pass with real Tencent Cloud API
+- [x] 6.1 Add acceptance test for auto_renew_flag update with TF_ACC=1
+- [x] 6.2 Add acceptance test for time_span update with TF_ACC=1
+- [x] 6.3 Add acceptance test for concurrent updates (multiple fields) with TF_ACC=1
+- [x] 6.4 Add acceptance test for update validation errors with TF_ACC=1
+- [x] 6.5 Run full acceptance test suite: `TF_ACC=1 go test ./tencentcloud/services/trabbit/ -v`
+- [x] 6.6 Verify all acceptance tests pass with real Tencent Cloud API
 
 ## 7. Backward Compatibility Verification
 
-- [ ] 7.1 Run existing unit tests to ensure no regressions
-- [ ] 7.2 Run existing acceptance tests to ensure no regressions
-- [ ] 7.3 Test with existing Terraform configurations (without new fields) to ensure they still work
-- [ ] 7.4 Verify state migration scenarios (existing resources with no changes applied)
+- [x] 7.1 Run existing unit tests to ensure no regressions
+- [x] 7.2 Run existing acceptance tests to ensure no regressions
+- [x] 7.3 Test with existing Terraform configurations (without new fields) to ensure they still work
+- [x] 7.4 Verify state migration scenarios (existing resources with no changes applied)
 
 ## 8. Code Quality and Linting
 
-- [ ] 8.1 Run `go fmt ./tencentcloud/services/trabbit/resource_tc_tdmq_rabbitmq_vip_instance.go` to format code
-- [ ] 8.2 Run `go vet ./tencentcloud/services/trabbit/` to check for code issues
-- [ ] 8.3 Run `golangci-lint run` if available in the project
-- [ ] 8.4 Ensure all error messages are user-friendly and provide actionable guidance
+- [x] 8.1 Run `go fmt ./tencentcloud/services/trabbit/resource_tc_tdmq_rabbitmq_vip_instance.go` to format code
+- [x] 8.2 Run `go vet ./tencentcloud/services/trabbit/` to check for code issues
+- [x] 8.3 Run `golangci-lint run` if available in the project
+- [x] 8.4 Ensure all error messages are user-friendly and provide actionable guidance
 
 ## 9. Final Verification and Cleanup
 
-- [ ] 9.1 Verify all files are properly formatted with `go fmt`
-- [ ] 9.2 Ensure no TODO or FIXME comments left in production code
-- [ ] 9.3 Verify logging is at appropriate levels (DEBUG for detailed info, INFO for important events, ERROR for failures)
-- [ ] 9.4 Review code comments for clarity and completeness
-- [ ] 9.5 Verify documentation matches implementation behavior
-- [ ] 9.6 Perform final end-to-end testing with Terraform plan/apply workflow
+- [x] 9.1 Verify all files are properly formatted with `go fmt`
+- [x] 9.2 Ensure no TODO or FIXME comments left in production code
+- [x] 9.3 Verify logging is at appropriate levels (DEBUG for detailed info, INFO for important events, ERROR for failures)
+- [x] 9.4 Review code comments for clarity and completeness
+- [x] 9.5 Verify documentation matches implementation behavior
+- [x] 9.6 Perform final end-to-end testing with Terraform plan/apply workflow
 
 ## 10. Deployment Preparation
 
-- [ ] 10.1 Review all code changes one final time
-- [ ] 10.2 Update CHANGELOG.md with details about the new update capabilities
-- [ ] 10.3 Create summary of changes for PR description
-- [ ] 10.4 Verify all tests pass: `go test ./tencentcloud/services/trabbit/` and `TF_ACC=1 go test ./tencentcloud/services/trabbit/`
-- [ ] 10.5 Prepare for code review with clear documentation of what was changed and why
+- [x] 10.1 Review all code changes one final time
+- [x] 10.2 Update CHANGELOG.md with details about the new update capabilities
+- [x] 10.3 Create summary of changes for PR description
+- [x] 10.4 Verify all tests pass: `go test ./tencentcloud/services/trabbit/` and `TF_ACC=1 go test ./tencentcloud/services/trabbit/`
+- [x] 10.5 Prepare for code review with clear documentation of what was changed and why
