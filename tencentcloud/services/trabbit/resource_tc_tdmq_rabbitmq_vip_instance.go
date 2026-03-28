@@ -458,10 +458,8 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	)
 
 	immutableArgs := []string{
-		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
-		"storage_size", "enable_create_default_ha_mirror_queue",
-		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
+		"zone_ids", "vpc_id", "subnet_id",
+		"auto_renew_flag", "time_span", "pay_mode",
 	}
 
 	for _, v := range immutableArgs {
@@ -476,6 +474,55 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("node_spec") {
+		if v, ok := d.GetOk("node_spec"); ok {
+			request.NodeSpec = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("node_num") {
+		if v, ok := d.GetOkExists("node_num"); ok {
+			request.NodeNum = helper.IntInt64(v.(int))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("storage_size") {
+		if v, ok := d.GetOkExists("storage_size"); ok {
+			request.StorageSize = helper.IntInt64(v.(int))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("band_width") {
+		if v, ok := d.GetOkExists("band_width"); ok {
+			request.Bandwidth = helper.IntUint64(v.(int))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_public_access") {
+		if v, ok := d.GetOkExists("enable_public_access"); ok {
+			request.EnablePublicAccess = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("cluster_version") {
+		if v, ok := d.GetOk("cluster_version"); ok {
+			request.ClusterVersion = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_create_default_ha_mirror_queue") {
+		if v, ok := d.GetOkExists("enable_create_default_ha_mirror_queue"); ok {
+			request.EnableCreateDefaultHaMirrorQueue = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}
