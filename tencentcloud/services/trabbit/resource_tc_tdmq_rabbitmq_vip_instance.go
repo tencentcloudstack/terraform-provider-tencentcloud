@@ -460,8 +460,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	immutableArgs := []string{
 		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
 		"storage_size", "enable_create_default_ha_mirror_queue",
-		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
+		"pay_mode", "cluster_version", "band_width", "enable_public_access",
 	}
 
 	for _, v := range immutableArgs {
@@ -472,6 +471,30 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	request.InstanceId = &instanceId
 	needUpdate := false
+
+	// Validate auto_renew_flag update - only allowed for prepaid instances (pay_mode = 1)
+	if d.HasChange("auto_renew_flag") {
+		payMode := d.Get("pay_mode").(int)
+		if payMode != 1 {
+			return fmt.Errorf("auto_renew_flag can only be updated for prepaid instances (pay_mode = 1), current pay_mode is %d", payMode)
+		}
+		if v, ok := d.GetOk("auto_renew_flag"); ok {
+			request.AutoRenewFlag = helper.IntInt64(v.(int))
+			needUpdate = true
+		}
+	}
+
+	// Validate time_span update - only allowed for prepaid instances (pay_mode = 1)
+	if d.HasChange("time_span") {
+		payMode := d.Get("pay_mode").(int)
+		if payMode != 1 {
+			return fmt.Errorf("time_span can only be updated for prepaid instances (pay_mode = 1), current pay_mode is %d", payMode)
+		}
+		if v, ok := d.GetOk("time_span"); ok {
+			request.TimeSpan = helper.IntInt64(v.(int))
+			needUpdate = true
+		}
+	}
 
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
