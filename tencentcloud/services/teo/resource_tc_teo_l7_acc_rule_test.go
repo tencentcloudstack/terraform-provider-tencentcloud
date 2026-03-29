@@ -19,6 +19,7 @@ func TestAccTencentCloudTeoL7AccRuleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "total_count"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.#", "6"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.description.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.rule_name", "Web Acceleration"),

@@ -31,6 +31,12 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 				Description: "Zone id.",
 			},
 
+			"total_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Total count of L7 acceleration rules.",
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -124,6 +130,11 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 		log.Printf("[WARN]%s resource `teo_l7_acc_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	if respData.TotalCount != nil {
+		_ = d.Set("total_count", *respData.TotalCount)
+	}
+
 	rulesList := make([]map[string]interface{}, 0, len(respData.Rules))
 	if respData.Rules != nil {
 		for _, rules := range respData.Rules {

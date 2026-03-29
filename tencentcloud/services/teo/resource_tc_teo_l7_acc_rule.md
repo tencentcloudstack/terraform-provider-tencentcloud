@@ -329,6 +329,14 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 }
 ```
 
+## Argument Reference
+
+The following arguments are supported:
+
+* `zone_id` - (Required, ForceNew) Zone id.
+* `total_count` - (Computed, Int) Total count of L7 acceleration rules.
+* `rules` - (Optional, List) Rules content.
+
 Import
 
 TEO l7 acc rule can be imported using the zone_id, e.g.
