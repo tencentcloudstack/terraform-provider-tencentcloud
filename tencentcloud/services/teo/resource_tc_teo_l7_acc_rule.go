@@ -31,6 +31,12 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 				Description: "Zone id.",
 			},
 
+			"total_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Total number of L7 access control rules in the zone.",
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -152,6 +158,11 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 		}
 
 		_ = d.Set("rules", rulesList)
+	}
+
+	// 设置 total_count
+	if respData.TotalCount != nil {
+		_ = d.Set("total_count", *respData.TotalCount)
 	}
 
 	_ = zoneId

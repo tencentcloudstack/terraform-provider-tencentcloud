@@ -329,6 +329,20 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 }
 ```
 
+## Argument Reference
+
+The following arguments are supported:
+
+* `zone_id` - (Required, ForceNew) Zone id.
+* `rules` - (Optional, ForceNew) Rules content. The maximum number of rules that can be created in a site is `50`.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+* `total_count` - Total number of L7 access control rules in the zone.
+
 Import
 
 TEO l7 acc rule can be imported using the zone_id, e.g.
