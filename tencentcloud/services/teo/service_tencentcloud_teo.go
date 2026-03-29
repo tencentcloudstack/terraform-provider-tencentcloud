@@ -1065,6 +1065,48 @@ func (me *TeoService) DescribeTeoZoneById(ctx context.Context, zoneId string) (r
 	return
 }
 
+func (me *TeoService) DescribeTeoExportZoneConfig(ctx context.Context, zoneId string) (zoneSetting *teo.ZoneSetting, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewDescribeZoneSettingRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = &zoneId
+
+	ratelimit.Check(request.GetAction())
+	response := teo.NewDescribeZoneSettingResponse()
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoClient().DescribeZoneSetting(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	zoneSetting = response.Response.ZoneSetting
+	return
+}
+
 func (me *TeoService) DescribeTeoZoneSettingById(ctx context.Context, zoneId string) (ret *teo.ZoneSetting, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
