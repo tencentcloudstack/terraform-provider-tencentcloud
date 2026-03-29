@@ -31,6 +31,13 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 				Description: "Zone id.",
 			},
 
+			"task_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Task id. Used to identify asynchronous tasks.",
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -215,6 +222,7 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 		}
 
 		if response != nil && response.Response != nil && response.Response.TaskId != nil {
+			_ = d.Set("task_id", *response.Response.TaskId)
 			service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 			conf := tccommon.BuildStateChangeConf([]string{"doing"}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TeoL7AccRuleStateRefreshFunc(zoneId, *response.Response.TaskId, []string{"failure"}))
 			if _, e := conf.WaitForState(); e != nil {

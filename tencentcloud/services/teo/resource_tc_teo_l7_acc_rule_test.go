@@ -649,7 +649,7 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
       }
     }
   }
-    rules {
+  rules {
     description = ["4"]
     rule_name   = "Video On Demand"
     branches {
@@ -701,3 +701,55 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   }
 }
 `
+
+const testAccTeoL7AccRuleWithTaskId = `
+
+resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule_with_task_id" {
+  zone_id  = "zone-39quuimqg8r6"
+  task_id  = "test-task-id"
+  rules {
+    description = ["Example with task ID"]
+    rule_name   = "Example Rule"
+    branches {
+      condition = "$${http.request.host} in ['example.com']"
+      actions {
+        name = "Cache"
+        cache_parameters {
+          custom_time {
+            cache_time           = 3600
+            ignore_cache_control = "off"
+            switch               = "on"
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+// go test -test.run TestAccTencentCloudTeoL7AccRuleResource_taskId -v
+func TestAccTencentCloudTeoL7AccRuleResource_taskId(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoL7AccRuleWithTaskId,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "zone_id", "zone-39quuimqg8r6"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "rules.0.description.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "rules.0.rule_name", "Example Rule"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "rules.0.branches.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "rules.0.branches.0.condition", "${http.request.host} in ['example.com']"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "rules.0.branches.0.actions.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "rules.0.branches.0.actions.0.name", "Cache"),
+					// Verify task_id is set (it should be computed, but may be set by user)
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule_with_task_id", "task_id", "test-task-id"),
+				),
+			},
+		},
+	})
+}

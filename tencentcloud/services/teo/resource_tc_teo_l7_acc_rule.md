@@ -329,6 +329,15 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 }
 ```
 
+The `task_id` attribute will be populated after the resource is created or updated. It represents the asynchronous task ID returned by the API, which can be used to track the import operation status.
+
+```hcl
+output "teo_l7_acc_rule_task_id" {
+  value = tencentcloud_teo_l7_acc_rule.example.task_id
+  description = "Task ID for tracking the import operation"
+}
+```
+
 Import
 
 TEO l7 acc rule can be imported using the zone_id, e.g.

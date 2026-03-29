@@ -15,6 +15,8 @@ Provides a resource to create a TEO l7 acc rule
 
 ## Example Usage
 
+### Basic Usage
+
 ```hcl
 resource "tencentcloud_teo_l7_acc_rule" "example" {
   zone_id = "zone-36bjhygh1bxe"
@@ -340,11 +342,38 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 }
 ```
 
+### With Task ID
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule" "with_task_id" {
+  zone_id  = "zone-36bjhygh1bxe"
+  task_id  = "task-xxxxxxxxxx"
+  rules {
+    description = ["Example with task ID"]
+    rule_name   = "Example Rule"
+    branches {
+      condition = "${http.request.host} in ['example.com']"
+      actions {
+        name = "Cache"
+        cache_parameters {
+          custom_time {
+            cache_time           = 3600
+            ignore_cache_control = "off"
+            switch               = "on"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `zone_id` - (Required, String, ForceNew) Zone id.
+* `task_id` - (Optional, String, Computed) Task id for identifying asynchronous tasks during update operations.
 * `rules` - (Optional, List) Rules content.
 
 The `access_url_redirect_parameters` object of `actions` supports the following:
@@ -739,6 +768,7 @@ The `web_socket_parameters` object of `actions` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `task_id` - Task id for identifying asynchronous tasks during update operations.
 
 
 
