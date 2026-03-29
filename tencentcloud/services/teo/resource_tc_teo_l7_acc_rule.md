@@ -329,6 +329,19 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 }
 ```
 
+## Arguments Reference
+
+The following arguments are supported:
+
+* `zone_id` - (Required, ForceNew) Zone id.
+* `rules` - (Optional) Rules content.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `total_count` - (Computed) Total number of L7 access rules.
+
 Import
 
 TEO l7 acc rule can be imported using the zone_id, e.g.

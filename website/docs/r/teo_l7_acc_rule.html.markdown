@@ -739,6 +739,7 @@ The `web_socket_parameters` object of `actions` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `total_count` - (Computed, Int) Total number of L7 access rules.
 
 
 
