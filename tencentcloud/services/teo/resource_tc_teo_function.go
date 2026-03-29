@@ -38,8 +38,9 @@ func ResourceTencentCloudTeoFunction() *schema.Resource {
 
 			"function_id": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
-				Description: "ID of the Function.",
+				Description: "ID of the Function. If not specified, the API will generate one automatically.",
 			},
 
 			"name": {
@@ -103,6 +104,11 @@ func resourceTencentCloudTeoFunctionCreate(d *schema.ResourceData, meta interfac
 	}
 
 	request.ZoneId = helper.String(zoneId)
+
+	if v, ok := d.GetOk("function_id"); ok {
+		functionId = v.(string)
+		request.FunctionId = helper.String(functionId)
+	}
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
