@@ -1661,6 +1661,10 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 	}
 
 	ret = response.Response
+	// Log TotalCount for monitoring and debugging
+	if ret.TotalCount != nil {
+		log.Printf("[DEBUG]%s DescribeL7AccRules returned TotalCount: %d\n", logId, *ret.TotalCount)
+	}
 	return
 }
 

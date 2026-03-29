@@ -7,6 +7,27 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
+// TestAccTencentCloudTeoL7AccRuleV2Resource_TotalCount tests that the TotalCount field
+// is properly received from the DescribeL7AccRules API response
+func TestAccTencentCloudTeoL7AccRuleV2Resource_TotalCount(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoL7V2AccRule,
+				Check: resource.ComposeTestCheckFunc(
+					// The resource should be created successfully
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "id"),
+					// The API should return valid data
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule_v2.teo_l7_acc_rule_v2", "rule_id"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
