@@ -33,6 +33,21 @@ data "tencentcloud_nats" "multi_nat" {
   max_concurrent = 3000000
   bandwidth      = 500
 }
+
+# Query NAT gateway with verbose level DETAIL (all information including NAT rules and custom routes)
+data "tencentcloud_nats" "nat_detail" {
+  verbose_level = "DETAIL"
+}
+
+# Query NAT gateway with verbose level COMPACT (no NAT rules or custom routes)
+data "tencentcloud_nats" "nat_compact" {
+  verbose_level = "COMPACT"
+}
+
+# Query NAT gateway with verbose level SIMPLE (only basic info and feature switches)
+data "tencentcloud_nats" "nat_simple" {
+  verbose_level = "SIMPLE"
+}
 ```
 
 ## Argument Reference
@@ -45,6 +60,7 @@ The following arguments are supported:
 * `name` - (Optional, String) The name for NAT Gateway.
 * `state` - (Optional, Int) NAT gateway status. Valid values: 0, 1, 2. 0: Running, 1: Unavailable, 2: Be in arrears and out of service.
 * `vpc_id` - (Optional, String) The VPC ID for NAT Gateway.
+* `verbose_level` - (Optional, String) The level of detail returned by the DescribeNatGateways API. Valid values are: `DETAIL` (output all information including NAT rules and custom routes), `COMPACT` (no NAT rules or custom routes, outputs instance basic info, feature switches and EIP info), `SIMPLE` (only outputs instance basic info and feature switches).
 
 ## Attributes Reference
 

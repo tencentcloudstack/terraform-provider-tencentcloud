@@ -1,6 +1,7 @@
 package vpc
 
 import (
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -11,6 +12,18 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+func validateVerboseLevel(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	validValues := []string{"DETAIL", "COMPACT", "SIMPLE"}
+	for _, valid := range validValues {
+		if value == valid {
+			return
+		}
+	}
+	errors = append(errors, fmt.Errorf("%s must be one of %v, got: %s", k, validValues, value))
+	return
+}
 
 func DataSourceTencentCloudNats() *schema.Resource {
 	return &schema.Resource{
@@ -49,7 +62,13 @@ func DataSourceTencentCloudNats() *schema.Resource {
 				Optional:    true,
 				Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: `10`, `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`.",
 			},
-			"nats": {
+			"verbose_level": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateVerboseLevel,
+				Description:  "The level of detail returned by the DescribeNatGateways API. Valid values: `DETAIL` (output all information including NAT rules and custom routes), `COMPACT` (no NAT rules or custom routes, outputs instance basic info, feature switches and EIP info), `SIMPLE` (only outputs instance basic info and feature switches).",
+			},
+		"nats": {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Information list of the dedicated tunnels.",
@@ -120,6 +139,11 @@ func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) er
 	}
 	if v, ok := d.GetOk("vpc_id"); ok {
 		params["vpc-id"] = v.(string)
+	}
+
+	// Retrieve verbose_level parameter value
+	if v, ok := d.GetOk("verbose_level"); ok {
+		request.VerboseLevel = helper.String(v.(string))
 	}
 
 	request.Filters = make([]*vpc.Filter, 0, len(params))
