@@ -31,6 +31,29 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 				Description: "Zone id.",
 			},
 
+			"filters": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Filter name. Supports: rule-id, RuleName, Status, etc.",
+						},
+						"values": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "Filter values. Multiple values are OR'ed together.",
+						},
+					},
+				},
+				Description: "Filter query results using key-value pairs.",
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -114,7 +137,28 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 
 	_ = d.Set("zone_id", zoneId)
 
-	respData, err := service.DescribeTeoL7AccRuleById(ctx, zoneId, "")
+	// Read filters parameter from schema
+	var apiFilters []*teov20220901.Filter
+	if v, ok := d.GetOk("filters"); ok {
+		filtersSet := v.(*schema.Set).List()
+		for _, filterItem := range filtersSet {
+			filterMap := filterItem.(map[string]interface{})
+			name := filterMap["name"].(string)
+			values := filterMap["values"].([]interface{})
+
+			valuesStr := make([]string, 0, len(values))
+			for _, val := range values {
+				valuesStr = append(valuesStr, val.(string))
+			}
+
+			apiFilters = append(apiFilters, &teov20220901.Filter{
+				Name:   helper.String(name),
+				Values: helper.Strings(valuesStr),
+			})
+		}
+	}
+
+	respData, err := service.DescribeTeoL7AccRuleById(ctx, zoneId, "", apiFilters)
 	if err != nil {
 		return err
 	}

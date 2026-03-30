@@ -2,6 +2,8 @@ Provides a resource to create a TEO l7 acc rule
 
 ~> **NOTE:** This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
 
+~> **NOTE:** The `filters` parameter can be used to filter query results by rule name, status, or other supported fields.
+
 Example Usage
 
 ```hcl
@@ -328,6 +330,70 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
   }
 }
 ```
+
+## Using Filters to Filter Query Results
+
+You can use the `filters` parameter to filter the rules returned from the API.
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule" "filtered" {
+  zone_id = "zone-36bjhygh1bxe"
+
+  # Filter rules by name
+  filters {
+    name   = "RuleName"
+    values = ["Web Acceleration", "Live Video Streaming"]
+  }
+
+  rules {
+    # ... rule configuration ...
+  }
+}
+```
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule" "filtered_by_status" {
+  zone_id = "zone-36bjhygh1bxe"
+
+  # Filter rules by status
+  filters {
+    name   = "Status"
+    values = ["Enabled"]
+  }
+
+  rules {
+    # ... rule configuration ...
+  }
+}
+```
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule" "multi_filter" {
+  zone_id = "zone-36bjhygh1bxe"
+
+  # Multiple filters (AND logic between different filters)
+  filters {
+    name   = "RuleName"
+    values = ["Web Acceleration"]
+  }
+  filters {
+    name   = "Status"
+    values = ["Enabled"]
+  }
+
+  rules {
+    # ... rule configuration ...
+  }
+}
+```
+
+**Note:** Multiple filter blocks with different names are combined with AND logic (all conditions must be met). Multiple values within a single filter are combined with OR logic (any value can match).
+
+Supported filter names include:
+- `rule-id`: Filter by rule ID
+- `RuleName`: Filter by rule name
+- `Status`: Filter by rule status
+- Other fields supported by the DescribeL7AccRules API
 
 Import
 

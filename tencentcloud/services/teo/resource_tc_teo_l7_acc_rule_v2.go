@@ -143,7 +143,7 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 	_ = d.Set("zone_id", zoneId)
 	_ = d.Set("rule_id", ruleId)
 
-	respData, err := service.DescribeTeoL7AccRuleById(ctx, zoneId, ruleId)
+	respData, err := service.DescribeTeoL7AccRuleById(ctx, zoneId, ruleId, nil)
 	if err != nil {
 		return err
 	}
