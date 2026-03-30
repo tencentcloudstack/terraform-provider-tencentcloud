@@ -16,6 +16,23 @@ resource "tencentcloud_teo_function" "teo_function" {
 }
 ```
 
+### Create function with existing FunctionId
+
+```hcl
+resource "tencentcloud_teo_function" "teo_function_with_id" {
+    content     = <<-EOT
+        addEventListener('fetch', e => {
+          const response = new Response('Hello World!!');
+          e.respondWith(response);
+        });
+    EOT
+    name        = "aaa-zone-2qtuhspy7cr6-1310708577"
+    remark      = "test"
+    zone_id     = "zone-2qtuhspy7cr6"
+    function_id = "existing-function-id-from-console"
+}
+```
+
 Import
 
 teo teo_function can be imported using the id, e.g.

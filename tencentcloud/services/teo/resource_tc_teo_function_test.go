@@ -22,6 +22,7 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "name", "aaa-zone-2qtuhspy7cr6-1310708577"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "remark", "test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "function_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "content", `addEventListener('fetch', e => {
   const response = new Response('Hello World!!');
   e.respondWith(response);
@@ -78,4 +79,16 @@ resource "tencentcloud_teo_function" "teo_function" {
     remark      = "test-update"
     zone_id     = "zone-2qtuhspy7cr6"
 }
+`
+// Note: Testing with an existing FunctionId requires a real pre-existing function ID.
+// This scenario can be tested in a real environment with:
+// 1. A pre-existing function created outside Terraform
+// 2. Using that function_id in the resource configuration
+// Example:
+// resource "tencentcloud_teo_function" "teo_function_with_id" {
+//     content     = "..."
+//     name        = "..."
+//     zone_id     = "..."
+//     function_id = "existing-function-id-from-console"
+// }
 `

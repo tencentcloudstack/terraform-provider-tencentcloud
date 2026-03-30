@@ -35,6 +35,7 @@ The following arguments are supported:
 * `name` - (Required, String) Function name. It can only contain lowercase letters, numbers, hyphens, must start and end with a letter or number, and can have a maximum length of 30 characters.
 * `zone_id` - (Required, String, ForceNew) ID of the site.
 * `remark` - (Optional, String) Function description, maximum support of 60 characters.
+* `function_id` - (Optional, String, Computed) ID of the Function. You can provide an existing function ID to reference a pre-created function. If not provided, a new function will be created.
 
 ## Attributes Reference
 

@@ -38,6 +38,7 @@ func ResourceTencentCloudTeoFunction() *schema.Resource {
 
 			"function_id": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
 				Description: "ID of the Function.",
 			},
@@ -114,6 +115,10 @@ func resourceTencentCloudTeoFunctionCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("content"); ok {
 		request.Content = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("function_id"); ok {
+		request.FunctionId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
