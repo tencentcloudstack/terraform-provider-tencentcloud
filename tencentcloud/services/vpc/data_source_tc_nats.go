@@ -49,6 +49,11 @@ func DataSourceTencentCloudNats() *schema.Resource {
 				Optional:    true,
 				Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: `10`, `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`.",
 			},
+			"verbose_level": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Verbose level. Valid values: 0, 1. 0: simple, 1: detailed.",
+			},
 			"nats": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -110,6 +115,11 @@ func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) er
 	request := vpc.NewDescribeNatGatewaysRequest()
 	request.Offset = helper.Uint64(0)
 	request.Limit = helper.Uint64(100)
+
+	// Read VerboseLevel parameter
+	if v, ok := d.GetOk("verbose_level"); ok {
+		request.VerboseLevel = helper.Uint64(v.(int))
+	}
 
 	params := make(map[string]string)
 	if v, ok := d.GetOk("id"); ok {

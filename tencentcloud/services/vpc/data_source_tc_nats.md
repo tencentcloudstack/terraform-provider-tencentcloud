@@ -22,4 +22,10 @@ data "tencentcloud_nats" "multi_nat" {
   max_concurrent = 3000000
   bandwidth      = 500
 }
+
+# Query NAT gateways with verbose level
+data "tencentcloud_nats" "verbose_nat" {
+  vpc_id        = "vpc-ezij4ltv"
+  verbose_level = 1
+}
 ```
