@@ -7,6 +7,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_teo_l7_acc_rule" "example" {
   zone_id = "zone-36bjhygh1bxe"
+  task_id = "your-task-id"
   rules {
     description = ["1"]
     rule_name   = "Web Acceleration"

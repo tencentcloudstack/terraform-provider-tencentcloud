@@ -30,6 +30,12 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 				ForceNew:    true,
 				Description: "Zone id.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Task ID for async operation.",
+			},
 
 			"rules": {
 				Type:        schema.TypeList,
@@ -168,6 +174,11 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 
 	zoneId := d.Id()
 
+	var taskId string
+	if v, ok := d.GetOk("task_id"); ok {
+		taskId = v.(string)
+	}
+
 	if v, ok := d.GetOk("rules"); ok {
 		request := teov20220901.NewImportZoneConfigRequest()
 		request.ZoneId = helper.String(zoneId)
@@ -197,6 +208,10 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 			return err
 		}
 		request.Content = helper.String(context)
+
+		if taskId != "" {
+			request.TaskId = helper.String(taskId)
+		}
 
 		response := teov20220901.NewImportZoneConfigResponse()
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

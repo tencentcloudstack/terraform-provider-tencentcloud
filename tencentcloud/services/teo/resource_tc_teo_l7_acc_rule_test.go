@@ -113,6 +113,57 @@ func TestAccTencentCloudTeoL7AccRuleResource_basic(t *testing.T) {
 	})
 }
 
+// go test -test.run TestAccTencentCloudTeoL7AccRuleResource_withTaskId -v
+func TestAccTencentCloudTeoL7AccRuleResource_withTaskId(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoL7AccRule,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
+				),
+			},
+			{
+				Config: testAccTeoL7AccRuleUpWithTaskId,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "task_id", "test-task-id-123"),
+				),
+			},
+		},
+	})
+}
+
+// go test -test.run TestAccTencentCloudTeoL7AccRuleResource_withoutTaskId -v
+func TestAccTencentCloudTeoL7AccRuleResource_withoutTaskId(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoL7AccRule,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
+				),
+			},
+			{
+				Config: testAccTeoL7AccRuleUp,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
+				),
+			},
+		},
+	})
+}
+
 const testAccTeoL7AccRule = `
 
 resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
@@ -701,3 +752,6 @@ resource "tencentcloud_teo_l7_acc_rule" "teo_l7_acc_rule" {
   }
 }
 `
+`
+
+const testAccTeoL7AccRuleUpWithTaskId = `
