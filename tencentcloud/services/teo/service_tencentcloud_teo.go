@@ -1622,7 +1622,6 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 	logId := tccommon.GetLogId(ctx)
 
 	request := teov20220901.NewDescribeL7AccRulesRequest()
-	response := teov20220901.NewDescribeL7AccRulesResponse()
 	request.ZoneId = helper.String(zoneId)
 
 	if ruleId != "" {
@@ -1641,26 +1640,51 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 
 	ratelimit.Check(request.GetAction())
 
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := me.client.UseTeoV20220901Client().DescribeL7AccRules(request)
-		if e != nil {
-			return tccommon.RetryError(e)
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	var rules []*teov20220901.Rule
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response := teov20220901.NewDescribeL7AccRulesResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeL7AccRules(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
 		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		errRet = err
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Rules) < 1 {
+			break
+		}
+
+		rules = append(rules, response.Response.Rules...)
+		if len(response.Response.Rules) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(rules) < 1 {
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil {
-		return
+	ret = &teov20220901.DescribeL7AccRulesResponseParams{
+		Rules:   rules,
+		Total:   helper.Int64(int64(len(rules))),
+		PageNum: helper.Int64(1),
+		PageSize: helper.Int64(int64(len(rules))),
 	}
-
-	ret = response.Response
 	return
 }
 
