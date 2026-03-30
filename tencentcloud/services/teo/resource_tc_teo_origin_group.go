@@ -183,6 +183,10 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 		request.Type = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("host_header"); ok {
+		request.HostHeader = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("records"); ok {
 		for _, item := range v.(*schema.Set).List() {
 			recordsMap := item.(map[string]interface{})
