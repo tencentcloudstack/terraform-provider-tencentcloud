@@ -739,6 +739,8 @@ The `web_socket_parameters` object of `actions` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `rules.0.rule_id` - Rule ID. Unique identifier of the rule.
+* `rules.0.rule_priority` - Rule priority. Only used as an output parameter.
 
 
 
