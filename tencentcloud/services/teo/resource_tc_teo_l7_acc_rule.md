@@ -329,6 +329,12 @@ resource "tencentcloud_teo_l7_acc_rule" "example" {
 }
 ```
 
+Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `total_count` - Total count of L7 acceleration rules
+
 Import
 
 TEO l7 acc rule can be imported using the zone_id, e.g.

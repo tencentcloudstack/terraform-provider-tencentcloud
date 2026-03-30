@@ -31,6 +31,12 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 				Description: "Zone id.",
 			},
 
+			"total_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Total count of L7 acceleration rules",
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -152,6 +158,11 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 		}
 
 		_ = d.Set("rules", rulesList)
+	}
+
+	// Set total_count from API response
+	if respData.TotalCount != nil {
+		_ = d.Set("total_count", *respData.TotalCount)
 	}
 
 	_ = zoneId
