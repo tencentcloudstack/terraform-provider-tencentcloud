@@ -311,6 +311,33 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Tls version settings, only support some Advanced domain names, support settings TLSv1, TLSV1.1, TLSV1.2, TLSv1.3, when modifying must open consecutive versions.",
 						},
+						"hsts": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "HSTS configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+										Description:  "HSTS configuration switch. Valid values are `on` and `off`.",
+									},
+									"max_age": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "MaxAge value.",
+									},
+									"include_sub_domains": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+										Description:  "Whether to include sub domains, values `on` and `off`.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -1583,6 +1610,162 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 					},
 				},
 			},
+			"user_agent_filter": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "UserAgent blacklist/whitelist configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+							Description:  "Configuration switch, valid values are `on` and `off`.",
+						},
+						"filter_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "UA blacklist/whitelist effect rule list.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rule_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Rule type, valid values: `all`, `file`, `directory`, `path`.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Rule paths.",
+									},
+									"user_agents": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "UserAgent list.",
+									},
+									"filter_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Blacklist or whitelist, valid values: `blacklist`, `whitelist`.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"url_redirect": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "URL redirect configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+							Description:  "Configuration switch, valid values are `on` and `off`.",
+						},
+						"path_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "URL redirect rule list, maximum 10 rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"redirect_status_code": {
+										Type:         schema.TypeInt,
+										Required:     true,
+										ValidateFunc: tccommon.ValidateAllowedIntValue([]int{301, 302}),
+										Description:  "Redirect status code, valid values: `301`, `302`.",
+									},
+									"pattern": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "URL path to match, supports wildcard `*`, max length 1024.",
+									},
+									"redirect_url": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Target URL, must start with `/`, max length 1024.",
+									},
+									"redirect_host": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Target host, must start with `http://` or `https://`.",
+									},
+									"full_match": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Whether to use full path match.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"origin_combine": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Origin combine configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+							Description:  "Configuration switch, valid values are `on` and `off`.",
+						},
+					},
+				},
+			},
+			"range_origin_pull": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Range origin pull configuration with path-based rules.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+							Description:  "Global range origin pull switch, valid values are `on` and `off`.",
+						},
+						"range_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Path-based range origin pull rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+										Description:  "Rule switch, valid values are `on` and `off`.",
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Rule type, valid values: `file`, `directory`, `path`.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Rule paths.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -1643,6 +1826,27 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	// Range Origin Pull
 	request.RangeOriginPull = &cdn.RangeOriginPull{}
 	request.RangeOriginPull.Switch = helper.String(d.Get("range_origin_switch").(string))
+	// 如果配置了 range_origin_pull，使用其中的 switch 和 range_rules
+	if v, ok := helper.InterfacesHeadMap(d, "range_origin_pull"); ok {
+		request.RangeOriginPull.Switch = helper.String(v["switch"].(string))
+		if rules, ok := v["range_rules"].([]interface{}); ok && len(rules) > 0 {
+			rangeRules := make([]*cdn.RangeOriginPullRule, 0, len(rules))
+			for _, rule := range rules {
+				ruleMap := rule.(map[string]interface{})
+				rangeRule := &cdn.RangeOriginPullRule{
+					Switch: helper.String(ruleMap["switch"].(string)),
+				}
+				if rv, ok := ruleMap["rule_type"].(string); ok && rv != "" {
+					rangeRule.RuleType = &rv
+				}
+				if rv, ok := ruleMap["rule_paths"].([]interface{}); ok && len(rv) > 0 {
+					rangeRule.RulePaths = helper.InterfacesStringsPoint(rv)
+				}
+				rangeRules = append(rangeRules, rangeRule)
+			}
+			request.RangeOriginPull.RangeRules = rangeRules
+		}
+	}
 
 	if v, ok := d.GetOk("ipv6_access_switch"); ok {
 		request.Ipv6Access = &cdn.Ipv6Access{
@@ -1954,6 +2158,22 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			}
 			if v, ok := config["tls_versions"]; ok {
 				request.Https.TlsVersion = helper.InterfacesStringsPoint(v.([]interface{}))
+			}
+			// HSTS
+			if v, ok := config["hsts"]; ok {
+				hstsList := v.([]interface{})
+				if len(hstsList) > 0 && hstsList[0] != nil {
+					hstsMap := hstsList[0].(map[string]interface{})
+					request.Https.Hsts = &cdn.Hsts{
+						Switch: helper.String(hstsMap["switch"].(string)),
+					}
+					if maxAge, ok := hstsMap["max_age"].(int); ok && maxAge > 0 {
+						request.Https.Hsts.MaxAge = helper.IntInt64(maxAge)
+					}
+					if includeSubDomains, ok := hstsMap["include_sub_domains"].(string); ok && includeSubDomains != "" {
+						request.Https.Hsts.IncludeSubDomains = &includeSubDomains
+					}
+				}
 			}
 		}
 	}
@@ -2732,6 +2952,19 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 		httpsConfig["tls_versions"] = tlsVersions
 	}
+	// HSTS
+	if domainConfig.Https.Hsts != nil {
+		hstsMap := map[string]interface{}{
+			"switch": domainConfig.Https.Hsts.Switch,
+		}
+		if domainConfig.Https.Hsts.MaxAge != nil {
+			hstsMap["max_age"] = domainConfig.Https.Hsts.MaxAge
+		}
+		if domainConfig.Https.Hsts.IncludeSubDomains != nil {
+			hstsMap["include_sub_domains"] = domainConfig.Https.Hsts.IncludeSubDomains
+		}
+		httpsConfig["hsts"] = []interface{}{hstsMap}
+	}
 	httpsConfigs = append(httpsConfigs, httpsConfig)
 	_ = d.Set("https_config", httpsConfigs)
 
@@ -3135,6 +3368,73 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 	}
 
+	// user_agent_filter
+	if ok := checkCdnInfoWritable(d, "user_agent_filter", dc.UserAgentFilter); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.UserAgentFilter.Switch,
+		}
+		if rules := dc.UserAgentFilter.FilterRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0, len(rules))
+			for _, item := range rules {
+				rule := map[string]interface{}{
+					"rule_type":   item.RuleType,
+					"rule_paths":  item.RulePaths,
+					"user_agents": item.UserAgents,
+					"filter_type": item.FilterType,
+				}
+				list = append(list, rule)
+			}
+			dMap["filter_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "user_agent_filter", dMap)
+	}
+	// url_redirect
+	if ok := checkCdnInfoWritable(d, "url_redirect", dc.UrlRedirect); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.UrlRedirect.Switch,
+		}
+		if rules := dc.UrlRedirect.PathRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0, len(rules))
+			for _, item := range rules {
+				rule := map[string]interface{}{
+					"redirect_status_code": item.RedirectStatusCode,
+					"pattern":              item.Pattern,
+					"redirect_url":         item.RedirectUrl,
+					"redirect_host":        item.RedirectHost,
+					"full_match":           item.FullMatch,
+				}
+				list = append(list, rule)
+			}
+			dMap["path_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "url_redirect", dMap)
+	}
+	// origin_combine
+	if ok := checkCdnInfoWritable(d, "origin_combine", dc.OriginCombine); ok {
+		_ = helper.SetMapInterfaces(d, "origin_combine", map[string]interface{}{
+			"switch": dc.OriginCombine.Switch,
+		})
+	}
+	// range_origin_pull (分路径规则)
+	if ok := checkCdnInfoWritable(d, "range_origin_pull", dc.RangeOriginPull); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.RangeOriginPull.Switch,
+		}
+		if rules := dc.RangeOriginPull.RangeRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0, len(rules))
+			for _, item := range rules {
+				rule := map[string]interface{}{
+					"switch":     item.Switch,
+					"rule_type":  item.RuleType,
+					"rule_paths": item.RulePaths,
+				}
+				list = append(list, rule)
+			}
+			dMap["range_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "range_origin_pull", dMap)
+	}
+
 	tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 	if errRet != nil {
 		return errRet
@@ -3380,6 +3680,22 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			}
 			if v, ok := config["tls_versions"]; ok {
 				request.Https.TlsVersion = helper.InterfacesStringsPoint(v.([]interface{}))
+			}
+			// HSTS
+			if v, ok := config["hsts"]; ok {
+				hstsList := v.([]interface{})
+				if len(hstsList) > 0 && hstsList[0] != nil {
+					hstsMap := hstsList[0].(map[string]interface{})
+					request.Https.Hsts = &cdn.Hsts{
+						Switch: helper.String(hstsMap["switch"].(string)),
+					}
+					if maxAge, ok := hstsMap["max_age"].(int); ok && maxAge > 0 {
+						request.Https.Hsts.MaxAge = helper.IntInt64(maxAge)
+					}
+					if includeSubDomains, ok := hstsMap["include_sub_domains"].(string); ok && includeSubDomains != "" {
+						request.Https.Hsts.IncludeSubDomains = &includeSubDomains
+					}
+				}
 			}
 		}
 	}
@@ -4018,6 +4334,100 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			Switch: &vSwitch,
 		}
 	}
+	// user_agent_filter
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "user_agent_filter"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "user_agent_filter")
+		vSwitch := v["switch"].(string)
+		request.UserAgentFilter = &cdn.UserAgentFilter{
+			Switch: &vSwitch,
+		}
+		if rules, ok := v["filter_rules"].([]interface{}); ok && len(rules) > 0 {
+			filterRules := make([]*cdn.UserAgentFilterRule, 0, len(rules))
+			for _, rule := range rules {
+				ruleMap := rule.(map[string]interface{})
+				filterRule := &cdn.UserAgentFilterRule{}
+				if rv, ok := ruleMap["rule_type"].(string); ok && rv != "" {
+					filterRule.RuleType = &rv
+				}
+				if rv, ok := ruleMap["rule_paths"].([]interface{}); ok && len(rv) > 0 {
+					filterRule.RulePaths = helper.InterfacesStringsPoint(rv)
+				}
+				if rv, ok := ruleMap["user_agents"].([]interface{}); ok && len(rv) > 0 {
+					filterRule.UserAgents = helper.InterfacesStringsPoint(rv)
+				}
+				if rv, ok := ruleMap["filter_type"].(string); ok && rv != "" {
+					filterRule.FilterType = &rv
+				}
+				filterRules = append(filterRules, filterRule)
+			}
+			request.UserAgentFilter.FilterRules = filterRules
+		}
+	}
+	// url_redirect
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "url_redirect"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "url_redirect")
+		vSwitch := v["switch"].(string)
+		request.UrlRedirect = &cdn.UrlRedirect{
+			Switch: &vSwitch,
+		}
+		if rules, ok := v["path_rules"].([]interface{}); ok && len(rules) > 0 {
+			pathRules := make([]*cdn.UrlRedirectRule, 0, len(rules))
+			for _, rule := range rules {
+				ruleMap := rule.(map[string]interface{})
+				pathRule := &cdn.UrlRedirectRule{}
+				if rv, ok := ruleMap["redirect_status_code"].(int); ok && rv > 0 {
+					pathRule.RedirectStatusCode = helper.IntInt64(rv)
+				}
+				if rv, ok := ruleMap["pattern"].(string); ok && rv != "" {
+					pathRule.Pattern = &rv
+				}
+				if rv, ok := ruleMap["redirect_url"].(string); ok && rv != "" {
+					pathRule.RedirectUrl = &rv
+				}
+				if rv, ok := ruleMap["redirect_host"].(string); ok && rv != "" {
+					pathRule.RedirectHost = &rv
+				}
+				if rv, ok := ruleMap["full_match"].(bool); ok {
+					pathRule.FullMatch = &rv
+				}
+				pathRules = append(pathRules, pathRule)
+			}
+			request.UrlRedirect.PathRules = pathRules
+		}
+	}
+	// origin_combine
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "origin_combine"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "origin_combine")
+		vSwitch := v["switch"].(string)
+		request.OriginCombine = &cdn.OriginCombine{
+			Switch: &vSwitch,
+		}
+	}
+	// range_origin_pull
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "range_origin_pull"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "range_origin_pull")
+		vSwitch := v["switch"].(string)
+		request.RangeOriginPull = &cdn.RangeOriginPull{
+			Switch: &vSwitch,
+		}
+		if rules, ok := v["range_rules"].([]interface{}); ok && len(rules) > 0 {
+			rangeRules := make([]*cdn.RangeOriginPullRule, 0, len(rules))
+			for _, rule := range rules {
+				ruleMap := rule.(map[string]interface{})
+				rangeRule := &cdn.RangeOriginPullRule{
+					Switch: helper.String(ruleMap["switch"].(string)),
+				}
+				if rv, ok := ruleMap["rule_type"].(string); ok && rv != "" {
+					rangeRule.RuleType = &rv
+				}
+				if rv, ok := ruleMap["rule_paths"].([]interface{}); ok && len(rv) > 0 {
+					rangeRule.RulePaths = helper.InterfacesStringsPoint(rv)
+				}
+				rangeRules = append(rangeRules, rangeRule)
+			}
+			request.RangeOriginPull.RangeRules = rangeRules
+		}
+	}
 
 	if v := d.Get("explicit_using_dry_run").(bool); v {
 		_ = d.Set("dry_run_update_result", request.ToJsonString())
@@ -4161,9 +4571,7 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 }
 
 func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx context.Context) error {
-	if !d.HasChanges("post_max_size") {
-		return nil
-	}
+	needUpdate := false
 
 	domain := d.Id()
 	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -4172,6 +4580,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 	request.Domain = &domain
 
 	if v, ok := helper.InterfacesHeadMap(d, "post_max_size"); ok {
+		needUpdate = true
 		vSwitch := v["switch"].(string)
 		maxSize := v["max_size"].(int)
 		request.PostMaxSize = &cdn.PostSize{
@@ -4180,6 +4589,82 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 		if maxSize > 0 {
 			request.PostMaxSize.MaxSize = helper.IntInt64(maxSize * 1024 * 1024)
 		}
+	}
+
+	// user_agent_filter - Create 接口不支持，需要通过 Update 接口设置
+	if v, ok := helper.InterfacesHeadMap(d, "user_agent_filter"); ok {
+		needUpdate = true
+		vSwitch := v["switch"].(string)
+		request.UserAgentFilter = &cdn.UserAgentFilter{
+			Switch: &vSwitch,
+		}
+		if rules, ok := v["filter_rules"].([]interface{}); ok && len(rules) > 0 {
+			filterRules := make([]*cdn.UserAgentFilterRule, 0, len(rules))
+			for _, rule := range rules {
+				ruleMap := rule.(map[string]interface{})
+				filterRule := &cdn.UserAgentFilterRule{}
+				if rv, ok := ruleMap["rule_type"].(string); ok && rv != "" {
+					filterRule.RuleType = &rv
+				}
+				if rv, ok := ruleMap["rule_paths"].([]interface{}); ok && len(rv) > 0 {
+					filterRule.RulePaths = helper.InterfacesStringsPoint(rv)
+				}
+				if rv, ok := ruleMap["user_agents"].([]interface{}); ok && len(rv) > 0 {
+					filterRule.UserAgents = helper.InterfacesStringsPoint(rv)
+				}
+				if rv, ok := ruleMap["filter_type"].(string); ok && rv != "" {
+					filterRule.FilterType = &rv
+				}
+				filterRules = append(filterRules, filterRule)
+			}
+			request.UserAgentFilter.FilterRules = filterRules
+		}
+	}
+
+	// url_redirect - Create 接口不支持，需要通过 Update 接口设置
+	if v, ok := helper.InterfacesHeadMap(d, "url_redirect"); ok {
+		needUpdate = true
+		vSwitch := v["switch"].(string)
+		request.UrlRedirect = &cdn.UrlRedirect{
+			Switch: &vSwitch,
+		}
+		if rules, ok := v["path_rules"].([]interface{}); ok && len(rules) > 0 {
+			pathRules := make([]*cdn.UrlRedirectRule, 0, len(rules))
+			for _, rule := range rules {
+				ruleMap := rule.(map[string]interface{})
+				pathRule := &cdn.UrlRedirectRule{}
+				if rv, ok := ruleMap["redirect_status_code"].(int); ok && rv > 0 {
+					pathRule.RedirectStatusCode = helper.IntInt64(rv)
+				}
+				if rv, ok := ruleMap["pattern"].(string); ok && rv != "" {
+					pathRule.Pattern = &rv
+				}
+				if rv, ok := ruleMap["redirect_url"].(string); ok && rv != "" {
+					pathRule.RedirectUrl = &rv
+				}
+				if rv, ok := ruleMap["redirect_host"].(string); ok && rv != "" {
+					pathRule.RedirectHost = &rv
+				}
+				if rv, ok := ruleMap["full_match"].(bool); ok {
+					pathRule.FullMatch = &rv
+				}
+				pathRules = append(pathRules, pathRule)
+			}
+			request.UrlRedirect.PathRules = pathRules
+		}
+	}
+
+	// origin_combine - Create 接口不支持，需要通过 Update 接口设置
+	if v, ok := helper.InterfacesHeadMap(d, "origin_combine"); ok {
+		needUpdate = true
+		vSwitch := v["switch"].(string)
+		request.OriginCombine = &cdn.OriginCombine{
+			Switch: &vSwitch,
+		}
+	}
+
+	if !needUpdate {
+		return nil
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

@@ -1497,3 +1497,151 @@ resource "tencentcloud_cdn_domain" "foo" {
   }
 }
 `
+
+const testAccCdnDomainAdvancedFields = testAccDomainCosForCDN + `
+
+resource "tencentcloud_cdn_domain" "advanced" {
+  domain       = "adv.${local.domain}"
+  service_type = "web"
+  area         = "overseas"
+
+  origin {
+    origin_type          = "cos"
+    origin_list          = [local.bucket_url]
+    server_name          = local.bucket_url
+    origin_pull_protocol = "follow"
+  }
+
+  user_agent_filter {
+    switch = "on"
+
+    filter_rules {
+      rule_type   = "all"
+      rule_paths  = ["*"]
+      user_agents = ["Mozilla/5.0"]
+      filter_type = "blacklist"
+    }
+  }
+
+  url_redirect {
+    switch = "on"
+
+    path_rules {
+      redirect_status_code = 302
+      pattern              = "/old/*"
+      redirect_url         = "/new/$1"
+    }
+  }
+
+  origin_combine {
+    switch = "on"
+  }
+
+  range_origin_pull {
+    switch = "on"
+
+    range_rules {
+      switch     = "on"
+      rule_type  = "file"
+      rule_paths = ["jpg", "png"]
+    }
+  }
+}
+`
+
+const testAccCdnDomainAdvancedFieldsUpdate = testAccDomainCosForCDN + `
+
+resource "tencentcloud_cdn_domain" "advanced" {
+  domain       = "adv.${local.domain}"
+  service_type = "web"
+  area         = "overseas"
+
+  origin {
+    origin_type          = "cos"
+    origin_list          = [local.bucket_url]
+    server_name          = local.bucket_url
+    origin_pull_protocol = "follow"
+  }
+
+  user_agent_filter {
+    switch = "on"
+
+    filter_rules {
+      rule_type   = "all"
+      rule_paths  = ["*"]
+      user_agents = ["curl/7.0", "Wget/1.0"]
+      filter_type = "whitelist"
+    }
+  }
+
+  url_redirect {
+    switch = "on"
+
+    path_rules {
+      redirect_status_code = 301
+      pattern              = "/legacy/*"
+      redirect_url         = "/v2/$1"
+    }
+  }
+
+  origin_combine {
+    switch = "off"
+  }
+
+  range_origin_pull {
+    switch = "on"
+
+    range_rules {
+      switch     = "on"
+      rule_type  = "directory"
+      rule_paths = ["/images/"]
+    }
+  }
+}
+`
+
+func TestAccTencentCloudCdnDomainResource_AdvancedFields(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCdnDomainDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCdnDomainAdvancedFields,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.advanced"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "user_agent_filter.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "user_agent_filter.0.filter_rules.0.rule_type", "all"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "user_agent_filter.0.filter_rules.0.filter_type", "blacklist"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "url_redirect.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "url_redirect.0.path_rules.0.redirect_status_code", "302"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "url_redirect.0.path_rules.0.pattern", "/old/*"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "origin_combine.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "range_origin_pull.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "range_origin_pull.0.range_rules.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "range_origin_pull.0.range_rules.0.rule_type", "file"),
+				),
+			},
+			{
+				Config: testAccCdnDomainAdvancedFieldsUpdate,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.advanced"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "user_agent_filter.0.filter_rules.0.filter_type", "whitelist"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "url_redirect.0.path_rules.0.redirect_status_code", "301"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "url_redirect.0.path_rules.0.pattern", "/legacy/*"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "origin_combine.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.advanced", "range_origin_pull.0.range_rules.0.rule_type", "directory"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cdn_domain.advanced",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
