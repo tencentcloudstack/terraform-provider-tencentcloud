@@ -172,3 +172,93 @@ resource "tencentcloud_teo_origin_group" "basic" {
 }
 
 `
+
+// go test -i; go test -test.run TestAccTencentCloudTeoOriginGroup_hostheader -v
+func TestAccTencentCloudTeoOriginGroup_hostheader(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckOriginGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoOriginGroupWithHostHeader,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.hostheader"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.hostheader", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.hostheader", "name", "keep-group-hostheader"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.hostheader", "type", "GENERAL"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.hostheader", "host_header", "example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.hostheader", "records.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.hostheader", "records.0.record"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.hostheader", "records.0.type"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_teo_origin_group.hostheader",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+// go test -i; go test -test.run TestAccTencentCloudTeoOriginGroup_noHostheader -v
+func TestAccTencentCloudTeoOriginGroup_noHostheader(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckOriginGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoOriginGroupWithoutHostHeader,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.no_hostheader"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.no_hostheader", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.no_hostheader", "name", "keep-group-no-hostheader"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.no_hostheader", "type", "GENERAL"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.no_hostheader", "records.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.no_hostheader", "records.0.record"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.no_hostheader", "records.0.type"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_teo_origin_group.no_hostheader",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+const testAccTeoOriginGroupWithHostHeader = testAccTeoZone + `
+
+resource "tencentcloud_teo_origin_group" "hostheader" {
+  name        = "keep-group-hostheader"
+  type        = "GENERAL"
+  zone_id     = tencentcloud_teo_zone.basic.id
+  host_header = "example.com"
+
+  records {
+    record = var.zone_name
+    type   = "IP_DOMAIN"
+    weight = 100
+  }
+}
+
+`
+
+const testAccTeoOriginGroupWithoutHostHeader = testAccTeoZone + `
+
+resource "tencentcloud_teo_origin_group" "no_hostheader" {
+  name    = "keep-group-no-hostheader"
+  type    = "GENERAL"
+  zone_id = tencentcloud_teo_zone.basic.id
+
+  records {
+    record = var.zone_name
+    type   = "IP_DOMAIN"
+    weight = 100
+  }
+}
+
+`
