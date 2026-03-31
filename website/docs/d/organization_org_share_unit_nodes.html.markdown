@@ -25,8 +25,6 @@ data "tencentcloud_organization_org_share_unit_nodes" "example" {
 data "tencentcloud_organization_org_share_unit_nodes" "example" {
   unit_id    = "us-xxxxx"
   search_key = "123456"
-  offset     = 0
-  limit      = 10
 }
 ```
 
@@ -35,8 +33,6 @@ data "tencentcloud_organization_org_share_unit_nodes" "example" {
 The following arguments are supported:
 
 * `unit_id` - (Required, String) Shared unit ID.
-* `limit` - (Optional, Int) Limit, range 1-50, default is 10.
-* `offset` - (Optional, Int) Offset, default is 0.
 * `result_output_file` - (Optional, String) Used to save results.
 * `search_key` - (Optional, String) Search key, supports searching by department ID.
 

@@ -2811,12 +2811,6 @@ func (me *OrganizationService) DescribeOrganizationOrgShareUnitNodesByFilter(ctx
 		if k == "UnitId" {
 			request.UnitId = v.(*string)
 		}
-		if k == "Offset" {
-			request.Offset = v.(*uint64)
-		}
-		if k == "Limit" {
-			request.Limit = v.(*uint64)
-		}
 		if k == "SearchKey" {
 			request.SearchKey = v.(*string)
 		}

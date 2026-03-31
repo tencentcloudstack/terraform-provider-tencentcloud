@@ -20,18 +20,6 @@ func DataSourceTencentCloudOrganizationOrgShareUnitNodes() *schema.Resource {
 				Description: "Shared unit ID.",
 			},
 
-			"offset": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Offset, default is 0.",
-			},
-
-			"limit": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Limit, range 1-50, default is 10.",
-			},
-
 			"search_key": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -80,14 +68,6 @@ func dataSourceTencentCloudOrganizationOrgShareUnitNodesRead(d *schema.ResourceD
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("unit_id"); ok {
 		paramMap["UnitId"] = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOkExists("offset"); ok {
-		paramMap["Offset"] = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOkExists("limit"); ok {
-		paramMap["Limit"] = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("search_key"); ok {

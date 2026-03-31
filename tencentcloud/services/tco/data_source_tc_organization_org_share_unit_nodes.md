@@ -14,7 +14,5 @@ Example with search_key:
 data "tencentcloud_organization_org_share_unit_nodes" "example" {
   unit_id    = "us-xxxxx"
   search_key = "123456"
-  offset     = 0
-  limit      = 10
 }
 ```
