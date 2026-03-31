@@ -1,3 +1,18 @@
+## 1.82.80(March 31 , 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_organization_org_share_unit_nodes` ([#3892](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3892))
+* **New Resource:** `tencentcloud_bh_auth_mode_config` ([#3941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3941))
+* **New Resource:** `tencentcloud_cls_kafka_consumer` ([#3937](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3937))
+* **New Resource:** `tencentcloud_organization_org_share_unit_node` ([#3892](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3892))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_sqlserver_general_cloud_instance: optimize delete instance code logic ([#3931](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3931))
+* resource/tencentcloud_sqlserver_instance: optimize delete instance code logic ([#3931](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3931))
+* resource/tencentcloud_waf_cc: update doc ([#3938](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3938))
+
 ## 1.82.79(March 27 , 2026)
 
 ENHANCEMENTS:
