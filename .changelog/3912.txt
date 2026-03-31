@@ -1,0 +1,2 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_backup_config: support `snapshot_secondary_backup_config`
