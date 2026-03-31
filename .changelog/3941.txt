@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_bh_auth_mode_config
+```
