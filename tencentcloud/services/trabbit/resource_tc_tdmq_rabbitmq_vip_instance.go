@@ -130,6 +130,24 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Whether to enable public network access. Default is false. Changing this will create a new instance.",
 			},
+			"remark": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Remarks for the RabbitMQ instance.",
+			},
+			"enable_deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable deletion protection. Default is false.",
+			},
+			"enable_risk_warning": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable cluster risk warning.",
+			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -373,6 +391,10 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("cluster_version", rabbitmqVipInstance.ClusterInfo.ClusterVersion)
 	}
 
+	if rabbitmqVipInstance.ClusterInfo.Remark != nil {
+		_ = d.Set("remark", rabbitmqVipInstance.ClusterInfo.Remark)
+	}
+
 	if rabbitmqVipInstance.ClusterNetInfo != nil && rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus != nil {
 		enablePublicAccess := *rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus == "ON"
 		_ = d.Set("enable_public_access", enablePublicAccess)
@@ -420,6 +442,14 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			} else {
 				_ = d.Set("auto_renew_flag", false)
 			}
+		}
+
+		if result[0].EnableDeletionProtection != nil {
+			_ = d.Set("enable_deletion_protection", result[0].EnableDeletionProtection)
+		}
+
+		if result[0].EnableRiskWarning != nil {
+			_ = d.Set("enable_risk_warning", result[0].EnableRiskWarning)
 		}
 
 		if result[0].PublicAccessEndpoint != nil {
@@ -486,6 +516,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}
