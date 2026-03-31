@@ -1458,6 +1458,7 @@ tencentcloud_cls_index
 tencentcloud_cls_alarm
 tencentcloud_cls_alarm_notice
 tencentcloud_cls_ckafka_consumer
+tencentcloud_cls_kafka_consumer
 tencentcloud_cls_kafka_recharge
 tencentcloud_cls_cos_recharge
 tencentcloud_cls_export
