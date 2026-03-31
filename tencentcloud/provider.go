@@ -2015,6 +2015,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_alarm":                                                                cls.ResourceTencentCloudClsAlarm(),
 			"tencentcloud_cls_alarm_notice":                                                         cls.ResourceTencentCloudClsAlarmNotice(),
 			"tencentcloud_cls_ckafka_consumer":                                                      cls.ResourceTencentCloudClsCkafkaConsumer(),
+			"tencentcloud_cls_kafka_consumer":                                                       cls.ResourceTencentCloudClsKafkaConsumer(),
 			"tencentcloud_cls_cos_recharge":                                                         cls.ResourceTencentCloudClsCosRecharge(),
 			"tencentcloud_cls_export":                                                               cls.ResourceTencentCloudClsExport(),
 			"tencentcloud_cls_data_transform":                                                       cls.ResourceTencentCloudClsDataTransform(),
