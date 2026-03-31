@@ -64,6 +64,166 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 				},
 			},
 
+			"rule_items": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Rule items returned from DescribeRules API.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rule_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule ID.",
+						},
+						"rule_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The rule name (1 to 255 characters).",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule status. Values:\n  - `enable`: Enabled.\n  - `disable`: Disabled.",
+						},
+						"rule_priority": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Rule priority, the larger the value, the higher the priority, the minimum is 1.",
+						},
+						"tags": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Rule tag list.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"rules": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Rule content.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"conditions": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Rule conditions.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"conditions": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "Rule conditions list.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"operator": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Operator. Valid values:\n  - `equal`: Equal.\n  - `notEqual`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
+															},
+															"target": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL.\n  - `url`: Partial URL.\n  - `client_country`: Country/Region of the client.\n  - `query_string`: Query string in the request URL.\n  - `request_header`: HTTP request header.\n  - `client_ip`: Client IP.",
+															},
+															"values": {
+																Type:        schema.TypeSet,
+																Computed:    true,
+																Description: "The parameter value of the match type.",
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+															"ignore_case": {
+																Type:        schema.TypeBool,
+																Computed:    true,
+																Description: "Whether the parameter value is case insensitive.",
+															},
+															"name": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "The parameter name of the match type.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"actions": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Rule actions.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"normal_action": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "Common operation.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"action": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Feature name.",
+															},
+															"parameters": {
+																Type:        schema.TypeList,
+																Computed:    true,
+																Description: "Parameter.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"name": {
+																			Type:        schema.TypeString,
+																			Computed:    true,
+																			Description: "Parameter name.",
+																		},
+																		"values": {
+																			Type:        schema.TypeSet,
+																			Computed:    true,
+																			Description: "The parameter value.",
+																			Elem: &schema.Schema{
+																				Type: schema.TypeString,
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"sub_rules": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Nested rules.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"tags": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "Tag of the rule.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"rules": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "Nested rule settings.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Required:    true,
@@ -1149,6 +1309,141 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 
 		_ = d.Set("rules", rulesList)
 	}
+
+	// Set rule_items
+	ruleItemsList := make([]map[string]interface{}, 0, 1)
+	ruleItemsMap := map[string]interface{}{}
+
+	if respData.RuleId != nil {
+		ruleItemsMap["rule_id"] = respData.RuleId
+	}
+
+	if respData.RuleName != nil {
+		ruleItemsMap["rule_name"] = respData.RuleName
+	}
+
+	if respData.Status != nil {
+		ruleItemsMap["status"] = respData.Status
+	}
+
+	if respData.RulePriority != nil {
+		ruleItemsMap["rule_priority"] = respData.RulePriority
+	}
+
+	if respData.Tags != nil {
+		ruleItemsMap["tags"] = respData.Tags
+	}
+
+	if respData.Rules != nil {
+		rulesListForRuleItems := make([]map[string]interface{}, 0, len(respData.Rules))
+		for _, rules := range respData.Rules {
+			rulesMap := map[string]interface{}{}
+
+			conditionsList := make([]map[string]interface{}, 0, len(rules.Conditions))
+			if rules.Conditions != nil {
+				for _, conditions := range rules.Conditions {
+					conditionsMap := map[string]interface{}{}
+
+					conditionsList2 := make([]map[string]interface{}, 0, len(conditions.Conditions))
+					if conditions.Conditions != nil {
+						for _, conditions := range conditions.Conditions {
+							conditionsMap2 := map[string]interface{}{}
+
+							if conditions.Operator != nil {
+								conditionsMap2["operator"] = conditions.Operator
+							}
+
+							if conditions.Target != nil {
+								conditionsMap2["target"] = conditions.Target
+							}
+
+							if conditions.Values != nil {
+								conditionsMap2["values"] = conditions.Values
+							}
+
+							if conditions.IgnoreCase != nil {
+								conditionsMap2["ignore_case"] = conditions.IgnoreCase
+							}
+
+							if conditions.Name != nil {
+								conditionsMap2["name"] = conditions.Name
+							}
+
+							conditionsList2 = append(conditionsList2, conditionsMap2)
+						}
+
+						conditionsMap["conditions"] = []interface{}{conditionsMap}
+					}
+					conditionsList = append(conditionsList, conditionsMap)
+				}
+
+				rulesMap["conditions"] = conditionsList
+			}
+
+			actionsList := make([]map[string]interface{}, 0, len(rules.Actions))
+			if rules.Actions != nil {
+				for _, actions := range rules.Actions {
+					actionsMap := map[string]interface{}{}
+
+					normalActionMap := map[string]interface{}{}
+
+					if actions.NormalAction != nil {
+						if actions.NormalAction.Action != nil {
+							normalActionMap["action"] = actions.NormalAction.Action
+						}
+
+						parametersList := make([]map[string]interface{}, 0, len(actions.NormalAction.Parameters))
+						if actions.NormalAction.Parameters != nil {
+							for _, parameters := range actions.NormalAction.Parameters {
+								parametersMap := map[string]interface{}{}
+
+								if parameters.Name != nil {
+									parametersMap["name"] = parameters.Name
+								}
+
+								if parameters.Values != nil {
+									parametersMap["values"] = parameters.Values
+								}
+
+								parametersList = append(parametersList, parametersMap)
+							}
+
+							normalActionMap["parameters"] = parametersList
+						}
+						actionsMap["normal_action"] = []interface{}{normalActionMap}
+					}
+
+					actionsList = append(actionsList, actionsMap)
+				}
+
+				rulesMap["actions"] = actionsList
+			}
+
+			subRulesList := make([]map[string]interface{}, 0, len(rules.SubRules))
+			if rules.SubRules != nil {
+				for _, subRules := range rules.SubRules {
+					subRulesMap := map[string]interface{}{}
+
+					if subRules.Tags != nil {
+						subRulesMap["tags"] = subRules.Tags
+					}
+
+					subRulesMap["rules"] = make([]interface{}, 0)
+
+					subRulesList = append(subRulesList, subRulesMap)
+				}
+
+				rulesMap["sub_rules"] = subRulesList
+			}
+
+			rulesListForRuleItems = append(rulesListForRuleItems, rulesMap)
+		}
+
+		ruleItemsMap["rules"] = rulesListForRuleItems
+	}
+
+	ruleItemsList = append(ruleItemsList, ruleItemsMap)
+	_ = d.Set("rule_items", ruleItemsList)
 
 	return nil
 }

@@ -124,6 +124,54 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
 }
 
 ```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `zone_id` - (Required, ForceNew) ID of the site.
+* `rule_name` - (Required) The rule name (1 to 255 characters).
+* `status` - (Required) Rule status. Values: `enable`, `disable`.
+* `tags` - (Optional) Rule tag list.
+* `rules` - (Required) Rule items list. See [rules block](#rules-block) below.
+
+### rules Block
+
+The `rules` block supports:
+
+* `actions` - (Optional) Features to be executed. See [actions block](#actions-block) below.
+* `or` - (Required) OR Conditions list of the rule.
+* `sub_rules` - (Optional) Nested rules. See [sub_rules block](#sub_rules-block) below.
+
+### actions Block
+
+The `actions` block supports:
+
+* `normal_action` - (Optional) Common operation.
+* `rewrite_action` - (Optional) Feature operation with a request/response header.
+* `code_action` - (Optional) Feature operation with a status code.
+
+### sub_rules Block
+
+The `sub_rules` block supports:
+
+* `tags` - (Optional) Tag of the rule.
+* `rules` - (Required) Nested rule settings.
+
+## Attribute Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `rule_id` - Rule ID.
+* `rule_priority` - Rule priority, larger value, higher priority, minimum is 1.
+* `rule_items` - (Computed) Rule items returned from DescribeRules API. This field provides the complete rule configuration structure from the API response, including all rule details such as rule type, conditions, and actions.
+  * `rule_id` - Rule ID.
+  * `rule_name` - The rule name (1 to 255 characters).
+  * `status` - Rule status. Values: `enable`, `disable`.
+  * `rule_priority` - Rule priority, larger value, higher priority, minimum is 1.
+  * `tags` - Rule tag list.
+  * `rules` - Rule content, containing conditions, actions, and sub_rules.
+
 Import
 
 teo rule_engine can be imported using the id#rule_id, e.g.

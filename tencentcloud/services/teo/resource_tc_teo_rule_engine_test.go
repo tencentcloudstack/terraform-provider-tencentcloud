@@ -46,6 +46,13 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.0.name", "ServerName"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.0.values.#", "1"),
+					// Check rule_items field
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_items.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "rule_items.0.rule_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "rule_items.0.rule_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "rule_items.0.status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "rule_items.0.rule_priority"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_items.0.rules.#", "1"),
 				),
 			},
 			{
