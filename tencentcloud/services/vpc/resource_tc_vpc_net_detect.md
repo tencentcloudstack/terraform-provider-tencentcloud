@@ -27,6 +27,31 @@ resource "tencentcloud_vpc_net_detect" "example" {
     "10.0.0.1",
     "10.0.0.2",
   ]
+
+  tags = {
+    Environment = "test"
+    Owner      = "devops"
+  }
+}
+```
+
+Create a Net Detect with tags
+
+```hcl
+resource "tencentcloud_vpc_net_detect" "example_with_tags" {
+  net_detect_name       = "tf-example-with-tags"
+  vpc_id                = tencentcloud_vpc.vpc.id
+  subnet_id             = tencentcloud_subnet.subnet.id
+  detect_destination_ip = [
+    "10.0.0.1",
+    "10.0.0.2",
+  ]
+
+  tags = {
+    Environment = "production"
+    Owner       = "devops"
+    Project     = "network"
+  }
 }
 ```
 

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -69,6 +70,13 @@ func ResourceTencentCloudVpcNetDetect() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Network probe description.",
 			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tags of the net detect resource.",
+			},
 		},
 	}
 }
@@ -114,6 +122,16 @@ func resourceTencentCloudVpcNetDetectCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("net_detect_description"); ok {
 		request.NetDetectDescription = helper.String(v.(string))
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -188,6 +206,16 @@ func resourceTencentCloudVpcNetDetectRead(d *schema.ResourceData, meta interface
 		_ = d.Set("net_detect_description", netDetect.NetDetectDescription)
 	}
 
+	// Read tags from tag service
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	tagService := svctag.NewTagService(tcClient)
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "netDetect", tcClient.Region, netDetectId)
+	if err != nil {
+		log.Printf("[WARN]%s describe netDetect tags failed, reason:%+v", logId, err)
+	} else {
+		_ = d.Set("tags", tags)
+	}
+
 	return nil
 }
 
@@ -205,7 +233,7 @@ func resourceTencentCloudVpcNetDetectUpdate(d *schema.ResourceData, meta interfa
 
 	mutableArgs := []string{
 		"net_detect_name", "detect_destination_ip", "next_hop_type",
-		"next_hop_destination", "net_detect_description",
+		"next_hop_destination", "net_detect_description", "tags",
 	}
 	needChange := false
 	for _, v := range mutableArgs {
@@ -254,6 +282,29 @@ func resourceTencentCloudVpcNetDetectUpdate(d *schema.ResourceData, meta interfa
 	if err != nil {
 		log.Printf("[CRITAL]%s update vpc netDetect failed, reason:%+v", logId, err)
 		return err
+	}
+
+	// Update tags if changed
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("vpc", "netDetect", tcClient.Region, netDetectId)
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			e := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update netDetect tags failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	return resourceTencentCloudVpcNetDetectRead(d, meta)

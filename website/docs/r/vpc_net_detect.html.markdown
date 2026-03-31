@@ -41,6 +41,26 @@ resource "tencentcloud_vpc_net_detect" "example" {
 }
 ```
 
+### Create a Net Detect with tags
+
+```hcl
+resource "tencentcloud_vpc_net_detect" "example_with_tags" {
+  net_detect_name       = "tf-example-with-tags"
+  vpc_id                = tencentcloud_vpc.vpc.id
+  subnet_id             = tencentcloud_subnet.subnet.id
+  detect_destination_ip = [
+    "10.0.0.1",
+    "10.0.0.2",
+  ]
+
+  tags = {
+    Environment = "production"
+    Owner       = "devops"
+    Project     = "network"
+  }
+}
+```
+
 
 
 ```hcl
@@ -229,6 +249,7 @@ The following arguments are supported:
 * `net_detect_description` - (Optional, String) Network probe description.
 * `next_hop_destination` - (Optional, String) The destination gateway of the next hop, the value is related to the next hop type. If the next hop type is VPN, and the value is the VPN gateway ID, such as: vpngw-12345678; If the next hop type is DIRECTCONNECT, and the value is the private line gateway ID, such as: dcg-12345678; If the next hop type is PEERCONNECTION, which takes the value of the peer connection ID, such as: pcx-12345678; If the next hop type is NAT, and the value is Nat gateway, such as: nat-12345678; If the next hop type is NORMAL_CVM, which takes the IPv4 address of the cloud server, such as: 10.0.0.12; If the next hop type is CCN, and the value is the cloud network ID, such as: ccn-12345678; If the next hop type is NONEXTHOP, and the specified network probe is a network probe without a next hop.
 * `next_hop_type` - (Optional, String) The next hop type, currently we support the following types: `VPN`: VPN gateway; `DIRECTCONNECT`: private line gateway; `PEERCONNECTION`: peer connection; `NAT`: NAT gateway; `NORMAL_CVM`: normal cloud server; `CCN`: cloud networking gateway; `NONEXTHOP`: no next hop.
+* `tags` - (Optional, Map, Computed) Tags of the net detect resource.
 
 ## Attributes Reference
 
