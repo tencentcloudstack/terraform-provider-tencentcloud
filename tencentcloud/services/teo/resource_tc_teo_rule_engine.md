@@ -124,6 +124,18 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
 }
 
 ```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `zone_id` - (Required, ForceNew) ID of the site.
+* `rule_name` - (Required) The rule name (1 to 255 characters).
+* `status` - (Required) Rule status. Values: `enable` (Enabled), `disable` (Disabled).
+* `rules` - (Required) Rule items list.
+* `tags` - (Optional) Rule tag list.
+* `rule_items` - (Computed) Complete list of rule items returned by the DescribeRules API for the zone. This field provides read-only access to all available rule items in the zone.
+
 Import
 
 teo rule_engine can be imported using the id#rule_id, e.g.

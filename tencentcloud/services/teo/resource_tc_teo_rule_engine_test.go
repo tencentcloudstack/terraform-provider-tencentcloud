@@ -29,6 +29,7 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_name", "rule-1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "status", "enable"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "rule_items.#"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.actions.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.or.#", "1"),

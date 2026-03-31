@@ -64,6 +64,36 @@ func ResourceTencentCloudTeoRuleEngine() *schema.Resource {
 				},
 			},
 
+			"rule_items": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Complete list of rule items returned by the DescribeRules API for the zone.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rule_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule ID.",
+						},
+						"rule_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The rule name.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule status.",
+						},
+						"rule_priority": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Rule priority.",
+						},
+					},
+				},
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Required:    true,
@@ -830,6 +860,29 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 	if respData.Tags != nil {
 		_ = d.Set("tags", respData.Tags)
 	}
+
+	// Populate rule_items field with all rules from the zone
+	ruleItemsList := make([]map[string]interface{}, 0)
+	ruleItemsData, err := service.DescribeTeoRuleEngineItems(ctx, zoneId)
+	if err == nil && ruleItemsData != nil {
+		for _, ruleItem := range ruleItemsData {
+			ruleItemMap := map[string]interface{}{}
+			if ruleItem.RuleId != nil {
+				ruleItemMap["rule_id"] = ruleItem.RuleId
+			}
+			if ruleItem.RuleName != nil {
+				ruleItemMap["rule_name"] = ruleItem.RuleName
+			}
+			if ruleItem.Status != nil {
+				ruleItemMap["status"] = ruleItem.Status
+			}
+			if ruleItem.RulePriority != nil {
+				ruleItemMap["rule_priority"] = ruleItem.RulePriority
+			}
+			ruleItemsList = append(ruleItemsList, ruleItemMap)
+		}
+	}
+	_ = d.Set("rule_items", ruleItemsList)
 
 	rulesList := make([]map[string]interface{}, 0, len(respData.Rules))
 	if respData.Rules != nil {

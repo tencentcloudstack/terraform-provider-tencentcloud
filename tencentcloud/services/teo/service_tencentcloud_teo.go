@@ -1144,6 +1144,43 @@ func (me *TeoService) DescribeTeoRuleEngineById(ctx context.Context, zoneId stri
 	return
 }
 
+func (me *TeoService) DescribeTeoRuleEngineItems(ctx context.Context, zoneId string) (ret []*teo.RuleItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeRulesRequest()
+	response := teo.NewDescribeRulesResponse()
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoClient().DescribeRules(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.RuleItems == nil {
+		return
+	}
+
+	ret = response.Response.RuleItems
+	return
+}
+
 func (me *TeoService) DescribeTeoOriginGroupById(ctx context.Context, originGroupId string) (ret *teo.OriginGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
