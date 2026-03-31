@@ -329,6 +329,73 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 				Computed:    true,
 				Description: "Real-time log delivery task ID.",
 			},
+
+			"realtime_log_delivery_tasks": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: "List of realtime log delivery tasks with their detailed information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"task_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Real-time log delivery task ID.",
+						},
+						"zone_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the site.",
+						},
+						"task_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The name of the real-time log delivery task.",
+						},
+						"task_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The real-time log delivery task type.",
+						},
+						"delivery_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The status of the real-time log delivery task.",
+						},
+						"entity_list": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "List of entities corresponding to real-time log delivery tasks.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"log_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Data delivery type.",
+						},
+						"area": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Data delivery area.",
+						},
+						"fields": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "A list of preset fields for delivery.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"sample": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The sampling ratio in thousandths.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -803,6 +870,59 @@ func resourceTencentCloudTeoRealtimeLogDeliveryRead(d *schema.ResourceData, meta
 		}
 
 		_ = d.Set("s3", []interface{}{s3Map})
+	}
+
+	// Set realtime_log_delivery_tasks parameter
+	// Note: Error handling is applied to ensure read operation doesn't fail if parameter population fails
+	realtimeLogDeliveryTasksList := make([]map[string]interface{}, 0, 1)
+	if respData != nil {
+		taskMap := map[string]interface{}{}
+
+		if respData.TaskId != nil {
+			taskMap["task_id"] = respData.TaskId
+		}
+
+		if respData.ZoneId != nil {
+			taskMap["zone_id"] = respData.ZoneId
+		}
+
+		if respData.TaskName != nil {
+			taskMap["task_name"] = respData.TaskName
+		}
+
+		if respData.TaskType != nil {
+			taskMap["task_type"] = respData.TaskType
+		}
+
+		if respData.DeliveryStatus != nil {
+			taskMap["delivery_status"] = respData.DeliveryStatus
+		}
+
+		if respData.EntityList != nil {
+			taskMap["entity_list"] = respData.EntityList
+		}
+
+		if respData.LogType != nil {
+			taskMap["log_type"] = respData.LogType
+		}
+
+		if respData.Area != nil {
+			taskMap["area"] = respData.Area
+		}
+
+		if respData.Fields != nil {
+			taskMap["fields"] = respData.Fields
+		}
+
+		if respData.Sample != nil {
+			taskMap["sample"] = respData.Sample
+		}
+
+		realtimeLogDeliveryTasksList = append(realtimeLogDeliveryTasksList, taskMap)
+	}
+	if err := d.Set("realtime_log_delivery_tasks", realtimeLogDeliveryTasksList); err != nil {
+		log.Printf("[WARN]%s failed to set realtime_log_delivery_tasks: %v\n", logId, err)
+		// Don't fail the read operation, just log the warning
 	}
 
 	return nil

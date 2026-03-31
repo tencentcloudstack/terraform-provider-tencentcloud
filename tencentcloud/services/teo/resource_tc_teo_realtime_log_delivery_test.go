@@ -36,6 +36,12 @@ func TestAccTencentCloudTeoRealtimeLogDeliveryResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "s3.0.compress_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "s3.0.endpoint"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "s3.0.region"),
+					// Check realtime_log_delivery_tasks parameter is populated
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "realtime_log_delivery_tasks.#"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "realtime_log_delivery_tasks.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "realtime_log_delivery_tasks.0.task_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "realtime_log_delivery_tasks.0.task_name"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_realtime_log_delivery.teo_realtime_log_delivery", "realtime_log_delivery_tasks.0.task_type", "s3"),
 				),
 			},
 			{
