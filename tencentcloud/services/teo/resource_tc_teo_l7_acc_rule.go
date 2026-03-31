@@ -24,6 +24,12 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: "Task ID returned by the ImportZoneConfig API.",
+			},
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -216,9 +222,14 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 
 		if response != nil && response.Response != nil && response.Response.TaskId != nil {
 			service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-			conf := tccommon.BuildStateChangeConf([]string{"doing"}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TeoL7AccRuleStateRefreshFunc(zoneId, *response.Response.TaskId, []string{"failure"}))
+			taskId := *response.Response.TaskId
+			conf := tccommon.BuildStateChangeConf([]string{"doing"}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.TeoL7AccRuleStateRefreshFunc(zoneId, taskId, []string{"failure"}))
 			if _, e := conf.WaitForState(); e != nil {
 				return e
+			}
+			// Save TaskId to state
+			if err := d.Set("task_id", taskId); err != nil {
+				return fmt.Errorf("failed to set task_id: %v", err)
 			}
 		} else {
 			return fmt.Errorf("[CRITAL]%s update teo l7 acc rule failed, response body is nil", logId)

@@ -18,6 +18,7 @@ func TestAccTencentCloudTeoL7AccRuleResource_basic(t *testing.T) {
 				Config: testAccTeoL7AccRule,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "task_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.#", "6"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.description.#", "1"),
@@ -68,6 +69,7 @@ func TestAccTencentCloudTeoL7AccRuleResource_basic(t *testing.T) {
 				Config: testAccTeoL7AccRuleUp,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "task_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "zone_id", "zone-39quuimqg8r6"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.#", "5"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_rule.teo_l7_acc_rule", "rules.0.description.#", "1"),
