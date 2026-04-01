@@ -129,6 +129,10 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 		for _, rules := range respData.Rules {
 			rulesMap := map[string]interface{}{}
 
+			if rules.Status != nil {
+				rulesMap["status"] = rules.Status
+			}
+
 			if rules.RuleId != nil {
 				rulesMap["rule_id"] = rules.RuleId
 			}
