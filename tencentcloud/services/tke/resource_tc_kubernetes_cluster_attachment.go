@@ -88,8 +88,8 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							ForceNew:    true,
-							Default:     "/var/lib/docker",
-							Description: "Docker graph path. Default is `/var/lib/docker`.",
+							Computed:    true,
+							Description: "Docker graph path. Default is determined by the platform (currently /var/lib/containerd for containerd-based nodes).",
 						},
 						"data_disk": {
 							Type:        schema.TypeList,
@@ -270,9 +270,9 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							ForceNew:    true,
-							Default:     "/var/lib/docker",
+							Computed:    true,
 							Deprecated:  "This argument was no longer supported by TencentCloud TKE.",
-							Description: "Docker graph path. Default is `/var/lib/docker`.",
+							Description: "Docker graph path. Default is determined by the platform (currently /var/lib/containerd for containerd-based nodes).",
 						},
 						"data_disk": {
 							Type:        schema.TypeList,
