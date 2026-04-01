@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a CynosDB cls delivery
 
+~> **NOTE:** Suggest not setting `topic_id` and `topic_name`, `group_id` and `group_name` simultaneously, If both `topic_id` and `topic_name` are set, `topic_id` is used by default; If both `group_id` and `group_name` are set, `group_id` is used by default.
+
 ~> **NOTE:** After executing `terraform destroy`, slow logs will no longer be uploaded, but historical logs will continue to be stored in the log topic until they expire. Log storage fees will continue to be charged during this period. If you do not wish to continue storing historical logs, you can go to CLS to delete the log topic.
 
 ## Example Usage
