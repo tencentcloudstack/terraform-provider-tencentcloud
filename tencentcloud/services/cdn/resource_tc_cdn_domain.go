@@ -1928,7 +1928,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	// Range Origin Pull
 	request.RangeOriginPull = &cdn.RangeOriginPull{}
 	request.RangeOriginPull.Switch = helper.String(d.Get("range_origin_switch").(string))
-	// 如果配置了 range_origin_pull，使用其中的 switch 和 range_rules
+	// If range_origin_pull is configured, use its switch and range_rules
 	if v, ok := helper.InterfacesHeadMap(d, "range_origin_pull"); ok {
 		request.RangeOriginPull.Switch = helper.String(v["switch"].(string))
 		if rules, ok := v["range_rules"].([]interface{}); ok && len(rules) > 0 {
@@ -3572,7 +3572,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			"switch": dc.OriginCombine.Switch,
 		})
 	}
-	// range_origin_pull (分路径规则)
+	// range_origin_pull (per-path rules)
 	if ok := checkCdnInfoWritable(d, "range_origin_pull", dc.RangeOriginPull); ok {
 		dMap := map[string]interface{}{
 			"switch": dc.RangeOriginPull.Switch,
@@ -4819,7 +4819,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 		}
 	}
 
-	// user_agent_filter - Create 接口不支持，需要通过 Update 接口设置
+	// user_agent_filter - not supported by Create API, must be set via Update API
 	if v, ok := helper.InterfacesHeadMap(d, "user_agent_filter"); ok {
 		needUpdate = true
 		vSwitch := v["switch"].(string)
@@ -4849,7 +4849,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 		}
 	}
 
-	// url_redirect - Create 接口不支持，需要通过 Update 接口设置
+	// url_redirect - not supported by Create API, must be set via Update API
 	if v, ok := helper.InterfacesHeadMap(d, "url_redirect"); ok {
 		needUpdate = true
 		vSwitch := v["switch"].(string)
@@ -4882,7 +4882,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 		}
 	}
 
-	// origin_combine - Create 接口不支持，需要通过 Update 接口设置
+	// origin_combine - not supported by Create API, must be set via Update API
 	if v, ok := helper.InterfacesHeadMap(d, "origin_combine"); ok {
 		needUpdate = true
 		vSwitch := v["switch"].(string)
@@ -4891,7 +4891,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 		}
 	}
 
-	// access_port - Create 接口不支持，需要通过 Update 接口设置
+	// access_port - not supported by Create API, must be set via Update API
 	if v, ok := d.GetOk("access_port"); ok {
 		needUpdate = true
 		ports := v.([]interface{})
