@@ -78,6 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Origin site group creation time.
+* `group_id` - The ID of the origin group.
 * `origin_group_id` - OriginGroup ID.
 * `references` - List of referenced instances of the origin site group.
   * `instance_id` - The instance ID of the reference type.

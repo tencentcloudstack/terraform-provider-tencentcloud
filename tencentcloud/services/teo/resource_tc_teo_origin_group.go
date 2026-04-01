@@ -38,6 +38,12 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 				Description: "OriginGroup ID.",
 			},
 
+			"group_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The ID of the origin group",
+			},
+
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -238,6 +244,14 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 
 	d.SetId(strings.Join([]string{zoneId, originGroupId}, tccommon.FILED_SP))
 
+	// Store GroupId to resource state
+	if response.Response.OriginGroupId == nil {
+		return fmt.Errorf("GroupId is required but not returned from API")
+	}
+	if err := d.Set("group_id", *response.Response.OriginGroupId); err != nil {
+		return fmt.Errorf("failed to set group_id: %v", err)
+	}
+
 	return resourceTencentCloudTeoOriginGroupRead(d, meta)
 }
 
@@ -272,6 +286,7 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 	}
 	if respData.GroupId != nil {
 		_ = d.Set("origin_group_id", respData.GroupId)
+		_ = d.Set("group_id", respData.GroupId)
 		originGroupId = *respData.GroupId
 	}
 
@@ -480,7 +495,16 @@ func resourceTencentCloudTeoOriginGroupDelete(d *schema.ResourceData, meta inter
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	zoneId := idSplit[0]
-	originGroupId := idSplit[1]
+
+	// Read group_id from resource state
+	groupId, ok := d.GetOk("group_id")
+	if !ok || groupId == nil {
+		return fmt.Errorf("group_id is required for deletion but not found in resource state")
+	}
+	groupIdStr := groupId.(string)
+	if groupIdStr == "" {
+		return fmt.Errorf("group_id is required for deletion but is empty")
+	}
 
 	var (
 		request  = teo.NewDeleteOriginGroupRequest()
@@ -489,7 +513,8 @@ func resourceTencentCloudTeoOriginGroupDelete(d *schema.ResourceData, meta inter
 
 	request.ZoneId = helper.String(zoneId)
 
-	request.GroupId = helper.String(originGroupId)
+	// Pass group_id as required GroupId parameter to DeleteOriginGroup API
+	request.GroupId = helper.String(groupIdStr)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteOriginGroupWithContext(ctx, request)

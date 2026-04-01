@@ -30,6 +30,7 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "name", "keep-group-1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "type", "GENERAL"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "group_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.#", "3"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.0.record"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "records.0.type"),
@@ -55,6 +56,7 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "group_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "records.0.private_parameters.0.name", "SecretAccessKey"),
