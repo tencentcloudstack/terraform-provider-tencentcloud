@@ -20,6 +20,7 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
 				Config: testAccTeoFunction,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "function_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "name", "aaa-zone-2qtuhspy7cr6-1310708577"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "remark", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "content", `addEventListener('fetch', e => {
@@ -38,6 +39,7 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
 				Config: testAccTeoFunctionUp,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "function_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "name", "aaa-zone-2qtuhspy7cr6-1310708577"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "remark", "test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "content", `addEventListener('fetch', e => {

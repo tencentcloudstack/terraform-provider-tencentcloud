@@ -132,6 +132,7 @@ func resourceTencentCloudTeoFunctionCreate(d *schema.ResourceData, meta interfac
 	}
 
 	functionId = *response.Response.FunctionId
+	_ = d.Set("function_id", functionId)
 
 	if _, err := (&resource.StateChangeConf{
 		Delay:      10 * time.Second,
