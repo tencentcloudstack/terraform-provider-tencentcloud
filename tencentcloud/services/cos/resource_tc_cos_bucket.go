@@ -1104,99 +1104,101 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	//read intelligent tiering
-	result, err := cosService.BucketGetIntelligentTiering(ctx, bucket, cdcId)
-	if err != nil {
-		return fmt.Errorf("get intelligent tiering failed: %v", err)
-	}
-	if result != nil {
-		if result.Status == "Enabled" {
-			_ = d.Set("enable_intelligent_tiering", true)
-		} else {
-			_ = d.Set("enable_intelligent_tiering", false)
+	if !strings.Contains(cosBucketUrl, ".cos-cdc.") {
+		result, err := cosService.BucketGetIntelligentTiering(ctx, bucket, cdcId)
+		if err != nil {
+			return fmt.Errorf("get intelligent tiering failed: %v", err)
+		}
+		if result != nil {
+			if result.Status == "Enabled" {
+				_ = d.Set("enable_intelligent_tiering", true)
+			} else {
+				_ = d.Set("enable_intelligent_tiering", false)
+			}
+
+			if result.Transition != nil {
+				_ = d.Set("intelligent_tiering_days", result.Transition.Days)
+				_ = d.Set("intelligent_tiering_request_frequent", result.Transition.RequestFrequent)
+			}
 		}
 
-		if result.Transition != nil {
-			_ = d.Set("intelligent_tiering_days", result.Transition.Days)
-			_ = d.Set("intelligent_tiering_request_frequent", result.Transition.RequestFrequent)
+		//read intelligent tiering archiving rule list
+		respData, err := cosService.BucketGetIntelligentTieringArchivingRuleList(ctx, bucket, cdcId)
+		if err != nil {
+			return fmt.Errorf("get intelligent tiering archiving rule list failed: %v", err)
 		}
-	}
 
-	//read intelligent tiering archiving rule list
-	respData, err := cosService.BucketGetIntelligentTieringArchivingRuleList(ctx, bucket, cdcId)
-	if err != nil {
-		return fmt.Errorf("get intelligent tiering archiving rule list failed: %v", err)
-	}
+		if respData != nil {
+			if respData.Configurations != nil && len(respData.Configurations) > 0 {
+				intelligentTieringArchivingRules := make([]map[string]interface{}, 0, len(respData.Configurations))
+				for _, config := range respData.Configurations {
+					intelligentTieringArchivingRule := make(map[string]interface{})
+					if config.Id == "default" {
+						continue
+					}
 
-	if respData != nil {
-		if respData.Configurations != nil && len(respData.Configurations) > 0 {
-			intelligentTieringArchivingRules := make([]map[string]interface{}, 0, len(respData.Configurations))
-			for _, config := range respData.Configurations {
-				intelligentTieringArchivingRule := make(map[string]interface{})
-				if config.Id == "default" {
-					continue
-				}
+					intelligentTieringArchivingRule["rule_id"] = config.Id
+					intelligentTieringArchivingRule["status"] = config.Status
 
-				intelligentTieringArchivingRule["rule_id"] = config.Id
-				intelligentTieringArchivingRule["status"] = config.Status
+					if config.Filter != nil {
+						dMap := make(map[string]interface{})
+						if config.Filter.And != nil {
+							andMap := make(map[string]interface{}, 0)
+							if config.Filter.And.Prefix != "" {
+								andMap["prefix"] = config.Filter.And.Prefix
+							}
 
-				if config.Filter != nil {
-					dMap := make(map[string]interface{})
-					if config.Filter.And != nil {
-						andMap := make(map[string]interface{}, 0)
-						if config.Filter.And.Prefix != "" {
-							andMap["prefix"] = config.Filter.And.Prefix
+							if config.Filter.And.Tag != nil && len(config.Filter.And.Tag) > 0 {
+								tagList := make([]map[string]interface{}, 0, len(config.Filter.And.Tag))
+								for _, item := range config.Filter.And.Tag {
+									dMap := make(map[string]interface{})
+									dMap["key"] = item.Key
+									dMap["value"] = item.Value
+									tagList = append(tagList, dMap)
+								}
+
+								andMap["tag"] = tagList
+							}
+
+							dMap["and"] = []interface{}{andMap}
 						}
 
-						if config.Filter.And.Tag != nil && len(config.Filter.And.Tag) > 0 {
-							tagList := make([]map[string]interface{}, 0, len(config.Filter.And.Tag))
-							for _, item := range config.Filter.And.Tag {
+						if config.Filter.Prefix != "" {
+							dMap["prefix"] = config.Filter.Prefix
+						}
+
+						if config.Filter.Tag != nil && len(config.Filter.Tag) > 0 {
+							tagList := make([]map[string]interface{}, 0, len(config.Filter.Tag))
+							for _, item := range config.Filter.Tag {
 								dMap := make(map[string]interface{})
 								dMap["key"] = item.Key
 								dMap["value"] = item.Value
 								tagList = append(tagList, dMap)
 							}
 
-							andMap["tag"] = tagList
+							dMap["tag"] = tagList
 						}
 
-						dMap["and"] = []interface{}{andMap}
+						intelligentTieringArchivingRule["filter"] = []interface{}{dMap}
 					}
 
-					if config.Filter.Prefix != "" {
-						dMap["prefix"] = config.Filter.Prefix
-					}
-
-					if config.Filter.Tag != nil && len(config.Filter.Tag) > 0 {
-						tagList := make([]map[string]interface{}, 0, len(config.Filter.Tag))
-						for _, item := range config.Filter.Tag {
+					if config.Tiering != nil && len(config.Tiering) > 0 {
+						tieringList := make([]map[string]interface{}, 0, len(config.Tiering))
+						for _, item := range config.Tiering {
 							dMap := make(map[string]interface{})
-							dMap["key"] = item.Key
-							dMap["value"] = item.Value
-							tagList = append(tagList, dMap)
+							dMap["access_tier"] = item.AccessTier
+							dMap["days"] = item.Days
+							tieringList = append(tieringList, dMap)
 						}
 
-						dMap["tag"] = tagList
+						intelligentTieringArchivingRule["tiering"] = tieringList
 					}
 
-					intelligentTieringArchivingRule["filter"] = []interface{}{dMap}
+					intelligentTieringArchivingRules = append(intelligentTieringArchivingRules, intelligentTieringArchivingRule)
 				}
 
-				if config.Tiering != nil && len(config.Tiering) > 0 {
-					tieringList := make([]map[string]interface{}, 0, len(config.Tiering))
-					for _, item := range config.Tiering {
-						dMap := make(map[string]interface{})
-						dMap["access_tier"] = item.AccessTier
-						dMap["days"] = item.Days
-						tieringList = append(tieringList, dMap)
-					}
-
-					intelligentTieringArchivingRule["tiering"] = tieringList
-				}
-
-				intelligentTieringArchivingRules = append(intelligentTieringArchivingRules, intelligentTieringArchivingRule)
+				_ = d.Set("intelligent_tiering_archiving_rule_list", intelligentTieringArchivingRules)
 			}
-
-			_ = d.Set("intelligent_tiering_archiving_rule_list", intelligentTieringArchivingRules)
 		}
 	}
 
