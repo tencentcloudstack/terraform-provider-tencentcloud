@@ -7,7 +7,7 @@ Example Usage
 Basic Usage
 
 ```hcl
-resource "tencentcloud_cvm_resource_pool_packs" "pool_packs" {
+resource "tencentcloud_cvm_resource_pool_pack" "pool_pack" {
   zone                              = "ap-guangzhou-7"
   instance_type                     = "SA9.96XLARGE1152"
   period                            = 12
@@ -21,7 +21,7 @@ resource "tencentcloud_cvm_resource_pool_packs" "pool_packs" {
 With Auto Renewal
 
 ```hcl
-resource "tencentcloud_cvm_resource_pool_packs" "pool_packs_auto_renew" {
+resource "tencentcloud_cvm_resource_pool_pack" "pool_pack_auto_renew" {
   zone                              = "ap-guangzhou-7"
   instance_type                     = "SA9.96XLARGE1152"
   period                            = 6
@@ -37,5 +37,5 @@ Import
 CVM resource pool packs can be imported using the resource pool pack ID, e.g.
 
 ```
-terraform import tencentcloud_cvm_resource_pool_packs.pool_packs rpp-xxxxx
+terraform import tencentcloud_cvm_resource_pool_pack.pool_pack rpp-xxxxx
 ```

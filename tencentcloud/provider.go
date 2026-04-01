@@ -1397,7 +1397,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eip_normal_address_return":                                                cvm.ResourceTencentCloudEipNormalAddressReturn(),
 			"tencentcloud_image":                                                                    cvm.ResourceTencentCloudImage(),
 			"tencentcloud_cvm_hpc_cluster":                                                          cvm.ResourceTencentCloudCvmHpcCluster(),
-			"tencentcloud_cvm_resource_pool_packs":                                                  cvm.ResourceTencentCloudCvmResourcePoolPacks(),
+			"tencentcloud_cvm_resource_pool_pack":                                                   cvm.ResourceTencentCloudCvmResourcePoolPack(),
 			"tencentcloud_cbs_snapshot":                                                             cbs.ResourceTencentCloudCbsSnapshot(),
 			"tencentcloud_cbs_snapshot_policy":                                                      cbs.ResourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                                                              cbs.ResourceTencentCloudCbsStorage(),

@@ -2031,7 +2031,7 @@ func (me *CvmService) DescribeCvmResourcePoolPackById(ctx context.Context, packI
 }
 
 // DeleteCvmResourcePoolPacks deletes resource pool packs via TerminateResourcePoolPacks API
-func (me *CvmService) DeleteCvmResourcePoolPacks(ctx context.Context, packIds []*string) (errRet error) {
+func (me *CvmService) DeleteCvmResourcePoolPack(ctx context.Context, packIds []*string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := cvm.NewTerminateResourcePoolPacksRequest()

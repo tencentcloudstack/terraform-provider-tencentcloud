@@ -14,11 +14,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudCvmResourcePoolPacks() *schema.Resource {
+func ResourceTencentCloudCvmResourcePoolPack() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCvmResourcePoolPacksCreate,
-		Read:   resourceTencentCloudCvmResourcePoolPacksRead,
-		Delete: resourceTencentCloudCvmResourcePoolPacksDelete,
+		Create: resourceTencentCloudCvmResourcePoolPackCreate,
+		Read:   resourceTencentCloudCvmResourcePoolPackRead,
+		Delete: resourceTencentCloudCvmResourcePoolPackDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -44,15 +44,15 @@ func ResourceTencentCloudCvmResourcePoolPacks() *schema.Resource {
 			"resource_pool_pack_type": {
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
-				Default:     "EXCLUSIVE",
 				Description: "Resource pool pack type. Options: EXCLUSIVE (exclusive, default), SHARED (shared). Note: Only EXCLUSIVE is supported in the first phase.",
 			},
 			"auto_placement": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeBool,
-				Default:     true,
+				Computed:    true,
 				Description: "Auto placement switch. Default: true. When enabled, the system will search for suitable pools in pools with this capability enabled when creating instances without specifying a resource pool.",
 			},
 			"dedicated_resource_pool_pack_name": {
@@ -65,7 +65,7 @@ func ResourceTencentCloudCvmResourcePoolPacks() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Default:     "NOTIFY_AND_MANUAL_RENEW",
+				Computed:    true,
 				Description: "Auto renewal flag. Options: NOTIFY_AND_AUTO_RENEW (notify and auto renew), NOTIFY_AND_MANUAL_RENEW (notify and manual renew, default), DISABLE_NOTIFY_AND_MANUAL_RENEW (do not notify and manual renew).",
 			},
 
@@ -99,8 +99,8 @@ func ResourceTencentCloudCvmResourcePoolPacks() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCvmResourcePoolPacksCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cvm_resource_pool_packs.create")()
+func resourceTencentCloudCvmResourcePoolPackCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_resource_pool_pack.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -115,6 +115,8 @@ func resourceTencentCloudCvmResourcePoolPacksCreate(d *schema.ResourceData, meta
 	if v, ok := d.GetOk("zone"); ok {
 		request.Zone = helper.String(v.(string))
 	}
+
+	request.InstanceCount = helper.IntUint64(1)
 
 	if v, ok := d.GetOk("instance_type"); ok {
 		request.InstanceType = helper.String(v.(string))
@@ -149,7 +151,7 @@ func resourceTencentCloudCvmResourcePoolPacksCreate(d *schema.ResourceData, meta
 	}
 
 	if len(packIds) < 1 {
-		return fmt.Errorf("resource `tencentcloud_cvm_resource_pool_packs` create failed, no pack ID returned")
+		return fmt.Errorf("resource `tencentcloud_cvm_resource_pool_pack` create failed, no pack ID returned")
 	}
 
 	// Set resource ID to the first pack ID
@@ -178,11 +180,11 @@ func resourceTencentCloudCvmResourcePoolPacksCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	return resourceTencentCloudCvmResourcePoolPacksRead(d, meta)
+	return resourceTencentCloudCvmResourcePoolPackRead(d, meta)
 }
 
-func resourceTencentCloudCvmResourcePoolPacksRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cvm_resource_pool_packs.read")()
+func resourceTencentCloudCvmResourcePoolPackRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_resource_pool_pack.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -210,7 +212,7 @@ func resourceTencentCloudCvmResourcePoolPacksRead(d *schema.ResourceData, meta i
 
 	if pack == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `tencentcloud_cvm_resource_pool_packs` %s does not exist", logId, packId)
+		log.Printf("[WARN]%s resource `tencentcloud_cvm_resource_pool_pack` %s does not exist", logId, packId)
 		return nil
 	}
 
@@ -262,8 +264,8 @@ func resourceTencentCloudCvmResourcePoolPacksRead(d *schema.ResourceData, meta i
 	return nil
 }
 
-func resourceTencentCloudCvmResourcePoolPacksDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cvm_resource_pool_packs.delete")()
+func resourceTencentCloudCvmResourcePoolPackDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cvm_resource_pool_pack.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -272,7 +274,7 @@ func resourceTencentCloudCvmResourcePoolPacksDelete(d *schema.ResourceData, meta
 	service := CvmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	packId := d.Id()
 
-	if err := service.DeleteCvmResourcePoolPacks(ctx, []*string{&packId}); err != nil {
+	if err := service.DeleteCvmResourcePoolPack(ctx, []*string{&packId}); err != nil {
 		log.Printf("[CRITAL]%s delete cvm resource pool pack failed, reason:%+v", logId, err)
 		return err
 	}
