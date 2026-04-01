@@ -219,6 +219,10 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if v, ok := d.GetOk("host_header"); ok {
+		request.HostHeader = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateOriginGroupWithContext(ctx, request)
 		if e != nil {

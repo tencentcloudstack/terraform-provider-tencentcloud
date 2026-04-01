@@ -37,6 +37,27 @@ resource "tencentcloud_teo_origin_group" "basic" {
 }
 ```
 
+### HTTP origin group with host_header
+
+```hcl
+resource "tencentcloud_teo_origin_group" "http" {
+  name        = "http-origin-group"
+  type        = "HTTP"
+  zone_id     = "zone-197z8rf93cfw"
+  host_header = "www.example.com"
+
+  records {
+    record  = "21.1.1.1"
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = false
+  }
+}
+```
+
+~> **NOTE:** The `host_header` parameter only takes effect when `type = HTTP`. The rule engine's Host Header configuration has higher priority than the origin group's Host Header.
+
+
 ## Argument Reference
 
 The following arguments are supported:
