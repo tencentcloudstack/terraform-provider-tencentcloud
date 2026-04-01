@@ -64,14 +64,13 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Description: "Exclusive cluster id.",
 			},
 			"dedicated_resource_pack_tenancy": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				RequiredWith: []string{"dedicated_resource_pack_ids"},
-				Description:  "Dedicated resource pack tenancy strategy. Valid values: `ResourcePool` (use instance resource pool for resource pre-deduction). This parameter must be specified together with `dedicated_resource_pack_ids`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Dedicated resource pack tenancy strategy. Valid values: `ResourcePool` (use instance resource pool for resource pre-deduction).",
 			},
 			"dedicated_resource_pack_ids": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				ForceNew: true,
 				Elem: &schema.Schema{
@@ -576,6 +575,11 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Instance os name.",
 			},
+			"rack_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The rack ID of the instance resource pool to which the instance belongs.",
+			},
 			"ipv6_addresses": {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -706,7 +710,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	if v, ok := d.GetOk("dedicated_resource_pack_ids"); ok {
-		packIds := v.([]interface{})
+		packIds := v.(*schema.Set).List()
 		for _, packId := range packIds {
 			request.Placement.DedicatedResourcePackIds = append(
 				request.Placement.DedicatedResourcePackIds,
@@ -1263,8 +1267,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		if instance.Placement.DedicatedResourcePackTenancy != nil {
 			_ = d.Set("dedicated_resource_pack_tenancy", instance.Placement.DedicatedResourcePackTenancy)
 		}
-		if len(instance.Placement.DedicatedResourcePackIds) > 0 {
-			_ = d.Set("dedicated_resource_pack_ids", helper.StringsInterfaces(instance.Placement.DedicatedResourcePackIds))
+		// if len(instance.Placement.DedicatedResourcePackIds) > 0 {
+		// 	_ = d.Set("dedicated_resource_pack_ids", helper.StringsInterfaces(instance.Placement.DedicatedResourcePackIds))
+		// }
+		if instance.Placement.RackId != nil {
+			_ = d.Set("rack_id", instance.Placement.RackId)
 		}
 	}
 
