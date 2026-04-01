@@ -25,6 +25,24 @@ resource "tencentcloud_teo_origin_group" "basic" {
   }
 }
 ```
+
+Origin group with host header
+
+```hcl
+resource "tencentcloud_teo_origin_group" "with_host_header" {
+  name        = "origin-group-with-host-header"
+  type        = "HTTP"
+  zone_id     = "zone-197z8rf93cfw"
+  host_header = "www.example.com"
+
+  records {
+    record  = "example.com"
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = false
+  }
+}
+```
 Import
 
 teo origin_group can be imported using the zone_id#originGroup_id, e.g.
