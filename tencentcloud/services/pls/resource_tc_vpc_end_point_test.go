@@ -1,6 +1,7 @@
 package pls_test
 
 import (
+	"regexp"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -74,3 +75,196 @@ resource "tencentcloud_vpc_end_point" "end_point" {
 }
 
 `
+
+func TestAccTencentCloudVpcEndPoint_SecurityGroupId(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcEndPointSecurityGroupId,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc_end_point.security_group_test", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.security_group_test", "security_group_id", "sg-ghvp9djf"),
+				),
+			},
+			{
+				Config: testAccVpcEndPointSecurityGroupIdUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.security_group_test", "security_group_id", "sg-3k7vtgf7"),
+				),
+			},
+		},
+	})
+}
+
+const testAccVpcEndPointSecurityGroupId = `
+resource "tencentcloud_vpc_end_point" "security_group_test" {
+  end_point_name        = "terraform_sg_test"
+  end_point_service_id  = "vpcsvc-5y4yb85d"
+  security_group_id     = "sg-ghvp9djf"
+  subnet_id            = "subnet-cpknsqgo"
+  vpc_id               = "vpc-gmq0mxoj"
+}
+`
+
+const testAccVpcEndPointSecurityGroupIdUpdate = `
+resource "tencentcloud_vpc_end_point" "security_group_test" {
+  end_point_name        = "terraform_sg_test"
+  end_point_service_id  = "vpcsvc-5y4yb85d"
+  security_group_id     = "sg-3k7vtgf7"
+  subnet_id            = "subnet-cpknsqgo"
+  vpc_id               = "vpc-gmq0mxoj"
+}
+`
+
+func TestAccTencentCloudVpcEndPoint_Tags(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcEndPointTags,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc_end_point.tags_test", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.tags_test", "tags.env", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.tags_test", "tags.project", "terraform"),
+				),
+			},
+			{
+				Config: testAccVpcEndPointTagsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.tags_test", "tags.env", "prod"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.tags_test", "tags.project", "terraform"),
+				),
+			},
+		},
+	})
+}
+
+const testAccVpcEndPointTags = `
+resource "tencentcloud_vpc_end_point" "tags_test" {
+  end_point_name       = "terraform_tags_test"
+  end_point_service_id = "vpcsvc-5y4yb85d"
+  tags                = {
+    env     = "test"
+    project = "terraform"
+  }
+  subnet_id = "subnet-cpknsqgo"
+  vpc_id    = "vpc-gmq0mxoj"
+}
+`
+
+const testAccVpcEndPointTagsUpdate = `
+resource "tencentcloud_vpc_end_point" "tags_test" {
+  end_point_name       = "terraform_tags_test"
+  end_point_service_id = "vpcsvc-5y4yb85d"
+  tags                = {
+    env     = "prod"
+    project = "terraform"
+  }
+  subnet_id = "subnet-cpknsqgo"
+  vpc_id    = "vpc-gmq0mxoj"
+}
+`
+
+func TestAccTencentCloudVpcEndPoint_IpAddressType(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcEndPointIpAddressTypeDefault,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc_end_point.ip_test", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.ip_test", "ip_address_type", "Ipv4"),
+				),
+			},
+			{
+				Config: testAccVpcEndPointIpAddressTypeIpv6,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.ip_test", "ip_address_type", "Ipv6"),
+				),
+			},
+			{
+				Config:      testAccVpcEndPointIpAddressTypeInvalid,
+				ExpectError: regexp.MustCompile(`Invalid ip_address_type value`),
+			},
+		},
+	})
+}
+
+const testAccVpcEndPointIpAddressTypeDefault = `
+resource "tencentcloud_vpc_end_point" "ip_test" {
+  end_point_name       = "terraform_ip_test"
+  end_point_service_id = "vpcsvc-5y4yb85d"
+  subnet_id           = "subnet-cpknsqgo"
+  vpc_id              = "vpc-gmq0mxoj"
+}
+`
+
+const testAccVpcEndPointIpAddressTypeIpv6 = `
+resource "tencentcloud_vpc_end_point" "ip_test" {
+  end_point_name       = "terraform_ip_test"
+  end_point_service_id = "vpcsvc-5y4yb85d"
+  ip_address_type      = "Ipv6"
+  subnet_id           = "subnet-cpknsqgo"
+  vpc_id              = "vpc-gmq0mxoj"
+}
+`
+
+const testAccVpcEndPointIpAddressTypeInvalid = `
+resource "tencentcloud_vpc_end_point" "ip_test" {
+  end_point_name       = "terraform_ip_test"
+  end_point_service_id = "vpcsvc-5y4yb85d"
+  ip_address_type      = "InvalidType"
+  subnet_id           = "subnet-cpknsqgo"
+  vpc_id              = "vpc-gmq0mxoj"
+}
+`
+
+func TestAccTencentCloudVpcEndPoint_AllFields(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcEndPointAllFields,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc_end_point.all_fields_test", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.all_fields_test", "security_group_id", "sg-ghvp9djf"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.all_fields_test", "tags.env", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_end_point.all_fields_test", "ip_address_type", "Ipv4"),
+				),
+			},
+		},
+	})
+}
+
+const testAccVpcEndPointAllFields = `
+resource "tencentcloud_vpc_end_point" "all_fields_test" {
+  end_point_name       = "terraform_all_fields_test"
+  end_point_service_id = "vpcsvc-5y4yb85d"
+  security_group_id    = "sg-ghvp9djf"
+  tags                = {
+    env     = "test"
+    project = "terraform"
+  }
+  ip_address_type      = "Ipv4"
+  subnet_id           = "subnet-cpknsqgo"
+  vpc_id              = "vpc-gmq0mxoj"
+}
+`
+
