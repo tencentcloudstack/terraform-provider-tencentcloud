@@ -176,6 +176,9 @@ type AddExistedInstancesRequestParams struct {
 
 	// 节点镜像
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
+
+	// 直接添加为原生节点
+	NodeType *string `json:"NodeType,omitnil,omitempty" name:"NodeType"`
 }
 
 type AddExistedInstancesRequest struct {
@@ -213,6 +216,9 @@ type AddExistedInstancesRequest struct {
 
 	// 节点镜像
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
+
+	// 直接添加为原生节点
+	NodeType *string `json:"NodeType,omitnil,omitempty" name:"NodeType"`
 }
 
 func (r *AddExistedInstancesRequest) ToJsonString() string {
@@ -238,6 +244,7 @@ func (r *AddExistedInstancesRequest) FromJsonString(s string) error {
 	delete(f, "SkipValidateOptions")
 	delete(f, "InstanceAdvancedSettingsOverrides")
 	delete(f, "ImageId")
+	delete(f, "NodeType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddExistedInstancesRequest has unknown keys!", "")
 	}
@@ -977,6 +984,9 @@ type Cluster struct {
 
 	// 本地专用集群Id
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+
+	// 集群是否启用高可用模式。用于指导跨可用区资源打散等高可用策略的执行
+	IsHighAvailability *bool `json:"IsHighAvailability,omitnil,omitempty" name:"IsHighAvailability"`
 }
 
 type ClusterAdvancedSettings struct {
@@ -1051,6 +1061,9 @@ type ClusterAdvancedSettings struct {
 
 	// 区分共享网卡多IP模式和独立网卡模式，共享网卡多 IP 模式填写"tke-route-eni"，独立网卡模式填写"tke-direct-eni"，默认为共享网卡模式
 	VpcCniType *string `json:"VpcCniType,omitnil,omitempty" name:"VpcCniType"`
+
+	// 集群是否启用高可用模式。用于指导跨可用区资源打散等高可用策略的执行，默认为true
+	IsHighAvailability *bool `json:"IsHighAvailability,omitnil,omitempty" name:"IsHighAvailability"`
 }
 
 type ClusterAsGroup struct {
@@ -1735,7 +1748,7 @@ type CreateClusterEndpointRequestParams struct {
 	// 设置域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 使用的安全组，只有外网访问需要传递（开启外网访问且不使用已有clb时必传）。获取方式：https://cloud.tencent.com/document/api/215/15808
+	// 使用的安全组（开启内外网访问且不使用已有clb时可传，内网访问需要先找clb侧加白使用）。获取方式：https://cloud.tencent.com/document/api/215/15808
 	SecurityGroup *string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
 	// 创建lb参数，只有外网访问需要设置，是一个json格式化后的字符串：{"InternetAccessible":{"InternetChargeType":"TRAFFIC_POSTPAID_BY_HOUR","InternetMaxBandwidthOut":200},"VipIsp":"","BandwidthPackageId":""}。
@@ -1765,7 +1778,7 @@ type CreateClusterEndpointRequest struct {
 	// 设置域名
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 使用的安全组，只有外网访问需要传递（开启外网访问且不使用已有clb时必传）。获取方式：https://cloud.tencent.com/document/api/215/15808
+	// 使用的安全组（开启内外网访问且不使用已有clb时可传，内网访问需要先找clb侧加白使用）。获取方式：https://cloud.tencent.com/document/api/215/15808
 	SecurityGroup *string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
 	// 创建lb参数，只有外网访问需要设置，是一个json格式化后的字符串：{"InternetAccessible":{"InternetChargeType":"TRAFFIC_POSTPAID_BY_HOUR","InternetMaxBandwidthOut":200},"VipIsp":"","BandwidthPackageId":""}。
@@ -2842,7 +2855,7 @@ type CreateECMInstancesRequestParams struct {
 	// 密码
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 公网带宽
+	// 公网带宽，单位为Mbps
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 镜像id
@@ -2882,7 +2895,7 @@ type CreateECMInstancesRequest struct {
 	// 密码
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 公网带宽
+	// 公网带宽，单位为Mbps
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 镜像id
@@ -7841,6 +7854,9 @@ type DescribeClusterEndpointsResponseParams struct {
 
 	// 内网访问所属子网
 	ClusterIntranetSubnetId *string `json:"ClusterIntranetSubnetId,omitnil,omitempty" name:"ClusterIntranetSubnetId"`
+
+	// 内网安全组
+	IntranetSecurityGroup *string `json:"IntranetSecurityGroup,omitnil,omitempty" name:"IntranetSecurityGroup"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -15698,6 +15714,81 @@ func (r *EnableControlPlaneLogsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type EnableEksEventPersistenceRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// cls服务的logsetID
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// cls服务的topicID
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// topic所在region
+	TopicRegion *string `json:"TopicRegion,omitnil,omitempty" name:"TopicRegion"`
+}
+
+type EnableEksEventPersistenceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// cls服务的logsetID
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// cls服务的topicID
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// topic所在region
+	TopicRegion *string `json:"TopicRegion,omitnil,omitempty" name:"TopicRegion"`
+}
+
+func (r *EnableEksEventPersistenceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableEksEventPersistenceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "LogsetId")
+	delete(f, "TopicId")
+	delete(f, "TopicRegion")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableEksEventPersistenceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableEksEventPersistenceResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type EnableEksEventPersistenceResponse struct {
+	*tchttp.BaseResponse
+	Response *EnableEksEventPersistenceResponseParams `json:"Response"`
+}
+
+func (r *EnableEksEventPersistenceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableEksEventPersistenceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type EnableEncryptionProtectionRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -17084,10 +17175,10 @@ type InstanceUpgradeProgressItem struct {
 }
 
 type KMSConfiguration struct {
-	// kms id，可以在密钥管理控制台获取
+	// 自定义密钥,当不指定KeyId时，采用默认生成密钥（TKE-KMS）
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
-	// kms 地域
+	// 默认生成密钥或自定义密钥地域信息
 	KmsRegion *string `json:"KmsRegion,omitnil,omitempty" name:"KmsRegion"`
 }
 
@@ -17616,6 +17707,9 @@ type ModifyClusterAttributeRequestParams struct {
 
 	// 集群属性
 	ClusterProperty *ClusterProperty `json:"ClusterProperty,omitnil,omitempty" name:"ClusterProperty"`
+
+	// 集群是否启用高可用模式。用于指导跨可用区资源打散等高可用策略的执行
+	IsHighAvailability *bool `json:"IsHighAvailability,omitnil,omitempty" name:"IsHighAvailability"`
 }
 
 type ModifyClusterAttributeRequest struct {
@@ -17644,6 +17738,9 @@ type ModifyClusterAttributeRequest struct {
 
 	// 集群属性
 	ClusterProperty *ClusterProperty `json:"ClusterProperty,omitnil,omitempty" name:"ClusterProperty"`
+
+	// 集群是否启用高可用模式。用于指导跨可用区资源打散等高可用策略的执行
+	IsHighAvailability *bool `json:"IsHighAvailability,omitnil,omitempty" name:"IsHighAvailability"`
 }
 
 func (r *ModifyClusterAttributeRequest) ToJsonString() string {
@@ -17666,6 +17763,7 @@ func (r *ModifyClusterAttributeRequest) FromJsonString(s string) error {
 	delete(f, "AutoUpgradeClusterLevel")
 	delete(f, "QGPUShareEnable")
 	delete(f, "ClusterProperty")
+	delete(f, "IsHighAvailability")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterAttributeRequest has unknown keys!", "")
 	}
@@ -17694,6 +17792,9 @@ type ModifyClusterAttributeResponseParams struct {
 
 	// 集群属性
 	ClusterProperty *ClusterProperty `json:"ClusterProperty,omitnil,omitempty" name:"ClusterProperty"`
+
+	// 集群是否启用高可用模式。用于指导跨可用区资源打散等高可用策略的执行
+	IsHighAvailability *bool `json:"IsHighAvailability,omitnil,omitempty" name:"IsHighAvailability"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -18803,7 +18904,7 @@ type ModifyNodePoolDesiredCapacityAboutAsgRequestParams struct {
 	// 节点池id
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点池所关联的伸缩组的期望实例数
+	// 节点池所关联的伸缩组的期望实例数，单位个
 	DesiredCapacity *int64 `json:"DesiredCapacity,omitnil,omitempty" name:"DesiredCapacity"`
 }
 
@@ -18816,7 +18917,7 @@ type ModifyNodePoolDesiredCapacityAboutAsgRequest struct {
 	// 节点池id
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点池所关联的伸缩组的期望实例数
+	// 节点池所关联的伸缩组的期望实例数，单位个
 	DesiredCapacity *int64 `json:"DesiredCapacity,omitnil,omitempty" name:"DesiredCapacity"`
 }
 
@@ -23645,7 +23746,13 @@ type UpgradePlan struct {
 	// 升级结束时间
 	UpgradeEndAt *string `json:"UpgradeEndAt,omitnil,omitempty" name:"UpgradeEndAt"`
 
-	// 升级状态
+	// 升级状态，包括以下状态值：
+	// - Pending：等待中
+	// - Processing：升级配置处理中
+	// - Running：升级中
+	// - Succeed：升级成功
+	// - Failed：升级失败
+	// - Cancelled：已取消
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 原因
@@ -23735,6 +23842,9 @@ type VirtualNodeSpec struct {
 
 	// 腾讯云标签
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 按量配额
+	Quota *SuperNodeResource `json:"Quota,omitnil,omitempty" name:"Quota"`
 }
 
 type VolumeMount struct {

@@ -36,6 +36,11 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			}),
 		},
 
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(60 * time.Minute),
+			Update: schema.DefaultTimeout(60 * time.Minute),
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
@@ -125,6 +130,13 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Required:    true,
 				Description: "Volume size(in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.",
+			},
+			"storage_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Storage type of the instance. Valid values: `PHYSICAL_LOCAL_SSD` (default, local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD). NOTE: This field will force new resource when modified.",
 			},
 			"memory": {
 				Type:        schema.TypeInt,
@@ -403,6 +415,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		autoVoucher     = 0
 		voucherIds      []*string
 		cpu             int // cpu only used for query specCode which contains cpu info
+		storageType     string
 	)
 
 	if v, ok := d.GetOkExists("cpu"); ok {
@@ -456,6 +469,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		voucherIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 
+	if v, ok := d.GetOk("storage_type"); ok {
+		storageType = v.(string)
+	}
+
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
 
 	for _, v := range securityGroups {
@@ -468,7 +485,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	// get specCode with engine_version and memory
 	outErr = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
-		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
+		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone, storageType)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
@@ -577,6 +594,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			kmsClusterId,
 			autoVoucher,
 			voucherIds,
+			storageType,
 		)
 
 		if inErr != nil {
@@ -598,7 +616,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 	// check creation done
-	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return tccommon.RetryError(err)
@@ -621,7 +639,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check init status
-	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	timeoutMinutes := int(d.Timeout(schema.TimeoutCreate).Minutes())
+	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 	if checkErr != nil {
 		return checkErr
 	}
@@ -648,7 +667,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check creation done
-	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	timeoutMinutes = int(d.Timeout(schema.TimeoutCreate).Minutes())
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 	if checkErr != nil {
 		return checkErr
 	}
@@ -668,7 +688,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check creation done
-	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	timeoutMinutes = int(d.Timeout(schema.TimeoutCreate).Minutes())
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 	if checkErr != nil {
 		return checkErr
 	}
@@ -924,6 +945,10 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	if ins.DBInstanceStorageType != nil {
+		_ = d.Set("storage_type", ins.DBInstanceStorageType)
+	}
+
 	nodeSet := ins.DBNodeSet
 	zoneSet := schema.NewSet(schema.HashString, nil)
 	if nodeCount := len(nodeSet); nodeCount > 0 {
@@ -1008,7 +1033,21 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	// backup plans (only specified will rewrite)
 	bkpRequest := postgresql.NewDescribeBackupPlansRequest()
 	bkpRequest.DBInstanceId = helper.String(d.Id())
-	bkpResponse, err := postgresqlService.DescribeBackupPlans(ctx, bkpRequest)
+	var bkpResponse []*postgresql.BackupPlan
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		bkpResponse, inErr = postgresqlService.DescribeBackupPlans(ctx, bkpRequest)
+		if inErr != nil {
+			ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.GetCode() == "FailedOperation.FailedOperationError" {
+				return nil
+			}
+
+			return tccommon.RetryError(inErr)
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -1445,7 +1484,8 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 			time.Sleep(time.Second * 5)
 			// check update storage and memory done
-			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, 60)
+			timeoutMinutes := int(d.Timeout(schema.TimeoutUpdate).Minutes())
+			checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
 			if checkErr != nil {
 				return checkErr
 			}

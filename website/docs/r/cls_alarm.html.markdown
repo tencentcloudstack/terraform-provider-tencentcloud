@@ -13,7 +13,7 @@ Provides a resource to create a cls alarm
 
 ## Example Usage
 
-### Use single condition
+### Use single condition with alarm_notice_ids
 
 ```hcl
 resource "tencentcloud_cls_alarm" "example" {
@@ -57,6 +57,72 @@ resource "tencentcloud_cls_alarm" "example" {
   classifications = {
     env     = "production"
     service = "api-gateway"
+  }
+
+  tags = {
+    createdBy = "terraform"
+  }
+}
+```
+
+### are mutually exclusive. You can only use one of them.
+
+```hcl
+resource "tencentcloud_cls_alarm" "example_monitor_notice" {
+  name = "tf-example-monitor-notice"
+
+  # Use monitor_notice for more flexible notification configuration
+  # Allows different notices for different alarm levels
+  monitor_notice {
+    notices {
+      notice_id       = "notice-c2af43ee-1a4b-4c4a-ae3e-f81481280101"
+      content_tmpl_id = "tmpl-5f7c8a9b-1234-5678-90ab-cdef12345678"
+      alarm_levels    = [1, 2] # Alert levels: 1=Critical, 2=Warning
+    }
+
+    notices {
+      notice_id       = "notice-d3bf54ff-2b5c-5d5b-bf4f-f92582391202"
+      content_tmpl_id = "tmpl-6g8d9b0c-2345-6789-01bc-def123456789"
+      alarm_levels    = [3] # Only send Info level alerts
+    }
+  }
+
+  alarm_period     = 15
+  condition        = "$1.errorCounts > 100"
+  alarm_level      = 1
+  message_template = "{{.Label}}"
+  status           = true
+  trigger_count    = 1
+
+  alarm_targets {
+    logset_id         = "e74efb8e-f647-48b2-a725-43f11b122081"
+    topic_id          = "59cf3ec0-1612-4157-be3f-341b2e7a53cb"
+    query             = "status:>500 | select count(*) as errorCounts"
+    start_time_offset = -15
+    end_time_offset   = 0
+    number            = 1
+    syntax_rule       = 1
+  }
+
+  analysis {
+    content = "__FILENAME__"
+    name    = "terraform"
+    type    = "field"
+
+    config_info {
+      key   = "QueryIndex"
+      value = "1"
+    }
+  }
+
+  monitor_time {
+    time = 1
+    type = "Period"
+  }
+
+  classifications = {
+    env     = "production"
+    service = "data-pipeline"
   }
 
   tags = {
@@ -129,18 +195,19 @@ resource "tencentcloud_cls_alarm" "example" {
 
 The following arguments are supported:
 
-* `alarm_notice_ids` - (Required, Set: [`String`]) list of alarm notice id.
 * `alarm_period` - (Required, Int) alarm repeat cycle.
 * `alarm_targets` - (Required, List) list of alarm target.
 * `monitor_time` - (Required, List) monitor task execution time.
 * `name` - (Required, String) log alarm name.
 * `trigger_count` - (Required, Int) continuous cycle.
 * `alarm_level` - (Optional, Int) Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.
+* `alarm_notice_ids` - (Optional, Set: [`String`]) List of alarm notice id. Note: AlarmNoticeIds and MonitorNotice cannot be set at the same time.
 * `analysis` - (Optional, List) multidimensional analysis.
 * `call_back` - (Optional, List) user define callback.
 * `classifications` - (Optional, Map) Alarm classification information map. Key must match regex `^[a-z]([a-z0-9_]{0,49})$`, value length cannot exceed 200 characters. Maximum 20 entries.
 * `condition` - (Optional, String) Trigger condition.
 * `message_template` - (Optional, String) user define alarm notice.
+* `monitor_notice` - (Optional, List) Monitor notice configuration for observable platform. Note: AlarmNoticeIds and MonitorNotice cannot be set at the same time.
 * `multi_conditions` - (Optional, List) Multiple triggering conditions.
 * `status` - (Optional, Bool) whether to enable the alarm policy.
 * `tags` - (Optional, Map) Tag description list.
@@ -172,6 +239,10 @@ The `config_info` object of `analysis` supports the following:
 * `key` - (Required, String) key.
 * `value` - (Required, String) value.
 
+The `monitor_notice` object supports the following:
+
+* `notices` - (Optional, List) List of monitor notice rules.
+
 The `monitor_time` object supports the following:
 
 * `time` - (Required, Int) time period or point in time.
@@ -181,6 +252,12 @@ The `multi_conditions` object supports the following:
 
 * `alarm_level` - (Optional, Int) Alarm level. 0: Warning; 1: Info; 2: Critical. Default is 0.
 * `condition` - (Optional, String) Trigger condition.
+
+The `notices` object of `monitor_notice` supports the following:
+
+* `notice_id` - (Required, String) Observable platform notification template ID.
+* `alarm_levels` - (Optional, List) Alarm levels. 0: Warning; 1: Info; 2: Critical.
+* `content_tmpl_id` - (Optional, String) Observable platform content template ID. If empty, use default content template.
 
 ## Attributes Reference
 

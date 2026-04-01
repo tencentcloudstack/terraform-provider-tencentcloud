@@ -202,6 +202,8 @@ The `system_disk` object of `native` supports the following:
 
 * `disk_size` - (Required, Int, ForceNew) Cloud disk size (G).
 * `disk_type` - (Required, String, ForceNew) Cloud disk type. Valid values: `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: cloud SSD disk, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD.
+* `encrypt` - (Optional, String) Encrypt System Drive. Allow value: `ENCRYPT`.
+* `kms_key_id` - (Optional, String) Kms key ID.
 
 The `tags` object of `tags` supports the following:
 

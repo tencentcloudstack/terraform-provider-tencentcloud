@@ -104,6 +104,9 @@ const (
 	// 参数不支持同时指定。
 	INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
 
+	// 指定的两个参数冲突，不能同时存在。
+	INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
+
 	// 当前IP已在其他公网IP类型的流量镜像中使用。
 	INVALIDPARAMETER_DUPLICATEDLBTRAFFICMIRRORCOLLECTORS = "InvalidParameter.DuplicatedLbTrafficMirrorCollectors"
 
@@ -269,6 +272,9 @@ const (
 	// 该实例不支持AnycastEIP。
 	INVALIDPARAMETERVALUE_INSTANCEDOESNOTSUPPORTANYCAST = "InvalidParameterValue.InstanceDoesNotSupportAnycast"
 
+	// 实例不支持在网卡上显示EIP。支持的实例ID格式为 ins-xxxxxxxx 和 eks-xxxxxxxx
+	INVALIDPARAMETERVALUE_INSTANCEDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.InstanceDoesNotSupportEipVisibleOnEni"
+
 	// 实例不存在公网IP。
 	INVALIDPARAMETERVALUE_INSTANCEHASNOWANIP = "InvalidParameterValue.InstanceHasNoWanIP"
 
@@ -289,6 +295,9 @@ const (
 
 	// 弹性网卡绑定的实例与地址绑定的实例不一致。
 	INVALIDPARAMETERVALUE_INSTANCENOTMATCHASSOCIATEENI = "InvalidParameterValue.InstanceNotMatchAssociateEni"
+
+	// 实例所属的VPC不支持在网卡上显示EIP
+	INVALIDPARAMETERVALUE_INSTANCEVPCDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.InstanceVpcDoesNotSupportEipVisibleOnEni"
 
 	// 网络计费模式没有更改。
 	INVALIDPARAMETERVALUE_INTERNETCHARGETYPENOTCHANGED = "InvalidParameterValue.InternetChargeTypeNotChanged"
@@ -395,6 +404,9 @@ const (
 	// 网络接口ID不正确。
 	INVALIDPARAMETERVALUE_NETWORKINTERFACEIDMALFORMED = "InvalidParameterValue.NetworkInterfaceIdMalformed"
 
+	// 指定的弹性公网IP地址已绑定到网卡 ，不支持绑定到不同的网卡。
+	INVALIDPARAMETERVALUE_NETWORKINTERFACEIDNOTMATCH = "InvalidParameterValue.NetworkInterfaceIdNotMatch"
+
 	// 网卡所绑定实例不支持绑定弹性公网IPv6
 	INVALIDPARAMETERVALUE_NETWORKINTERFACEINSTANCENOTSUPPORT = "InvalidParameterValue.NetworkInterfaceInstanceNotSupport"
 
@@ -418,6 +430,12 @@ const (
 
 	// 参数值格式不匹配。
 	INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
+
+	// 私网IP是一个辅助IP，不支持其绑定的EIP在网卡上显示
+	INVALIDPARAMETERVALUE_PRIVATEIPADDRESSDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.PrivateIpAddressDoesNotSupportEipVisibleOnEni"
+
+	// 指定的弹性公网IP地址已绑定到私有IP地址，不支持绑定到不同的私有IP地址。
+	INVALIDPARAMETERVALUE_PRIVATEIPADDRESSNOTMATCH = "InvalidParameterValue.PrivateIpAddressNotMatch"
 
 	// 私网NAT网关不存在
 	INVALIDPARAMETERVALUE_PRIVATENATNOTEXISTS = "InvalidParameterValue.PrivateNatNotExists"
@@ -523,6 +541,9 @@ const (
 
 	// 无效参数值。参数值太长。
 	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+
+	// 传统公网IPv6地址已默认支持在网卡上显示，无需单独开启此功能
+	INVALIDPARAMETERVALUE_TRADITIONALIPV6VISIBLEONENINOTSUPPORTED = "InvalidParameterValue.TraditionalIPv6VisibleOnEniNotSupported"
 
 	// 流量包ID格式错误。
 	INVALIDPARAMETERVALUE_TRAFFICPACKAGEID = "InvalidParameterValue.TrafficPackageId"
@@ -734,6 +755,9 @@ const (
 	// 可创建的对等连接个数超过总上限。
 	LIMITEXCEEDED_VPCPEERTOTALLIMITEXCEEDED = "LimitExceeded.VpcPeerTotalLimitExceeded"
 
+	// VPN网关:`%(value)s`创建的路由条目数超过上限：`%(limit)s`。
+	LIMITEXCEEDED_VPNGATEWAYROUTESLIMITEXCEEDED = "LimitExceeded.VpnGatewayRoutesLimitExceeded"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
@@ -748,6 +772,15 @@ const (
 
 	// 互斥的任务正在执行。
 	OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+
+	// 资源业务带宽超过防误操作检测阈值。
+	OPERATIONDENIED_TRAFFICEXCEEDTHRESHOLD = "OperationDenied.TrafficExceedThreshold"
+
+	// 资源在防误操作检测期间流量验证失败。
+	OPERATIONDENIED_TRAFFICVALIDATIONFAILED = "OperationDenied.TrafficValidationFailed"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
@@ -905,6 +938,9 @@ const (
 	// 添加 community 时，vpg 需要开通传播 community 白名单
 	UNSUPPORTEDOPERATION_CCNNOTENABLECOMMUNITY = "UnsupportedOperation.CcnNotEnableCommunity"
 
+	// 云联网未开启策略路由开关
+	UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
+
 	// 跨账号场景下不支持自驾云账号实例 关联普通账号云联网。
 	UNSUPPORTEDOPERATION_CCNORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.CcnOrdinaryAccountRefuseAttach"
 
@@ -1018,6 +1054,9 @@ const (
 
 	// 终端节点服务负载均衡类型不为内网负载均衡。
 	UNSUPPORTEDOPERATION_ENDPOINTSERVICELOADBALANCERINVALIDTYPE = "UnsupportedOperation.EndPointServiceLoadBalancerInvalidType"
+
+	// 网卡类型不支持删除保护。
+	UNSUPPORTEDOPERATION_ENINOTSUPPORTTERMINATIONPROTECTION = "UnsupportedOperation.EniNotSupportTerminationProtection"
 
 	// 存在云联网自定义路由表不允许删除该云联网
 	UNSUPPORTEDOPERATION_EXISTCCNCUSTOMROUTETABLESNOTSUPPORTDELETECCN = "UnsupportedOperation.ExistCcnCustomRouteTablesNotSupportDeleteCcn"
@@ -1169,8 +1208,35 @@ const (
 	// NAT网关类型不支持SNAT规则。
 	UNSUPPORTEDOPERATION_NATGATEWAYTYPENOTSUPPORTSNAT = "UnsupportedOperation.NatGatewayTypeNotSupportSNAT"
 
+	// NAT网关绑定了vpg，不支持该操作。
+	UNSUPPORTEDOPERATION_NATHASBOUNDVPG = "UnsupportedOperation.NatHasBoundVpg"
+
+	// NAT网关开启了ECMP，不支持该操作。
+	UNSUPPORTEDOPERATION_NATHASECMP = "UnsupportedOperation.NatHasECMP"
+
+	// NAT网关开启了网关流控，不支持该操作。
+	UNSUPPORTEDOPERATION_NATHASENABLEDGATEWAYFLOWCONTROL = "UnsupportedOperation.NatHasEnabledGatewayFlowControl"
+
+	// NAT网关开启了流日志，不支持该操作。
+	UNSUPPORTEDOPERATION_NATHASFLOWLOG = "UnsupportedOperation.NatHasFlowLog"
+
+	// 独享型NAT不支持该操作。
+	UNSUPPORTEDOPERATION_NATINSTANCEEXCLUSIVE = "UnsupportedOperation.NatInstanceExclusive"
+
+	// NFV NAT服务不支持该地域。
+	UNSUPPORTEDOPERATION_NATNFVUNSUPPORTEDREGION = "UnsupportedOperation.NatNfvUnsupportedRegion"
+
 	// NAT实例不支持该操作。
 	UNSUPPORTEDOPERATION_NATNOTSUPPORTED = "UnsupportedOperation.NatNotSupported"
+
+	// NAT网关规格超过标准型nat规格，不支持该操作。
+	UNSUPPORTEDOPERATION_NATSPECIFICATIONEXCEEDED = "UnsupportedOperation.NatSpecificationExceeded"
+
+	// NAT网关实例类型不支持该操作。
+	UNSUPPORTEDOPERATION_NATTYPEERROR = "UnsupportedOperation.NatTypeError"
+
+	// NAT网关近30天的最大用量超过标准型NAT规格，不支持该操作。
+	UNSUPPORTEDOPERATION_NATUSAGEEXCEEDED = "UnsupportedOperation.NatUsageExceeded"
 
 	// 没有CDC专线网关。
 	UNSUPPORTEDOPERATION_NOCDCDCGW = "UnsupportedOperation.NoCdcDcGw"
@@ -1423,6 +1489,12 @@ const (
 
 	// 指定机型不支持弹性网卡。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDINSTANCEFAMILY = "UnsupportedOperation.UnsupportedInstanceFamily"
+
+	// 传统型账号不支持该操作。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDLEGACYACCOUNT = "UnsupportedOperation.UnsupportedLegacyAccount"
+
+	// NAT网关部署在local zone，不支持该操作。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDLOCALZONENAT = "UnsupportedOperation.UnsupportedLocalZoneNat"
 
 	// 暂无法在此国家/地区提供该服务。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"

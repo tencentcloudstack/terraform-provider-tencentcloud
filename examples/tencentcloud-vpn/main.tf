@@ -90,3 +90,87 @@ resource "tencentcloud_vpn_gateway_route" "example" {
 data "tencentcloud_vpn_gateway_routes" "example" {
   vpn_gateway_id = tencentcloud_vpn_gateway.example.id
 }
+
+# VPN SSL Server examples
+resource "tencentcloud_vpn_gateway" "ssl_example" {
+  name      = "ssl-vpn-gateway-example"
+  vpc_id    = data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id
+  bandwidth = 5
+  zone      = var.availability_zone
+  type      = "SSL"
+
+  tags = {
+    test = "ssl-gateway"
+  }
+}
+
+# Basic SSL Server
+resource "tencentcloud_vpn_ssl_server" "basic" {
+  vpn_gateway_id      = tencentcloud_vpn_gateway.ssl_example.id
+  ssl_vpn_server_name = "basic-ssl-server"
+  local_address = [
+    "10.0.200.0/24",
+  ]
+  remote_address = "192.168.100.0/24"
+}
+
+# SSL Server with Tags and DNS
+resource "tencentcloud_vpn_ssl_server" "with_dns_tags" {
+  vpn_gateway_id      = tencentcloud_vpn_gateway.ssl_example.id
+  ssl_vpn_server_name = "ssl-server-with-dns-tags"
+  local_address = [
+    "10.0.201.0/24",
+  ]
+  remote_address = "192.168.101.0/24"
+
+  tags = {
+    Environment = "production"
+    Owner       = "team-a"
+  }
+
+  dns_servers {
+    primary_dns   = "8.8.8.8"
+    secondary_dns = "8.8.4.4"
+  }
+}
+
+# SSL Server with Access Policy (Note: detailed policies configured separately)
+resource "tencentcloud_vpn_ssl_server" "with_policy" {
+  vpn_gateway_id        = tencentcloud_vpn_gateway.ssl_example.id
+  ssl_vpn_server_name   = "ssl-server-with-policy"
+  local_address = [
+    "10.0.202.0/24",
+  ]
+  remote_address        = "192.168.102.0/24"
+  access_policy_enabled = true
+}
+
+# SSL Server with SSO (requires whitelist - commented out)
+# resource "tencentcloud_vpn_ssl_server" "with_sso" {
+#   vpn_gateway_id      = tencentcloud_vpn_gateway.ssl_example.id
+#   ssl_vpn_server_name = "ssl-server-with-sso"
+#   local_address = [
+#     "10.0.203.0/24",
+#   ]
+#   remote_address = "192.168.103.0/24"
+#   sso_enabled    = true
+#   saml_data      = "<Your SAML configuration data>"
+# }
+
+# VPN SSL Client examples
+# Basic SSL Client
+resource "tencentcloud_vpn_ssl_client" "basic" {
+  ssl_vpn_server_id   = tencentcloud_vpn_ssl_server.basic.id
+  ssl_vpn_client_name = "basic-ssl-client"
+}
+
+# SSL Client with Tags
+resource "tencentcloud_vpn_ssl_client" "with_tags" {
+  ssl_vpn_server_id   = tencentcloud_vpn_ssl_server.with_dns_tags.id
+  ssl_vpn_client_name = "ssl-client-with-tags"
+
+  tags = {
+    Environment = "production"
+    Owner       = "team-a"
+  }
+}

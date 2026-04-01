@@ -51,7 +51,7 @@ func DataSourceTencentCloudInstanceTypes() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The filter name. Valid values: `zone`, `instance-family` and `instance-charge-type`.",
+							Description: "The filter name. Valid values: `zone`, `instance-family`, `instance-type`, `instance-charge-type` and `sort-keys`.",
 						},
 						"values": {
 							Type:        schema.TypeList,

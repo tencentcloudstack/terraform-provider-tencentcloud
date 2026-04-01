@@ -149,12 +149,52 @@ func ResourceTencentCloudClsAlarm() *schema.Resource {
 			},
 
 			"alarm_notice_ids": {
-				Required: true,
-				Type:     schema.TypeSet,
+				Optional:     true,
+				Type:         schema.TypeSet,
+				ExactlyOneOf: []string{"monitor_notice"},
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "list of alarm notice id.",
+				Description: "List of alarm notice id. Note: AlarmNoticeIds and MonitorNotice cannot be set at the same time.",
+			},
+
+			"monitor_notice": {
+				Optional:     true,
+				Type:         schema.TypeList,
+				MaxItems:     1,
+				ExactlyOneOf: []string{"alarm_notice_ids"},
+				Description:  "Monitor notice configuration for observable platform. Note: AlarmNoticeIds and MonitorNotice cannot be set at the same time.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"notices": {
+							Optional:    true,
+							Type:        schema.TypeList,
+							Description: "List of monitor notice rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"notice_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Observable platform notification template ID.",
+									},
+									"content_tmpl_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Observable platform content template ID. If empty, use default content template.",
+									},
+									"alarm_levels": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Alarm levels. 0: Warning; 1: Info; 2: Critical.",
+										Elem: &schema.Schema{
+											Type: schema.TypeInt,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 
 			"status": {
@@ -359,6 +399,39 @@ func resourceTencentCloudClsAlarmCreate(d *schema.ResourceData, meta interface{}
 		for i := range alarmNoticeIdsSet {
 			alarmNoticeIds := alarmNoticeIdsSet[i].(string)
 			request.AlarmNoticeIds = append(request.AlarmNoticeIds, &alarmNoticeIds)
+		}
+	}
+
+	if v, ok := d.GetOk("monitor_notice"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			monitorNotice := cls.MonitorNotice{}
+
+			if noticesVal, ok := dMap["notices"]; ok {
+				for _, noticeItem := range noticesVal.([]interface{}) {
+					noticeMap := noticeItem.(map[string]interface{})
+					monitorNoticeRule := cls.MonitorNoticeRule{}
+
+					if v, ok := noticeMap["notice_id"]; ok {
+						monitorNoticeRule.NoticeId = helper.String(v.(string))
+					}
+
+					if v, ok := noticeMap["content_tmpl_id"]; ok && v.(string) != "" {
+						monitorNoticeRule.ContentTmplId = helper.String(v.(string))
+					}
+
+					if v, ok := noticeMap["alarm_levels"]; ok {
+						alarmLevelsList := v.([]interface{})
+						for _, level := range alarmLevelsList {
+							monitorNoticeRule.AlarmLevels = append(monitorNoticeRule.AlarmLevels, helper.IntUint64(level.(int)))
+						}
+					}
+
+					monitorNotice.Notices = append(monitorNotice.Notices, &monitorNoticeRule)
+				}
+			}
+
+			request.MonitorNotice = &monitorNotice
 		}
 	}
 
@@ -584,6 +657,38 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("alarm_notice_ids", alarm.AlarmNoticeIds)
 	}
 
+	if alarm.MonitorNotice != nil && alarm.MonitorNotice.Notices != nil {
+		monitorNoticeList := []interface{}{}
+		monitorNoticeMap := map[string]interface{}{}
+		noticesList := []interface{}{}
+
+		for _, notice := range alarm.MonitorNotice.Notices {
+			noticeMap := map[string]interface{}{}
+
+			if notice.NoticeId != nil {
+				noticeMap["notice_id"] = notice.NoticeId
+			}
+
+			if notice.ContentTmplId != nil {
+				noticeMap["content_tmpl_id"] = notice.ContentTmplId
+			}
+
+			if notice.AlarmLevels != nil {
+				alarmLevels := []interface{}{}
+				for _, level := range notice.AlarmLevels {
+					alarmLevels = append(alarmLevels, level)
+				}
+				noticeMap["alarm_levels"] = alarmLevels
+			}
+
+			noticesList = append(noticesList, noticeMap)
+		}
+
+		monitorNoticeMap["notices"] = noticesList
+		monitorNoticeList = append(monitorNoticeList, monitorNoticeMap)
+		_ = d.Set("monitor_notice", monitorNoticeList)
+	}
+
 	if alarm.Status != nil {
 		_ = d.Set("status", alarm.Status)
 	}
@@ -687,6 +792,7 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 		"name", "alarm_targets", "monitor_time", "condition", "alarm_level",
 		"multi_conditions", "trigger_count", "alarm_period", "alarm_notice_ids",
 		"status", "message_template", "call_back", "analysis", "classifications",
+		"monitor_notice",
 	}
 
 	for _, v := range mutableArgs {
@@ -791,6 +897,39 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 			for i := range alarmNoticeIdsSet {
 				alarmNoticeIds := alarmNoticeIdsSet[i].(string)
 				request.AlarmNoticeIds = append(request.AlarmNoticeIds, &alarmNoticeIds)
+			}
+		}
+
+		if v, ok := d.GetOk("monitor_notice"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				monitorNotice := cls.MonitorNotice{}
+
+				if noticesVal, ok := dMap["notices"]; ok {
+					for _, noticeItem := range noticesVal.([]interface{}) {
+						noticeMap := noticeItem.(map[string]interface{})
+						monitorNoticeRule := cls.MonitorNoticeRule{}
+
+						if v, ok := noticeMap["notice_id"]; ok {
+							monitorNoticeRule.NoticeId = helper.String(v.(string))
+						}
+
+						if v, ok := noticeMap["content_tmpl_id"]; ok && v.(string) != "" {
+							monitorNoticeRule.ContentTmplId = helper.String(v.(string))
+						}
+
+						if v, ok := noticeMap["alarm_levels"]; ok {
+							alarmLevelsList := v.([]interface{})
+							for _, level := range alarmLevelsList {
+								monitorNoticeRule.AlarmLevels = append(monitorNoticeRule.AlarmLevels, helper.IntUint64(level.(int)))
+							}
+						}
+
+						monitorNotice.Notices = append(monitorNotice.Notices, &monitorNoticeRule)
+					}
+				}
+
+				request.MonitorNotice = &monitorNotice
 			}
 		}
 

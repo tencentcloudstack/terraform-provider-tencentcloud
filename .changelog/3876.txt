@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_addon_config: optimize field `raw_values` for json data order issue and support import
+```

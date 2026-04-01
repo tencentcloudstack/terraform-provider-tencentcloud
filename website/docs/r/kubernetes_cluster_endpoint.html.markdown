@@ -52,9 +52,10 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) Specify cluster ID.
 * `cluster_internet_domain` - (Optional, String) Domain name for cluster Kube-apiserver internet access.  Be careful if you modify value of this parameter, the cluster_external_endpoint value may be changed automatically too.
-* `cluster_internet_security_group` - (Optional, String) Specify security group, NOTE: This argument must not be empty if cluster internet enabled.
+* `cluster_internet_security_group` - (Optional, String) Security group ID for internet cluster endpoint. NOTE: This argument must not be empty if cluster internet enabled.
 * `cluster_internet` - (Optional, Bool) Open internet access or not.
 * `cluster_intranet_domain` - (Optional, String) Domain name for cluster Kube-apiserver intranet access. Be careful if you modify value of this parameter, the pgw_endpoint value may be changed automatically too.
+* `cluster_intranet_security_group` - (Optional, String, ForceNew) Security group ID for intranet cluster endpoint.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not.
 * `extensive_parameters` - (Optional, String, ForceNew) The LB parameter. Only used for public network access.

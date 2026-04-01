@@ -16,6 +16,11 @@ func DataSourceTencentCloudPostgresqlDbInstanceVersions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudPostgresqlDbInstanceVersionsRead,
 		Schema: map[string]*schema.Schema{
+			"storage_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Storage type filter. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).",
+			},
 			"version_set": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -86,10 +91,15 @@ func dataSourceTencentCloudPostgresqlDbInstanceVersionsRead(d *schema.ResourceDa
 
 	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("storage_type"); ok {
+		paramMap["StorageType"] = v.(string)
+	}
+
 	var versionSet []*postgresql.Version
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribePostgresqlDbInstanceVersionsByFilter(ctx)
+		result, e := service.DescribePostgresqlDbVersionsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

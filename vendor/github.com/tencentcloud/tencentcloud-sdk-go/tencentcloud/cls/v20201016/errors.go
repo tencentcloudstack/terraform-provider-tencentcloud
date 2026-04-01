@@ -146,6 +146,9 @@ const (
 	// 无效的Content。
 	INVALIDPARAMETER_CONTENT = "InvalidParameter.Content"
 
+	// 跨账号标识错误
+	INVALIDPARAMETER_CROSSACCOUNTCONFLICT = "InvalidParameter.CrossAccountConflict"
+
 	// 仪表盘命名冲突。
 	INVALIDPARAMETER_DASHBOARDNAMECONFLICT = "InvalidParameter.DashboardNameConflict"
 
@@ -202,6 +205,9 @@ const (
 
 	// 创建日志导出任务数量超出限制。
 	LIMITEXCEEDED_EXPORT = "LimitExceeded.Export"
+
+	// 键值索引个数超过限制
+	LIMITEXCEEDED_INDEXKEYOVERLIMIT = "LimitExceeded.IndexKeyOverLimit"
 
 	// 索引操作超过频率限制。
 	LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
@@ -304,6 +310,9 @@ const (
 
 	// 告警策略通知模板不存在。
 	RESOURCENOTFOUND_ALARMNOTICENOTEXIST = "ResourceNotFound.AlarmNoticeNotExist"
+
+	// 集群id不存在
+	RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 
 	// 指定的采集规则配置不存在。
 	RESOURCENOTFOUND_CONFIGNOTEXIST = "ResourceNotFound.ConfigNotExist"

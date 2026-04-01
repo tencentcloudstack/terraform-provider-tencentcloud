@@ -961,7 +961,7 @@ func (me *CvmService) DescribeZones(ctx context.Context) (zones []*cvm.ZoneInfo,
 
 func (me *CvmService) CreateReservedInstance(ctx context.Context, configId string, count int64, extendParams map[string]interface{}) (instanceId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	request := cvm.NewPurchaseReservedInstancesOfferingRequest()
+	request := cvmintl.NewPurchaseReservedInstancesOfferingRequest()
 	request.ReservedInstancesOfferingId = &configId
 	request.InstanceCount = &count
 	if v, ok := extendParams["reserved_instance_name"]; ok {
@@ -970,7 +970,7 @@ func (me *CvmService) CreateReservedInstance(ctx context.Context, configId strin
 	}
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCvmClient().PurchaseReservedInstancesOffering(request)
+	response, err := me.client.UseCvmIntlClient().PurchaseReservedInstancesOffering(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -1029,12 +1029,12 @@ func (me *CvmService) DescribeReservedInstanceByFilter(ctx context.Context, filt
 	return
 }
 
-func (me *CvmService) DescribeReservedInstanceConfigs(ctx context.Context, filters map[string]string) (configs []*cvm.ReservedInstancesOffering, errRet error) {
+func (me *CvmService) DescribeReservedInstanceConfigs(ctx context.Context, filters map[string]string) (configs []*cvmintl.ReservedInstancesOffering, errRet error) {
 	logId := tccommon.GetLogId(ctx)
-	request := cvm.NewDescribeReservedInstancesOfferingsRequest()
-	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	request := cvmintl.NewDescribeReservedInstancesOfferingsRequest()
+	request.Filters = make([]*cvmintl.Filter, 0, len(filters))
 	for k, v := range filters {
-		filter := cvm.Filter{
+		filter := cvmintl.Filter{
 			Name:   helper.String(k),
 			Values: []*string{helper.String(v)},
 		}
@@ -1043,12 +1043,12 @@ func (me *CvmService) DescribeReservedInstanceConfigs(ctx context.Context, filte
 
 	var offset int64 = 0
 	var pageSize int64 = 100
-	configs = make([]*cvm.ReservedInstancesOffering, 0)
+	configs = make([]*cvmintl.ReservedInstancesOffering, 0)
 	for {
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseCvmClient().DescribeReservedInstancesOfferings(request)
+		response, err := me.client.UseCvmIntlClient().DescribeReservedInstancesOfferings(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -1950,4 +1950,110 @@ func flattenInstanceTagsMapping(list []*cvm.Tag) map[string]interface{} {
 		result[*v.Key] = *v.Value
 	}
 	return result
+}
+
+// CreateCvmResourcePoolPacks creates resource pool packs via PurchaseResourcePoolPacks API
+func (me *CvmService) CreateCvmResourcePoolPacks(ctx context.Context, request *cvm.PurchaseResourcePoolPacksRequest) (packIds []*string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().PurchaseResourcePoolPacks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.DedicatedResourcePackIdSet == nil || len(response.Response.DedicatedResourcePackIdSet) < 1 {
+		errRet = fmt.Errorf("resource pool pack id is nil or empty")
+		return
+	}
+
+	packIds = response.Response.DedicatedResourcePackIdSet
+	return
+}
+
+// DescribeCvmResourcePoolPackById describes a resource pool pack by ID with retry logic
+func (me *CvmService) DescribeCvmResourcePoolPackById(ctx context.Context, packId string) (pack *cvm.ResourcePoolPack, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewDescribeResourcePoolPacksRequest()
+	request.Filters = []*cvm.Filter{
+		{
+			Name:   helper.String("dedicated-resource-pack-id"),
+			Values: []*string{&packId},
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	defer tccommon.LogElapsed(request.GetAction())()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseCvmClient().DescribeResourcePoolPacks(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response.Response.DedicatedResourcePackSet == nil || len(response.Response.DedicatedResourcePackSet) < 1 {
+			// Resource not found
+			pack = nil
+			return nil
+		}
+
+		pack = response.Response.DedicatedResourcePackSet[0]
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+// DeleteCvmResourcePoolPacks deletes resource pool packs via TerminateResourcePoolPacks API
+func (me *CvmService) DeleteCvmResourcePoolPack(ctx context.Context, packIds []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cvm.NewTerminateResourcePoolPacksRequest()
+	request.DedicatedResourcePackIds = packIds
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	defer tccommon.LogElapsed(request.GetAction())()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().TerminateResourcePoolPacks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
