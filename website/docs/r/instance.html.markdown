@@ -437,8 +437,8 @@ The following arguments are supported:
 * `cdh_instance_type` - (Optional, String) Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
-* `dedicated_resource_pack_ids` - (Optional, List: [`String`], ForceNew) List of dedicated resource pack IDs (e.g., rpp-xxxxxxxx). When creating instances using pre-purchased resource pool packs, this parameter must be specified together with `dedicated_resource_pack_tenancy` to match the corresponding tenancy strategy. Related resource: `tencentcloud_cvm_resource_pool_packs`.
-* `dedicated_resource_pack_tenancy` - (Optional, String, ForceNew) Dedicated resource pack tenancy strategy. Valid values: `ResourcePool` (use instance resource pool for resource pre-deduction). This parameter must be specified together with `dedicated_resource_pack_ids`.
+* `dedicated_resource_pack_ids` - (Optional, Set: [`String`], ForceNew) List of dedicated resource pack IDs (e.g., rpp-xxxxxxxx). When creating instances using pre-purchased resource pool packs, this parameter must be specified together with `dedicated_resource_pack_tenancy` to match the corresponding tenancy strategy. Related resource: `tencentcloud_cvm_resource_pool_packs`.
+* `dedicated_resource_pack_tenancy` - (Optional, String, ForceNew) Dedicated resource pack tenancy strategy. Valid values: `ResourcePool` (use instance resource pool for resource pre-deduction).
 * `disable_api_termination` - (Optional, Bool) Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.
 * `disable_automation_service` - (Optional, Bool) Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
@@ -515,6 +515,7 @@ In addition to all arguments above, the following attributes are exported:
 * `os_name` - Instance os name.
 * `public_ip` - Public IP of the instance.
 * `public_ipv6_addresses` - The public IPv6 address to which the instance is bound.
+* `rack_id` - The rack ID of the instance resource pool to which the instance belongs.
 * `uuid` - Globally unique ID of the instance.
 
 ## Timeouts
