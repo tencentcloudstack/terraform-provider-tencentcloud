@@ -1,3 +1,13 @@
+## 1.82.81(April 1, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cvm_resource_pool_pack` ([#3946](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3946))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: support to set `dedicated_resource_pack_ids` and `dedicated_resource_pack_tenancy` ([#3951](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3951))
+
 ## 1.82.80(March 31 , 2026)
 
 FEATURES:
