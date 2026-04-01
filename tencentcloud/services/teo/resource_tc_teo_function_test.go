@@ -27,6 +27,13 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
   e.respondWith(response);
 });
 `),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.function_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.zone_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.content"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.update_time"),
 				),
 			},
 			{
@@ -45,6 +52,13 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
   e.respondWith(response);
 });
 `),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.function_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.zone_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.content"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "functions.0.update_time"),
 				),
 			},
 		},

@@ -77,6 +77,56 @@ func ResourceTencentCloudTeoFunction() *schema.Resource {
 				Computed:    true,
 				Description: "Modification time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.",
 			},
+
+			"functions": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of function information from DescribeFunctions API.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"function_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Function ID.",
+						},
+						"zone_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Site ID.",
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Function name.",
+						},
+						"remark": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Function description.",
+						},
+						"content": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Function content.",
+						},
+						"domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Function default domain.",
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Creation time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.",
+						},
+						"update_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Modification time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -204,6 +254,47 @@ func resourceTencentCloudTeoFunctionRead(d *schema.ResourceData, meta interface{
 
 	if respData.UpdateTime != nil {
 		_ = d.Set("update_time", respData.UpdateTime)
+	}
+
+	// Fetch all functions for the zone and populate the functions list
+	functionsData, err := service.DescribeFunctionsByZoneId(ctx, zoneId)
+	if err != nil {
+		return err
+	}
+
+	if functionsData != nil && len(functionsData) > 0 {
+		functionsList := make([]map[string]interface{}, 0, len(functionsData))
+		for _, fn := range functionsData {
+			functionMap := make(map[string]interface{})
+			if fn.FunctionId != nil {
+				functionMap["function_id"] = *fn.FunctionId
+			}
+			if fn.ZoneId != nil {
+				functionMap["zone_id"] = *fn.ZoneId
+			}
+			if fn.Name != nil {
+				functionMap["name"] = *fn.Name
+			}
+			if fn.Remark != nil {
+				functionMap["remark"] = *fn.Remark
+			}
+			if fn.Content != nil {
+				functionMap["content"] = *fn.Content
+			}
+			if fn.Domain != nil {
+				functionMap["domain"] = *fn.Domain
+			}
+			if fn.CreateTime != nil {
+				functionMap["create_time"] = *fn.CreateTime
+			}
+			if fn.UpdateTime != nil {
+				functionMap["update_time"] = *fn.UpdateTime
+			}
+			functionsList = append(functionsList, functionMap)
+		}
+		_ = d.Set("functions", functionsList)
+	} else {
+		_ = d.Set("functions", []interface{}{})
 	}
 
 	return nil
