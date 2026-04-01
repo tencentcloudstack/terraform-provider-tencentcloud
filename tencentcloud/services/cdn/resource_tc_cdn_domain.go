@@ -314,6 +314,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"hsts": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "HSTS configuration.",
 							Elem: &schema.Resource{
@@ -1613,6 +1614,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"user_agent_filter": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "UserAgent blacklist/whitelist configuration.",
 				Elem: &schema.Resource{
@@ -1660,6 +1662,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"url_redirect": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "URL redirect configuration.",
 				Elem: &schema.Resource{
@@ -1711,6 +1714,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"origin_combine": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Origin combine configuration.",
 				Elem: &schema.Resource{
@@ -1727,6 +1731,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"range_origin_pull": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Range origin pull configuration with path-based rules.",
 				Elem: &schema.Resource{
@@ -1798,10 +1803,107 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Computed:    true,
 				Description: "Used for store `dry_run` request json.",
 			},
+			"access_port": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeInt},
+				Description: "Access port configuration. List of ports that can be accessed.",
+			},
 			"dry_run_update_result": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Used for store `dry_run` update request json.",
+			},
+			"auto_guard": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Traffic anti-hotlinking protection configuration. Note: Create API does not support this field, it will be set via Update API after creation.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+							Description:  "AutoGuard switch, valid values are `on` and `off`.",
+						},
+						"filter_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "AutoGuard filter rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"filter_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Block type. `forbidden`: block.",
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Block rule type. `all`: all requests; `file`: file requests with specified suffix.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Block rule paths.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"geo_blocker": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Regional access control configuration. Note: Create API does not support this field, it will be set via Update API after creation.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
+							Description:  "GeoBlocker switch, valid values are `on` and `off`.",
+						},
+						"block_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "GeoBlocker block rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"block_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Rule type. `whitelist`: whitelist; `blacklist`: blacklist.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Rule paths.",
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Rule effective type. `all`: all; `directory`: directory.",
+									},
+									"districts": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Effective districts, e.g. `CN-HK`, `CN-BJ`, etc.",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -1859,6 +1961,9 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			Switch: helper.String(v.(string)),
 		}
 	}
+
+	// access_port - Note: AccessPort is only supported in UpdateDomainConfigRequest, not AddCdnDomainRequest
+	// This will be handled in the Update function
 
 	if v, ok := helper.InterfacesHeadMap(d, "authentication"); ok {
 		switchOn := v["switch"].(string)
@@ -3019,6 +3124,58 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("authentication", []interface{}{auth})
 	}
 
+	// access_port
+	if domainConfig.AccessPort != nil {
+		portList := make([]interface{}, 0, len(domainConfig.AccessPort))
+		for _, port := range domainConfig.AccessPort {
+			if port != nil {
+				portList = append(portList, int(*port))
+			}
+		}
+		_ = d.Set("access_port", portList)
+	}
+
+	// auto_guard
+	if domainConfig.AutoGuard != nil {
+		autoGuard := map[string]interface{}{
+			"switch": helper.PString(domainConfig.AutoGuard.Switch),
+		}
+		if domainConfig.AutoGuard.FilterRules != nil {
+			filterRules := make([]interface{}, 0, len(domainConfig.AutoGuard.FilterRules))
+			for _, rule := range domainConfig.AutoGuard.FilterRules {
+				ruleMap := map[string]interface{}{
+					"filter_type": helper.PString(rule.FilterType),
+					"rule_type":   helper.PString(rule.RuleType),
+					"rule_paths":  helper.StringsInterfaces(rule.RulePaths),
+				}
+				filterRules = append(filterRules, ruleMap)
+			}
+			autoGuard["filter_rules"] = filterRules
+		}
+		_ = d.Set("auto_guard", []interface{}{autoGuard})
+	}
+
+	// geo_blocker
+	if domainConfig.GeoBlocker != nil {
+		geoBlocker := map[string]interface{}{
+			"switch": helper.PString(domainConfig.GeoBlocker.Switch),
+		}
+		if domainConfig.GeoBlocker.BlockRules != nil {
+			blockRules := make([]interface{}, 0, len(domainConfig.GeoBlocker.BlockRules))
+			for _, rule := range domainConfig.GeoBlocker.BlockRules {
+				ruleMap := map[string]interface{}{
+					"block_type": helper.PString(rule.BlockType),
+					"rule_paths": helper.StringsInterfaces(rule.RulePaths),
+					"rule_type":  helper.PString(rule.RuleType),
+					"districts":  helper.StringsInterfaces(rule.Districts),
+				}
+				blockRules = append(blockRules, ruleMap)
+			}
+			geoBlocker["block_rules"] = blockRules
+		}
+		_ = d.Set("geo_blocker", []interface{}{geoBlocker})
+	}
+
 	dc := domainConfig
 
 	if ok := checkCdnInfoWritable(d, "ip_filter", dc.IpFilter); ok {
@@ -3806,6 +3963,20 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	// access_port
+	if d.HasChange("access_port") {
+		updateAttrs = append(updateAttrs, "access_port")
+		if v, ok := d.GetOk("access_port"); ok {
+			ports := v.([]interface{})
+			portList := make([]*int64, 0, len(ports))
+			for _, port := range ports {
+				portValue := int64(port.(int))
+				portList = append(portList, &portValue)
+			}
+			request.AccessPort = portList
+		}
+	}
+
 	// more added
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "ip_filter"); ok && hasChanged {
 		updateAttrs = append(updateAttrs, "ip_filter")
@@ -4428,6 +4599,63 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			request.RangeOriginPull.RangeRules = rangeRules
 		}
 	}
+	// auto_guard
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "auto_guard"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "auto_guard")
+		autoGuard := &cdn.AutoGuard{}
+		if sw, ok := v["switch"].(string); ok && sw != "" {
+			autoGuard.Switch = helper.String(sw)
+		}
+		if rules, ok := v["filter_rules"].([]interface{}); ok && len(rules) > 0 {
+			filterRules := make([]*cdn.FilterRules, 0, len(rules))
+			for _, r := range rules {
+				ruleMap := r.(map[string]interface{})
+				rule := &cdn.FilterRules{}
+				if ft, ok := ruleMap["filter_type"].(string); ok && ft != "" {
+					rule.FilterType = helper.String(ft)
+				}
+				if rt, ok := ruleMap["rule_type"].(string); ok && rt != "" {
+					rule.RuleType = helper.String(rt)
+				}
+				if rp, ok := ruleMap["rule_paths"].([]interface{}); ok {
+					rule.RulePaths = helper.InterfacesStringsPoint(rp)
+				}
+				filterRules = append(filterRules, rule)
+			}
+			autoGuard.FilterRules = filterRules
+		}
+		request.AutoGuard = autoGuard
+	}
+	// geo_blocker
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "geo_blocker"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "geo_blocker")
+		geoBlocker := &cdn.GeoBlocker{}
+		if sw, ok := v["switch"].(string); ok && sw != "" {
+			geoBlocker.Switch = helper.String(sw)
+		}
+		if rules, ok := v["block_rules"].([]interface{}); ok && len(rules) > 0 {
+			blockRules := make([]*cdn.GeoBlockStrategy, 0, len(rules))
+			for _, r := range rules {
+				ruleMap := r.(map[string]interface{})
+				rule := &cdn.GeoBlockStrategy{}
+				if bt, ok := ruleMap["block_type"].(string); ok && bt != "" {
+					rule.BlockType = helper.String(bt)
+				}
+				if rp, ok := ruleMap["rule_paths"].([]interface{}); ok {
+					rule.RulePaths = helper.InterfacesStringsPoint(rp)
+				}
+				if rt, ok := ruleMap["rule_type"].(string); ok && rt != "" {
+					rule.RuleType = helper.String(rt)
+				}
+				if ds, ok := ruleMap["districts"].([]interface{}); ok {
+					rule.Districts = helper.InterfacesStringsPoint(ds)
+				}
+				blockRules = append(blockRules, rule)
+			}
+			geoBlocker.BlockRules = blockRules
+		}
+		request.GeoBlocker = geoBlocker
+	}
 
 	if v := d.Get("explicit_using_dry_run").(bool); v {
 		_ = d.Set("dry_run_update_result", request.ToJsonString())
@@ -4661,6 +4889,75 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 		request.OriginCombine = &cdn.OriginCombine{
 			Switch: &vSwitch,
 		}
+	}
+
+	// access_port - Create 接口不支持，需要通过 Update 接口设置
+	if v, ok := d.GetOk("access_port"); ok {
+		needUpdate = true
+		ports := v.([]interface{})
+		portList := make([]*int64, 0, len(ports))
+		for _, port := range ports {
+			portValue := int64(port.(int))
+			portList = append(portList, &portValue)
+		}
+		request.AccessPort = portList
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "auto_guard"); ok {
+		needUpdate = true
+		autoGuard := &cdn.AutoGuard{}
+		if sw, ok := v["switch"].(string); ok && sw != "" {
+			autoGuard.Switch = helper.String(sw)
+		}
+		if rules, ok := v["filter_rules"].([]interface{}); ok && len(rules) > 0 {
+			filterRules := make([]*cdn.FilterRules, 0, len(rules))
+			for _, r := range rules {
+				ruleMap := r.(map[string]interface{})
+				rule := &cdn.FilterRules{}
+				if ft, ok := ruleMap["filter_type"].(string); ok && ft != "" {
+					rule.FilterType = helper.String(ft)
+				}
+				if rt, ok := ruleMap["rule_type"].(string); ok && rt != "" {
+					rule.RuleType = helper.String(rt)
+				}
+				if rp, ok := ruleMap["rule_paths"].([]interface{}); ok {
+					rule.RulePaths = helper.InterfacesStringsPoint(rp)
+				}
+				filterRules = append(filterRules, rule)
+			}
+			autoGuard.FilterRules = filterRules
+		}
+		request.AutoGuard = autoGuard
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "geo_blocker"); ok {
+		needUpdate = true
+		geoBlocker := &cdn.GeoBlocker{}
+		if sw, ok := v["switch"].(string); ok && sw != "" {
+			geoBlocker.Switch = helper.String(sw)
+		}
+		if rules, ok := v["block_rules"].([]interface{}); ok && len(rules) > 0 {
+			blockRules := make([]*cdn.GeoBlockStrategy, 0, len(rules))
+			for _, r := range rules {
+				ruleMap := r.(map[string]interface{})
+				rule := &cdn.GeoBlockStrategy{}
+				if bt, ok := ruleMap["block_type"].(string); ok && bt != "" {
+					rule.BlockType = helper.String(bt)
+				}
+				if rp, ok := ruleMap["rule_paths"].([]interface{}); ok {
+					rule.RulePaths = helper.InterfacesStringsPoint(rp)
+				}
+				if rt, ok := ruleMap["rule_type"].(string); ok && rt != "" {
+					rule.RuleType = helper.String(rt)
+				}
+				if ds, ok := ruleMap["districts"].([]interface{}); ok {
+					rule.Districts = helper.InterfacesStringsPoint(ds)
+				}
+				blockRules = append(blockRules, rule)
+			}
+			geoBlocker.BlockRules = blockRules
+		}
+		request.GeoBlocker = geoBlocker
 	}
 
 	if !needUpdate {
