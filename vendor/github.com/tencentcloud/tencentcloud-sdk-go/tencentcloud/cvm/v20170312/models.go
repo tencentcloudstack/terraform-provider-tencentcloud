@@ -700,7 +700,7 @@ func (r *ConvertOperatingSystemsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ConvertOperatingSystemsResponseParams struct {
-	// 转换的目标操系统信息，仅在入参 DryRun 为 true 时返回。
+	// 转换的目标操作系统信息，仅在入参 DryRun 为 true 时返回。
 	SupportTargetOSList []*TargetOS `json:"SupportTargetOSList,omitnil,omitempty" name:"SupportTargetOSList"`
 
 	// 操作系统转换的任务 ID
@@ -812,7 +812,7 @@ type CreateDisasterRecoverGroupResponseParams struct {
 	// 置放群组内已有的云服务器数量。
 	CurrentNum *int64 `json:"CurrentNum,omitnil,omitempty" name:"CurrentNum"`
 
-	// 置放群组创建时间。
+	// 分散置放群组创建时间。按照ISO8601标准表示，并且使用UTC时间。格式为：YYYY-MM-DDThh:mm:ssZ。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -837,44 +837,44 @@ func (r *CreateDisasterRecoverGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateHpcClusterRequestParams struct {
-	// 可用区。
+	// 可用区信息。可用区信息可通过 [查询可用区信息](https://cloud.tencent.com/document/api/213/15707) 接口获取。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 高性能计算集群名称。
+	// 高性能计算集群名称，长度限制[1-60]。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 高性能计算集群备注。
+	// 高性能计算集群备注，长度[1-256]。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 高性能计算集群类型。
+	// 高性能计算集群类型，当前有三个取值：分别是CDC/CHC/STANDARD，其中STANDARD是默认的标准模式。
 	HpcClusterType *string `json:"HpcClusterType,omitnil,omitempty" name:"HpcClusterType"`
 
-	// 高性能计算集群对应的业务场景标识，当前只支持CDC。
+	// 高性能计算集群对应的业务场景标识，当前只支持CDC场景类型。
 	HpcClusterBusinessId *string `json:"HpcClusterBusinessId,omitnil,omitempty" name:"HpcClusterBusinessId"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的HPC高性能集群。
+	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的HPC高性能集群。集群信息可通过 [查询高性能集群信息](https://cloud.tencent.com/document/api/213/83220) 接口获取。
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 }
 
 type CreateHpcClusterRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区。
+	// 可用区信息。可用区信息可通过 [查询可用区信息](https://cloud.tencent.com/document/api/213/15707) 接口获取。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 高性能计算集群名称。
+	// 高性能计算集群名称，长度限制[1-60]。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 高性能计算集群备注。
+	// 高性能计算集群备注，长度[1-256]。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 高性能计算集群类型。
+	// 高性能计算集群类型，当前有三个取值：分别是CDC/CHC/STANDARD，其中STANDARD是默认的标准模式。
 	HpcClusterType *string `json:"HpcClusterType,omitnil,omitempty" name:"HpcClusterType"`
 
-	// 高性能计算集群对应的业务场景标识，当前只支持CDC。
+	// 高性能计算集群对应的业务场景标识，当前只支持CDC场景类型。
 	HpcClusterBusinessId *string `json:"HpcClusterBusinessId,omitnil,omitempty" name:"HpcClusterBusinessId"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的HPC高性能集群。
+	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的HPC高性能集群。集群信息可通过 [查询高性能集群信息](https://cloud.tencent.com/document/api/213/83220) 接口获取。
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 }
 
@@ -1238,6 +1238,9 @@ type CreateLaunchTemplateRequestParams struct {
 	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br></li>默认取值：FALSE。
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
+	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
+
 	// 标签描述列表。通过指定该参数可以绑定标签到实例启动模板。
 	LaunchTemplateTagSpecification []*TagSpecification `json:"LaunchTemplateTagSpecification,omitnil,omitempty" name:"LaunchTemplateTagSpecification"`
 
@@ -1342,6 +1345,9 @@ type CreateLaunchTemplateRequest struct {
 	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br></li>默认取值：FALSE。
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
+	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
+
 	// 标签描述列表。通过指定该参数可以绑定标签到实例启动模板。
 	LaunchTemplateTagSpecification []*TagSpecification `json:"LaunchTemplateTagSpecification,omitnil,omitempty" name:"LaunchTemplateTagSpecification"`
 
@@ -1396,6 +1402,7 @@ func (r *CreateLaunchTemplateRequest) FromJsonString(s string) error {
 	delete(f, "InstanceChargeType")
 	delete(f, "InstanceChargePrepaid")
 	delete(f, "DisableApiTermination")
+	delete(f, "EnableJumboFrame")
 	delete(f, "LaunchTemplateTagSpecification")
 	delete(f, "Metadata")
 	delete(f, "TemplateDataModifyAction")
@@ -1521,6 +1528,9 @@ type CreateLaunchTemplateVersionRequestParams struct {
 	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例</li><br><br>默认取值：FALSE。
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
+	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
+
 	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
 	// **注：内测中**。
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
@@ -1625,6 +1635,9 @@ type CreateLaunchTemplateVersionRequest struct {
 	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例</li><br><br>默认取值：FALSE。
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
+	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
+
 	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
 	// **注：内测中**。
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
@@ -1677,6 +1690,7 @@ func (r *CreateLaunchTemplateVersionRequest) FromJsonString(s string) error {
 	delete(f, "InstanceChargeType")
 	delete(f, "InstanceChargePrepaid")
 	delete(f, "DisableApiTermination")
+	delete(f, "EnableJumboFrame")
 	delete(f, "Metadata")
 	delete(f, "TemplateDataModifyAction")
 	if len(f) > 0 {
@@ -2161,7 +2175,7 @@ func (r *DeleteLaunchTemplateVersionsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeAccountQuotaRequestParams struct {
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>quota-type</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>配额类型</strong>】进行过滤。配额类型形如：PostPaidQuotaSet。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">PostPaidQuotaSet: 后付费配额</p><p style="padding-left: 30px;">PrePaidQuotaSet: 预付费配额</p><p style="padding-left: 30px;">SpotPaidQuotaSet: 竞价配额</p><p style="padding-left: 30px;">ImageQuotaSet: 镜像配额</p><p style="padding-left: 30px;">DisasterRecoverGroupQuotaSet: 置放群组配额</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
@@ -2171,7 +2185,7 @@ type DescribeAccountQuotaRequest struct {
 	*tchttp.BaseRequest
 	
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>quota-type</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>配额类型</strong>】进行过滤。配额类型形如：PostPaidQuotaSet。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">PostPaidQuotaSet: 后付费配额</p><p style="padding-left: 30px;">PrePaidQuotaSet: 预付费配额</p><p style="padding-left: 30px;">SpotPaidQuotaSet: 竞价配额</p><p style="padding-left: 30px;">ImageQuotaSet: 镜像配额</p><p style="padding-left: 30px;">DisasterRecoverGroupQuotaSet: 置放群组配额</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
@@ -2286,20 +2300,7 @@ type DescribeChcHostsRequestParams struct {
 	// CHC物理服务器实例ID。每次请求的实例的上限为100。参数不支持同时指定`ChcIds`和`Filters`。
 	ChcIds []*string `json:"ChcIds,omitnil,omitempty" name:"ChcIds"`
 
-	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
-	// <li><strong>instance-name</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>instance-state</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>device-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>设备类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>vpc-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>私有网络唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>subnet-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>私有子网唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>sn</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>设备SN</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>zone</strong></li><p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p><li><strong>instance-name</strong></li><p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>instance-state</strong></li><p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>device-type</strong></li><p style="padding-left: 30px;">按照【<strong>设备类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>vpc-id</strong></li><p style="padding-left: 30px;">按照【<strong>私有网络唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>subnet-id</strong></li><p style="padding-left: 30px;">按照【<strong>私有子网唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>sn</strong></li><p style="padding-left: 30px;">按照【<strong>设备SN</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
@@ -2315,20 +2316,7 @@ type DescribeChcHostsRequest struct {
 	// CHC物理服务器实例ID。每次请求的实例的上限为100。参数不支持同时指定`ChcIds`和`Filters`。
 	ChcIds []*string `json:"ChcIds,omitnil,omitempty" name:"ChcIds"`
 
-	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
-	// <li><strong>instance-name</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>instance-state</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>device-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>设备类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>vpc-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>私有网络唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>subnet-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>私有子网唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>sn</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>设备SN</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>zone</strong></li><p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p><li><strong>instance-name</strong></li><p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>instance-state</strong></li><p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>device-type</strong></li><p style="padding-left: 30px;">按照【<strong>设备类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>vpc-id</strong></li><p style="padding-left: 30px;">按照【<strong>私有网络唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>subnet-id</strong></li><p style="padding-left: 30px;">按照【<strong>私有子网唯一ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>sn</strong></li><p style="padding-left: 30px;">按照【<strong>设备SN</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
@@ -2558,7 +2546,7 @@ func (r *DescribeDisasterRecoverGroupsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeHostsRequestParams struct {
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>project-id</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>项目ID</strong>】进行过滤，可通过调用[DescribeProject](https://cloud.tencent.com/document/api/651/78725)查询已创建的项目列表或登录[控制台](https://console.cloud.tencent.com/cvm/index)进行查看；也可以调用[AddProject](https://cloud.tencent.com/document/api/651/81952)创建新的项目。项目ID形如：1002189。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>host-id</strong></li>
@@ -2584,7 +2572,7 @@ type DescribeHostsRequest struct {
 	*tchttp.BaseRequest
 	
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>project-id</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>项目ID</strong>】进行过滤，可通过调用[DescribeProject](https://cloud.tencent.com/document/api/651/78725)查询已创建的项目列表或登录[控制台](https://console.cloud.tencent.com/cvm/index)进行查看；也可以调用[AddProject](https://cloud.tencent.com/document/api/651/81952)创建新的项目。项目ID形如：1002189。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>host-id</strong></li>
@@ -2945,22 +2933,7 @@ type DescribeImagesRequestParams struct {
 	// 镜像ID列表 。镜像ID如：`img-gvbnzy6f`。array型参数的格式可以参考[API简介](https://cloud.tencent.com/document/api/213/15688)。镜像ID可以通过如下方式获取：<br><li>通过[DescribeImages](https://cloud.tencent.com/document/api/213/15715)接口返回的`ImageId`获取。</li><li>通过[镜像控制台](https://console.cloud.tencent.com/cvm/image)获取。</li>
 	ImageIds []*string `json:"ImageIds,omitnil,omitempty" name:"ImageIds"`
 
-	// 过滤条件，每次请求的`Filters`的上限为10，`Filters.Values`的上限为5。参数不可以同时指定`ImageIds`和`Filters`。详细的过滤条件如下：
-	// 
-	// <li><strong>image-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>image-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">PRIVATE_IMAGE: 自定义镜像 (本账户创建的镜像)</p><p style="padding-left: 30px;">PUBLIC_IMAGE: 公共镜像 (腾讯云官方镜像)</p><p style="padding-left: 30px;">SHARED_IMAGE: 共享镜像(其他账户共享给本账户的镜像)</p>
-	// <li><strong>image-name</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像名称</strong>】进行过滤。支持模糊查询。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>platform</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像平台</strong>】进行过滤，如 CentOS，支持模糊匹配。可通过 <a href="https://cloud.tencent.com/document/api/213/15715" target="_blank">DescribeImages</a> 接口返回的<code> Platform </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>tag-key</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>tag-value</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>tag:tag-key</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey 和 TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// 过滤条件，每次请求的`Filters`的上限为10，`Filters.Values`的上限为5。参数不可以同时指定`ImageIds`和`Filters`。详细的过滤条件如下：<li><strong>image-id</strong></li><p style="padding-left: 30px;">按照【<strong>镜像ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>image-type</strong></li><p style="padding-left: 30px;">按照【<strong>镜像类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">PRIVATE_IMAGE: 自定义镜像 (本账户创建的镜像)</p><p style="padding-left: 30px;">PUBLIC_IMAGE: 公共镜像 (腾讯云官方镜像)</p><p style="padding-left: 30px;">SHARED_IMAGE: 共享镜像(其他账户共享给本账户的镜像)</p><li><strong>image-name</strong></li><p style="padding-left: 30px;">按照【<strong>镜像名称</strong>】进行过滤。支持模糊查询。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>platform</strong></li><p style="padding-left: 30px;">按照【<strong>镜像平台</strong>】进行过滤，如 CentOS，支持模糊匹配。可通过 <a href="https://cloud.tencent.com/document/api/213/15715" target="_blank">DescribeImages</a> 接口返回的<code> Platform </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>tag-key</strong></li><p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>tag-value</strong></li><p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>tag:tag-key</strong></li><p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey 和 TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>dedicated-cluster-id</strong></li><p style="padding-left: 30px;">按照【<strong>本地专用集群CDC ID</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/api/1346/73758" target="_blank"> DescribeDedicatedClusters </a> 接口返回的<code> DedicatedClusterSet </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>cdc-cache-status</strong></li><p style="padding-left: 30px;">按照【<strong>CDC镜像缓存状态</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">CACHED_ALL: 全部缓存状态</p><p style="padding-left: 30px;">CACHING: 缓存中</p><p style="padding-left: 30px;">CACHED: 已缓存</p><p style="padding-left: 30px;">CACHE_INVALID: 缓存失效</p><p style="padding-left: 30px;">CACHE_FAILED: 缓存失败</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。关于Offset详见[API简介](/document/api/213/568#.E8.BE.93.E5.85.A5.E5.8F.82.E6.95.B0.E4.B8.8E.E8.BF.94.E5.9B.9E.E5.8F.82.E6.95.B0.E9.87.8A.E4.B9.89)。
@@ -2969,7 +2942,7 @@ type DescribeImagesRequestParams struct {
 	// 数量限制，默认为20，最大值为100。关于Limit详见[API简介](/document/api/213/568#.E8.BE.93.E5.85.A5.E5.8F.82.E6.95.B0.E4.B8.8E.E8.BF.94.E5.9B.9E.E5.8F.82.E6.95.B0.E9.87.8A.E4.B9.89)。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 实例类型，如 `S1.SMALL1`。可通过 [DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/product/213/15749) 接口返回的 `InstanceType` 获取。
+	// 实例类型，如 `SA5.MEDIUM2`。可通过 [DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/product/213/15749) 接口返回的 `InstanceType` 获取。
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 }
 
@@ -2979,22 +2952,7 @@ type DescribeImagesRequest struct {
 	// 镜像ID列表 。镜像ID如：`img-gvbnzy6f`。array型参数的格式可以参考[API简介](https://cloud.tencent.com/document/api/213/15688)。镜像ID可以通过如下方式获取：<br><li>通过[DescribeImages](https://cloud.tencent.com/document/api/213/15715)接口返回的`ImageId`获取。</li><li>通过[镜像控制台](https://console.cloud.tencent.com/cvm/image)获取。</li>
 	ImageIds []*string `json:"ImageIds,omitnil,omitempty" name:"ImageIds"`
 
-	// 过滤条件，每次请求的`Filters`的上限为10，`Filters.Values`的上限为5。参数不可以同时指定`ImageIds`和`Filters`。详细的过滤条件如下：
-	// 
-	// <li><strong>image-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>image-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">PRIVATE_IMAGE: 自定义镜像 (本账户创建的镜像)</p><p style="padding-left: 30px;">PUBLIC_IMAGE: 公共镜像 (腾讯云官方镜像)</p><p style="padding-left: 30px;">SHARED_IMAGE: 共享镜像(其他账户共享给本账户的镜像)</p>
-	// <li><strong>image-name</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像名称</strong>】进行过滤。支持模糊查询。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>platform</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>镜像平台</strong>】进行过滤，如 CentOS，支持模糊匹配。可通过 <a href="https://cloud.tencent.com/document/api/213/15715" target="_blank">DescribeImages</a> 接口返回的<code> Platform </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>tag-key</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>tag-value</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// <li><strong>tag:tag-key</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey 和 TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// 过滤条件，每次请求的`Filters`的上限为10，`Filters.Values`的上限为5。参数不可以同时指定`ImageIds`和`Filters`。详细的过滤条件如下：<li><strong>image-id</strong></li><p style="padding-left: 30px;">按照【<strong>镜像ID</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>image-type</strong></li><p style="padding-left: 30px;">按照【<strong>镜像类型</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">PRIVATE_IMAGE: 自定义镜像 (本账户创建的镜像)</p><p style="padding-left: 30px;">PUBLIC_IMAGE: 公共镜像 (腾讯云官方镜像)</p><p style="padding-left: 30px;">SHARED_IMAGE: 共享镜像(其他账户共享给本账户的镜像)</p><li><strong>image-name</strong></li><p style="padding-left: 30px;">按照【<strong>镜像名称</strong>】进行过滤。支持模糊查询。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>platform</strong></li><p style="padding-left: 30px;">按照【<strong>镜像平台</strong>】进行过滤，如 CentOS，支持模糊匹配。可通过 <a href="https://cloud.tencent.com/document/api/213/15715" target="_blank">DescribeImages</a> 接口返回的<code> Platform </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>tag-key</strong></li><p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>tag-value</strong></li><p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>tag:tag-key</strong></li><p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。可通过 <a href="https://cloud.tencent.com/document/product/651/72275" target="_blank"> GetTags </a> 接口返回的<code> TagKey 和 TagValue </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>dedicated-cluster-id</strong></li><p style="padding-left: 30px;">按照【<strong>本地专用集群CDC ID</strong>】进行过滤。可通过 <a href="https://cloud.tencent.com/document/api/1346/73758" target="_blank"> DescribeDedicatedClusters </a> 接口返回的<code> DedicatedClusterSet </code>获取。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>cdc-cache-status</strong></li><p style="padding-left: 30px;">按照【<strong>CDC镜像缓存状态</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：</p><p style="padding-left: 30px;">CACHED_ALL: 全部缓存状态</p><p style="padding-left: 30px;">CACHING: 缓存中</p><p style="padding-left: 30px;">CACHED: 已缓存</p><p style="padding-left: 30px;">CACHE_INVALID: 缓存失效</p><p style="padding-left: 30px;">CACHE_FAILED: 缓存失败</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。关于Offset详见[API简介](/document/api/213/568#.E8.BE.93.E5.85.A5.E5.8F.82.E6.95.B0.E4.B8.8E.E8.BF.94.E5.9B.9E.E5.8F.82.E6.95.B0.E9.87.8A.E4.B9.89)。
@@ -3003,7 +2961,7 @@ type DescribeImagesRequest struct {
 	// 数量限制，默认为20，最大值为100。关于Limit详见[API简介](/document/api/213/568#.E8.BE.93.E5.85.A5.E5.8F.82.E6.95.B0.E4.B8.8E.E8.BF.94.E5.9B.9E.E5.8F.82.E6.95.B0.E9.87.8A.E4.B9.89)。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 实例类型，如 `S1.SMALL1`。可通过 [DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/product/213/15749) 接口返回的 `InstanceType` 获取。
+	// 实例类型，如 `SA5.MEDIUM2`。可通过 [DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/product/213/15749) 接口返回的 `InstanceType` 获取。
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 }
 
@@ -3229,7 +3187,7 @@ func (r *DescribeInstanceInternetBandwidthConfigsResponse) FromJsonString(s stri
 // Predefined struct for user
 type DescribeInstanceTypeConfigsRequestParams struct {
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>instance-family</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例机型系列</strong>】进行过滤。实例机型系列形如：S1、I1、M1等。具体取值参见[实例类型](https://cloud.tencent.com/document/product/213/11518)描述。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-type</strong></li>
@@ -3242,7 +3200,7 @@ type DescribeInstanceTypeConfigsRequest struct {
 	*tchttp.BaseRequest
 	
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>instance-family</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例机型系列</strong>】进行过滤。实例机型系列形如：S1、I1、M1等。具体取值参见[实例类型](https://cloud.tencent.com/document/product/213/11518)描述。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-type</strong></li>
@@ -3652,7 +3610,7 @@ type DescribeInstancesRequestParams struct {
 	// 按照一个或者多个实例ID查询。实例ID例如：`ins-xxxxxxxx`。（此参数的具体格式可参考API[简介](https://cloud.tencent.com/document/api/213/15688)的`ids.N`一节）。每次请求的实例的上限为100。参数不支持同时指定`InstanceIds`和`Filters`。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// <li><strong>zone</strong></li> <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区例如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p> <li><strong>project-id</strong></li> <p style="padding-left: 30px;">按照【<strong>项目ID</strong>】进行过滤，可通过调用[DescribeProjects](https://cloud.tencent.com/document/api/651/78725)查询已创建的项目列表或登录[控制台](https://console.cloud.tencent.com/cvm/index)进行查看；也可以调用[AddProject](https://cloud.tencent.com/document/api/651/81952)创建新的项目。项目ID例如：1002189。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">必选：否</p> <li><strong>host-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDH](https://cloud.tencent.com/document/product/416) ID</strong>】进行过滤。[CDH](https://cloud.tencent.com/document/product/416) ID例如：host-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>dedicated-cluster-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDC](https://cloud.tencent.com/document/product/1346) ID</strong>】进行过滤。[CDC](https://cloud.tencent.com/document/product/1346) ID例如：cluster-xxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>vpc-id</strong></li> <p style="padding-left: 30px;">按照【<strong>VPC ID</strong>】进行过滤。VPC ID例如：vpc-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>subnet-id</strong></li> <p style="padding-left: 30px;">按照【<strong>子网ID</strong>】进行过滤。子网ID例如：subnet-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-id</strong></li> <p style="padding-left: 30px;">按照【<strong>实例ID</strong>】进行过滤。实例ID例如：ins-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>uuid</strong></li> <p style="padding-left: 30px;">按照【<strong>实例UUID</strong>】进行过滤。实例UUID例如：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>security-group-id</strong></li> <p style="padding-left: 30px;">按照【<strong>安全组ID</strong>】进行过滤。安全组ID例如: sg-8jlk3f3r。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-name</strong></li> <p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-charge-type</strong></li> <p style="padding-left: 30px;">按照【<strong>实例计费模式</strong>】进行过滤。(PREPAID：表示预付费，即包年包月 | POSTPAID_BY_HOUR：表示后付费，即按量计费 | CDHPAID：表示[CDH](https://cloud.tencent.com/document/product/416)付费，即只对[CDH](https://cloud.tencent.com/document/product/416)计费，不对[CDH](https://cloud.tencent.com/document/product/416)上的实例计费。)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-state</strong></li> <p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>private-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的内网IP</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>public-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的公网IP</strong>】进行过滤，包含实例创建时自动分配的IP和实例创建后手动绑定的弹性IP。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>ipv6-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例的IPv6地址</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-value</strong></li> <p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag:tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。使用请参考示例2。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>creation-start-time</strong></li> <p style="padding-left: 30px;">按照【<strong>创建实例请求的起始时间</strong>】进行过滤。例如：2023-06-01 00:00:00。
+	// <li><strong>zone</strong></li> <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区例如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p> <li><strong>project-id</strong></li> <p style="padding-left: 30px;">按照【<strong>项目ID</strong>】进行过滤，可通过调用[DescribeProjects](https://cloud.tencent.com/document/api/651/78725)查询已创建的项目列表或登录[控制台](https://console.cloud.tencent.com/cvm/index)进行查看；也可以调用[AddProject](https://cloud.tencent.com/document/api/651/81952)创建新的项目。项目ID例如：1002189。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">必选：否</p> <li><strong>host-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDH](https://cloud.tencent.com/document/product/416) ID</strong>】进行过滤。[CDH](https://cloud.tencent.com/document/product/416) ID例如：host-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>dedicated-cluster-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDC](https://cloud.tencent.com/document/product/1346) ID</strong>】进行过滤。[CDC](https://cloud.tencent.com/document/product/1346) ID例如：cluster-xxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>vpc-id</strong></li> <p style="padding-left: 30px;">按照【<strong>VPC ID</strong>】进行过滤。VPC ID例如：vpc-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>subnet-id</strong></li> <p style="padding-left: 30px;">按照【<strong>子网ID</strong>】进行过滤。子网ID例如：subnet-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-id</strong></li> <p style="padding-left: 30px;">按照【<strong>实例ID</strong>】进行过滤。实例ID例如：ins-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>uuid</strong></li> <p style="padding-left: 30px;">按照【<strong>实例UUID</strong>】进行过滤。实例UUID例如：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>security-group-id</strong></li> <p style="padding-left: 30px;">按照【<strong>安全组ID</strong>】进行过滤。安全组ID例如: sg-8jlk3f3r。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-name</strong></li> <p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-charge-type</strong></li> <p style="padding-left: 30px;">按照【<strong>实例计费模式</strong>】进行过滤。(PREPAID：表示预付费，即包年包月 | POSTPAID_BY_HOUR：表示后付费，即按量计费 | CDHPAID：表示[CDH](https://cloud.tencent.com/document/product/416)付费，即只对[CDH](https://cloud.tencent.com/document/product/416)计费，不对[CDH](https://cloud.tencent.com/document/product/416)上的实例计费。)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-state</strong></li> <p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>private-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的内网IP</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>public-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的公网IP</strong>】进行过滤，包含实例创建时自动分配的IP和实例创建后手动绑定的弹性IP。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>ipv6-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例的IPv6地址</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-value</strong></li> <p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag:tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。使用请参考示例2。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>creation-start-time</strong></li> <p style="padding-left: 30px;">按照【<strong>创建实例请求的起始时间</strong>】进行过滤。例如：2023-06-01 00:00:00。
 	// </p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>creation-end-time</strong></li> <p style="padding-left: 30px;">按照【<strong>创建实例请求的截止时间</strong>】进行过滤。例如：2023-06-01 00:00:00。
 	// </p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`InstanceIds`和`Filters`。
@@ -3671,7 +3629,7 @@ type DescribeInstancesRequest struct {
 	// 按照一个或者多个实例ID查询。实例ID例如：`ins-xxxxxxxx`。（此参数的具体格式可参考API[简介](https://cloud.tencent.com/document/api/213/15688)的`ids.N`一节）。每次请求的实例的上限为100。参数不支持同时指定`InstanceIds`和`Filters`。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// <li><strong>zone</strong></li> <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区例如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p> <li><strong>project-id</strong></li> <p style="padding-left: 30px;">按照【<strong>项目ID</strong>】进行过滤，可通过调用[DescribeProjects](https://cloud.tencent.com/document/api/651/78725)查询已创建的项目列表或登录[控制台](https://console.cloud.tencent.com/cvm/index)进行查看；也可以调用[AddProject](https://cloud.tencent.com/document/api/651/81952)创建新的项目。项目ID例如：1002189。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">必选：否</p> <li><strong>host-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDH](https://cloud.tencent.com/document/product/416) ID</strong>】进行过滤。[CDH](https://cloud.tencent.com/document/product/416) ID例如：host-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>dedicated-cluster-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDC](https://cloud.tencent.com/document/product/1346) ID</strong>】进行过滤。[CDC](https://cloud.tencent.com/document/product/1346) ID例如：cluster-xxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>vpc-id</strong></li> <p style="padding-left: 30px;">按照【<strong>VPC ID</strong>】进行过滤。VPC ID例如：vpc-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>subnet-id</strong></li> <p style="padding-left: 30px;">按照【<strong>子网ID</strong>】进行过滤。子网ID例如：subnet-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-id</strong></li> <p style="padding-left: 30px;">按照【<strong>实例ID</strong>】进行过滤。实例ID例如：ins-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>uuid</strong></li> <p style="padding-left: 30px;">按照【<strong>实例UUID</strong>】进行过滤。实例UUID例如：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>security-group-id</strong></li> <p style="padding-left: 30px;">按照【<strong>安全组ID</strong>】进行过滤。安全组ID例如: sg-8jlk3f3r。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-name</strong></li> <p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-charge-type</strong></li> <p style="padding-left: 30px;">按照【<strong>实例计费模式</strong>】进行过滤。(PREPAID：表示预付费，即包年包月 | POSTPAID_BY_HOUR：表示后付费，即按量计费 | CDHPAID：表示[CDH](https://cloud.tencent.com/document/product/416)付费，即只对[CDH](https://cloud.tencent.com/document/product/416)计费，不对[CDH](https://cloud.tencent.com/document/product/416)上的实例计费。)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-state</strong></li> <p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>private-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的内网IP</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>public-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的公网IP</strong>】进行过滤，包含实例创建时自动分配的IP和实例创建后手动绑定的弹性IP。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>ipv6-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例的IPv6地址</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-value</strong></li> <p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag:tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。使用请参考示例2。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>creation-start-time</strong></li> <p style="padding-left: 30px;">按照【<strong>创建实例请求的起始时间</strong>】进行过滤。例如：2023-06-01 00:00:00。
+	// <li><strong>zone</strong></li> <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区例如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p> <li><strong>project-id</strong></li> <p style="padding-left: 30px;">按照【<strong>项目ID</strong>】进行过滤，可通过调用[DescribeProjects](https://cloud.tencent.com/document/api/651/78725)查询已创建的项目列表或登录[控制台](https://console.cloud.tencent.com/cvm/index)进行查看；也可以调用[AddProject](https://cloud.tencent.com/document/api/651/81952)创建新的项目。项目ID例如：1002189。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">必选：否</p> <li><strong>host-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDH](https://cloud.tencent.com/document/product/416) ID</strong>】进行过滤。[CDH](https://cloud.tencent.com/document/product/416) ID例如：host-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>dedicated-cluster-id</strong></li> <p style="padding-left: 30px;">按照【<strong>[CDC](https://cloud.tencent.com/document/product/1346) ID</strong>】进行过滤。[CDC](https://cloud.tencent.com/document/product/1346) ID例如：cluster-xxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>vpc-id</strong></li> <p style="padding-left: 30px;">按照【<strong>VPC ID</strong>】进行过滤。VPC ID例如：vpc-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>subnet-id</strong></li> <p style="padding-left: 30px;">按照【<strong>子网ID</strong>】进行过滤。子网ID例如：subnet-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-id</strong></li> <p style="padding-left: 30px;">按照【<strong>实例ID</strong>】进行过滤。实例ID例如：ins-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>uuid</strong></li> <p style="padding-left: 30px;">按照【<strong>实例UUID</strong>】进行过滤。实例UUID例如：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>security-group-id</strong></li> <p style="padding-left: 30px;">按照【<strong>安全组ID</strong>】进行过滤。安全组ID例如: sg-8jlk3f3r。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-name</strong></li> <p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-charge-type</strong></li> <p style="padding-left: 30px;">按照【<strong>实例计费模式</strong>】进行过滤。(PREPAID：表示预付费，即包年包月 | POSTPAID_BY_HOUR：表示后付费，即按量计费 | CDHPAID：表示[CDH](https://cloud.tencent.com/document/product/416)付费，即只对[CDH](https://cloud.tencent.com/document/product/416)计费，不对[CDH](https://cloud.tencent.com/document/product/416)上的实例计费。)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>instance-state</strong></li> <p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>private-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的内网IP</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>public-ip-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例主网卡的公网IP</strong>】进行过滤，包含实例创建时自动分配的IP和实例创建后手动绑定的弹性IP。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>ipv6-address</strong></li> <p style="padding-left: 30px;">按照【<strong>实例的IPv6地址</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag-value</strong></li> <p style="padding-left: 30px;">按照【<strong>标签值</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> <li><strong>tag:tag-key</strong></li> <p style="padding-left: 30px;">按照【<strong>标签键值对</strong>】进行过滤。tag-key使用具体的标签键进行替换。使用请参考示例2。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><li><strong>creation-start-time</strong></li> <p style="padding-left: 30px;">按照【<strong>创建实例请求的起始时间</strong>】进行过滤。例如：2023-06-01 00:00:00。
 	// </p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>creation-end-time</strong></li> <p style="padding-left: 30px;">按照【<strong>创建实例请求的截止时间</strong>】进行过滤。例如：2023-06-01 00:00:00。
 	// </p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p> 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`InstanceIds`和`Filters`。
@@ -3736,7 +3694,7 @@ func (r *DescribeInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstancesStatusRequestParams struct {
-	// 按照一个或者多个实例ID查询。实例ID形如：`ins-11112222`。此参数的具体格式可参考API[简介](https://cloud.tencent.com/document/api/213/15688)的`ids.N`一节）。每次请求的实例的上限为100。
+	// 按照一个或者多个实例ID查询。实例ID形如：`ins-dyzp06q6`。此参数的具体格式可参考API[简介](https://cloud.tencent.com/document/api/213/15688)的`ids.N`一节）。每次请求的实例的上限为100。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
@@ -3749,7 +3707,7 @@ type DescribeInstancesStatusRequestParams struct {
 type DescribeInstancesStatusRequest struct {
 	*tchttp.BaseRequest
 	
-	// 按照一个或者多个实例ID查询。实例ID形如：`ins-11112222`。此参数的具体格式可参考API[简介](https://cloud.tencent.com/document/api/213/15688)的`ids.N`一节）。每次请求的实例的上限为100。
+	// 按照一个或者多个实例ID查询。实例ID形如：`ins-dyzp06q6`。此参数的具体格式可参考API[简介](https://cloud.tencent.com/document/api/213/15688)的`ids.N`一节）。每次请求的实例的上限为100。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
@@ -3868,7 +3826,7 @@ type DescribeKeyPairsRequestParams struct {
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
 	// 过滤条件。
-	// <li> project-id - Integer - 是否必填：否 -（过滤条件）按照项目ID过滤。可以通过[项目列表](https://console.cloud.tencent.com/project)查询项目ID，或者调用接口 [DescribeProject](https://cloud.tencent.com/document/api/378/4400)，取返回信息中的projectId获取项目ID。</li>
+	// <li> project-id - Integer - 是否必填：否 -（过滤条件）按照项目ID过滤。可以通过[项目列表](https://console.cloud.tencent.com/project)查询项目ID，或者调用接口 [DescribeProjects](https://cloud.tencent.com/document/api/651/78725)，取返回信息中的projectId获取项目ID。</li>
 	// <li> key-name - String - 是否必填：否 -（过滤条件）按照密钥对名称过滤。</li>
 	// <li> tag-key - String - 是否必填：否 -（过滤条件）按照标签键过滤。</li>
 	// <li> tag-value - String - 是否必填：否 -（过滤条件）按照标签值过滤。</li>
@@ -3890,7 +3848,7 @@ type DescribeKeyPairsRequest struct {
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
 	// 过滤条件。
-	// <li> project-id - Integer - 是否必填：否 -（过滤条件）按照项目ID过滤。可以通过[项目列表](https://console.cloud.tencent.com/project)查询项目ID，或者调用接口 [DescribeProject](https://cloud.tencent.com/document/api/378/4400)，取返回信息中的projectId获取项目ID。</li>
+	// <li> project-id - Integer - 是否必填：否 -（过滤条件）按照项目ID过滤。可以通过[项目列表](https://console.cloud.tencent.com/project)查询项目ID，或者调用接口 [DescribeProjects](https://cloud.tencent.com/document/api/651/78725)，取返回信息中的projectId获取项目ID。</li>
 	// <li> key-name - String - 是否必填：否 -（过滤条件）按照密钥对名称过滤。</li>
 	// <li> tag-key - String - 是否必填：否 -（过滤条件）按照标签键过滤。</li>
 	// <li> tag-value - String - 是否必填：否 -（过滤条件）按照标签值过滤。</li>
@@ -3966,7 +3924,7 @@ type DescribeLaunchTemplateVersionsRequestParams struct {
 	// 通过范围指定版本时的最小版本号，默认为0。
 	MinVersion *uint64 `json:"MinVersion,omitnil,omitempty" name:"MinVersion"`
 
-	// 过范围指定版本时的最大版本号，默认为30。
+	// 通过范围指定版本时的最大版本号，默认为30。
 	MaxVersion *uint64 `json:"MaxVersion,omitnil,omitempty" name:"MaxVersion"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
@@ -3975,7 +3933,7 @@ type DescribeLaunchTemplateVersionsRequestParams struct {
 	// 返回数量，默认为20，最大值为100。关于`Limit`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 是否查询默认版本。该参数不可与LaunchTemplateVersions同时指定。
+	// 是否查询默认版本。默认值：false
 	DefaultVersion *bool `json:"DefaultVersion,omitnil,omitempty" name:"DefaultVersion"`
 }
 
@@ -3991,7 +3949,7 @@ type DescribeLaunchTemplateVersionsRequest struct {
 	// 通过范围指定版本时的最小版本号，默认为0。
 	MinVersion *uint64 `json:"MinVersion,omitnil,omitempty" name:"MinVersion"`
 
-	// 过范围指定版本时的最大版本号，默认为30。
+	// 通过范围指定版本时的最大版本号，默认为30。
 	MaxVersion *uint64 `json:"MaxVersion,omitnil,omitempty" name:"MaxVersion"`
 
 	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
@@ -4000,7 +3958,7 @@ type DescribeLaunchTemplateVersionsRequest struct {
 	// 返回数量，默认为20，最大值为100。关于`Limit`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 是否查询默认版本。该参数不可与LaunchTemplateVersions同时指定。
+	// 是否查询默认版本。默认值：false
 	DefaultVersion *bool `json:"DefaultVersion,omitnil,omitempty" name:"DefaultVersion"`
 }
 
@@ -4208,220 +4166,223 @@ func (r *DescribeRegionsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type DescribeReservedInstancesConfigInfosRequestParams struct {
-	// zone
-	// 按照预留实例计费可购买的可用区进行过滤。形如：ap-guangzhou-1。
-	// 类型：String
-	// 必选：否
-	// 可选项：各地域可用区列表
-	// 
-	// product-description
-	// 按照预留实例计费的平台描述（即操作系统）进行过滤。形如：linux。
-	// 类型：String
-	// 必选：否
-	// 可选项：linux
-	// 
-	// duration
-	// 按照预留实例计费有效期，即预留实例计费购买时长进行过滤。形如：31536000。
-	// 类型：Integer
-	// 计量单位：秒
-	// 必选：否
-	// 可选项：31536000 (1年)
-	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+type DescribeResourcePoolPackInstancesRequestParams struct {
+	// 实例资源池ID列表。形如：rpp-39kj2fsb。每次请求的实例的上限为100。
+	DedicatedResourcePackIds []*string `json:"DedicatedResourcePackIds,omitnil,omitempty" name:"DedicatedResourcePackIds"`
 }
 
-type DescribeReservedInstancesConfigInfosRequest struct {
+type DescribeResourcePoolPackInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// zone
-	// 按照预留实例计费可购买的可用区进行过滤。形如：ap-guangzhou-1。
-	// 类型：String
-	// 必选：否
-	// 可选项：各地域可用区列表
-	// 
-	// product-description
-	// 按照预留实例计费的平台描述（即操作系统）进行过滤。形如：linux。
-	// 类型：String
-	// 必选：否
-	// 可选项：linux
-	// 
-	// duration
-	// 按照预留实例计费有效期，即预留实例计费购买时长进行过滤。形如：31536000。
-	// 类型：Integer
-	// 计量单位：秒
-	// 必选：否
-	// 可选项：31536000 (1年)
-	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+	// 实例资源池ID列表。形如：rpp-39kj2fsb。每次请求的实例的上限为100。
+	DedicatedResourcePackIds []*string `json:"DedicatedResourcePackIds,omitnil,omitempty" name:"DedicatedResourcePackIds"`
 }
 
-func (r *DescribeReservedInstancesConfigInfosRequest) ToJsonString() string {
+func (r *DescribeResourcePoolPackInstancesRequest) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *DescribeReservedInstancesConfigInfosRequest) FromJsonString(s string) error {
+func (r *DescribeResourcePoolPackInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DedicatedResourcePackIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourcePoolPackInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourcePoolPackInstancesResponseParams struct {
+	// 实例资源池内已创建的实例详情列表。
+	DedicatedResourcePackInstanceSet []*ResourcePoolPackInstance `json:"DedicatedResourcePackInstanceSet,omitnil,omitempty" name:"DedicatedResourcePackInstanceSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourcePoolPackInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourcePoolPackInstancesResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourcePoolPackInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourcePoolPackInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourcePoolPackTypeConfigsRequestParams struct {
+	// <li><strong>zone</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：是</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <li><strong>instance-family</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例族</strong>】进行过滤。形如：SA9。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>instance-type</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例规格</strong>】进行过滤。形如：SA9.96XLARGE1152。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// 每次请求的`Filters`的上限为10。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeResourcePoolPackTypeConfigsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <li><strong>zone</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：是</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <li><strong>instance-family</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例族</strong>】进行过滤。形如：SA9。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>instance-type</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例规格</strong>】进行过滤。形如：SA9.96XLARGE1152。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// 每次请求的`Filters`的上限为10。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeResourcePoolPackTypeConfigsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourcePoolPackTypeConfigsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
 	delete(f, "Filters")
 	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeReservedInstancesConfigInfosRequest has unknown keys!", "")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourcePoolPackTypeConfigsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
-type DescribeReservedInstancesConfigInfosResponseParams struct {
-	// 预留实例静态配置信息列表。
-	ReservedInstanceConfigInfos []*ReservedInstanceConfigInfoItem `json:"ReservedInstanceConfigInfos,omitnil,omitempty" name:"ReservedInstanceConfigInfos"`
+type DescribeResourcePoolPackTypeConfigsResponseParams struct {
+	// 支持实例资源池的机型规格列表。
+	InstanceTypeConfigSet []*InstanceTypeConfig `json:"InstanceTypeConfigSet,omitnil,omitempty" name:"InstanceTypeConfigSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
-type DescribeReservedInstancesConfigInfosResponse struct {
+type DescribeResourcePoolPackTypeConfigsResponse struct {
 	*tchttp.BaseResponse
-	Response *DescribeReservedInstancesConfigInfosResponseParams `json:"Response"`
+	Response *DescribeResourcePoolPackTypeConfigsResponseParams `json:"Response"`
 }
 
-func (r *DescribeReservedInstancesConfigInfosResponse) ToJsonString() string {
+func (r *DescribeResourcePoolPackTypeConfigsResponse) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *DescribeReservedInstancesConfigInfosResponse) FromJsonString(s string) error {
+func (r *DescribeResourcePoolPackTypeConfigsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
-type DescribeReservedInstancesOfferingsRequestParams struct {
-	// 试运行, 默认为 false。
-	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+type DescribeResourcePoolPacksRequestParams struct {
+	// 返回数量，默认值为10，最小值为10，最大值为100。
+	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
-	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+	// 分页标记，用于获取下一页数据。
+	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
-	// 返回数量，默认为20，最大值为100。关于`Limit`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
-	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
-
-	// 以最大有效期作为过滤参数。
-	// 计量单位: 秒
-	// 默认为 94608000。
-	MaxDuration *int64 `json:"MaxDuration,omitnil,omitempty" name:"MaxDuration"`
-
-	// 以最小有效期作为过滤参数。
-	// 计量单位: 秒
-	// 默认为 2592000。
-	MinDuration *int64 `json:"MinDuration,omitnil,omitempty" name:"MinDuration"`
-
+	// <li><strong>dedicated-resource-pack-id</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例资源池ID</strong>】进行过滤。形如：rpp-rn99mzt2。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照预留实例计费可购买的【<strong>可用区</strong>】进行过滤。形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
-	// <li><strong>duration</strong></li>
-	// <p style="padding-left: 30px;">按照预留实例计费【<strong>有效期</strong>】即预留实例计费购买时长进行过滤。形如：31536000。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">计量单位：秒</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：31536000 (1年) | 94608000（3年）</p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <li><strong>instance-family</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例类型</strong>】进行过滤。形如：SA9。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>预留实例计费类型</strong>】进行过滤。形如：S3.MEDIUM4。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例计费类型列表</a></p>
-	// <li><strong>offering-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>付款类型</strong>】进行过滤。形如：All Upfront (预付全部费用)。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：All Upfront (预付全部费用)</p>
-	// <li><strong>product-description</strong></li>
-	// <p style="padding-left: 30px;">按照预留实例计费的【<strong>平台描述</strong>】（即操作系统）进行过滤。形如：linux。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：linux</p>
-	// <li><strong>reserved-instances-offering-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>预留实例计费配置ID</strong>】进行过滤。形如：650c138f-ae7e-4750-952a-96841d6e9fc1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。
+	// <p style="padding-left: 30px;">按照【<strong>实例规格</strong>】进行过滤。形如：SA9.96XLARGE1152。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>status</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例资源池状态</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：CREATING (创建中) | ACTIVE (运行中) | RETIRED (已过期)</p>
+	// 每次请求的`Filters`的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
-type DescribeReservedInstancesOfferingsRequest struct {
+type DescribeResourcePoolPacksRequest struct {
 	*tchttp.BaseRequest
 	
-	// 试运行, 默认为 false。
-	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+	// 返回数量，默认值为10，最小值为10，最大值为100。
+	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
-	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+	// 分页标记，用于获取下一页数据。
+	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
-	// 返回数量，默认为20，最大值为100。关于`Limit`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/15688)中的相关小节。
-	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
-
-	// 以最大有效期作为过滤参数。
-	// 计量单位: 秒
-	// 默认为 94608000。
-	MaxDuration *int64 `json:"MaxDuration,omitnil,omitempty" name:"MaxDuration"`
-
-	// 以最小有效期作为过滤参数。
-	// 计量单位: 秒
-	// 默认为 2592000。
-	MinDuration *int64 `json:"MinDuration,omitnil,omitempty" name:"MinDuration"`
-
+	// <li><strong>dedicated-resource-pack-id</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例资源池ID</strong>】进行过滤。形如：rpp-rn99mzt2。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照预留实例计费可购买的【<strong>可用区</strong>】进行过滤。形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
-	// <li><strong>duration</strong></li>
-	// <p style="padding-left: 30px;">按照预留实例计费【<strong>有效期</strong>】即预留实例计费购买时长进行过滤。形如：31536000。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">计量单位：秒</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：31536000 (1年) | 94608000（3年）</p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <li><strong>instance-family</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例类型</strong>】进行过滤。形如：SA9。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>预留实例计费类型</strong>】进行过滤。形如：S3.MEDIUM4。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例计费类型列表</a></p>
-	// <li><strong>offering-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>付款类型</strong>】进行过滤。形如：All Upfront (预付全部费用)。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：All Upfront (预付全部费用)</p>
-	// <li><strong>product-description</strong></li>
-	// <p style="padding-left: 30px;">按照预留实例计费的【<strong>平台描述</strong>】（即操作系统）进行过滤。形如：linux。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：linux</p>
-	// <li><strong>reserved-instances-offering-id</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>预留实例计费配置ID</strong>】进行过滤。形如：650c138f-ae7e-4750-952a-96841d6e9fc1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
-	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。
+	// <p style="padding-left: 30px;">按照【<strong>实例规格</strong>】进行过滤。形如：SA9.96XLARGE1152。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>status</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例资源池状态</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：CREATING (创建中) | ACTIVE (运行中) | RETIRED (已过期)</p>
+	// 每次请求的`Filters`的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
-func (r *DescribeReservedInstancesOfferingsRequest) ToJsonString() string {
+func (r *DescribeResourcePoolPacksRequest) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *DescribeReservedInstancesOfferingsRequest) FromJsonString(s string) error {
+func (r *DescribeResourcePoolPacksRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "DryRun")
-	delete(f, "Offset")
-	delete(f, "Limit")
-	delete(f, "MaxDuration")
-	delete(f, "MinDuration")
+	delete(f, "MaxResults")
+	delete(f, "NextToken")
 	delete(f, "Filters")
 	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeReservedInstancesOfferingsRequest has unknown keys!", "")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourcePoolPacksRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
-type DescribeReservedInstancesOfferingsResponseParams struct {
-	// 符合条件的预留实例计费数量。
-	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+type DescribeResourcePoolPacksResponseParams struct {
+	// 符合条件的实例资源池列表。
+	DedicatedResourcePackSet []*ResourcePoolPack `json:"DedicatedResourcePackSet,omitnil,omitempty" name:"DedicatedResourcePackSet"`
 
-	// 符合条件的预留实例计费列表。
-	ReservedInstancesOfferingsSet []*ReservedInstancesOffering `json:"ReservedInstancesOfferingsSet,omitnil,omitempty" name:"ReservedInstancesOfferingsSet"`
+	// 下一页数据的标记，用于分页查询。值为空时表示已到最后一页。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
-type DescribeReservedInstancesOfferingsResponse struct {
+type DescribeResourcePoolPacksResponse struct {
 	*tchttp.BaseResponse
-	Response *DescribeReservedInstancesOfferingsResponseParams `json:"Response"`
+	Response *DescribeResourcePoolPacksResponseParams `json:"Response"`
 }
 
-func (r *DescribeReservedInstancesOfferingsResponse) ToJsonString() string {
+func (r *DescribeResourcePoolPacksResponse) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *DescribeReservedInstancesOfferingsResponse) FromJsonString(s string) error {
+func (r *DescribeResourcePoolPacksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4643,7 +4604,7 @@ func (r *DescribeTaskInfoResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeZoneInstanceConfigInfosRequestParams struct {
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>instance-family</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例机型系列</strong>】进行过滤。实例机型系列形如：S1、I1、M1等。具体取值参见[实例类型](https://cloud.tencent.com/document/product/213/11518)描述。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-type</strong></li>
@@ -4660,7 +4621,7 @@ type DescribeZoneInstanceConfigInfosRequest struct {
 	*tchttp.BaseRequest
 	
 	// <li><strong>zone</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-1。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>可用区</strong>】进行过滤。可用区形如：ap-guangzhou-6。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a></p>
 	// <li><strong>instance-family</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例机型系列</strong>】进行过滤。实例机型系列形如：S1、I1、M1等。具体取值参见[实例类型](https://cloud.tencent.com/document/product/213/11518)描述。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-type</strong></li>
@@ -5334,7 +5295,8 @@ type HostResource struct {
 	// 专用宿主机实例可用GPU卡数
 	GpuAvailable *uint64 `json:"GpuAvailable,omitnil,omitempty" name:"GpuAvailable"`
 
-	// CDH owner
+	// CDH 拥有者
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExclusiveOwner *string `json:"ExclusiveOwner,omitnil,omitempty" name:"ExclusiveOwner"`
 }
 
@@ -5788,87 +5750,80 @@ func (r *ImportKeyPairResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type InquirePricePurchaseReservedInstancesOfferingRequestParams struct {
-	// 购买预留实例计费数量
-	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+type InquirePricePurchaseResourcePoolPacksRequestParams struct {
+	// 实例资源池预扣包所在可用区。形如：ap-guangzhou-6。可通过[DescribeZones](https://cloud.tencent.com/document/product/213/15707)接口获取可用区列表。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 预留实例计费配置ID
-	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitnil,omitempty" name:"ReservedInstancesOfferingId"`
+	// 实例资源池的规格，仅支持整机/半整机规格。形如：SA9.96XLARGE1152。
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 试运行
-	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+	// 实例资源池的数量。1个数量代表1个半整机/整机资源池。
+	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。<br>更多详细信息请参阅：如何保证幂等性
-	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
-
-	// 预留实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持60个字符（包含模式串）。</li>
-	ReservedInstanceName *string `json:"ReservedInstanceName,omitnil,omitempty" name:"ReservedInstanceName"`
+	// 实例资源池的时长，单位：月。取值范围：1-60。
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 }
 
-type InquirePricePurchaseReservedInstancesOfferingRequest struct {
+type InquirePricePurchaseResourcePoolPacksRequest struct {
 	*tchttp.BaseRequest
 	
-	// 购买预留实例计费数量
-	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+	// 实例资源池预扣包所在可用区。形如：ap-guangzhou-6。可通过[DescribeZones](https://cloud.tencent.com/document/product/213/15707)接口获取可用区列表。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 预留实例计费配置ID
-	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitnil,omitempty" name:"ReservedInstancesOfferingId"`
+	// 实例资源池的规格，仅支持整机/半整机规格。形如：SA9.96XLARGE1152。
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 试运行
-	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+	// 实例资源池的数量。1个数量代表1个半整机/整机资源池。
+	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。<br>更多详细信息请参阅：如何保证幂等性
-	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
-
-	// 预留实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持60个字符（包含模式串）。</li>
-	ReservedInstanceName *string `json:"ReservedInstanceName,omitnil,omitempty" name:"ReservedInstanceName"`
+	// 实例资源池的时长，单位：月。取值范围：1-60。
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 }
 
-func (r *InquirePricePurchaseReservedInstancesOfferingRequest) ToJsonString() string {
+func (r *InquirePricePurchaseResourcePoolPacksRequest) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *InquirePricePurchaseReservedInstancesOfferingRequest) FromJsonString(s string) error {
+func (r *InquirePricePurchaseResourcePoolPacksRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	delete(f, "Zone")
+	delete(f, "InstanceType")
 	delete(f, "InstanceCount")
-	delete(f, "ReservedInstancesOfferingId")
-	delete(f, "DryRun")
-	delete(f, "ClientToken")
-	delete(f, "ReservedInstanceName")
+	delete(f, "Period")
 	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquirePricePurchaseReservedInstancesOfferingRequest has unknown keys!", "")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquirePricePurchaseResourcePoolPacksRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
-type InquirePricePurchaseReservedInstancesOfferingResponseParams struct {
-	// 该参数表示对应配置预留实例的价格。
-	Price *ReservedInstancePrice `json:"Price,omitnil,omitempty" name:"Price"`
+type InquirePricePurchaseResourcePoolPacksResponseParams struct {
+	// 实例资源池价格信息。
+	Price *ItemPrice `json:"Price,omitnil,omitempty" name:"Price"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
-type InquirePricePurchaseReservedInstancesOfferingResponse struct {
+type InquirePricePurchaseResourcePoolPacksResponse struct {
 	*tchttp.BaseResponse
-	Response *InquirePricePurchaseReservedInstancesOfferingResponseParams `json:"Response"`
+	Response *InquirePricePurchaseResourcePoolPacksResponseParams `json:"Response"`
 }
 
-func (r *InquirePricePurchaseReservedInstancesOfferingResponse) ToJsonString() string {
+func (r *InquirePricePurchaseResourcePoolPacksResponse) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *InquirePricePurchaseReservedInstancesOfferingResponse) FromJsonString(s string) error {
+func (r *InquirePricePurchaseResourcePoolPacksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6827,6 +6782,9 @@ type Instance struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LatestOperationErrorMsg *string `json:"LatestOperationErrorMsg,omitnil,omitempty" name:"LatestOperationErrorMsg"`
 
+	// 自定义metadata，本参数对应创建 CVM时指定的Metadata 信息。**注：内测中**。
+	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
+
 	// 实例绑定的公网IPv6地址。
 	PublicIPv6Addresses []*string `json:"PublicIPv6Addresses,omitnil,omitempty" name:"PublicIPv6Addresses"`
 }
@@ -7004,45 +6962,34 @@ type InternetAccessible struct {
 	// 带宽包ID。可通过[ DescribeBandwidthPackages ](https://cloud.tencent.com/document/api/215/19209)接口返回值中的`BandwidthPackageId`获取。该参数仅在RunInstances接口中作为入参使用。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitnil,omitempty" name:"BandwidthPackageId"`
 
-	// 线路类型。各种线路类型详情可参考：[EIP 的 IP 地址类型](https://cloud.tencent.com/document/product/1199/41646)。默认值：BGP。
-	// 
-	// - BGP：常规 BGP 线路
-	// 
+	// 线路类型。各种线路类型及支持地区详情可参考：[EIP 的 IP 地址类型](https://cloud.tencent.com/document/product/1199/41646)。默认值：BGP。
+	// <li>BGP：常规 BGP 线路</li>
 	// 已开通静态单线IP白名单的用户，可选值：
-	// 
-	//  - CMCC：中国移动
-	//  - CTCC：中国电信
-	//  - CUCC：中国联通
-	// 
+	// <li>CMCC：中国移动</li>
+	// <li>CTCC：中国电信</li>
+	// <li>CUCC：中国联通</li>
 	// 注意：仅部分地域支持静态单线IP。
-	// 示例值：BGP
 	InternetServiceProvider *string `json:"InternetServiceProvider,omitnil,omitempty" name:"InternetServiceProvider"`
 
 	// 公网 IP 类型。
 	// 
-	// - WanIP：普通公网IP。
-	// - HighQualityEIP：精品 IP。仅新加坡和中国香港支持精品IP。
-	// - AntiDDoSEIP：高防 IP。仅部分地域支持高防IP，详情可见[弹性公网IP产品概述](https://cloud.tencent.com/document/product/1199/41646)。
-	// 
+	// <li> WanIP：普通公网IP。</li>
+	// <li> HighQualityEIP：精品 IP。仅新加坡和中国香港支持精品IP。</li>
+	// <li> AntiDDoSEIP：高防 IP。仅部分地域支持高防IP，详情可见[弹性公网IP产品概述](https://cloud.tencent.com/document/product/1199/41646)。</li>
 	// 如需为资源分配公网IPv4地址，请指定公网IPv4地址类型。
-	// 
-	// 示例值：WanIP
 	// 
 	// 此功能仅部分地区灰度开放，如需使用[请提交工单咨询](https://console.cloud.tencent.com/workorder/category)
 	IPv4AddressType *string `json:"IPv4AddressType,omitnil,omitempty" name:"IPv4AddressType"`
 
 	// 弹性公网 IPv6 类型。
-	// - EIPv6：弹性公网 IPv6。
-	// - HighQualityEIPv6：精品 IPv6。仅中国香港支持精品IPv6。
-	// 
+	// <li> EIPv6：弹性公网 IPv6。</li>
+	// <li> HighQualityEIPv6：精品 IPv6。仅中国香港支持精品IPv6。</li>
 	// 如需为资源分配IPv6地址，请指定弹性公网IPv6类型。
-	// 示例值：EIPv6
 	// 
 	// 此功能仅部分地区灰度开放，如需使用[请提交工单咨询](https://console.cloud.tencent.com/workorder/category)
 	IPv6AddressType *string `json:"IPv6AddressType,omitnil,omitempty" name:"IPv6AddressType"`
 
 	// 高防包唯一ID，申请高防IP时，该字段必传。
-	// 示例值：bgp-12345678
 	AntiDDoSPackageId *string `json:"AntiDDoSPackageId,omitnil,omitempty" name:"AntiDDoSPackageId"`
 }
 
@@ -7334,10 +7281,10 @@ type Metadata struct {
 }
 
 type MetadataItem struct {
-	// 自定义metadata键，需符合正则 ^[a-zA-Z0-9_-]+$，长度 ≤128 字节（大小写敏感）；
+	// 自定义metadata键，由大写字母（A-Z）、小写字母（a-z）、数字（0-9）、下划线（_）或连字符（-）组成，大小上限为128 字节。
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
-	// 自定义metadata值，支持任意数据（含二进制），大小 ≤256 KB（大小写敏感）；
+	// 自定义metadata值，大小上限为256 KB。
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
@@ -7502,7 +7449,7 @@ type ModifyHostsAttributeRequestParams struct {
 	// 自动续费标识。取值范围：<br><li>NOTIFY_AND_AUTO_RENEW：通知过期且自动续费</li><li>NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW：不通知过期不自动续费</li><br>若该参数指定为NOTIFY_AND_AUTO_RENEW，在账户余额充足的情况下，实例到期后将按月自动续费。
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
-	// 项目ID。项目可以使用[AddProject](https://cloud.tencent.com/document/api/651/81952)接口创建。可通过[DescribeProject](https://cloud.tencent.com/document/product/378/4400) API返回值中的`projectId`获取。后续使用[DescribeHosts](https://cloud.tencent.com/document/api/213/16474)接口查询实例时，项目ID可用于过滤结果。
+	// 项目ID。项目可以使用 [AddProject](https://cloud.tencent.com/document/api/651/81952) 接口创建。可通过 [DescribeProjects](https://cloud.tencent.com/document/api/651/78725) 接口返回值中的`projectId`获取。后续使用 [DescribeHosts](https://cloud.tencent.com/document/api/213/16474) 接口查询实例时，项目ID可用于过滤结果。
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
@@ -7518,7 +7465,7 @@ type ModifyHostsAttributeRequest struct {
 	// 自动续费标识。取值范围：<br><li>NOTIFY_AND_AUTO_RENEW：通知过期且自动续费</li><li>NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW：不通知过期不自动续费</li><br>若该参数指定为NOTIFY_AND_AUTO_RENEW，在账户余额充足的情况下，实例到期后将按月自动续费。
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
-	// 项目ID。项目可以使用[AddProject](https://cloud.tencent.com/document/api/651/81952)接口创建。可通过[DescribeProject](https://cloud.tencent.com/document/product/378/4400) API返回值中的`projectId`获取。后续使用[DescribeHosts](https://cloud.tencent.com/document/api/213/16474)接口查询实例时，项目ID可用于过滤结果。
+	// 项目ID。项目可以使用 [AddProject](https://cloud.tencent.com/document/api/651/81952) 接口创建。可通过 [DescribeProjects](https://cloud.tencent.com/document/api/651/78725) 接口返回值中的`projectId`获取。后续使用 [DescribeHosts](https://cloud.tencent.com/document/api/213/16474) 接口查询实例时，项目ID可用于过滤结果。
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 }
 
@@ -7974,7 +7921,7 @@ func (r *ModifyInstancesAttributeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstancesChargeTypeRequestParams struct {
-	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/15728)接口返回值中的`InstanceId`获取。每次请求批量实例的上限为30。
+	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/15728)接口返回值中的`InstanceId`获取。每次请求批量实例的上限为20。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 修改后实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<li> PREPAID：预付费，即包年包月。</li><li> POSTPAID_BY_HOUR：后付费，即按量付费。</li>
@@ -7990,7 +7937,7 @@ type ModifyInstancesChargeTypeRequestParams struct {
 type ModifyInstancesChargeTypeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/15728)接口返回值中的`InstanceId`获取。每次请求批量实例的上限为30。
+	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/15728)接口返回值中的`InstanceId`获取。每次请求批量实例的上限为20。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 修改后实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<li> PREPAID：预付费，即包年包月。</li><li> POSTPAID_BY_HOUR：后付费，即按量付费。</li>
@@ -8482,6 +8429,15 @@ type Placement struct {
 
 	// 实例所属的专用宿主机ID，仅用于出参。
 	HostId *string `json:"HostId,omitnil,omitempty" name:"HostId"`
+
+	// 专有资源预扣策略。取值范围：<li>ResourcePool：使用实例资源池进行资源预扣</li>
+	DedicatedResourcePackTenancy *string `json:"DedicatedResourcePackTenancy,omitnil,omitempty" name:"DedicatedResourcePackTenancy"`
+
+	// 专有预扣资源ID列表。形如：rpp-7eumgm3l。通过指定专有预扣资源创建实例时，必须同时指定匹配的DedicatedResourcePackTenancy。
+	DedicatedResourcePackIds []*string `json:"DedicatedResourcePackIds,omitnil,omitempty" name:"DedicatedResourcePackIds"`
+
+	// 实例所属的实例资源池机架ID，仅用于出参。
+	RackId *string `json:"RackId,omitnil,omitempty" name:"RackId"`
 }
 
 type PostPaidQuota struct {
@@ -8599,87 +8555,135 @@ func (r *ProgramFpgaImageResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type PurchaseReservedInstancesOfferingRequestParams struct {
-	// 购买预留实例计费数量
-	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+type PurchaseResourcePoolPacksRequestParams struct {
+	// 实例资源池预扣包所在可用区。形如：ap-guangzhou-6。可通过[DescribeZones](https://cloud.tencent.com/document/product/213/15707)接口获取可用区列表。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 预留实例计费配置ID
-	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitnil,omitempty" name:"ReservedInstancesOfferingId"`
+	// 实例资源池预扣包的规格，仅支持半整机/整机规格。形如：SA9.96XLARGE1152（SA9半整机）。
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 试运行
+	// 实例资源池预扣包的数量。1个数量代表1个半整机/整机资源池。取值范围：1-100。
+	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+
+	// 实例资源池预扣包的时长，单位：月。取值范围：1-60。
+	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// 实例资源池类型。取值范围：
+	// <li>EXCLUSIVE：独享（默认值）</li>
+	// <li>SHARED：共享</li>
+	// 注意：第一期仅支持EXCLUSIVE类型。
+	ResourcePoolPackType *string `json:"ResourcePoolPackType,omitnil,omitempty" name:"ResourcePoolPackType"`
+
+	// 自动放置开关，默认开启（true）。
+	// <li>开启：在不指定实例资源池创建实例时，系统会在开启了该能力的实例资源池里寻找合适的池子创建实例。</li>
+	// <li>关闭：在不指定实例资源池创建实例时，系统不会在该池子里创建实例，只有在指定实例资源池创建实例时，指定了该池子的ID，才允许在池子内创建实例。</li>
+	AutoPlacement *bool `json:"AutoPlacement,omitnil,omitempty" name:"AutoPlacement"`
+
+	// 实例资源池的名称。长度限制：1-60个字符，支持中文、英文、数字、连接线"-"、下划线"_"。
+	DedicatedResourcePoolPackName *string `json:"DedicatedResourcePoolPackName,omitnil,omitempty" name:"DedicatedResourcePoolPackName"`
+
+	// 自动续费标识。取值范围：
+	// <li>NOTIFY_AND_AUTO_RENEW：通知过期且自动续费</li>
+	// <li>NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费（默认值）</li>
+	// <li>DISABLE_NOTIFY_AND_MANUAL_RENEW：不通知过期不自动续费</li>
+	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+
+	// 试运行，用于校验请求参数是否正确。默认为false。
+	// <li>true：发送检查请求，不会创建实例资源池。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId。</li>
+	// <li>false（默认值）：发送正常请求，通过检查后直接创建实例资源池。</li>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
-
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。<br>更多详细信息请参阅：如何保证幂等性
-	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
-
-	// 预留实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持60个字符（包含模式串）。</li>
-	ReservedInstanceName *string `json:"ReservedInstanceName,omitnil,omitempty" name:"ReservedInstanceName"`
 }
 
-type PurchaseReservedInstancesOfferingRequest struct {
+type PurchaseResourcePoolPacksRequest struct {
 	*tchttp.BaseRequest
 	
-	// 购买预留实例计费数量
-	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+	// 实例资源池预扣包所在可用区。形如：ap-guangzhou-6。可通过[DescribeZones](https://cloud.tencent.com/document/product/213/15707)接口获取可用区列表。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 预留实例计费配置ID
-	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitnil,omitempty" name:"ReservedInstancesOfferingId"`
+	// 实例资源池预扣包的规格，仅支持半整机/整机规格。形如：SA9.96XLARGE1152（SA9半整机）。
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 试运行
+	// 实例资源池预扣包的数量。1个数量代表1个半整机/整机资源池。取值范围：1-100。
+	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
+
+	// 实例资源池预扣包的时长，单位：月。取值范围：1-60。
+	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// 实例资源池类型。取值范围：
+	// <li>EXCLUSIVE：独享（默认值）</li>
+	// <li>SHARED：共享</li>
+	// 注意：第一期仅支持EXCLUSIVE类型。
+	ResourcePoolPackType *string `json:"ResourcePoolPackType,omitnil,omitempty" name:"ResourcePoolPackType"`
+
+	// 自动放置开关，默认开启（true）。
+	// <li>开启：在不指定实例资源池创建实例时，系统会在开启了该能力的实例资源池里寻找合适的池子创建实例。</li>
+	// <li>关闭：在不指定实例资源池创建实例时，系统不会在该池子里创建实例，只有在指定实例资源池创建实例时，指定了该池子的ID，才允许在池子内创建实例。</li>
+	AutoPlacement *bool `json:"AutoPlacement,omitnil,omitempty" name:"AutoPlacement"`
+
+	// 实例资源池的名称。长度限制：1-60个字符，支持中文、英文、数字、连接线"-"、下划线"_"。
+	DedicatedResourcePoolPackName *string `json:"DedicatedResourcePoolPackName,omitnil,omitempty" name:"DedicatedResourcePoolPackName"`
+
+	// 自动续费标识。取值范围：
+	// <li>NOTIFY_AND_AUTO_RENEW：通知过期且自动续费</li>
+	// <li>NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费（默认值）</li>
+	// <li>DISABLE_NOTIFY_AND_MANUAL_RENEW：不通知过期不自动续费</li>
+	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+
+	// 试运行，用于校验请求参数是否正确。默认为false。
+	// <li>true：发送检查请求，不会创建实例资源池。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId。</li>
+	// <li>false（默认值）：发送正常请求，通过检查后直接创建实例资源池。</li>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
-
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。<br>更多详细信息请参阅：如何保证幂等性
-	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
-
-	// 预留实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持60个字符（包含模式串）。</li>
-	ReservedInstanceName *string `json:"ReservedInstanceName,omitnil,omitempty" name:"ReservedInstanceName"`
 }
 
-func (r *PurchaseReservedInstancesOfferingRequest) ToJsonString() string {
+func (r *PurchaseResourcePoolPacksRequest) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *PurchaseReservedInstancesOfferingRequest) FromJsonString(s string) error {
+func (r *PurchaseResourcePoolPacksRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	delete(f, "Zone")
+	delete(f, "InstanceType")
 	delete(f, "InstanceCount")
-	delete(f, "ReservedInstancesOfferingId")
+	delete(f, "Period")
+	delete(f, "ResourcePoolPackType")
+	delete(f, "AutoPlacement")
+	delete(f, "DedicatedResourcePoolPackName")
+	delete(f, "RenewFlag")
 	delete(f, "DryRun")
-	delete(f, "ClientToken")
-	delete(f, "ReservedInstanceName")
 	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "PurchaseReservedInstancesOfferingRequest has unknown keys!", "")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "PurchaseResourcePoolPacksRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
-type PurchaseReservedInstancesOfferingResponseParams struct {
-	// 已购买预留实例计费ID
-	ReservedInstanceId *string `json:"ReservedInstanceId,omitnil,omitempty" name:"ReservedInstanceId"`
+type PurchaseResourcePoolPacksResponseParams struct {
+	// 创建的实例资源池ID列表。形如：rpp-39kj2fsb。
+	DedicatedResourcePackIdSet []*string `json:"DedicatedResourcePackIdSet,omitnil,omitempty" name:"DedicatedResourcePackIdSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
-type PurchaseReservedInstancesOfferingResponse struct {
+type PurchaseResourcePoolPacksResponse struct {
 	*tchttp.BaseResponse
-	Response *PurchaseReservedInstancesOfferingResponseParams `json:"Response"`
+	Response *PurchaseResourcePoolPacksResponseParams `json:"Response"`
 }
 
-func (r *PurchaseReservedInstancesOfferingResponse) ToJsonString() string {
+func (r *PurchaseResourcePoolPacksResponse) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *PurchaseReservedInstancesOfferingResponse) FromJsonString(s string) error {
+func (r *PurchaseResourcePoolPacksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9252,164 +9256,6 @@ type RepairTaskInfo struct {
 	AuthSource *string `json:"AuthSource,omitnil,omitempty" name:"AuthSource"`
 }
 
-type ReservedInstanceConfigInfoItem struct {
-	// 实例规格。
-	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
-
-	// 实例规格名称。
-	TypeName *string `json:"TypeName,omitnil,omitempty" name:"TypeName"`
-
-	// 优先级。
-	Order *int64 `json:"Order,omitnil,omitempty" name:"Order"`
-
-	// 实例族信息列表。
-	InstanceFamilies []*ReservedInstanceFamilyItem `json:"InstanceFamilies,omitnil,omitempty" name:"InstanceFamilies"`
-}
-
-type ReservedInstanceFamilyItem struct {
-	// 实例族。
-	InstanceFamily *string `json:"InstanceFamily,omitnil,omitempty" name:"InstanceFamily"`
-
-	// 优先级。
-	Order *int64 `json:"Order,omitnil,omitempty" name:"Order"`
-
-	// 实例类型信息列表。
-	InstanceTypes []*ReservedInstanceTypeItem `json:"InstanceTypes,omitnil,omitempty" name:"InstanceTypes"`
-}
-
-type ReservedInstancePrice struct {
-	// 预支合计费用的原价，单位：元。
-	OriginalFixedPrice *float64 `json:"OriginalFixedPrice,omitnil,omitempty" name:"OriginalFixedPrice"`
-
-	// 预支合计费用的折扣价，单位：元。
-	DiscountFixedPrice *float64 `json:"DiscountFixedPrice,omitnil,omitempty" name:"DiscountFixedPrice"`
-
-	// 后续合计费用的原价，单位：元/小时
-	OriginalUsagePrice *float64 `json:"OriginalUsagePrice,omitnil,omitempty" name:"OriginalUsagePrice"`
-
-	// 后续合计费用的折扣价，单位：元/小时
-	DiscountUsagePrice *float64 `json:"DiscountUsagePrice,omitnil,omitempty" name:"DiscountUsagePrice"`
-
-	// 预支费用的折扣，如20.0代表2折。 注意：此字段可能返回 null，表示取不到有效值。
-	FixedPriceDiscount *float64 `json:"FixedPriceDiscount,omitnil,omitempty" name:"FixedPriceDiscount"`
-
-	// 后续费用的折扣，如20.0代表2折。 注意：此字段可能返回 null，表示取不到有效值。
-	UsagePriceDiscount *float64 `json:"UsagePriceDiscount,omitnil,omitempty" name:"UsagePriceDiscount"`
-}
-
-type ReservedInstancePriceItem struct {
-	// 付费类型，如："All Upfront","Partial Upfront","No Upfront"
-	OfferingType *string `json:"OfferingType,omitnil,omitempty" name:"OfferingType"`
-
-	// 预支合计费用，单位：元。
-	FixedPrice *float64 `json:"FixedPrice,omitnil,omitempty" name:"FixedPrice"`
-
-	// 后续合计费用，单位：元/小时
-	UsagePrice *float64 `json:"UsagePrice,omitnil,omitempty" name:"UsagePrice"`
-
-	// 预留实例配置ID
-	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitnil,omitempty" name:"ReservedInstancesOfferingId"`
-
-	// 预留实例计费可购买的可用区。
-	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
-
-	// 预留实例计费【有效期】即预留实例计费购买时长。形如：31536000。
-	// 计量单位：秒
-	Duration *uint64 `json:"Duration,omitnil,omitempty" name:"Duration"`
-
-	// 预留实例计费的平台描述（即操作系统）。形如：Linux。
-	// 返回项： Linux 。
-	ProductDescription *string `json:"ProductDescription,omitnil,omitempty" name:"ProductDescription"`
-
-	// 预支合计费用，单位：元。
-	DiscountUsagePrice *float64 `json:"DiscountUsagePrice,omitnil,omitempty" name:"DiscountUsagePrice"`
-
-	// 后续合计费用的折扣价，单位：元/小时
-	DiscountFixedPrice *float64 `json:"DiscountFixedPrice,omitnil,omitempty" name:"DiscountFixedPrice"`
-}
-
-type ReservedInstanceTypeItem struct {
-	// 实例类型。
-	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
-
-	// CPU核数。
-	Cpu *uint64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
-
-	// 内存大小。
-	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
-
-	// GPU数量。
-	Gpu *uint64 `json:"Gpu,omitnil,omitempty" name:"Gpu"`
-
-	// FPGA数量。
-	Fpga *uint64 `json:"Fpga,omitnil,omitempty" name:"Fpga"`
-
-	// 本地存储块数量。
-	StorageBlock *uint64 `json:"StorageBlock,omitnil,omitempty" name:"StorageBlock"`
-
-	// 网卡数。
-	NetworkCard *uint64 `json:"NetworkCard,omitnil,omitempty" name:"NetworkCard"`
-
-	// 最大带宽。
-	MaxBandwidth *float64 `json:"MaxBandwidth,omitnil,omitempty" name:"MaxBandwidth"`
-
-	// 主频。
-	Frequency *string `json:"Frequency,omitnil,omitempty" name:"Frequency"`
-
-	// CPU型号名称。
-	CpuModelName *string `json:"CpuModelName,omitnil,omitempty" name:"CpuModelName"`
-
-	// 包转发率。
-	Pps *uint64 `json:"Pps,omitnil,omitempty" name:"Pps"`
-
-	// 外部信息。
-	Externals *Externals `json:"Externals,omitnil,omitempty" name:"Externals"`
-
-	// 备注信息。
-	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
-
-	// 预留实例配置价格信息。
-	Prices []*ReservedInstancePriceItem `json:"Prices,omitnil,omitempty" name:"Prices"`
-}
-
-type ReservedInstancesOffering struct {
-	// 预留实例计费可购买的可用区。形如：ap-guangzhou-1。
-	// 返回项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a>
-	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
-
-	// 可购买的预留实例计费类型的结算货币，使用ISO 4217标准货币代码。
-	// 返回项：USD（美元）。
-	CurrencyCode *string `json:"CurrencyCode,omitnil,omitempty" name:"CurrencyCode"`
-
-	// 预留实例计费【有效期】即预留实例计费购买时长。形如：31536000。
-	// 计量单位：秒
-	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
-
-	// 预留实例计费的购买价格。形如：4000.0。
-	// 计量单位：与 currencyCode 一致，目前支持 USD（美元）
-	FixedPrice *float64 `json:"FixedPrice,omitnil,omitempty" name:"FixedPrice"`
-
-	// 预留实例计费的实例类型。形如：S3.MEDIUM4。
-	// 返回项：<a href="https://cloud.tencent.com/product/cvm/instances">预留实例计费类型列表</a>
-	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
-
-	// 预留实例计费的付款类型。形如：All Upfront。
-	// 返回项： All Upfront (预付全部费用)。
-	OfferingType *string `json:"OfferingType,omitnil,omitempty" name:"OfferingType"`
-
-	// 可购买的预留实例计费配置ID。形如：650c138f-ae7e-4750-952a-96841d6e9fc1。
-	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitnil,omitempty" name:"ReservedInstancesOfferingId"`
-
-	// 预留实例计费的平台描述（即操作系统）。形如：linux。
-	// 返回项： linux 。
-	ProductDescription *string `json:"ProductDescription,omitnil,omitempty" name:"ProductDescription"`
-
-	// 扣除预付费之后的使用价格 (按小时计费)。形如：0.0。
-	// 目前，因为只支持 All Upfront 付款类型，所以默认为 0元/小时。
-	// 计量单位：元/小时，货币单位与 currencyCode 一致，目前支持 USD（美元）
-	UsagePrice *float64 `json:"UsagePrice,omitnil,omitempty" name:"UsagePrice"`
-}
-
 // Predefined struct for user
 type ResetInstanceRequestParams struct {
 	// 实例ID。可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) API返回值中的`InstanceId`获取。
@@ -9510,7 +9356,7 @@ func (r *ResetInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ResetInstancesInternetMaxBandwidthRequestParams struct {
-	// 一个或多个待操作的实例ID。可通过[`DescribeInstances`](https://cloud.tencent.com/document/api/213/9388)接口返回值中的 `InstanceId` 获取。 每次请求批量实例的上限为100。当调整 `BANDWIDTH_PREPAID` 和 `BANDWIDTH_POSTPAID_BY_HOUR` 计费方式的带宽时，只支持一个实例。
+	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/9388)接口返回值中的 `InstanceId` 获取。 每次请求批量实例的上限为100。当调整 `BANDWIDTH_PREPAID` 和 `BANDWIDTH_POSTPAID_BY_HOUR` 计费方式的带宽时，只支持一个实例。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 公网出带宽配置。不同机型带宽上限范围不一致，具体限制详见带宽限制对账表。暂时只支持 `InternetMaxBandwidthOut` 参数。
@@ -9526,7 +9372,7 @@ type ResetInstancesInternetMaxBandwidthRequestParams struct {
 type ResetInstancesInternetMaxBandwidthRequest struct {
 	*tchttp.BaseRequest
 	
-	// 一个或多个待操作的实例ID。可通过[`DescribeInstances`](https://cloud.tencent.com/document/api/213/9388)接口返回值中的 `InstanceId` 获取。 每次请求批量实例的上限为100。当调整 `BANDWIDTH_PREPAID` 和 `BANDWIDTH_POSTPAID_BY_HOUR` 计费方式的带宽时，只支持一个实例。
+	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/9388)接口返回值中的 `InstanceId` 获取。 每次请求批量实例的上限为100。当调整 `BANDWIDTH_PREPAID` 和 `BANDWIDTH_POSTPAID_BY_HOUR` 计费方式的带宽时，只支持一个实例。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 公网出带宽配置。不同机型带宽上限范围不一致，具体限制详见带宽限制对账表。暂时只支持 `InternetMaxBandwidthOut` 参数。
@@ -9812,6 +9658,95 @@ func (r *ResizeInstanceDisksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ResourceCount struct {
+	// vCPU核数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Cpu *uint64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// 内存大小，单位：GB。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
+
+	// GPU数量。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Gpu *uint64 `json:"Gpu,omitnil,omitempty" name:"Gpu"`
+
+	// 本地盘大小，单位：GB。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Disk *uint64 `json:"Disk,omitnil,omitempty" name:"Disk"`
+}
+
+type ResourcePoolPack struct {
+	// 实例资源池ID。形如：rpp-rn99mzt2。
+	DedicatedResourcePackId *string `json:"DedicatedResourcePackId,omitnil,omitempty" name:"DedicatedResourcePackId"`
+
+	// 实例资源池的名称。
+	DedicatedResourcePackName *string `json:"DedicatedResourcePackName,omitnil,omitempty" name:"DedicatedResourcePackName"`
+
+	// 实例资源池预扣包所在可用区。形如：ap-guangzhou-6。
+	// 返回项：<a href="https://cloud.tencent.com/document/product/213/6091">可用区列表</a>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 实例资源池预扣包的规格，仅支持半整机/整机规格。形如：SA9.96XLARGE1152（SA9半整机）。
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 实例资源池预扣包的实例类型。形如：SA9。
+	InstanceFamily *string `json:"InstanceFamily,omitnil,omitempty" name:"InstanceFamily"`
+
+	// 实例资源池类型。
+	// 返回项：EXCLUSIVE (独享) | SHARED (共享)。
+	ResourcePoolPackType *string `json:"ResourcePoolPackType,omitnil,omitempty" name:"ResourcePoolPackType"`
+
+	// 实例资源池状态。
+	// 返回项：CREATING (创建中) | ACTIVE (运行中) | FAILED (创建失败) | RETIRED (已过期)。
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 实例资源池总容量。
+	TotalCapacity *ResourceCount `json:"TotalCapacity,omitnil,omitempty" name:"TotalCapacity"`
+
+	// 实例资源池剩余容量。
+	AvailableCapacity *ResourceCount `json:"AvailableCapacity,omitnil,omitempty" name:"AvailableCapacity"`
+
+	// 底层物理机IP（已加密）。
+	HostIp *string `json:"HostIp,omitnil,omitempty" name:"HostIp"`
+
+	// 机架ID（已加密）。
+	RackId *string `json:"RackId,omitnil,omitempty" name:"RackId"`
+
+	// 交换机ID（已加密）。
+	SwitchId *string `json:"SwitchId,omitnil,omitempty" name:"SwitchId"`
+
+	// 自动放置开关状态。开启则在不指定实例资源池创建实例时，系统会在开启了该能力的实例资源池里寻找合适的池子创建实例。关闭则在不指定实例资源池创建实例时，系统不会在该池子里创建实例，只有在指定实例资源池创建实例时，指定了该池子的ID，才允许在池子内创建实例。
+	AutoPlacement *bool `json:"AutoPlacement,omitnil,omitempty" name:"AutoPlacement"`
+
+	// 自动续费标识。
+	// 返回项：NOTIFY_AND_AUTO_RENEW (通知且自动续费) | NOTIFY_AND_MANUAL_RENEW (通知不自动续费) | DISABLE_NOTIFY_AND_MANUAL_RENEW (不通知不自动续费)。
+	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+
+	// 实例资源池预扣包创建时间。按照`ISO8601`标准表示，并且使用`UTC`时间。格式为：`YYYY-MM-DDThh:mm:ssZ`。
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 实例资源池到期时间。按照`ISO8601`标准表示，并且使用`UTC`时间。格式为：`YYYY-MM-DDThh:mm:ssZ`。
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+type ResourcePoolPackInstance struct {
+	// 实例资源池ID。形如：rpp-fb7bzcyt。
+	DedicatedResourcePackId *string `json:"DedicatedResourcePackId,omitnil,omitempty" name:"DedicatedResourcePackId"`
+
+	// 实例资源池内的实例ID列表。形如：["ins-5u8lxsum"]。
+	InstanceIdSet []*string `json:"InstanceIdSet,omitnil,omitempty" name:"InstanceIdSet"`
+
+	// 实例族。形如：SA9。
+	InstanceFamily *string `json:"InstanceFamily,omitnil,omitempty" name:"InstanceFamily"`
+
+	// 实例规格。形如：SA9.96XLARGE1152。
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 可用区。形如：ap-guangzhou-6。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+}
+
 type RunAutomationServiceEnabled struct {
 	// 是否开启云自动化助手。取值范围：<br><li>true：表示开启云自动化助手服务<br><li>false：表示不开启云自动化助手服务<br><br>默认取值：false。
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
@@ -9852,7 +9787,17 @@ type RunInstancesRequestParams struct {
 	// 购买实例数量。包年包月实例取值范围：[1，500]，按量计费实例取值范围：[1，500]。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// 指定创建实例的最小数量，取值范围为不大于InstanceCount的正整数。
+	// 指定最小数量时，承诺最少创建MinCount台实例，并尽量创建InstanceCount台实例。
+	// 库存不足以满足最小数量时，API 会返回库存不足最小数量的错误信息。
+	// 仅对支持部分发货的账号、区域和计费模式（包年包月、按量计费、竞价实例、按量包销）生效。
+	MinCount *int64 `json:"MinCount,omitnil,omitempty" name:"MinCount"`
+
+	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持128个字符（含模式串）。</li><li>购买多台实例时：
+	// - 指定模式串  {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买实例的数量。例如：输入 server_{R:3}，购买1台时，实例显示名称为 server_3；购买2台时，实例显示名称分别为 server_3、server_4。
+	// - 指定模式串  {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，实例显示名称为 server_003、server_004。；若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，实例显示名称为 app_99、app_100。
+	// - 模式串需严格遵循 {R:x,F:y}或 {R:x}格式，无效格式（如 {}）视为普通文本。支持多个模式串。
+	// - 未指定模式串：实例显示名称添加后缀 1、2...n，其中n表示购买实例的数量，例如 server_购买2台时生成 server_1、server_2。</li>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。
@@ -9867,7 +9812,13 @@ type RunInstancesRequestParams struct {
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 实例主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><br><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server{R:3}`，购买1台时，实例主机名为`server3`；购买2台时，实例主机名分别为`server3`，`server4`。支持指定多个模式串`{R:x}`。</li><br><li>购买多台实例，如果不指定模式串，则在实例主机名添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server`，购买2台时，实例主机名分别为`server1`，`server2`。</li>
+	// 实例主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><br><li>购买多台实例时：
+	// - 指定模式串  {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买实例的数量。例如：输入 server_{R:3}，购买1台时，实例主机名为 server_3；购买2台时，实例主机名分别为 server_3、server_4。
+	// - 指定模式串  {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，实例主机名为 server_003、server_004。若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，实例主机名为 app_99、app_100。
+	// - 指定模式串 {IP}：自动替换为实例的内网IP地址。例如：输入 node-{IP}，实例主机名为 node-10.0.12.8；支持与序号模式串混合使用，例如：输入 web-{IP}-{R:1}，购买2台时，实例主机名分别为 web-10.0.12.8-1、web-10.0.12.9-2。
+	// - 模式串需严格遵循 {R:x,F:y}、{R:x} 或 {IP} 格式，无效格式（如 {}）视为普通文本。支持多个模式串。
+	// - 未指定模式串：实例主机名添加后缀 1、2...n，其中n表示购买实例的数量，例如 server_购买2台时生成 server_1、server_2。
+	// </li>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
 	// 定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。
@@ -9957,7 +9908,17 @@ type RunInstancesRequest struct {
 	// 购买实例数量。包年包月实例取值范围：[1，500]，按量计费实例取值范围：[1，500]。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// 指定创建实例的最小数量，取值范围为不大于InstanceCount的正整数。
+	// 指定最小数量时，承诺最少创建MinCount台实例，并尽量创建InstanceCount台实例。
+	// 库存不足以满足最小数量时，API 会返回库存不足最小数量的错误信息。
+	// 仅对支持部分发货的账号、区域和计费模式（包年包月、按量计费、竞价实例、按量包销）生效。
+	MinCount *int64 `json:"MinCount,omitnil,omitempty" name:"MinCount"`
+
+	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持128个字符（含模式串）。</li><li>购买多台实例时：
+	// - 指定模式串  {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买实例的数量。例如：输入 server_{R:3}，购买1台时，实例显示名称为 server_3；购买2台时，实例显示名称分别为 server_3、server_4。
+	// - 指定模式串  {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，实例显示名称为 server_003、server_004。；若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，实例显示名称为 app_99、app_100。
+	// - 模式串需严格遵循 {R:x,F:y}或 {R:x}格式，无效格式（如 {}）视为普通文本。支持多个模式串。
+	// - 未指定模式串：实例显示名称添加后缀 1、2...n，其中n表示购买实例的数量，例如 server_购买2台时生成 server_1、server_2。</li>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。
@@ -9972,7 +9933,13 @@ type RunInstancesRequest struct {
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 实例主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><br><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server{R:3}`，购买1台时，实例主机名为`server3`；购买2台时，实例主机名分别为`server3`，`server4`。支持指定多个模式串`{R:x}`。</li><br><li>购买多台实例，如果不指定模式串，则在实例主机名添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server`，购买2台时，实例主机名分别为`server1`，`server2`。</li>
+	// 实例主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><br><li>购买多台实例时：
+	// - 指定模式串  {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买实例的数量。例如：输入 server_{R:3}，购买1台时，实例主机名为 server_3；购买2台时，实例主机名分别为 server_3、server_4。
+	// - 指定模式串  {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，实例主机名为 server_003、server_004。若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，实例主机名为 app_99、app_100。
+	// - 指定模式串 {IP}：自动替换为实例的内网IP地址。例如：输入 node-{IP}，实例主机名为 node-10.0.12.8；支持与序号模式串混合使用，例如：输入 web-{IP}-{R:1}，购买2台时，实例主机名分别为 web-10.0.12.8-1、web-10.0.12.9-2。
+	// - 模式串需严格遵循 {R:x,F:y}、{R:x} 或 {IP} 格式，无效格式（如 {}）视为普通文本。支持多个模式串。
+	// - 未指定模式串：实例主机名添加后缀 1、2...n，其中n表示购买实例的数量，例如 server_购买2台时生成 server_1、server_2。
+	// </li>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
 	// 定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。
@@ -10048,6 +10015,7 @@ func (r *RunInstancesRequest) FromJsonString(s string) error {
 	delete(f, "VirtualPrivateCloud")
 	delete(f, "InternetAccessible")
 	delete(f, "InstanceCount")
+	delete(f, "MinCount")
 	delete(f, "InstanceName")
 	delete(f, "LoginSettings")
 	delete(f, "SecurityGroupIds")
@@ -10437,7 +10405,7 @@ type SystemDisk struct {
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
 	// 系统盘ID。
-	// 该参数目前仅用于`DescribeInstances`等查询类接口的返回参数，不可用于`RunInstances`等写接口的入参。
+	// 该参数目前仅用于 [DescribeInstances](https://cloud.tencent.com/document/product/213/15728) 等查询类接口的返回参数，不可用于 [RunInstances](https://cloud.tencent.com/document/product/213/15730) 等写接口的入参。
 	DiskId *string `json:"DiskId,omitnil,omitempty" name:"DiskId"`
 
 	// 系统盘大小，单位：GiB。默认值为 50
@@ -10551,6 +10519,60 @@ func (r *TerminateInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type TerminateResourcePoolPacksRequestParams struct {
+	// 实例资源池ID列表，支持批量销毁。形如：rpp-6rk3550n。每次请求的实例的上限为100。
+	DedicatedResourcePackIds []*string `json:"DedicatedResourcePackIds,omitnil,omitempty" name:"DedicatedResourcePackIds"`
+}
+
+type TerminateResourcePoolPacksRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例资源池ID列表，支持批量销毁。形如：rpp-6rk3550n。每次请求的实例的上限为100。
+	DedicatedResourcePackIds []*string `json:"DedicatedResourcePackIds,omitnil,omitempty" name:"DedicatedResourcePackIds"`
+}
+
+func (r *TerminateResourcePoolPacksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TerminateResourcePoolPacksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DedicatedResourcePackIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TerminateResourcePoolPacksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type TerminateResourcePoolPacksResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type TerminateResourcePoolPacksResponse struct {
+	*tchttp.BaseResponse
+	Response *TerminateResourcePoolPacksResponseParams `json:"Response"`
+}
+
+func (r *TerminateResourcePoolPacksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TerminateResourcePoolPacksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type VirtualPrivateCloud struct {
 	// 私有网络ID，形如`vpc-xxx`。有效的VpcId可通过登录[控制台](https://console.cloud.tencent.com/vpc/vpc?rid=1)查询；也可以调用接口 [DescribeVpcs](https://cloud.tencent.com/document/product/215/15778) ，从接口返回中的`VpcId `字段获取。若在创建子机时VpcId与SubnetId同时传入`DEFAULT`，则强制使用默认vpc网络。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
@@ -10599,7 +10621,6 @@ type ZoneInfo struct {
 	// <li> ap-shanghai-fsi-3 </li>
 	// <li> ap-bangkok-1 </li>
 	// <li> ap-bangkok-2 </li>
-	// <li> ap-shanghai-1（售罄） </li>
 	// <li> ap-shanghai-2 </li>
 	// <li> ap-shanghai-3 </li>
 	// <li> ap-shanghai-4 </li>
@@ -10608,7 +10629,6 @@ type ZoneInfo struct {
 	// <li> ap-mumbai-1 </li>
 	// <li> ap-mumbai-2 </li>
 	// <li> ap-beijing-1（售罄）</li>
-	// <li> ap-beijing-2 </li>
 	// <li> ap-beijing-3 </li>
 	// <li> ap-beijing-4 </li>
 	// <li> ap-beijing-5 </li>
