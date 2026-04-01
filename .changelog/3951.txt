@@ -1,0 +1,2 @@
+```release-note:enhancement
+resource/tencentcloud_instance: support to set `dedicated_resource_pack_ids` and `dedicated_resource_pack_tenancy`

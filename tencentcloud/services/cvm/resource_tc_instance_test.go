@@ -3151,3 +3151,62 @@ resource "tencentcloud_instance" "foo" {
   release_address            = true
 }
 `
+
+func TestAccTencentCloudInstanceResource_dedicatedResourcePack(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithDedicatedResourcePack,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.dedicated_resource_pack"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.dedicated_resource_pack", "dedicated_resource_pack_tenancy", "dedicated"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.dedicated_resource_pack", "dedicated_resource_pack_ids.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+const testAccTencentCloudInstanceWithDedicatedResourcePack = `
+data "tencentcloud_availability_zones_by_product" "default" {
+  product = "cvm"
+}
+
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.2"
+}
+
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["S5"]
+  }
+
+  cpu_core_count = 2
+  memory_size    = 4
+}
+
+# Note: This test requires a valid dedicated resource pool pack ID
+# Replace "drp-xxxxxx" with an actual resource pool pack ID in your test environment
+resource "tencentcloud_instance" "dedicated_resource_pack" {
+  instance_name              = "tf-test-drp-instance"
+  availability_zone          = data.tencentcloud_availability_zones_by_product.default.zones.0.name
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type           = "CLOUD_PREMIUM"
+  system_disk_size           = 50
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 10
+  force_delete               = true
+  
+  # Dedicated resource pack placement parameters
+  dedicated_resource_pack_tenancy = "dedicated"
+  dedicated_resource_pack_ids     = ["drp-xxxxxx"]
+}
+`
