@@ -1,3 +1,9 @@
+## 1.82.82(April 1, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: output `rack_id` ([#3958](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3958))
+
 ## 1.82.81(April 1, 2026)
 
 FEATURES:
