@@ -79,3 +79,50 @@ resource "tencentcloud_teo_function" "teo_function" {
     zone_id     = "zone-2qtuhspy7cr6"
 }
 `
+
+// Test for FunctionIds field - ensure backward compatibility
+func TestAccTencentCloudTeoFunctionResource_functionIds(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoFunctionWithFunctionIds,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "name", "aaa-zone-2qtuhspy7cr6-1310708577"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "remark", "test-function-ids"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function", "content", `addEventListener('fetch', e => {
+  const response = new Response('Hello World!!');
+  e.respondWith(response);
+});
+`),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_teo_function.teo_function",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+const testAccTeoFunctionWithFunctionIds = `
+
+resource "tencentcloud_teo_function" "teo_function" {
+    content     = <<-EOT
+        addEventListener('fetch', e => {
+          const response = new Response('Hello World!!');
+          e.respondWith(response);
+        });
+    EOT
+    name        = "aaa-zone-2qtuhspy7cr6-1310708577"
+    remark      = "test-function-ids"
+    zone_id     = "zone-2qtuhspy7cr6"
+    function_ids = []  // Test backward compatibility with empty function_ids
+}
+`

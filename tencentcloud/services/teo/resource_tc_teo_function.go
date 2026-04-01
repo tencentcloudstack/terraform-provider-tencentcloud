@@ -77,6 +77,13 @@ func ResourceTencentCloudTeoFunction() *schema.Resource {
 				Computed:    true,
 				Description: "Modification time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.",
 			},
+
+			"function_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "List of function IDs to filter. This field is optional and only used in read operation.",
+			},
 		},
 	}
 }
@@ -167,16 +174,48 @@ func resourceTencentCloudTeoFunctionRead(d *schema.ResourceData, meta interface{
 
 	_ = d.Set("zone_id", zoneId)
 
-	respData, err := service.DescribeTeoFunctionById(ctx, zoneId, functionId)
+	var functionIds []*string
+	if v, ok := d.GetOk("function_ids"); ok && len(v.([]interface{})) > 0 {
+		ids := v.([]interface{})
+		functionIds = make([]*string, len(ids))
+		for i, id := range ids {
+			functionIds[i] = helper.String(id.(string))
+		}
+	} else {
+		// Backward compatibility: if function_ids is not provided, use the functionId from the resource ID
+		functionIds = []*string{helper.String(functionId)}
+	}
+
+	request := teov20220901.NewDescribeFunctionsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.FunctionIds = functionIds
+
+	ratelimit.Check(request.GetAction())
+
+	var response *teov20220901.DescribeFunctionsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeFunctionsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s describe teo function failed, reason:%+v", logId, err)
 		return err
 	}
 
-	if respData == nil {
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Functions) < 1 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `teo_function` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	respData := response.Response.Functions[0]
+
 	if respData.FunctionId != nil {
 		_ = d.Set("function_id", respData.FunctionId)
 		functionId = *respData.FunctionId
