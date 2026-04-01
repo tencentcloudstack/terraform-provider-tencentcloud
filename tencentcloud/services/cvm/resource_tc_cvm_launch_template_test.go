@@ -21,6 +21,8 @@ func TestAccTencentCloudCvmLaunchTemplateResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cvm_launch_template.launch_template", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_cvm_launch_template.launch_template", "image_id", "img-9qrfy1xt"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_launch_template.launch_template", "launch_template_id"),
+					resource.TestCheckResourceAttrPair("tencentcloud_cvm_launch_template.launch_template", "id", "tencentcloud_cvm_launch_template.launch_template", "launch_template_id"),
 				),
 			},
 		},

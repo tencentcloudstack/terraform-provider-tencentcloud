@@ -10,6 +10,9 @@ data "tencentcloud_images" "example" {
 
 resource "tencentcloud_cvm_launch_template" "example" {
   launch_template_name = "tf-example"
+  # The ID of the launch template (Computed, returned after creation)
+  # launch_template_id = "lt-xxxxxxxx"
+
   placement {
     zone       = "ap-guangzhou-6"
     project_id = 0

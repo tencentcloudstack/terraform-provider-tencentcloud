@@ -600,6 +600,12 @@ func ResourceTencentCloudCvmLaunchTemplate() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+
+			"launch_template_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The ID of launch template.",
+			},
 		},
 	}
 }
@@ -956,6 +962,10 @@ func resourceTencentCloudCvmLaunchTemplateCreate(d *schema.ResourceData, meta in
 	launchTemplateId = *response.Response.LaunchTemplateId
 	d.SetId(launchTemplateId)
 
+	if response.Response.LaunchTemplateId != nil {
+		_ = d.Set("launch_template_id", *response.Response.LaunchTemplateId)
+	}
+
 	return resourceTencentCloudCvmLaunchTemplateRead(d, meta)
 }
 
@@ -984,6 +994,11 @@ func resourceTencentCloudCvmLaunchTemplateRead(d *schema.ResourceData, meta inte
 
 	if launchTemplate.LaunchTemplateName != nil {
 		_ = d.Set("launch_template_name", launchTemplate.LaunchTemplateName)
+	}
+
+	// Set launch_template_id from the ID
+	if launchTemplateId != "" {
+		_ = d.Set("launch_template_id", launchTemplateId)
 	}
 
 	launchTemplateVersion, err := service.DescribeLaunchTemplateVersionsById(ctx, launchTemplateId)
