@@ -739,6 +739,7 @@ The `web_socket_parameters` object of `actions` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `task_id` - (String) Task ID of the configuration import. You can query the execution result of the import task through the `DescribeZoneConfigImportResult` interface. Note that the import task ID only supports querying import tasks within the last 7 days.
 
 
 

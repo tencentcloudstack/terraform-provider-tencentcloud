@@ -31,6 +31,12 @@ func ResourceTencentCloudTeoL7AccRule() *schema.Resource {
 				Description: "Zone id.",
 			},
 
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Task ID. The task ID of the import configuration, you can query the execution result of this import task by querying the site configuration import result interface (DescribeZoneConfigImportResult).",
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -220,6 +226,7 @@ func resourceTencentCloudTeoL7AccRuleUpdate(d *schema.ResourceData, meta interfa
 			if _, e := conf.WaitForState(); e != nil {
 				return e
 			}
+			_ = d.Set("task_id", response.Response.TaskId)
 		} else {
 			return fmt.Errorf("[CRITAL]%s update teo l7 acc rule failed, response body is nil", logId)
 		}
