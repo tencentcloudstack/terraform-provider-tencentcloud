@@ -87,6 +87,38 @@ func ResourceTencentCloudVpcEndPoint() *schema.Resource {
 				Computed:    true,
 				Description: "CDC instance ID.",
 			},
+
+			"security_group_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "ID of security group.",
+			},
+
+			"tags": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag key.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
+				Description: "Tags of endpoint.",
+			},
+
+			"ip_address_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "IP address type. Valid values are Ipv4 and Ipv6. Default is Ipv4.",
+			},
 		},
 	}
 }
@@ -120,6 +152,28 @@ func resourceTencentCloudVpcEndPointCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("end_point_vip"); ok {
 		request.EndPointVip = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("security_group_id"); ok {
+		request.SecurityGroupId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		tags := v.(*schema.Set).List()
+		tagList := make([]*vpc.Tag, 0, len(tags))
+		for _, tag := range tags {
+			tagMap := tag.(map[string]interface{})
+			tag := &vpc.Tag{
+				Key:   helper.String(tagMap["key"].(string)),
+				Value: helper.String(tagMap["value"].(string)),
+			}
+			tagList = append(tagList, tag)
+		}
+		request.Tags = tagList
+	}
+
+	if v, ok := d.GetOk("ip_address_type"); ok {
+		request.IpAddressType = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -235,6 +289,28 @@ func resourceTencentCloudVpcEndPointRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("cdc_id", endPoint.CdcId)
 	}
 
+	if endPoint.SecurityGroupId != nil {
+		_ = d.Set("security_group_id", endPoint.SecurityGroupId)
+	}
+
+	if endPoint.TagSet != nil {
+		tags := make([]map[string]interface{}, 0, len(endPoint.TagSet))
+		for _, tag := range endPoint.TagSet {
+			tags = append(tags, map[string]interface{}{
+				"key":   *tag.Key,
+				"value": *tag.Value,
+			})
+		}
+		_ = d.Set("tags", tags)
+	}
+
+	if endPoint.IpAddressType != nil {
+		_ = d.Set("ip_address_type", endPoint.IpAddressType)
+	} else {
+		// If API does not return IpAddressType, set default value to "Ipv4"
+		_ = d.Set("ip_address_type", "Ipv4")
+	}
+
 	return nil
 }
 
@@ -262,13 +338,39 @@ func resourceTencentCloudVpcEndPointUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if d.HasChange("end_point_name") || d.HasChange("security_groups_ids") {
+	if d.HasChange("end_point_name") || d.HasChange("security_groups_ids") || d.HasChange("security_group_id") || d.HasChange("tags") || d.HasChange("ip_address_type") {
 		if v, ok := d.GetOk("end_point_name"); ok {
 			request.EndPointName = helper.String(v.(string))
 		}
 
 		if v, ok := d.GetOk("security_groups_ids"); ok {
 			request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
+		}
+
+		if v, ok := d.GetOk("security_group_id"); ok {
+			request.SecurityGroupId = helper.String(v.(string))
+		}
+
+		if d.HasChange("tags") {
+			if v, ok := d.GetOk("tags"); ok {
+				tags := v.(*schema.Set).List()
+				tagList := make([]*vpc.Tag, 0, len(tags))
+				for _, tag := range tags {
+					tagMap := tag.(map[string]interface{})
+					tag := &vpc.Tag{
+						Key:   helper.String(tagMap["key"].(string)),
+						Value: helper.String(tagMap["value"].(string)),
+					}
+					tagList = append(tagList, tag)
+				}
+				request.Tags = tagList
+			}
+		}
+
+		if d.HasChange("ip_address_type") {
+			if v, ok := d.GetOk("ip_address_type"); ok {
+				request.IpAddressType = helper.String(v.(string))
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
