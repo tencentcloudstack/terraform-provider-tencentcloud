@@ -3210,4 +3210,3 @@ resource "tencentcloud_instance" "dedicated_resource_pack" {
   dedicated_resource_pack_ids     = ["drp-xxxxxx"]
 }
 `
-
