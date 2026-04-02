@@ -803,15 +803,16 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 	ratelimit.Check(request.GetAction())
 
 	var (
-		offset int64 = 0
-		limit  int64 = 20
+		offset          int64 = 0
+		limit           int64 = 20
+		retryTimeout, _       = ctx.Value(timeout).(time.Duration)
 	)
 	var instances []*teo.AccelerationDomain
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
 		response := teo.NewDescribeAccelerationDomainsResponse()
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(retryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseTeoClient().DescribeAccelerationDomains(request)
 			if e != nil {
 				return tccommon.RetryError(e)
