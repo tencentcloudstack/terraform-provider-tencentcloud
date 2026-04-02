@@ -2389,6 +2389,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_instance":                                                      cdwch.ResourceTencentCloudClickhouseInstance(),
 			"tencentcloud_cls_kafka_recharge":                                                       cls.ResourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                                        cls.ResourceTencentCloudClsScheduledSql(),
+			"tencentcloud_cls_dlc_deliver":                                                          cls.ResourceTencentCloudClsDlcDeliver(),
 			"tencentcloud_eb_event_transform":                                                       eb.ResourceTencentCloudEbEventTransform(),
 			"tencentcloud_eb_event_bus":                                                             eb.ResourceTencentCloudEbEventBus(),
 			"tencentcloud_eb_event_rule":                                                            eb.ResourceTencentCloudEbEventRule(),
