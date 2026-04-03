@@ -496,11 +496,9 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-	}
 
-	if d.HasChange("security_policy") {
+		// Waiting for External EndPoint status changed
 		var err error
-		// Waiting for External EndPoint opened
 		err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			var (
 				status string
@@ -510,21 +508,31 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 				return resource.NonRetryableError(fmt.Errorf("an error occurred during DescribeExternalEndpointStatus: %s", err.Error()))
 			}
 
-			if status == "Opened" {
-				return nil
+			if operation {
+				if status == "Opened" {
+					return nil
+				}
+				if status == "Opening" {
+					return resource.RetryableError(fmt.Errorf("external endpoint status is `%s`, retrying", status))
+				}
+				return resource.NonRetryableError(fmt.Errorf("unexpected external endpoint status: `%s`", status))
+			} else {
+				if status == "Closed" {
+					return nil
+				}
+				if status == "Deleting" {
+					return resource.RetryableError(fmt.Errorf("external endpoint status is `%s`, retrying", status))
+				}
+				return resource.NonRetryableError(fmt.Errorf("unexpected external endpoint status: `%s`", status))
 			}
-
-			if status == "Opening" {
-				return resource.RetryableError(fmt.Errorf("external endpoint status is `%s`, retrying", status))
-			}
-
-			return resource.NonRetryableError(fmt.Errorf("unexpected external endpoint status: `%s`", status))
 		})
 
 		if err != nil {
 			return err
 		}
+	}
 
+	if d.HasChange("security_policy") {
 		o, n := d.GetChange("security_policy")
 		os := o.(*schema.Set)
 		ns := n.(*schema.Set)
