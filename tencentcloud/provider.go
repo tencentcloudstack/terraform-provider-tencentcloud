@@ -75,6 +75,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/igtm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vdb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mariadb"
@@ -2620,6 +2621,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
 			"tencentcloud_advisor_authorization_operation":                                          advisor.ResourceTencentCloudAdvisorAuthorizationOperation(),
+			"tencentcloud_vdb_instance":                                                             vdb.ResourceTencentCloudVdbInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

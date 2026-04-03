@@ -69,6 +69,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
 	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
+	vdbv20230616 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb/v20230616"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -253,6 +254,7 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	vdbv20230616Conn            *vdbv20230616.Client
 	bhv20230418Conn             *bhv20230418.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
@@ -2221,4 +2223,16 @@ func (me *TencentCloudClient) UseAdvisorV20200721Client() *advisorv20200721.Clie
 	me.advisorv20200721Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.advisorv20200721Conn
+}
+
+// UseVdbV20230616Client return VDB client for service
+func (me *TencentCloudClient) UseVdbV20230616Client() *vdbv20230616.Client {
+	if me.vdbv20230616Conn != nil {
+		return me.vdbv20230616Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.vdbv20230616Conn, _ = vdbv20230616.NewClient(me.Credential, me.Region, cpf)
+	me.vdbv20230616Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.vdbv20230616Conn
 }
