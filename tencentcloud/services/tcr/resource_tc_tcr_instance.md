@@ -1,5 +1,7 @@
 Use this resource to create tcr instance.
 
+~> **NOTE:**If `security_policy` needs to be configured, `open_public_operation` needs to be set to true
+
 Example Usage
 
 Create a basic tcr instance.
