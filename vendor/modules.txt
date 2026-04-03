@@ -1289,7 +1289,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.1008
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.3.40
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region/v20220627
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744

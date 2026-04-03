@@ -89,6 +89,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/privatedns"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/project"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pts"
+	regionpkg "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/region"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/rum"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/scf"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ses"
@@ -1364,6 +1365,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy_list":                                    igtm.DataSourceTencentCloudIgtmStrategyList(),
 			"tencentcloud_igtm_instance_package_list":                            igtm.DataSourceTencentCloudIgtmInstancePackageList(),
 			"tencentcloud_igtm_detect_task_package_list":                         igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
+			"tencentcloud_products":                                              regionpkg.DataSourceTencentCloudProducts(),
+			"tencentcloud_regions":                                               regionpkg.DataSourceTencentCloudRegions(),
+			"tencentcloud_zones":                                                 regionpkg.DataSourceTencentCloudZones(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
