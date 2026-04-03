@@ -11,6 +11,8 @@ description: |-
 
 Use this resource to create tcr instance.
 
+~> **NOTE:**If `security_policy` needs to be configured, `open_public_operation` needs to be set to true
+
 ## Example Usage
 
 ### Create a basic tcr instance.
@@ -36,6 +38,7 @@ resource "tencentcloud_tcr_instance" "example" {
   security_policy {
     cidr_block = "10.0.0.1/24"
   }
+
   security_policy {
     cidr_block = "192.168.1.1"
   }
@@ -51,6 +54,7 @@ resource "tencentcloud_tcr_instance" "example" {
   replications {
     region_id = var.tcr_region_map["ap-guangzhou"] # 1
   }
+
   replications {
     region_id = var.tcr_region_map["ap-singapore"] # 9
   }
@@ -123,6 +127,6 @@ In addition to all arguments above, the following attributes are exported:
 tcr instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_instance.foo instance_id
+terraform import tencentcloud_tcr_instance.example tcr-4detlt3v
 ```
 
