@@ -1,3 +1,22 @@
+## 1.82.83(April 3, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_products` ([#3967](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3967))
+* **New Data Source:** `tencentcloud_regions` ([#3967](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3967))
+* **New Data Source:** `tencentcloud_zones` ([#3967](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3967))
+* **New Resource:** `tencentcloud_bh_acl` ([#3962](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3962))
+* **New Resource:** `tencentcloud_cls_dlc_deliver` ([#3965](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3965))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: optimize code for read function ([#3948](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3948))
+* resource/tencentcloud_cynosdb_cls_delivery: optmize create function code logic ([#3952](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3952))
+* resource/tencentcloud_kubernetes_cluster_attachment: update param `docker_graph_path` default value ([#3945](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3945))
+* resource/tencentcloud_tcr_instance: optimize update code logic ([#3966](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3966))
+* resource/tencentcloud_teo_acceleration_domain: acceleration_domain supports timeouts. ([#3964](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3964))
+* resource/tencentcloud_teo_l7_acc_rule_v2:  The `error_page_params` parameter supports arrays. ([#3963](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3963))
+
 ## 1.82.82(April 1, 2026)
 
 ENHANCEMENTS:
