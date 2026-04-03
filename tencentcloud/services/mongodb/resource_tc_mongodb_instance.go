@@ -6,6 +6,7 @@ import (
 	"log"
 	"reflect"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -526,11 +527,98 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	d.Partial(true)
 
-	immutableArgs := []string{"availability_zone_list", "hidden_zone"}
+	if d.HasChange("available_zone") || d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
+		request := mongodb.NewModifyInstanceAzRequest()
+		var (
+			primaryNodeZone      string
+			hiddenNodeZone       string
+			availabilityZoneList []string
+		)
 
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+		if v, ok := d.GetOk("available_zone"); ok {
+			request.PrimaryNodeZone = helper.String(v.(string))
+			primaryNodeZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("hidden_zone"); ok {
+			request.HiddenNodeZone = helper.String(v.(string))
+			hiddenNodeZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("availability_zone_list"); ok {
+			for _, item := range v.([]interface{}) {
+				availabilityZoneList = append(availabilityZoneList, item.(string))
+			}
+
+			// Validate: primaryNodeZone and hiddenNodeZone must be in availabilityZoneList if not empty
+			zoneSet := make(map[string]bool, len(availabilityZoneList))
+			for _, z := range availabilityZoneList {
+				zoneSet[z] = true
+			}
+			if primaryNodeZone != "" && !zoneSet[primaryNodeZone] {
+				return fmt.Errorf("available_zone `%s` must be in availability_zone_list", primaryNodeZone)
+			}
+			if hiddenNodeZone != "" && !zoneSet[hiddenNodeZone] {
+				return fmt.Errorf("hidden_zone `%s` must be in availability_zone_list", hiddenNodeZone)
+			}
+
+			// Pick secondary node zone: last element in availabilityZoneList that differs from primaryNodeZone and hiddenNodeZone
+			var secondaryNodeZone string
+			for i := len(availabilityZoneList) - 1; i >= 0; i-- {
+				z := availabilityZoneList[i]
+				if z != primaryNodeZone && z != hiddenNodeZone {
+					secondaryNodeZone = z
+					break
+				}
+			}
+
+			request.SecondaryNodeZone = append(request.SecondaryNodeZone, &secondaryNodeZone)
+		}
+
+		request.InstanceId = &instanceId
+		request.InMaintenance = helper.IntUint64(0)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ModifyInstanceAz(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait for api sync
+		time.Sleep(10 * time.Second)
+		waitReq := mongodb.NewDescribeDBInstancesRequest()
+		waitReq.InstanceIds = helper.Strings([]string{instanceId})
+		err = resource.Retry(tccommon.ReadRetryTimeout*20, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeDBInstances(waitReq)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || len(result.Response.InstanceDetails) != 1 {
+				return resource.NonRetryableError(fmt.Errorf("Resource num is not equal to 1"))
+			}
+
+			if result.Response.InstanceDetails[0].Status != nil && *result.Response.InstanceDetails[0].Status == 2 {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("mongodb az is still in running, status: %d", *result.Response.InstanceDetails[0].Status))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
+			return err
 		}
 	}
 

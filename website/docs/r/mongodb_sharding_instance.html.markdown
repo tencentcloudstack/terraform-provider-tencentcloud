@@ -37,7 +37,7 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
 
 The following arguments are supported:
 
-* `available_zone` - (Required, String, ForceNew) The available zone of the Mongodb.
+* `available_zone` - (Required, String) The available zone of the Mongodb.
 * `engine_version` - (Required, String) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
 - MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.
 - MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.
