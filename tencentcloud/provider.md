@@ -2590,3 +2590,9 @@ tencentcloud_vcube_renew_video_operation
 Advisor
 Resource
 tencentcloud_advisor_authorization_operation
+
+Regional Management(region)
+Data Source
+tencentcloud_products
+tencentcloud_regions
+tencentcloud_zones
