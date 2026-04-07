@@ -529,6 +529,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("available_zone") || d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
 		request := mongodb.NewModifyInstanceAzRequest()
+		response := mongodb.NewModifyInstanceAzResponse()
 		var (
 			primaryNodeZone      string
 			hiddenNodeZone       string
@@ -585,6 +586,11 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 
+			if result == nil || result.Response == nil || result.Response.DealId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify instance az failed, Response is nil"))
+			}
+
+			response = result
 			return nil
 		})
 
@@ -593,27 +599,33 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
+		dealId := *response.Response.DealId
+
 		// wait for api sync
 		time.Sleep(10 * time.Second)
-		waitReq := mongodb.NewDescribeDBInstancesRequest()
-		waitReq.InstanceIds = helper.Strings([]string{instanceId})
+		waitReq := mongodb.NewDescribeDBInstanceDealRequest()
+		waitReq.DealId = &dealId
 		err = resource.Retry(tccommon.ReadRetryTimeout*20, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeDBInstances(waitReq)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeDBInstanceDeal(waitReq)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
 			}
 
-			if result == nil || result.Response == nil || len(result.Response.InstanceDetails) != 1 {
-				return resource.NonRetryableError(fmt.Errorf("Resource num is not equal to 1"))
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Response is nil"))
 			}
 
-			if result.Response.InstanceDetails[0].Status != nil && *result.Response.InstanceDetails[0].Status == 2 {
+			if result.Response.Status == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Status is nil"))
+			}
+
+			if *result.Response.Status == 4 {
 				return nil
 			}
 
-			return resource.RetryableError(fmt.Errorf("mongodb az is still in running, status: %d", *result.Response.InstanceDetails[0].Status))
+			return resource.RetryableError(fmt.Errorf("mongodb az is still in running, status: %d", *result.Response.Status))
 		})
 
 		if err != nil {
