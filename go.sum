@@ -849,6 +849,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149 h1:lW1auC
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149/go.mod h1:LDcZtoh9sKi/2/Tze53H64C4G3CzzHN22AWsflf3Cn4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.1010 h1:sO0vW6E09xFQ5+I8mfvAyIlRZvWBWPf6ilZU5LI4lmE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.1010/go.mod h1:/UDEkf2UhUud19VVMGMTpyiI7HoE3U/c23uoAqDgIWA=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.3.61 h1:7Um6/PF4HrG/eIvjZP3g2YtE+HQxqZ7nr0ArkzbEEHU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.3.61/go.mod h1:Z1CH7vkUveTBzExivA94ZHTGylw9SVleqiVYlNheinc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7 h1:QhV9ZnvepxNsuphfoJ78ipnwOYV0BFrK68zr7FMOHbE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7/go.mod h1:sji/Zh97gdtTVfeMqMQ/VQ39F6Y9MpxmP1Rx+HIUbKU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993 h1:b4EFXmAFslKvrFLogWXNQCAVDKG1/IZsR/L4sDmEbr8=
