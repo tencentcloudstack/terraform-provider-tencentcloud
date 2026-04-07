@@ -118,6 +118,23 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Description: "Whether to enable public network access. Default is false.",
 			},
+			"remark": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Remark for the RabbitMQ VIP instance.",
+			},
+			"enable_deletion_protection": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable deletion protection. Default is false.",
+			},
+			"enable_risk_warning": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable risk warning. Default is false.",
+			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -366,6 +383,18 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("enable_public_access", enablePublicAccess)
 	}
 
+	if rabbitmqVipInstance.ClusterInfo != nil {
+		if rabbitmqVipInstance.ClusterInfo.Remark != nil {
+			_ = d.Set("remark", rabbitmqVipInstance.ClusterInfo.Remark)
+		}
+		if rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection != nil {
+			_ = d.Set("enable_deletion_protection", rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection)
+		}
+		if rabbitmqVipInstance.ClusterInfo.EnableRiskWarning != nil {
+			_ = d.Set("enable_risk_warning", rabbitmqVipInstance.ClusterInfo.EnableRiskWarning)
+		}
+	}
+
 	if rabbitmqVipInstance.ClusterInfo != nil && len(rabbitmqVipInstance.ClusterInfo.Tags) > 0 {
 		resourceTagsList := []interface{}{}
 		for _, resourceTags := range rabbitmqVipInstance.ClusterInfo.Tags {
@@ -466,7 +495,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+			return fmt.Errorf("argument `%s` cannot be changed as it is an immutable field. This field must be set at resource creation time and cannot be modified afterwards. If you need to change this field, you must destroy and recreate the resource.", v)
 		}
 	}
 
@@ -497,6 +526,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		} else {
 			// If resource_tags is removed, set RemoveAllTags to true
 			request.RemoveAllTags = helper.Bool(true)
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}

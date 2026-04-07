@@ -1,0 +1,1 @@
+feat(trabbit): optimize RabbitMQ instance update logic
