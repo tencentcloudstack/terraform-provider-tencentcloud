@@ -1,5 +1,28 @@
 Provides a resource to create a TDMQ rabbitmq vip instance
 
+## Update Policy
+
+The following fields can be updated after instance creation:
+- `cluster_name` - Instance name
+- `resource_tags` - Instance tags
+
+The following fields currently cannot be updated due to Tencent Cloud API limitations:
+- `node_spec` - Node specification (contact Tencent Cloud support for spec changes)
+- `node_num` - Node count (contact Tencent Cloud support for scaling)
+- `storage_size` - Storage size (contact Tencent Cloud support for storage expansion)
+- `band_width` - Public network bandwidth (contact Tencent Cloud support for bandwidth adjustments)
+- `enable_public_access` - Public network access (contact Tencent Cloud support for access changes)
+
+The following fields are immutable and cannot be changed after instance creation:
+- `zone_ids` - Availability zone(s)
+- `vpc_id` - VPC ID
+- `subnet_id` - Subnet ID
+- `enable_create_default_ha_mirror_queue` - Mirror queue configuration
+- `auto_renew_flag` - Auto-renewal flag
+- `time_span` - Subscription period
+- `pay_mode` - Payment mode
+- `cluster_version` - Cluster version
+
 Example Usage
 
 ```hcl

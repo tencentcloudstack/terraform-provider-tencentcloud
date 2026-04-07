@@ -458,10 +458,9 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	)
 
 	immutableArgs := []string{
-		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
-		"storage_size", "enable_create_default_ha_mirror_queue",
+		"zone_ids", "vpc_id", "subnet_id",
+		"enable_create_default_ha_mirror_queue",
 		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
 	}
 
 	for _, v := range immutableArgs {
@@ -472,6 +471,26 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	request.InstanceId = &instanceId
 	needUpdate := false
+
+	if d.HasChange("node_spec") {
+		return fmt.Errorf("updating `node_spec` is not supported by the current Tencent Cloud API. Please contact Tencent Cloud support for instance specification changes")
+	}
+
+	if d.HasChange("node_num") {
+		return fmt.Errorf("updating `node_num` is not supported by the current Tencent Cloud API. Please contact Tencent Cloud support for node count changes")
+	}
+
+	if d.HasChange("storage_size") {
+		return fmt.Errorf("updating `storage_size` is not supported by the current Tencent Cloud API. Please contact Tencent Cloud support for storage expansion")
+	}
+
+	if d.HasChange("band_width") {
+		return fmt.Errorf("updating `band_width` is not supported by the current Tencent Cloud API. Please contact Tencent Cloud support for bandwidth adjustments")
+	}
+
+	if d.HasChange("enable_public_access") {
+		return fmt.Errorf("updating `enable_public_access` is not supported by the current Tencent Cloud API. Please contact Tencent Cloud support for public network access changes")
+	}
 
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
