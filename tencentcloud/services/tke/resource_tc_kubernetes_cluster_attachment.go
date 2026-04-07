@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -20,6 +21,9 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 		Create: resourceTencentCloudKubernetesClusterAttachmentCreate,
 		Read:   resourceTencentCloudKubernetesClusterAttachmentRead,
 		Delete: resourceTencentCloudKubernetesClusterAttachmentDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(30 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
