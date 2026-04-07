@@ -460,8 +460,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	immutableArgs := []string{
 		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
 		"storage_size", "enable_create_default_ha_mirror_queue",
-		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
+		"time_span", "pay_mode", "cluster_version",
 	}
 
 	for _, v := range immutableArgs {
@@ -472,11 +471,48 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	request.InstanceId = &instanceId
 	needUpdate := false
+	needWaitBandWidth := false
+	var targetBandWidth uint64
+	needWaitEnablePublicAccess := false
+	var targetEnablePublicAccess string
 
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
 			needUpdate = true
+		}
+	}
+
+	if d.HasChange("auto_renew_flag") {
+		if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+			request.AutoRenewFlag = helper.Bool(v.(bool))
+			needUpdate = true
+			log.Printf("[DEBUG]%s auto_renew_flag will be updated to %t", logId, v.(bool))
+		}
+	}
+
+	if d.HasChange("band_width") {
+		if v, ok := d.GetOkExists("band_width"); ok {
+			request.Bandwidth = helper.IntUint64(v.(int))
+			needUpdate = true
+			needWaitBandWidth = true
+			targetBandWidth = uint64(v.(int))
+			log.Printf("[DEBUG]%s band_width will be updated to %d", logId, v.(int))
+		}
+	}
+
+	if d.HasChange("enable_public_access") {
+		if v, ok := d.GetOkExists("enable_public_access"); ok {
+			enableAccess := v.(bool)
+			request.EnablePublicAccess = helper.Bool(enableAccess)
+			needUpdate = true
+			needWaitEnablePublicAccess = true
+			if enableAccess {
+				targetEnablePublicAccess = "ON"
+			} else {
+				targetEnablePublicAccess = "OFF"
+			}
+			log.Printf("[DEBUG]%s enable_public_access will be updated to %t (target status: %s)", logId, enableAccess, targetEnablePublicAccess)
 		}
 	}
 
@@ -516,6 +552,73 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		if err != nil {
 			log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
 			return err
+		}
+
+		// Add async waiting for band_width and enable_public_access
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+
+		if needWaitBandWidth || needWaitEnablePublicAccess {
+			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
+				paramMap := make(map[string]interface{})
+				tmpSet := make([]*tdmq.Filter, 0)
+				filter := tdmq.Filter{}
+				filter.Name = helper.String("instanceIds")
+				filter.Values = helper.Strings([]string{instanceId})
+				tmpSet = append(tmpSet, &filter)
+				paramMap["filters"] = tmpSet
+
+				result, e := service.DescribeTdmqRabbitmqVipInstanceByFilter(ctx, paramMap)
+				if e != nil {
+					log.Printf("[CRITAL]%s DescribeTdmqRabbitmqVipInstanceByFilter failed, reason:%+v", logId, e)
+					return tccommon.RetryError(e)
+				}
+
+				if len(result) == 0 {
+					log.Printf("[CRITAL]%s instance not found during wait for update", logId)
+					return resource.NonRetryableError(fmt.Errorf("instance not found"))
+				}
+
+				instance := result[0]
+
+				// Check band_width
+				if needWaitBandWidth {
+					if instance.ClusterSpecInfo != nil && instance.ClusterSpecInfo.PublicNetworkTps != nil {
+						if *instance.ClusterSpecInfo.PublicNetworkTps == targetBandWidth {
+							log.Printf("[DEBUG]%s band_width updated to %d", logId, targetBandWidth)
+							needWaitBandWidth = false
+						} else {
+							return resource.RetryableError(fmt.Errorf("band_width is updating, current: %d, target: %d", *instance.ClusterSpecInfo.PublicNetworkTps, targetBandWidth))
+						}
+					}
+				}
+
+				// Check enable_public_access
+				if needWaitEnablePublicAccess {
+					if instance.ClusterNetInfo != nil && instance.ClusterNetInfo.PublicDataStreamStatus != nil {
+						if *instance.ClusterNetInfo.PublicDataStreamStatus == targetEnablePublicAccess {
+							log.Printf("[DEBUG]%s enable_public_access updated to %s", logId, targetEnablePublicAccess)
+							needWaitEnablePublicAccess = false
+						} else {
+							return resource.RetryableError(fmt.Errorf("enable_public_access is updating, current: %s, target: %s", *instance.ClusterNetInfo.PublicDataStreamStatus, targetEnablePublicAccess))
+						}
+					}
+				}
+
+				// If all updates are complete, stop retrying
+				if !needWaitBandWidth && !needWaitEnablePublicAccess {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("waiting for parameters to update"))
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s wait for tdmq rabbitmqVipInstance parameters update failed, reason:%+v", logId, err)
+				return fmt.Errorf("timeout waiting for parameters update: %v", err)
+			}
+		} else {
+			log.Printf("[DEBUG]%s instance updated successfully, no async wait required", logId)
 		}
 	}
 

@@ -3,6 +3,7 @@ package trabbit_test
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"testing"
 	"time"
 
@@ -65,6 +66,155 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "time_span"),
 					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
 				),
+			},
+		},
+	})
+}
+
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVipInstanceResource_autoRenewFlag -v
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_autoRenewFlag(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithAutoRenewFlagTrue,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag", "true"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithAutoRenewFlagFalse,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag", "false"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVipInstanceResource_bandWidth -v
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_bandWidth(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithBandWidth100,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "band_width", "100"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithBandWidth200,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "band_width", "200"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVipInstanceResource_enablePublicAccess -v
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_enablePublicAccess(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithEnablePublicAccessFalse,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_public_access", "false"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithEnablePublicAccessTrue,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_public_access", "true"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVipInstanceResource_multipleParamsUpdate -v
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_multipleParamsUpdate(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceInitial,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "band_width", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_public_access", "false"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceMultipleParamsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "band_width", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_public_access", "true"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqVipInstanceResource_immutableParams -v
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_immutableParams(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceInitial,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config:      testAccTdmqRabbitmqVipInstanceChangeImmutableZoneIds,
+				ExpectError: regexp.MustCompile(`zone_ids cannot be changed`),
 			},
 		},
 	})
@@ -195,5 +345,334 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithAutoRenewFlagTrue = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-autorenew"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithAutoRenewFlagFalse = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-autorenew"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithBandWidth100 = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-bandwidth"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+  band_width                            = 100
+  enable_public_access                   = true
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithBandWidth200 = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-bandwidth"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+  band_width                            = 200
+  enable_public_access                   = true
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithEnablePublicAccessFalse = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-publicaccess"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+  band_width                            = 100
+  enable_public_access                   = false
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithEnablePublicAccessTrue = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-publicaccess"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+  band_width                            = 100
+  enable_public_access                   = true
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceInitial = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-multiple"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+  band_width                            = 100
+  enable_public_access                   = false
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceMultipleParamsUpdate = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-multiple"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  band_width                            = 200
+  enable_public_access                   = true
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceChangeImmutableZoneIds = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.1.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-multiple"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = false
+  time_span                             = 1
+  band_width                            = 100
+  enable_public_access                   = false
 }
 `
