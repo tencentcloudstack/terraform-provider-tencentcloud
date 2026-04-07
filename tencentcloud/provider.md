@@ -2596,3 +2596,7 @@ Data Source
 tencentcloud_products
 tencentcloud_regions
 tencentcloud_zones
+
+Vector Database(VDB)
+Resource
+tencentcloud_vdb_instance

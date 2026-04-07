@@ -119,6 +119,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tse"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vcube"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vdb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
@@ -2620,6 +2621,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
 			"tencentcloud_advisor_authorization_operation":                                          advisor.ResourceTencentCloudAdvisorAuthorizationOperation(),
+			"tencentcloud_vdb_instance":                                                             vdb.ResourceTencentCloudVdbInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
