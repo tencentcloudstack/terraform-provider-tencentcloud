@@ -1,0 +1,4 @@
+```release-note:enhancement
+data-source/tencentcloud_kubernetes_addons: add new params
+
+```

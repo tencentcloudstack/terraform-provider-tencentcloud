@@ -1,0 +1,27 @@
+ARCHIVED: 2026-03-24
+REASON: Implementation completed successfully
+IMPLEMENTATION_TIME: 10 minutes
+STATUS: ✅ Completed
+QUALITY: ⭐⭐⭐⭐⭐
+
+FILES_CHANGED: 1
+LINES_ADDED: 1
+RISK_LEVEL: Low
+BREAKING_CHANGES: None
+
+DOCUMENTS:
+- README.md (10 KB)
+- proposal.md (12 KB)
+- tasks.md (8.5 KB)
+- SUMMARY.md (5.6 KB)
+- VISUAL_GUIDE.md (30 KB)
+- IMPLEMENTATION.md (15 KB)
+- ARCHIVE_INFO.md (5.2 KB)
+
+CODE_CHANGES:
+File: tencentcloud/services/tke/resource_tc_kubernetes_addon.go
+Line: 60
+Change: Added DiffSuppressFunc: helper.DiffSupressJSON
+
+OUTCOME:
+Successfully added JSON semantic comparison for raw_values field to ignore key ordering differences in Kubernetes addon configuration.

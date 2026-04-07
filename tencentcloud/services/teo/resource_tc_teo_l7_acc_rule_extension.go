@@ -955,7 +955,6 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"error_page_params": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									MaxItems:    1,
 									Description: "Custom error page configuration list.",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{

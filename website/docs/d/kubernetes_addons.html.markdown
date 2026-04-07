@@ -14,8 +14,17 @@ Use this data source to query detailed information of kubernetes addons.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_kubernetes_addons" "kubernetes_addons" {
-  cluster_id = "cls-12345678"
+data "tencentcloud_kubernetes_addons" "example" {
+  cluster_id = "cls-5yezvaxo"
+}
+```
+
+### Or
+
+```hcl
+data "tencentcloud_kubernetes_addons" "example" {
+  cluster_id = "cls-5yezvaxo"
+  addon_name = "ip-masq-agent"
 }
 ```
 
@@ -34,6 +43,8 @@ In addition to all arguments above, the following attributes are exported:
 * `addons` - List of add-ons.
   * `addon_name` - Add-on name.
   * `addon_version` - Add-on version.
+  * `decode_values` - Decoded add-on parameters (base64 decoded from raw_values).
+Note: This field may return empty string if raw_values is null or invalid base64.
   * `phase` - Add-on status
 Note: This field may return `null`, indicating that no valid values can be obtained.
   * `raw_values` - Add-on parameters, which are base64-encoded strings in JSON/

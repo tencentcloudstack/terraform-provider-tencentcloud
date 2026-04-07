@@ -1325,7 +1325,7 @@ type Disk struct {
 	// 云盘类型
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 云盘大小(G）
+	// 云盘大小 (G）
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
 	// 是否自动化格式盘并挂载
@@ -1340,6 +1340,14 @@ type Disk struct {
 	// 云盘ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskId *string `json:"DiskId,omitnil,omitempty" name:"DiskId"`
+
+	// 加密系统盘
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Encrypt *string `json:"Encrypt,omitnil,omitempty" name:"Encrypt"`
+
+	// 自定义 KMS ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KmsKeyId *string `json:"KmsKeyId,omitnil,omitempty" name:"KmsKeyId"`
 }
 
 type ExternalNodeInfo struct {
@@ -1577,7 +1585,7 @@ type IntOrString struct {
 }
 
 type InternetAccessible struct {
-	// 带宽
+	// 带宽，单位为Mbps
 	MaxBandwidthOut *int64 `json:"MaxBandwidthOut,omitnil,omitempty" name:"MaxBandwidthOut"`
 
 	// 网络计费方式
@@ -1738,6 +1746,9 @@ type ModifyClusterMachineRequestParams struct {
 	// 系统盘的信息
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
+	// 安全组列表
+	SecurityGroupIDs []*string `json:"SecurityGroupIDs,omitnil,omitempty" name:"SecurityGroupIDs"`
+
 	// 节点预付费信息
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 }
@@ -1756,6 +1767,9 @@ type ModifyClusterMachineRequest struct {
 
 	// 系统盘的信息
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
+
+	// 安全组列表
+	SecurityGroupIDs []*string `json:"SecurityGroupIDs,omitnil,omitempty" name:"SecurityGroupIDs"`
 
 	// 节点预付费信息
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
@@ -1777,6 +1791,7 @@ func (r *ModifyClusterMachineRequest) FromJsonString(s string) error {
 	delete(f, "MachineNames")
 	delete(f, "DisplayName")
 	delete(f, "SystemDisk")
+	delete(f, "SecurityGroupIDs")
 	delete(f, "InstanceChargePrepaid")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterMachineRequest has unknown keys!", "")
@@ -2733,11 +2748,16 @@ type UpdateNativeNodePoolParam struct {
 	// 期望节点数
 	Replicas *int64 `json:"Replicas,omitnil,omitempty" name:"Replicas"`
 
-	// 是否更新存量节点
+	// 是否更新存量节点MetaData(包括： metadata、annotation、label)
 	UpdateExistedNode *bool `json:"UpdateExistedNode,omitnil,omitempty" name:"UpdateExistedNode"`
 
 	// 数据盘列表
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
+
+	// 节点management参数存量更新开关，有enable（打开）、disable（关闭）两个状态可选
+	// 
+	// management包括：nameserver、host、kubelet、kernel参数
+	UpdateMachineManagement *string `json:"UpdateMachineManagement,omitnil,omitempty" name:"UpdateMachineManagement"`
 
 	// ssh公钥id数组
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`

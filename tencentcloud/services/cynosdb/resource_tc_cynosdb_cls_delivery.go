@@ -122,33 +122,25 @@ func resourceTencentCloudCynosdbClsDeliveryCreate(d *schema.ResourceData, meta i
 				clsInfo.Region = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["topic_id"]; ok && v.(string) != "" {
-				clsInfo.TopicId = helper.String(v.(string))
-				topicId = v.(string)
-
-				clsInfo.TopicOperation = helper.String("reuse")
-				clsInfo.GroupOperation = helper.String("reuse")
-			}
-
 			if v, ok := dMap["topic_name"]; ok && v.(string) != "" {
 				clsInfo.TopicName = helper.String(v.(string))
-
 				clsInfo.TopicOperation = helper.String("create")
+			}
+
+			if v, ok := dMap["topic_id"]; ok && v.(string) != "" {
+				clsInfo.TopicId = helper.String(v.(string))
+				clsInfo.TopicOperation = helper.String("reuse")
+				topicId = v.(string)
+			}
+
+			if v, ok := dMap["group_name"]; ok && v.(string) != "" {
+				clsInfo.GroupName = helper.String(v.(string))
 				clsInfo.GroupOperation = helper.String("create")
 			}
 
 			if v, ok := dMap["group_id"]; ok && v.(string) != "" {
 				clsInfo.GroupId = helper.String(v.(string))
-
-				clsInfo.TopicOperation = helper.String("reuse")
 				clsInfo.GroupOperation = helper.String("reuse")
-			}
-
-			if v, ok := dMap["group_name"]; ok && v.(string) != "" {
-				clsInfo.GroupName = helper.String(v.(string))
-
-				clsInfo.TopicOperation = helper.String("create")
-				clsInfo.GroupOperation = helper.String("create")
 			}
 
 			request.CLSInfoList = append(request.CLSInfoList, &clsInfo)

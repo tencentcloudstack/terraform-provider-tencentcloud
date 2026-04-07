@@ -3,6 +3,7 @@ package teo
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -49,8 +50,9 @@ func checkAccelerationDomainStatus(ctx context.Context, expectedStatuses ...stri
 		domainName = v.(string)
 	}
 
+	retryTimeout, _ := ctx.Value(timeout).(time.Duration)
 	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	return resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(retryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)

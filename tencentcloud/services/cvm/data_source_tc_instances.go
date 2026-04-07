@@ -153,6 +153,11 @@ func DataSourceTencentCloudInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Image ID of the system disk.",
 						},
+						"rack_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The rack ID of the instance resource pool to which the instance belongs.",
+						},
 						"data_disks": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -342,6 +347,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"os_name":                    instance.OsName,
 			"availability_zone":          instance.Placement.Zone,
 			"project_id":                 instance.Placement.ProjectId,
+			"rack_id":                    instance.Placement.RackId,
 			"image_id":                   instance.ImageId,
 			"instance_charge_type":       instance.InstanceChargeType,
 			"system_disk_type":           instance.SystemDisk.DiskType,

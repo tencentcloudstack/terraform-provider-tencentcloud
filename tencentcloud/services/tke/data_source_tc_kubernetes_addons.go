@@ -3,13 +3,12 @@ package tke
 
 import (
 	"context"
-	"strings"
+	"encoding/base64"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tkev20180525 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func DataSourceTencentCloudKubernetesAddons() *schema.Resource {
@@ -48,6 +47,11 @@ func DataSourceTencentCloudKubernetesAddons() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Add-on parameters, which are base64-encoded strings in JSON/\nNote: This field may return `null`, indicating that no valid values can be obtained.",
+						},
+						"decode_values": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Decoded add-on parameters (base64 decoded from raw_values).\nNote: This field may return empty string if raw_values is null or invalid base64.",
 						},
 						"phase": {
 							Type:        schema.TypeString,
@@ -106,7 +110,6 @@ func dataSourceTencentCloudKubernetesAddonsRead(d *schema.ResourceData, meta int
 		return reqErr
 	}
 
-	ids := make([]string, 0, len(respData))
 	addonsList := make([]map[string]interface{}, 0, len(respData))
 	if respData != nil {
 		for _, addons := range respData {
@@ -122,6 +125,13 @@ func dataSourceTencentCloudKubernetesAddonsRead(d *schema.ResourceData, meta int
 
 			if addons.RawValues != nil {
 				addonsMap["raw_values"] = addons.RawValues
+				// Decode base64 raw_values to decode_values
+				if decoded, err := base64.StdEncoding.DecodeString(*addons.RawValues); err == nil {
+					addonsMap["decode_values"] = string(decoded)
+				} else {
+					// If decode fails, set empty string
+					addonsMap["decode_values"] = ""
+				}
 			}
 
 			if addons.Phase != nil {
@@ -132,14 +142,14 @@ func dataSourceTencentCloudKubernetesAddonsRead(d *schema.ResourceData, meta int
 				addonsMap["reason"] = addons.Reason
 			}
 
-			ids = append(ids, strings.Join([]string{clusterId, *addons.AddonName}, tccommon.FILED_SP))
 			addonsList = append(addonsList, addonsMap)
 		}
 
 		_ = d.Set("addons", addonsList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash(ids))
+	// Use cluster_id as the resource ID since it's a required parameter
+	d.SetId(clusterId)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

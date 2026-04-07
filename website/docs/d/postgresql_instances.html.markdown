@@ -79,6 +79,7 @@ Default value: `postgresql`.
     * `subnet_id` - Subnet ID.
     * `vpc_id` - VPC ID. specifies the ID of the virtual private cloud.
   * `db_instance_status` - Instance status, including: `applying` (applying), `init` (to be initialized), `initing` (initializing), `running` (running), `limited run` (restricted operation), `isolating` (isolating), `isolated` (isolated), `disisolating` (de-isolating), `recycling` (recycling), `recycled` (recycled), `job running` (task executing), `offline` (offline), `migrating` (migrating), `expanding` (scaling out), `waitSwitch` (waiting to switch), `switching` (switching), `readonly` (readonly), `restarting` (restarting), `network changing` (network modification in progress), `upgrading` (kernel version upgrading), `audit-switching` (audit status changing), `primary-switching` (primary-secondary switching), `offlining` (offline), `deployment changing` (modify az), `cloning` (restoring data), `parameter modifying` (parameter modification in progress), `log-switching` (log status change), `restoring` (recovering), and `expanding` (scaling out).
+  * `db_instance_storage_type` - Storage type. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).
   * `db_instance_storage` - Assigned instance storage capacity in GB.
   * `db_instance_type` - Instance type, which includes:
 <li>primary: primary instance </li>
@@ -159,6 +160,7 @@ Default value: 0.
   * `public_access_port` - Port for public access.
   * `public_access_switch` - Indicates whether to enable the access to an instance from public network or not.
   * `root_user` - Instance root account name, default value is `root`.
+  * `storage_type` - Storage type. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).
   * `storage` - Volume size(in GB).
   * `subnet_id` - ID of subnet.
   * `tags` - The available tags within this postgresql.

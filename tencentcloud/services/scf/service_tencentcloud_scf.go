@@ -315,6 +315,10 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 		}
 	}
 
+	if info.layers != nil {
+		request.Layers = info.layers
+	}
+
 	request.DnsCache = info.dnsCache
 	request.IntranetConfig = info.intranetConfig
 

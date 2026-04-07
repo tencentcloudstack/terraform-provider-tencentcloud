@@ -664,6 +664,42 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceDelete(d *schema.ResourceD
 		return err
 	}
 
+	// Wait for instance to be isolated (status = 4)
+	err := resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+		// Query instance status using DescribeDBInstances API
+		instance, err := service.DescribeSqlserverRestartDBInstanceById(ctx, instanceId)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		// Check if instance exists
+		if instance == nil {
+			return resource.NonRetryableError(fmt.Errorf("instance %s not found", instanceId))
+		}
+
+		// Check instance status
+		if instance.Status != nil {
+			status := *instance.Status
+			log.Printf("[DEBUG]%s instance %s current status: %d", logId, instanceId, status)
+
+			if status == 4 {
+				// Instance is isolated, ready to delete
+				log.Printf("[INFO]%s instance %s is isolated (status=4), ready to delete", logId, instanceId)
+				return nil
+			}
+
+			// Continue waiting for other statuses
+			return resource.RetryableError(fmt.Errorf("waiting for instance %s to be isolated, current status: %d", instanceId, status))
+		}
+
+		return resource.RetryableError(fmt.Errorf("instance %s status is nil", instanceId))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for instance %s isolation failed, reason: %+v", logId, instanceId, err)
+		return err
+	}
+
 	if err := service.DeleteSqlserverInstanceById(ctx, instanceId); err != nil {
 		return err
 	}

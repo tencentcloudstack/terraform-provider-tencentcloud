@@ -110,6 +110,98 @@ func ResourceTencentCloudCynosdbBackupConfig() *schema.Resource {
 					},
 				},
 			},
+
+			"snapshot_secondary_backup_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Secondary snapshot backup configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"backup_custom_auto_time": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Computed:    true,
+							Description: "Whether to use system auto time.",
+						},
+						"backup_time_beg": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Backup start time. Range: [0-24*3600]. E.g. 0:00, 1:00, 2:00 are 0, 3600, 7200.",
+						},
+						"backup_time_end": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Backup end time. Range: [0-24*3600]. E.g. 0:00, 1:00, 2:00 are 0, 3600, 7200.",
+						},
+						"backup_week_days": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							Description: "Backup week days array (length 7, Sunday to Saturday). Values: full, increment, none.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"backup_interval_time": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Backup interval time.",
+						},
+						"reserve_duration": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Backup retention period in seconds. 7 days = 604800. Max: 158112000.",
+						},
+						"backup_trigger_strategy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Backup trigger strategy. Values: `periodically` (periodic auto backup), `frequent` (high-frequency backup).",
+						},
+						"cross_regions_enable": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Whether cross-region backup is enabled. Values: `yes`, `no`.",
+						},
+						"cross_regions": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Cross-region backup target regions.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"auto_copy_vaults": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							Description: "Auto copy vault configuration list.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"vault_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Vault ID.",
+									},
+									"vault_region": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Vault region.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -212,6 +304,72 @@ func resourceTencentCloudCynosdbBackupConfigRead(d *schema.ResourceData, meta in
 		_ = d.Set("logic_backup_config", []interface{}{logicBackupConfigMap})
 	}
 
+	if respData.SnapshotSecondaryBackupConfig != nil {
+		snapshotSecondaryBackupConfigMap := map[string]interface{}{}
+		cfg := respData.SnapshotSecondaryBackupConfig
+
+		if cfg.BackupCustomAutoTime != nil {
+			snapshotSecondaryBackupConfigMap["backup_custom_auto_time"] = cfg.BackupCustomAutoTime
+		}
+
+		if cfg.BackupTimeBeg != nil {
+			snapshotSecondaryBackupConfigMap["backup_time_beg"] = cfg.BackupTimeBeg
+		}
+
+		if cfg.BackupTimeEnd != nil {
+			snapshotSecondaryBackupConfigMap["backup_time_end"] = cfg.BackupTimeEnd
+		}
+
+		if cfg.BackupWeekDays != nil {
+			weekDays := make([]string, 0, len(cfg.BackupWeekDays))
+			for _, v := range cfg.BackupWeekDays {
+				weekDays = append(weekDays, *v)
+			}
+			snapshotSecondaryBackupConfigMap["backup_week_days"] = weekDays
+		}
+
+		if cfg.BackupIntervalTime != nil {
+			snapshotSecondaryBackupConfigMap["backup_interval_time"] = cfg.BackupIntervalTime
+		}
+
+		if cfg.ReserveDuration != nil {
+			snapshotSecondaryBackupConfigMap["reserve_duration"] = cfg.ReserveDuration
+		}
+
+		if cfg.BackupTriggerStrategy != nil {
+			snapshotSecondaryBackupConfigMap["backup_trigger_strategy"] = cfg.BackupTriggerStrategy
+		}
+
+		if cfg.CrossRegionsEnable != nil {
+			snapshotSecondaryBackupConfigMap["cross_regions_enable"] = cfg.CrossRegionsEnable
+		}
+
+		if cfg.CrossRegions != nil {
+			regions := make([]string, 0, len(cfg.CrossRegions))
+			for _, v := range cfg.CrossRegions {
+				regions = append(regions, *v)
+			}
+			snapshotSecondaryBackupConfigMap["cross_regions"] = regions
+		}
+
+		if cfg.AutoCopyVaults != nil {
+			vaults := make([]interface{}, 0, len(cfg.AutoCopyVaults))
+			for _, v := range cfg.AutoCopyVaults {
+				vaultMap := map[string]interface{}{}
+				if v.VaultId != nil {
+					vaultMap["vault_id"] = v.VaultId
+				}
+				if v.VaultRegion != nil {
+					vaultMap["vault_region"] = v.VaultRegion
+				}
+				vaults = append(vaults, vaultMap)
+			}
+			snapshotSecondaryBackupConfigMap["auto_copy_vaults"] = vaults
+		}
+
+		_ = d.Set("snapshot_secondary_backup_config", []interface{}{snapshotSecondaryBackupConfigMap})
+	}
+
 	_ = clusterId
 	return nil
 }
@@ -227,7 +385,7 @@ func resourceTencentCloudCynosdbBackupConfigUpdate(d *schema.ResourceData, meta 
 	clusterId := d.Id()
 
 	needChange := false
-	mutableArgs := []string{"backup_time_beg", "backup_time_end", "reserve_duration", "backup_freq", "backup_type", "logic_backup_config"}
+	mutableArgs := []string{"backup_time_beg", "backup_time_end", "reserve_duration", "backup_freq", "backup_type", "logic_backup_config", "snapshot_secondary_backup_config"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -292,6 +450,60 @@ func resourceTencentCloudCynosdbBackupConfigUpdate(d *schema.ResourceData, meta 
 			}
 
 			request.LogicBackupConfig = &logicBackupConfigInfo
+		}
+
+		if snapshotSecondaryList, ok := d.GetOk("snapshot_secondary_backup_config"); ok {
+			snapshotSecondaryArr := snapshotSecondaryList.([]interface{})
+			if len(snapshotSecondaryArr) > 0 && snapshotSecondaryArr[0] != nil {
+				cfgMap := snapshotSecondaryArr[0].(map[string]interface{})
+				snapshotCfg := &cynosdbv20190107.SnapshotBackupConfig{}
+
+				if v, ok := cfgMap["backup_custom_auto_time"].(bool); ok {
+					snapshotCfg.BackupCustomAutoTime = helper.Bool(v)
+				}
+
+				if v, ok := cfgMap["backup_time_beg"].(int); ok {
+					snapshotCfg.BackupTimeBeg = helper.IntUint64(v)
+				}
+
+				if v, ok := cfgMap["backup_time_end"].(int); ok {
+					snapshotCfg.BackupTimeEnd = helper.IntUint64(v)
+				}
+
+				if v, ok := cfgMap["backup_week_days"].([]interface{}); ok && len(v) > 0 {
+					for _, day := range v {
+						snapshotCfg.BackupWeekDays = append(snapshotCfg.BackupWeekDays, helper.String(day.(string)))
+					}
+				}
+
+				if v, ok := cfgMap["backup_interval_time"].(int); ok {
+					snapshotCfg.BackupIntervalTime = helper.Int64(int64(v))
+				}
+
+				if v, ok := cfgMap["reserve_duration"].(int); ok {
+					snapshotCfg.ReserveDuration = helper.IntUint64(v)
+				}
+
+				if v, ok := cfgMap["backup_trigger_strategy"].(string); ok && v != "" {
+					snapshotCfg.BackupTriggerStrategy = helper.String(v)
+				}
+
+				if v, ok := cfgMap["auto_copy_vaults"].([]interface{}); ok && len(v) > 0 {
+					for _, vaultItem := range v {
+						vaultMap := vaultItem.(map[string]interface{})
+						vault := &cynosdbv20190107.CreateBackupVaultItem{}
+						if vaultId, ok := vaultMap["vault_id"].(string); ok && vaultId != "" {
+							vault.VaultId = helper.String(vaultId)
+						}
+						if vaultRegion, ok := vaultMap["vault_region"].(string); ok && vaultRegion != "" {
+							vault.VaultRegion = helper.String(vaultRegion)
+						}
+						snapshotCfg.AutoCopyVaults = append(snapshotCfg.AutoCopyVaults, vault)
+					}
+				}
+
+				request.SnapshotSecondaryBackupConfig = snapshotCfg
+			}
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

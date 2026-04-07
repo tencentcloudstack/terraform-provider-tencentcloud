@@ -110,6 +110,7 @@ import (
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	vcubev20220410 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410"
+	vdbv20230616 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb/v20230616"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -253,6 +254,7 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	vdbv20230616Conn            *vdbv20230616.Client
 	bhv20230418Conn             *bhv20230418.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
@@ -2221,4 +2223,16 @@ func (me *TencentCloudClient) UseAdvisorV20200721Client() *advisorv20200721.Clie
 	me.advisorv20200721Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.advisorv20200721Conn
+}
+
+// UseVdbV20230616Client return VDB client for service
+func (me *TencentCloudClient) UseVdbV20230616Client() *vdbv20230616.Client {
+	if me.vdbv20230616Conn != nil {
+		return me.vdbv20230616Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.vdbv20230616Conn, _ = vdbv20230616.NewClient(me.Credential, me.Region, cpf)
+	me.vdbv20230616Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.vdbv20230616Conn
 }

@@ -100,6 +100,11 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   security_groups_ids = [
     tencentcloud_security_group.example.id,
   ]
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+  }
 }
 ```
 
@@ -202,6 +207,11 @@ resource "tencentcloud_postgresql_readonly_instance" "example" {
   security_groups_ids = [
     tencentcloud_security_group.example.id,
   ]
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+  }
 }
 ```
 
@@ -241,6 +251,12 @@ In addition to all arguments above, the following attributes are exported:
 * `private_access_ip` - IP for private access.
 * `private_access_port` - Port for private access.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `1h0m`) Used when creating the resource.
+* `update` - (Defaults to `1h0m`) Used when updating the resource.
 
 ## Import
 

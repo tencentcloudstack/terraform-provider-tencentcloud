@@ -63,6 +63,22 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Exclusive cluster id.",
 			},
+			"dedicated_resource_pack_tenancy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Dedicated resource pack tenancy strategy. Valid values: `ResourcePool` (use instance resource pool for resource pre-deduction).",
+			},
+			"dedicated_resource_pack_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				RequiredWith: []string{"dedicated_resource_pack_tenancy"},
+				Description:  "List of dedicated resource pack IDs (e.g., rpp-xxxxxxxx). When creating instances using pre-purchased resource pool packs, this parameter must be specified together with `dedicated_resource_pack_tenancy` to match the corresponding tenancy strategy. Related resource: `tencentcloud_cvm_resource_pool_packs`.",
+			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -559,6 +575,11 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Instance os name.",
 			},
+			"rack_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The rack ID of the instance resource pool to which the instance belongs.",
+			},
 			"ipv6_addresses": {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -680,6 +701,21 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			} else {
 				return fmt.Errorf("cdh_host_id can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
+		}
+	}
+
+	// Dedicated resource pack placement parameters
+	if v, ok := d.GetOk("dedicated_resource_pack_tenancy"); ok {
+		request.Placement.DedicatedResourcePackTenancy = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("dedicated_resource_pack_ids"); ok {
+		packIds := v.(*schema.Set).List()
+		for _, packId := range packIds {
+			request.Placement.DedicatedResourcePackIds = append(
+				request.Placement.DedicatedResourcePackIds,
+				helper.String(packId.(string)),
+			)
 		}
 	}
 
@@ -1225,6 +1261,20 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("instance_name", instance.InstanceName)
 	_ = d.Set("instance_type", instance.InstanceType)
 	_ = d.Set("project_id", instance.Placement.ProjectId)
+
+	// Set dedicated resource pack placement parameters
+	if instance.Placement != nil {
+		if instance.Placement.DedicatedResourcePackTenancy != nil {
+			_ = d.Set("dedicated_resource_pack_tenancy", instance.Placement.DedicatedResourcePackTenancy)
+		}
+		// if len(instance.Placement.DedicatedResourcePackIds) > 0 {
+		// 	_ = d.Set("dedicated_resource_pack_ids", helper.StringsInterfaces(instance.Placement.DedicatedResourcePackIds))
+		// }
+		if instance.Placement.RackId != nil {
+			_ = d.Set("rack_id", instance.Placement.RackId)
+		}
+	}
+
 	_ = d.Set("instance_charge_type", instance.InstanceChargeType)
 	_ = d.Set("instance_charge_type_prepaid_renew_flag", instance.RenewFlag)
 	_ = d.Set("internet_charge_type", instance.InternetAccessible.InternetChargeType)

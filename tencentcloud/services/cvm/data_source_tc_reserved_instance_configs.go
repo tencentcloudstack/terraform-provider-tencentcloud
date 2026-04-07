@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -137,7 +137,7 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 		filter["product-description"] = v.(string)
 	}
 
-	var configs []*cvm.ReservedInstancesOffering
+	var configs []*cvmintl.ReservedInstancesOffering
 	var errRet error
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		configs, errRet = cvmService.DescribeReservedInstanceConfigs(ctx, filter)

@@ -1,0 +1,19 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: add `storage_type`
+```
+
+```release-note:enhancement
+data-source/tencentcloud_postgresql_db_instance_versions: add `storage_type`
+```
+
+```release-note:enhancement
+data-source/tencentcloud_postgresql_db_instance_classes: add `storage_type`
+```
+
+```release-note:enhancement
+data-source/tencentcloud_postgresql_specinfos: add `storage_type`
+```
+
+```release-note:enhancement
+data-source/tencentcloud_postgresql_instances: add `storage_type`
+```

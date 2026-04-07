@@ -2776,6 +2776,82 @@ func (me *MonitorService) DescribeNoticeContentTmplByFilter(ctx context.Context,
 	return
 }
 
+func (me *MonitorService) DescribeNoticeContentTmplsByFilter(ctx context.Context, param map[string]interface{}) (noticeContentTmpls []*monitorv20230616.NoticeContentTmpl, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = monitorv20230616.NewDescribeNoticeContentTmplRequest()
+		response = monitorv20230616.NewDescribeNoticeContentTmplResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TmplIDs" {
+			request.TmplIDs = v.([]*string)
+		}
+		if k == "TmplName" {
+			request.TmplName = v.(*string)
+		}
+		if k == "NoticeID" {
+			request.NoticeID = v.(*string)
+		}
+		if k == "TmplLanguage" {
+			request.TmplLanguage = v.(*string)
+		}
+		if k == "MonitorType" {
+			request.MonitorType = v.(*string)
+		}
+	}
+
+	var (
+		pageNumber uint64 = 1
+		pageSize   uint64 = 50
+	)
+
+	for {
+		request.PageNumber = &pageNumber
+		request.PageSize = &pageSize
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseMonitorV20230616Client().DescribeNoticeContentTmpl(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response.Response.NoticeContentTmpls != nil {
+			noticeContentTmpls = append(noticeContentTmpls, response.Response.NoticeContentTmpls...)
+		}
+
+		if len(response.Response.NoticeContentTmpls) < int(pageSize) {
+			break
+		}
+
+		pageNumber++
+	}
+
+	return
+}
+
 func (me *MonitorService) DescribeNoticeContentTmplById(ctx context.Context, tmplID string) (noticeContentTmpl *monitorv20230616.NoticeContentTmpl, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

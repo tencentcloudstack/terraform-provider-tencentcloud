@@ -3,8 +3,10 @@ package tke
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
+	"reflect"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -20,6 +22,9 @@ func ResourceTencentCloudKubernetesAddonConfig() *schema.Resource {
 		Read:   resourceTencentCloudKubernetesAddonConfigRead,
 		Update: resourceTencentCloudKubernetesAddonConfigUpdate,
 		Delete: resourceTencentCloudKubernetesAddonConfigDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -43,10 +48,11 @@ func ResourceTencentCloudKubernetesAddonConfig() *schema.Resource {
 			},
 
 			"raw_values": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Params of addon, base64 encoded json format.",
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				Description:      "Params of addon, base64 encoded json format.",
+				DiffSuppressFunc: suppressJSONOrderDiff,
 			},
 
 			"phase": {
@@ -193,4 +199,35 @@ func resourceTencentCloudKubernetesAddonConfigDelete(d *schema.ResourceData, met
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
+}
+
+// suppressJSONOrderDiff compares two JSON strings and ignores ordering differences
+func suppressJSONOrderDiff(k, old, new string, d *schema.ResourceData) bool {
+	// If both are empty, no diff
+	if old == "" && new == "" {
+		return true
+	}
+
+	// If only one is empty, there is a diff
+	if old == "" || new == "" {
+		return false
+	}
+
+	// Try to unmarshal both strings as JSON
+	var oldJSON, newJSON interface{}
+	if err := json.Unmarshal([]byte(old), &oldJSON); err != nil {
+		// If old value is not valid JSON, fallback to string comparison
+		log.Printf("[WARN] Failed to unmarshal old value as JSON: %v", err)
+		return old == new
+	}
+
+	if err := json.Unmarshal([]byte(new), &newJSON); err != nil {
+		// If new value is not valid JSON, fallback to string comparison
+		log.Printf("[WARN] Failed to unmarshal new value as JSON: %v", err)
+		return old == new
+	}
+
+	// Use reflect.DeepEqual to compare the unmarshaled JSON objects
+	// This ignores ordering differences in JSON objects and arrays of objects
+	return reflect.DeepEqual(oldJSON, newJSON)
 }

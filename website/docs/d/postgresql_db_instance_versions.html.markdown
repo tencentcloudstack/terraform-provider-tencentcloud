@@ -4,17 +4,27 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_postgresql_db_instance_versions"
 sidebar_current: "docs-tencentcloud-datasource-postgresql_db_instance_versions"
 description: |-
-  Use this data source to query detailed information of postgresql db_instance_versions
+  Use this data source to query detailed information of PostgreSQL db instance versions
 ---
 
 # tencentcloud_postgresql_db_instance_versions
 
-Use this data source to query detailed information of postgresql db_instance_versions
+Use this data source to query detailed information of PostgreSQL db instance versions
 
 ## Example Usage
 
+### Query all versions
+
 ```hcl
-data "tencentcloud_postgresql_db_instance_versions" "db_instance_versions" {}
+data "tencentcloud_postgresql_db_instance_versions" "example" {}
+```
+
+### Query versions by storage type
+
+```hcl
+data "tencentcloud_postgresql_db_instance_versions" "example" {
+  storage_type = "CLOUD_HSSD"
+}
 ```
 
 ## Argument Reference
@@ -22,6 +32,7 @@ data "tencentcloud_postgresql_db_instance_versions" "db_instance_versions" {}
 The following arguments are supported:
 
 * `result_output_file` - (Optional, String) Used to save results.
+* `storage_type` - (Optional, String) Storage type filter. Valid values: `PHYSICAL_LOCAL_SSD` (local SSD), `CLOUD_PREMIUM` (premium cloud disk), `CLOUD_SSD` (cloud SSD), `CLOUD_HSSD` (enhanced cloud SSD).
 
 ## Attributes Reference
 

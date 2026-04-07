@@ -1006,7 +1006,7 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 		request.SubnetId = &subnetId
 	}
 
-	if securityGroupId != "" && internet {
+	if securityGroupId != "" {
 		request.SecurityGroup = &securityGroupId
 	}
 
