@@ -457,16 +457,22 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		instanceId = d.Id()
 	)
 
+	// Immutable parameters that cannot be changed after instance creation.
+	// These parameters require instance recreation due to architectural limitations.
+	// - zone_ids, vpc_id, subnet_id: Network infrastructure cannot be changed
+	// - node_spec, node_num, storage_size: Resource allocation changes require recreation
+	// - enable_create_default_ha_mirror_queue: HA mirror queue configuration is set at creation
+	// - time_span, pay_mode: Payment mode changes require special handling
+	// - cluster_version: Version upgrades require a separate upgrade process
 	immutableArgs := []string{
 		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
 		"storage_size", "enable_create_default_ha_mirror_queue",
-		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
+		"time_span", "pay_mode", "cluster_version",
 	}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+			return fmt.Errorf("argument `%s` cannot be changed after instance creation. Please recreate the instance if you need to modify this parameter.", v)
 		}
 	}
 
@@ -501,7 +507,33 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 
+	if d.HasChange("auto_renew_flag") {
+		if v, ok := d.GetOk("auto_renew_flag"); ok {
+			request.AutoRenewFlag = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_public_access") {
+		if v, ok := d.GetOk("enable_public_access"); ok {
+			request.EnablePublicAccess = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("band_width") {
+		if v, ok := d.GetOk("band_width"); ok {
+			request.Bandwidth = helper.IntUint64(v.(int))
+			needUpdate = true
+		}
+	}
+
 	if needUpdate {
+		var (
+			ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			service = svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		)
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().ModifyRabbitMQVipInstance(request)
 			if e != nil {
@@ -511,6 +543,48 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 			}
 
 			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update tdmq rabbitmqVipInstance failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// Wait for instance status to stabilize after update.
+		// After calling ModifyRabbitMQVipInstance API, the instance enters "Updating" state.
+		// We poll the instance status until it reaches a stable state (Running/Success) or fails (Failed/Rollback).
+		// Timeout: ReadRetryTimeout * 10 (approximately 10 minutes) to accommodate large configuration changes.
+		// This prevents race conditions where subsequent operations might execute while the instance is still updating.
+		paramMap := make(map[string]interface{})
+		tmpSet := make([]*tdmq.Filter, 0)
+		filter := tdmq.Filter{}
+		filter.Name = helper.String("instanceIds")
+		filter.Values = helper.Strings([]string{instanceId})
+		tmpSet = append(tmpSet, &filter)
+		paramMap["filters"] = tmpSet
+		err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+			result, e := service.DescribeTdmqRabbitmqVipInstanceByFilter(ctx, paramMap)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || len(result) != 1 {
+				return resource.NonRetryableError(fmt.Errorf("resource `tencentcloud_tdmq_rabbitmq_vip_instance` %s id error", instanceId))
+			}
+
+			// Instance status transitions during update:
+			// - Running/Success → Updating (API call accepted) → Running/Success (Update complete)
+			// - If status is "Updating", we continue polling
+			// - If status is "Running" or "Success", the update is complete
+			// - Any other status (e.g., "Failed", "Rollback") indicates a problem
+			if *result[0].Status == svctdmq.RabbitMQVipInstanceUpdating {
+				return resource.RetryableError(fmt.Errorf("rabbitmq_vip_instance status is updating"))
+			} else if *result[0].Status == svctdmq.RabbitMQVipInstanceRunning ||
+				*result[0].Status == svctdmq.RabbitMQVipInstanceSuccess {
+				return nil
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("rabbitmq_vip_instance status illegal: %s", *result[0].Status))
+			}
 		})
 
 		if err != nil {
