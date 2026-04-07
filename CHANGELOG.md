@@ -1,3 +1,14 @@
+## 1.82.84(April 7, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vdb_instance` ([#3968](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3968))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: support user_agent_filter, url_redirect,origin_combine,range_origin_pull,range_rules and hsts. ([#3955](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3955))
+* resource/tencentcloud_kubernetes_cluster_attachment: optimize create function code logic ([#3974](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3974))
+
 ## 1.82.83(April 3, 2026)
 
 FEATURES:
