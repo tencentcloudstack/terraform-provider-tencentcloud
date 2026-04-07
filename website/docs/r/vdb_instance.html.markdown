@@ -52,7 +52,6 @@ resource "tencentcloud_vdb_instance" "cluster" {
   memory          = 8
   disk_size       = 100
   worker_node_num = 2
-  goods_num       = 1
   params          = "{\"key\":\"value\"}"
   force_delete    = true
 
@@ -82,7 +81,6 @@ The following arguments are supported:
 * `cpu` - (Optional, Int) CPU cores.
 * `disk_size` - (Optional, Int) Disk size in GB.
 * `force_delete` - (Optional, Bool) Whether to force delete (destroy) the instance. If false, only isolate to recycle bin. If true, isolate then destroy. Default is false.
-* `goods_num` - (Optional, Int) Number of instances to purchase.
 * `instance_name` - (Optional, String) Instance name. Supports up to 60 characters.
 * `instance_type` - (Optional, String, ForceNew) Instance type. Valid values: base, single, cluster.
 * `memory` - (Optional, Int) Memory size in GB.

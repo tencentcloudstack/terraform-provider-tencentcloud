@@ -532,7 +532,7 @@ func TestVdbInstanceResourceSchema(t *testing.T) {
 	// Verify optional input fields
 	optionalFields := []string{
 		"instance_name", "pay_period", "auto_renew",
-		"params", "resource_tags", "instance_type", "mode", "goods_num",
+		"params", "resource_tags", "instance_type", "mode",
 		"product_type", "node_type", "cpu", "memory", "disk_size",
 		"worker_node_num", "force_delete",
 	}

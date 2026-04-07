@@ -104,11 +104,6 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Availability zone mode for cluster type. Valid values: two, three.",
 			},
-			"goods_num": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Number of instances to purchase.",
-			},
 			"product_type": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -352,9 +347,7 @@ func resourceTencentCloudVdbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.Mode = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("goods_num"); ok {
-		request.GoodsNum = helper.IntInt64(v.(int))
-	}
+	request.GoodsNum = helper.IntInt64(1)
 
 	if v, ok := d.GetOkExists("product_type"); ok {
 		request.ProductType = helper.IntInt64(v.(int))
@@ -630,7 +623,7 @@ func resourceTencentCloudVdbInstanceUpdate(d *schema.ResourceData, meta interfac
 	immutableFields := []string{
 		"pay_mode", "instance_name",
 		"pay_period", "auto_renew", "params", "resource_tags",
-		"instance_type", "mode", "goods_num", "product_type", "node_type",
+		"instance_type", "mode", "product_type", "node_type",
 	}
 	for _, field := range immutableFields {
 		if d.HasChange(field) {

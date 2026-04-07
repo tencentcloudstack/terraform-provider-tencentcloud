@@ -41,7 +41,6 @@ resource "tencentcloud_vdb_instance" "cluster" {
   memory            = 8
   disk_size         = 100
   worker_node_num   = 2
-  goods_num         = 1
   params            = "{\"key\":\"value\"}"
   force_delete      = true
 

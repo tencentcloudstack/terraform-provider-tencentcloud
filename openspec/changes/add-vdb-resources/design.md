@@ -140,6 +140,9 @@ For `tencentcloud_vdb_instance`:
 **Deprecated SDK fields NOT to expose** (确认跳过):
 `Project`, `NetworkType`, `TemplateId`, `Components`, `Zone` (Create input), `SlaveZones`, `IsNoExpired` (Create input), `EngineName` (Create input), `EngineVersion` (Create input), `Brief`, `Chief`, `DBA`, `HealthScore`, `Warning`.
 
+**Hardcoded SDK fields NOT to expose** (内部固定值):
+- `GoodsNum`: 固定为 `1`。Terraform Provider 每个 resource block 管理一个资源，购买数量由 Provider 内部控制，不暴露给用户。
+
 Note: `NodeType` is deprecated in `CreateInstanceRequestParams` but still present in `InstanceInfo` response. Keep it as ForceNew input + Computed for backward compatibility.
 
 ### Decision 11: Serial Execution of Scale Operations in Update
@@ -176,7 +179,7 @@ type VdbClientInterface interface {
 
 **Choice**: 每个 resource 的 `.md` 文件应提供足够的 HCL 示例，覆盖所有参数的用法：
 
-- `resource_tc_vdb_instance.md`：提供两个示例 —— 按量付费单机版（最小参数集）和包年包月集群版（全量参数，包含 `security_group_ids`, `mode`, `goods_num`, `product_type`, `params`, `resource_tags`）。
+- `resource_tc_vdb_instance.md`：提供两个示例 —— 按量付费单机版（最小参数集）和包年包月集群版（全量参数，包含 `security_group_ids`, `mode`, `product_type`, `params`, `resource_tags`）。
 
 **Rationale**: 用户通过 `.md` 中的 HCL 示例了解参数用法，示例不充分会导致用户不知道某些参数的存在或用法。
 
@@ -194,10 +197,11 @@ type VdbClientInterface interface {
 
 ```go
 // vpc_id, subnet_id 已设置 ForceNew: true，Terraform plan 阶段即提示需重建
+// goods_num 已从 schema 移除，内部硬编码为 1
 immutableFields := []string{
     "pay_mode", "instance_name",
     "pay_period", "auto_renew", "params", "resource_tags",
-    "instance_type", "mode", "goods_num", "product_type", "node_type",
+    "instance_type", "mode", "product_type", "node_type",
 }
 for _, field := range immutableFields {
     if d.HasChange(field) {

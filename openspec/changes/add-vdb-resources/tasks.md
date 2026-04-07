@@ -94,8 +94,16 @@
 ## 14a. Enhancement: ForceNew for VPC/Subnet + Immutable Fields Check in Update
 
 - [x] 14a.1 Set `ForceNew: true` on `vpc_id` and `subnet_id` schema fields (Terraform handles recreation at plan time)
-- [x] 14a.2 Add `immutableFields` array at the beginning of Update function, listing non-updatable input fields (excluding `vpc_id`/`subnet_id` which are handled by ForceNew): `pay_mode`, `instance_name`, `pay_period`, `auto_renew`, `params`, `resource_tags`, `instance_type`, `mode`, `goods_num`, `product_type`, `node_type`
+- [x] 14a.2 Add `immutableFields` array at the beginning of Update function, listing non-updatable input fields (excluding `vpc_id`/`subnet_id` which are handled by ForceNew): `pay_mode`, `instance_name`, `pay_period`, `auto_renew`, `params`, `resource_tags`, `instance_type`, `mode`, `product_type`, `node_type`
 - [x] 14a.3 Iterate `immutableFields` array, for each field call `d.HasChange(field)`, if changed return `fmt.Errorf("argument '%s' cannot be changed", field)`
+
+## 14b. Enhancement: Hardcode goods_num to 1
+
+- [x] 14b.1 Remove `goods_num` from schema (delete the Optional field definition)
+- [x] 14b.2 In Create function, replace `d.GetOkExists("goods_num")` with hardcoded `request.GoodsNum = helper.IntInt64(1)`
+- [x] 14b.3 Remove `goods_num` from `immutableFields` array in Update function
+- [x] 14b.4 Remove `goods_num` from md examples and test schema assertions
+- [x] 14b.5 Verify build and all 25 tests pass
 
 ## 15. Final Verification
 

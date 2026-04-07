@@ -25,7 +25,7 @@ The service layer SHALL provide the following polling helper methods:
 - **THEN** the helper polls `DescribeVdbInstanceById` repeatedly until it returns nil (instance no longer exists), returning nil on not-found or error on timeout
 
 ### Requirement: Create VDB instance with all non-deprecated SDK parameters
-The system SHALL allow users to create a VDB instance exposing ALL non-deprecated `CreateInstanceRequest` parameters: vpc_id, subnet_id, pay_mode, instance_name, security_group_ids (Required), pay_period, auto_renew, params (JSON string), resource_tags, instance_type, mode, goods_num, product_type, node_type, cpu, memory, disk_size, worker_node_num. After calling `CreateInstance` API, the system SHALL call `WaitForInstanceStatus` to wait for status `online`.
+The system SHALL allow users to create a VDB instance exposing ALL non-deprecated `CreateInstanceRequest` parameters: vpc_id, subnet_id, pay_mode, instance_name, security_group_ids (Required), pay_period, auto_renew, params (JSON string), resource_tags, instance_type, mode, product_type, node_type, cpu, memory, disk_size, worker_node_num. The `goods_num` parameter SHALL NOT be exposed to users — it SHALL be hardcoded to `1` in the Create function, since the Provider manages one resource per block. After calling `CreateInstance` API, the system SHALL call `WaitForInstanceStatus` to wait for status `online`.
 
 #### Scenario: Successful instance creation
 - **WHEN** user applies a `tencentcloud_vdb_instance` resource with valid configuration
@@ -51,7 +51,7 @@ The system SHALL read ALL non-deprecated fields from `InstanceInfo` response and
 - **THEN** the system removes the resource from state by calling `d.SetId("")`
 
 ### Requirement: ForceNew for VPC/Subnet and immutable fields check in Update
-`vpc_id` and `subnet_id` SHALL be marked `ForceNew: true` in the schema, so Terraform triggers resource recreation at plan time when these fields change. The Update function SHALL additionally define an `immutableFields` array listing fields that cannot be modified in-place (`pay_mode`, `instance_name`, `pay_period`, `auto_renew`, `params`, `resource_tags`, `instance_type`, `mode`, `goods_num`, `product_type`, `node_type`). Before processing any update logic, the function SHALL iterate the array and reject changes to any listed field with an error message `argument 'X' cannot be changed`.
+`vpc_id` and `subnet_id` SHALL be marked `ForceNew: true` in the schema, so Terraform triggers resource recreation at plan time when these fields change. The Update function SHALL additionally define an `immutableFields` array listing fields that cannot be modified in-place (`pay_mode`, `instance_name`, `pay_period`, `auto_renew`, `params`, `resource_tags`, `instance_type`, `mode`, `product_type`, `node_type`). Before processing any update logic, the function SHALL iterate the array and reject changes to any listed field with an error message `argument 'X' cannot be changed`.
 
 #### Scenario: Change vpc_id or subnet_id
 - **WHEN** user modifies `vpc_id` or `subnet_id`
