@@ -37,6 +37,12 @@ func ResourceTencentCloudTdmqRole() *schema.Resource {
 				Required:    true,
 				Description: "The description of tdmq role.",
 			},
+			"token": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "Role token. This field is returned by the API and used for authentication.",
+			},
 		},
 	}
 }
@@ -105,6 +111,7 @@ func resourceTencentCloudTdmqRoleRead(d *schema.ResourceData, meta interface{}) 
 
 		_ = d.Set("role_name", info.RoleName)
 		_ = d.Set("remark", info.Remark)
+		_ = d.Set("token", info.Token)
 		return nil
 	})
 
