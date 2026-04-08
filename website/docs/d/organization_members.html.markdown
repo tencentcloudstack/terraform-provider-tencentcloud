@@ -13,8 +13,19 @@ Use this data source to query detailed information of organization members
 
 ## Example Usage
 
+### Query all members
+
 ```hcl
-data "tencentcloud_organization_members" "members" {}
+data "tencentcloud_organization_members" "example" {}
+```
+
+### Query members by filter
+
+```hcl
+data "tencentcloud_organization_members" "example" {
+  lang       = "en"
+  search_key = "tf-example"
+}
 ```
 
 ## Argument Reference
@@ -38,6 +49,7 @@ In addition to all arguments above, the following attributes are exported:
   * `member_type` - Member type. Valid values: `Invite` (invited); `Create` (created).Note: This field may return null, indicating that no valid values can be obtained.
   * `member_uin` - Member UINNote: This field may return null, indicating that no valid values can be obtained.
   * `name` - Member nameNote: This field may return null, indicating that no valid values can be obtained.
+  * `nick_name` - Tencent Cloud nickname. Note: This field may return null, indicating that no valid values can be obtained.
   * `node_id` - Node IDNote: This field may return null, indicating that no valid values can be obtained.
   * `node_name` - Node nameNote: This field may return null, indicating that no valid values can be obtained.
   * `org_identity` - Management identityNote: This field may return null, indicating that no valid values can be obtained.
