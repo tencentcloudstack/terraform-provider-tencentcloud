@@ -62,6 +62,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `private_ip_set` - Private IP address list of the bastion host instance.
+* `public_ip_set` - Public IP address list of the bastion host instance.
 * `resource_id` - Resource instance ID.
 
 
