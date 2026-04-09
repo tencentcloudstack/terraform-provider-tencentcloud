@@ -793,7 +793,7 @@ func (me *OrganizationService) DescribeOrganizationMembersByFilter(ctx context.C
 
 	var (
 		offset uint64 = 0
-		limit  uint64 = 20
+		limit  uint64 = 50
 	)
 	for {
 		request.Offset = &offset
