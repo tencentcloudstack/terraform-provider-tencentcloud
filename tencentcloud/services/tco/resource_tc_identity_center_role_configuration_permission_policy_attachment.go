@@ -190,17 +190,23 @@ func resourceTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachme
 
 	if respData == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `identity_center_role_configuration_permission_policy_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_identity_center_role_configuration_permission_policy_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
 	if respData.RolePolicies != nil {
 		var rolePolicie *organization.RolePolicie
 		for _, r := range respData.RolePolicies {
-			if *r.RolePolicyId == rolePolicyId {
+			if r != nil && r.RolePolicyId != nil && *r.RolePolicyId == rolePolicyId {
 				rolePolicie = r
 				break
 			}
+		}
+
+		if rolePolicie == nil {
+			d.SetId("")
+			log.Printf("[WARN]%s policy [%d] not found in role configuration [%s], treating as deleted.\n", logId, rolePolicyId, roleConfigurationId)
+			return nil
 		}
 
 		if rolePolicie.RolePolicyName != nil {
