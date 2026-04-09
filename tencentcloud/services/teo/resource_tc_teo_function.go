@@ -42,6 +42,13 @@ func ResourceTencentCloudTeoFunction() *schema.Resource {
 				Description: "ID of the Function.",
 			},
 
+			"function_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "List of function IDs to query. When specified, the read operation will query multiple functions at once. If not specified, the default single function query logic will be used.",
+			},
+
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -167,43 +174,102 @@ func resourceTencentCloudTeoFunctionRead(d *schema.ResourceData, meta interface{
 
 	_ = d.Set("zone_id", zoneId)
 
-	respData, err := service.DescribeTeoFunctionById(ctx, zoneId, functionId)
-	if err != nil {
-		return err
-	}
+	// Check if function_ids parameter is set
+	if functionIds, ok := d.GetOk("function_ids"); ok {
+		// Validate function_ids is not empty
+		functionIdsList := functionIds.([]interface{})
+		if len(functionIdsList) == 0 {
+			return fmt.Errorf("function_ids cannot be empty")
+		}
 
-	if respData == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_function` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-	if respData.FunctionId != nil {
-		_ = d.Set("function_id", respData.FunctionId)
-		functionId = *respData.FunctionId
-	}
+		// Convert function_ids to []string
+		functionIdsStr := make([]string, 0, len(functionIdsList))
+		for _, v := range functionIdsList {
+			functionIdsStr = append(functionIdsStr, v.(string))
+		}
 
-	if respData.Name != nil {
-		_ = d.Set("name", respData.Name)
-	}
+		// Call service method with multiple function IDs
+		respDataList, err := service.DescribeTeoFunctionsByIds(ctx, zoneId, functionIdsStr)
+		if err != nil {
+			return err
+		}
 
-	if respData.Remark != nil {
-		_ = d.Set("remark", respData.Remark)
-	}
+		if len(respDataList) == 0 {
+			d.SetId("")
+			log.Printf("[WARN]%s resource `teo_function` not found with function_ids [%v], please check if they have been deleted.\n", logId, functionIdsStr)
+			return nil
+		}
 
-	if respData.Content != nil {
-		_ = d.Set("content", respData.Content)
-	}
+		// For backward compatibility, set the first function's data
+		respData := respDataList[0]
+		if respData.FunctionId != nil {
+			_ = d.Set("function_id", respData.FunctionId)
+			functionId = *respData.FunctionId
+		}
 
-	if respData.Domain != nil {
-		_ = d.Set("domain", respData.Domain)
-	}
+		if respData.Name != nil {
+			_ = d.Set("name", respData.Name)
+		}
 
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", respData.CreateTime)
-	}
+		if respData.Remark != nil {
+			_ = d.Set("remark", respData.Remark)
+		}
 
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", respData.UpdateTime)
+		if respData.Content != nil {
+			_ = d.Set("content", respData.Content)
+		}
+
+		if respData.Domain != nil {
+			_ = d.Set("domain", respData.Domain)
+		}
+
+		if respData.CreateTime != nil {
+			_ = d.Set("create_time", respData.CreateTime)
+		}
+
+		if respData.UpdateTime != nil {
+			_ = d.Set("update_time", respData.UpdateTime)
+		}
+	} else {
+		// Use existing single function query logic (backward compatibility)
+		respData, err := service.DescribeTeoFunctionById(ctx, zoneId, functionId)
+		if err != nil {
+			return err
+		}
+
+		if respData == nil {
+			d.SetId("")
+			log.Printf("[WARN]%s resource `teo_function` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			return nil
+		}
+		if respData.FunctionId != nil {
+			_ = d.Set("function_id", respData.FunctionId)
+			functionId = *respData.FunctionId
+		}
+
+		if respData.Name != nil {
+			_ = d.Set("name", respData.Name)
+		}
+
+		if respData.Remark != nil {
+			_ = d.Set("remark", respData.Remark)
+		}
+
+		if respData.Content != nil {
+			_ = d.Set("content", respData.Content)
+		}
+
+		if respData.Domain != nil {
+			_ = d.Set("domain", respData.Domain)
+		}
+
+		if respData.CreateTime != nil {
+			_ = d.Set("create_time", respData.CreateTime)
+		}
+
+		if respData.UpdateTime != nil {
+			_ = d.Set("update_time", respData.UpdateTime)
+		}
 	}
 
 	return nil

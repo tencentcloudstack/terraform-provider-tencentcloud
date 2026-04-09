@@ -51,6 +51,26 @@ func TestAccTencentCloudTeoFunctionResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudTeoFunctionResource_functionIds(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoFunctionWithFunctionIds,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_function.teo_function_ids", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function_ids", "name", "tf-test-function-ids"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_function.teo_function_ids", "remark", "test with function_ids"),
+				),
+			},
+		},
+	})
+}
+
 const testAccTeoFunction = `
 
 resource "tencentcloud_teo_function" "teo_function" {
@@ -76,6 +96,20 @@ resource "tencentcloud_teo_function" "teo_function" {
     EOT
     name        = "aaa-zone-2qtuhspy7cr6-1310708577"
     remark      = "test-update"
+    zone_id     = "zone-2qtuhspy7cr6"
+}
+`
+const testAccTeoFunctionWithFunctionIds = `
+
+resource "tencentcloud_teo_function" "teo_function_ids" {
+    content     = <<-EOT
+        addEventListener('fetch', e => {
+          const response = new Response('Test with function_ids');
+          e.respondWith(response);
+        });
+    EOT
+    name        = "tf-test-function-ids"
+    remark      = "test with function_ids"
     zone_id     = "zone-2qtuhspy7cr6"
 }
 `
