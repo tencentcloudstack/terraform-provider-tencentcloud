@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -19,6 +20,10 @@ func ResourceTencentCloudSqlserverAccount() *schema.Resource {
 		Delete: resourceTencentCLoudSqlserverAccountDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(30 * time.Minute),
+			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -89,10 +94,31 @@ func resourceTencentCloudSqlserverAccountCreate(d *schema.ResourceData, meta int
 
 	var outErr, inErr error
 
+	var flowId int64
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		inErr = sqlserverService.CreateSqlserverAccount(ctx, instanceId, name, password, remark, isAdmin)
+		flowId, inErr = sqlserverService.CreateSqlserverAccountReturnFlowId(ctx, instanceId, name, password, remark, isAdmin)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
+		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
+	}
+
+	outErr = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		taskStatus, inErr := sqlserverService.DescribeCloneStatusByFlowId(ctx, flowId)
+		if inErr != nil {
+			return tccommon.RetryError(inErr)
+		}
+		if taskStatus == nil || taskStatus.Status == nil {
+			return resource.RetryableError(fmt.Errorf("sqlserver account flow %d status is nil, retrying", flowId))
+		}
+		if *taskStatus.Status == int64(SQLSERVER_TASK_RUNNING) {
+			return resource.RetryableError(fmt.Errorf("sqlserver account flow %d is still running, retrying", flowId))
+		}
+		if *taskStatus.Status == int64(SQLSERVER_TASK_FAIL) {
+			return resource.NonRetryableError(fmt.Errorf("sqlserver account flow %d failed", flowId))
 		}
 		return nil
 	})
@@ -233,6 +259,7 @@ func resourceTencentCLoudSqlserverAccountDelete(d *schema.ResourceData, meta int
 	var outErr, inErr error
 	var has bool
 
+	// Block 1: confirm account exists
 	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, inErr = sqlserverService.DescribeSqlserverAccountById(ctx, instanceId, name)
 		if inErr != nil {
@@ -240,39 +267,54 @@ func resourceTencentCLoudSqlserverAccountDelete(d *schema.ResourceData, meta int
 		}
 		return nil
 	})
-
 	if outErr != nil {
 		return outErr
 	}
-
 	if !has {
 		return nil
 	}
 
+	// Block 2: call delete API only, no wait
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		inErr = sqlserverService.DeleteSqlserverAccount(ctx, instanceId, name)
+		inErr = sqlserverService.DeleteSqlserverAccountOnly(ctx, instanceId, name)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
 		return nil
 	})
-
 	if outErr != nil {
 		return outErr
 	}
 
+	// Block 3: wait for async delete to complete (status -1 → gone)
+	outErr = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		instance, has, inErr := sqlserverService.DescribeSqlserverAccountById(ctx, instanceId, name)
+		if inErr != nil {
+			return tccommon.RetryError(inErr)
+		}
+		if !has {
+			return nil
+		}
+		if int(*instance.Status) == -1 {
+			return resource.RetryableError(fmt.Errorf("deleting SQL Server account %s, status %d, retrying", id, *instance.Status))
+		}
+		return resource.NonRetryableError(fmt.Errorf("delete SQL Server account %s failed, unexpected status %d", id, *instance.Status))
+	})
+	if outErr != nil {
+		return outErr
+	}
+
+	// Block 4: final verification that account is gone
 	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		_, has, inErr = sqlserverService.DescribeSqlserverAccountById(ctx, instanceId, name)
+		_, has, inErr := sqlserverService.DescribeSqlserverAccountById(ctx, instanceId, name)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
 		if has {
-			inErr = fmt.Errorf("delete SQL Server account %s fail, account still exists from SDK DescribeSqlserverAccountById", id)
-			return resource.RetryableError(inErr)
+			return resource.RetryableError(fmt.Errorf("delete SQL Server account %s fail, account still exists", id))
 		}
 		return nil
 	})
-
 	if outErr != nil {
 		return outErr
 	}

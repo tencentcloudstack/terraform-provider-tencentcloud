@@ -663,6 +663,37 @@ func (me *SqlserverService) CreateSqlserverAccount(ctx context.Context, instance
 	return
 }
 
+func (me *SqlserverService) CreateSqlserverAccountReturnFlowId(ctx context.Context, instanceId string, userName string, password string, remark string, isAdmin bool) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := sqlserver.NewCreateAccountRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	account := sqlserver.AccountCreateInfo{UserName: &userName, Password: &password, IsAdmin: &isAdmin}
+	if remark != "" {
+		account.Remark = &remark
+	}
+	request.Accounts = []*sqlserver.AccountCreateInfo{&account}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().CreateAccount(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	flowId = *response.Response.FlowId
+	return
+}
+
 func (me *SqlserverService) DescribeSqlserverAccounts(ctx context.Context, instanceId string) (accounts []*sqlserver.AccountDetail, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := sqlserver.NewDescribeAccountsRequest()
@@ -674,7 +705,7 @@ func (me *SqlserverService) DescribeSqlserverAccounts(ctx context.Context, insta
 
 	request.InstanceId = &instanceId
 
-	var offset, limit uint64 = 0, 20
+	var offset, limit uint64 = 0, 100
 
 	for {
 		request.Offset = &offset
@@ -814,6 +845,28 @@ func (me *SqlserverService) DeleteSqlserverAccount(ctx context.Context, instance
 		}
 	})
 
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverAccountOnly(ctx context.Context, instanceId string, userName string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := sqlserver.NewDeleteAccountRequest()
+	request.UserNames = []*string{&userName}
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().DeleteAccount(request)
+	if err != nil {
+		ee, ok := err.(*SDKErrors.TencentCloudSDKError)
+		if !ok || ee.Code != "ResourceNotFound.InstanceNotFound" {
+			errRet = err
+		}
+	}
 	return
 }
 
