@@ -42,6 +42,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `token` - Role token. This field is returned by the API and used for authentication.
 
 
