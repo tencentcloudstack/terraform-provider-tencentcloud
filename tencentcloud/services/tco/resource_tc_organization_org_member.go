@@ -429,7 +429,7 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 			}
 		}
 
-		if d.HasChange("permission_ids") {
+		if d.HasChange("permission_ids") || d.HasChange("pay_uin") {
 			if v, ok := d.GetOk("permission_ids"); ok {
 				ids := v.(*schema.Set).List()
 				for i := range ids {
@@ -441,17 +441,15 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 			if v, ok := d.GetOk("policy_type"); ok {
 				request.PolicyType = helper.String(v.(string))
 			}
+
+			if v, ok := d.GetOk("pay_uin"); ok {
+				request.PayUin = helper.String(v.(string))
+			}
 		}
 
 		if d.HasChange("is_allow_quit") {
 			if v, ok := d.GetOk("is_allow_quit"); ok {
 				request.IsAllowQuit = helper.String(v.(string))
-			}
-		}
-
-		if d.HasChange("pay_uin") {
-			if v, ok := d.GetOk("pay_uin"); ok {
-				request.PayUin = helper.String(v.(string))
 			}
 		}
 
