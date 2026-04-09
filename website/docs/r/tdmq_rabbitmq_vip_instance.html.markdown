@@ -45,6 +45,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  remark                                = "Instance remark information"
+  enable_deletion_protection           = false
+  enable_risk_warning                   = false
 }
 
 # create postpaid rabbitmq instance
@@ -105,10 +108,13 @@ The following arguments are supported:
 * `band_width` - (Optional, Int) Public network bandwidth in Mbps.
 * `cluster_version` - (Optional, String) Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.
 * `enable_create_default_ha_mirror_queue` - (Optional, Bool) Mirrored queue, the default is false.
+* `enable_deletion_protection` - (Optional, Bool) Whether to enable deletion protection. Default is false. When enabled, the instance cannot be deleted.
 * `enable_public_access` - (Optional, Bool) Whether to enable public network access. Default is false.
+* `enable_risk_warning` - (Optional, Bool) Whether to enable cluster risk warning. Default is false.
 * `node_num` - (Optional, Int) The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3.
 * `node_spec` - (Optional, String) Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.
 * `pay_mode` - (Optional, Int) Payment method: 0 indicates postpaid; 1 indicates prepaid. Default: prepaid.
+* `remark` - (Optional, String) Instance remark information. This field can be used to add descriptive notes to the instance.
 * `resource_tags` - (Optional, List) Instance resource tags. Each tag is a key-value pair for resource identification and management.
 * `storage_size` - (Optional, Int) Single node storage specification, the default is 200G.
 * `time_span` - (Optional, Int) Purchase duration, the default is 1 (month).
@@ -130,6 +136,7 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_endpoint` - VPC Endpoint.
   * `vpc_id` - VPC ID.
 
+~> **NOTE:** When `enable_deletion_protection` is set to `true`, the instance cannot be deleted. To delete the instance, you must first set `enable_deletion_protection` to `false` and apply the change, then delete the instance.
 
 ## Import
 

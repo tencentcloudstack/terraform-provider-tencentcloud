@@ -152,6 +152,21 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 					},
 				},
 			},
+			"remark": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Instance remark information.",
+			},
+			"enable_deletion_protection": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable deletion protection. Default is false.",
+			},
+			"enable_risk_warning": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable cluster risk warning. Default is false.",
+			},
 		},
 	}
 }
@@ -241,6 +256,18 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOkExists("enable_public_access"); ok {
 		request.EnablePublicAccess = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("remark"); ok {
+		request.Remark = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+		request.EnableDeletionProtection = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+		request.EnableRiskWarning = helper.Bool(v.(bool))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -381,6 +408,18 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
+	if rabbitmqVipInstance.Remark != nil {
+		_ = d.Set("remark", rabbitmqVipInstance.Remark)
+	}
+
+	if rabbitmqVipInstance.EnableDeletionProtection != nil {
+		_ = d.Set("enable_deletion_protection", rabbitmqVipInstance.EnableDeletionProtection)
+	}
+
+	if rabbitmqVipInstance.EnableRiskWarning != nil {
+		_ = d.Set("enable_risk_warning", rabbitmqVipInstance.EnableRiskWarning)
+	}
+
 	paramMap := make(map[string]interface{})
 	tmpSet := make([]*tdmq.Filter, 0)
 	filter := tdmq.Filter{}
@@ -497,6 +536,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		} else {
 			// If resource_tags is removed, set RemoveAllTags to true
 			request.RemoveAllTags = helper.Bool(true)
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}

@@ -70,6 +70,96 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 	})
 }
 
+// TestAccTencentCloudTdmqRabbitmqVipInstanceResource_remark tests the remark field functionality
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_remark(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithRemark,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "remark", "Initial remark for testing"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithRemarkUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "remark", "Updated remark for testing"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
+// TestAccTencentCloudTdmqRabbitmqVipInstanceResource_deletionProtection tests the enable_deletion_protection field
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_deletionProtection(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithDeletionProtection,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_deletion_protection", "true"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithDeletionProtectionUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_deletion_protection", "false"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
+// TestAccTencentCloudTdmqRabbitmqVipInstanceResource_riskWarning tests the enable_risk_warning field
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_riskWarning(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithRiskWarning,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_risk_warning", "true"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithRiskWarningUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_risk_warning", "false"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTdmqRabbitmqVipInstanceExists(re string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -195,5 +285,197 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithRemark = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-remark-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet-remark-test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids      = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id        = tencentcloud_vpc.vpc.id
+  subnet_id     = tencentcloud_subnet.subnet.id
+  cluster_name  = "tf-remark-test"
+  node_spec     = "rabbit-vip-basic-1"
+  node_num      = 1
+  storage_size  = 200
+  remark        = "Initial remark for testing"
+  auto_renew_flag = true
+  time_span    = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithRemarkUpdate = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-remark-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet-remark-test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids      = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id        = tencentcloud_vpc.vpc.id
+  subnet_id     = tencentcloud_subnet.subnet.id
+  cluster_name  = "tf-remark-test"
+  node_spec     = "rabbit-vip-basic-1"
+  node_num      = 1
+  storage_size  = 200
+  remark        = "Updated remark for testing"
+  auto_renew_flag = true
+  time_span    = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithDeletionProtection = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-del-protection-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet-del-protection-test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                    = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                      = tencentcloud_vpc.vpc.id
+  subnet_id                   = tencentcloud_subnet.subnet.id
+  cluster_name                = "tf-del-protection-test"
+  node_spec                   = "rabbit-vip-basic-1"
+  node_num                    = 1
+  storage_size                = 200
+  enable_deletion_protection  = true
+  auto_renew_flag            = true
+  time_span                  = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithDeletionProtectionUpdate = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-del-protection-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet-del-protection-test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                    = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                      = tencentcloud_vpc.vpc.id
+  subnet_id                   = tencentcloud_subnet.subnet.id
+  cluster_name                = "tf-del-protection-test"
+  node_spec                   = "rabbit-vip-basic-1"
+  node_num                    = 1
+  storage_size                = 200
+  enable_deletion_protection  = false
+  auto_renew_flag            = true
+  time_span                  = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithRiskWarning = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-risk-warning-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet-risk-warning-test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids               = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  cluster_name           = "tf-risk-warning-test"
+  node_spec              = "rabbit-vip-basic-1"
+  node_num               = 1
+  storage_size           = 200
+  enable_risk_warning    = true
+  auto_renew_flag       = true
+  time_span             = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithRiskWarningUpdate = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-risk-warning-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet-risk-warning-test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids               = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  cluster_name           = "tf-risk-warning-test"
+  node_spec              = "rabbit-vip-basic-1"
+  node_num               = 1
+  storage_size           = 200
+  enable_risk_warning    = false
+  auto_renew_flag       = true
+  time_span             = 1
 }
 `

@@ -34,6 +34,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  remark                                = "Instance remark information"
+  enable_deletion_protection           = false
+  enable_risk_warning                   = false
 }
 
 # create postpaid rabbitmq instance
