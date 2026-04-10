@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a dasb bind device resource
 
+~> **NOTE:** This resource must exclusive in one dasb resource, do not declare additional rule resources of this device elsewhere.
+
 ## Example Usage
 
 ```hcl
