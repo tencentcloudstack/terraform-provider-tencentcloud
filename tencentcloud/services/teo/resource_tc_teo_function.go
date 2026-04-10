@@ -77,6 +77,115 @@ func ResourceTencentCloudTeoFunction() *schema.Resource {
 				Computed:    true,
 				Description: "Modification time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.",
 			},
+
+			"environment_variables": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "The environment variable list for the function.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The name of the variable, which is limited to alphanumeric characters and the special characters `@`, `.`, `-`, and `_`. It can have a maximum of 64 bytes and should not be duplicated.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The value of the variable, which is limited to a maximum of 5000 bytes. The default value is empty.",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "string",
+							Description: "The type of the variable can have the following values:  - `string`: Represents a string type.  - `json`: Represents a JSON object type.",
+						},
+					},
+				},
+			},
+
+			"rules": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "The function rule list for the function.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rule_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the Function Rule.",
+						},
+						"remark": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Rule description, maximum support of 60 characters.",
+						},
+						"priority": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The priority of function trigger rule. A higher numerical value indicates a higher priority.",
+						},
+						"function_rule_conditions": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "The list of rule conditions, where conditions are connected by an \"OR\" relationship.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rule_conditions": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "For edge function trigger rule conditions, if all items in list are satisfied, then condition is considered fulfilled.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"operator": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Operator. Valid values:\n  - `equals`: Equals.\n  - `notEquals`: Does not equal.\n  - `exist`: Exists.\n  - `notexist`: Does not exist.",
+												},
+												"target": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "The match type. Values:\n  - `filename`: File name.\n  - `extension`: File extension.\n  - `host`: Host.\n  - `full_url`: Full URL, which indicates to complete URL path under current site and must contain HTTP protocol, host, and path.\n  - `url`: Partial URL under current site.\n  - `client_country`: Country/Region of client.\n  - `query_string`: Query string in request URL.\n  - `request_header`: HTTP request header.",
+												},
+												"values": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Description: "The parameter value of match type.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"ignore_case": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Whether parameter value is case insensitive. Default value: false.",
+												},
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "The parameter name of match type. This field is required only when `Target=query_string/request_header`.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
+			"region_selection": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "The region selection configuration for the function deployment. If not specified, the function is deployed globally.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -145,6 +254,20 @@ func resourceTencentCloudTeoFunctionCreate(d *schema.ResourceData, meta interfac
 	}
 	d.SetId(strings.Join([]string{zoneId, functionId}, tccommon.FILED_SP))
 
+	// Handle environment variables after function creation
+	if v, ok := d.GetOk("environment_variables"); ok && len(v.([]interface{})) > 0 {
+		if err := handleTeoFunctionEnvironmentVariables(ctx, d, meta, zoneId, functionId, "setEnvironmentVariable"); err != nil {
+			return err
+		}
+	}
+
+	// Handle rules after function creation
+	if v, ok := d.GetOk("rules"); ok && len(v.([]interface{})) > 0 {
+		if err := handleTeoFunctionRules(ctx, d, meta, zoneId, functionId); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudTeoFunctionRead(d, meta)
 }
 
@@ -206,6 +329,101 @@ func resourceTencentCloudTeoFunctionRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("update_time", respData.UpdateTime)
 	}
 
+	// Read environment variables
+	envService := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	envData, err := envService.DescribeTeoFunctionRuntimeEnvironmentById(ctx, zoneId, functionId)
+	if err == nil && envData != nil && len(envData.EnvironmentVariables) > 0 {
+		environmentVariablesList := make([]map[string]interface{}, 0, len(envData.EnvironmentVariables))
+		for _, environmentVariables := range envData.EnvironmentVariables {
+			environmentVariablesMap := map[string]interface{}{}
+
+			if environmentVariables.Key != nil {
+				environmentVariablesMap["key"] = environmentVariables.Key
+			}
+
+			if environmentVariables.Value != nil {
+				environmentVariablesMap["value"] = environmentVariables.Value
+			}
+
+			if environmentVariables.Type != nil {
+				environmentVariablesMap["type"] = environmentVariables.Type
+			}
+
+			environmentVariablesList = append(environmentVariablesList, environmentVariablesMap)
+		}
+
+		_ = d.Set("environment_variables", environmentVariablesList)
+	}
+
+	// Read rules
+	ruleData, err := envService.DescribeTeoFunctionRulesByFunctionId(ctx, zoneId, functionId)
+	if err == nil && ruleData != nil && len(ruleData.FunctionRules) > 0 {
+		rulesList := make([]map[string]interface{}, 0, len(ruleData.FunctionRules))
+		for _, rule := range ruleData.FunctionRules {
+			ruleMap := map[string]interface{}{}
+
+			if rule.RuleId != nil {
+				ruleMap["rule_id"] = rule.RuleId
+			}
+
+			if rule.Remark != nil {
+				ruleMap["remark"] = rule.Remark
+			}
+
+			if rule.Priority != nil {
+				ruleMap["priority"] = rule.Priority
+			}
+
+			if rule.FunctionRuleConditions != nil {
+				functionRuleConditionsList := make([]map[string]interface{}, 0, len(rule.FunctionRuleConditions))
+				for _, functionRuleCondition := range rule.FunctionRuleConditions {
+					functionRuleConditionMap := map[string]interface{}{}
+
+					if functionRuleCondition.RuleConditions != nil {
+						ruleConditionsList := make([]map[string]interface{}, 0, len(functionRuleCondition.RuleConditions))
+						for _, ruleCondition := range functionRuleCondition.RuleConditions {
+							ruleConditionMap := map[string]interface{}{}
+
+							if ruleCondition.Operator != nil {
+								ruleConditionMap["operator"] = ruleCondition.Operator
+							}
+
+							if ruleCondition.Target != nil {
+								ruleConditionMap["target"] = ruleCondition.Target
+							}
+
+							if ruleCondition.Values != nil {
+								valuesSet := schema.NewSet(schema.HashString, []interface{}{})
+								for _, val := range ruleCondition.Values {
+									valuesSet.Add(*val)
+								}
+								ruleConditionMap["values"] = valuesSet
+							}
+
+							if ruleCondition.IgnoreCase != nil {
+								ruleConditionMap["ignore_case"] = ruleCondition.IgnoreCase
+							}
+
+							if ruleCondition.Name != nil {
+								ruleConditionMap["name"] = ruleCondition.Name
+							}
+
+							ruleConditionsList = append(ruleConditionsList, ruleConditionMap)
+						}
+						functionRuleConditionMap["rule_conditions"] = ruleConditionsList
+					}
+
+					functionRuleConditionsList = append(functionRuleConditionsList, functionRuleConditionMap)
+				}
+				ruleMap["function_rule_conditions"] = functionRuleConditionsList
+			}
+
+			rulesList = append(rulesList, ruleMap)
+		}
+
+		_ = d.Set("rules", rulesList)
+	}
+
 	return nil
 }
 
@@ -231,7 +449,7 @@ func resourceTencentCloudTeoFunctionUpdate(d *schema.ResourceData, meta interfac
 	functionId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"remark", "content"}
+	mutableArgs := []string{"remark", "content", "environment_variables", "rules"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -254,18 +472,60 @@ func resourceTencentCloudTeoFunctionUpdate(d *schema.ResourceData, meta interfac
 			request.Content = helper.String(v.(string))
 		}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyFunctionWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if d.HasChange("remark") || d.HasChange("content") {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyFunctionWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update teo function failed, reason:%+v", logId, err)
+				return err
 			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update teo function failed, reason:%+v", logId, err)
-			return err
+		}
+
+		// Handle environment variables update
+		if d.HasChange("environment_variables") {
+			_, new := d.GetChange("environment_variables")
+			if len(new.([]interface{})) == 0 {
+				// Clear all environment variables
+				if err := handleTeoFunctionEnvironmentVariables(ctx, d, meta, zoneId, functionId, "clearEnvironmentVariable"); err != nil {
+					return err
+				}
+			} else {
+				// Set or reset environment variables
+				if err := handleTeoFunctionEnvironmentVariables(ctx, d, meta, zoneId, functionId, "resetEnvironmentVariable"); err != nil {
+					return err
+				}
+			}
+		}
+
+		// Handle rules update
+		if d.HasChange("rules") {
+			old, new := d.GetChange("rules")
+			oldRules := old.([]interface{})
+			newRules := new.([]interface{})
+
+			// Delete old rules
+			for _, oldRule := range oldRules {
+				oldRuleMap := oldRule.(map[string]interface{})
+				if ruleId, ok := oldRuleMap["rule_id"].(string); ok && ruleId != "" {
+					if err := deleteTeoFunctionRule(ctx, d, meta, zoneId, ruleId); err != nil {
+						return err
+					}
+				}
+			}
+
+			// Create new rules
+			if len(newRules) > 0 {
+				if err := handleTeoFunctionRules(ctx, d, meta, zoneId, functionId); err != nil {
+					return err
+				}
+			}
 		}
 	}
 
@@ -360,3 +620,141 @@ func resourceTeoFunctionCreateStateRefreshFunc_0_0(ctx context.Context, zoneId s
 		return resp.Response, state, nil
 	}
 }
+
+// handleTeoFunctionEnvironmentVariables handles environment variables for a function
+func handleTeoFunctionEnvironmentVariables(ctx context.Context, d *schema.ResourceData, meta interface{}, zoneId string, functionId string, operation string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewHandleFunctionRuntimeEnvironmentRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.FunctionId = helper.String(functionId)
+	request.Operation = helper.String(operation)
+
+	if v, ok := d.GetOk("environment_variables"); ok {
+		for _, item := range v.([]interface{}) {
+			environmentVariablesMap := item.(map[string]interface{})
+			functionEnvironmentVariable := teov20220901.FunctionEnvironmentVariable{}
+			if v, ok := environmentVariablesMap["key"]; ok {
+				functionEnvironmentVariable.Key = helper.String(v.(string))
+			}
+			if v, ok := environmentVariablesMap["value"]; ok {
+				functionEnvironmentVariable.Value = helper.String(v.(string))
+			}
+			if v, ok := environmentVariablesMap["type"]; ok {
+				functionEnvironmentVariable.Type = helper.String(v.(string))
+			}
+			request.EnvironmentVariables = append(request.EnvironmentVariables, &functionEnvironmentVariable)
+		}
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().HandleFunctionRuntimeEnvironmentWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s handle teo function environment variables failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+// handleTeoFunctionRules handles rules for a function
+func handleTeoFunctionRules(ctx context.Context, d *schema.ResourceData, meta interface{}, zoneId string, functionId string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	if v, ok := d.GetOk("rules"); ok {
+		for _, item := range v.([]interface{}) {
+			ruleMap := item.(map[string]interface{})
+
+			request := teov20220901.NewCreateFunctionRuleRequest()
+			request.ZoneId = helper.String(zoneId)
+			request.FunctionId = helper.String(functionId)
+
+			if v, ok := ruleMap["remark"]; ok && v.(string) != "" {
+				request.Remark = helper.String(v.(string))
+			}
+
+			if v, ok := ruleMap["function_rule_conditions"]; ok {
+				for _, item := range v.([]interface{}) {
+					functionRuleConditionsMap := item.(map[string]interface{})
+					functionRuleCondition := teov20220901.FunctionRuleCondition{}
+					if v, ok := functionRuleConditionsMap["rule_conditions"]; ok {
+						for _, item := range v.([]interface{}) {
+							ruleConditionsMap := item.(map[string]interface{})
+							ruleCondition := teov20220901.RuleCondition{}
+							if v, ok := ruleConditionsMap["operator"]; ok {
+								ruleCondition.Operator = helper.String(v.(string))
+							}
+							if v, ok := ruleConditionsMap["target"]; ok {
+								ruleCondition.Target = helper.String(v.(string))
+							}
+							if v, ok := ruleConditionsMap["values"]; ok {
+								valuesSet := v.(*schema.Set).List()
+								for i := range valuesSet {
+									values := valuesSet[i].(string)
+									ruleCondition.Values = append(ruleCondition.Values, helper.String(values))
+								}
+							}
+							if v, ok := ruleConditionsMap["ignore_case"]; ok {
+								ruleCondition.IgnoreCase = helper.Bool(v.(bool))
+							}
+							if v, ok := ruleConditionsMap["name"]; ok {
+								ruleCondition.Name = helper.String(v.(string))
+							}
+							functionRuleCondition.RuleConditions = append(functionRuleCondition.RuleConditions, &ruleCondition)
+						}
+					}
+					request.FunctionRuleConditions = append(request.FunctionRuleConditions, &functionRuleCondition)
+				}
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateFunctionRuleWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s create teo function rule failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+// deleteTeoFunctionRule deletes a function rule
+func deleteTeoFunctionRule(ctx context.Context, d *schema.ResourceData, meta interface{}, zoneId string, ruleId string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDeleteFunctionRulesRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.RuleIds = []*string{helper.String(ruleId)}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteFunctionRulesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s delete teo function rule failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
