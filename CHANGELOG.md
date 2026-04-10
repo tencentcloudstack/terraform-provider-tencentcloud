@@ -1,3 +1,22 @@
+## 1.82.85(April 10, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_organization_members` ([#3975](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3975))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_bh_resource: add new params ([#3979](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3979))
+* resource/tencentcloud_cls_alarm_notice: support new params ([#3976](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3976))
+* resource/tencentcloud_dasb_bind_device_resource: support importer and update doc ([#3988](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3988))
+* resource/tencentcloud_identity_center_role_configuration_permission_policy_attachment: optimize read function code logic ([#3980](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3980))
+* resource/tencentcloud_mongodb_instance: update `availability_zone_list` param ([#3872](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3872))
+* resource/tencentcloud_mongodb_readonly_instance: update `availability_zone_list` param ([#3872](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3872))
+* resource/tencentcloud_mongodb_sharding_instance: update `availability_zone_list` param ([#3872](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3872))
+* resource/tencentcloud_organization_org_member: optimize update function code logic ([#3985](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3985))
+* resource/tencentcloud_sqlserver_account: suppoort `timeouts` ([#3982](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3982))
+* resource/tencentcloud_tdmq_role: add new param ([#3978](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3978))
+
 ## 1.82.84(April 7, 2026)
 
 FEATURES:
