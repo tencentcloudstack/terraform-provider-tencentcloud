@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -223,4 +224,156 @@ desc: this is a description`
 	assert.Equalf(t, err1, nil, "")
 	assert.Equalf(t, reflect.TypeOf(yaml1).String(), "map[interface {}]interface {}", "")
 	assert.Equalf(t, yaml1["name"], "test-name", "")
+}
+
+func TestStringListDiffSuppressIgnoreOrder(t *testing.T) {
+	testCases := []struct {
+		name     string
+		old      []interface{}
+		new      []interface{}
+		expected bool
+	}{
+		{
+			name:     "same order",
+			old:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"},
+			new:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"},
+			expected: true,
+		},
+		{
+			name:     "different order same content",
+			old:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"},
+			new:      []interface{}{"ap-guangzhou-6", "ap-guangzhou-3", "ap-guangzhou-4"},
+			expected: true,
+		},
+		{
+			name:     "different order same content - reverse",
+			old:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"},
+			new:      []interface{}{"ap-guangzhou-6", "ap-guangzhou-4", "ap-guangzhou-3"},
+			expected: true,
+		},
+		{
+			name:     "different content",
+			old:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4"},
+			new:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-5"},
+			expected: false,
+		},
+		{
+			name:     "different length - old longer",
+			old:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4"},
+			new:      []interface{}{"ap-guangzhou-3"},
+			expected: false,
+		},
+		{
+			name:     "different length - new longer",
+			old:      []interface{}{"ap-guangzhou-3"},
+			new:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4"},
+			expected: false,
+		},
+		{
+			name:     "both empty",
+			old:      []interface{}{},
+			new:      []interface{}{},
+			expected: true,
+		},
+		{
+			name:     "single element",
+			old:      []interface{}{"ap-guangzhou-3"},
+			new:      []interface{}{"ap-guangzhou-3"},
+			expected: true,
+		},
+		{
+			name:     "two elements swapped",
+			old:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4"},
+			new:      []interface{}{"ap-guangzhou-4", "ap-guangzhou-3"},
+			expected: true,
+		},
+		{
+			name:     "completely different zones",
+			old:      []interface{}{"ap-guangzhou-3", "ap-guangzhou-4", "ap-guangzhou-6"},
+			new:      []interface{}{"ap-shanghai-1", "ap-shanghai-2", "ap-shanghai-3"},
+			expected: false,
+		},
+	}
+
+	fieldName := "availability_zone_list"
+	suppressFn := StringListDiffSuppressIgnoreOrder(fieldName)
+	resourceSchema := map[string]*schema.Schema{
+		fieldName: {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			d := schema.TestResourceDataRaw(t, resourceSchema, map[string]interface{}{
+				fieldName: tc.old,
+			})
+			_ = d.Set(fieldName, tc.new)
+
+			result := suppressFn(fieldName, "", "", d)
+			if result != tc.expected {
+				t.Errorf("expected %v, got %v (old: %v, new: %v)", tc.expected, result, tc.old, tc.new)
+			}
+		})
+	}
+}
+
+func TestStringListDiffSuppressIgnoreOrder_SubElements(t *testing.T) {
+	fieldName := "availability_zone_list"
+	suppressFn := StringListDiffSuppressIgnoreOrder(fieldName)
+	resourceSchema := map[string]*schema.Schema{
+		fieldName: {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		},
+	}
+
+	d := schema.TestResourceDataRaw(t, resourceSchema, map[string]interface{}{
+		fieldName: []interface{}{"ap-guangzhou-3", "ap-guangzhou-4"},
+	})
+	_ = d.Set(fieldName, []interface{}{"ap-guangzhou-4", "ap-guangzhou-3"})
+
+	testCases := []struct {
+		name     string
+		key      string
+		expected bool
+	}{
+		{
+			name:     "list root key",
+			key:      "availability_zone_list",
+			expected: true,
+		},
+		{
+			name:     "list count key",
+			key:      "availability_zone_list.#",
+			expected: true,
+		},
+		{
+			name:     "first element",
+			key:      "availability_zone_list.0",
+			expected: false,
+		},
+		{
+			name:     "second element",
+			key:      "availability_zone_list.1",
+			expected: false,
+		},
+		{
+			name:     "unrelated key",
+			key:      "some_other_field",
+			expected: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := suppressFn(tc.key, "", "", d)
+			if result != tc.expected {
+				t.Errorf("key %s: expected %v, got %v", tc.key, tc.expected, result)
+			}
+		})
+	}
 }

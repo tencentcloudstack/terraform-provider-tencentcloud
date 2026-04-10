@@ -107,7 +107,7 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			Type:             schema.TypeList,
 			Optional:         true,
 			Computed:         true,
-			DiffSuppressFunc: mongodbAvailabilityZoneListDiffSuppress,
+			DiffSuppressFunc: tccommon.StringListDiffSuppressIgnoreOrder("availability_zone_list"),
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
