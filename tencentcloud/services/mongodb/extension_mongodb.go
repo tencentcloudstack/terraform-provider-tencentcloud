@@ -116,7 +116,6 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"available_zone": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "The available zone of the Mongodb.",
 		},
 		"vpc_id": {

@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: update `availability_zone_list` param
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: update `availability_zone_list` param
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_readonly_instance: update `availability_zone_list` param
+```

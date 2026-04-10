@@ -66,7 +66,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.48
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.65
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.49
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.3.45
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.3.54
