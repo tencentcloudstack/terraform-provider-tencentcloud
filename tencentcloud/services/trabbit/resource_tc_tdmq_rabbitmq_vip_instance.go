@@ -432,41 +432,41 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			_ = d.Set("public_access_endpoint", result[0].PublicAccessEndpoint)
 		}
 
-	if result[0].Vpcs != nil {
-		tmpList := make([]map[string]interface{}, 0, len(result[0].Vpcs))
-		for _, vpc := range result[0].Vpcs {
-			vpcMap := map[string]interface{}{}
-			if vpc.VpcId != nil {
-				vpcMap["vpc_id"] = vpc.VpcId
+		if result[0].Vpcs != nil {
+			tmpList := make([]map[string]interface{}, 0, len(result[0].Vpcs))
+			for _, vpc := range result[0].Vpcs {
+				vpcMap := map[string]interface{}{}
+				if vpc.VpcId != nil {
+					vpcMap["vpc_id"] = vpc.VpcId
+				}
+				if vpc.SubnetId != nil {
+					vpcMap["subnet_id"] = vpc.SubnetId
+				}
+				if vpc.VpcEndpoint != nil {
+					vpcMap["vpc_endpoint"] = vpc.VpcEndpoint
+				}
+				if vpc.VpcDataStreamEndpointStatus != nil {
+					vpcMap["vpc_data_stream_endpoint_status"] = vpc.VpcDataStreamEndpointStatus
+				}
+				tmpList = append(tmpList, vpcMap)
 			}
-			if vpc.SubnetId != nil {
-				vpcMap["subnet_id"] = vpc.SubnetId
-			}
-			if vpc.VpcEndpoint != nil {
-				vpcMap["vpc_endpoint"] = vpc.VpcEndpoint
-			}
-			if vpc.VpcDataStreamEndpointStatus != nil {
-				vpcMap["vpc_data_stream_endpoint_status"] = vpc.VpcDataStreamEndpointStatus
-			}
-			tmpList = append(tmpList, vpcMap)
+			_ = d.Set("vpcs", tmpList)
 		}
-		_ = d.Set("vpcs", tmpList)
-	}
 
-	// TODO: Uncomment and verify field names after SDK update
-	// if result[0].Remark != nil {
-	// 	_ = d.Set("remark", result[0].Remark)
-	// }
-	//
-	// if result[0].EnableDeletionProtection != nil {
-	// 	_ = d.Set("enable_deletion_protection", result[0].EnableDeletionProtection)
-	// }
-	//
-	// if result[0].EnableRiskWarning != nil {
-	// 	_ = d.Set("enable_risk_warning", result[0].EnableRiskWarning)
-	// }
+		// TODO: Uncomment and verify field names after SDK update
+		// if result[0].Remark != nil {
+		// 	_ = d.Set("remark", result[0].Remark)
+		// }
+		//
+		// if result[0].EnableDeletionProtection != nil {
+		// 	_ = d.Set("enable_deletion_protection", result[0].EnableDeletionProtection)
+		// }
+		//
+		// if result[0].EnableRiskWarning != nil {
+		// 	_ = d.Set("enable_risk_warning", result[0].EnableRiskWarning)
+		// }
 
-	return nil
+		return nil
 	})
 
 	if err != nil {
