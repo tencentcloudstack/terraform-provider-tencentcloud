@@ -45,6 +45,8 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  enable_deletion_protection            = true
+  remark                               = "Initial setup"
 }
 
 # create postpaid rabbitmq instance
@@ -61,6 +63,8 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
   time_span                             = 1
   pay_mode                              = 0
   cluster_version                       = "3.11.8"
+  enable_deletion_protection            = false
+  remark                               = "Postpaid instance"
   resource_tags {
     tag_key   = "tagKey"
     tag_value = "tagValue"
@@ -93,6 +97,48 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
 }
 ```
 
+### Update instance parameters
+
+The following parameters can be updated after instance creation:
+- `cluster_name` - Cluster name
+- `remark` - Instance remark
+- `enable_deletion_protection` - Deletion protection setting
+- `resource_tags` - Resource tags
+
+The following parameters cannot be changed after instance creation and require recreation:
+- `zone_ids` - Availability zones
+- `vpc_id` - VPC ID
+- `subnet_id` - Subnet ID
+- `node_spec` - Node specifications
+- `node_num` - Node count
+- `storage_size` - Storage size
+- `band_width` - Public network bandwidth
+- `auto_renew_flag` - Auto renewal flag
+- `enable_public_access` - Public network access
+- `enable_create_default_ha_mirror_queue` - HA mirror queue setting
+- `time_span` - Purchase duration
+- `pay_mode` - Payment mode
+- `cluster_version` - Cluster version
+
+Example of updating mutable parameters:
+
+```hcl
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  enable_deletion_protection            = false
+  remark                               = "Updated configuration"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -105,10 +151,12 @@ The following arguments are supported:
 * `band_width` - (Optional, Int) Public network bandwidth in Mbps.
 * `cluster_version` - (Optional, String) Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.
 * `enable_create_default_ha_mirror_queue` - (Optional, Bool) Mirrored queue, the default is false.
+* `enable_deletion_protection` - (Optional, Bool) Whether to enable deletion protection. Default is false.
 * `enable_public_access` - (Optional, Bool) Whether to enable public network access. Default is false.
 * `node_num` - (Optional, Int) The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3.
 * `node_spec` - (Optional, String) Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.
 * `pay_mode` - (Optional, Int) Payment method: 0 indicates postpaid; 1 indicates prepaid. Default: prepaid.
+* `remark` - (Optional, String) The remark of the instance.
 * `resource_tags` - (Optional, List) Instance resource tags. Each tag is a key-value pair for resource identification and management.
 * `storage_size` - (Optional, Int) Single node storage specification, the default is 200G.
 * `time_span` - (Optional, Int) Purchase duration, the default is 1 (month).

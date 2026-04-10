@@ -118,6 +118,18 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Description: "Whether to enable public network access. Default is false.",
 			},
+			"enable_deletion_protection": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether to enable deletion protection. Default is false.",
+			},
+			"remark": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The remark of the instance.",
+			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -259,6 +271,14 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOkExists("enable_public_access"); ok {
 		request.EnablePublicAccess = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+		request.EnableDeletionProtection = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("remark"); ok {
+		request.Remark = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -432,6 +452,14 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			_ = d.Set("public_access_endpoint", result[0].PublicAccessEndpoint)
 		}
 
+		if result[0].EnableDeletionProtection != nil {
+			_ = d.Set("enable_deletion_protection", result[0].EnableDeletionProtection)
+		}
+
+		if result[0].Remark != nil {
+			_ = d.Set("remark", result[0].Remark)
+		}
+
 		if result[0].Vpcs != nil {
 			tmpList := make([]map[string]interface{}, 0, len(result[0].Vpcs))
 			for _, vpc := range result[0].Vpcs {
@@ -522,6 +550,20 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	// Handle tags update
 	if handleTagsUpdate(d, request) {
 		needUpdate = true
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
 	}
 
 	if needUpdate {
