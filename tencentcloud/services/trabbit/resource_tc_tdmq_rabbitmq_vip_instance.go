@@ -123,6 +123,24 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Public Network Access Point.",
 			},
+			"remark": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Instance remark information.",
+			},
+			"enable_deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable deletion protection. Default is false.",
+			},
+			"enable_risk_warning": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable cluster risk warning.",
+			},
 			"vpcs": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -414,28 +432,41 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			_ = d.Set("public_access_endpoint", result[0].PublicAccessEndpoint)
 		}
 
-		if result[0].Vpcs != nil {
-			tmpList := make([]map[string]interface{}, 0, len(result[0].Vpcs))
-			for _, vpc := range result[0].Vpcs {
-				vpcMap := map[string]interface{}{}
-				if vpc.VpcId != nil {
-					vpcMap["vpc_id"] = vpc.VpcId
-				}
-				if vpc.SubnetId != nil {
-					vpcMap["subnet_id"] = vpc.SubnetId
-				}
-				if vpc.VpcEndpoint != nil {
-					vpcMap["vpc_endpoint"] = vpc.VpcEndpoint
-				}
-				if vpc.VpcDataStreamEndpointStatus != nil {
-					vpcMap["vpc_data_stream_endpoint_status"] = vpc.VpcDataStreamEndpointStatus
-				}
-				tmpList = append(tmpList, vpcMap)
+	if result[0].Vpcs != nil {
+		tmpList := make([]map[string]interface{}, 0, len(result[0].Vpcs))
+		for _, vpc := range result[0].Vpcs {
+			vpcMap := map[string]interface{}{}
+			if vpc.VpcId != nil {
+				vpcMap["vpc_id"] = vpc.VpcId
 			}
-			_ = d.Set("vpcs", tmpList)
+			if vpc.SubnetId != nil {
+				vpcMap["subnet_id"] = vpc.SubnetId
+			}
+			if vpc.VpcEndpoint != nil {
+				vpcMap["vpc_endpoint"] = vpc.VpcEndpoint
+			}
+			if vpc.VpcDataStreamEndpointStatus != nil {
+				vpcMap["vpc_data_stream_endpoint_status"] = vpc.VpcDataStreamEndpointStatus
+			}
+			tmpList = append(tmpList, vpcMap)
 		}
+		_ = d.Set("vpcs", tmpList)
+	}
 
-		return nil
+	// TODO: Uncomment and verify field names after SDK update
+	// if result[0].Remark != nil {
+	// 	_ = d.Set("remark", result[0].Remark)
+	// }
+	//
+	// if result[0].EnableDeletionProtection != nil {
+	// 	_ = d.Set("enable_deletion_protection", result[0].EnableDeletionProtection)
+	// }
+	//
+	// if result[0].EnableRiskWarning != nil {
+	// 	_ = d.Set("enable_risk_warning", result[0].EnableRiskWarning)
+	// }
+
+	return nil
 	})
 
 	if err != nil {
@@ -457,22 +488,15 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		instanceId = d.Id()
 	)
 
-	immutableArgs := []string{
-		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
-		"storage_size", "enable_create_default_ha_mirror_queue",
-		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
-		"band_width", "enable_public_access",
-	}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
+	// Check immutable parameters
+	if err := checkImmutableArgs(d); err != nil {
+		return err
 	}
 
 	request.InstanceId = &instanceId
 	needUpdate := false
 
+	// Handle cluster name update
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
@@ -480,25 +504,24 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	if d.HasChange("resource_tags") {
-		if v, ok := d.GetOk("resource_tags"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				tag := tdmq.Tag{}
-				if v, ok := dMap["tag_key"]; ok {
-					tag.TagKey = helper.String(v.(string))
-				}
-				if v, ok := dMap["tag_value"]; ok {
-					tag.TagValue = helper.String(v.(string))
-				}
-				request.Tags = append(request.Tags, &tag)
-			}
-			needUpdate = true
-		} else {
-			// If resource_tags is removed, set RemoveAllTags to true
-			request.RemoveAllTags = helper.Bool(true)
-			needUpdate = true
-		}
+	// Handle remark update
+	if handleRemarkUpdate(d, request) {
+		needUpdate = true
+	}
+
+	// Handle deletion protection update
+	if handleDeletionProtectionUpdate(d, request) {
+		needUpdate = true
+	}
+
+	// Handle risk warning update
+	if handleRiskWarningUpdate(d, request) {
+		needUpdate = true
+	}
+
+	// Handle tags update
+	if handleTagsUpdate(d, request) {
+		needUpdate = true
 	}
 
 	if needUpdate {
@@ -520,6 +543,75 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	}
 
 	return resourceTencentCloudTdmqRabbitmqVipInstanceRead(d, meta)
+}
+
+func checkImmutableArgs(d *schema.ResourceData) error {
+	immutableArgs := []string{
+		"zone_ids", "vpc_id", "subnet_id", "node_spec", "node_num",
+		"storage_size", "enable_create_default_ha_mirror_queue",
+		"auto_renew_flag", "time_span", "pay_mode", "cluster_version",
+		"band_width", "enable_public_access",
+	}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	return nil
+}
+
+func handleRemarkUpdate(d *schema.ResourceData, request *tdmq.ModifyRabbitMQVipInstanceRequest) bool {
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+		}
+		return true
+	}
+	return false
+}
+
+func handleDeletionProtectionUpdate(d *schema.ResourceData, request *tdmq.ModifyRabbitMQVipInstanceRequest) bool {
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+		}
+		return true
+	}
+	return false
+}
+
+func handleRiskWarningUpdate(d *schema.ResourceData, request *tdmq.ModifyRabbitMQVipInstanceRequest) bool {
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
+		}
+		return true
+	}
+	return false
+}
+
+func handleTagsUpdate(d *schema.ResourceData, request *tdmq.ModifyRabbitMQVipInstanceRequest) bool {
+	if d.HasChange("resource_tags") {
+		request.Tags = []*tdmq.Tag{}
+		if v, ok := d.GetOk("resource_tags"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				tag := tdmq.Tag{}
+				if v, ok := dMap["tag_key"]; ok {
+					tag.TagKey = helper.String(v.(string))
+				}
+				if v, ok := dMap["tag_value"]; ok {
+					tag.TagValue = helper.String(v.(string))
+				}
+				request.Tags = append(request.Tags, &tag)
+			}
+		} else {
+			request.RemoveAllTags = helper.Bool(true)
+		}
+		return true
+	}
+	return false
 }
 
 func resourceTencentCloudTdmqRabbitmqVipInstanceDelete(d *schema.ResourceData, meta interface{}) error {
