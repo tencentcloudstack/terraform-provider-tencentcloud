@@ -88,43 +88,43 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.",
 			},
-		"resource_tags": {
-			Optional:    true,
-			Type:        schema.TypeList,
-			Description: "Instance resource tags. Each tag is a key-value pair for resource identification and management.",
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"tag_key": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "The key of tag.",
-					},
-					"tag_value": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "The value of tag.",
+			"resource_tags": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Instance resource tags. Each tag is a key-value pair for resource identification and management.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The key of tag.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The value of tag.",
+						},
 					},
 				},
 			},
-		},
-		"remark": {
-			Optional:    true,
-			Computed:    true,
-			Type:        schema.TypeString,
-			Description: "Instance remark or description information.",
-		},
-		"enable_deletion_protection": {
-			Optional:    true,
-			Computed:    true,
-			Type:        schema.TypeBool,
-			Description: "Whether to enable deletion protection for the instance.",
-		},
-		"enable_risk_warning": {
-			Optional:    true,
-			Computed:    true,
-			Type:        schema.TypeBool,
-			Description: "Whether to enable cluster risk warning for the instance.",
-		},
+			"remark": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Instance remark or description information.",
+			},
+			"enable_deletion_protection": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable deletion protection for the instance.",
+			},
+			"enable_risk_warning": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable cluster risk warning for the instance.",
+			},
 			"band_width": {
 				Optional:    true,
 				Computed:    true,
