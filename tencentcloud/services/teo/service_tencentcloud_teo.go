@@ -2508,3 +2508,34 @@ func (me *TeoService) DescribeTeoConfigGroupVersionById(ctx context.Context, zon
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) ExportTeoZoneConfig(ctx context.Context, zoneId string, exportTypes []*string) (content *string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewExportZoneConfigRequest()
+	request.ZoneId = &zoneId
+	if len(exportTypes) > 0 {
+		request.Types = exportTypes
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().ExportZoneConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && response.Response.Content != nil {
+		content = response.Response.Content
+	}
+
+	return
+}
