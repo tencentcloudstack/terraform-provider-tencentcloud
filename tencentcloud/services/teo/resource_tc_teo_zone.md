@@ -18,6 +18,25 @@ resource "tencentcloud_teo_zone" "zone" {
 }
 ```
 
+Usage with allow_duplicates
+
+```hcl
+resource "tencentcloud_teo_zone" "zone_with_duplicates" {
+  zone_name        = "tf-teo-duplicates.com"
+  type             = "partial"
+  area             = "overseas"
+  alias_zone_name  = "teo-duplicates-test"
+  paused           = false
+  plan_id          = "edgeone-2kfv1h391n6w"
+  allow_duplicates = true  # Allow duplicate rule configurations
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+**Important:** The `allow_duplicates` field can only be set during resource creation and cannot be updated afterwards. If you need to change this value, you must recreate the zone.
+
 Enable Version Control Mode
 
 ```hcl

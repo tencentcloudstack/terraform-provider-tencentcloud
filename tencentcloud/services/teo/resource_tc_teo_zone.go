@@ -64,6 +64,12 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 				Description: "Indicates whether the site is disabled.",
 			},
 
+			"allow_duplicates": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to allow duplicate rule configurations in the zone.",
+			},
+
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -179,6 +185,10 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request.AliasZoneName = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("allow_duplicates"); ok {
+		request.AllowDuplicates = helper.Bool(v.(bool))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateZoneWithContext(ctx, request)
 		if e != nil {
@@ -257,6 +267,10 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 
 	if respData.Paused != nil {
 		_ = d.Set("paused", respData.Paused)
+	}
+
+	if respData.AllowDuplicates != nil {
+		_ = d.Set("allow_duplicates", respData.AllowDuplicates)
 	}
 
 	if respData.Area != nil {

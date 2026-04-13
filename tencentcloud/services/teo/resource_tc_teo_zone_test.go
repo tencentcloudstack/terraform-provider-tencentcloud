@@ -110,6 +110,50 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 	})
 }
 
+// go test -test.run TestAccTencentCloudTeoZone_allowDuplicates -v
+func TestAccTencentCloudTeoZone_allowDuplicates(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckZoneDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoZoneAllowDuplicatesTrue,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckZoneExists("tencentcloud_teo_zone.allow_duplicates"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "zone_name", "tf-teo-allow-duplicates.xyz"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "area", "overseas"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "type", "partial"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "plan_id", "edgeone-2kfv1h391n6w"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "allow_duplicates", "true"),
+				),
+			},
+			{
+				Config: testAccTeoZoneAllowDuplicatesFalse,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckZoneExists("tencentcloud_teo_zone.allow_duplicates"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "zone_name", "tf-teo-allow-duplicates.xyz"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "area", "overseas"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "type", "partial"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "plan_id", "edgeone-2kfv1h391n6w"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "allow_duplicates", "false"),
+				),
+			},
+			{
+				Config: testAccTeoZoneWithoutAllowDuplicates,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckZoneExists("tencentcloud_teo_zone.allow_duplicates"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "zone_name", "tf-teo-allow-duplicates.xyz"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "area", "overseas"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "type", "partial"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.allow_duplicates", "plan_id", "edgeone-2kfv1h391n6w"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckZoneDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -220,4 +264,51 @@ resource "tencentcloud_teo_zone" "basic" {
 	}
   }
 
+`
+
+const testAccTeoZoneAllowDuplicatesTrue = testAccTeoZoneVar + `
+
+resource "tencentcloud_teo_zone" "allow_duplicates" {
+	area             = "overseas"
+	paused           = false
+	plan_id          = var.plan_id
+	type             = "partial"
+	zone_name        = "tf-teo-allow-duplicates.xyz"
+	allow_duplicates = true
+	tags = {
+	  "DoNotMove"  = "TF-Test"
+	  "Owner" = "arunma"
+	}
+}
+`
+
+const testAccTeoZoneAllowDuplicatesFalse = testAccTeoZoneVar + `
+
+resource "tencentcloud_teo_zone" "allow_duplicates" {
+	area             = "overseas"
+	paused           = false
+	plan_id          = var.plan_id
+	type             = "partial"
+	zone_name        = "tf-teo-allow-duplicates.xyz"
+	allow_duplicates = false
+	tags = {
+	  "DoNotMove"  = "TF-Test"
+	  "Owner" = "arunma"
+	}
+}
+`
+
+const testAccTeoZoneWithoutAllowDuplicates = testAccTeoZoneVar + `
+
+resource "tencentcloud_teo_zone" "allow_duplicates" {
+	area      = "overseas"
+	paused    = false
+	plan_id   = var.plan_id
+	type      = "partial"
+	zone_name = "tf-teo-allow-duplicates.xyz"
+	tags = {
+	  "DoNotMove"  = "TF-Test"
+	  "Owner" = "arunma"
+	}
+}
 `
