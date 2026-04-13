@@ -37,3 +37,18 @@ resource "tencentcloud_mps_edit_media_operation" "operation" {
   output_object_path = "/output"
 }
 ```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `file_infos` - (Required) The file information for edit media operation.
+* `output_storage` - (Optional) The output storage of media processing.
+* `output_object_path` - (Optional) The output object path of media processing.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `task_id` - Task ID returned by API, used to track media processing task status.
+* `id` - Resource ID, same as `task_id`.

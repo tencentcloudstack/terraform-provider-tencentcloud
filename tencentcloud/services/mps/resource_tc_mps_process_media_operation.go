@@ -2628,6 +2628,12 @@ func ResourceTencentCloudMpsProcessMediaOperation() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The task type. `Online` (default): A task that is executed immediately. `Offline`: A task that is executed when the system is idle (within three days by default).",
 			},
+
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Task ID returned by API, used to track media processing task status.",
+			},
 		},
 	}
 }
@@ -4085,6 +4091,7 @@ func resourceTencentCloudMpsProcessMediaOperationCreate(d *schema.ResourceData, 
 
 	taskId = *response.Response.TaskId
 	d.SetId(taskId)
+	d.Set("task_id", taskId)
 
 	return resourceTencentCloudMpsProcessMediaOperationRead(d, meta)
 }

@@ -580,6 +580,6 @@ The `watermark_set` object of `transcode_task_set` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `task_id` - Task ID returned by API, used to track media processing task status.
 
 

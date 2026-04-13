@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_mps_process_media_operation: support task_id parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_mps_edit_media_operation: support task_id parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_mps_process_live_stream_operation: support task_id parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_mps_withdraws_watermark_operation: support task_id parameter
+```

@@ -21,6 +21,7 @@ func TestAccTencentCloudMpsProcessMediaOperationResource_basic(t *testing.T) {
 				Config: fmt.Sprintf(testAccMpsProcessMediaOperation, tcacctest.DefaultRegion, tcacctest.DefaultRegion),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_media_operation.operation", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_media_operation.operation", "task_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_media_operation.operation", "input_info.#"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_process_media_operation.operation", "input_info.0.type", "COS"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_media_operation.operation", "input_info.0.cos_input_info.#"),

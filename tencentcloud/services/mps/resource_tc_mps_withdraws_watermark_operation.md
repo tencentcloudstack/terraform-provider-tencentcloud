@@ -29,3 +29,17 @@ resource "tencentcloud_mps_withdraws_watermark_operation" "operation" {
   session_context = "this is a example session context"
 }
 ```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `input_info` - (Required) The input information for withdraw watermark operation.
+* `session_context` - (Optional) The source context which is used to pass through user request information.
+
+## Attributes Reference
+
+In addition to all arguments above, following attributes are exported:
+
+* `task_id` - Task ID returned by API, used to track media processing task status.
+* `id` - Resource ID, same as `task_id`.

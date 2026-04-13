@@ -193,6 +193,12 @@ func ResourceTencentCloudMpsWithdrawsWatermarkOperation() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The source context which is used to pass through the user request information. The task flow status change callback will return the value of this field.",
 			},
+
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Task ID returned by API, used to track media processing task status.",
+			},
 		},
 	}
 }
@@ -318,6 +324,7 @@ func resourceTencentCloudMpsWithdrawsWatermarkOperationCreate(d *schema.Resource
 
 	taskId = *response.Response.TaskId
 	d.SetId(taskId)
+	d.Set("task_id", taskId)
 
 	return resourceTencentCloudMpsWithdrawsWatermarkOperationRead(d, meta)
 }

@@ -40,3 +40,22 @@ resource "tencentcloud_mps_process_live_stream_operation" "operation" {
   }
 }
 ```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `url` - (Required) The URL of live stream to process.
+* `task_notify_config` - (Optional) The task notification configuration.
+* `output_storage` - (Optional) The output storage of media processing.
+* `output_dir` - (Optional) The output directory of media processing.
+* `ai_content_review_task` - (Optional) The AI content review task configuration.
+* `ai_recognition_task` - (Optional) The AI recognition task configuration.
+* `schedule_id` - (Optional) The scheme ID.
+
+## Attributes Reference
+
+In addition to all arguments above, following attributes are exported:
+
+* `task_id` - Task ID returned by API, used to track media processing task status.
+* `id` - Resource ID, same as `task_id`.

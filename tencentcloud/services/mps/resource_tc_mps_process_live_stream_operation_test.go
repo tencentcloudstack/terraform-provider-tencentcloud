@@ -21,6 +21,7 @@ func TestAccTencentCloudMpsProcessLiveStreamOperationResource_basic(t *testing.T
 				Config: fmt.Sprintf(testAccMpsProcessLiveStreamOperation, tcacctest.DefaultRegion),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_live_stream_operation.operation", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_live_stream_operation.operation", "task_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_process_live_stream_operation.operation", "url", "http://www.abc.com/abc.m3u8"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_live_stream_operation.operation", "task_notify_config.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_process_live_stream_operation.operation", "output_storage.#"),

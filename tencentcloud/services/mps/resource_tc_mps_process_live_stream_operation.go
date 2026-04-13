@@ -239,6 +239,12 @@ func ResourceTencentCloudMpsProcessLiveStreamOperation() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "The scheme ID.Note 1: About `OutputStorage` and `OutputDir`:If an output storage and directory are specified for a subtask of the scheme, those output settings will be applied.If an output storage and directory are not specified for the subtasks of a scheme, the output parameters passed in the `ProcessMedia` API will be applied.Note 2: If `TaskNotifyConfig` is specified, the specified settings will be used instead of the default callback settings of the scheme.",
 			},
+
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Task ID returned by API, used to track media processing task status.",
+			},
 		},
 	}
 }
@@ -386,6 +392,7 @@ func resourceTencentCloudMpsProcessLiveStreamOperationCreate(d *schema.ResourceD
 
 	taskId = *response.Response.TaskId
 	d.SetId(taskId)
+	d.Set("task_id", taskId)
 
 	return resourceTencentCloudMpsProcessLiveStreamOperationRead(d, meta)
 }

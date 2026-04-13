@@ -139,6 +139,6 @@ The `url_input_info` object of `input_info` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `task_id` - Task ID returned by API, used to track media processing task status.
 
 

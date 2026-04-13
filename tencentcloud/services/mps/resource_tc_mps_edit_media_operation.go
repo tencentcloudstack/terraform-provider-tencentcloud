@@ -322,6 +322,12 @@ func ResourceTencentCloudMpsEditMediaOperation() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The source context which is used to pass through the user request information. The task flow status change callback will return the value of this field. It can contain up to 1,000 characters.",
 			},
+
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Task ID returned by API, used to track media processing task status.",
+			},
 		},
 	}
 }
@@ -517,6 +523,7 @@ func resourceTencentCloudMpsEditMediaOperationCreate(d *schema.ResourceData, met
 
 	taskId = *response.Response.TaskId
 	d.SetId(taskId)
+	d.Set("task_id", taskId)
 
 	return resourceTencentCloudMpsEditMediaOperationRead(d, meta)
 }

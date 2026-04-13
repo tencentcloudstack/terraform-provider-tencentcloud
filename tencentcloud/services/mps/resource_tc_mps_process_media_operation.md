@@ -51,3 +51,21 @@ resource "tencentcloud_mps_process_media_operation" "operation" {
   }
 }
 ```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `input_info` - (Required) The information of the file to process.
+* `output_storage` - (Optional) The output storage of media processing.
+* `output_dir` - (Optional) The output directory of media processing.
+* `ai_content_review_task` - (Optional) The AI content review task configuration.
+* `ai_recognition_task` - (Optional) The AI recognition task configuration.
+* `task_notify_config` - (Optional) The task notification configuration.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `task_id` - Task ID returned by API, used to track media processing task status.
+* `id` - Resource ID, same as `task_id`.
