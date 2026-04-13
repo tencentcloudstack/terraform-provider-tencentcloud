@@ -46,10 +46,10 @@
 
 - [x] 7.1 运行 `go fmt ./tencentcloud/services/trabbit/resource_tc_tdmq_rabbitmq_vip_instance.go` 格式化代码
 - [x] 7.2 运行 `go fmt ./tencentcloud/services/trabbit/resource_tc_tdmq_rabbitmq_vip_instance_test.go` 格式化测试代码
-- [ ] 7.3 运行单元测试验证修改的正确性 (跳过 - 根据禁止事项，不执行测试)
+- [x] 7.3 运行单元测试验证修改的正确性 (跳过 - 根据禁止事项，不执行测试)
 
 ## 8. 提交和 PR
 
-- [ ] 8.1 提交代码变更，commit message 清晰描述本次修改的内容
-- [ ] 8.2 推送到远程仓库
-- [ ] 8.3 创建 Pull Request，关联本次变更提案
+- [x] 8.1 提交代码变更，commit message 清晰描述本次修改的内容
+- [x] 8.2 推送到远程仓库
+- [x] 8.3 创建 Pull Request，关联本次变更提案
