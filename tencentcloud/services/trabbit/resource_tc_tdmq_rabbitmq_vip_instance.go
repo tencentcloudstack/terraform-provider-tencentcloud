@@ -82,12 +82,30 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Payment method: 0 indicates postpaid; 1 indicates prepaid. Default: prepaid.",
 			},
-			"cluster_version": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.",
-			},
+		"cluster_version": {
+			Optional:    true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.",
+		},
+		"remark": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeString,
+			Description: "Cluster description information.",
+		},
+		"enable_deletion_protection": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeBool,
+			Description: "Whether to enable deletion protection. Default is false.",
+		},
+		"enable_risk_warning": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeBool,
+			Description: "Whether to enable cluster risk warning. Default is false.",
+		},
 			"resource_tags": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -361,6 +379,18 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("cluster_version", rabbitmqVipInstance.ClusterInfo.ClusterVersion)
 	}
 
+	if rabbitmqVipInstance.ClusterInfo.Remark != nil {
+		_ = d.Set("remark", rabbitmqVipInstance.ClusterInfo.Remark)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection != nil {
+		_ = d.Set("enable_deletion_protection", rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo.EnableRiskWarning != nil {
+		_ = d.Set("enable_risk_warning", rabbitmqVipInstance.ClusterInfo.EnableRiskWarning)
+	}
+
 	if rabbitmqVipInstance.ClusterNetInfo != nil && rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus != nil {
 		enablePublicAccess := *rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus == "ON"
 		_ = d.Set("enable_public_access", enablePublicAccess)
@@ -408,6 +438,14 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			} else {
 				_ = d.Set("auto_renew_flag", false)
 			}
+		}
+
+		if result[0].Remark != nil {
+			_ = d.Set("remark", result[0].Remark)
+		}
+
+		if result[0].EnableDeletionProtection != nil {
+			_ = d.Set("enable_deletion_protection", result[0].EnableDeletionProtection)
 		}
 
 		if result[0].PublicAccessEndpoint != nil {
@@ -476,6 +514,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}
