@@ -40,6 +40,8 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_create_default_ha_mirror_queue"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "time_span"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "remark", "Test instance remark"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_deletion_protection", "true"),
 					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
 				),
 			},
@@ -63,6 +65,9 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_create_default_ha_mirror_queue"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "auto_renew_flag"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_vip_instance.example", "time_span"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "remark", "Updated instance remark"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_deletion_protection", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_risk_warning", "true"),
 					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
 				),
 			},
@@ -160,6 +165,8 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  remark                                = "Test instance remark"
+  enable_deletion_protection            = true
 }
 `
 
@@ -195,5 +202,8 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  remark                                = "Updated instance remark"
+  enable_deletion_protection            = false
+  enable_risk_warning                   = true
 }
 `
