@@ -55,6 +55,23 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
     tag_value = "tagValue"
   }
 }
+
+# create rabbitmq instance with new fields (remark, enable_deletion_protection, enable_risk_warning)
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example3" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  remark                                = "Production instance for team A"
+  enable_deletion_protection            = true
+  enable_risk_warning                   = true
+}
 ```
 
 Enable public network access
