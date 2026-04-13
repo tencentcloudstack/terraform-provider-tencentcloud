@@ -70,6 +70,40 @@ func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_basic(t *testing.T) {
 	})
 }
 
+// Test updating new parameters: remark, enable_deletion_protection, enable_risk_warning
+func TestAccTencentCloudTdmqRabbitmqVipInstanceResource_updateExtraParams(t *testing.T) {
+	//t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		CheckDestroy: testAccCheckTdmqRabbitmqVipInstanceDestroy,
+		Providers:    tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTdmqRabbitmqVipInstanceWithNewParams,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "remark", "Test instance"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_deletion_protection", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_risk_warning", "true"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+			{
+				Config: testAccTdmqRabbitmqVipInstanceUpdateNewParams,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdmqRabbitmqVipInstanceExists("tencentcloud_tdmq_rabbitmq_vip_instance.example"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "remark", "Updated instance remark"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_deletion_protection", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_vip_instance.example", "enable_risk_warning", "false"),
+					tcacctest.AccStepTimeSleepDuration(1*time.Minute),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTdmqRabbitmqVipInstanceExists(re string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -195,5 +229,81 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceWithNewParams = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance with new parameters
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-new-params"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  remark                               = "Test instance"
+  enable_deletion_protection            = true
+  enable_risk_warning                 = true
+}
+`
+
+const testAccTdmqRabbitmqVipInstanceUpdateNewParams = `
+data "tencentcloud_availability_zones" "zones" {
+  name = "ap-guangzhou-6"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rabbitmq instance with updated new parameters
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-new-params"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  remark                               = "Updated instance remark"
+  enable_deletion_protection            = false
+  enable_risk_warning                 = false
 }
 `

@@ -88,25 +88,43 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Cluster version, the default is `3.8.30`, valid values: `3.8.30`, `3.11.8` and `3.13.7`.",
 			},
-			"resource_tags": {
-				Optional:    true,
-				Type:        schema.TypeList,
-				Description: "Instance resource tags. Each tag is a key-value pair for resource identification and management.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"tag_key": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The key of tag.",
-						},
-						"tag_value": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The value of tag.",
-						},
+		"resource_tags": {
+			Optional:    true,
+			Type:        schema.TypeList,
+			Description: "Instance resource tags. Each tag is a key-value pair for resource identification and management.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"tag_key": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "The key of tag.",
+					},
+					"tag_value": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "The value of tag.",
 					},
 				},
 			},
+		},
+		"remark": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeString,
+			Description: "Instance remark or description information.",
+		},
+		"enable_deletion_protection": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeBool,
+			Description: "Whether to enable deletion protection for the instance.",
+		},
+		"enable_risk_warning": {
+			Optional:    true,
+			Computed:    true,
+			Type:        schema.TypeBool,
+			Description: "Whether to enable cluster risk warning for the instance.",
+		},
 			"band_width": {
 				Optional:    true,
 				Computed:    true,
@@ -381,6 +399,18 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
+	if rabbitmqVipInstance.ClusterInfo.Remark != nil {
+		_ = d.Set("remark", rabbitmqVipInstance.ClusterInfo.Remark)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection != nil {
+		_ = d.Set("enable_deletion_protection", rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo.EnableRiskWarning != nil {
+		_ = d.Set("enable_risk_warning", rabbitmqVipInstance.ClusterInfo.EnableRiskWarning)
+	}
+
 	paramMap := make(map[string]interface{})
 	tmpSet := make([]*tdmq.Filter, 0)
 	filter := tdmq.Filter{}
@@ -476,6 +506,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}
