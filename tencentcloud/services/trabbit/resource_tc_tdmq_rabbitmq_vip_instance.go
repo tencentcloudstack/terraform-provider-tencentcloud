@@ -118,6 +118,24 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Description: "Whether to enable public network access. Default is false.",
 			},
+			"remark": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Remark of the RabbitMQ instance.",
+			},
+			"enable_deletion_protection": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable deletion protection. Default is false.",
+			},
+			"enable_risk_warning": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable cluster risk warning. Default is false.",
+			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -243,6 +261,10 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 		request.EnablePublicAccess = helper.Bool(v.(bool))
 	}
 
+	if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+		request.EnableDeletionProtection = helper.Bool(v.(bool))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().CreateRabbitMQVipInstance(request)
 		if e != nil {
@@ -361,6 +383,14 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("cluster_version", rabbitmqVipInstance.ClusterInfo.ClusterVersion)
 	}
 
+	if rabbitmqVipInstance.Remark != nil {
+		_ = d.Set("remark", rabbitmqVipInstance.Remark)
+	}
+
+	if rabbitmqVipInstance.EnableDeletionProtection != nil {
+		_ = d.Set("enable_deletion_protection", rabbitmqVipInstance.EnableDeletionProtection)
+	}
+
 	if rabbitmqVipInstance.ClusterNetInfo != nil && rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus != nil {
 		enablePublicAccess := *rabbitmqVipInstance.ClusterNetInfo.PublicDataStreamStatus == "ON"
 		_ = d.Set("enable_public_access", enablePublicAccess)
@@ -476,6 +506,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}
