@@ -36,8 +36,35 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   time_span                             = 1
 }
 
-# create postpaid rabbitmq instance
-resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
+# create postpaid rabbitmq instance with remark and deletion protection
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example3" {
+  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  vpc_id                                = tencentcloud_vpc.vpc.id
+  subnet_id                             = tencentcloud_subnet.subnet.id
+  cluster_name                          = "tf-example-rabbitmq-vip-instance-with-protection"
+  node_spec                             = "rabbit-vip-basic-1"
+  node_num                              = 1
+  storage_size                          = 200
+  enable_create_default_ha_mirror_queue = false
+  auto_renew_flag                       = true
+  time_span                             = 1
+  pay_mode                              = 0
+  cluster_version                       = "3.11.8"
+  remark                                = "Production RabbitMQ instance"
+  enable_deletion_protection            = true
+  enable_risk_warning                   = false
+  resource_tags {
+    tag_key   = "tagKey"
+    tag_value = "tagValue"
+  }
+}
+```
+
+Update instance with new parameters
+
+```hcl
+# After creating the instance, you can update the remark and other parameters
+resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
   vpc_id                                = tencentcloud_vpc.vpc.id
   subnet_id                             = tencentcloud_subnet.subnet.id
@@ -48,12 +75,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
-  pay_mode                              = 0
-  cluster_version                       = "3.11.8"
-  resource_tags {
-    tag_key   = "tagKey"
-    tag_value = "tagValue"
-  }
+  remark                                = "Updated instance remark"
+  enable_deletion_protection            = true
+  enable_risk_warning                   = true
 }
 ```
 
