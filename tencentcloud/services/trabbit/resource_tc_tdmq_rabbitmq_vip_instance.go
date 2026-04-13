@@ -118,6 +118,21 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Description: "Whether to enable public network access. Default is false.",
 			},
+			"remark": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Instance remark.",
+			},
+			"enable_deletion_protection": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable deletion protection. Default is false.",
+			},
+			"enable_risk_warning": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable cluster risk warning. Default is false.",
+			},
 			"public_access_endpoint": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -241,6 +256,20 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOkExists("enable_public_access"); ok {
 		request.EnablePublicAccess = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("remark"); ok {
+		// Note: Remark is not supported in CreateRabbitMQVipInstance API
+		// This field will be set during update operation
+	}
+
+	if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+		request.EnableDeletionProtection = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+		// Note: EnableRiskWarning is not supported in CreateRabbitMQVipInstance API
+		// This field will be set during update operation
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -381,6 +410,18 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
+	if rabbitmqVipInstance.ClusterInfo != nil && rabbitmqVipInstance.ClusterInfo.Remark != nil {
+		_ = d.Set("remark", rabbitmqVipInstance.ClusterInfo.Remark)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo != nil && rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection != nil {
+		_ = d.Set("enable_deletion_protection", rabbitmqVipInstance.ClusterInfo.EnableDeletionProtection)
+	}
+
+	if rabbitmqVipInstance.ClusterInfo != nil && rabbitmqVipInstance.ClusterInfo.EnableRiskWarning != nil {
+		_ = d.Set("enable_risk_warning", rabbitmqVipInstance.ClusterInfo.EnableRiskWarning)
+	}
+
 	paramMap := make(map[string]interface{})
 	tmpSet := make([]*tdmq.Filter, 0)
 	filter := tdmq.Filter{}
@@ -497,6 +538,27 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 		} else {
 			// If resource_tags is removed, set RemoveAllTags to true
 			request.RemoveAllTags = helper.Bool(true)
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		if v, ok := d.GetOkExists("enable_deletion_protection"); ok {
+			request.EnableDeletionProtection = helper.Bool(v.(bool))
+			needUpdate = true
+		}
+	}
+
+	if d.HasChange("enable_risk_warning") {
+		if v, ok := d.GetOkExists("enable_risk_warning"); ok {
+			request.EnableRiskWarning = helper.Bool(v.(bool))
 			needUpdate = true
 		}
 	}
