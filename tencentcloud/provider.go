@@ -50,6 +50,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/controlcenter"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
@@ -1366,6 +1367,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy_list":                                    igtm.DataSourceTencentCloudIgtmStrategyList(),
 			"tencentcloud_igtm_instance_package_list":                            igtm.DataSourceTencentCloudIgtmInstancePackageList(),
 			"tencentcloud_igtm_detect_task_package_list":                         igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
+			"tencentcloud_config_compliance_packs":                               config.DataSourceTencentCloudConfigCompliancePacks(),
+			"tencentcloud_system_config_compliance_packs":                        config.DataSourceTencentCloudSystemConfigCompliancePacks(),
+			"tencentcloud_config_system_rules":                                   config.DataSourceTencentCloudConfigSystemRules(),
+			"tencentcloud_config_rule_evaluation_results":                        config.DataSourceTencentCloudConfigRuleEvaluationResults(),
+			"tencentcloud_config_rules":                                          config.DataSourceTencentCloudConfigRules(),
+			"tencentcloud_config_discovered_resources":                           config.DataSourceTencentCloudConfigDiscoveredResources(),
+			"tencentcloud_config_resource_types":                                 config.DataSourceTencentCloudConfigResourceTypes(),
 			"tencentcloud_products":                                              regionpkg.DataSourceTencentCloudProducts(),
 			"tencentcloud_regions":                                               regionpkg.DataSourceTencentCloudRegions(),
 			"tencentcloud_zones":                                                 regionpkg.DataSourceTencentCloudZones(),
@@ -2521,6 +2529,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_sg_rule":                                                                  cfw.ResourceTencentCloudSgRule(),
 			"tencentcloud_cfw_cluster_vpc_fw_switch":                                                cfw.ResourceTencentCloudCfwClusterVpcFwSwitch(),
 			"tencentcloud_cfw_ips_mode_switch":                                                      cfw.ResourceTencentCloudCfwIpsModeSwitch(),
+			"tencentcloud_config_compliance_pack":                                                   config.ResourceTencentCloudConfigCompliancePack(),
+			"tencentcloud_config_remediation":                                                       config.ResourceTencentCloudConfigRemediation(),
+			"tencentcloud_config_start_config_rule_evaluation_operation":                            config.ResourceTencentCloudConfigStartConfigRuleEvaluationOperation(),
+			"tencentcloud_config_deliver_config":                                                    config.ResourceTencentCloudConfigDeliverConfig(),
+			"tencentcloud_config_recorder_config":                                                   config.ResourceTencentCloudConfigRecorderConfig(),
 			"tencentcloud_bh_acl":                                                                   bh.ResourceTencentCloudBhAcl(),
 			"tencentcloud_bh_access_white_list_rule":                                                bh.ResourceTencentCloudBhAccessWhiteListRule(),
 			"tencentcloud_bh_access_white_list_config":                                              bh.ResourceTencentCloudBhAccessWhiteListConfig(),

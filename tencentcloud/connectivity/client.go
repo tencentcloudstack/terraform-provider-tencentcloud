@@ -49,6 +49,7 @@ import (
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	configv20220802 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
 	controlcenter "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 	cvmv20170312 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -206,6 +207,7 @@ type TencentCloudClient struct {
 	mpsConn              *mps.Client
 	cwpConn              *cwp.Client
 	chdfsConn            *chdfs.Client
+	configv20220802Conn  *configv20220802.Client
 	mdlConn              *mdl.Client
 	apmConn              *apm.Client
 	ciamConn             *ciam.Client
@@ -2199,6 +2201,18 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
+}
+
+// UseConfigV20220802Client return Config client for service
+func (me *TencentCloudClient) UseConfigV20220802Client() *configv20220802.Client {
+	if me.configv20220802Conn != nil {
+		return me.configv20220802Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.configv20220802Conn, _ = configv20220802.NewClient(me.Credential, me.Region, cpf)
+	me.configv20220802Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.configv20220802Conn
 }
 
 // UseVcubeV20220410Client return VCUBE client for service
