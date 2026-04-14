@@ -2508,3 +2508,70 @@ func (me *TeoService) DescribeTeoConfigGroupVersionById(ctx context.Context, zon
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoAliasDomainById(ctx context.Context,
+	zoneId, aliasName string) (aliasDomain *teo.AliasDomain, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewDescribeAliasDomainsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = &zoneId
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("alias-name"),
+			Values: []*string{&aliasName},
+		},
+	)
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	aliasDomains := make([]*teo.AliasDomain, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response := teo.NewDescribeAliasDomainsResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoClient().DescribeAliasDomains(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.AliasDomains) < 1 {
+			break
+		}
+		aliasDomains = append(aliasDomains, response.Response.AliasDomains...)
+		if len(response.Response.AliasDomains) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(aliasDomains) < 1 {
+		return
+	}
+	aliasDomain = aliasDomains[0]
+
+	return
+}
