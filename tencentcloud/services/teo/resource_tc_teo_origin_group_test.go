@@ -67,6 +67,67 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudTeoOriginGroup_withHostHeader -v
+func TestAccTencentCloudTeoOriginGroup_withHostHeader(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckOriginGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoOriginGroupWithHostHeader,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "name", "keep-group-with-host"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "type", "GENERAL"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "host_header", "example.com"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_teo_origin_group.basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccTeoOriginGroupUpdateHostHeader,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "host_header", "new-example.com"),
+				),
+			},
+		},
+	})
+}
+
+// go test -i; go test -test.run TestAccTencentCloudTeoOriginGroup_withoutHostHeader -v
+func TestAccTencentCloudTeoOriginGroup_withoutHostHeader(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PRIVATE) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckOriginGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoOriginGroupWithoutHostHeader,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "name", "keep-group-no-host"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "type", "GENERAL"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "host_header", ""),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_teo_origin_group.basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccCheckOriginGroupDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -168,6 +229,59 @@ resource "tencentcloud_teo_origin_group" "basic" {
       name = "SecretAccessKey"
       value = "test"
     }
+  }
+}
+
+`
+
+const testAccTeoOriginGroupWithHostHeader = testAccTeoZone + `
+
+resource "tencentcloud_teo_origin_group" "basic" {
+  name        = "keep-group-with-host"
+  type        = "GENERAL"
+  zone_id     = tencentcloud_teo_zone.basic.id
+  host_header = "example.com"
+
+  records {
+    record  = var.zone_name
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = false
+  }
+}
+
+`
+
+const testAccTeoOriginGroupUpdateHostHeader = testAccTeoZone + `
+
+resource "tencentcloud_teo_origin_group" "basic" {
+  name        = "keep-group-with-host"
+  type        = "GENERAL"
+  zone_id     = tencentcloud_teo_zone.basic.id
+  host_header = "new-example.com"
+
+  records {
+    record  = var.zone_name
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = false
+  }
+}
+
+`
+
+const testAccTeoOriginGroupWithoutHostHeader = testAccTeoZone + `
+
+resource "tencentcloud_teo_origin_group" "basic" {
+  name    = "keep-group-no-host"
+  type    = "GENERAL"
+  zone_id = tencentcloud_teo_zone.basic.id
+
+  records {
+    record  = var.zone_name
+    type    = "IP_DOMAIN"
+    weight  = 100
+    private = false
   }
 }
 
