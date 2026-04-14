@@ -34,6 +34,9 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   enable_create_default_ha_mirror_queue = false
   auto_renew_flag                       = true
   time_span                             = 1
+  remark                                = "Example instance for testing"
+  enable_deletion_protection           = true
+  enable_risk_warning                   = true
 }
 
 # create postpaid rabbitmq instance
@@ -50,6 +53,8 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
   time_span                             = 1
   pay_mode                              = 0
   cluster_version                       = "3.11.8"
+  remark                                = "Postpaid instance"
+  enable_deletion_protection           = false
   resource_tags {
     tag_key   = "tagKey"
     tag_value = "tagValue"
