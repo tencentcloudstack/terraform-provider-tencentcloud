@@ -1475,6 +1475,7 @@ tencentcloud_cls_dlc_deliver
 Data Source
 tencentcloud_cls_shipper_tasks
 tencentcloud_cls_machines
+tencentcloud_cls_notice_contents
 tencentcloud_cls_machine_group_configs
 tencentcloud_cls_logsets
 tencentcloud_cls_topics
