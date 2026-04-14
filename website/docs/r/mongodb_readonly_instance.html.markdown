@@ -60,7 +60,7 @@ resource "tencentcloud_mongodb_readonly_instance" "sharding_mongodb" {
 
 The following arguments are supported:
 
-* `available_zone` - (Required, String, ForceNew) The available zone of the Mongodb.
+* `available_zone` - (Required, String) The available zone of the Mongodb.
 * `cluster_type` - (Required, String, ForceNew) Instance schema type.	- REPLSET: Replset cluster;	- SHARD: Shard cluster.
 * `engine_version` - (Required, String) Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.
 - MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.
