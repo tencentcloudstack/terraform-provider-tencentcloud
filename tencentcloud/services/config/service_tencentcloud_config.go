@@ -347,6 +347,99 @@ func (me *ConfigService) DescribeConfigRulesByFilter(ctx context.Context, paramM
 	return
 }
 
+func (me *ConfigService) DescribeConfigRuleById(ctx context.Context, ruleId string) (ret *configv20220802.ConfigRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewDescribeConfigRuleRequest()
+	response := configv20220802.NewDescribeConfigRuleResponse()
+	request.RuleId = &ruleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().DescribeConfigRule(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe config rule failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.ConfigRule
+	return
+}
+
+func (me *ConfigService) DescribeConfigAlarmPolicyById(ctx context.Context, alarmPolicyId uint64) (ret *configv20220802.AlarmPolicyRsp, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewListAlarmPolicyRequest()
+	request.Offset = helper.Uint64(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for {
+		var result *configv20220802.ListAlarmPolicyResponse
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			resp, e := me.client.UseConfigV20220802Client().ListAlarmPolicy(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if resp == nil || resp.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("list config alarm policy failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), resp.ToJsonString())
+
+			result = resp
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		for _, policy := range result.Response.AlarmPolicyList {
+			if policy.AlarmPolicyId != nil && *policy.AlarmPolicyId == alarmPolicyId {
+				ret = policy
+				return
+			}
+		}
+
+		if len(result.Response.AlarmPolicyList) == 0 {
+			break
+		}
+
+		*request.Offset++
+	}
+
+	return
+}
+
 func (me *ConfigService) DescribeConfigRecorder(ctx context.Context) (ret *configv20220802.DescribeConfigRecorderResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
