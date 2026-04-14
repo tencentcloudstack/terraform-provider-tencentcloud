@@ -770,11 +770,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis ModifyInstanceChargeType error, reason:%s\n", logId, err.Error())
 			return err
 		}
-		err = redisService.CheckRedisUpdateOk(ctx, id)
-		if err != nil {
-			log.Printf("[CRITAL]%s redis update charge type fail, reason:%s\n", logId, err.Error())
-			return err
-		}
 	}
 
 	// name\mem_size\password\project_id
