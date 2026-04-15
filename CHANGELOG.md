@@ -1,3 +1,14 @@
+## 1.82.87(April 15, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_teo_create_cls_index_operation` ([#4015](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4015))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_redis_instance: support change `charge_type` ([#4009](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4009))
+* resource/tencentcloud_security_group: support custom delete timeout ([#4016](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4016))
+
 ## 1.82.86(April 14, 2026)
 
 FEATURES:
