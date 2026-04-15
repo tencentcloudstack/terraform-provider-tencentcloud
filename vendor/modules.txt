@@ -74,6 +74,10 @@ github.com/ProtonMail/go-crypto/openpgp/s2k
 # github.com/agext/levenshtein v1.2.3
 ## explicit
 github.com/agext/levenshtein
+# github.com/agiledragon/gomonkey/v2 v2.14.0
+## explicit; go 1.14
+github.com/agiledragon/gomonkey/v2
+github.com/agiledragon/gomonkey/v2/creflect
 # github.com/alexkohler/prealloc v1.0.0
 ## explicit; go 1.15
 github.com/alexkohler/prealloc/pkg
@@ -1160,9 +1164,6 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.3.33
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.75
-## explicit; go 1.14
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112
@@ -1191,6 +1192,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.75
 ## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110

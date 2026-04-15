@@ -1,182 +1,141 @@
 package teo_test
 
 import (
-	"errors"
+	"fmt"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
-// MockClient is a mock for the TEO API client
-type MockTeoV20220901Client struct {
-	mock.Mock
+// mockMeta implements tccommon.ProviderMeta
+type mockMeta struct {
+	client *connectivity.TencentCloudClient
 }
 
-// CreateCLSIndex mocks the CreateCLSIndex API call
-func (m *MockTeoV20220901Client) CreateCLSIndex(request *teo_v20220901.CreateCLSIndexRequest) (response *teo_v20220901.CreateCLSIndexResponse, err error) {
-	args := m.Called(request)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*teo_v20220901.CreateCLSIndexResponse), args.Error(1)
+func (m *mockMeta) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
 }
 
-// MockProviderMeta is a mock for the provider metadata
-type MockProviderMeta struct {
-	mock.Mock
+var _ tccommon.ProviderMeta = &mockMeta{}
+
+func newMockMeta() *mockMeta {
+	return &mockMeta{client: &connectivity.TencentCloudClient{}}
 }
 
-// GetAPIV3Conn returns a mock API connection
-func (m *MockProviderMeta) GetAPIV3Conn() interface{} {
-	args := m.Called()
-	return args.Get(0)
-}
+// go test ./tencentcloud/services/teo/ -run "TestCreateCLSIndexOperation" -v -count=1 -gcflags="all=-l"
+// TestCreateCLSIndexOperation_Success tests Create calls API and sets ID
+func TestCreateCLSIndexOperation_Success(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
 
-func TestResourceTencentCloudTeoCreateCLSIndexOperationCreate_Success(t *testing.T) {
-	// Create mock client and provider meta
-	mockClient := new(MockTeoV20220901Client)
-	mockProviderMeta := new(MockProviderMeta)
+	// Patch UseTeoV20220901Client to return a non-nil client
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
 
-	// Setup expectations
-	mockProviderMeta.On("GetAPIV3Conn").Return(mockClient)
-	mockClient.On("CreateCLSIndex", mock.Anything).Return(&teo_v20220901.CreateCLSIndexResponse{}, nil)
+	// Patch CreateCLSIndex to return success
+	patches.ApplyMethodFunc(teoClient, "CreateCLSIndex", func(request *teov20220901.CreateCLSIndexRequest) (*teov20220901.CreateCLSIndexResponse, error) {
+		assert.Equal(t, "zone-12345678", *request.ZoneId)
+		assert.Equal(t, "task-87654321", *request.TaskId)
+		resp := teov20220901.NewCreateCLSIndexResponse()
+		resp.Response = &teov20220901.CreateCLSIndexResponseParams{
+			RequestId: ptrString("fake-request-id"),
+		}
+		return resp, nil
+	})
 
-	// Create resource data schema
-	resourceSchema := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
-	resourceData := schema.TestResourceDataRaw(t, resourceSchema.Schema, map[string]interface{}{
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-12345678",
 		"task_id": "task-87654321",
 	})
 
-	// Call Create function
-	err := resourceData.Create(mockProviderMeta, common.ProviderMeta{})
-
-	// Assertions
+	err := res.Create(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "zone-12345678", resourceData.Id())
-	mockClient.AssertExpectations(t)
-	mockProviderMeta.AssertExpectations(t)
+	assert.Equal(t, "zone-12345678", d.Id())
 }
 
-func TestResourceTencentCloudTeoCreateCLSIndexOperationCreate_APIError(t *testing.T) {
-	// Create mock client and provider meta
-	mockClient := new(MockTeoV20220901Client)
-	mockProviderMeta := new(MockProviderMeta)
+// TestCreateCLSIndexOperation_APIError tests Create handles API error
+func TestCreateCLSIndexOperation_APIError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
 
-	// Setup expectations
-	mockProviderMeta.On("GetAPIV3Conn").Return(mockClient)
-	mockClient.On("CreateCLSIndex", mock.Anything).Return(nil, errors.New("API error: Invalid zone_id"))
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
 
-	// Create resource data schema
-	resourceSchema := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
-	resourceData := schema.TestResourceDataRaw(t, resourceSchema.Schema, map[string]interface{}{
-		"zone_id": "zone-12345678",
+	patches.ApplyMethodFunc(teoClient, "CreateCLSIndex", func(request *teov20220901.CreateCLSIndexRequest) (*teov20220901.CreateCLSIndexResponse, error) {
+		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
+	})
+
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-invalid",
 		"task_id": "task-87654321",
 	})
 
-	// Call Create function
-	err := resourceData.Create(mockProviderMeta, common.ProviderMeta{})
-
-	// Assertions
+	err := res.Create(d, meta)
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "API error")
-	mockClient.AssertExpectations(t)
-	mockProviderMeta.AssertExpectations(t)
+	assert.Contains(t, err.Error(), "InvalidParameter")
 }
 
-func TestResourceTencentCloudTeoCreateCLSIndexOperationCreate_MissingZoneId(t *testing.T) {
-	// Create resource data schema without zone_id
-	resourceSchema := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
-	resourceData := schema.TestResourceDataRaw(t, resourceSchema.Schema, map[string]interface{}{
-		"task_id": "task-87654321",
-	})
-
-	// Call Create function
-	err := resourceData.Create(nil, common.ProviderMeta{})
-
-	// Assertions
-	// The error should indicate that zone_id is required
-	assert.Error(t, err)
-}
-
-func TestResourceTencentCloudTeoCreateCLSIndexOperationCreate_MissingTaskId(t *testing.T) {
-	// Create resource data schema without task_id
-	resourceSchema := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
-	resourceData := schema.TestResourceDataRaw(t, resourceSchema.Schema, map[string]interface{}{
-		"zone_id": "zone-12345678",
-	})
-
-	// Call Create function
-	err := resourceData.Create(nil, common.ProviderMeta{})
-
-	// Assertions
-	// The error should indicate that task_id is required
-	assert.Error(t, err)
-}
-
-func TestResourceTencentCloudTeoCreateCLSIndexOperationRead(t *testing.T) {
-	// Create resource data schema
-	resourceSchema := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
-	resourceData := schema.TestResourceDataRaw(t, resourceSchema.Schema, map[string]interface{}{
+// TestCreateCLSIndexOperation_Read tests Read is no-op
+func TestCreateCLSIndexOperation_Read(t *testing.T) {
+	res := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-12345678",
 		"task_id": "task-87654321",
 	})
-	resourceData.SetId("zone-12345678")
+	d.SetId("zone-12345678")
 
-	// Call Read function (should return nil for operation resource)
-	err := resourceData.Read(nil, common.ProviderMeta{})
-
-	// Assertions
+	err := res.Read(d, nil)
 	assert.NoError(t, err)
 }
 
-func TestResourceTencentCloudTeoCreateCLSIndexOperationDelete(t *testing.T) {
-	// Create resource data schema
-	resourceSchema := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
-	resourceData := schema.TestResourceDataRaw(t, resourceSchema.Schema, map[string]interface{}{
+// TestCreateCLSIndexOperation_Delete tests Delete is no-op
+func TestCreateCLSIndexOperation_Delete(t *testing.T) {
+	res := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-12345678",
 		"task_id": "task-87654321",
 	})
-	resourceData.SetId("zone-12345678")
+	d.SetId("zone-12345678")
 
-	// Call Delete function (should return nil for operation resource)
-	err := resourceData.Delete(nil, common.ProviderMeta{})
-
-	// Assertions
+	err := res.Delete(d, nil)
 	assert.NoError(t, err)
 }
 
-func TestResourceTencentCloudTeoCreateCLSIndexOperationSchema(t *testing.T) {
-	// Get the resource schema
-	resourceSchema := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
+// TestCreateCLSIndexOperation_Schema validates schema definition
+func TestCreateCLSIndexOperation_Schema(t *testing.T) {
+	res := teo.ResourceTencentCloudTeoCreateCLSIndexOperation()
 
-	// Assertions
-	assert.NotNil(t, resourceSchema)
-	assert.NotNil(t, resourceSchema.Create)
-	assert.NotNil(t, resourceSchema.Read)
-	assert.Nil(t, resourceSchema.Update) // Operation resources don't have Update
-	assert.NotNil(t, resourceSchema.Delete)
+	assert.NotNil(t, res)
+	assert.NotNil(t, res.Create)
+	assert.NotNil(t, res.Read)
+	assert.Nil(t, res.Update)
+	assert.NotNil(t, res.Delete)
 
-	// Check schema fields
-	assert.NotNil(t, resourceSchema.Schema)
-	assert.Contains(t, resourceSchema.Schema, "zone_id")
-	assert.Contains(t, resourceSchema.Schema, "task_id")
+	assert.Contains(t, res.Schema, "zone_id")
+	assert.Contains(t, res.Schema, "task_id")
 
-	// Check zone_id
-	zoneIdSchema := resourceSchema.Schema["zone_id"]
-	assert.Equal(t, schema.TypeString, zoneIdSchema.Type)
-	assert.True(t, zoneIdSchema.Required)
-	assert.True(t, zoneIdSchema.ForceNew)
+	zoneId := res.Schema["zone_id"]
+	assert.Equal(t, schema.TypeString, zoneId.Type)
+	assert.True(t, zoneId.Required)
+	assert.True(t, zoneId.ForceNew)
 
-	// Check task_id
-	taskIdSchema := resourceSchema.Schema["task_id"]
-	assert.Equal(t, schema.TypeString, taskIdSchema.Type)
-	assert.True(t, taskIdSchema.Required)
-	assert.True(t, taskIdSchema.ForceNew)
+	taskId := res.Schema["task_id"]
+	assert.Equal(t, schema.TypeString, taskId.Type)
+	assert.True(t, taskId.Required)
+	assert.True(t, taskId.ForceNew)
+}
+
+func ptrString(s string) *string {
+	return &s
 }
