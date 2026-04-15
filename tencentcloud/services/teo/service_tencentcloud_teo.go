@@ -2508,3 +2508,227 @@ func (me *TeoService) DescribeTeoConfigGroupVersionById(ctx context.Context, zon
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) CreateDnsRecord(ctx context.Context, param map[string]interface{}) (recordId string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewCreateDnsRecordRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := param["zone_id"].(string); ok {
+		request.ZoneId = helper.String(v)
+	}
+
+	if v, ok := param["name"].(string); ok {
+		request.Name = helper.String(v)
+	}
+
+	if v, ok := param["type"].(string); ok {
+		request.Type = helper.String(v)
+	}
+
+	if v, ok := param["content"].(string); ok {
+		request.Content = helper.String(v)
+	}
+
+	if v, ok := param["ttl"]; ok {
+		request.TTL = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := param["weight"]; ok {
+		request.Weight = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := param["priority"]; ok {
+		request.Priority = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := param["location"].(string); ok {
+		request.Location = helper.String(v)
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var response *teo.CreateDnsRecordResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().CreateDnsRecord(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString())
+
+	if response.Response != nil && response.Response.RecordId != nil {
+		recordId = *response.Response.RecordId
+	}
+
+	return
+}
+
+func (me *TeoService) DescribeDnsRecordById(ctx context.Context, zoneId, recordId string) (dnsRecord *teo.DnsRecord, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewDescribeDnsRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = helper.String(zoneId)
+	request.Filters = []*teo.AdvancedFilter{
+		{
+			Name:   helper.String("id"),
+			Values: []*string{&recordId},
+		},
+	}
+	request.Limit = helper.IntInt64(1)
+
+	ratelimit.Check(request.GetAction())
+
+	var response *teo.DescribeDnsRecordsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeDnsRecords(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.TotalCount == nil || *response.Response.TotalCount == 0 ||
+		len(response.Response.DnsRecords) == 0 {
+		return
+	}
+
+	dnsRecord = response.Response.DnsRecords[0]
+	return
+}
+
+func (me *TeoService) ModifyDnsRecord(ctx context.Context, zoneId string, param map[string]interface{}) (errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewModifyDnsRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = helper.String(zoneId)
+
+	dnsRecord := &teo.DnsRecord{}
+
+	if v, ok := param["record_id"].(string); ok {
+		dnsRecord.RecordId = helper.String(v)
+	}
+
+	if v, ok := param["content"].(string); ok {
+		dnsRecord.Content = helper.String(v)
+	}
+
+	if v, ok := param["ttl"]; ok {
+		dnsRecord.TTL = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := param["weight"]; ok {
+		dnsRecord.Weight = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := param["priority"]; ok {
+		dnsRecord.Priority = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := param["location"].(string); ok {
+		dnsRecord.Location = helper.String(v)
+	}
+
+	request.DnsRecords = []*teo.DnsRecord{dnsRecord}
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseTeoV20220901Client().ModifyDnsRecords(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString())
+
+	return
+}
+
+func (me *TeoService) DeleteDnsRecordById(ctx context.Context, zoneId, recordId string) (errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewDeleteDnsRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = helper.String(zoneId)
+	request.RecordIds = []*string{&recordId}
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseTeoV20220901Client().DeleteDnsRecords(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString())
+
+	return
+}
