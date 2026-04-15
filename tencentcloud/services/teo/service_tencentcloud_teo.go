@@ -2508,3 +2508,43 @@ func (me *TeoService) DescribeTeoConfigGroupVersionById(ctx context.Context, zon
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) TeoExportZoneConfig(ctx context.Context, zoneId string, types []interface{}) (ret *string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewExportZoneConfigRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = &zoneId
+
+	if len(types) > 0 {
+		typeList := make([]*string, 0, len(types))
+		for _, v := range types {
+			if str, ok := v.(string); ok && str != "" {
+				typeList = append(typeList, &str)
+			}
+		}
+		request.Types = typeList
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().ExportZoneConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && response.Response.Content != nil {
+		ret = response.Response.Content
+	}
+
+	return
+}
