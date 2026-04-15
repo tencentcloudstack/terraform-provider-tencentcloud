@@ -1160,9 +1160,6 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.3.33
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.75
-## explicit; go 1.14
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112
@@ -1191,6 +1188,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.75
 ## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110
@@ -1291,7 +1289,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.1008
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.3.73
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.3.40

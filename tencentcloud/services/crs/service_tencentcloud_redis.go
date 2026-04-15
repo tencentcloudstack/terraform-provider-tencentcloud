@@ -2281,3 +2281,35 @@ func (me *RedisService) DescribeRedisLogDeliveryById(ctx context.Context, instan
 	ret = response.Response.SlowLog
 	return
 }
+
+func (me *RedisService) ModifyInstanceChargeType(ctx context.Context, instanceId string, chargeType string, period int) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := redis.NewModifyInstanceChargeTypeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceIds = []*string{&instanceId}
+	request.InstanceChargeType = &chargeType
+	if chargeType == REDIS_CHARGE_TYPE_PREPAID && period > 0 {
+		periodUint := uint64(period)
+		request.Period = &periodUint
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().ModifyInstanceChargeType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && len(response.Response.FailedInstanceIds) > 0 {
+		errRet = fmt.Errorf("ModifyInstanceChargeType failed for instance %s", instanceId)
+	}
+	return
+}

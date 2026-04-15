@@ -74,7 +74,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.63
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.1.42
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.1008
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.3.73
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.1034
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748

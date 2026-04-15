@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,49 +21,40 @@ import (
 )
 
 type Account struct {
-	// 实例 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 账号名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>账号名称。</p>
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
-	// 账号描述信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>账号描述信息。</p>
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 读写权限策略。
-	// - r：只读。
-	// - w：只写。
-	// - rw：读写。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>读写权限策略。- r：只读。- w：只写。- rw：读写。</p>
 	Privilege *string `json:"Privilege,omitnil,omitempty" name:"Privilege"`
 
-	// 只读路由策略。
-	// - master：主节点。
-	// - replication：从节点。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>只读路由策略。- master：主节点。- replication：从节点。</p>
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitnil,omitempty" name:"ReadonlyPolicy"`
 
-	// 子账号状态.
-	// - 1：账号变更中。
-	// - 2：账号有效。
-	// - 4：账号已删除。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>子账号状态.- 1：账号变更中。- 2：账号有效。- 4：账号已删除。</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>账号创建时间。</p><p>若该参数为空字符串，说明该账号创建于早期版本，未支持创建时间记录功能。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>账号最后修改密码的时间。</p><p>若该参数为空字符串，说明该账号创建于早期版本，未支持密码修改时间记录功能。</p>
+	PasswordLastModifiedTime *string `json:"PasswordLastModifiedTime,omitnil,omitempty" name:"PasswordLastModifiedTime"`
 }
 
 // Predefined struct for user
 type AddReplicationInstanceRequestParams struct {
-	// 复制组ID。
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 实例ID。
+	// - 添加复制组实例有地域与可用区限制。具体信息，请参见[使用限制](https://cloud.tencent.com/document/product/239/71934)。
+	// - 当前仅4.0、5.0 Redis 版集群架构的实例支持加入复制组。
+	// - 请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制需加入复制组的实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 给复制组添加的实例分配角色。<ul><li>rw：可读写。</li><li>r：只读。</li></ul>
@@ -73,10 +64,13 @@ type AddReplicationInstanceRequestParams struct {
 type AddReplicationInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 复制组ID。
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 实例ID。
+	// - 添加复制组实例有地域与可用区限制。具体信息，请参见[使用限制](https://cloud.tencent.com/document/product/239/71934)。
+	// - 当前仅4.0、5.0 Redis 版集群架构的实例支持加入复制组。
+	// - 请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制需加入复制组的实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 给复制组添加的实例分配角色。<ul><li>rw：可读写。</li><li>r：只读。</li></ul>
@@ -131,14 +125,14 @@ func (r *AddReplicationInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AllocateWanAddressRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type AllocateWanAddressRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -191,20 +185,24 @@ func (r *AllocateWanAddressResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ApplyParamsTemplateRequestParams struct {
-	// 实例ID列表
+	// 实例 ID 列表，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 应用的参数模板ID
+	// 应用的参数模板ID。
+	// - 请通过接口 [DescribeParamTemplateInfo](https://cloud.tencent.com/document/product/239/58748) 的返回参数 **TemplateId** 获取参数模板 ID。
+	// - 仅当参数模板版本与目标实例的架构版本一致时，操作才能成功执行。版本不匹配将触发执行错误。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 }
 
 type ApplyParamsTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID列表
+	// 实例 ID 列表，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 应用的参数模板ID
+	// 应用的参数模板ID。
+	// - 请通过接口 [DescribeParamTemplateInfo](https://cloud.tencent.com/document/product/239/58748) 的返回参数 **TemplateId** 获取参数模板 ID。
+	// - 仅当参数模板版本与目标实例的架构版本一致时，操作才能成功执行。版本不匹配将触发执行错误。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 }
 
@@ -258,10 +256,10 @@ type AssociateSecurityGroupsRequestParams struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 要绑定的安全组ID，类似sg-efil73jd。
+	// 要绑定的安全组ID，请在[控制台安全组](https://console.cloud.tencent.com/vpc/security-group)页面获取安全组 ID。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 
-	// 被绑定的实例ID，类似ins-lesecurk，支持指定多个实例。
+	// 被绑定的实例ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID，支持指定多个实例。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 }
 
@@ -271,10 +269,10 @@ type AssociateSecurityGroupsRequest struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 要绑定的安全组ID，类似sg-efil73jd。
+	// 要绑定的安全组ID，请在[控制台安全组](https://console.cloud.tencent.com/vpc/security-group)页面获取安全组 ID。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 
-	// 被绑定的实例ID，类似ins-lesecurk，支持指定多个实例。
+	// 被绑定的实例ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID，支持指定多个实例。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 }
 
@@ -323,11 +321,9 @@ func (r *AssociateSecurityGroupsResponse) FromJsonString(s string) error {
 
 type AvailableRegion struct {
 	// 地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 可用区信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AvailableZones []*string `json:"AvailableZones,omitnil,omitempty" name:"AvailableZones"`
 }
 
@@ -430,26 +426,30 @@ type CDCResource struct {
 
 // Predefined struct for user
 type ChangeInstanceRoleRequestParams struct {
-	// 复制组ID
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 实例ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例角色，rw可读写，r只读
+	// 实例角色。
+	// - rw：可读写。
+	// - r：只读。
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 }
 
 type ChangeInstanceRoleRequest struct {
 	*tchttp.BaseRequest
 	
-	// 复制组ID
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 实例ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例角色，rw可读写，r只读
+	// 实例角色。
+	// - rw：可读写。
+	// - r：只读。
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 }
 
@@ -642,14 +642,14 @@ func (r *ChangeReplicaToMasterResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CleanUpInstanceRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录 [Redis 控制台回收站](https://console.cloud.tencent.com/redis/recycle)的实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type CleanUpInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录 [Redis 控制台回收站](https://console.cloud.tencent.com/redis/recycle)的实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -699,21 +699,31 @@ func (r *CleanUpInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ClearInstanceRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// redis的实例密码（免密实例不需要传密码，非免密实例必传）
+	// 实例访问密码。
+	// - 免密访问：无需配置。
+	// - 密码认证：必须配置。字符个数为[8,64]，至少包含小写字母、大写字母、数字和字符 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的2种，不能以"/"开头。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 type ClearInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// redis的实例密码（免密实例不需要传密码，非免密实例必传）
+	// 实例访问密码。
+	// - 免密访问：无需配置。
+	// - 密码认证：必须配置。字符个数为[8,64]，至少包含小写字母、大写字母、数字和字符 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的2种，不能以"/"开头。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 func (r *ClearInstanceRequest) ToJsonString() string {
@@ -730,6 +740,7 @@ func (r *ClearInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "InstanceId")
 	delete(f, "Password")
+	delete(f, "EncryptPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ClearInstanceRequest has unknown keys!", "")
 	}
@@ -780,7 +791,7 @@ type CloneInstancesRequestParams struct {
 	// 购买实例时长。<ul><li>单位：月。</li><li>付费方式选择包年包月计费时，取值范围为[1,2,3,4,5,6,7,8,9,10,11,12,24,36,48,60]。</li><li>付费方式选择按量计费时，设置为1。</li></ul>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 安全组ID。请登录控制台，在<b>安全组</b>页面获取安全组 ID 信息。
+	// 安全组ID。请通过 [DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447) 接口获取实例的安全组 ID。
 	SecurityGroupIdList []*string `json:"SecurityGroupIdList,omitnil,omitempty" name:"SecurityGroupIdList"`
 
 	// 克隆实例使用的备份ID。请通过接口[DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011)获取备份ID。
@@ -827,6 +838,9 @@ type CloneInstancesRequestParams struct {
 	// 克隆指定恢复数据的时间。
 	// 仅支持已开通秒级备份的实例
 	CloneTime *string `json:"CloneTime,omitnil,omitempty" name:"CloneTime"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 type CloneInstancesRequest struct {
@@ -849,7 +863,7 @@ type CloneInstancesRequest struct {
 	// 购买实例时长。<ul><li>单位：月。</li><li>付费方式选择包年包月计费时，取值范围为[1,2,3,4,5,6,7,8,9,10,11,12,24,36,48,60]。</li><li>付费方式选择按量计费时，设置为1。</li></ul>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 安全组ID。请登录控制台，在<b>安全组</b>页面获取安全组 ID 信息。
+	// 安全组ID。请通过 [DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447) 接口获取实例的安全组 ID。
 	SecurityGroupIdList []*string `json:"SecurityGroupIdList,omitnil,omitempty" name:"SecurityGroupIdList"`
 
 	// 克隆实例使用的备份ID。请通过接口[DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011)获取备份ID。
@@ -896,6 +910,9 @@ type CloneInstancesRequest struct {
 	// 克隆指定恢复数据的时间。
 	// 仅支持已开通秒级备份的实例
 	CloneTime *string `json:"CloneTime,omitnil,omitempty" name:"CloneTime"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 func (r *CloneInstancesRequest) ToJsonString() string {
@@ -930,6 +947,7 @@ func (r *CloneInstancesRequest) FromJsonString(s string) error {
 	delete(f, "TemplateId")
 	delete(f, "AlarmPolicyList")
 	delete(f, "CloneTime")
+	delete(f, "EncryptPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloneInstancesRequest has unknown keys!", "")
 	}
@@ -938,11 +956,16 @@ func (r *CloneInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CloneInstancesResponseParams struct {
-	// 请求任务 ID。
+	// 交易的ID。
+	//
+	// Deprecated: DealId is deprecated.
 	DealId *string `json:"DealId,omitnil,omitempty" name:"DealId"`
 
 	// 克隆实例的 ID。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// 订单号。
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -965,15 +988,76 @@ func (r *CloneInstancesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CloseLogRequestParams struct {
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志类型</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+type CloseLogRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志类型</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+}
+
+func (r *CloseLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseLogRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LogType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloseLogRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloseLogResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CloseLogResponse struct {
+	*tchttp.BaseResponse
+	Response *CloseLogResponseParams `json:"Response"`
+}
+
+func (r *CloseLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseLogResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CloseSSLRequestParams struct {
-	// 实例ID。
+	// 实例 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type CloseSSLRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// 实例 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -1030,17 +1114,106 @@ type CommandTake struct {
 }
 
 // Predefined struct for user
-type CreateInstanceAccountRequestParams struct {
-	// 实例 ID。
+type CreateExportTaskRequestParams struct {
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 自定义访问数据库的名称。
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志检索的起始时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 00:00:00。返回结果中仅包含该时间点及之后的日志。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>日志检索的结束时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 23:59:59。返回结果中仅包含该时间点及之前的日志。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>设置日志筛选字段，过滤并下载符合条件的日志。</p>
+	LogFilter []*LogFilter `json:"LogFilter,omitnil,omitempty" name:"LogFilter"`
+
+	// <p>自定义下载的日志字段，多个字段以逗号分隔，例如 &quot;timestamp,operation,user&quot;。指定后仅下载所选字段的数据。不传该参数时，默认下载所有字段。</p>
+	ColumnFilter []*string `json:"ColumnFilter,omitnil,omitempty" name:"ColumnFilter"`
+}
+
+type CreateExportTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志检索的起始时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 00:00:00。返回结果中仅包含该时间点及之后的日志。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>日志检索的结束时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 23:59:59。返回结果中仅包含该时间点及之前的日志。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>设置日志筛选字段，过滤并下载符合条件的日志。</p>
+	LogFilter []*LogFilter `json:"LogFilter,omitnil,omitempty" name:"LogFilter"`
+
+	// <p>自定义下载的日志字段，多个字段以逗号分隔，例如 &quot;timestamp,operation,user&quot;。指定后仅下载所选字段的数据。不传该参数时，默认下载所有字段。</p>
+	ColumnFilter []*string `json:"ColumnFilter,omitnil,omitempty" name:"ColumnFilter"`
+}
+
+func (r *CreateExportTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateExportTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LogType")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "LogFilter")
+	delete(f, "ColumnFilter")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateExportTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateExportTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateExportTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateExportTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateExportTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateExportTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateInstanceAccountRequestParams struct {
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 自定义的访问数据库的账号名称。
 	// - 仅由字母、数字、下划线、中划线组成。
 	// - 长度不能大于32位。
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
 	// 设置自定义账号的密码。密码复杂度要求如下：
-	// - 字符个数为[8,32]。
+	// - 字符个数为[8,64]。
 	// - 至少包含小写字母、大写字母、数字和字符 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的两种。
 	// - 不能以"/"开头。
 	AccountPassword *string `json:"AccountPassword,omitnil,omitempty" name:"AccountPassword"`
@@ -1051,27 +1224,30 @@ type CreateInstanceAccountRequestParams struct {
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitnil,omitempty" name:"ReadonlyPolicy"`
 
 	// 账户读写权限，支持选择只读与读写权限。
-	// - r：只读
-	// - rw: 读写权限
+	// - r：只读。
+	// - rw: 读写。
 	Privilege *string `json:"Privilege,omitnil,omitempty" name:"Privilege"`
 
-	// 子账号描述信息，长度[0,64] 字节，支持中文。
+	// 账号备注描述信息，长度为[0,64] 字节，支持中文。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 type CreateInstanceAccountRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 自定义访问数据库的名称。
+	// 自定义的访问数据库的账号名称。
 	// - 仅由字母、数字、下划线、中划线组成。
 	// - 长度不能大于32位。
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
 	// 设置自定义账号的密码。密码复杂度要求如下：
-	// - 字符个数为[8,32]。
+	// - 字符个数为[8,64]。
 	// - 至少包含小写字母、大写字母、数字和字符 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的两种。
 	// - 不能以"/"开头。
 	AccountPassword *string `json:"AccountPassword,omitnil,omitempty" name:"AccountPassword"`
@@ -1082,12 +1258,15 @@ type CreateInstanceAccountRequest struct {
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitnil,omitempty" name:"ReadonlyPolicy"`
 
 	// 账户读写权限，支持选择只读与读写权限。
-	// - r：只读
-	// - rw: 读写权限
+	// - r：只读。
+	// - rw: 读写。
 	Privilege *string `json:"Privilege,omitnil,omitempty" name:"Privilege"`
 
-	// 子账号描述信息，长度[0,64] 字节，支持中文。
+	// 账号备注描述信息，长度为[0,64] 字节，支持中文。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 func (r *CreateInstanceAccountRequest) ToJsonString() string {
@@ -1108,6 +1287,7 @@ func (r *CreateInstanceAccountRequest) FromJsonString(s string) error {
 	delete(f, "ReadonlyPolicy")
 	delete(f, "Privilege")
 	delete(f, "Remark")
+	delete(f, "EncryptPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstanceAccountRequest has unknown keys!", "")
 	}
@@ -1116,7 +1296,7 @@ func (r *CreateInstanceAccountRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstanceAccountResponseParams struct {
-	// 任务ID
+	// 任务ID。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1141,231 +1321,171 @@ func (r *CreateInstanceAccountResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstancesRequestParams struct {
-	// 实例类型。
-	// <ul><li>2：Redis 2.8 内存版（标准架构）。</li><li>3：CKV 3.2 内存版（标准架构）。</li><li>4：CKV 3.2 内存版（集群架构）。</li><li>6：Redis 4.0 内存版（标准架构）。</li><li>7：Redis 4.0 内存版（集群架构）。</li><li>8：Redis 5.0 内存版（标准架构）。</li><li>9：Redis 5.0 内存版（集群架构）。</li><li>15：Redis 6.2 内存版（标准架构）。</li><li>16：Redis 6.2 内存版（集群架构）。</li><li>17：Redis 7.0 内存版（标准架构）。</li><li>18：Redis 7.0 内存版（集群架构）。</li></ul>
+	// <p>实例类型。</p><ul><li>2：Redis 2.8 内存版（标准架构）。</li><li>3：CKV 3.2 内存版（标准架构）。</li><li>4：CKV 3.2 内存版（集群架构）。</li><li>6：Redis 4.0 内存版（标准架构）。</li><li>7：Redis 4.0 内存版（集群架构）。</li><li>8：Redis 5.0 内存版（标准架构）。</li><li>9：Redis 5.0 内存版（集群架构）。</li><li>15：Redis 6.2 内存版（标准架构）。</li><li>16：Redis 6.2 内存版（集群架构）。</li><li>17：Redis 7.0 内存版（标准架构）。</li><li>18：Redis 7.0 内存版（集群架构）。</li><li>200：Memcached 1.6 内存版（集群架构）。<br><strong>说明</strong>：CKV 版本当前有存量用户使用，暂时保留。</li></ul>
 	TypeId *uint64 `json:"TypeId,omitnil,omitempty" name:"TypeId"`
 
-	// 内存容量，单位为MB， 数值需为1024的整数倍。具体规格，请通过 [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600) 接口查询全地域的售卖规格。
-	// - **TypeId**为标准架构时，**MemSize**是实例总内存容量；
-	// - **TypeId**为集群架构时，**MemSize**是单分片内存容量。
+	// <p>内存容量，单位为MB， 数值需为1024的整数倍。具体规格，请通过 <a href="https://cloud.tencent.com/document/api/239/30600">DescribeProductInfo</a> 接口查询全地域的售卖规格。</p><ul><li><strong>TypeId</strong>为标准架构时，<strong>MemSize</strong>是实例总内存容量；</li><li><strong>TypeId</strong>为集群架构时，<strong>MemSize</strong>是单分片内存容量。</li></ul>
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 实例数量，单次购买实例数量。具体信息，请通过 [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600) 接口查询全地域的售卖规格。
+	// <p>实例数量，单次购买实例数量。具体信息，请通过 <a href="https://cloud.tencent.com/document/api/239/30600">DescribeProductInfo</a> 接口查询全地域的售卖规格。</p>
 	GoodsNum *uint64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 购买实例的时长。
-	// - 若 **BillingMode**为**1**，即计费方式为包年包月时，需设置该参数，指定所购买实例的时长。单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
-	// - 若 **BillingMode**为**0**，即计费方式为按量计费时，该参数配置为1。
+	// <p>购买实例的时长。</p><ul><li>若 <strong>BillingMode</strong>为<strong>1</strong>，即计费方式为包年包月时，需设置该参数，指定所购买实例的时长。单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</li><li>若 <strong>BillingMode</strong>为<strong>0</strong>，即计费方式为按量计费时，该参数配置为1。</li></ul>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 计费方式。
-	// - 0：按量计费。
-	// - 1：包年包月。
+	// <p>计费方式。</p><ul><li>0：按量计费。</li><li>1：包年包月。</li></ul>
 	BillingMode *int64 `json:"BillingMode,omitnil,omitempty" name:"BillingMode"`
 
-	// 实例所属的可用区ID，可参考[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>实例所属的可用区ID，可参考<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。</p>
 	ZoneId *uint64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 访问实例的密码。
-	// - 当输入参数**NoAuth**为**true**时，指设置实例为免密码访问，Password可不用配置，否则Password为必填参数。
-	// - 当实例类型**TypeId**为Redis 2.8 内存版标准架构、Redis 4.0、5.0、6.0内存版标准架构或集群架构时，其密码复杂度要求为：8-30个字符，至少包含小写字母、大写字母、数字和字符()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的2种，不能以"/"开头。
-	// - 当实例类型**TypeId**为CKV 3.2 内存版标准架构或集群架构时，其密码复杂度为：8-30个字符，必须包含字母和数字，且 不包含其他字符。
+	// <p>访问实例的密码。</p><ul><li>当输入参数<strong>NoAuth</strong>为<strong>true</strong>时，指设置实例为免密码访问，Password可不用配置，否则Password为必填参数。</li><li>当实例类型<strong>TypeId</strong>为Redis 2.8 内存版标准架构、Redis 4.0、5.0、6.2、7.0内存版标准架构或集群架构时，其密码复杂度要求为：8-64个字符，至少包含小写字母、大写字母、数字和字符()`~!@#$%^&amp;*-+=_|{}[]:;&lt;&gt;,.?/ 中的2种，不能以&quot;/&quot;开头。</li><li>当实例类型<strong>TypeId</strong>为CKV 3.2 内存版标准架构或集群架构时，其密码复杂度为：8-30个字符，必须包含字母和数字，且不包含其他字符。</li></ul>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 私有网络ID。如果不配置该参数则默认选择基础网络。请登录 [私有网络](https://console.cloud.tencent.com/vpc)控制台查询具体的ID。
+	// <p>私有网络ID。如果不配置该参数则默认选择基础网络。请登录 <a href="https://console.cloud.tencent.com/vpc">私有网络</a>控制台查询具体的ID。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络VPC的子网。基础网络下， 该参数无需配置。请登录 [私有网络](https://console.cloud.tencent.com/vpc)控制台查询子网列表获取具体的 ID。
+	// <p>私有网络VPC的子网。基础网络下， 该参数无需配置。请登录 <a href="https://console.cloud.tencent.com/vpc">私有网络</a>控制台查询子网列表获取具体的 ID。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 项目 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)，在右上角的账户信息菜单中，选择**项目管理**查询项目 ID。
+	// <p>项目 ID。请登录<a href="https://console.cloud.tencent.com/redis#/">Redis控制台</a>，在右上角的账户信息菜单中，选择<strong>项目管理</strong>查询项目 ID。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 自动续费标识。
-	// - 0：默认状态（手动续费）。
-	// - 1：自动续费。
-	// - 2：到期不续费。
+	// <p>自动续费标识。</p><ul><li>0：默认状态（手动续费）。</li><li>1：自动续费。</li><li>2：到期不续费。</li></ul>
 	AutoRenew *uint64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 
-	// 安全组 ID 数组。请通过[DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447)接口获取实例的安全组 ID。
+	// <p>安全组 ID 数组。</p><ul><li>安全组是一种虚拟防火墙，对云数据库实例的网络访问进行控制。创建实例时，建议绑定相应的安全组。</li><li>请通过 <a href="https://cloud.tencent.com/document/product/239/34447">DescribeInstanceSecurityGroup</a> 接口获取实例的安全组 ID。</li></ul>
 	SecurityGroupIdList []*string `json:"SecurityGroupIdList,omitnil,omitempty" name:"SecurityGroupIdList"`
 
-	// 用户自定义的网络端口。默认为6379，范围为 [1024,65535]。
+	// <p>用户自定义的网络端口。默认为6379，范围为 [1024,65535]。</p>
 	VPort *uint64 `json:"VPort,omitnil,omitempty" name:"VPort"`
 
-	// 实例分片数量。
-	// - 标准版实例无需配置该参数。
-	// - 集群版实例，分片数量范围为：[1、3、5、8、12、16、24、32、40、48、64、80、96、128]。
+	// <p>实例分片数量。</p><ul><li>标准版实例无需配置该参数。</li><li>集群版实例，分片数量范围为：[1、3、5、8、12、16、24、32、40、48、64、80、96、128]。</li></ul>
 	RedisShardNum *int64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 实例副本数量。
-	// - Redis 内存版 4.0、5.0、6.2 标准架构和集群架构支持副本数量范围为[1,5]。
-	// - Redis 2.8标准版、CKV标准版只支持1副本。
+	// <p>实例副本数量。</p><ul><li>Redis 内存版 4.0、5.0、6.2、7.0 标准架构和集群架构支持副本数量范围为[1,5]。</li><li>Redis 2.8标准版、CKV标准版只支持1副本。</li></ul>
 	RedisReplicasNum *int64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
-	// 标识实例是否需支持副本只读。
-	// - Redis 2.8 标准版、CKV标准版不支持副本只读。
-	// - 开启副本只读，实例将自动读写分离，写请求路由到主节点，读请求路由到副本节点。
-	// - 如需开启副本只读，建议副本数量大于等于2。
+	// <p>标识实例是否需支持副本只读。</p><ul><li>Redis 2.8 标准版、CKV标准版不支持副本只读。</li><li>开启副本只读，实例将自动读写分离，写请求路由到主节点，读请求路由到副本节点。</li><li>如需开启副本只读，建议副本数量大于等于2。</li></ul>
 	ReplicasReadonly *bool `json:"ReplicasReadonly,omitnil,omitempty" name:"ReplicasReadonly"`
 
-	// 实例名称。命名要求：仅支持长度小于60的中文、英文或者数字，短划线"-"、下划线"_"。
+	// <p>实例名称。命名要求：仅支持长度小于60的中文、英文或者数字，短划线&quot;-&quot;、下划线&quot;_&quot;。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 配置实例是否支持免密码访问。
-	// - true：免密访问实例。
-	// - false：非免密访问实例。默认为非免密方式，仅VPC网络的实例支持免密码访问。
+	// <p>配置实例是否支持免密码访问。</p><ul><li>true：免密访问实例。</li><li>false：非免密访问实例。默认为非免密方式，仅VPC网络的实例支持免密码访问。</li></ul>
 	NoAuth *bool `json:"NoAuth,omitnil,omitempty" name:"NoAuth"`
 
-	// 实例的节点信息，包含节点 ID、节点类型、节点可用区 ID等。具体信息，请参见[RedisNodeInfo ](https://cloud.tencent.com/document/product/239/20022)。
-	// 目前支持传入节点的类型（主节点或者副本节点），节点的可用区。单可用区部署不需要传递此参数。
+	// <p>实例的节点信息，包含节点 ID、节点类型、节点可用区 ID等。具体信息，请参见<a href="https://cloud.tencent.com/document/product/239/20022">RedisNodeInfo </a>。<br>目前支持传入节点的类型（主节点或者副本节点），节点的可用区。未指定该参数时，在支持多可用区部署的地域，系统将默认创建多可用区架构实例。</p>
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
 
-	// 给实例设定标签。
+	// <p>给实例设定标签。</p>
 	ResourceTags []*ResourceTag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 指定实例所属的可用区名称。具体信息，请参见[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>指定实例所属的可用区名称。具体信息，请参见<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。</p>
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
-	// 指定实例相关的参数模板 ID。
-	// - 若不配置该参数，则系统会依据所选择的兼容版本及架构，自动适配对应的默认模板。
-	// - 请通过[DescribeParamTemplates](https://cloud.tencent.com/document/product/239/58750)接口，查询实例的参数模板列表，获取模板 ID 编号。
+	// <p>指定实例相关的参数模板 ID。</p><ul><li>若不配置该参数，则系统会依据所选择的兼容版本及架构，自动适配对应的默认模板。</li><li>请通过<a href="https://cloud.tencent.com/document/product/239/58750">DescribeParamTemplates</a>接口，查询实例的参数模板列表，获取模板 ID 编号。</li></ul>
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 
-	// 内部参数，标识创建实例是否需要检查。
-	// - false ：默认值。发送正常请求，通过检查后直接创建实例。
-	// - true：发送检查请求，不会创建实例。
+	// <p>内部参数，标识创建实例是否需要检查。</p><ul><li>false ：默认值。发送正常请求，通过检查后直接创建实例。</li><li>true：发送检查请求，不会创建实例。</li></ul>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 指定实例的产品版本。
-	// - local：本地盘版。
-	// - cloud：云盘版，
-	// - cdc：独享集群版。如果不传默认发货为本地盘版本。
+	// <p>指实例部署模式。</p><ul><li>local：传统架构，默认为 local。</li><li>cdc：独享集群。</li><li>cloud：云原生，当前已暂停售卖。</li></ul>
 	ProductVersion *string `json:"ProductVersion,omitnil,omitempty" name:"ProductVersion"`
 
-	// 独享集群 ID。当**ProductVersion**设置为**cdc**时，该参数必须设置。
+	// <p>独享集群 ID。</p><ul><li>当 <strong>ProductVersion</strong> 设置为 <strong>cdc</strong> 时，该参数必须设置。</li><li>请通过接口<a href="https://cloud.tencent.com/document/product/239/109628"> DescribeRedisClusters</a> 获取集群 ID。</li></ul>
 	RedisClusterId *string `json:"RedisClusterId,omitnil,omitempty" name:"RedisClusterId"`
 
-	// 告警策略 ID 数组。
-	// 
-	// - 请登录[腾讯云可观测平台-告警管理-策略管理](https://console.cloud.tencent.com/monitor/alarm/policy)获取告警策略 ID。
-	// - 若不配置该参数，则绑定默认告警策略。默认告警策略具体信息，请登录[腾讯云可观测平台-告警管理-策略管理](https://console.cloud.tencent.com/monitor/alarm/policy)查看。
+	// <p>告警策略 ID 数组。</p><ul><li>请登录<a href="https://console.cloud.tencent.com/monitor/alarm/policy">腾讯云可观测平台-告警管理-策略管理</a>获取告警策略 ID。</li><li>若不配置该参数，则绑定默认告警策略。默认告警策略具体信息，请登录<a href="https://console.cloud.tencent.com/monitor/alarm/policy">腾讯云可观测平台-告警管理-策略管理</a>查看。</li></ul>
 	AlarmPolicyList []*string `json:"AlarmPolicyList,omitnil,omitempty" name:"AlarmPolicyList"`
+
+	// <p>是否加密密码</p>
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 type CreateInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例类型。
-	// <ul><li>2：Redis 2.8 内存版（标准架构）。</li><li>3：CKV 3.2 内存版（标准架构）。</li><li>4：CKV 3.2 内存版（集群架构）。</li><li>6：Redis 4.0 内存版（标准架构）。</li><li>7：Redis 4.0 内存版（集群架构）。</li><li>8：Redis 5.0 内存版（标准架构）。</li><li>9：Redis 5.0 内存版（集群架构）。</li><li>15：Redis 6.2 内存版（标准架构）。</li><li>16：Redis 6.2 内存版（集群架构）。</li><li>17：Redis 7.0 内存版（标准架构）。</li><li>18：Redis 7.0 内存版（集群架构）。</li></ul>
+	// <p>实例类型。</p><ul><li>2：Redis 2.8 内存版（标准架构）。</li><li>3：CKV 3.2 内存版（标准架构）。</li><li>4：CKV 3.2 内存版（集群架构）。</li><li>6：Redis 4.0 内存版（标准架构）。</li><li>7：Redis 4.0 内存版（集群架构）。</li><li>8：Redis 5.0 内存版（标准架构）。</li><li>9：Redis 5.0 内存版（集群架构）。</li><li>15：Redis 6.2 内存版（标准架构）。</li><li>16：Redis 6.2 内存版（集群架构）。</li><li>17：Redis 7.0 内存版（标准架构）。</li><li>18：Redis 7.0 内存版（集群架构）。</li><li>200：Memcached 1.6 内存版（集群架构）。<br><strong>说明</strong>：CKV 版本当前有存量用户使用，暂时保留。</li></ul>
 	TypeId *uint64 `json:"TypeId,omitnil,omitempty" name:"TypeId"`
 
-	// 内存容量，单位为MB， 数值需为1024的整数倍。具体规格，请通过 [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600) 接口查询全地域的售卖规格。
-	// - **TypeId**为标准架构时，**MemSize**是实例总内存容量；
-	// - **TypeId**为集群架构时，**MemSize**是单分片内存容量。
+	// <p>内存容量，单位为MB， 数值需为1024的整数倍。具体规格，请通过 <a href="https://cloud.tencent.com/document/api/239/30600">DescribeProductInfo</a> 接口查询全地域的售卖规格。</p><ul><li><strong>TypeId</strong>为标准架构时，<strong>MemSize</strong>是实例总内存容量；</li><li><strong>TypeId</strong>为集群架构时，<strong>MemSize</strong>是单分片内存容量。</li></ul>
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 实例数量，单次购买实例数量。具体信息，请通过 [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600) 接口查询全地域的售卖规格。
+	// <p>实例数量，单次购买实例数量。具体信息，请通过 <a href="https://cloud.tencent.com/document/api/239/30600">DescribeProductInfo</a> 接口查询全地域的售卖规格。</p>
 	GoodsNum *uint64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 购买实例的时长。
-	// - 若 **BillingMode**为**1**，即计费方式为包年包月时，需设置该参数，指定所购买实例的时长。单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
-	// - 若 **BillingMode**为**0**，即计费方式为按量计费时，该参数配置为1。
+	// <p>购买实例的时长。</p><ul><li>若 <strong>BillingMode</strong>为<strong>1</strong>，即计费方式为包年包月时，需设置该参数，指定所购买实例的时长。单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</li><li>若 <strong>BillingMode</strong>为<strong>0</strong>，即计费方式为按量计费时，该参数配置为1。</li></ul>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 计费方式。
-	// - 0：按量计费。
-	// - 1：包年包月。
+	// <p>计费方式。</p><ul><li>0：按量计费。</li><li>1：包年包月。</li></ul>
 	BillingMode *int64 `json:"BillingMode,omitnil,omitempty" name:"BillingMode"`
 
-	// 实例所属的可用区ID，可参考[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>实例所属的可用区ID，可参考<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。</p>
 	ZoneId *uint64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 访问实例的密码。
-	// - 当输入参数**NoAuth**为**true**时，指设置实例为免密码访问，Password可不用配置，否则Password为必填参数。
-	// - 当实例类型**TypeId**为Redis 2.8 内存版标准架构、Redis 4.0、5.0、6.0内存版标准架构或集群架构时，其密码复杂度要求为：8-30个字符，至少包含小写字母、大写字母、数字和字符()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的2种，不能以"/"开头。
-	// - 当实例类型**TypeId**为CKV 3.2 内存版标准架构或集群架构时，其密码复杂度为：8-30个字符，必须包含字母和数字，且 不包含其他字符。
+	// <p>访问实例的密码。</p><ul><li>当输入参数<strong>NoAuth</strong>为<strong>true</strong>时，指设置实例为免密码访问，Password可不用配置，否则Password为必填参数。</li><li>当实例类型<strong>TypeId</strong>为Redis 2.8 内存版标准架构、Redis 4.0、5.0、6.2、7.0内存版标准架构或集群架构时，其密码复杂度要求为：8-64个字符，至少包含小写字母、大写字母、数字和字符()`~!@#$%^&amp;*-+=_|{}[]:;&lt;&gt;,.?/ 中的2种，不能以&quot;/&quot;开头。</li><li>当实例类型<strong>TypeId</strong>为CKV 3.2 内存版标准架构或集群架构时，其密码复杂度为：8-30个字符，必须包含字母和数字，且不包含其他字符。</li></ul>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 私有网络ID。如果不配置该参数则默认选择基础网络。请登录 [私有网络](https://console.cloud.tencent.com/vpc)控制台查询具体的ID。
+	// <p>私有网络ID。如果不配置该参数则默认选择基础网络。请登录 <a href="https://console.cloud.tencent.com/vpc">私有网络</a>控制台查询具体的ID。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络VPC的子网。基础网络下， 该参数无需配置。请登录 [私有网络](https://console.cloud.tencent.com/vpc)控制台查询子网列表获取具体的 ID。
+	// <p>私有网络VPC的子网。基础网络下， 该参数无需配置。请登录 <a href="https://console.cloud.tencent.com/vpc">私有网络</a>控制台查询子网列表获取具体的 ID。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 项目 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)，在右上角的账户信息菜单中，选择**项目管理**查询项目 ID。
+	// <p>项目 ID。请登录<a href="https://console.cloud.tencent.com/redis#/">Redis控制台</a>，在右上角的账户信息菜单中，选择<strong>项目管理</strong>查询项目 ID。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 自动续费标识。
-	// - 0：默认状态（手动续费）。
-	// - 1：自动续费。
-	// - 2：到期不续费。
+	// <p>自动续费标识。</p><ul><li>0：默认状态（手动续费）。</li><li>1：自动续费。</li><li>2：到期不续费。</li></ul>
 	AutoRenew *uint64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 
-	// 安全组 ID 数组。请通过[DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447)接口获取实例的安全组 ID。
+	// <p>安全组 ID 数组。</p><ul><li>安全组是一种虚拟防火墙，对云数据库实例的网络访问进行控制。创建实例时，建议绑定相应的安全组。</li><li>请通过 <a href="https://cloud.tencent.com/document/product/239/34447">DescribeInstanceSecurityGroup</a> 接口获取实例的安全组 ID。</li></ul>
 	SecurityGroupIdList []*string `json:"SecurityGroupIdList,omitnil,omitempty" name:"SecurityGroupIdList"`
 
-	// 用户自定义的网络端口。默认为6379，范围为 [1024,65535]。
+	// <p>用户自定义的网络端口。默认为6379，范围为 [1024,65535]。</p>
 	VPort *uint64 `json:"VPort,omitnil,omitempty" name:"VPort"`
 
-	// 实例分片数量。
-	// - 标准版实例无需配置该参数。
-	// - 集群版实例，分片数量范围为：[1、3、5、8、12、16、24、32、40、48、64、80、96、128]。
+	// <p>实例分片数量。</p><ul><li>标准版实例无需配置该参数。</li><li>集群版实例，分片数量范围为：[1、3、5、8、12、16、24、32、40、48、64、80、96、128]。</li></ul>
 	RedisShardNum *int64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 实例副本数量。
-	// - Redis 内存版 4.0、5.0、6.2 标准架构和集群架构支持副本数量范围为[1,5]。
-	// - Redis 2.8标准版、CKV标准版只支持1副本。
+	// <p>实例副本数量。</p><ul><li>Redis 内存版 4.0、5.0、6.2、7.0 标准架构和集群架构支持副本数量范围为[1,5]。</li><li>Redis 2.8标准版、CKV标准版只支持1副本。</li></ul>
 	RedisReplicasNum *int64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
-	// 标识实例是否需支持副本只读。
-	// - Redis 2.8 标准版、CKV标准版不支持副本只读。
-	// - 开启副本只读，实例将自动读写分离，写请求路由到主节点，读请求路由到副本节点。
-	// - 如需开启副本只读，建议副本数量大于等于2。
+	// <p>标识实例是否需支持副本只读。</p><ul><li>Redis 2.8 标准版、CKV标准版不支持副本只读。</li><li>开启副本只读，实例将自动读写分离，写请求路由到主节点，读请求路由到副本节点。</li><li>如需开启副本只读，建议副本数量大于等于2。</li></ul>
 	ReplicasReadonly *bool `json:"ReplicasReadonly,omitnil,omitempty" name:"ReplicasReadonly"`
 
-	// 实例名称。命名要求：仅支持长度小于60的中文、英文或者数字，短划线"-"、下划线"_"。
+	// <p>实例名称。命名要求：仅支持长度小于60的中文、英文或者数字，短划线&quot;-&quot;、下划线&quot;_&quot;。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 配置实例是否支持免密码访问。
-	// - true：免密访问实例。
-	// - false：非免密访问实例。默认为非免密方式，仅VPC网络的实例支持免密码访问。
+	// <p>配置实例是否支持免密码访问。</p><ul><li>true：免密访问实例。</li><li>false：非免密访问实例。默认为非免密方式，仅VPC网络的实例支持免密码访问。</li></ul>
 	NoAuth *bool `json:"NoAuth,omitnil,omitempty" name:"NoAuth"`
 
-	// 实例的节点信息，包含节点 ID、节点类型、节点可用区 ID等。具体信息，请参见[RedisNodeInfo ](https://cloud.tencent.com/document/product/239/20022)。
-	// 目前支持传入节点的类型（主节点或者副本节点），节点的可用区。单可用区部署不需要传递此参数。
+	// <p>实例的节点信息，包含节点 ID、节点类型、节点可用区 ID等。具体信息，请参见<a href="https://cloud.tencent.com/document/product/239/20022">RedisNodeInfo </a>。<br>目前支持传入节点的类型（主节点或者副本节点），节点的可用区。未指定该参数时，在支持多可用区部署的地域，系统将默认创建多可用区架构实例。</p>
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
 
-	// 给实例设定标签。
+	// <p>给实例设定标签。</p>
 	ResourceTags []*ResourceTag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 指定实例所属的可用区名称。具体信息，请参见[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>指定实例所属的可用区名称。具体信息，请参见<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。</p>
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
-	// 指定实例相关的参数模板 ID。
-	// - 若不配置该参数，则系统会依据所选择的兼容版本及架构，自动适配对应的默认模板。
-	// - 请通过[DescribeParamTemplates](https://cloud.tencent.com/document/product/239/58750)接口，查询实例的参数模板列表，获取模板 ID 编号。
+	// <p>指定实例相关的参数模板 ID。</p><ul><li>若不配置该参数，则系统会依据所选择的兼容版本及架构，自动适配对应的默认模板。</li><li>请通过<a href="https://cloud.tencent.com/document/product/239/58750">DescribeParamTemplates</a>接口，查询实例的参数模板列表，获取模板 ID 编号。</li></ul>
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 
-	// 内部参数，标识创建实例是否需要检查。
-	// - false ：默认值。发送正常请求，通过检查后直接创建实例。
-	// - true：发送检查请求，不会创建实例。
+	// <p>内部参数，标识创建实例是否需要检查。</p><ul><li>false ：默认值。发送正常请求，通过检查后直接创建实例。</li><li>true：发送检查请求，不会创建实例。</li></ul>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 指定实例的产品版本。
-	// - local：本地盘版。
-	// - cloud：云盘版，
-	// - cdc：独享集群版。如果不传默认发货为本地盘版本。
+	// <p>指实例部署模式。</p><ul><li>local：传统架构，默认为 local。</li><li>cdc：独享集群。</li><li>cloud：云原生，当前已暂停售卖。</li></ul>
 	ProductVersion *string `json:"ProductVersion,omitnil,omitempty" name:"ProductVersion"`
 
-	// 独享集群 ID。当**ProductVersion**设置为**cdc**时，该参数必须设置。
+	// <p>独享集群 ID。</p><ul><li>当 <strong>ProductVersion</strong> 设置为 <strong>cdc</strong> 时，该参数必须设置。</li><li>请通过接口<a href="https://cloud.tencent.com/document/product/239/109628"> DescribeRedisClusters</a> 获取集群 ID。</li></ul>
 	RedisClusterId *string `json:"RedisClusterId,omitnil,omitempty" name:"RedisClusterId"`
 
-	// 告警策略 ID 数组。
-	// 
-	// - 请登录[腾讯云可观测平台-告警管理-策略管理](https://console.cloud.tencent.com/monitor/alarm/policy)获取告警策略 ID。
-	// - 若不配置该参数，则绑定默认告警策略。默认告警策略具体信息，请登录[腾讯云可观测平台-告警管理-策略管理](https://console.cloud.tencent.com/monitor/alarm/policy)查看。
+	// <p>告警策略 ID 数组。</p><ul><li>请登录<a href="https://console.cloud.tencent.com/monitor/alarm/policy">腾讯云可观测平台-告警管理-策略管理</a>获取告警策略 ID。</li><li>若不配置该参数，则绑定默认告警策略。默认告警策略具体信息，请登录<a href="https://console.cloud.tencent.com/monitor/alarm/policy">腾讯云可观测平台-告警管理-策略管理</a>查看。</li></ul>
 	AlarmPolicyList []*string `json:"AlarmPolicyList,omitnil,omitempty" name:"AlarmPolicyList"`
+
+	// <p>是否加密密码</p>
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 func (r *CreateInstancesRequest) ToJsonString() string {
@@ -1406,6 +1526,7 @@ func (r *CreateInstancesRequest) FromJsonString(s string) error {
 	delete(f, "ProductVersion")
 	delete(f, "RedisClusterId")
 	delete(f, "AlarmPolicyList")
+	delete(f, "EncryptPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstancesRequest has unknown keys!", "")
 	}
@@ -1414,11 +1535,16 @@ func (r *CreateInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstancesResponseParams struct {
-	// 交易的ID。
+	// <p>交易的ID。</p>
+	//
+	// Deprecated: DealId is deprecated.
 	DealId *string `json:"DealId,omitnil,omitempty" name:"DealId"`
 
-	// 实例ID。
+	// <p>实例ID。</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>订单号。</p>
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -1442,14 +1568,13 @@ func (r *CreateInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateParamTemplateRequestParams struct {
-	// 参数模板名称。
+	// 参数模板名称。字符长度要求为[2,64]。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 参数模板描述。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 产品类型。
-	// - 2：Redis 2.8 内存版（标准架构）。
 	// - 6：Redis 4.0 内存版（标准架构）。
 	// - 7：Redis 4.0 内存版（集群架构）。
 	// - 8：Redis 5.0 内存版（标准架构）。
@@ -1470,14 +1595,13 @@ type CreateParamTemplateRequestParams struct {
 type CreateParamTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 参数模板名称。
+	// 参数模板名称。字符长度要求为[2,64]。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 参数模板描述。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 产品类型。
-	// - 2：Redis 2.8 内存版（标准架构）。
 	// - 6：Redis 4.0 内存版（标准架构）。
 	// - 7：Redis 4.0 内存版（集群架构）。
 	// - 8：Redis 5.0 内存版（标准架构）。
@@ -1545,10 +1669,10 @@ func (r *CreateParamTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateReplicationGroupRequestParams struct {
-	// 指定复制组中的主实例ID。
+	// 指定复制组中的主实例ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 复制组名称。名称只支持长度为2-64个字符的中文、英文、数字、下划线_、分隔符-。
+	// 配置复制组名称。仅支持长度为2-64个字符的中文、英文、数字、下划线_、分隔符-。
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
 	// 备注信息。
@@ -1558,10 +1682,10 @@ type CreateReplicationGroupRequestParams struct {
 type CreateReplicationGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 指定复制组中的主实例ID。
+	// 指定复制组中的主实例ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 复制组名称。名称只支持长度为2-64个字符的中文、英文、数字、下划线_、分隔符-。
+	// 配置复制组名称。仅支持长度为2-64个字符的中文、英文、数字、下划线_、分隔符-。
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
 	// 备注信息。
@@ -1593,6 +1717,9 @@ func (r *CreateReplicationGroupRequest) FromJsonString(s string) error {
 type CreateReplicationGroupResponseParams struct {
 	// 异步流程ID。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 复制组string型id
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -1632,21 +1759,89 @@ type DelayDistribution struct {
 }
 
 // Predefined struct for user
+type DeleteExportTaskRequestParams struct {
+	// <p>指定删除的日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>指定删除日志的文件名。</p>
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DeleteExportTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>指定删除的日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>指定删除日志的文件名。</p>
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DeleteExportTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteExportTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogType")
+	delete(f, "FileName")
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteExportTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteExportTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteExportTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteExportTaskResponseParams `json:"Response"`
+}
+
+func (r *DeleteExportTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteExportTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteInstanceAccountRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 子账号名称
+	// 子账号名称。请登录[Redis控制台](https://console.cloud.tencent.com/redis)，切换至**账号管理**页面获取。具体信息，请参见[管理账号](https://cloud.tencent.com/document/product/239/36710)。
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 }
 
 type DeleteInstanceAccountRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 子账号名称
+	// 子账号名称。请登录[Redis控制台](https://console.cloud.tencent.com/redis)，切换至**账号管理**页面获取。具体信息，请参见[管理账号](https://cloud.tencent.com/document/product/239/36710)。
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 }
 
@@ -1697,14 +1892,14 @@ func (r *DeleteInstanceAccountResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteParamTemplateRequestParams struct {
-	// 参数模板 ID。
+	// 参数模板 ID。请登录 [Redis 控制台的参数模板](https://console.cloud.tencent.com/redis/templates)页面获取模板 ID。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 }
 
 type DeleteParamTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 参数模板 ID。
+	// 参数模板 ID。请登录 [Redis 控制台的参数模板](https://console.cloud.tencent.com/redis/templates)页面获取模板 ID。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 }
 
@@ -1751,26 +1946,30 @@ func (r *DeleteParamTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteReplicationInstanceRequestParams struct {
-	// 复制组ID
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据同步类型，true:需要数据强同步,false:不需要强同步，仅限删除主实例
+	// 数据同步类型。
+	// - true：需要数据强同步。
+	// - false：不需要强同步，仅限删除主实例。
 	SyncType *bool `json:"SyncType,omitnil,omitempty" name:"SyncType"`
 }
 
 type DeleteReplicationInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 复制组ID
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据同步类型，true:需要数据强同步,false:不需要强同步，仅限删除主实例
+	// 数据同步类型。
+	// - true：需要数据强同步。
+	// - false：不需要强同步，仅限删除主实例。
 	SyncType *bool `json:"SyncType,omitnil,omitempty" name:"SyncType"`
 }
 
@@ -1818,6 +2017,28 @@ func (r *DeleteReplicationInstanceResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *DeleteReplicationInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeliverSummary struct {
+	// <p>投递类型，store（存储类），mq（消息通道）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeliverType *string `json:"DeliverType,omitnil,omitempty" name:"DeliverType"`
+
+	// <p>投递子类型：cls，ckafka。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeliverSubType *string `json:"DeliverSubType,omitnil,omitempty" name:"DeliverSubType"`
+
+	// <p>投递订阅者</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeliverConsumer *string `json:"DeliverConsumer,omitnil,omitempty" name:"DeliverConsumer"`
+
+	// <p>投递订阅者名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeliverConsumerName *string `json:"DeliverConsumerName,omitnil,omitempty" name:"DeliverConsumerName"`
+
+	// <p>投递</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeliverError *string `json:"DeliverError,omitnil,omitempty" name:"DeliverError"`
 }
 
 // Predefined struct for user
@@ -1891,7 +2112,7 @@ func (r *DescribeAutoBackupConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBackupDetailRequestParams struct {
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 备份 ID，可通过接口 [DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011) 返回的参数 **RedisBackupSet** 获取。
@@ -1901,7 +2122,7 @@ type DescribeBackupDetailRequestParams struct {
 type DescribeBackupDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 备份 ID，可通过接口 [DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011) 返回的参数 **RedisBackupSet** 获取。
@@ -2073,14 +2294,13 @@ func (r *DescribeBackupDownloadRestrictionResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type DescribeBackupUrlRequestParams struct {
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 备份 ID，可通过 [DescribeInstanceBackups ](https://cloud.tencent.com/document/product/239/20011)接口返回的参数 RedisBackupSet 获取。
 	BackupId *string `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 
 	// 下载备份文件的网络限制类型，如果不配置该参数，则使用用户自定义的配置。
-	// 
 	// - NoLimit：不限制，腾讯云内外网均可以下载备份文件。
 	// -  LimitOnlyIntranet：仅腾讯云自动分配的内网地址可下载备份文件。
 	// - Customize：指用户自定义的私有网络可下载备份文件。
@@ -2090,7 +2310,6 @@ type DescribeBackupUrlRequestParams struct {
 	VpcComparisonSymbol *string `json:"VpcComparisonSymbol,omitnil,omitempty" name:"VpcComparisonSymbol"`
 
 	// 标识自定义的 LimitIp 地址是否可下载备份文件。
-	// 
 	// - In: 自定义的 IP 地址可以下载。默认为 In。
 	// - NotIn: 自定义的 IP 不可以下载。
 	IpComparisonSymbol *string `json:"IpComparisonSymbol,omitnil,omitempty" name:"IpComparisonSymbol"`
@@ -2105,14 +2324,13 @@ type DescribeBackupUrlRequestParams struct {
 type DescribeBackupUrlRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 备份 ID，可通过 [DescribeInstanceBackups ](https://cloud.tencent.com/document/product/239/20011)接口返回的参数 RedisBackupSet 获取。
 	BackupId *string `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 
 	// 下载备份文件的网络限制类型，如果不配置该参数，则使用用户自定义的配置。
-	// 
 	// - NoLimit：不限制，腾讯云内外网均可以下载备份文件。
 	// -  LimitOnlyIntranet：仅腾讯云自动分配的内网地址可下载备份文件。
 	// - Customize：指用户自定义的私有网络可下载备份文件。
@@ -2122,7 +2340,6 @@ type DescribeBackupUrlRequest struct {
 	VpcComparisonSymbol *string `json:"VpcComparisonSymbol,omitnil,omitempty" name:"VpcComparisonSymbol"`
 
 	// 标识自定义的 LimitIp 地址是否可下载备份文件。
-	// 
 	// - In: 自定义的 IP 地址可以下载。默认为 In。
 	// - NotIn: 自定义的 IP 不可以下载。
 	IpComparisonSymbol *string `json:"IpComparisonSymbol,omitnil,omitempty" name:"IpComparisonSymbol"`
@@ -2162,17 +2379,22 @@ func (r *DescribeBackupUrlRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeBackupUrlResponseParams struct {
 	// 外网下载地址（6小时内链接有效），该字段正在逐步废弃中。
+	//
+	// Deprecated: DownloadUrl is deprecated.
 	DownloadUrl []*string `json:"DownloadUrl,omitnil,omitempty" name:"DownloadUrl"`
 
 	// 内网下载地址（6小时内链接有效），该字段正在逐步废弃中。
+	//
+	// Deprecated: InnerDownloadUrl is deprecated.
 	InnerDownloadUrl []*string `json:"InnerDownloadUrl,omitnil,omitempty" name:"InnerDownloadUrl"`
 
 	// 文件名称，该字段正在逐步废弃中。
 	// 注意：此字段可能返回 null，表示取不到有效值。
+	//
+	// Deprecated: Filenames is deprecated.
 	Filenames []*string `json:"Filenames,omitnil,omitempty" name:"Filenames"`
 
 	// 备份文件信息列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupInfos []*BackupDownloadInfo `json:"BackupInfos,omitnil,omitempty" name:"BackupInfos"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2197,14 +2419,14 @@ func (r *DescribeBackupUrlResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBandwidthRangeRequestParams struct {
-	// 实例 ID。
+	// <p>实例 ID，请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeBandwidthRangeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// <p>实例 ID，请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -2229,16 +2451,16 @@ func (r *DescribeBandwidthRangeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBandwidthRangeResponseParams struct {
-	// 标准带宽。指购买实例时，系统为每个节点分配的带宽。
+	// <p>标准带宽。指购买实例时，系统为每个节点分配的带宽。</p>单位： MB/s。
 	BaseBandwidth *int64 `json:"BaseBandwidth,omitnil,omitempty" name:"BaseBandwidth"`
 
-	// 指实例的附加带宽。标准带宽不满足需求的情况下，用户可自行增加的带宽。<ul><li>开启副本只读时，实例总带宽 = 附加带宽 * 分片数 + 标准带宽 * 分片数 * Max ([只读副本数量, 1])，标准架构的分片数 = 1。</li><li>没有开启副本只读时，实例总带宽 = 附加带宽 * 分片数 + 标准带宽 * 分片数，标准架构的分片数 = 1。</li></ul>
+	// <p>指实例的附加带宽。标准带宽不满足需求的情况下，用户可自行增加的带宽。</p><ul><li>开启副本只读时，实例总带宽 = 附加带宽 * 分片数 + 标准带宽 * 分片数 * Max ([只读副本数量, 1])，标准架构的分片数 = 1。</li><li>没有开启副本只读时，实例总带宽 = 附加带宽 * 分片数 + 标准带宽 * 分片数，标准架构的分片数 = 1。</li></ul>单位： MB/s。
 	AddBandwidth *int64 `json:"AddBandwidth,omitnil,omitempty" name:"AddBandwidth"`
 
-	// 附加带宽设置下限。
+	// <p>附加带宽设置下限。</p>单位： MB/s。
 	MinAddBandwidth *int64 `json:"MinAddBandwidth,omitnil,omitempty" name:"MinAddBandwidth"`
 
-	// 附加带宽设置上限。
+	// <p>附加带宽设置上限。</p>单位： MB/s。
 	MaxAddBandwidth *int64 `json:"MaxAddBandwidth,omitnil,omitempty" name:"MaxAddBandwidth"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2476,6 +2698,87 @@ func (r *DescribeDBSecurityGroupsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeExportTasksRequestParams struct {
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>每页输出的任务列表大小。</p><ul><li>默认值：20。</li><li>取值范围：[1,100]。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移量。</p><ul><li>默认值：0。</li><li>取值：Limit 整数倍。计算公式：offset=limit*(页码-1)。</li></ul>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>指定查询的实例 ID。请登录<a href="https://console.cloud.tencent.com/redis">Redis 控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeExportTasksRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>每页输出的任务列表大小。</p><ul><li>默认值：20。</li><li>取值范围：[1,100]。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移量。</p><ul><li>默认值：0。</li><li>取值：Limit 整数倍。计算公式：offset=limit*(页码-1)。</li></ul>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>指定查询的实例 ID。请登录<a href="https://console.cloud.tencent.com/redis">Redis 控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeExportTasksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeExportTasksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogType")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeExportTasksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeExportTasksResponseParams struct {
+	// <p>查询日志记录的总数目。</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>日志文件属性信息，包含：文件名、文件大小、下载地址等。</p>
+	Items []*ExportFile `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeExportTasksResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeExportTasksResponseParams `json:"Response"`
+}
+
+func (r *DescribeExportTasksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeExportTasksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeGlobalReplicationAreaRequestParams struct {
 
 }
@@ -2531,26 +2834,26 @@ func (r *DescribeGlobalReplicationAreaResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceAccountRequestParams struct {
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 分页大小。
+	// <p>分页大小。默认值为20，最小值为1，最大值为100。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移量。取Limit整数倍。计算公式：offset=limit*(页码-1)。
+	// <p>分页偏移量。</p><ul><li>参数取值：Limit 的整数倍，offset=limit*(页码-1)。</li><li>默认值：0。</li></ul>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeInstanceAccountRequest struct {
 	*tchttp.BaseRequest
 	
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 分页大小。
+	// <p>分页大小。默认值为20，最小值为1，最大值为100。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移量。取Limit整数倍。计算公式：offset=limit*(页码-1)。
+	// <p>分页偏移量。</p><ul><li>参数取值：Limit 的整数倍，offset=limit*(页码-1)。</li><li>默认值：0。</li></ul>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -2577,12 +2880,10 @@ func (r *DescribeInstanceAccountRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceAccountResponseParams struct {
-	// 账号详细信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>账号详细信息。</p>
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// 账号个数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>账号个数。</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2616,10 +2917,10 @@ type DescribeInstanceBackupsRequestParams struct {
 	// 待操作的实例ID，可通过 DescribeInstance 接口返回值中的 InstanceId 获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 开始时间，格式如：2017-02-08 16:46:34。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
+	// 开始时间，格式如：2017-02-08 16:46:34。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 结束时间，格式如：2017-02-08 19:09:26。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
+	// 结束时间，格式如：2017-02-08 19:09:26。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表，查询时间最大跨度30天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 备份任务的状态：
@@ -2647,10 +2948,10 @@ type DescribeInstanceBackupsRequest struct {
 	// 待操作的实例ID，可通过 DescribeInstance 接口返回值中的 InstanceId 获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 开始时间，格式如：2017-02-08 16:46:34。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
+	// 开始时间，格式如：2017-02-08 16:46:34。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 结束时间，格式如：2017-02-08 19:09:26。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
+	// 结束时间，格式如：2017-02-08 19:09:26。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表，查询时间最大跨度30天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 备份任务的状态：
@@ -2721,14 +3022,14 @@ func (r *DescribeInstanceBackupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceDTSInfoRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeInstanceDTSInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -2754,35 +3055,27 @@ func (r *DescribeInstanceDTSInfoRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeInstanceDTSInfoResponseParams struct {
 	// DTS任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// DTS任务名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
 	// 任务状态,取值为：1-创建中(Creating),3-校验中(Checking)4-校验通过(CheckPass),5-校验不通过（CheckNotPass）,7-任务运行(Running),8-准备完成（ReadyComplete）,9-任务成功（Success）,10-任务失败（Failed）,11-撤销中（Stopping）,12-完成中（Completing）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 状态描述
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
 
 	// 同步时延，单位：字节
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 断开时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CutDownTime *string `json:"CutDownTime,omitnil,omitempty" name:"CutDownTime"`
 
 	// 源实例信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SrcInfo *DescribeInstanceDTSInstanceInfo `json:"SrcInfo,omitnil,omitempty" name:"SrcInfo"`
 
 	// 目标实例信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DstInfo *DescribeInstanceDTSInstanceInfo `json:"DstInfo,omitnil,omitempty" name:"DstInfo"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2807,49 +3100,49 @@ func (r *DescribeInstanceDTSInfoResponse) FromJsonString(s string) error {
 
 type DescribeInstanceDTSInstanceInfo struct {
 	// 地域 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
 	// 实例 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 仓库ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SetId *int64 `json:"SetId,omitnil,omitempty" name:"SetId"`
 
 	// 可用区ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 实例类型。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 实例名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 实例访问地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 状态。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 // Predefined struct for user
 type DescribeInstanceDealDetailRequestParams struct {
-	// 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。数组最大长度限制为10
+	// 订单号，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。数组最大长度限制为10
+	//
+	// Deprecated: DealIds is deprecated.
 	DealIds []*string `json:"DealIds,omitnil,omitempty" name:"DealIds"`
+
+	// 订单号，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealName。数组最大长度限制为10
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 }
 
 type DescribeInstanceDealDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。数组最大长度限制为10
+	// 订单号，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。数组最大长度限制为10
 	DealIds []*string `json:"DealIds,omitnil,omitempty" name:"DealIds"`
+
+	// 订单号，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealName。数组最大长度限制为10
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 }
 
 func (r *DescribeInstanceDealDetailRequest) ToJsonString() string {
@@ -2865,6 +3158,7 @@ func (r *DescribeInstanceDealDetailRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "DealIds")
+	delete(f, "DealName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceDealDetailRequest has unknown keys!", "")
 	}
@@ -2898,19 +3192,23 @@ func (r *DescribeInstanceDealDetailResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceEventsRequestParams struct {
-	// 配置查询事件执行计划的起始日期。
+	// 配置查询事件执行计划的起始日期，查询日期最大跨度30天。
 	ExecutionStartDate *string `json:"ExecutionStartDate,omitnil,omitempty" name:"ExecutionStartDate"`
 
-	// 配置查询事件执行计划的结束日期。
+	// 配置查询事件执行计划的结束日期，查询日期最大跨度30天。
 	ExecutionEndDate *string `json:"ExecutionEndDate,omitnil,omitempty" name:"ExecutionEndDate"`
 
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 输出每页显示事件的数量，默认：10。
+	// 输出每页显示事件的数量。
+	// - 默认值：10。
+	// - 取值范围：[1,100]。
 	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
 
-	// 配置查询事件的输出页码，即支持根据PageNo（页码）与 PageSize （每页输出数量）查询某一页的事件。默认：1。
+	// 配置查询事件的输出页码，即支持根据PageNo（页码）与 PageSize （每页输出数量）查询某一页的事件。
+	// - 默认值：1。
+	// - 取值范围：大于0 的正整数。
 	PageNo *int64 `json:"PageNo,omitnil,omitempty" name:"PageNo"`
 
 	// 事件当前状态。
@@ -2934,19 +3232,23 @@ type DescribeInstanceEventsRequestParams struct {
 type DescribeInstanceEventsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 配置查询事件执行计划的起始日期。
+	// 配置查询事件执行计划的起始日期，查询日期最大跨度30天。
 	ExecutionStartDate *string `json:"ExecutionStartDate,omitnil,omitempty" name:"ExecutionStartDate"`
 
-	// 配置查询事件执行计划的结束日期。
+	// 配置查询事件执行计划的结束日期，查询日期最大跨度30天。
 	ExecutionEndDate *string `json:"ExecutionEndDate,omitnil,omitempty" name:"ExecutionEndDate"`
 
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 输出每页显示事件的数量，默认：10。
+	// 输出每页显示事件的数量。
+	// - 默认值：10。
+	// - 取值范围：[1,100]。
 	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
 
-	// 配置查询事件的输出页码，即支持根据PageNo（页码）与 PageSize （每页输出数量）查询某一页的事件。默认：1。
+	// 配置查询事件的输出页码，即支持根据PageNo（页码）与 PageSize （每页输出数量）查询某一页的事件。
+	// - 默认值：1。
+	// - 取值范围：大于0 的正整数。
 	PageNo *int64 `json:"PageNo,omitnil,omitempty" name:"PageNo"`
 
 	// 事件当前状态。
@@ -3023,14 +3325,14 @@ func (r *DescribeInstanceEventsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceLogDeliveryRequestParams struct {
-	// 实例ID。
+	// 实例ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeInstanceLogDeliveryRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// 实例ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -3351,14 +3653,14 @@ func (r *DescribeInstanceMonitorHotKeyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceMonitorSIPRequestParams struct {
-	// 实例Id
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeInstanceMonitorSIPRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例Id
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -3408,7 +3710,7 @@ func (r *DescribeInstanceMonitorSIPResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceMonitorTookDistRequestParams struct {
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 查询时间日期。
@@ -3425,7 +3727,7 @@ type DescribeInstanceMonitorTookDistRequestParams struct {
 type DescribeInstanceMonitorTookDistRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 查询时间日期。
@@ -3487,7 +3789,7 @@ func (r *DescribeInstanceMonitorTookDistResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type DescribeInstanceMonitorTopNCmdRequestParams struct {
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 时间范围。
@@ -3501,7 +3803,7 @@ type DescribeInstanceMonitorTopNCmdRequestParams struct {
 type DescribeInstanceMonitorTopNCmdRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 时间范围。
@@ -3559,7 +3861,7 @@ func (r *DescribeInstanceMonitorTopNCmdResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeInstanceMonitorTopNCmdTookRequestParams struct {
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 查询时间范围。
@@ -3573,7 +3875,7 @@ type DescribeInstanceMonitorTopNCmdTookRequestParams struct {
 type DescribeInstanceMonitorTopNCmdTookRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 查询时间范围。
@@ -3681,21 +3983,18 @@ type DescribeInstanceNodeInfoResponseParams struct {
 	ProxyCount *int64 `json:"ProxyCount,omitnil,omitempty" name:"ProxyCount"`
 
 	// Proxy节点信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Proxy []*ProxyNodes `json:"Proxy,omitnil,omitempty" name:"Proxy"`
 
 	// Redis节点数量。
 	RedisCount *int64 `json:"RedisCount,omitnil,omitempty" name:"RedisCount"`
 
 	// Redis节点信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Redis []*RedisNodes `json:"Redis,omitnil,omitempty" name:"Redis"`
 
 	// 该参数不再使用，请忽略。
 	TendisCount *int64 `json:"TendisCount,omitnil,omitempty" name:"TendisCount"`
 
 	// 该参数不再使用，请忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tendis []*TendisNodes `json:"Tendis,omitnil,omitempty" name:"Tendis"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3720,26 +4019,26 @@ func (r *DescribeInstanceNodeInfoResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceParamRecordsRequestParams struct {
-	// 实例Id
+	// 实例 ID 。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 分页大小
+	// 分页大小。默认为100，最大值为 200。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 偏移量，取Limit整数倍，默认值为0。计算公式：offset=limit*(页码-1)。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeInstanceParamRecordsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例Id
+	// 实例 ID 。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 分页大小
+	// 分页大小。默认为100，最大值为 200。
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 偏移量，取Limit整数倍，默认值为0。计算公式：offset=limit*(页码-1)。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -3863,14 +4162,14 @@ func (r *DescribeInstanceParamsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceSecurityGroupRequestParams struct {
-	// 实例 ID 列表，数组长度限制[0,100]。例如：["crs-f2ho5rsz\n"]
+	// 实例 ID 列表，数组长度限制[0,100]。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 }
 
 type DescribeInstanceSecurityGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID 列表，数组长度限制[0,100]。例如：["crs-f2ho5rsz\n"]
+	// 实例 ID 列表，数组长度限制[0,100]。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 }
 
@@ -3923,9 +4222,9 @@ type DescribeInstanceShardsRequestParams struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 是否过滤掉从节信息。
+	// 指定是否过滤掉从节信息。
 	// - true；过滤从节点。
-	// - false：不过滤。
+	// - false：不过滤。默认为 false。
 	FilterSlave *bool `json:"FilterSlave,omitnil,omitempty" name:"FilterSlave"`
 }
 
@@ -3935,9 +4234,9 @@ type DescribeInstanceShardsRequest struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 是否过滤掉从节信息。
+	// 指定是否过滤掉从节信息。
 	// - true；过滤从节点。
-	// - false：不过滤。
+	// - false：不过滤。默认为 false。
 	FilterSlave *bool `json:"FilterSlave,omitnil,omitempty" name:"FilterSlave"`
 }
 
@@ -3991,12 +4290,45 @@ func (r *DescribeInstanceShardsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceSpecBandwidthRequestParams struct {
+	// <p>指定实例 ID。请登录 <a href="https://console.cloud.tencent.com/redis">Redis控制台</a> 在实例列表复制实例 ID。同时，InstanceId 与规格参数不能同时为空，至少提供一种。</p><ul><li>若仅指定 InstanceId：查询该实例当前规格的带宽。</li><li>若指定 InstanceId + 至少一个规格参数（ShardSize、ShardNum 或 ReplicateNum）：计算变更规格后的带宽。</li><li>若指定部分或所有规格参数（ShardSize、ShardNum、ReplicateNum 与 Type），而不指定 InstanceId：根据规格组合查询理论带宽。</li></ul>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
+	// <p>分片大小。单位：MB。</p>
+	ShardSize *int64 `json:"ShardSize,omitnil,omitempty" name:"ShardSize"`
+
+	// <p>分片数量。</p>
+	ShardNum *int64 `json:"ShardNum,omitnil,omitempty" name:"ShardNum"`
+
+	// <p>复制组数量。</p>
+	ReplicateNum *int64 `json:"ReplicateNum,omitnil,omitempty" name:"ReplicateNum"`
+
+	// <p>只读权重。- 100：开启从只读。- 0：关闭从只读。</p>
+	ReadOnlyWeight *int64 `json:"ReadOnlyWeight,omitnil,omitempty" name:"ReadOnlyWeight"`
+
+	// <p>实例类型，同 <a href="https://cloud.tencent.com/document/api/239/20026">CreateInstances</a> 的Type。</p>
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 type DescribeInstanceSpecBandwidthRequest struct {
 	*tchttp.BaseRequest
 	
+	// <p>指定实例 ID。请登录 <a href="https://console.cloud.tencent.com/redis">Redis控制台</a> 在实例列表复制实例 ID。同时，InstanceId 与规格参数不能同时为空，至少提供一种。</p><ul><li>若仅指定 InstanceId：查询该实例当前规格的带宽。</li><li>若指定 InstanceId + 至少一个规格参数（ShardSize、ShardNum 或 ReplicateNum）：计算变更规格后的带宽。</li><li>若指定部分或所有规格参数（ShardSize、ShardNum、ReplicateNum 与 Type），而不指定 InstanceId：根据规格组合查询理论带宽。</li></ul>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>分片大小。单位：MB。</p>
+	ShardSize *int64 `json:"ShardSize,omitnil,omitempty" name:"ShardSize"`
+
+	// <p>分片数量。</p>
+	ShardNum *int64 `json:"ShardNum,omitnil,omitempty" name:"ShardNum"`
+
+	// <p>复制组数量。</p>
+	ReplicateNum *int64 `json:"ReplicateNum,omitnil,omitempty" name:"ReplicateNum"`
+
+	// <p>只读权重。- 100：开启从只读。- 0：关闭从只读。</p>
+	ReadOnlyWeight *int64 `json:"ReadOnlyWeight,omitnil,omitempty" name:"ReadOnlyWeight"`
+
+	// <p>实例类型，同 <a href="https://cloud.tencent.com/document/api/239/20026">CreateInstances</a> 的Type。</p>
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 func (r *DescribeInstanceSpecBandwidthRequest) ToJsonString() string {
@@ -4011,7 +4343,12 @@ func (r *DescribeInstanceSpecBandwidthRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "InstanceId")
+	delete(f, "ShardSize")
+	delete(f, "ShardNum")
+	delete(f, "ReplicateNum")
+	delete(f, "ReadOnlyWeight")
+	delete(f, "Type")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceSpecBandwidthRequest has unknown keys!", "")
 	}
@@ -4020,6 +4357,12 @@ func (r *DescribeInstanceSpecBandwidthRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceSpecBandwidthResponseParams struct {
+	// <p>基础带宽。</p>
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
+
+	// <p>链接限制。</p>
+	ClientLimit *int64 `json:"ClientLimit,omitnil,omitempty" name:"ClientLimit"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -4042,26 +4385,26 @@ func (r *DescribeInstanceSpecBandwidthResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceSupportFeatureRequestParams struct {
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
-	// 示例值：crs-asdasdas
+	// 指定实例 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 功能特性名称
-	// - read-local-node-only 就近接入功能
-	// - multi-account 多账号功能
+	// 支持查询的功能特性如下所示。
+	// - read-local-node-only：就近接入。
+	// - multi-account：多账号管理。
+	// - auto-failback：故障恢复场景，主节点是否开启自动回切。
 	FeatureName *string `json:"FeatureName,omitnil,omitempty" name:"FeatureName"`
 }
 
 type DescribeInstanceSupportFeatureRequest struct {
 	*tchttp.BaseRequest
 	
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
-	// 示例值：crs-asdasdas
+	// 指定实例 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 功能特性名称
-	// - read-local-node-only 就近接入功能
-	// - multi-account 多账号功能
+	// 支持查询的功能特性如下所示。
+	// - read-local-node-only：就近接入。
+	// - multi-account：多账号管理。
+	// - auto-failback：故障恢复场景，主节点是否开启自动回切。
 	FeatureName *string `json:"FeatureName,omitnil,omitempty" name:"FeatureName"`
 }
 
@@ -4260,6 +4603,7 @@ type DescribeInstancesRequestParams struct {
 	// - 16：Redis 6.2 内存版（集群架构）。
 	// - 17：Redis 7.0 内存版（标准架构）。
 	// - 18：Redis 7.0 内存版（集群架构）。
+	// - 200:Memcached 1.6 内存版（集群架构）。
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 该参数为数组类型，支持配置实例名称、实例 ID、IP地址，其中实例名称为模糊匹配，实例 ID 和 IP 地址精确匹配。
@@ -4385,6 +4729,7 @@ type DescribeInstancesRequest struct {
 	// - 16：Redis 6.2 内存版（集群架构）。
 	// - 17：Redis 7.0 内存版（标准架构）。
 	// - 18：Redis 7.0 内存版（集群架构）。
+	// - 200:Memcached 1.6 内存版（集群架构）。
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 该参数为数组类型，支持配置实例名称、实例 ID、IP地址，其中实例名称为模糊匹配，实例 ID 和 IP 地址精确匹配。
@@ -4489,6 +4834,218 @@ func (r *DescribeInstancesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogInstanceListRequestParams struct {
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>每页输出的任务列表大小。</p><ul><li>取值范围：[1,100]。</li><li>默认值：20。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移量。默认为0。取值为 Limit 整数倍。计算公式：offset=limit*(页码-1)。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>设置日志筛选字段，过滤并返回符合条件的日志。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>日志子类型。</p><p>枚举值：</p><ul><li>write： 写日志。</li><li>read： 读日志。</li><li>all： 读写日志。</li></ul>
+	LogSubType *string `json:"LogSubType,omitnil,omitempty" name:"LogSubType"`
+
+	// <p>日志开关。不传查询所有日志实例。</p><ul><li>on：开启。</li><li>off：关闭。</li></ul>
+	LogSwitch *string `json:"LogSwitch,omitnil,omitempty" name:"LogSwitch"`
+}
+
+type DescribeLogInstanceListRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>每页输出的任务列表大小。</p><ul><li>取值范围：[1,100]。</li><li>默认值：20。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移量。默认为0。取值为 Limit 整数倍。计算公式：offset=limit*(页码-1)。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>设置日志筛选字段，过滤并返回符合条件的日志。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>日志子类型。</p><p>枚举值：</p><ul><li>write： 写日志。</li><li>read： 读日志。</li><li>all： 读写日志。</li></ul>
+	LogSubType *string `json:"LogSubType,omitnil,omitempty" name:"LogSubType"`
+
+	// <p>日志开关。不传查询所有日志实例。</p><ul><li>on：开启。</li><li>off：关闭。</li></ul>
+	LogSwitch *string `json:"LogSwitch,omitnil,omitempty" name:"LogSwitch"`
+}
+
+func (r *DescribeLogInstanceListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogInstanceListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogType")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	delete(f, "LogSubType")
+	delete(f, "LogSwitch")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLogInstanceListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogInstanceListResponseParams struct {
+	// <p>查询到的日志的数量。</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>日志平台实例信息。</p>
+	Items []*LogInstance `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeLogInstanceListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeLogInstanceListResponseParams `json:"Response"`
+}
+
+func (r *DescribeLogInstanceListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogInstanceListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogsRequestParams struct {
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志检索的起始时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 00:00:00。返回结果中仅包含该时间点及之后的日志。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>日志检索的结束时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 23:59:59。返回结果中仅包含该时间点及之前的日志。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>过滤条件</p>
+	LogFilter []*LogFilter `json:"LogFilter,omitnil,omitempty" name:"LogFilter"`
+
+	// <p>每页返回的日志列表大小。</p><ul><li>默认值：20。</li><li>取值范围：[1,100]。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页的起始偏移量。</p><ul><li>默认：0。</li><li>取值：Limit 整数倍。计算公式：offset=limit*(页码-1)。</li></ul>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>日志排序方式，默认值为 DESC。取值如下：</p><ul><li>ASC：按时间升序排列，最早的日志在前。</li><li>DESC：按时间降序排列，最新的日志在前。</li></ul>
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// <p>排序字段，指定按哪个字段对日志进行排序。</p>
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+}
+
+type DescribeLogsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志检索的起始时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 00:00:00。返回结果中仅包含该时间点及之后的日志。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>日志检索的结束时间。</p><p>参数格式：YYYY-MM-DD HH:mm:ss，例如 2026-03-06 23:59:59。返回结果中仅包含该时间点及之前的日志。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>过滤条件</p>
+	LogFilter []*LogFilter `json:"LogFilter,omitnil,omitempty" name:"LogFilter"`
+
+	// <p>每页返回的日志列表大小。</p><ul><li>默认值：20。</li><li>取值范围：[1,100]。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页的起始偏移量。</p><ul><li>默认：0。</li><li>取值：Limit 整数倍。计算公式：offset=limit*(页码-1)。</li></ul>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>日志排序方式，默认值为 DESC。取值如下：</p><ul><li>ASC：按时间升序排列，最早的日志在前。</li><li>DESC：按时间降序排列，最新的日志在前。</li></ul>
+	Order *string `json:"Order,omitnil,omitempty" name:"Order"`
+
+	// <p>排序字段，指定按哪个字段对日志进行排序。</p>
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+}
+
+func (r *DescribeLogsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "LogType")
+	delete(f, "LogFilter")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Order")
+	delete(f, "OrderBy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLogsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogsResponseParams struct {
+	// <p>查询的日志总数量。</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>日志详情。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*LogResult `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeLogsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeLogsResponseParams `json:"Response"`
+}
+
+func (r *DescribeLogsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4641,49 +5198,39 @@ func (r *DescribeParamTemplateInfoResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeParamTemplatesRequestParams struct {
-	// 产品类型数组。
-	// - 2：Redis 2.8 内存版（标准架构）。
-	// - 3：CKV 3.2 内存版（标准架构）。
-	// - 4：CKV 3.2 内存版（集群架构）。
-	// - 6：Redis 4.0 内存版（标准架构）。
-	// - 7：Redis 4.0 内存版（集群架构）。
-	// - 8：Redis 5.0 内存版（标准架构）。
-	// - 9：Redis 5.0 内存版（集群架构）。
-	// - 15：Redis 6.2 内存版（标准架构）。
-	// - 16：Redis 6.2 内存版（集群架构）。
-	// - 17：Redis 7.0 内存版（标准架构）。
-	// - 18：Redis 7.0 内存版（集群架构）。
+	// <p>指定查询的产品版本与架构。</p><ul><li>6：Redis 4.0 标准架构。</li><li>7：Redis 4.0 集群架构。</li><li>8：Redis 5.0 标准架构。</li><li>9：Redis 5.0 集群架构。</li><li>15：Redis 6.2 标准架构。</li><li>16：Redis 6.2 集群架构。</li><li>17：Redis 7.0 标准架构。</li><li>18：Redis 7.0 集群架构。</li><li>19：ValKey 8.0 标准架构。</li><li>20：ValKey 8.0 集群架构。</li></ul>
 	ProductTypes []*int64 `json:"ProductTypes,omitnil,omitempty" name:"ProductTypes"`
 
-	// 模板名称数组。数组最大长度限制为50
+	// <p>指定查询的参数模板名称。</p><ul><li>数据类型：字符串数组，最大长度限制为50。</li><li>获取方式：请通过 <a href="https://console.cloud.tencent.com/redis/templates">Redis 控制台的参数模版</a> 页面复制自定义模板或系统默认模板的模板名称。</li></ul>
 	TemplateNames []*string `json:"TemplateNames,omitnil,omitempty" name:"TemplateNames"`
 
-	// 模板ID数组。数组最大长度限制为50
+	// <p>指定查询的参数模板 ID。</p><ul><li>数据类型：字符串数组，最大长度限制为50。</li><li>获取方式：请通过 <a href="https://console.cloud.tencent.com/redis/templates">Redis 控制台的参数模版</a> 页面复制自定义模板或系统默认模板的模板 ID。</li></ul>
 	TemplateIds []*string `json:"TemplateIds,omitnil,omitempty" name:"TemplateIds"`
+
+	// <p>指定查询结果的分页大小，即每页返回的记录数量。</p><ul><li>取值范围：0～200。</li><li>默认值：200。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移量，用于指定查询结果的起始位置。</p><ul><li>取值：必须为 Limit 的整数倍，默认值为 0。</li><li>计算公式：offset=limit*(页码-1)。</li></ul>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeParamTemplatesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 产品类型数组。
-	// - 2：Redis 2.8 内存版（标准架构）。
-	// - 3：CKV 3.2 内存版（标准架构）。
-	// - 4：CKV 3.2 内存版（集群架构）。
-	// - 6：Redis 4.0 内存版（标准架构）。
-	// - 7：Redis 4.0 内存版（集群架构）。
-	// - 8：Redis 5.0 内存版（标准架构）。
-	// - 9：Redis 5.0 内存版（集群架构）。
-	// - 15：Redis 6.2 内存版（标准架构）。
-	// - 16：Redis 6.2 内存版（集群架构）。
-	// - 17：Redis 7.0 内存版（标准架构）。
-	// - 18：Redis 7.0 内存版（集群架构）。
+	// <p>指定查询的产品版本与架构。</p><ul><li>6：Redis 4.0 标准架构。</li><li>7：Redis 4.0 集群架构。</li><li>8：Redis 5.0 标准架构。</li><li>9：Redis 5.0 集群架构。</li><li>15：Redis 6.2 标准架构。</li><li>16：Redis 6.2 集群架构。</li><li>17：Redis 7.0 标准架构。</li><li>18：Redis 7.0 集群架构。</li><li>19：ValKey 8.0 标准架构。</li><li>20：ValKey 8.0 集群架构。</li></ul>
 	ProductTypes []*int64 `json:"ProductTypes,omitnil,omitempty" name:"ProductTypes"`
 
-	// 模板名称数组。数组最大长度限制为50
+	// <p>指定查询的参数模板名称。</p><ul><li>数据类型：字符串数组，最大长度限制为50。</li><li>获取方式：请通过 <a href="https://console.cloud.tencent.com/redis/templates">Redis 控制台的参数模版</a> 页面复制自定义模板或系统默认模板的模板名称。</li></ul>
 	TemplateNames []*string `json:"TemplateNames,omitnil,omitempty" name:"TemplateNames"`
 
-	// 模板ID数组。数组最大长度限制为50
+	// <p>指定查询的参数模板 ID。</p><ul><li>数据类型：字符串数组，最大长度限制为50。</li><li>获取方式：请通过 <a href="https://console.cloud.tencent.com/redis/templates">Redis 控制台的参数模版</a> 页面复制自定义模板或系统默认模板的模板 ID。</li></ul>
 	TemplateIds []*string `json:"TemplateIds,omitnil,omitempty" name:"TemplateIds"`
+
+	// <p>指定查询结果的分页大小，即每页返回的记录数量。</p><ul><li>取值范围：0～200。</li><li>默认值：200。</li></ul>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移量，用于指定查询结果的起始位置。</p><ul><li>取值：必须为 Limit 的整数倍，默认值为 0。</li><li>计算公式：offset=limit*(页码-1)。</li></ul>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeParamTemplatesRequest) ToJsonString() string {
@@ -4701,6 +5248,8 @@ func (r *DescribeParamTemplatesRequest) FromJsonString(s string) error {
 	delete(f, "ProductTypes")
 	delete(f, "TemplateNames")
 	delete(f, "TemplateIds")
+	delete(f, "Limit")
+	delete(f, "Offset")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeParamTemplatesRequest has unknown keys!", "")
 	}
@@ -4709,10 +5258,10 @@ func (r *DescribeParamTemplatesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeParamTemplatesResponseParams struct {
-	// 该用户的参数模板数量。
+	// <p>该用户的参数模板数量。</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 参数模板详情。
+	// <p>参数模板详情。</p>
 	Items []*ParamTemplateInfo `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4766,7 +5315,7 @@ func (r *DescribeProductInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeProductInfoResponseParams struct {
-	// 地域售卖信息。
+	// 地域售卖信息。即使指定具体地域，也返回所有地域的售卖信息。
 	RegionSet []*RegionConf `json:"RegionSet,omitnil,omitempty" name:"RegionSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4791,20 +5340,26 @@ func (r *DescribeProductInfoResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeProjectSecurityGroupRequestParams struct {
-	// 0:默认项目；-1 所有项目; >0: 特定项目
+	// 指定查询的项目 ID。
+	// - 0：默认项目。
+	// - -1：所有项目。
+	// - 大于0：特定项目。请登录[Redis控制台的项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 安全组Id
+	// 安全组 ID，通过接口[DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447)的返回参数 **InstanceSecurityGroupsDetail** 的子参数 **SecurityGroupId** 获取。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 }
 
 type DescribeProjectSecurityGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 0:默认项目；-1 所有项目; >0: 特定项目
+	// 指定查询的项目 ID。
+	// - 0：默认项目。
+	// - -1：所有项目。
+	// - 大于0：特定项目。请登录[Redis控制台的项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 安全组Id
+	// 安全组 ID，通过接口[DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447)的返回参数 **InstanceSecurityGroupsDetail** 的子参数 **SecurityGroupId** 获取。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 }
 
@@ -4858,7 +5413,7 @@ type DescribeProjectSecurityGroupsRequestParams struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 项目 ID。
+	// 项目 ID，请登录[Redis控制台的项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 偏移量，取值为Limit的整数倍。
@@ -4877,7 +5432,7 @@ type DescribeProjectSecurityGroupsRequest struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 项目 ID。
+	// 项目 ID，请登录[Redis控制台的项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 偏移量，取值为Limit的整数倍。
@@ -4946,19 +5501,19 @@ type DescribeProxySlowLogRequestParams struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 慢查询的开始时间。
+	// 慢查询的开始时间，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 慢查询的结束时间。
+	// 慢查询的结束时间，查询时间最大跨度30天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 慢查询阈值，单位：毫秒。
+	// 慢查询阈值。取值为大于0 的正整数。单位：毫秒。
 	MinQueryTime *int64 `json:"MinQueryTime,omitnil,omitempty" name:"MinQueryTime"`
 
-	// 分页大小。默认为 20，取值范围[20,1000]。
+	// 每页输出的任务列表大小。默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍。
+	// 分页偏移量。默认为0。取值为 Limit 整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -4968,19 +5523,19 @@ type DescribeProxySlowLogRequest struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 慢查询的开始时间。
+	// 慢查询的开始时间，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 慢查询的结束时间。
+	// 慢查询的结束时间，查询时间最大跨度30天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 慢查询阈值，单位：毫秒。
+	// 慢查询阈值。取值为大于0 的正整数。单位：毫秒。
 	MinQueryTime *int64 `json:"MinQueryTime,omitnil,omitempty" name:"MinQueryTime"`
 
-	// 分页大小。默认为 20，取值范围[20,1000]。
+	// 每页输出的任务列表大小。默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍。
+	// 分页偏移量。默认为0。取值为 Limit 整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -5013,7 +5568,7 @@ type DescribeProxySlowLogResponseParams struct {
 	// 慢查询总数。
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 慢查询详情。
+	// 慢查询详情，注意：TotalCount大于1W，即慢日志超过1万条，不支持返回日志详情，返回数据为空。 建议缩小BeginTime和EndTime的时间间隔，多次查询。
 	InstanceProxySlowLogDetail []*InstanceProxySlowlogDetail `json:"InstanceProxySlowLogDetail,omitnil,omitempty" name:"InstanceProxySlowLogDetail"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5038,14 +5593,16 @@ func (r *DescribeProxySlowLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRedisClusterOverviewRequestParams struct {
-	// 本地专用集群id
+	// 本地专用集群 ID，请登录[专用集群控制台](https://console.cloud.tencent.com/cdc/dedicatedcluster/index?rid=1
+	// )实例列表获取集群 ID。
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 }
 
 type DescribeRedisClusterOverviewRequest struct {
 	*tchttp.BaseRequest
 	
-	// 本地专用集群id
+	// 本地专用集群 ID，请登录[专用集群控制台](https://console.cloud.tencent.com/cdc/dedicatedcluster/index?rid=1
+	// )实例列表获取集群 ID。
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 }
 
@@ -5098,62 +5655,78 @@ func (r *DescribeRedisClusterOverviewResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRedisClustersRequestParams struct {
-	// Redis独享集群id
+	// Redis独享集群 ID。请登录[专用集群控制台](https://console.cloud.tencent.com/cdc/dedicatedcluster/index?rid=1
+	// )切换至**云服务管理**页面，在下拉框选择**云数据库 Redis**，可获取独享集群ID。
 	RedisClusterIds []*string `json:"RedisClusterIds,omitnil,omitempty" name:"RedisClusterIds"`
 
-	// 集群状态：1-流程中，2-运行中，3-已隔离
+	// 集群状态。
+	// - 1：流程。
+	// - 2：运行中。
+	// - 3：已隔离。
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 项目ID数组
+	// 项目ID数组。请登录[项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectIds []*int64 `json:"ProjectIds,omitnil,omitempty" name:"ProjectIds"`
 
-	// 续费模式：0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+	// 续费模式。
+	// - 0：默认状态，手动续费。
+	// - 1：自动续费。
+	// - 2：明确不自动续费。
 	AutoRenewFlag []*int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// Redis独享集群名称
+	// Redis 独享集群名称。
 	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
-	// 搜索关键词：支持集群Id、集群名称
+	// 搜索关键词：支持集群 ID、集群名称。
 	SearchKey *string `json:"SearchKey,omitnil,omitempty" name:"SearchKey"`
 
-	// 分页限制返回大小，不传则默认为20
+	// 分页限制返回大小，不传则默认为20。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 偏移量，取Limit整数倍
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 本地专用集群id
+	// 本地专用集群 ID，请登录[专用集群控制台](https://console.cloud.tencent.com/cdc/dedicatedcluster/index?rid=1
+	// )实例列表获取集群 ID。
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 }
 
 type DescribeRedisClustersRequest struct {
 	*tchttp.BaseRequest
 	
-	// Redis独享集群id
+	// Redis独享集群 ID。请登录[专用集群控制台](https://console.cloud.tencent.com/cdc/dedicatedcluster/index?rid=1
+	// )切换至**云服务管理**页面，在下拉框选择**云数据库 Redis**，可获取独享集群ID。
 	RedisClusterIds []*string `json:"RedisClusterIds,omitnil,omitempty" name:"RedisClusterIds"`
 
-	// 集群状态：1-流程中，2-运行中，3-已隔离
+	// 集群状态。
+	// - 1：流程。
+	// - 2：运行中。
+	// - 3：已隔离。
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 项目ID数组
+	// 项目ID数组。请登录[项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectIds []*int64 `json:"ProjectIds,omitnil,omitempty" name:"ProjectIds"`
 
-	// 续费模式：0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+	// 续费模式。
+	// - 0：默认状态，手动续费。
+	// - 1：自动续费。
+	// - 2：明确不自动续费。
 	AutoRenewFlag []*int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// Redis独享集群名称
+	// Redis 独享集群名称。
 	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
-	// 搜索关键词：支持集群Id、集群名称
+	// 搜索关键词：支持集群 ID、集群名称。
 	SearchKey *string `json:"SearchKey,omitnil,omitempty" name:"SearchKey"`
 
-	// 分页限制返回大小，不传则默认为20
+	// 分页限制返回大小，不传则默认为20。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 偏移量，取Limit整数倍
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 本地专用集群id
+	// 本地专用集群 ID，请登录[专用集群控制台](https://console.cloud.tencent.com/cdc/dedicatedcluster/index?rid=1
+	// )实例列表获取集群 ID。
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 }
 
@@ -5285,7 +5858,7 @@ func (r *DescribeReplicationGroupInstanceResponse) FromJsonString(s string) erro
 
 // Predefined struct for user
 type DescribeReplicationGroupRequestParams struct {
-	// 每页输出实例列表的大小，参数默认值20。
+	// 每页输出实例列表的大小。取值为大于0 的正整数，默认为20。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
@@ -5301,7 +5874,7 @@ type DescribeReplicationGroupRequestParams struct {
 type DescribeReplicationGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 每页输出实例列表的大小，参数默认值20。
+	// 每页输出实例列表的大小。取值为大于0 的正整数，默认为20。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
@@ -5366,14 +5939,14 @@ func (r *DescribeReplicationGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSSLStatusRequestParams struct {
-	// 实例 ID。
+	// 实例 ID。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeSSLStatusRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -5440,23 +6013,101 @@ func (r *DescribeSSLStatusResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSecondLevelBackupInfoRequestParams struct {
+	// 指定实例 ID。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 秒级备份时间戳。
+	// - 设置范围：支持7天内任意秒级时间点。
+	// -  时间戳格式：Unix 时间戳。
+	BackupTimestamp *int64 `json:"BackupTimestamp,omitnil,omitempty" name:"BackupTimestamp"`
+}
+
+type DescribeSecondLevelBackupInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 指定实例 ID。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 秒级备份时间戳。
+	// - 设置范围：支持7天内任意秒级时间点。
+	// -  时间戳格式：Unix 时间戳。
+	BackupTimestamp *int64 `json:"BackupTimestamp,omitnil,omitempty" name:"BackupTimestamp"`
+}
+
+func (r *DescribeSecondLevelBackupInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSecondLevelBackupInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "BackupTimestamp")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSecondLevelBackupInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSecondLevelBackupInfoResponseParams struct {
+	// 备份记录ID。
+	BackupId *string `json:"BackupId,omitnil,omitempty" name:"BackupId"`
+
+	// 备份时间戳。
+	BackupTimestamp *int64 `json:"BackupTimestamp,omitnil,omitempty" name:"BackupTimestamp"`
+
+	// 备份不存在的时间戳范围。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MissingTimestamps []*SecondLevelBackupMissingTimestamps `json:"MissingTimestamps,omitnil,omitempty" name:"MissingTimestamps"`
+
+	// 实例开启秒级备份的时间戳。
+	StartTimestamp *int64 `json:"StartTimestamp,omitnil,omitempty" name:"StartTimestamp"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSecondLevelBackupInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSecondLevelBackupInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeSecondLevelBackupInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSecondLevelBackupInfoResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSlowLogRequestParams struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 预查询慢日志的起始时间。
+	// 预查询慢日志的起始时间，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 预查询慢日志的结束时间。
+	// 预查询慢日志的结束时间，查询时间最大跨度30天
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 慢查询平均执行时间阈值，单位：毫秒。
+	// 慢查询平均执行时间阈值。取值为大于0 的正整数。单位：毫秒。
 	MinQueryTime *int64 `json:"MinQueryTime,omitnil,omitempty" name:"MinQueryTime"`
 
-	// 每个页面展示的慢查询条数，默认值为20。取值范围：[20,1000]。
+	// 每个页面展示的慢查询条数，默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 慢查询条数的偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
+	// 慢查询条数的偏移量。默认为0。取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 节点所属角色。
@@ -5471,19 +6122,19 @@ type DescribeSlowLogRequest struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 预查询慢日志的起始时间。
+	// 预查询慢日志的起始时间，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 预查询慢日志的结束时间。
+	// 预查询慢日志的结束时间，查询时间最大跨度30天
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 慢查询平均执行时间阈值，单位：毫秒。
+	// 慢查询平均执行时间阈值。取值为大于0 的正整数。单位：毫秒。
 	MinQueryTime *int64 `json:"MinQueryTime,omitnil,omitempty" name:"MinQueryTime"`
 
-	// 每个页面展示的慢查询条数，默认值为20。取值范围：[20,1000]。
+	// 每个页面展示的慢查询条数，默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 慢查询条数的偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
+	// 慢查询条数的偏移量。默认为0。取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 节点所属角色。
@@ -5523,9 +6174,11 @@ type DescribeSlowLogResponseParams struct {
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 已废弃，该参数存在命名不规范问题，后续用参数InstanceSlowLogDetail取代。慢查询详情。
+	//
+	// Deprecated: InstanceSlowlogDetail is deprecated.
 	InstanceSlowlogDetail []*InstanceSlowlogDetail `json:"InstanceSlowlogDetail,omitnil,omitempty" name:"InstanceSlowlogDetail"`
 
-	// 慢查询详情。
+	// 慢查询详情，注意：TotalCount大于1W，即慢日志超过1万条，不支持返回日志详情，返回数据为空。 建议缩小BeginTime和EndTime的时间间隔，多次查询。
 	InstanceSlowLogDetail []*InstanceSlowlogDetail `json:"InstanceSlowLogDetail,omitnil,omitempty" name:"InstanceSlowLogDetail"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5550,14 +6203,14 @@ func (r *DescribeSlowLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTaskInfoRequestParams struct {
-	// 任务 ID。
+	// 任务 ID, 请通过接口[DescribeTaskList](https://cloud.tencent.com/document/product/239/39374) 的返回参数 **Tasks** 的子参数 **TaskId** 获取。
 	TaskId *uint64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 type DescribeTaskInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务 ID。
+	// 任务 ID, 请通过接口[DescribeTaskList](https://cloud.tencent.com/document/product/239/39374) 的返回参数 **Tasks** 的子参数 **TaskId** 获取。
 	TaskId *uint64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
@@ -5627,16 +6280,18 @@ type DescribeTaskListRequestParams struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名称。
+	// 实例名称。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例名称。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 每页输出的任务列表大小。默认为 20，最多输出100条。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
+	// 分页偏移量。取值需为 Limit 的整数倍：offset=limit*(页码-1)，默认值为0。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 项目 ID。登录 [Redis 控制台](https://console.cloud.tencent.com/redis)，在右上角的账号信息下拉菜单中，选择**项目管理**，即可获取对应的项目 ID。
+	// 该字段已废弃, 请忽略, 项目 ID
+	//
+	// Deprecated: ProjectIds is deprecated.
 	ProjectIds []*int64 `json:"ProjectIds,omitnil,omitempty" name:"ProjectIds"`
 
 	// 任务类型。
@@ -5667,7 +6322,7 @@ type DescribeTaskListRequestParams struct {
 	// - FLOW_MODIFYINSTANCEPARAMS："034"，修改实例参数。
 	// - FLOW_MODIFYINSTANCEPASSWORDFREE："035"，设置免密。
 	// - FLOW_SWITCHINSTANCEVIP："036"，实例VIP切换。
-	// - FLOW_MODIFYINSTANCEACCOUNT："037"，实例帐号变更。
+	// - FLOW_MODIFYINSTANCEACCOUNT："037"，实例账号变更。
 	// - FLOW_MODIFYINSTANCEBANDWIDTH："038"，实例带宽变更。
 	// - FLOW_ENABLEINSTANCE_REPLICATE："039"，开启副本只读。
 	// - FLOW_DISABLEINSTANCE_REPLICATE："040"，关闭副本只读。
@@ -5688,7 +6343,7 @@ type DescribeTaskListRequestParams struct {
 	// - FLOW_CODE_CHANGE_INSTANCE_ROLE： "057"，更改复制组实例角色。
 	// - FLOW_MIGRATE_NODE："058"，迁移节点。
 	// - FLOW_SWITCH_NODE："059"，切换节点。
-	// - FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redi s版本。
+	// - FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redis版本。
 	// - FLOW_UPGRADE_PROXY_VERSION："061"，升级 Proxy 版本。
 	// - FLOW_MODIFY_INSTANCE_NETWORK： "062"，实例修改网络。
 	// - FLOW_MIGRATE_PROXY_NODE："063"，迁移proxy节点。
@@ -5698,10 +6353,10 @@ type DescribeTaskListRequestParams struct {
 	// - FLOW_MODIFYBACKUPMOD："070"，变更实例备份模式。
 	TaskTypes []*string `json:"TaskTypes,omitnil,omitempty" name:"TaskTypes"`
 
-	// 任务执行的起始时间。格式如：2021-12-30 00:00:00。
+	// 任务执行的起始时间，格式如：2021-12-30 00:00:00，支持查询近30天内数据。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 任务运行的终止时间。格式如：2021-12-30 20:59:35
+	// 任务运行的终止时间。格式如：2021-12-30 20:59:35，支持查询近30天内数据。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 该参数为内部使用，请忽略。
@@ -5715,6 +6370,8 @@ type DescribeTaskListRequestParams struct {
 	Result []*int64 `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 该字段已废弃，使用OperateUin代替，请忽略。
+	//
+	// Deprecated: OperatorUin is deprecated.
 	OperatorUin []*int64 `json:"OperatorUin,omitnil,omitempty" name:"OperatorUin"`
 
 	// 操作者账号 ID，UIN。
@@ -5727,16 +6384,16 @@ type DescribeTaskListRequest struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名称。
+	// 实例名称。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例名称。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 每页输出的任务列表大小。默认为 20，最多输出100条。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
+	// 分页偏移量。取值需为 Limit 的整数倍：offset=limit*(页码-1)，默认值为0。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 项目 ID。登录 [Redis 控制台](https://console.cloud.tencent.com/redis)，在右上角的账号信息下拉菜单中，选择**项目管理**，即可获取对应的项目 ID。
+	// 该字段已废弃, 请忽略, 项目 ID
 	ProjectIds []*int64 `json:"ProjectIds,omitnil,omitempty" name:"ProjectIds"`
 
 	// 任务类型。
@@ -5767,7 +6424,7 @@ type DescribeTaskListRequest struct {
 	// - FLOW_MODIFYINSTANCEPARAMS："034"，修改实例参数。
 	// - FLOW_MODIFYINSTANCEPASSWORDFREE："035"，设置免密。
 	// - FLOW_SWITCHINSTANCEVIP："036"，实例VIP切换。
-	// - FLOW_MODIFYINSTANCEACCOUNT："037"，实例帐号变更。
+	// - FLOW_MODIFYINSTANCEACCOUNT："037"，实例账号变更。
 	// - FLOW_MODIFYINSTANCEBANDWIDTH："038"，实例带宽变更。
 	// - FLOW_ENABLEINSTANCE_REPLICATE："039"，开启副本只读。
 	// - FLOW_DISABLEINSTANCE_REPLICATE："040"，关闭副本只读。
@@ -5788,7 +6445,7 @@ type DescribeTaskListRequest struct {
 	// - FLOW_CODE_CHANGE_INSTANCE_ROLE： "057"，更改复制组实例角色。
 	// - FLOW_MIGRATE_NODE："058"，迁移节点。
 	// - FLOW_SWITCH_NODE："059"，切换节点。
-	// - FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redi s版本。
+	// - FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redis版本。
 	// - FLOW_UPGRADE_PROXY_VERSION："061"，升级 Proxy 版本。
 	// - FLOW_MODIFY_INSTANCE_NETWORK： "062"，实例修改网络。
 	// - FLOW_MIGRATE_PROXY_NODE："063"，迁移proxy节点。
@@ -5798,10 +6455,10 @@ type DescribeTaskListRequest struct {
 	// - FLOW_MODIFYBACKUPMOD："070"，变更实例备份模式。
 	TaskTypes []*string `json:"TaskTypes,omitnil,omitempty" name:"TaskTypes"`
 
-	// 任务执行的起始时间。格式如：2021-12-30 00:00:00。
+	// 任务执行的起始时间，格式如：2021-12-30 00:00:00，支持查询近30天内数据。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 任务运行的终止时间。格式如：2021-12-30 20:59:35
+	// 任务运行的终止时间。格式如：2021-12-30 20:59:35，支持查询近30天内数据。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 该参数为内部使用，请忽略。
@@ -5881,44 +6538,44 @@ func (r *DescribeTaskListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTendisSlowLogRequestParams struct {
-	// 实例Id：crs-ngvou0i1
+	// 实例 ID，请登录[Tendis控制台](https://console.cloud.tencent.com/tendis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 开始时间：2019-09-08 12:12:41
+	// 开始时间：2019-09-08 12:12:41，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 结束时间：2019-09-09 12:12:41
+	// 结束时间：2019-09-09 12:12:41，查询时间最大跨度30天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 慢查询阈值（毫秒）
+	// 慢查询阈值，取值为大于0的正整数，单位：毫秒。
 	MinQueryTime *int64 `json:"MinQueryTime,omitnil,omitempty" name:"MinQueryTime"`
 
-	// 页面大小：默认20
+	// 页面大小。默认为20，最小为1，最大为100。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量。默认为0，取值为 Limit 整数倍，计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeTendisSlowLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例Id：crs-ngvou0i1
+	// 实例 ID，请登录[Tendis控制台](https://console.cloud.tencent.com/tendis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 开始时间：2019-09-08 12:12:41
+	// 开始时间：2019-09-08 12:12:41，查询时间最大跨度30天。
 	BeginTime *string `json:"BeginTime,omitnil,omitempty" name:"BeginTime"`
 
-	// 结束时间：2019-09-09 12:12:41
+	// 结束时间：2019-09-09 12:12:41，查询时间最大跨度30天。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 慢查询阈值（毫秒）
+	// 慢查询阈值，取值为大于0的正整数，单位：毫秒。
 	MinQueryTime *int64 `json:"MinQueryTime,omitnil,omitempty" name:"MinQueryTime"`
 
-	// 页面大小：默认20
+	// 页面大小。默认为20，最小为1，最大为100。
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量。默认为0，取值为 Limit 整数倍，计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -5951,7 +6608,7 @@ type DescribeTendisSlowLogResponseParams struct {
 	// 慢查询总数
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 慢查询详情
+	// 慢查询详情，注意：TotalCount大于1W，即慢日志超过1万条，不支持返回日志详情，返回数据为空。 建议缩小BeginTime和EndTime的时间间隔，多次查询。
 	TendisSlowLogDetail []*TendisSlowLogDetail `json:"TendisSlowLogDetail,omitnil,omitempty" name:"TendisSlowLogDetail"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5976,14 +6633,14 @@ func (r *DescribeTendisSlowLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DestroyPostpaidInstanceRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制按量计费的实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DestroyPostpaidInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制按量计费的实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -6033,14 +6690,14 @@ func (r *DestroyPostpaidInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DestroyPrepaidInstanceRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DestroyPrepaidInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -6066,7 +6723,12 @@ func (r *DestroyPrepaidInstanceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DestroyPrepaidInstanceResponseParams struct {
 	// 订单Id
+	//
+	// Deprecated: DealId is deprecated.
 	DealId *string `json:"DealId,omitnil,omitempty" name:"DealId"`
+
+	// 订单号。
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -6090,14 +6752,14 @@ func (r *DestroyPrepaidInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisableReplicaReadonlyRequestParams struct {
-	// 实例序号ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DisableReplicaReadonlyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例序号ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -6123,7 +6785,6 @@ func (r *DisableReplicaReadonlyRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DisableReplicaReadonlyResponseParams struct {
 	// 任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6151,10 +6812,10 @@ type DisassociateSecurityGroupsRequestParams struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 安全组 ID。
+	// 安全组 ID，请通过接口[DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447)的返回参数InstanceSecurityGroupsDetail 的子参数**SecurityGroupId**获取。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 
-	// 实例ID列表，一个或者多个实例 ID 组成的数组。
+	// 实例ID列表，一个或者多个实例 ID 组成的数组。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 }
 
@@ -6164,10 +6825,10 @@ type DisassociateSecurityGroupsRequest struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 安全组 ID。
+	// 安全组 ID，请通过接口[DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/product/239/34447)的返回参数InstanceSecurityGroupsDetail 的子参数**SecurityGroupId**获取。
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 
-	// 实例ID列表，一个或者多个实例 ID 组成的数组。
+	// 实例ID列表，一个或者多个实例 ID 组成的数组。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 }
 
@@ -6216,20 +6877,24 @@ func (r *DisassociateSecurityGroupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type EnableReplicaReadonlyRequestParams struct {
-	// 实例序号ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 账号路由策略：填写master或者replication，表示路由主节点，从节点；不填路由策略默认为写主节点，读从节点
+	// 只读路由策略。
+	// - master：表示只读路由至主节点。
+	// - replication：表示只读路由至从节点。默认值为：replication。
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitnil,omitempty" name:"ReadonlyPolicy"`
 }
 
 type EnableReplicaReadonlyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例序号ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 账号路由策略：填写master或者replication，表示路由主节点，从节点；不填路由策略默认为写主节点，读从节点
+	// 只读路由策略。
+	// - master：表示只读路由至主节点。
+	// - replication：表示只读路由至从节点。默认值为：replication。
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitnil,omitempty" name:"ReadonlyPolicy"`
 }
 
@@ -6256,11 +6921,11 @@ func (r *EnableReplicaReadonlyRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type EnableReplicaReadonlyResponseParams struct {
 	// 错误：ERROR，正确OK（已废弃）
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	//
+	// Deprecated: Status is deprecated.
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6283,6 +6948,63 @@ func (r *EnableReplicaReadonlyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ExportFile struct {
+	// <p>文件名。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// <p>状态值。</p><p>枚举值：</p><ul><li>creating： 文件创建中。</li><li>success： 文件已生成。</li><li>failed： 文件生成失败。</li><li>deleted： 文件已删除。</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>文件大小，单位：byte。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FileSize *int64 `json:"FileSize,omitnil,omitempty" name:"FileSize"`
+
+	// <p>文件创建时间。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>文件下载地址。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DownloadUrl *string `json:"DownloadUrl,omitnil,omitempty" name:"DownloadUrl"`
+
+	// <p>导出文件的错误信息。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
+
+	// <p>导出文件的进度。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
+
+	// <p>导出文件的完成时间。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FinishTime *string `json:"FinishTime,omitnil,omitempty" name:"FinishTime"`
+
+	// <p>异步请求 ID。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsyncRequestId *int64 `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
+}
+
+type FailedInstance struct {
+	// <p>失败实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>失败信息</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+}
+
+type Filter struct {
+	// <p>过滤字段。</p><p>枚举值：</p><ul><li>InstanceId： 实例 ID。</li><li>InstanceName： 实例名称。</li><li>TagKey： 标签键。</li><li>InstanceTags： 实例标签键值，标签key值&amp;标签value值。</li></ul>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>过滤字段的值。</p>
+	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
+
+	// <p>精确匹配开关。</p><ul><li>false：关闭。</li><li>true：开启。</li></ul>
+	ExactMatch *bool `json:"ExactMatch,omitnil,omitempty" name:"ExactMatch"`
+}
+
 type Groups struct {
 	// 用户 APPID。APPID是与账号ID有唯一对应关系的应用 ID，部分腾讯云产品会使用此 APPID。
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
@@ -6300,7 +7022,6 @@ type Groups struct {
 	// - 17：德国 
 	// - 18：韩国 
 	// - 19：重庆 
-	// - 21：印度 
 	// - 22：美东（弗吉尼亚）
 	// - 23：泰国 
 	// - 25：日本
@@ -6310,7 +7031,6 @@ type Groups struct {
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 复制组名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
 	// 复制组状态。
@@ -6325,11 +7045,9 @@ type Groups struct {
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
 	// 复制组中的实例信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Instances []*Instances `json:"Instances,omitnil,omitempty" name:"Instances"`
 
 	// 备注信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 }
 
@@ -6372,112 +7090,74 @@ type Inbound struct {
 
 // Predefined struct for user
 type InquiryPriceCreateInstanceRequestParams struct {
-	// 实例类型。
-	// - 2：Redis 2.8 内存版（标准架构）。
-	// - 6：Redis 4.0 内存版（标准架构）。
-	// - 7：Redis 4.0 内存版（集群架构）。
-	// - 8：Redis 5.0 内存版（标准架构）。
-	// - 9：Redis 5.0 内存版（集群架构）。
-	// - 15：Redis 6.2 内存版（标准架构）。
-	// - 16：Redis 6.2 内存版（集群架构）。
-	// - 17：Redis 7.0 内存版（标准架构）。
-	// - 18：Redis 7.0 内存版（集群架构）。
+	// <p>实例类型。- 2：Redis 2.8 内存版（标准架构）。- 6：Redis 4.0 内存版（标准架构）。- 7：Redis 4.0 内存版（集群架构）。- 8：Redis 5.0 内存版（标准架构）。- 9：Redis 5.0 内存版（集群架构）。- 15：Redis 6.2 内存版（标准架构）。- 16：Redis 6.2 内存版（集群架构）。- 17：Redis 7.0 内存版（标准架构）。- 18：Redis 7.0 内存版（集群架构）。- 200:Memcached 1.6 内存版（集群架构）。</p>
 	TypeId *uint64 `json:"TypeId,omitnil,omitempty" name:"TypeId"`
 
-	// 内存容量，单位为MB， 数值需为1024的整数倍，具体规格以 [查询产品售卖规格](https://cloud.tencent.com/document/api/239/30600) 返回的规格为准。
-	// TypeId为标准架构时，MemSize是实例总内存容量；TypeId为集群架构时，MemSize是单分片内存容量。
+	// <p>内存容量，单位为MB， 数值需为1024的整数倍，具体规格以 <a href="https://cloud.tencent.com/document/api/239/30600">查询产品售卖规格</a> 返回的规格为准。TypeId为标准架构时，MemSize是实例总内存容量；TypeId为集群架构时，MemSize是单分片内存容量。</p>
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 实例数量，单次购买实例数量以 [查询产品售卖规格](https://cloud.tencent.com/document/api/239/30600) 返回的规格为准。
+	// <p>实例数量，单次购买实例数量以 <a href="https://cloud.tencent.com/document/api/239/30600">查询产品售卖规格</a> 返回的规格为准。</p>
 	GoodsNum *uint64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 购买时长，在创建包年包月实例的时候需要填写，按量计费实例填1即可，单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
+	// <p>购买时长，在创建包年包月实例的时候需要填写，按量计费实例填1即可，单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 付费方式。
-	// - 0：按量计费。
-	// - 1：包年包月。
+	// <p>付费方式。- 0：按量计费。- 1：包年包月。</p>
 	BillingMode *int64 `json:"BillingMode,omitnil,omitempty" name:"BillingMode"`
 
-	// 实例所属的可用区ID，可参考[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>实例所属的可用区 ID，可参考<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。<strong>说明</strong>：请在 <strong>ZoneId</strong> 与 <strong>ZoneName</strong> 中至少指定一个参数。</p>
 	ZoneId *uint64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 实例分片数量。
-	// Redis2.8标准架构、CKV标准架构、Redis4.0标准架构无需填写。
+	// <p>实例分片数量。- 标准架构需要配置分片数量为1。- 集群架构分片数量支持设置为1、3、5、8、12、16、24、32、40、48、64、80、96、128。</p>
 	RedisShardNum *int64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 实例副本数量。
-	// Redis2.8标准架构、CKV标准架构无需填写。
+	// <p>实例副本数量。取值范围为：1、2、3、4、5。</p>
 	RedisReplicasNum *int64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
-	// 是否支持副本只读。Redis2.8标准架构、CKV标准架构无需填写。
-	// - true：无需支持副本只读。
-	// - false：需支持。
+	// <p>是否支持副本只读。Redis2.8标准架构、CKV标准架构无需填写。- true：无需支持副本只读。- false：需支持。</p>
 	ReplicasReadonly *bool `json:"ReplicasReadonly,omitnil,omitempty" name:"ReplicasReadonly"`
 
-	// 实例所属的可用区名称，可参考[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>实例所属的可用区名称，可参考<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。<strong>说明</strong>：请在 <strong>ZoneId</strong> 与 <strong>ZoneName</strong> 中至少指定一个参数。</p>
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
-	// 部署方式。
-	// - local：本地盘版，默认为 local。
-	// - cloud：云盘版。
-	// - cdc：独享集群版。
+	// <p>部署方式。- local：本地盘版，默认为 local。- cloud：云盘版。- cdc：独享集群版。</p>
 	ProductVersion *string `json:"ProductVersion,omitnil,omitempty" name:"ProductVersion"`
 }
 
 type InquiryPriceCreateInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例类型。
-	// - 2：Redis 2.8 内存版（标准架构）。
-	// - 6：Redis 4.0 内存版（标准架构）。
-	// - 7：Redis 4.0 内存版（集群架构）。
-	// - 8：Redis 5.0 内存版（标准架构）。
-	// - 9：Redis 5.0 内存版（集群架构）。
-	// - 15：Redis 6.2 内存版（标准架构）。
-	// - 16：Redis 6.2 内存版（集群架构）。
-	// - 17：Redis 7.0 内存版（标准架构）。
-	// - 18：Redis 7.0 内存版（集群架构）。
+	// <p>实例类型。- 2：Redis 2.8 内存版（标准架构）。- 6：Redis 4.0 内存版（标准架构）。- 7：Redis 4.0 内存版（集群架构）。- 8：Redis 5.0 内存版（标准架构）。- 9：Redis 5.0 内存版（集群架构）。- 15：Redis 6.2 内存版（标准架构）。- 16：Redis 6.2 内存版（集群架构）。- 17：Redis 7.0 内存版（标准架构）。- 18：Redis 7.0 内存版（集群架构）。- 200:Memcached 1.6 内存版（集群架构）。</p>
 	TypeId *uint64 `json:"TypeId,omitnil,omitempty" name:"TypeId"`
 
-	// 内存容量，单位为MB， 数值需为1024的整数倍，具体规格以 [查询产品售卖规格](https://cloud.tencent.com/document/api/239/30600) 返回的规格为准。
-	// TypeId为标准架构时，MemSize是实例总内存容量；TypeId为集群架构时，MemSize是单分片内存容量。
+	// <p>内存容量，单位为MB， 数值需为1024的整数倍，具体规格以 <a href="https://cloud.tencent.com/document/api/239/30600">查询产品售卖规格</a> 返回的规格为准。TypeId为标准架构时，MemSize是实例总内存容量；TypeId为集群架构时，MemSize是单分片内存容量。</p>
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 实例数量，单次购买实例数量以 [查询产品售卖规格](https://cloud.tencent.com/document/api/239/30600) 返回的规格为准。
+	// <p>实例数量，单次购买实例数量以 <a href="https://cloud.tencent.com/document/api/239/30600">查询产品售卖规格</a> 返回的规格为准。</p>
 	GoodsNum *uint64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 购买时长，在创建包年包月实例的时候需要填写，按量计费实例填1即可，单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
+	// <p>购买时长，在创建包年包月实例的时候需要填写，按量计费实例填1即可，单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 付费方式。
-	// - 0：按量计费。
-	// - 1：包年包月。
+	// <p>付费方式。- 0：按量计费。- 1：包年包月。</p>
 	BillingMode *int64 `json:"BillingMode,omitnil,omitempty" name:"BillingMode"`
 
-	// 实例所属的可用区ID，可参考[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>实例所属的可用区 ID，可参考<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。<strong>说明</strong>：请在 <strong>ZoneId</strong> 与 <strong>ZoneName</strong> 中至少指定一个参数。</p>
 	ZoneId *uint64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 实例分片数量。
-	// Redis2.8标准架构、CKV标准架构、Redis4.0标准架构无需填写。
+	// <p>实例分片数量。- 标准架构需要配置分片数量为1。- 集群架构分片数量支持设置为1、3、5、8、12、16、24、32、40、48、64、80、96、128。</p>
 	RedisShardNum *int64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 实例副本数量。
-	// Redis2.8标准架构、CKV标准架构无需填写。
+	// <p>实例副本数量。取值范围为：1、2、3、4、5。</p>
 	RedisReplicasNum *int64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
-	// 是否支持副本只读。Redis2.8标准架构、CKV标准架构无需填写。
-	// - true：无需支持副本只读。
-	// - false：需支持。
+	// <p>是否支持副本只读。Redis2.8标准架构、CKV标准架构无需填写。- true：无需支持副本只读。- false：需支持。</p>
 	ReplicasReadonly *bool `json:"ReplicasReadonly,omitnil,omitempty" name:"ReplicasReadonly"`
 
-	// 实例所属的可用区名称，可参考[地域和可用区](https://cloud.tencent.com/document/product/239/4106)  。
+	// <p>实例所属的可用区名称，可参考<a href="https://cloud.tencent.com/document/product/239/4106">地域和可用区</a>  。<strong>说明</strong>：请在 <strong>ZoneId</strong> 与 <strong>ZoneName</strong> 中至少指定一个参数。</p>
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
-	// 部署方式。
-	// - local：本地盘版，默认为 local。
-	// - cloud：云盘版。
-	// - cdc：独享集群版。
+	// <p>部署方式。- local：本地盘版，默认为 local。- cloud：云盘版。- cdc：独享集群版。</p>
 	ProductVersion *string `json:"ProductVersion,omitnil,omitempty" name:"ProductVersion"`
 }
 
@@ -6512,9 +7192,23 @@ func (r *InquiryPriceCreateInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquiryPriceCreateInstanceResponseParams struct {
-	// 价格，单位：分
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>折扣后价格</p>
 	Price *float64 `json:"Price,omitnil,omitempty" name:"Price"`
+
+	// <p>高精度折扣后价格</p>
+	HighPrecisionPrice *float64 `json:"HighPrecisionPrice,omitnil,omitempty" name:"HighPrecisionPrice"`
+
+	// <p>原价</p>
+	OriginalPrice *float64 `json:"OriginalPrice,omitnil,omitempty" name:"OriginalPrice"`
+
+	// <p>高精度原价</p>
+	HighPrecisionOriginalPrice *float64 `json:"HighPrecisionOriginalPrice,omitnil,omitempty" name:"HighPrecisionOriginalPrice"`
+
+	// <p>币种</p>
+	Currency *string `json:"Currency,omitnil,omitempty" name:"Currency"`
+
+	// <p>价格金额单位</p><ul><li>pent: 分</li><li>microPent: 微分</li></ul>
+	AmountUnit *string `json:"AmountUnit,omitnil,omitempty" name:"AmountUnit"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -6538,20 +7232,20 @@ func (r *InquiryPriceCreateInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquiryPriceRenewInstanceRequestParams struct {
-	// 包年包月实例的购买时长，单位：月。
+	// <p>包年包月实例的购买时长。- 单位：月。- 取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录 <a href="https://console.cloud.tencent.com/redis">Redis 控制台</a>在实例列表复制包年包月实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type InquiryPriceRenewInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 包年包月实例的购买时长，单位：月。
+	// <p>包年包月实例的购买时长。- 单位：月。- 取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录 <a href="https://console.cloud.tencent.com/redis">Redis 控制台</a>在实例列表复制包年包月实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -6577,9 +7271,23 @@ func (r *InquiryPriceRenewInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquiryPriceRenewInstanceResponseParams struct {
-	// 价格，单位：分。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>折扣后价格</p>
 	Price *float64 `json:"Price,omitnil,omitempty" name:"Price"`
+
+	// <p>高精度折扣后价格</p>
+	HighPrecisionPrice *float64 `json:"HighPrecisionPrice,omitnil,omitempty" name:"HighPrecisionPrice"`
+
+	// <p>原价</p>
+	OriginalPrice *float64 `json:"OriginalPrice,omitnil,omitempty" name:"OriginalPrice"`
+
+	// <p>高精度原价</p>
+	HighPrecisionOriginalPrice *float64 `json:"HighPrecisionOriginalPrice,omitnil,omitempty" name:"HighPrecisionOriginalPrice"`
+
+	// <p>币种</p>
+	Currency *string `json:"Currency,omitnil,omitempty" name:"Currency"`
+
+	// <p>价格金额单位</p><ul><li>pent: 分</li><li>microPent: 微分</li></ul>
+	AmountUnit *string `json:"AmountUnit,omitnil,omitempty" name:"AmountUnit"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -6603,32 +7311,32 @@ func (r *InquiryPriceRenewInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquiryPriceUpgradeInstanceRequestParams struct {
-	// 实例Id
+	// <p>实例 ID，请登录<a href="https://console.cloud.tencent.com/redis/instance/list">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 分片大小 单位 MB
+	// <p>分片大小，单位：MB。</p>
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 分片数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	// <p>分片数量。- 实例为标准架构，RedisShardNum 默认为1。- Redis 2.8主从版、CKV主从版和 Redis 2.8单机版不需要填写。</p>
 	RedisShardNum *uint64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 副本数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	// <p>副本数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写。</p>
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 }
 
 type InquiryPriceUpgradeInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例Id
+	// <p>实例 ID，请登录<a href="https://console.cloud.tencent.com/redis/instance/list">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 分片大小 单位 MB
+	// <p>分片大小，单位：MB。</p>
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 分片数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	// <p>分片数量。- 实例为标准架构，RedisShardNum 默认为1。- Redis 2.8主从版、CKV主从版和 Redis 2.8单机版不需要填写。</p>
 	RedisShardNum *uint64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 副本数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	// <p>副本数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写。</p>
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 }
 
@@ -6656,9 +7364,23 @@ func (r *InquiryPriceUpgradeInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquiryPriceUpgradeInstanceResponseParams struct {
-	// 价格，单位：分
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>折扣后价格</p>
 	Price *float64 `json:"Price,omitnil,omitempty" name:"Price"`
+
+	// <p>高精度折扣后价格</p>
+	HighPrecisionPrice *float64 `json:"HighPrecisionPrice,omitnil,omitempty" name:"HighPrecisionPrice"`
+
+	// <p>原价</p>
+	OriginalPrice *float64 `json:"OriginalPrice,omitnil,omitempty" name:"OriginalPrice"`
+
+	// <p>高精度原价</p>
+	HighPrecisionOriginalPrice *float64 `json:"HighPrecisionOriginalPrice,omitnil,omitempty" name:"HighPrecisionOriginalPrice"`
+
+	// <p>币种</p>
+	Currency *string `json:"Currency,omitnil,omitempty" name:"Currency"`
+
+	// <p>价格金额单位</p><ul><li>pent: 分</li><li>microPent: 微分</li></ul>
+	AmountUnit *string `json:"AmountUnit,omitnil,omitempty" name:"AmountUnit"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -6762,6 +7484,12 @@ type InstanceClusterShard struct {
 	// - 0：down。
 	// - 1：on。
 	Connected *int64 `json:"Connected,omitnil,omitempty" name:"Connected"`
+
+	// 可用区信息。
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// 节点组 ID。
+	ReplicasNodeId *int64 `json:"ReplicasNodeId,omitnil,omitempty" name:"ReplicasNodeId"`
 }
 
 type InstanceEnumParam struct {
@@ -6794,6 +7522,43 @@ type InstanceEnumParam struct {
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
+type InstanceInfo struct {
+	// <p>实例名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
+
+	// <p>项目ID</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
+
+	// <p>实例状态</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>流程中的实例返回的子状态。</p><p>枚举值：</p><ul><li>0： 磁盘只读，</li></ul>
+	SubStatus *int64 `json:"SubStatus,omitnil,omitempty" name:"SubStatus"`
+
+	// <p>地域</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// <p>区</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>降级策略，单位：毫秒，实例P99达到降级策略后，审计数据自动丢弃，优先保障业务的可用性,默认值：500毫秒，范围值：300-1000毫秒</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DegradeStrategy *int64 `json:"DegradeStrategy,omitnil,omitempty" name:"DegradeStrategy"`
+
+	// <p>标签信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceTags []*InstanceTagInfo `json:"InstanceTags,omitnil,omitempty" name:"InstanceTags"`
+
+	// <p>架构版本</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
 type InstanceIntegerParam struct {
 	// 参数名
 	ParamName *string `json:"ParamName,omitnil,omitempty" name:"ParamName"`
@@ -6823,7 +7588,6 @@ type InstanceIntegerParam struct {
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 参数单位
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Unit *string `json:"Unit,omitnil,omitempty" name:"Unit"`
 }
 
@@ -6894,20 +7658,29 @@ type InstanceParamHistory struct {
 }
 
 type InstanceProxySlowlogDetail struct {
-	// 慢查询耗时时长。单位：毫秒。
+	// <p>慢查询耗时时长。单位：毫秒。</p>
 	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
 
-	// 客户端地址。
+	// <p>客户端地址。</p>
 	Client *string `json:"Client,omitnil,omitempty" name:"Client"`
 
-	// 慢查询的命令。
+	// <p>慢查询的命令。</p>
 	Command *string `json:"Command,omitnil,omitempty" name:"Command"`
 
-	// 慢查询详细命令行信息。
+	// <p>慢查询详细命令行信息。</p>
 	CommandLine *string `json:"CommandLine,omitnil,omitempty" name:"CommandLine"`
 
-	// 执行时间。
+	// <p>执行时间。</p>
 	ExecuteTime *string `json:"ExecuteTime,omitnil,omitempty" name:"ExecuteTime"`
+
+	// <p>收客户端请求时长(ms)</p>
+	RecvClientEnd *int64 `json:"RecvClientEnd,omitnil,omitempty" name:"RecvClientEnd"`
+
+	// <p>发送客户端请求时长(ms)</p>
+	SendClientEnd *int64 `json:"SendClientEnd,omitnil,omitempty" name:"SendClientEnd"`
+
+	// <p>Proxy节点ID。</p>
+	Node *string `json:"Node,omitnil,omitempty" name:"Node"`
 }
 
 type InstanceSecurityGroupDetail struct {
@@ -6925,13 +7698,13 @@ type InstanceSet struct {
 	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 用户APPID。APPID是与账号ID有唯一对应关系的应用 ID，部分腾讯云产品会使用此 APPID。
+	// 用户AppId。AppId是与账号ID有唯一对应关系的应用 ID，部分腾讯云产品会使用此 AppId。
 	Appid *int64 `json:"Appid,omitnil,omitempty" name:"Appid"`
 
 	// 项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 地域 ID。<ul><li>1：广州。</li><li>4：上海。</li><li>5：中国香港。</li><li>7：上海金融。</li> <li>8：北京。</li> <li>9：新加坡。</li> <li>11：深圳金融。</li> <li>15：美西（硅谷）。</li><li>16：成都。</li><li>17：法兰克福。</li><li>18：首尔。</li><li>19：重庆。</li><li>21：孟买。</li><li>22：美东（弗吉尼亚）。</li><li>23：曼谷。</li><li>25：东京。</li></ul>
+	// 地域 ID。<ul><li>1：广州。</li><li>4：上海。</li><li>5：中国香港。</li><li>7：上海金融。</li> <li>8：北京。</li> <li>9：新加坡。</li> <li>11：深圳金融。</li> <li>15：美西（硅谷）。</li><li>16：成都。</li><li>17：法兰克福。</li><li>18：首尔。</li><li>19：重庆。</li><li>22：美东（弗吉尼亚）。</li><li>23：曼谷。</li><li>25：东京。</li></ul>
 	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
 	// 区域 ID。
@@ -6959,6 +7732,8 @@ type InstanceSet struct {
 	Size *float64 `json:"Size,omitnil,omitempty" name:"Size"`
 
 	// 该字段已废弃。请使用腾讯云可观测平台API 接口 [GetMonitorData](https://cloud.tencent.com/document/product/248/31014) 获取实例已使用的内存容量。
+	//
+	// Deprecated: SizeUsed is deprecated.
 	SizeUsed *float64 `json:"SizeUsed,omitnil,omitempty" name:"SizeUsed"`
 
 	// 实例类型。
@@ -6974,6 +7749,7 @@ type InstanceSet struct {
 	// - 16：Redis 6.2 内存版（集群架构）。
 	// - 17：Redis 7.0 内存版（标准架构）。
 	// - 18：Redis 7.0 内存版（集群架构）。
+	// - 200:Memcached 1.6 内存版（集群架构）。
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 实例是否设置自动续费标识。<ul><li>1：设置自动续费。</li><li>0：未设置自动续费。</li></ul>
@@ -7003,7 +7779,9 @@ type InstanceSet struct {
 	// 已隔离实例默认下线时间。按量计费实例隔离后默认两小时后下线，包年包月默认7天后下线。格式如：2020-02-15 10:20:00。
 	OfflineTime *string `json:"OfflineTime,omitnil,omitempty" name:"OfflineTime"`
 
-	// 流程中的实例，返回子状态。
+	// 流程中的实例返回的子状态。
+	// - 0：磁盘读写状态。
+	// - 1：磁盘超限只读状态。
 	SubStatus *int64 `json:"SubStatus,omitnil,omitempty" name:"SubStatus"`
 
 	// 反亲和性标签。
@@ -7028,115 +7806,94 @@ type InstanceSet struct {
 	CloseTime *string `json:"CloseTime,omitnil,omitempty" name:"CloseTime"`
 
 	// 从节点读取权重。
+	// - 0：表示关闭副本只读。
+	// - 100：表示开启副本只读。
 	SlaveReadWeight *int64 `json:"SlaveReadWeight,omitnil,omitempty" name:"SlaveReadWeight"`
 
 	// 实例关联的标签信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceTags []*InstanceTagInfo `json:"InstanceTags,omitnil,omitempty" name:"InstanceTags"`
 
 	// 项目名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProjectName *string `json:"ProjectName,omitnil,omitempty" name:"ProjectName"`
 
 	// 是否为免密实例。<ul><li>true：免密实例。</li><li>false：非免密实例。</li></ul>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NoAuth *bool `json:"NoAuth,omitnil,omitempty" name:"NoAuth"`
 
 	// 客户端连接数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientLimit *int64 `json:"ClientLimit,omitnil,omitempty" name:"ClientLimit"`
 
 	// DTS状态（内部参数，用户可忽略）。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DtsStatus *int64 `json:"DtsStatus,omitnil,omitempty" name:"DtsStatus"`
 
 	// 分片带宽上限，单位MB。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetLimit *int64 `json:"NetLimit,omitnil,omitempty" name:"NetLimit"`
 
 	// 免密实例标识（内部参数，用户可忽略）。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PasswordFree *int64 `json:"PasswordFree,omitnil,omitempty" name:"PasswordFree"`
 
 	// 该参数存在命名不规范问题，建议用参数IPv6取代。内部参数，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip6 *string `json:"Vip6,omitnil,omitempty" name:"Vip6"`
 
 	// 内部参数，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPv6 *string `json:"IPv6,omitnil,omitempty" name:"IPv6"`
 
 	// 实例只读标识（内部参数，用户可忽略）。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReadOnly *int64 `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 
 	// 内部参数，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemainBandwidthDuration *string `json:"RemainBandwidthDuration,omitnil,omitempty" name:"RemainBandwidthDuration"`
 
 	// Redis实例请忽略该参数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
 	// 监控版本。<ul><li>1m：1分钟粒度监控。目前该监控粒度已下线，具体信息，请参见[云数据库 Redis 1分钟粒度下线公告](https://cloud.tencent.com/document/product/239/80653)。</li><li>5s：5秒粒度监控。</li></ul>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	MonitorVersion *string `json:"MonitorVersion,omitnil,omitempty" name:"MonitorVersion"`
 
 	// 客户端最大连接数可设置的最小值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientLimitMin *int64 `json:"ClientLimitMin,omitnil,omitempty" name:"ClientLimitMin"`
 
 	// 客户端最大连接数可设置的最大值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientLimitMax *int64 `json:"ClientLimitMax,omitnil,omitempty" name:"ClientLimitMax"`
 
 	// 实例的节点详细信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 只有多可用区实例会返回。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
 
 	// 实例所在的地域信息，比如ap-guangzhou。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 外网地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanAddress *string `json:"WanAddress,omitnil,omitempty" name:"WanAddress"`
 
 	// 北极星服务地址，内部使用。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolarisServer *string `json:"PolarisServer,omitnil,omitempty" name:"PolarisServer"`
 
 	// CDC Redis集群ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	RedisClusterId *string `json:"RedisClusterId,omitnil,omitempty" name:"RedisClusterId"`
 
 	// CDC 集群ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
 
 	// 产品版本。<ul><li>local：本地盘。</li><li>cloud：云盘版。</li><li>cdc：CDC 集群版本。</li></ul>
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProductVersion *string `json:"ProductVersion,omitnil,omitempty" name:"ProductVersion"`
 
 	// 实例当前Proxy版本。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitnil,omitempty" name:"CurrentProxyVersion"`
 
 	// 实例当前Cache小版本。如果实例加入全球复制组，显示全球复制的内核版本。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CurrentRedisVersion *string `json:"CurrentRedisVersion,omitnil,omitempty" name:"CurrentRedisVersion"`
 
 	// 实例可升级Proxy版本。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpgradeProxyVersion *string `json:"UpgradeProxyVersion,omitnil,omitempty" name:"UpgradeProxyVersion"`
 
 	// 实例可升级Cache小版本。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpgradeRedisVersion *string `json:"UpgradeRedisVersion,omitnil,omitempty" name:"UpgradeRedisVersion"`
 
 	// 备份模式：- SecondLevelBackup   秒级备份- NormalLevelBackup    普通备份
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupMode *string `json:"BackupMode,omitnil,omitempty" name:"BackupMode"`
+
+	// 删除保护开关，0关闭，1开启
+	DeleteProtectionSwitch *int64 `json:"DeleteProtectionSwitch,omitnil,omitempty" name:"DeleteProtectionSwitch"`
 }
 
 type InstanceSlowlogDetail struct {
@@ -7223,7 +7980,6 @@ type Instances struct {
 	RedisShardSize *int64 `json:"RedisShardSize,omitnil,omitempty" name:"RedisShardSize"`
 
 	// 实例的磁盘大小。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
 	// 引擎：社区版Redis、腾讯云CKV。
@@ -7236,11 +7992,9 @@ type Instances struct {
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 该参数存在命名不规范问题，建议用参数IPv6取代。内部参数，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip6 *string `json:"Vip6,omitnil,omitempty" name:"Vip6"`
 
 	// 内部参数，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPv6 *string `json:"IPv6,omitnil,omitempty" name:"IPv6"`
 
 	// VPC 网络ID，如：75101。
@@ -7286,7 +8040,7 @@ type KillMasterGroupRequestParams struct {
 	// - 至少包含小写字母a-z、大写字母A-Z、数字0-9及其 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 分片集群的分片 ID。
+	// 分片集群的分片 ID。请通过接口[DescribeInstanceNodeInfo](https://cloud.tencent.com/document/product/239/48603) 的返回参数 **Redis** 中的 **ClusterId** 获取。
 	ShardIds []*int64 `json:"ShardIds,omitnil,omitempty" name:"ShardIds"`
 }
 
@@ -7302,7 +8056,7 @@ type KillMasterGroupRequest struct {
 	// - 至少包含小写字母a-z、大写字母A-Z、数字0-9及其 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 分片集群的分片 ID。
+	// 分片集群的分片 ID。请通过接口[DescribeInstanceNodeInfo](https://cloud.tencent.com/document/product/239/48603) 的返回参数 **Redis** 中的 **ClusterId** 获取。
 	ShardIds []*int64 `json:"ShardIds,omitnil,omitempty" name:"ShardIds"`
 }
 
@@ -7354,20 +8108,101 @@ func (r *KillMasterGroupResponse) FromJsonString(s string) error {
 
 type LogDeliveryInfo struct {
 	// 日志投递开启状态，开启：true，关闭：false
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
 	// 日志集ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
 	// 日志主题ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志集所在地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
+}
+
+type LogFilter struct {
+	// <p>过滤条件名称。</p><p>枚举值：</p><ul><li>Timestamp： 创建时间（格式：2006-01-02 15:04:05.000）</li><li>UserName： 用户名</li><li>CacheCode： 缓存代码，后端redis节点</li><li>ClientAddr： 客户端地址</li><li>CommandDetail： 命令详情</li><li>CommandLatency： 命令延迟（毫秒）</li><li>CommandType： 命令类型</li><li>DBId： 数据库ID</li><li>ErrMsg： 错误信息</li></ul>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>过滤条件匹配类型。</p><p>枚举值：</p><ul><li>INC： 包含，多个值之前是||的关系</li><li>EXC： 不包含，多个值之前是||的关系</li><li>EQS： 等于，多个值之前是||的关系</li><li>NEQ： 不等于，多个值之前是&amp;&amp;的关系</li><li>RA： 范围</li></ul>
+	Compare *string `json:"Compare,omitnil,omitempty" name:"Compare"`
+
+	// <p>过滤条件匹配值。当Compare=RA时，例如：[&quot;1-100&quot;,&quot;200-300&quot;]。</p>
+	Value []*string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type LogInstance struct {
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志状态，create：创建中；normal：开启；close：关闭中。</p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>是否可以切换日志查询-取值：yes-可以，no-不可以。该参数主要为控制存量日志迁移到日志平台做查询使用，只有为yes状态才可以调用查询日志接口。</p>
+	EnableQuery *string `json:"EnableQuery,omitnil,omitempty" name:"EnableQuery"`
+
+	// <p>开启时间</p>
+	CreateAt *string `json:"CreateAt,omitnil,omitempty" name:"CreateAt"`
+
+	// <p>高频存储天数</p>
+	HighLogExpireDay *int64 `json:"HighLogExpireDay,omitnil,omitempty" name:"HighLogExpireDay"`
+
+	// <p>低频存储天数</p>
+	LowLogExpireDay *int64 `json:"LowLogExpireDay,omitnil,omitempty" name:"LowLogExpireDay"`
+
+	// <p>总存储时长</p>
+	LogExpireDay *int64 `json:"LogExpireDay,omitnil,omitempty" name:"LogExpireDay"`
+
+	// <p>高频存储量，单位：MB</p>
+	HighStorage *float64 `json:"HighStorage,omitnil,omitempty" name:"HighStorage"`
+
+	// <p>低频存储量，单位：MB</p>
+	LowStorage *float64 `json:"LowStorage,omitnil,omitempty" name:"LowStorage"`
+
+	// <p>总存储量</p>
+	LogStorage *float64 `json:"LogStorage,omitnil,omitempty" name:"LogStorage"`
+
+	// <p>是否开启投递：ON，OFF</p>
+	Deliver *string `json:"Deliver,omitnil,omitempty" name:"Deliver"`
+
+	// <p>日志投递信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeliverSummary []*DeliverSummary `json:"DeliverSummary,omitnil,omitempty" name:"DeliverSummary"`
+
+	// <p>业务侧实例相关信息，根据业务不同，返回相关信息不同。</p>
+	InstanceInfo *InstanceInfo `json:"InstanceInfo,omitnil,omitempty" name:"InstanceInfo"`
+
+	// <p>审计子类型</p>
+	LogSubType *string `json:"LogSubType,omitnil,omitempty" name:"LogSubType"`
+}
+
+type LogResult struct {
+	// <p>数据库ID</p>
+	DBId *int64 `json:"DBId,omitnil,omitempty" name:"DBId"`
+
+	// <p>命令延迟（毫秒）</p>
+	CommandLatency *int64 `json:"CommandLatency,omitnil,omitempty" name:"CommandLatency"`
+
+	// <p>创建时间（格式：2006-01-02 15:04:05.000）</p>
+	Timestamp *string `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
+
+	// <p>客户端地址</p>
+	ClientAddr *string `json:"ClientAddr,omitnil,omitempty" name:"ClientAddr"`
+
+	// <p>用户名</p>
+	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
+
+	// <p>命令类型</p>
+	CommandType *string `json:"CommandType,omitnil,omitempty" name:"CommandType"`
+
+	// <p>缓存代码，后端redis节点</p>
+	CacheCode *string `json:"CacheCode,omitnil,omitempty" name:"CacheCode"`
+
+	// <p>命令详情</p>
+	CommandDetail *string `json:"CommandDetail,omitnil,omitempty" name:"CommandDetail"`
+
+	// <p>错误信息</p>
+	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
 }
 
 // Predefined struct for user
@@ -7456,10 +8291,13 @@ type ModfiyInstancePasswordRequestParams struct {
 	OldPassword *string `json:"OldPassword,omitnil,omitempty" name:"OldPassword"`
 
 	// 实例新密码。密码复杂度要求如下：
-	// - 长度8 - 30位, 推荐使用12位以上的密码。
+	// - 长度8 - 64位, 推荐使用12位以上的密码。
 	// - 不能以"/"开头。
 	// - 至少包含小写字母a - z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 type ModfiyInstancePasswordRequest struct {
@@ -7472,10 +8310,13 @@ type ModfiyInstancePasswordRequest struct {
 	OldPassword *string `json:"OldPassword,omitnil,omitempty" name:"OldPassword"`
 
 	// 实例新密码。密码复杂度要求如下：
-	// - 长度8 - 30位, 推荐使用12位以上的密码。
+	// - 长度8 - 64位, 推荐使用12位以上的密码。
 	// - 不能以"/"开头。
 	// - 至少包含小写字母a - z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 func (r *ModfiyInstancePasswordRequest) ToJsonString() string {
@@ -7493,6 +8334,7 @@ func (r *ModfiyInstancePasswordRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "OldPassword")
 	delete(f, "Password")
+	delete(f, "EncryptPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModfiyInstancePasswordRequest has unknown keys!", "")
 	}
@@ -7537,6 +8379,9 @@ type ModifyAutoBackupConfigRequestParams struct {
 
 	// 自动备份类型。目前仅能配置为：1 ，指定时备份。
 	AutoBackupType *int64 `json:"AutoBackupType,omitnil,omitempty" name:"AutoBackupType"`
+
+	// 全量备份文件保存天数。 仅支持设置为 7，单位：天。如需更长天数，请[提交工单](https://console.cloud.tencent.com/workorder/category)申请。
+	BackupStorageDays *int64 `json:"BackupStorageDays,omitnil,omitempty" name:"BackupStorageDays"`
 }
 
 type ModifyAutoBackupConfigRequest struct {
@@ -7553,6 +8398,9 @@ type ModifyAutoBackupConfigRequest struct {
 
 	// 自动备份类型。目前仅能配置为：1 ，指定时备份。
 	AutoBackupType *int64 `json:"AutoBackupType,omitnil,omitempty" name:"AutoBackupType"`
+
+	// 全量备份文件保存天数。 仅支持设置为 7，单位：天。如需更长天数，请[提交工单](https://console.cloud.tencent.com/workorder/category)申请。
+	BackupStorageDays *int64 `json:"BackupStorageDays,omitnil,omitempty" name:"BackupStorageDays"`
 }
 
 func (r *ModifyAutoBackupConfigRequest) ToJsonString() string {
@@ -7571,6 +8419,7 @@ func (r *ModifyAutoBackupConfigRequest) FromJsonString(s string) error {
 	delete(f, "WeekDays")
 	delete(f, "TimePeriod")
 	delete(f, "AutoBackupType")
+	delete(f, "BackupStorageDays")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAutoBackupConfigRequest has unknown keys!", "")
 	}
@@ -7709,30 +8558,34 @@ func (r *ModifyBackupDownloadRestrictionResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type ModifyConnectionConfigRequestParams struct {
-	// 实例的ID，长度在12-36之间。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 附加带宽，大于0，单位MB。
+	// **说明**：Bandwidth 和 ClientLimit 参数不能同时为空，您必须至少选择其中一个进行配置。
 	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 单分片的总连接数。
-	// 未开启副本只读时，下限为10000，上限为40000；
-	// 开启副本只读时，下限为10000，上限为10000×(只读副本数+3)。
+	// - 未开启副本只读时，下限为10000，上限为40000。
+	// - 开启副本只读时，下限为10000，上限为10000×(只读副本数+3)。
+	// **说明**：Bandwidth 和 ClientLimit 参数不能同时为空，您必须至少选择其中一个进行配置。
 	ClientLimit *int64 `json:"ClientLimit,omitnil,omitempty" name:"ClientLimit"`
 }
 
 type ModifyConnectionConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例的ID，长度在12-36之间。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 附加带宽，大于0，单位MB。
+	// **说明**：Bandwidth 和 ClientLimit 参数不能同时为空，您必须至少选择其中一个进行配置。
 	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 单分片的总连接数。
-	// 未开启副本只读时，下限为10000，上限为40000；
-	// 开启副本只读时，下限为10000，上限为10000×(只读副本数+3)。
+	// - 未开启副本只读时，下限为10000，上限为40000。
+	// - 开启副本只读时，下限为10000，上限为10000×(只读副本数+3)。
+	// **说明**：Bandwidth 和 ClientLimit 参数不能同时为空，您必须至少选择其中一个进行配置。
 	ClientLimit *int64 `json:"ClientLimit,omitnil,omitempty" name:"ClientLimit"`
 }
 
@@ -7787,10 +8640,13 @@ type ModifyDBInstanceSecurityGroupsRequestParams struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 要修改的安全组 ID 列表，一个或者多个安全组 ID 组成的数组。
+	// 更换为新的安全组 ID 列表，即一个或者多个安全组 ID 组成的数组。
+	// - 若实例第一次配置安全组，请使用接口[AssociateSecurityGroups](https://cloud.tencent.com/document/product/239/41260)先绑定安全组。
+	// - 更换安全组，请在[控制台安全组](https://console.cloud.tencent.com/vpc/security-group)页面获取安全组 ID。
+	//   **注意：**该入参会全量替换存量已有集合，非增量更新。修改需传入预期的全量集合。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 实例 ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -7800,10 +8656,13 @@ type ModifyDBInstanceSecurityGroupsRequest struct {
 	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 要修改的安全组 ID 列表，一个或者多个安全组 ID 组成的数组。
+	// 更换为新的安全组 ID 列表，即一个或者多个安全组 ID 组成的数组。
+	// - 若实例第一次配置安全组，请使用接口[AssociateSecurityGroups](https://cloud.tencent.com/document/product/239/41260)先绑定安全组。
+	// - 更换安全组，请在[控制台安全组](https://console.cloud.tencent.com/vpc/security-group)页面获取安全组 ID。
+	//   **注意：**该入参会全量替换存量已有集合，非增量更新。修改需传入预期的全量集合。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 实例 ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -7852,51 +8711,75 @@ func (r *ModifyDBInstanceSecurityGroupsResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type ModifyInstanceAccountRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 子账号名称，如果要修改主账号，填root
+	// 指定需修改的账号。
+	// - root：指在创建 Redis 数据库实例时自动生成的账号。用户无法修改其读写权限，仅可修改其请求路由策略。
+	// - 自定义的账号：用户在实例创建成功后手动创建的账号。用户可以随时修改其读写权限与请求路由策略。
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
-	// 子账号密码
+	// 指定所修改账号访问的密码。
 	AccountPassword *string `json:"AccountPassword,omitnil,omitempty" name:"AccountPassword"`
 
-	// 子账号描述信息
+	// 账号描述信息
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 路由策略：填写master或者replication，表示主节点或者从节点
+	// 指定所修改账号读写请求路由的策略。
+	// - master：表示读写请求路由至主节点。
+	// - replication：表示读写请求路由至从节点。
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitnil,omitempty" name:"ReadonlyPolicy"`
 
-	// 子账号读写策略：填写r、w、rw，表示只读，只写，读写策略
+	// 指定所修改账号的读写权限。
+	// - r：只读。
+	// - w：只写。
+	// - rw：读写。
 	Privilege *string `json:"Privilege,omitnil,omitempty" name:"Privilege"`
 
-	// true表示将主账号切换为免密账号，这里只适用于主账号，子账号不可免密。
+	// 指定是否将默认账号（root）设置为免密账号。自定义账号不支持免密访问。
+	// - true：默认账号（root）设置为免密账号。
+	// - false：默认账号（root）不设置为免密账号。
 	NoAuth *bool `json:"NoAuth,omitnil,omitempty" name:"NoAuth"`
+
+	// 指定所修改的账号是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 type ModifyInstanceAccountRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 子账号名称，如果要修改主账号，填root
+	// 指定需修改的账号。
+	// - root：指在创建 Redis 数据库实例时自动生成的账号。用户无法修改其读写权限，仅可修改其请求路由策略。
+	// - 自定义的账号：用户在实例创建成功后手动创建的账号。用户可以随时修改其读写权限与请求路由策略。
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
-	// 子账号密码
+	// 指定所修改账号访问的密码。
 	AccountPassword *string `json:"AccountPassword,omitnil,omitempty" name:"AccountPassword"`
 
-	// 子账号描述信息
+	// 账号描述信息
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 路由策略：填写master或者replication，表示主节点或者从节点
+	// 指定所修改账号读写请求路由的策略。
+	// - master：表示读写请求路由至主节点。
+	// - replication：表示读写请求路由至从节点。
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitnil,omitempty" name:"ReadonlyPolicy"`
 
-	// 子账号读写策略：填写r、w、rw，表示只读，只写，读写策略
+	// 指定所修改账号的读写权限。
+	// - r：只读。
+	// - w：只写。
+	// - rw：读写。
 	Privilege *string `json:"Privilege,omitnil,omitempty" name:"Privilege"`
 
-	// true表示将主账号切换为免密账号，这里只适用于主账号，子账号不可免密。
+	// 指定是否将默认账号（root）设置为免密账号。自定义账号不支持免密访问。
+	// - true：默认账号（root）设置为免密账号。
+	// - false：默认账号（root）不设置为免密账号。
 	NoAuth *bool `json:"NoAuth,omitnil,omitempty" name:"NoAuth"`
+
+	// 指定所修改的账号是否加密密码
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 func (r *ModifyInstanceAccountRequest) ToJsonString() string {
@@ -7918,6 +8801,7 @@ func (r *ModifyInstanceAccountRequest) FromJsonString(s string) error {
 	delete(f, "ReadonlyPolicy")
 	delete(f, "Privilege")
 	delete(f, "NoAuth")
+	delete(f, "EncryptPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceAccountRequest has unknown keys!", "")
 	}
@@ -7926,7 +8810,7 @@ func (r *ModifyInstanceAccountRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceAccountResponseParams struct {
-	// 任务ID
+	// 任务ID。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8027,11 +8911,150 @@ func (r *ModifyInstanceAvailabilityZonesResponse) FromJsonString(s string) error
 }
 
 // Predefined struct for user
+type ModifyInstanceBackupModeRequestParams struct {
+	// 实例的ID。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 备份模式：
+	// - SecondLevelBackup   秒级备份。
+	// - NormalLevelBackup    普通备份。
+	BackupMode *string `json:"BackupMode,omitnil,omitempty" name:"BackupMode"`
+}
+
+type ModifyInstanceBackupModeRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例的ID。请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 备份模式：
+	// - SecondLevelBackup   秒级备份。
+	// - NormalLevelBackup    普通备份。
+	BackupMode *string `json:"BackupMode,omitnil,omitempty" name:"BackupMode"`
+}
+
+func (r *ModifyInstanceBackupModeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceBackupModeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "BackupMode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceBackupModeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceBackupModeResponseParams struct {
+	// 任务 ID。
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyInstanceBackupModeResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceBackupModeResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceBackupModeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceBackupModeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceChargeTypeRequestParams struct {
+	// <p>实例ID数组</p><p>入参限制：批量操作数组长度不超过20</p>
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>修改计费模式的操作类型</p><p>枚举值：</p><ul><li>PREPAID： 按量计费转包年包月</li><li>POSTPAID： 包年包月转按量计费</li></ul>
+	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
+
+	// <p>购买时长，仅当InstanceChargeType=PREPAID时需要传</p><p>取值范围：[1, 36]</p><p>单位：月</p>
+	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
+}
+
+type ModifyInstanceChargeTypeRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID数组</p><p>入参限制：批量操作数组长度不超过20</p>
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>修改计费模式的操作类型</p><p>枚举值：</p><ul><li>PREPAID： 按量计费转包年包月</li><li>POSTPAID： 包年包月转按量计费</li></ul>
+	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
+
+	// <p>购买时长，仅当InstanceChargeType=PREPAID时需要传</p><p>取值范围：[1, 36]</p><p>单位：月</p>
+	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
+}
+
+func (r *ModifyInstanceChargeTypeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceChargeTypeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceIds")
+	delete(f, "InstanceChargeType")
+	delete(f, "Period")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceChargeTypeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceChargeTypeResponseParams struct {
+	// <p>修改失败的实例信息汇总</p>
+	FailedInstanceIds []*FailedInstance `json:"FailedInstanceIds,omitnil,omitempty" name:"FailedInstanceIds"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyInstanceChargeTypeResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceChargeTypeResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceChargeTypeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceChargeTypeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyInstanceEventRequestParams struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 事件 ID。请通过 DescribeInstanceEvents 获取需修改的事件 ID。
+	// 事件 ID。请通过 [DescribeInstanceEvents](https://cloud.tencent.com/document/product/239/104779) 获取需修改的事件 ID。
 	EventId *int64 `json:"EventId,omitnil,omitempty" name:"EventId"`
 
 	// 修改事件执行的计划开始时间。
@@ -8055,7 +9078,7 @@ type ModifyInstanceEventRequest struct {
 	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 事件 ID。请通过 DescribeInstanceEvents 获取需修改的事件 ID。
+	// 事件 ID。请通过 [DescribeInstanceEvents](https://cloud.tencent.com/document/product/239/104779) 获取需修改的事件 ID。
 	EventId *int64 `json:"EventId,omitnil,omitempty" name:"EventId"`
 
 	// 修改事件执行的计划开始时间。
@@ -8124,7 +9147,7 @@ func (r *ModifyInstanceEventResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceLogDeliveryRequestParams struct {
-	// 实例ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 日志类型。当前仅支持设置为slowlog，指慢查询日志。
@@ -8135,16 +9158,16 @@ type ModifyInstanceLogDeliveryRequestParams struct {
 	// - false：关闭。
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
-	// 投递的日志集ID。
+	// 投递的日志集ID。通过接口[DescribeLogsets](https://cloud.tencent.com/document/api/614/58624)获取到日志集ID。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
-	// 投递的日志主题ID。
+	// 投递的日志主题ID。通过接口[DescribeTopics](https://cloud.tencent.com/document/api/614/56454)获取到日志主题ID。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 日志集名称。若**LogsetId**未指定具体的日志集ID，请配置该参数，设置日志集名称，系统会以设置的日志集名称自动创建新的日志集。
+	// 日志集名称。**LogsetId**为空时必传，系统会以LogsetName为名称来创建新的日志集并投递日志。
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 日志主题名称，TopicId为空时必传，会自动创建新的日志主题。
+	// 日志主题名称。**TopicId**为空时必传，系统会以TopicName为名称来创建新的日志主题并投递日志。
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
 	// 日志集所在地域，不传默认使用实例所在地域。
@@ -8160,7 +9183,7 @@ type ModifyInstanceLogDeliveryRequestParams struct {
 type ModifyInstanceLogDeliveryRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 日志类型。当前仅支持设置为slowlog，指慢查询日志。
@@ -8171,16 +9194,16 @@ type ModifyInstanceLogDeliveryRequest struct {
 	// - false：关闭。
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
-	// 投递的日志集ID。
+	// 投递的日志集ID。通过接口[DescribeLogsets](https://cloud.tencent.com/document/api/614/58624)获取到日志集ID。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
-	// 投递的日志主题ID。
+	// 投递的日志主题ID。通过接口[DescribeTopics](https://cloud.tencent.com/document/api/614/56454)获取到日志主题ID。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 日志集名称。若**LogsetId**未指定具体的日志集ID，请配置该参数，设置日志集名称，系统会以设置的日志集名称自动创建新的日志集。
+	// 日志集名称。**LogsetId**为空时必传，系统会以LogsetName为名称来创建新的日志集并投递日志。
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 日志主题名称，TopicId为空时必传，会自动创建新的日志主题。
+	// 日志主题名称。**TopicId**为空时必传，系统会以TopicName为名称来创建新的日志主题并投递日志。
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
 	// 日志集所在地域，不传默认使用实例所在地域。
@@ -8245,7 +9268,7 @@ func (r *ModifyInstanceLogDeliveryResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceParamsRequestParams struct {
-	// 实例ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 实例修改的参数列表。
@@ -8255,7 +9278,7 @@ type ModifyInstanceParamsRequestParams struct {
 type ModifyInstanceParamsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 实例修改的参数列表。
@@ -8311,21 +9334,102 @@ func (r *ModifyInstanceParamsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type ModifyInstanceReadOnlyRequestParams struct {
-	// 实例ID
+type ModifyInstancePasswordRequestParams struct {
+	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例输入模式，0：读写 1：只读
+	// 实例旧密码。
+	OldPassword *string `json:"OldPassword,omitnil,omitempty" name:"OldPassword"`
+
+	// 实例新密码。密码复杂度要求如下：
+	// - 长度8 - 30位, 推荐使用12位以上的密码。
+	// - 不能以"/"开头。
+	// - 至少包含小写字母a - z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
+	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+}
+
+type ModifyInstancePasswordRequest struct {
+	*tchttp.BaseRequest
+	
+	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 实例旧密码。
+	OldPassword *string `json:"OldPassword,omitnil,omitempty" name:"OldPassword"`
+
+	// 实例新密码。密码复杂度要求如下：
+	// - 长度8 - 30位, 推荐使用12位以上的密码。
+	// - 不能以"/"开头。
+	// - 至少包含小写字母a - z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
+	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+}
+
+func (r *ModifyInstancePasswordRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstancePasswordRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "OldPassword")
+	delete(f, "Password")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstancePasswordRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstancePasswordResponseParams struct {
+	// 任务 ID。
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyInstancePasswordResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstancePasswordResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstancePasswordResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstancePasswordResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceReadOnlyRequestParams struct {
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 实例输入模式。
+	// - 0：读写。
+	// - 1：只读。
 	InputMode *string `json:"InputMode,omitnil,omitempty" name:"InputMode"`
 }
 
 type ModifyInstanceReadOnlyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例输入模式，0：读写 1：只读
+	// 实例输入模式。
+	// - 0：读写。
+	// - 1：只读。
 	InputMode *string `json:"InputMode,omitnil,omitempty" name:"InputMode"`
 }
 
@@ -8376,56 +9480,82 @@ func (r *ModifyInstanceReadOnlyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceRequestParams struct {
-	// 修改实例操作，如填写：rename-表示实例重命名；modifyProject-修改实例所属项目；modifyAutoRenew-修改实例续费标记
+	// 修改实例操作。如填写：
+	// - rename：表示实例重命名。
+	// - modifyProject：修改实例所属项目。
+	// - modifyAutoRenew：修改实例续费标记。
+	// - modifyDeleteProtectionSwitch：修改实例删除保护。
 	Operation *string `json:"Operation,omitnil,omitempty" name:"Operation"`
 
-	// 实例Id，每次请求的实例的上限为10。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。每次请求的实例数量的上限为10。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 实例的新名称
+	// 实例的新名称。名称只支持长度为60个字符的中文、英文、数字、下划线_、分隔符-。
 	InstanceNames []*string `json:"InstanceNames,omitnil,omitempty" name:"InstanceNames"`
 
-	// 项目Id
+	// 项目 ID，请登录[Redis控制台的项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 自动续费标识。0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+	// 自动续费标识。
+	// - 0：默认状态，指手动续费。
+	// - 1：自动续费。
+	// - 2：明确不自动续费。
 	AutoRenews []*int64 `json:"AutoRenews,omitnil,omitempty" name:"AutoRenews"`
 
-	// 已经废弃
+	// 删除保护开关。- 0：默认状态，指关闭。- 1：开关打开。
+	DeleteProtectionSwitches []*int64 `json:"DeleteProtectionSwitches,omitnil,omitempty" name:"DeleteProtectionSwitches"`
+
+	// 目前在废弃中，存量用户还可以使用，建议新用户使用 InstanceIds。
+	//
+	// Deprecated: InstanceId is deprecated.
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 已经废弃
+	//
+	// Deprecated: InstanceName is deprecated.
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 已经废弃
+	// 已经废弃。
+	//
+	// Deprecated: AutoRenew is deprecated.
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 }
 
 type ModifyInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 修改实例操作，如填写：rename-表示实例重命名；modifyProject-修改实例所属项目；modifyAutoRenew-修改实例续费标记
+	// 修改实例操作。如填写：
+	// - rename：表示实例重命名。
+	// - modifyProject：修改实例所属项目。
+	// - modifyAutoRenew：修改实例续费标记。
+	// - modifyDeleteProtectionSwitch：修改实例删除保护。
 	Operation *string `json:"Operation,omitnil,omitempty" name:"Operation"`
 
-	// 实例Id，每次请求的实例的上限为10。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。每次请求的实例数量的上限为10。
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 实例的新名称
+	// 实例的新名称。名称只支持长度为60个字符的中文、英文、数字、下划线_、分隔符-。
 	InstanceNames []*string `json:"InstanceNames,omitnil,omitempty" name:"InstanceNames"`
 
-	// 项目Id
+	// 项目 ID，请登录[Redis控制台的项目管理](https://console.cloud.tencent.com/project)页面，在**项目名称**中复制项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 自动续费标识。0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+	// 自动续费标识。
+	// - 0：默认状态，指手动续费。
+	// - 1：自动续费。
+	// - 2：明确不自动续费。
 	AutoRenews []*int64 `json:"AutoRenews,omitnil,omitempty" name:"AutoRenews"`
 
-	// 已经废弃
+	// 删除保护开关。- 0：默认状态，指关闭。- 1：开关打开。
+	DeleteProtectionSwitches []*int64 `json:"DeleteProtectionSwitches,omitnil,omitempty" name:"DeleteProtectionSwitches"`
+
+	// 目前在废弃中，存量用户还可以使用，建议新用户使用 InstanceIds。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 已经废弃
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 已经废弃
+	// 已经废弃。
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 }
 
@@ -8446,6 +9576,7 @@ func (r *ModifyInstanceRequest) FromJsonString(s string) error {
 	delete(f, "InstanceNames")
 	delete(f, "ProjectId")
 	delete(f, "AutoRenews")
+	delete(f, "DeleteProtectionSwitches")
 	delete(f, "InstanceId")
 	delete(f, "InstanceName")
 	delete(f, "AutoRenew")
@@ -8478,27 +9609,118 @@ func (r *ModifyInstanceResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type ModifyMaintenanceWindowRequestParams struct {
-	// 实例ID
+type ModifyLogRequestParams struct {
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 维护时间窗起始时间，如：17:00
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志子类型。</p><p>枚举值：</p><ul><li>write： 写命令</li><li>read： 读命令</li><li>all： 全部命令</li></ul>
+	LogSubType *string `json:"LogSubType,omitnil,omitempty" name:"LogSubType"`
+
+	// <p>日志过期时间，单位：天。</p><p>枚举值：</p><ul><li>7：  7 天</li><li>30： 30 天</li></ul>
+	LogExpireDay *int64 `json:"LogExpireDay,omitnil,omitempty" name:"LogExpireDay"`
+
+	// <p>高频日志过期时间，单位：天。</p><p>枚举值：</p><ul><li>7： 7 天</li></ul><p>默认值： 7</p>
+	HighLogExpireDay *int64 `json:"HighLogExpireDay,omitnil,omitempty" name:"HighLogExpireDay"`
+
+	// <p>降级策略，单位：毫秒，实例P99达到降级策略后，审计数据自动丢弃，优先保障业务的可用性，默认值：500毫秒。</p><p>取值范围：[300, 1000]</p>
+	DegradeStrategy *int64 `json:"DegradeStrategy,omitnil,omitempty" name:"DegradeStrategy"`
+}
+
+type ModifyLogRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志子类型。</p><p>枚举值：</p><ul><li>write： 写命令</li><li>read： 读命令</li><li>all： 全部命令</li></ul>
+	LogSubType *string `json:"LogSubType,omitnil,omitempty" name:"LogSubType"`
+
+	// <p>日志过期时间，单位：天。</p><p>枚举值：</p><ul><li>7：  7 天</li><li>30： 30 天</li></ul>
+	LogExpireDay *int64 `json:"LogExpireDay,omitnil,omitempty" name:"LogExpireDay"`
+
+	// <p>高频日志过期时间，单位：天。</p><p>枚举值：</p><ul><li>7： 7 天</li></ul><p>默认值： 7</p>
+	HighLogExpireDay *int64 `json:"HighLogExpireDay,omitnil,omitempty" name:"HighLogExpireDay"`
+
+	// <p>降级策略，单位：毫秒，实例P99达到降级策略后，审计数据自动丢弃，优先保障业务的可用性，默认值：500毫秒。</p><p>取值范围：[300, 1000]</p>
+	DegradeStrategy *int64 `json:"DegradeStrategy,omitnil,omitempty" name:"DegradeStrategy"`
+}
+
+func (r *ModifyLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLogRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LogType")
+	delete(f, "LogSubType")
+	delete(f, "LogExpireDay")
+	delete(f, "HighLogExpireDay")
+	delete(f, "DegradeStrategy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyLogRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyLogResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyLogResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyLogResponseParams `json:"Response"`
+}
+
+func (r *ModifyLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLogResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyMaintenanceWindowRequestParams struct {
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 维护时间窗起始时间，如：17:00。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 维护时间窗结束时间，如：19:00
+	// 维护时间窗结束时间，如：19:00。
+	// **说明：**维护时间窗时长，当前支持：30分钟、1小时、1.5小时、2小时、3小时。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 }
 
 type ModifyMaintenanceWindowRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 维护时间窗起始时间，如：17:00
+	// 维护时间窗起始时间，如：17:00。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 维护时间窗结束时间，如：19:00
+	// 维护时间窗结束时间，如：19:00。
+	// **说明：**维护时间窗时长，当前支持：30分钟、1小时、1.5小时、2小时、3小时。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 }
 
@@ -8550,7 +9772,7 @@ func (r *ModifyMaintenanceWindowResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyNetworkConfigRequestParams struct {
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 指预修改网络的类别，包括：
@@ -8563,17 +9785,20 @@ type ModifyNetworkConfigRequestParams struct {
 	// 指实例私有网络内网 IPv4 地址。当**Operation**为**changeVip**时，需配置该参数。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 指修改后的私有网络 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// 指修改后的私有网络 ID。
+	// - 当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// - 请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)，切换至**实例详情**页面，在**网络信息**区域，单击所属网络后面的私有网络名称，获取私有网络 ID。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 指修改后的私有网络所属子网 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// 指修改后的私有网络所属子网 ID。
+	// - 当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// - 请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)，切换至**实例详情**页面，在**网络信息**区域，单击所属网络后面的子网名称，获取子网ID。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 原内网 IPv4 地址保留时长。
 	// - 单位：天。
 	// - 取值范围：0、1、2、3、7、15。
-	// 
-	// **说明**：设置原地址保留时长需最新版SDK，否则原地址将立即释放，查看SDK版本，请参见 [SDK中心](https://cloud.tencent.com/document/sdk)。
+	// **说明**：保留时长不设置或者设置为0，原网络地址将立即释放。
 	Recycle *int64 `json:"Recycle,omitnil,omitempty" name:"Recycle"`
 
 	// 指修改后的网络端口。当**Operation**为**changeVPort**或**changeVip**时，需配置该参数。取值范围为[1024,65535]。
@@ -8583,7 +9808,7 @@ type ModifyNetworkConfigRequestParams struct {
 type ModifyNetworkConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 指预修改网络的类别，包括：
@@ -8596,17 +9821,20 @@ type ModifyNetworkConfigRequest struct {
 	// 指实例私有网络内网 IPv4 地址。当**Operation**为**changeVip**时，需配置该参数。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 指修改后的私有网络 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// 指修改后的私有网络 ID。
+	// - 当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// - 请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)，切换至**实例详情**页面，在**网络信息**区域，单击所属网络后面的私有网络名称，获取私有网络 ID。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 指修改后的私有网络所属子网 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// 指修改后的私有网络所属子网 ID。
+	// - 当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
+	// - 请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)，切换至**实例详情**页面，在**网络信息**区域，单击所属网络后面的子网名称，获取子网ID。
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 原内网 IPv4 地址保留时长。
 	// - 单位：天。
 	// - 取值范围：0、1、2、3、7、15。
-	// 
-	// **说明**：设置原地址保留时长需最新版SDK，否则原地址将立即释放，查看SDK版本，请参见 [SDK中心](https://cloud.tencent.com/document/sdk)。
+	// **说明**：保留时长不设置或者设置为0，原网络地址将立即释放。
 	Recycle *int64 `json:"Recycle,omitnil,omitempty" name:"Recycle"`
 
 	// 指修改后的网络端口。当**Operation**为**changeVPort**或**changeVip**时，需配置该参数。取值范围为[1024,65535]。
@@ -8652,7 +9880,7 @@ type ModifyNetworkConfigResponseParams struct {
 	// 指实例新的内网 IPv4 地址。
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 任务 ID。可获取**taskId**，通过接口 **DescribeTaskInfo **查询任务执行状态。
+	// 任务 ID。获取**taskId**，通过接口 [DescribeTaskInfo](https://cloud.tencent.com/document/product/239/30601) 查询任务执行状态。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8677,7 +9905,7 @@ func (r *ModifyNetworkConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyParamTemplateRequestParams struct {
-	// 源参数模板 ID。
+	// 源参数模板 ID。 请通过接口[DescribeParamTemplateInfo](https://cloud.tencent.com/document/product/239/58748)的返回参数 **TemplateId** 获取参数模板 ID。 
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 
 	// 参数模板修改后的新名称。
@@ -8693,7 +9921,7 @@ type ModifyParamTemplateRequestParams struct {
 type ModifyParamTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 源参数模板 ID。
+	// 源参数模板 ID。 请通过接口[DescribeParamTemplateInfo](https://cloud.tencent.com/document/product/239/58748)的返回参数 **TemplateId** 获取参数模板 ID。 
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 
 	// 参数模板修改后的新名称。
@@ -8752,26 +9980,26 @@ func (r *ModifyParamTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyReplicationGroupRequestParams struct {
-	// 复制组字符串ID
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 复制组名称
+	// 修改后的复制组名称。
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
-	// 备注
+	// 备注描述。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 }
 
 type ModifyReplicationGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 复制组字符串ID
+	// 复制组ID。请登录[Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication)页面获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 复制组名称
+	// 修改后的复制组名称。
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
-	// 备注
+	// 备注描述。
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 }
 
@@ -8819,15 +10047,104 @@ func (r *ModifyReplicationGroupResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type OpenLogRequestParams struct {
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志子类型。</p><p>枚举值：</p><ul><li>write： 写命令。</li><li>read： 读命令。</li><li>all： 读写命令。</li></ul>
+	LogSubType *string `json:"LogSubType,omitnil,omitempty" name:"LogSubType"`
+
+	// <p>日志有效期, 单位：天。</p><p>枚举值：</p><ul><li>7：  7 天</li><li>30： 30 天</li></ul><p>默认值：7</p>
+	LogExpireDay *int64 `json:"LogExpireDay,omitnil,omitempty" name:"LogExpireDay"`
+
+	// <p>高频日志有效期, 单位：天。</p><p>枚举值：</p><ul><li>7： 7天</li></ul><p>默认值：7</p>
+	HighLogExpireDay *int64 `json:"HighLogExpireDay,omitnil,omitempty" name:"HighLogExpireDay"`
+
+	// <p>日志降级策略阈值。当实例 P99 延迟达到该阈值后，系统将自动丢弃审计日志数据，以优先保障业务可用性。</p><ul><li>单位：毫秒。</li><li>默认值：500。</li><li>取值范围：[300, 1000]。</li></ul>
+	DegradeStrategy *int64 `json:"DegradeStrategy,omitnil,omitempty" name:"DegradeStrategy"`
+}
+
+type OpenLogRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>指定实例 ID。例如：crs-xjhsdj****。请登录<a href="https://console.cloud.tencent.com/redis">Redis控制台</a>在实例列表复制实例 ID。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>日志类型。</p><p>枚举值：</p><ul><li>auditLog： 审计日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志子类型。</p><p>枚举值：</p><ul><li>write： 写命令。</li><li>read： 读命令。</li><li>all： 读写命令。</li></ul>
+	LogSubType *string `json:"LogSubType,omitnil,omitempty" name:"LogSubType"`
+
+	// <p>日志有效期, 单位：天。</p><p>枚举值：</p><ul><li>7：  7 天</li><li>30： 30 天</li></ul><p>默认值：7</p>
+	LogExpireDay *int64 `json:"LogExpireDay,omitnil,omitempty" name:"LogExpireDay"`
+
+	// <p>高频日志有效期, 单位：天。</p><p>枚举值：</p><ul><li>7： 7天</li></ul><p>默认值：7</p>
+	HighLogExpireDay *int64 `json:"HighLogExpireDay,omitnil,omitempty" name:"HighLogExpireDay"`
+
+	// <p>日志降级策略阈值。当实例 P99 延迟达到该阈值后，系统将自动丢弃审计日志数据，以优先保障业务可用性。</p><ul><li>单位：毫秒。</li><li>默认值：500。</li><li>取值范围：[300, 1000]。</li></ul>
+	DegradeStrategy *int64 `json:"DegradeStrategy,omitnil,omitempty" name:"DegradeStrategy"`
+}
+
+func (r *OpenLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenLogRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LogType")
+	delete(f, "LogSubType")
+	delete(f, "LogExpireDay")
+	delete(f, "HighLogExpireDay")
+	delete(f, "DegradeStrategy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenLogRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OpenLogResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type OpenLogResponse struct {
+	*tchttp.BaseResponse
+	Response *OpenLogResponseParams `json:"Response"`
+}
+
+func (r *OpenLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenLogResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type OpenSSLRequestParams struct {
-	// 实例ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type OpenSSLRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -8947,15 +10264,12 @@ type ParameterDetail struct {
 	NeedReboot *int64 `json:"NeedReboot,omitnil,omitempty" name:"NeedReboot"`
 
 	// 参数允许的最大值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Max *string `json:"Max,omitnil,omitempty" name:"Max"`
 
 	// 参数允许的最小值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Min *string `json:"Min,omitnil,omitempty" name:"Min"`
 
 	// 参数可选枚举值。如果为非枚举参数，则为空。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnumValue []*string `json:"EnumValue,omitnil,omitempty" name:"EnumValue"`
 }
 
@@ -9013,22 +10327,21 @@ type ProductConf struct {
 	// 该参数名因存在拼写不规范的问题，建议使用**EnableReplicaReadOnly**参数取代。其含义为是否支持副本只读。
 	// - true：支持副本只读。
 	// - false：不支持。
+	//
+	// Deprecated: EnableRepicaReadOnly is deprecated.
 	EnableRepicaReadOnly *bool `json:"EnableRepicaReadOnly,omitnil,omitempty" name:"EnableRepicaReadOnly"`
 
 	// 是否支持副本只读。
 	// - true：支持副本只读。
 	// - false：不支持。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableReplicaReadOnly *bool `json:"EnableReplicaReadOnly,omitnil,omitempty" name:"EnableReplicaReadOnly"`
 }
 
 type ProxyNodes struct {
 	// 节点 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 
 	// 可用区 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
@@ -9061,15 +10374,12 @@ type RedisBackupSet struct {
 	Locked *int64 `json:"Locked,omitnil,omitempty" name:"Locked"`
 
 	// 内部字段，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupSize *int64 `json:"BackupSize,omitnil,omitempty" name:"BackupSize"`
 
 	// 内部字段，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	FullBackup *int64 `json:"FullBackup,omitnil,omitempty" name:"FullBackup"`
 
 	// 内部字段，用户可忽略。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceType *int64 `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
 	// 实例 ID。
@@ -9146,19 +10456,15 @@ type RedisCommonInstanceList struct {
 
 type RedisInstanceEvent struct {
 	// 事件 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ID *int64 `json:"ID,omitnil,omitempty" name:"ID"`
 
 	// 实例 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 实例名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 事件类型，当前仅支持配置实例迁移、资源腾挪、机房裁撤相关的运维操作。该参数仅支持配置为 **InstanceMigration**。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 事件等级根据其影响严重程度和紧急程度进行分级，由重至轻依次为关键、重要、中等、一般。
@@ -9166,23 +10472,18 @@ type RedisInstanceEvent struct {
 	// - High：重要
 	// - Middle：中等
 	// - Low：一般
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Grade *string `json:"Grade,omitnil,omitempty" name:"Grade"`
 
 	// 事件计划执行日期。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExecutionDate *string `json:"ExecutionDate,omitnil,omitempty" name:"ExecutionDate"`
 
 	// 事件计划执行开始时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// 事件计划执行结束时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 运维事件最迟执行的日期，即该事件必须在该日期之前完成，否则可能会对业务产生影响。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	LatestExecutionDate *string `json:"LatestExecutionDate,omitnil,omitempty" name:"LatestExecutionDate"`
 
 	// 事件当前状态。
@@ -9190,19 +10491,15 @@ type RedisInstanceEvent struct {
 	// - Running：在维护时间窗内，正在执行维护的事件。
 	// - Finished：已全部完成维护的事件。
 	// - Canceled：已取消执行的事件。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 事件执行任务完成时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskEndTime *string `json:"TaskEndTime,omitnil,omitempty" name:"TaskEndTime"`
 
 	// 事件影响信息。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EffectInfo *string `json:"EffectInfo,omitnil,omitempty" name:"EffectInfo"`
 
 	// 事件最初计划执行日期。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InitialExecutionDate *string `json:"InitialExecutionDate,omitnil,omitempty" name:"InitialExecutionDate"`
 }
 
@@ -9270,14 +10567,14 @@ type RegionConf struct {
 
 // Predefined struct for user
 type ReleaseWanAddressRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type ReleaseWanAddressRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -9329,27 +10626,85 @@ func (r *ReleaseWanAddressResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type RemoveReplicationGroupRequestParams struct {
+	// 复制组ID。请登录 [Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication) 页面获取复制组 ID。
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+}
+
+type RemoveReplicationGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 复制组ID。请登录 [Redis控制台的全球复制](https://console.cloud.tencent.com/redis/replication) 页面获取复制组 ID。
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+}
+
+func (r *RemoveReplicationGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveReplicationGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveReplicationGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RemoveReplicationGroupResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RemoveReplicationGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *RemoveReplicationGroupResponseParams `json:"Response"`
+}
+
+func (r *RemoveReplicationGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveReplicationGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type RemoveReplicationInstanceRequestParams struct {
-	// 复制组ID
+	// 复制组 ID。例如：crs-rpl-m3zt****。请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据同步类型，true:需要数据强同步,false:不需要强同步，仅限删除主实例
+	// 数据同步类型。
+	// - true：需数据强同步。
+	// - false：无需强同步，仅限删除主实例。
 	SyncType *bool `json:"SyncType,omitnil,omitempty" name:"SyncType"`
 }
 
 type RemoveReplicationInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 复制组ID
+	// 复制组 ID。例如：crs-rpl-m3zt****。请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据同步类型，true:需要数据强同步,false:不需要强同步，仅限删除主实例
+	// 数据同步类型。
+	// - true：需数据强同步。
+	// - false：无需强同步，仅限删除主实例。
 	SyncType *bool `json:"SyncType,omitnil,omitempty" name:"SyncType"`
 }
 
@@ -9376,7 +10731,7 @@ func (r *RemoveReplicationInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RemoveReplicationInstanceResponseParams struct {
-	// 异步任务ID
+	// 异步任务ID。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9401,26 +10756,34 @@ func (r *RemoveReplicationInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RenewInstanceRequestParams struct {
-	// 购买时长，单位：月。
+	// 购买时长。
+	// - 单位：月。
+	// - 取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 实例 ID。
+	// 实例 ID，请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 标识是否修改计费模式。<ul><li>当前实例计费模式为按量计费方式，预转换为包年包月而续费，请指定该参数为 <b>prepaid</b>。</li><li>当前实例计费模式为包年包月方式，可不设置该参数。</li></ul>
+	// 标识是否修改计费模式。
+	// - 当前实例计费模式为按量计费方式，预转换为包年包月而续费，请指定该参数为 <b>prepaid</b>。
+	// - 当前实例计费模式为包年包月方式，可不设置该参数。
 	ModifyPayMode *string `json:"ModifyPayMode,omitnil,omitempty" name:"ModifyPayMode"`
 }
 
 type RenewInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 购买时长，单位：月。
+	// 购买时长。
+	// - 单位：月。
+	// - 取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 实例 ID。
+	// 实例 ID，请登录 [Redis 控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 标识是否修改计费模式。<ul><li>当前实例计费模式为按量计费方式，预转换为包年包月而续费，请指定该参数为 <b>prepaid</b>。</li><li>当前实例计费模式为包年包月方式，可不设置该参数。</li></ul>
+	// 标识是否修改计费模式。
+	// - 当前实例计费模式为按量计费方式，预转换为包年包月而续费，请指定该参数为 <b>prepaid</b>。
+	// - 当前实例计费模式为包年包月方式，可不设置该参数。
 	ModifyPayMode *string `json:"ModifyPayMode,omitnil,omitempty" name:"ModifyPayMode"`
 }
 
@@ -9448,7 +10811,12 @@ func (r *RenewInstanceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type RenewInstanceResponseParams struct {
 	// 交易ID。
+	//
+	// Deprecated: DealId is deprecated.
 	DealId *string `json:"DealId,omitnil,omitempty" name:"DealId"`
+
+	// 订单号。
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -9489,27 +10857,47 @@ type ReplicaGroup struct {
 
 // Predefined struct for user
 type ResetPasswordRequestParams struct {
-	// Redis实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 重置的密码（切换为免密实例时，可不传；其他情况必传）
+	// 重置的密码。若切换为免密实例时，可不配置该参数。
+	// - 长度8-32位, 推荐使用12位以上的密码。
+	// - 不能以"/"开头。
+	// - 至少包含小写字母a- z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 是否切换免密实例，false-切换为非免密码实例，true-切换为免密码实例；默认false
+	// 是否切换免密实例。
+	// - false：切换为非免密码实例。默认 false。
+	// - true：切换为免密码实例。
 	NoAuth *bool `json:"NoAuth,omitnil,omitempty" name:"NoAuth"`
+
+	// 是否加密密码。
+	// - false：非加密密码。默认 false。
+	// - true：加密密码。
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 type ResetPasswordRequest struct {
 	*tchttp.BaseRequest
 	
-	// Redis实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 重置的密码（切换为免密实例时，可不传；其他情况必传）
+	// 重置的密码。若切换为免密实例时，可不配置该参数。
+	// - 长度8-32位, 推荐使用12位以上的密码。
+	// - 不能以"/"开头。
+	// - 至少包含小写字母a- z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 是否切换免密实例，false-切换为非免密码实例，true-切换为免密码实例；默认false
+	// 是否切换免密实例。
+	// - false：切换为非免密码实例。默认 false。
+	// - true：切换为免密码实例。
 	NoAuth *bool `json:"NoAuth,omitnil,omitempty" name:"NoAuth"`
+
+	// 是否加密密码。
+	// - false：非加密密码。默认 false。
+	// - true：加密密码。
+	EncryptPassword *bool `json:"EncryptPassword,omitnil,omitempty" name:"EncryptPassword"`
 }
 
 func (r *ResetPasswordRequest) ToJsonString() string {
@@ -9527,6 +10915,7 @@ func (r *ResetPasswordRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "Password")
 	delete(f, "NoAuth")
+	delete(f, "EncryptPassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetPasswordRequest has unknown keys!", "")
 	}
@@ -9579,10 +10968,10 @@ type ResourceTag struct {
 
 // Predefined struct for user
 type RestoreInstanceRequestParams struct {
-	// 待操作的实例ID，可通过 DescribeInstances 接口返回值中的 InstanceId 获取。
+	// 待操作的实例ID，可通过 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 接口返回值中的 InstanceId 获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 备份ID，可通过 GetRedisBackupList 接口返回值中的 backupId 获取
+	// 备份ID，可通过 [DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011) 接口返回的参数 RedisBackupSet 获取。
 	BackupId *string `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 
 	// 实例密码，恢复实例时，需要校验实例密码（免密实例不需要传密码）
@@ -9592,10 +10981,10 @@ type RestoreInstanceRequestParams struct {
 type RestoreInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 待操作的实例ID，可通过 DescribeInstances 接口返回值中的 InstanceId 获取。
+	// 待操作的实例ID，可通过 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 接口返回值中的 InstanceId 获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 备份ID，可通过 GetRedisBackupList 接口返回值中的 backupId 获取
+	// 备份ID，可通过 [DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011) 接口返回的参数 RedisBackupSet 获取。
 	BackupId *string `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 
 	// 实例密码，恢复实例时，需要校验实例密码（免密实例不需要传密码）
@@ -9646,6 +11035,14 @@ func (r *RestoreInstanceResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *RestoreInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type SecondLevelBackupMissingTimestamps struct {
+	// 开始时间戳
+	StartTimeStamp *int64 `json:"StartTimeStamp,omitnil,omitempty" name:"StartTimeStamp"`
+
+	// 结束时间戳
+	EndTimeStamp *int64 `json:"EndTimeStamp,omitnil,omitempty" name:"EndTimeStamp"`
 }
 
 type SecurityGroup struct {
@@ -9731,14 +11128,14 @@ type SourceInfo struct {
 
 // Predefined struct for user
 type StartupInstanceRequestParams struct {
-	// 实例id
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在回收站复制需解隔离的实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type StartupInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例id
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在回收站复制需解隔离的实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -9764,6 +11161,8 @@ func (r *StartupInstanceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type StartupInstanceResponseParams struct {
 	// 该字段已废弃，请通过查询实例接口获取到的状态来判断实例是否已解隔离
+	//
+	// Deprecated: TaskId is deprecated.
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9844,16 +11243,18 @@ func (r *SwitchAccessNewInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SwitchInstanceVipRequestParams struct {
-	// 源实例ID
+	// 源实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	SrcInstanceId *string `json:"SrcInstanceId,omitnil,omitempty" name:"SrcInstanceId"`
 
-	// 目标实例ID
+	// 目标实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	DstInstanceId *string `json:"DstInstanceId,omitnil,omitempty" name:"DstInstanceId"`
 
-	// 单位为秒。源实例与目标实例间DTS已断开时间，如果DTS断开时间大于TimeDelay，则不切换VIP，建议尽量根据业务设置一个可接受的值。
+	// 单位为秒。源实例与目标实例间DTS已断开时间。如果 DTS 断开时间大于TimeDelay，则不切换VIP，建议尽量根据业务设置一个可接受的值。
 	TimeDelay *int64 `json:"TimeDelay,omitnil,omitempty" name:"TimeDelay"`
 
-	// 在DTS断开的情况下是否强制切换。1：强制切换，0：不强制切换
+	// 在 DTS 断开的情况下是否强制切换。
+	// - 1：强制切换。
+	// - 0：不强制切换。
 	ForceSwitch *int64 `json:"ForceSwitch,omitnil,omitempty" name:"ForceSwitch"`
 
 	// now: 立即切换，syncComplete：等待同步完成后切换
@@ -9863,16 +11264,18 @@ type SwitchInstanceVipRequestParams struct {
 type SwitchInstanceVipRequest struct {
 	*tchttp.BaseRequest
 	
-	// 源实例ID
+	// 源实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	SrcInstanceId *string `json:"SrcInstanceId,omitnil,omitempty" name:"SrcInstanceId"`
 
-	// 目标实例ID
+	// 目标实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	DstInstanceId *string `json:"DstInstanceId,omitnil,omitempty" name:"DstInstanceId"`
 
-	// 单位为秒。源实例与目标实例间DTS已断开时间，如果DTS断开时间大于TimeDelay，则不切换VIP，建议尽量根据业务设置一个可接受的值。
+	// 单位为秒。源实例与目标实例间DTS已断开时间。如果 DTS 断开时间大于TimeDelay，则不切换VIP，建议尽量根据业务设置一个可接受的值。
 	TimeDelay *int64 `json:"TimeDelay,omitnil,omitempty" name:"TimeDelay"`
 
-	// 在DTS断开的情况下是否强制切换。1：强制切换，0：不强制切换
+	// 在 DTS 断开的情况下是否强制切换。
+	// - 1：强制切换。
+	// - 0：不强制切换。
 	ForceSwitch *int64 `json:"ForceSwitch,omitnil,omitempty" name:"ForceSwitch"`
 
 	// now: 立即切换，syncComplete：等待同步完成后切换
@@ -9929,21 +11332,27 @@ func (r *SwitchInstanceVipResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SwitchProxyRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例ProxyID
+	// 实例 ProxyID，请通过接口[DescribeInstanceNodeInfo](https://cloud.tencent.com/document/product/239/48603)的返回参数**Proxy**中的**NodeId**获取。  
 	ProxyID *string `json:"ProxyID,omitnil,omitempty" name:"ProxyID"`
+
+	// 实例 ProxyID列表，请通过接口[DescribeInstanceNodeInfo](https://cloud.tencent.com/document/product/239/48603)的返回参数**Proxy**中的**NodeId**获取。
+	ProxyIDList []*string `json:"ProxyIDList,omitnil,omitempty" name:"ProxyIDList"`
 }
 
 type SwitchProxyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例ProxyID
+	// 实例 ProxyID，请通过接口[DescribeInstanceNodeInfo](https://cloud.tencent.com/document/product/239/48603)的返回参数**Proxy**中的**NodeId**获取。  
 	ProxyID *string `json:"ProxyID,omitnil,omitempty" name:"ProxyID"`
+
+	// 实例 ProxyID列表，请通过接口[DescribeInstanceNodeInfo](https://cloud.tencent.com/document/product/239/48603)的返回参数**Proxy**中的**NodeId**获取。
+	ProxyIDList []*string `json:"ProxyIDList,omitnil,omitempty" name:"ProxyIDList"`
 }
 
 func (r *SwitchProxyRequest) ToJsonString() string {
@@ -9960,6 +11369,7 @@ func (r *SwitchProxyRequest) FromJsonString(s string) error {
 	}
 	delete(f, "InstanceId")
 	delete(f, "ProxyID")
+	delete(f, "ProxyIDList")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SwitchProxyRequest has unknown keys!", "")
 	}
@@ -9968,6 +11378,9 @@ func (r *SwitchProxyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SwitchProxyResponseParams struct {
+	// 任务ID。
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -9990,11 +11403,9 @@ func (r *SwitchProxyResponse) FromJsonString(s string) error {
 
 type TaskInfoDetail struct {
 	// 任务 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 任务开始时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// 任务类型。
@@ -10014,7 +11425,7 @@ type TaskInfoDetail struct {
 	// - FLOW_AUTOBACKUP："017"，自动备份实例。
 	// - FLOW_MIGRATECHECK： "022"，迁移参数校验。
 	// - FLOW_MIGRATETASK："023"，数据迁移中。
-	// - FLOW_CLEANDB："025"，清空某个数据库。
+	// - FLOW_CLEANDB："025"，清空数据库。
 	// - FLOW_CLONEBACKUP："026"，克隆备份。
 	// - FLOW_CHANGEVIP： "027"，改变vip地址。
 	// - FLOW_EXPORSHR ："028"，扩缩容。
@@ -10024,7 +11435,7 @@ type TaskInfoDetail struct {
 	// - FLOW_MODIFYINSTANCEPARAMS："034"，修改实例参数。
 	// - FLOW_MODIFYINSTANCEPASSWORDFREE："035"，设置免密。
 	// - FLOW_SWITCHINSTANCEVIP："036"，实例VIP切换。
-	// - FLOW_MODIFYINSTANCEACCOUNT："037"，实例帐号变更。
+	// - FLOW_MODIFYINSTANCEACCOUNT："037"，实例账号变更。
 	// - FLOW_MODIFYINSTANCEBANDWIDTH："038"，实例带宽变更。
 	// - FLOW_ENABLEINSTANCE_REPLICATE："039"，开启副本只读。
 	// - FLOW_DISABLEINSTANCE_REPLICATE："040"，关闭副本只读。
@@ -10039,41 +11450,35 @@ type TaskInfoDetail struct {
 	// - FLOW_CHANGE_REPLICA_TO_MASTER："049"，手动提主。
 	// - FLOW_CODE_ADD_REPLICATION_INSTANCE："050"，新增复制组。
 	// - FLOW_OPEN_WAN："052"，开通外网。
-	// - FLOW_CLOSE_WAN："053"，关闭外网FLOW_UPDATE_WAN："054"，更新外网。
+	// - FLOW_CLOSE_WAN："053"，关闭外网
 	// - FLOW_CODE_DELETE_REPLICATION_INSTANCE："055"，解绑复制组。
 	// - FLOW_CODE_CHANGE_MASTER_INSTANCE："056"，复制组实例切主。
 	// - FLOW_CODE_CHANGE_INSTANCE_ROLE： "057"，更改复制组实例角色。
 	// - FLOW_MIGRATE_NODE："058"，迁移节点。
 	// - FLOW_SWITCH_NODE："059"，切换节点。
-	// - FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redi s版本。
+	// - FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redis版本。
 	// - FLOW_UPGRADE_PROXY_VERSION："061"，升级 Proxy 版本。
 	// - FLOW_MODIFY_INSTANCE_NETWORK： "062"，实例修改网络。
-	// - FLOW_MIGRATE_PROXY_NODE："063"，迁移proxy节点。
+	// - FLOW_MIGRATE_PROXY_NODE："063"，迁移 proxy节点。
 	// - FLOW_MIGRATION_INSTANCE_ZONE："066"，实例可用区迁移中。
 	// - FLOW_UPGRADE_INSTANCE_CACHE_AND_PROXY： "067"，实例版本升级中。
 	// - FLOW_MODIFY_PROXY_NUM："069"，加（减）Proxy 节点。
 	// - FLOW_MODIFYBACKUPMOD："070"，变更实例备份模式。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
 	// 实例名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
 	// 实例 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 项目 ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 任务进度。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Progress *float64 `json:"Progress,omitnil,omitempty" name:"Progress"`
 
 	// 任务执行结束时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 任务执行状态。
@@ -10082,7 +11487,6 @@ type TaskInfoDetail struct {
 	// 1：执行中。
 	// 2：完成。
 	// 4：失败。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Result *int64 `json:"Result,omitnil,omitempty" name:"Result"`
 }
 
@@ -10116,6 +11520,8 @@ type TendisSlowLogDetail struct {
 
 type TradeDealDetail struct {
 	// 订单号ID，调用云API时使用此ID
+	//
+	// Deprecated: DealId is deprecated.
 	DealId *string `json:"DealId,omitnil,omitempty" name:"DealId"`
 
 	// 长订单ID，反馈订单问题给官方客服使用此ID
@@ -10154,39 +11560,63 @@ type TradeDealDetail struct {
 
 // Predefined struct for user
 type UpgradeInstanceRequestParams struct {
-	// 待变更实例 ID。
+	// 待变更实例 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指实例每个分片内存变更后的大小。<ul><li>单位 MB。</li><li>每次只能修改参数MemSize、RedisShardNum和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>缩容时，缩容后的规格务必要大于等于使用容量的1.3倍，否则将执行失败。</li></ul>
+	// 指实例每个分片内存变更后的大小。
+	// - 单位 MB。
+	// - 每次只能修改参数MemSize、RedisShardNum和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。
+	// - 缩容时，缩容后的规格务必要大于等于使用容量的1.3倍，否则将执行失败。
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 指实例变更后的分片数量。<ul><li>标准架构不需要配置该参数，集群架构为必填参数。</li><li>集群架构，每次只能修改参数RedisShardNum、MemSize和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li></ul>
+	// 指实例变更后的分片数量。
+	// - 标准架构不需要配置该参数，集群架构为必填参数。
+	// - 集群架构，每次只能修改参数RedisShardNum、MemSize和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。
 	RedisShardNum *uint64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 指实例变更后的副本数量。<ul><li>每次只能修改参数RedisReplicasNum、MemSize和RedisShardNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>多AZ实例修改副本时必须要传入NodeSet。</li></ul>
+	// 指实例变更后的副本数量。
+	// - 每次只能修改参数 RedisReplicasNum、MemSize 和 RedisShardNum 其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。
+	// - 多AZ实例修改副本时必须要传入 NodeSet。
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
 	// 多AZ实例，增加副本时的节点信息，包括副本的 ID 编号及可用区信息。非多AZ实例不需要配置该参数。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
+
+	// 切换时间。 
+	// - 1：维护时间窗操作：指升级规格在设置的维护时间窗内执行。请通过接口[DescribeMaintenanceWindow](https://cloud.tencent.com/document/product/239/46336)查询设置的维护时间窗时间段。增减副本、增减分片、扩缩内存均支持在维护时间窗执行操作。维护时间窗升级规格正在分地域逐步测试发布中，部分区域已支持，未覆盖地域若需紧急接入，请[提交工单](https://console.cloud.tencent.com/workorder/category)申请白名单。
+	// - 2：立即操作：操作将立即执行，无需等待维护时间窗。系统默认设置为立即操作。
+	SwitchOption *uint64 `json:"SwitchOption,omitnil,omitempty" name:"SwitchOption"`
 }
 
 type UpgradeInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 待变更实例 ID。
+	// 待变更实例 ID。请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指实例每个分片内存变更后的大小。<ul><li>单位 MB。</li><li>每次只能修改参数MemSize、RedisShardNum和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>缩容时，缩容后的规格务必要大于等于使用容量的1.3倍，否则将执行失败。</li></ul>
+	// 指实例每个分片内存变更后的大小。
+	// - 单位 MB。
+	// - 每次只能修改参数MemSize、RedisShardNum和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。
+	// - 缩容时，缩容后的规格务必要大于等于使用容量的1.3倍，否则将执行失败。
 	MemSize *uint64 `json:"MemSize,omitnil,omitempty" name:"MemSize"`
 
-	// 指实例变更后的分片数量。<ul><li>标准架构不需要配置该参数，集群架构为必填参数。</li><li>集群架构，每次只能修改参数RedisShardNum、MemSize和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li></ul>
+	// 指实例变更后的分片数量。
+	// - 标准架构不需要配置该参数，集群架构为必填参数。
+	// - 集群架构，每次只能修改参数RedisShardNum、MemSize和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。
 	RedisShardNum *uint64 `json:"RedisShardNum,omitnil,omitempty" name:"RedisShardNum"`
 
-	// 指实例变更后的副本数量。<ul><li>每次只能修改参数RedisReplicasNum、MemSize和RedisShardNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>多AZ实例修改副本时必须要传入NodeSet。</li></ul>
+	// 指实例变更后的副本数量。
+	// - 每次只能修改参数 RedisReplicasNum、MemSize 和 RedisShardNum 其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。
+	// - 多AZ实例修改副本时必须要传入 NodeSet。
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitnil,omitempty" name:"RedisReplicasNum"`
 
 	// 多AZ实例，增加副本时的节点信息，包括副本的 ID 编号及可用区信息。非多AZ实例不需要配置该参数。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
+
+	// 切换时间。 
+	// - 1：维护时间窗操作：指升级规格在设置的维护时间窗内执行。请通过接口[DescribeMaintenanceWindow](https://cloud.tencent.com/document/product/239/46336)查询设置的维护时间窗时间段。增减副本、增减分片、扩缩内存均支持在维护时间窗执行操作。维护时间窗升级规格正在分地域逐步测试发布中，部分区域已支持，未覆盖地域若需紧急接入，请[提交工单](https://console.cloud.tencent.com/workorder/category)申请白名单。
+	// - 2：立即操作：操作将立即执行，无需等待维护时间窗。系统默认设置为立即操作。
+	SwitchOption *uint64 `json:"SwitchOption,omitnil,omitempty" name:"SwitchOption"`
 }
 
 func (r *UpgradeInstanceRequest) ToJsonString() string {
@@ -10206,6 +11636,7 @@ func (r *UpgradeInstanceRequest) FromJsonString(s string) error {
 	delete(f, "RedisShardNum")
 	delete(f, "RedisReplicasNum")
 	delete(f, "NodeSet")
+	delete(f, "SwitchOption")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeInstanceRequest has unknown keys!", "")
 	}
@@ -10215,7 +11646,12 @@ func (r *UpgradeInstanceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type UpgradeInstanceResponseParams struct {
 	// 订单ID。
+	//
+	// Deprecated: DealId is deprecated.
 	DealId *string `json:"DealId,omitnil,omitempty" name:"DealId"`
+
+	// 订单号。
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -10298,7 +11734,12 @@ func (r *UpgradeInstanceVersionRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type UpgradeInstanceVersionResponseParams struct {
 	// 订单ID
+	//
+	// Deprecated: DealId is deprecated.
 	DealId *string `json:"DealId,omitnil,omitempty" name:"DealId"`
+
+	// 订单号。
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -10322,32 +11763,36 @@ func (r *UpgradeInstanceVersionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeProxyVersionRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 当前proxy版本
+	// 当前 Proxy 版本。请通过 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 接口获取实例当前 Proxy 版本。
 	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitnil,omitempty" name:"CurrentProxyVersion"`
 
-	// 可升级的redis版本
+	// 可升级的 Redis 版本。请通过 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 接口获取实例可升级的 Redis 版本。
 	UpgradeProxyVersion *string `json:"UpgradeProxyVersion,omitnil,omitempty" name:"UpgradeProxyVersion"`
 
-	// 1-立即升级   0-维护时间窗口升级
+	// 指定是否立即升级。
+	// - 1：立即升级。
+	// - 0：维护时间窗口升级。
 	InstanceTypeUpgradeNow *int64 `json:"InstanceTypeUpgradeNow,omitnil,omitempty" name:"InstanceTypeUpgradeNow"`
 }
 
 type UpgradeProxyVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 当前proxy版本
+	// 当前 Proxy 版本。请通过 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 接口获取实例当前 Proxy 版本。
 	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitnil,omitempty" name:"CurrentProxyVersion"`
 
-	// 可升级的redis版本
+	// 可升级的 Redis 版本。请通过 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 接口获取实例可升级的 Redis 版本。
 	UpgradeProxyVersion *string `json:"UpgradeProxyVersion,omitnil,omitempty" name:"UpgradeProxyVersion"`
 
-	// 1-立即升级   0-维护时间窗口升级
+	// 指定是否立即升级。
+	// - 1：立即升级。
+	// - 0：维护时间窗口升级。
 	InstanceTypeUpgradeNow *int64 `json:"InstanceTypeUpgradeNow,omitnil,omitempty" name:"InstanceTypeUpgradeNow"`
 }
 
@@ -10400,32 +11845,36 @@ func (r *UpgradeProxyVersionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeSmallVersionRequestParams struct {
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 当前redis版本
+	// 当前 Redis 小版本。小版本信息，请参见[升级实例版本](https://cloud.tencent.com/document/product/239/46457)。
 	CurrentRedisVersion *string `json:"CurrentRedisVersion,omitnil,omitempty" name:"CurrentRedisVersion"`
 
-	// 可升级的redis版本
+	// 升级后的 Redis 小版本。小版本信息，请参见[升级实例版本](https://cloud.tencent.com/document/product/239/46457)。
 	UpgradeRedisVersion *string `json:"UpgradeRedisVersion,omitnil,omitempty" name:"UpgradeRedisVersion"`
 
-	// 1-立即升级   0-维护时间窗口升级
+	// 指定是否立即升级。
+	// - 1：立即升级。
+	// - 0：维护时间窗口升级。
 	InstanceTypeUpgradeNow *int64 `json:"InstanceTypeUpgradeNow,omitnil,omitempty" name:"InstanceTypeUpgradeNow"`
 }
 
 type UpgradeSmallVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID，请登录[Redis控制台](https://console.cloud.tencent.com/redis/instance/list)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 当前redis版本
+	// 当前 Redis 小版本。小版本信息，请参见[升级实例版本](https://cloud.tencent.com/document/product/239/46457)。
 	CurrentRedisVersion *string `json:"CurrentRedisVersion,omitnil,omitempty" name:"CurrentRedisVersion"`
 
-	// 可升级的redis版本
+	// 升级后的 Redis 小版本。小版本信息，请参见[升级实例版本](https://cloud.tencent.com/document/product/239/46457)。
 	UpgradeRedisVersion *string `json:"UpgradeRedisVersion,omitnil,omitempty" name:"UpgradeRedisVersion"`
 
-	// 1-立即升级   0-维护时间窗口升级
+	// 指定是否立即升级。
+	// - 1：立即升级。
+	// - 0：维护时间窗口升级。
 	InstanceTypeUpgradeNow *int64 `json:"InstanceTypeUpgradeNow,omitnil,omitempty" name:"InstanceTypeUpgradeNow"`
 }
 
@@ -10478,22 +11927,20 @@ func (r *UpgradeSmallVersionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeVersionToMultiAvailabilityZonesRequestParams struct {
-	// 实例ID。
+	// <p>实例ID，请登录 <a href="https://console.cloud.tencent.com/redis/instance/list">Redis 控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 升级多可用区之后是否支持就近访问功能。
-	// <ul><li>true：支持就近访问功能。升级过程，需同时升级 Proxy 版本和 Redis 内核小版本，涉及数据搬迁，可能会长达数小时。</li><li>false：无需支持就近访问功能。升级多可用区仅涉及管理元数据迁移，对服务没有影响，升级过程通常在3分钟内完成。</li></ul>
+	// <p>升级多可用区之后是否支持就近访问功能。- true：支持就近访问功能。升级过程，需同时升级 Proxy 版本和 Redis 内核小版本，涉及数据搬迁，可能会长达数小时。- false：无需支持就近访问功能。升级多可用区仅涉及管理元数据迁移，对服务没有影响，升级过程通常在3分钟内完成。默认为 false。</p>
 	UpgradeProxyAndRedisServer *bool `json:"UpgradeProxyAndRedisServer,omitnil,omitempty" name:"UpgradeProxyAndRedisServer"`
 }
 
 type UpgradeVersionToMultiAvailabilityZonesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// <p>实例ID，请登录 <a href="https://console.cloud.tencent.com/redis/instance/list">Redis 控制台</a>在实例列表复制实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 升级多可用区之后是否支持就近访问功能。
-	// <ul><li>true：支持就近访问功能。升级过程，需同时升级 Proxy 版本和 Redis 内核小版本，涉及数据搬迁，可能会长达数小时。</li><li>false：无需支持就近访问功能。升级多可用区仅涉及管理元数据迁移，对服务没有影响，升级过程通常在3分钟内完成。</li></ul>
+	// <p>升级多可用区之后是否支持就近访问功能。- true：支持就近访问功能。升级过程，需同时升级 Proxy 版本和 Redis 内核小版本，涉及数据搬迁，可能会长达数小时。- false：无需支持就近访问功能。升级多可用区仅涉及管理元数据迁移，对服务没有影响，升级过程通常在3分钟内完成。默认为 false。</p>
 	UpgradeProxyAndRedisServer *bool `json:"UpgradeProxyAndRedisServer,omitnil,omitempty" name:"UpgradeProxyAndRedisServer"`
 }
 
@@ -10519,7 +11966,7 @@ func (r *UpgradeVersionToMultiAvailabilityZonesRequest) FromJsonString(s string)
 
 // Predefined struct for user
 type UpgradeVersionToMultiAvailabilityZonesResponseParams struct {
-	// 任务ID
+	// <p>任务ID</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
