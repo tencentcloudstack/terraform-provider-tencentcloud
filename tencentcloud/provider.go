@@ -2073,6 +2073,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_security_policy_config":                                               teo.ResourceTencentCloudTeoSecurityPolicyConfig(),
 			"tencentcloud_teo_web_security_template":                                                teo.ResourceTencentCloudTeoWebSecurityTemplate(),
 			"tencentcloud_teo_dns_record":                                                           teo.ResourceTencentCloudTeoDnsRecord(),
+			"tencentcloud_teo_dns_record_v12":                                                       teo.ResourceTencentCloudTeoDnsRecordV12(),
 			"tencentcloud_teo_bind_security_template":                                               teo.ResourceTencentCloudTeoBindSecurityTemplate(),
 			"tencentcloud_teo_plan":                                                                 teo.ResourceTencentCloudTeoPlan(),
 			"tencentcloud_teo_content_identifier":                                                   teo.ResourceTencentCloudTeoContentIdentifier(),
