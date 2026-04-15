@@ -2508,3 +2508,118 @@ func (me *TeoService) DescribeTeoConfigGroupVersionById(ctx context.Context, zon
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) CallDescribeDnsRecords(ctx context.Context, meta interface{}, zoneId, recordId string) (ret *teov20220901.DnsRecord, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeDnsRecordsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.Filters = []*teov20220901.AdvancedFilter{
+		{
+			Name:   helper.String("id"),
+			Values: helper.Strings([]string{recordId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeDnsRecordsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if len(response.Response.DnsRecords) > 0 {
+			ret = response.Response.DnsRecords[0]
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TeoService) CallCreateDnsRecord(ctx context.Context, meta interface{}, request *teov20220901.CreateDnsRecordRequest) (recordId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateDnsRecordWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		recordId = *response.Response.RecordId
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TeoService) CallModifyDnsRecords(ctx context.Context, meta interface{}, request *teov20220901.ModifyDnsRecordsRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyDnsRecordsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		_ = response
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TeoService) CallDeleteDnsRecords(ctx context.Context, meta interface{}, request *teov20220901.DeleteDnsRecordsRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteDnsRecordsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		_ = response
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
