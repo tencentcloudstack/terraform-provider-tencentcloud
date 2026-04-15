@@ -1571,6 +1571,7 @@ tencentcloud_teo_customize_error_page
 tencentcloud_teo_origin_acl
 tencentcloud_teo_ddos_protection_config
 tencentcloud_teo_config_group_version
+tencentcloud_teo_create_cls_index_operation
 tencentcloud_teo_deploy_config_group_version
 
 TencentCloud ServiceMesh(TCM)
