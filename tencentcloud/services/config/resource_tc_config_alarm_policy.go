@@ -30,6 +30,13 @@ func ResourceTencentCloudConfigAlarmPolicy() *schema.Resource {
 				Description: "Alarm policy name.",
 			},
 
+			"type": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Event Type 1: Resource Non Compliance Event.",
+			},
+
 			"event_scope": {
 				Type:        schema.TypeList,
 				Required:    true,
@@ -104,6 +111,10 @@ func resourceTencentCloudConfigAlarmPolicyCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("type"); ok {
+		request.Type = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("event_scope"); ok {
@@ -201,6 +212,10 @@ func resourceTencentCloudConfigAlarmPolicyRead(d *schema.ResourceData, meta inte
 
 	if respData.Name != nil {
 		_ = d.Set("name", respData.Name)
+	}
+
+	if respData.Type != nil {
+		_ = d.Set("type", respData.Type)
 	}
 
 	if respData.EventScope != nil {
