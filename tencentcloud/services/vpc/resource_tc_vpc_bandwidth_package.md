@@ -7,7 +7,7 @@ resource "tencentcloud_vpc_bandwidth_package" "example" {
   network_type           = "BGP"
   charge_type            = "TOP5_POSTPAID_BY_MONTH"
   bandwidth_package_name = "tf-example"
-  tags = {
+  tag = {
     createdBy = "Terraform"
   }
 }
@@ -22,7 +22,7 @@ resource "tencentcloud_vpc_bandwidth_package" "example" {
   bandwidth_package_name = "tf-example"
   time_span              = 3
   internet_max_bandwidth = 100
-  tags = {
+  tag = {
     createdBy = "Terraform"
   }
 }
@@ -37,7 +37,7 @@ resource "tencentcloud_vpc_bandwidth_package" "example" {
   bandwidth_package_name = "tf-example"
   internet_max_bandwidth = 400
   egress                 = "center_egress2"
-  tags                   = {
+  tag                   = {
     createdBy = "Terraform"
   }
 }
