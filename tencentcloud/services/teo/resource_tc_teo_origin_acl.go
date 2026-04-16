@@ -51,6 +51,13 @@ func ResourceTencentCloudTeoOriginAcl() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "he list of L4 proxy Instances that require enabling origin ACLs. This list must be empty when the request parameter L4EnableMode is set to 'all'.",
 			},
+
+			"origin_acl_family": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The control domain for origin ACL. Available values: 'gaz', 'mlc', 'emc', 'plat-gaz', 'plat-mlc', 'plat-emc'. If not specified, the default global control domain will be used.",
+			},
 		},
 	}
 }
@@ -70,6 +77,10 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("zone_id"); ok {
 		request.ZoneId = helper.String(v.(string))
 		zoneId = v.(string)
+	}
+
+	if v, ok := d.GetOk("origin_acl_family"); ok {
+		request.OriginACLFamily = helper.String(v.(string))
 	}
 
 	tmpL7Hosts := make([]interface{}, 0)
@@ -265,6 +276,10 @@ func ResourceTencentCloudTeoOriginAclRead(d *schema.ResourceData, meta interface
 		_ = d.Set("l4_proxy_ids", tmpList)
 	}
 
+	if respData.OriginACLFamily != nil {
+		_ = d.Set("origin_acl_family", *respData.OriginACLFamily)
+	}
+
 	return nil
 }
 
@@ -279,6 +294,40 @@ func ResourceTencentCloudTeoOriginAclUpdate(d *schema.ResourceData, meta interfa
 		zoneId         = d.Id()
 		l7List, l4List []*teov20220901.OriginACLEntity
 	)
+
+	if d.HasChange("origin_acl_family") {
+		_, newOriginAclFamily := d.GetChange("origin_acl_family")
+		if newOriginAclFamily != nil && newOriginAclFamily.(string) != "" {
+			request := teov20220901.NewModifyOriginACLRequest()
+			request.ZoneId = &zoneId
+			request.OriginACLFamily = helper.String(newOriginAclFamily.(string))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyOriginACLWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify teo origin acl failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify teo origin acl (origin_acl_family) failed, reason:%+v", logId, err)
+				return err
+			}
+
+			// wait
+			err = service.WaitTeoOriginACLById(ctx, d.Timeout(schema.TimeoutCreate), zoneId, "online")
+			if err != nil {
+				return err
+			}
+		}
+	}
 
 	if d.HasChange("l7_hosts") {
 		o, n := d.GetChange("l7_hosts")

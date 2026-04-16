@@ -21,6 +21,7 @@ func TestAccTencentCloudTeoOriginAclResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_acl.example", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_acl.example", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_acl.example", "origin_acl_family", "gaz"),
 				),
 			},
 			{
@@ -28,6 +29,7 @@ func TestAccTencentCloudTeoOriginAclResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_acl.example", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_acl.example", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_origin_acl.example", "origin_acl_family", "mlc"),
 				),
 			},
 			{
@@ -39,9 +41,30 @@ func TestAccTencentCloudTeoOriginAclResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudTeoOriginAclResource_withoutOriginAclFamily(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoOriginAclWithoutFamily,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_acl.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_acl.example", "zone_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_acl.example", "origin_acl_family"),
+				),
+			},
+		},
+	})
+}
+
 const testAccTeoOriginAcl = `
 resource "tencentcloud_teo_origin_acl" "example" {
   zone_id        = "zone-3edjdliiw3he"
+  origin_acl_family = "gaz"
   l7_hosts = [
     "1.makn.cn",
     "2.makn.cn",
@@ -69,6 +92,7 @@ resource "tencentcloud_teo_origin_acl" "example" {
 const testAccTeoOriginAclUpdate = `
 resource "tencentcloud_teo_origin_acl" "example" {
   zone_id        = "zone-3edjdliiw3he"
+  origin_acl_family = "mlc"
   l7_hosts = [
     "1.makn.cn",
     "2.makn.cn",
@@ -78,6 +102,25 @@ resource "tencentcloud_teo_origin_acl" "example" {
   l4_proxy_ids = [
     "sid-3edjg6t8dw78",
     "sid-3edjgc30nbgx",
+  ]
+
+  timeouts {
+    create = "30m"
+    update = "30m"
+    delete = "30m"
+  }
+}
+`
+
+const testAccTeoOriginAclWithoutFamily = `
+resource "tencentcloud_teo_origin_acl" "example" {
+  zone_id        = "zone-3edjdliiw3he"
+  l7_hosts = [
+    "1.makn.cn",
+  ]
+
+  l4_proxy_ids = [
+    "sid-3edjg6t8dw78",
   ]
 
   timeouts {
