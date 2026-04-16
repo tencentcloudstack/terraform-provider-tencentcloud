@@ -2101,3 +2101,27 @@ func (me *CamService) DescribeCamMessageReceiverById(ctx context.Context, name s
 
 	return
 }
+
+func (me *CamService) DescribeCamPolicyDetailByFilter(ctx context.Context, paramMap map[string]interface{}) (result *cam.GetPolicyResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cam.NewGetPolicyRequest()
+	if v, ok := paramMap["PolicyId"]; ok {
+		request.PolicyId = v.(*uint64)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCamClient().GetPolicy(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s GetPolicy failed, reason: %s\n", logId, err.Error())
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	result = response.Response
+	return
+}
