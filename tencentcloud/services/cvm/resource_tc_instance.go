@@ -2211,7 +2211,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if d.HasChange(nameKey) {
 				name := d.Get(nameKey).(string)
 				diskId := d.Get(idKey).(string)
-				err := cbsService.ModifyDiskAttributes(ctx, diskId, name, -1, "")
+				err := cbsService.ModifyDiskAttributes(ctx, "", diskId, name, -1, "")
 				if err != nil {
 					return fmt.Errorf("an error occurred when modifying data disk name: %s, reason: %s", name, err.Error())
 				}
@@ -2283,7 +2283,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if v, ok := d.GetOk("system_disk_id"); ok {
 			systemDiskId := v.(string)
 			cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-			err := cbsService.ModifyDiskAttributes(ctx, systemDiskId, systemDiskName, -1, "")
+			err := cbsService.ModifyDiskAttributes(ctx, "", systemDiskId, systemDiskName, -1, "")
 			if err != nil {
 				return fmt.Errorf("an error occurred when modifying system disk name %s, reason: %s", systemDiskName, err.Error())
 			}
