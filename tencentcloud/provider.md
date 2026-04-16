@@ -1573,6 +1573,7 @@ tencentcloud_teo_ddos_protection_config
 tencentcloud_teo_config_group_version
 tencentcloud_teo_create_cls_index_operation
 tencentcloud_teo_deploy_config_group_version
+tencentcloud_teo_just_in_time_transcode_template
 
 TencentCloud ServiceMesh(TCM)
 Data Source
