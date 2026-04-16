@@ -800,6 +800,9 @@ func (me *CamService) DescribePoliciesByFilter(ctx context.Context, params map[s
 		if k == "create_mode" {
 			createMode = v.(int)
 		}
+		if k == "Scope" {
+			request.Scope = helper.String(v.(string))
+		}
 	}
 	policies = make([]*cam.StrategyInfo, 0)
 	for {

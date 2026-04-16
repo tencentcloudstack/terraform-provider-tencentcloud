@@ -13,16 +13,20 @@ Use this data source to query detailed information of CAM policies
 
 ## Example Usage
 
-```hcl
-# query by policy_id
-data "tencentcloud_cam_policies" "foo" {
-  policy_id = tencentcloud_cam_policy.foo.id
-}
+### Query all policies
 
-# query by policy_id and name
-data "tencentcloud_cam_policies" "bar" {
-  policy_id = tencentcloud_cam_policy.foo.id
-  name      = "tf-auto-test"
+```hcl
+data "tencentcloud_cam_policies" "example" {}
+```
+
+### Query policies by filter
+
+```hcl
+data "tencentcloud_cam_policies" "example" {
+  name        = "tf-example"
+  policy_id   = "236215899"
+  type        = 1
+  create_mode = 2
 }
 ```
 
@@ -35,6 +39,7 @@ The following arguments are supported:
 * `name` - (Optional, String) Name of the CAM policy to be queried.
 * `policy_id` - (Optional, String) ID of CAM policy to be queried.
 * `result_output_file` - (Optional, String) Used to save results.
+* `scope` - (Optional, String) Available values are 'All', 'QCS', and' Local '.' All 'retrieves all policies,' QCS' retrieves preset policies, 'Local' retrieves custom policies, and defaults to 'All'.
 * `type` - (Optional, Int) Type of the policy strategy. Valid values: `1`, `2`. `1` means customer strategy and `2` means preset strategy.
 
 ## Attributes Reference
