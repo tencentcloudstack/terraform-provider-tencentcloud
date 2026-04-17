@@ -41,10 +41,19 @@ func DataSourceTencentCloudCamPolicies() *schema.Resource {
 				Description:  "Type of the policy strategy. Valid values: `1`, `2`. `1` means customer strategy and `2` means preset strategy.",
 			},
 			"create_mode": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2}),
-				Description:  "Mode of creation of policy strategy. Valid values: `1`, `2`. `1` means policy was created with console, and `2` means it was created by strategies.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Mode of creation of policy strategy. Valid values: `1`, `2`. `1` means policy was created with console, and `2` means it was created by strategies.",
+			},
+			"scope": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Available values are 'All', 'QCS', and' Local '.' All 'retrieves all policies,' QCS' retrieves preset policies, 'Local' retrieves custom policies, and defaults to 'All'.",
+			},
+			"key_word": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Match by strategy name.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -130,6 +139,12 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 	}
 	if v, ok := d.GetOk("type"); ok {
 		params["type"] = v.(int)
+	}
+	if v, ok := d.GetOk("scope"); ok {
+		params["Scope"] = v.(string)
+	}
+	if v, ok := d.GetOk("key_word"); ok {
+		params["Keyword"] = v.(string)
 	}
 
 	camService := CamService{
