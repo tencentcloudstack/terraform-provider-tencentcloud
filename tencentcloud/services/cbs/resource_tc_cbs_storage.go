@@ -29,7 +29,6 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 			"storage_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.",
 			},
 			"storage_size": {
@@ -396,6 +395,42 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 	projectId := -1
 	changed := false
 
+	if d.HasChange("storage_type") {
+		storageType := d.Get("storage_type").(string)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			e := cbsService.ModifyDiskAttributes(ctx, storageType, storageId, "", projectId, "")
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update cbs storage type failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
+		// wait
+		err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+			storage, e := cbsService.DescribeDiskById(ctx, storageId)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if *storage.MigratePercent == 100 {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("waiting for cbs storage type changed, now %d", *storage.MigratePercent))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update cbs storage type failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+	}
+
 	if d.HasChange("storage_name") {
 		changed = true
 		storageName = d.Get("storage_name").(string)
@@ -420,7 +455,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 
 	if changed {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			e := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId, burstPerformanceOperation)
+			e := cbsService.ModifyDiskAttributes(ctx, "", storageId, storageName, projectId, burstPerformanceOperation)
 			if e != nil {
 				return tccommon.RetryError(e)
 			}
