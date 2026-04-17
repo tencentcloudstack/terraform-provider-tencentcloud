@@ -150,7 +150,10 @@ The `cfs_config` object supports the following:
 The `image_config` object supports the following:
 
 * `image_type` - (Required, String) The image type. personal or enterprise.
-* `image_uri` - (Required, String) The uri of image.
+* `image_uri` - (Required, String) The uri of image. Supports three formats:
+  - Format A: registry/repo:tag
+  - Format B: registry/repo@sha256:digest
+  - Format C: registry/repo:tag@sha256:digest.
 * `args` - (Optional, String) the parameters of command.
 * `command` - (Optional, String) The command of entrypoint.
 * `container_image_accelerate` - (Optional, Bool) Image accelerate switch.
