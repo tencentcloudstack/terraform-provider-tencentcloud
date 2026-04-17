@@ -74,8 +74,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/igtm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/keewidb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mariadb"
@@ -776,6 +778,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_user_info":                                             cam.DataSourceTencentCloudUserInfo(),
 			"tencentcloud_cam_sub_accounts":                                      cam.DataSourceTencentCloudCamSubAccounts(),
 			"tencentcloud_cam_role_detail":                                       cam.DataSourceTencentCloudCamRoleDetail(),
+			"tencentcloud_cam_policy_detail":                                     cam.DataSourceTencentCloudCamPolicyDetail(),
 			"tencentcloud_cdn_domains":                                           cdn.DataSourceTencentCloudCdnDomains(),
 			"tencentcloud_cdn_domain_verifier":                                   cdn.DataSourceTencentCloudCdnDomainVerifyRecord(),
 			"tencentcloud_scf_functions":                                         scf.DataSourceTencentCloudScfFunctions(),
@@ -1186,6 +1189,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_backup_tables":                              cdwch.DataSourceTencentCloudClickhouseBackupTables(),
 			"tencentcloud_cls_shipper_tasks":                                     cls.DataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                                          cls.DataSourceTencentCloudClsMachines(),
+			"tencentcloud_cls_notice_contents":                                   cls.DataSourceTencentCloudClsNoticeContents(),
 			"tencentcloud_cls_machine_group_configs":                             cls.DataSourceTencentCloudClsMachineGroupConfigs(),
 			"tencentcloud_cls_logsets":                                           cls.DataSourceTencentCloudClsLogsets(),
 			"tencentcloud_cls_topics":                                            cls.DataSourceTencentCloudClsTopics(),
@@ -1367,6 +1371,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy_list":                                    igtm.DataSourceTencentCloudIgtmStrategyList(),
 			"tencentcloud_igtm_instance_package_list":                            igtm.DataSourceTencentCloudIgtmInstancePackageList(),
 			"tencentcloud_igtm_detect_task_package_list":                         igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
+			"tencentcloud_gs_android_instances":                                  gs.DataSourceTencentCloudGsAndroidInstances(),
+			"tencentcloud_keewidb_instances":                                     keewidb.DataSourceTencentCloudKeewidbInstances(),
 			"tencentcloud_config_compliance_packs":                               config.DataSourceTencentCloudConfigCompliancePacks(),
 			"tencentcloud_system_config_compliance_packs":                        config.DataSourceTencentCloudSystemConfigCompliancePacks(),
 			"tencentcloud_config_system_rules":                                   config.DataSourceTencentCloudConfigSystemRules(),
@@ -1580,6 +1586,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_global_maintenance_window_and_exclusion":                       tke.ResourceTencentCloudKubernetesGlobalMaintenanceWindowAndExclusion(),
 			"tencentcloud_kubernetes_cluster_maintenance_window_and_exclusion":                      tke.ResourceTencentCloudKubernetesClusterMaintenanceWindowAndExclusion(),
 			"tencentcloud_kubernetes_cancel_upgrade_plan_operation":                                 tke.ResourceTencentCloudKubernetesCancelUpgradePlanOperation(),
+			"tencentcloud_kubernetes_cluster_scheduler_policy_config":                               tke.ResourceTencentCloudKubernetesClusterSchedulerPolicyConfig(),
 			"tencentcloud_mysql_backup_policy":                                                      cdb.ResourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                                            cdb.ResourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                                                  cdb.ResourceTencentCloudMysqlAccountPrivilege(),
@@ -1840,6 +1847,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_instance_network_access":                                       postgresql.ResourceTencentCloudPostgresqlInstanceNetworkAccess(),
 			"tencentcloud_postgresql_parameters":                                                    postgresql.ResourceTencentCloudPostgresqlParameters(),
 			"tencentcloud_postgresql_instance_ssl_config":                                           postgresql.ResourceTencentCloudPostgresqlInstanceSslConfig(),
+			"tencentcloud_postgresql_restore_db_instance_objects_operation":                         postgresql.ResourceTencentCloudPostgresqlRestoreDbInstanceObjectsOperation(),
 			"tencentcloud_postgresql_time_window":                                                   postgresql.ResourceTencentCloudPostgresqlTimeWindow(),
 			"tencentcloud_sqlserver_instance":                                                       sqlserver.ResourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                                             sqlserver.ResourceTencentCloudSqlserverDB(),
@@ -2060,6 +2068,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_rule_engine":                                                          teo.ResourceTencentCloudTeoRuleEngine(),
 			"tencentcloud_teo_ownership_verify":                                                     teo.ResourceTencentCloudTeoOwnershipVerify(),
 			"tencentcloud_teo_certificate_config":                                                   teo.ResourceTencentCloudTeoCertificateConfig(),
+			"tencentcloud_teo_create_cls_index_operation":                                           teo.ResourceTencentCloudTeoCreateCLSIndexOperation(),
 			"tencentcloud_teo_acceleration_domain":                                                  teo.ResourceTencentCloudTeoAccelerationDomain(),
 			"tencentcloud_teo_application_proxy":                                                    teo.ResourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                                               teo.ResourceTencentCloudTeoApplicationProxyRule(),

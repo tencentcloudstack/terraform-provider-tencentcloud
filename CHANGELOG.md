@@ -1,3 +1,36 @@
+## 1.82.87(April 15, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_teo_create_cls_index_operation` ([#4015](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4015))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_redis_instance: support change `charge_type` ([#4009](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4009))
+* resource/tencentcloud_security_group: support custom delete timeout ([#4016](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4016))
+
+## 1.82.86(April 14, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cls_notice_contents` ([#4007](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4007))
+* **New Data Source:** `tencentcloud_config_compliance_packs` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Data Source:** `tencentcloud_config_discovered_resources` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Data Source:** `tencentcloud_config_resource_types` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Data Source:** `tencentcloud_config_rule_evaluation_results` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Data Source:** `tencentcloud_config_rules` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Data Source:** `tencentcloud_config_system_rules` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Data Source:** `tencentcloud_system_config_compliance_packs` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Resource:** `tencentcloud_config_compliance_pack` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Resource:** `tencentcloud_config_deliver_config` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Resource:** `tencentcloud_config_recorder_config` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Resource:** `tencentcloud_config_remediation` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+* **New Resource:** `tencentcloud_config_start_config_rule_evaluation_operation` ([#4004](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4004))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_waf_clb_domain: update code logic for `load_balancer_set` ([#4013](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4013))
+
 ## 1.82.85(April 10, 2026)
 
 FEATURES:

@@ -113,7 +113,7 @@ The following arguments are supported:
 * `availability_zone` - (Required, String, ForceNew) The available zone that the CBS instance locates at.
 * `storage_name` - (Required, String) Name of CBS. The maximum length can not exceed 60 bytes.
 * `storage_size` - (Required, Int) Volume of CBS, and unit is GB.
-* `storage_type` - (Required, String, ForceNew) Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.
+* `storage_type` - (Required, String) Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.
 * `burst_performance` - (Optional, Bool) Whether to enable performance burst when creating a cloud disk.
 * `charge_type` - (Optional, String) The charge type of CBS instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `CDCPAID` and `DEDICATED_CLUSTER_PAID`. The default is `POSTPAID_BY_HOUR`.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.

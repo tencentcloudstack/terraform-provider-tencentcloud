@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ func NewAddReplicationInstanceResponse() (response *AddReplicationInstanceRespon
 }
 
 // AddReplicationInstance
-// 添加复制组成员
+// 本接口（AddReplicationInstance）用于为全球复制组添加实例成员。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -88,7 +88,7 @@ func (c *Client) AddReplicationInstance(request *AddReplicationInstanceRequest) 
 }
 
 // AddReplicationInstance
-// 添加复制组成员
+// 本接口（AddReplicationInstance）用于为全球复制组添加实例成员。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -110,6 +110,7 @@ func (c *Client) AddReplicationInstanceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewAddReplicationInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "AddReplicationInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddReplicationInstance require credential")
@@ -142,7 +143,7 @@ func NewAllocateWanAddressResponse() (response *AllocateWanAddressResponse) {
 }
 
 // AllocateWanAddress
-// 开通外网
+// 本接口（AllocateWanAddress）用于开通实例外网访问。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -156,7 +157,7 @@ func (c *Client) AllocateWanAddress(request *AllocateWanAddressRequest) (respons
 }
 
 // AllocateWanAddress
-// 开通外网
+// 本接口（AllocateWanAddress）用于开通实例外网访问。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -169,6 +170,7 @@ func (c *Client) AllocateWanAddressWithContext(ctx context.Context, request *All
     if request == nil {
         request = NewAllocateWanAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "AllocateWanAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AllocateWanAddress require credential")
@@ -201,7 +203,7 @@ func NewApplyParamsTemplateResponse() (response *ApplyParamsTemplateResponse) {
 }
 
 // ApplyParamsTemplate
-// 应用参数模板到实例
+// 本接口（ApplyParamsTemplate）用于应用参数模板到实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -223,7 +225,7 @@ func (c *Client) ApplyParamsTemplate(request *ApplyParamsTemplateRequest) (respo
 }
 
 // ApplyParamsTemplate
-// 应用参数模板到实例
+// 本接口（ApplyParamsTemplate）用于应用参数模板到实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -244,6 +246,7 @@ func (c *Client) ApplyParamsTemplateWithContext(ctx context.Context, request *Ap
     if request == nil {
         request = NewApplyParamsTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ApplyParamsTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ApplyParamsTemplate require credential")
@@ -276,7 +279,7 @@ func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResp
 }
 
 // AssociateSecurityGroups
-// 本接口 (AssociateSecurityGroups) 用于安全组批量绑定多个指定实例。
+// 本接口 (AssociateSecurityGroups) 用于将一个安全组绑定于一个或多个数据库实例。创建实例时，未配置安全组，建议通过该接口，绑定安全组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -294,7 +297,7 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
 }
 
 // AssociateSecurityGroups
-// 本接口 (AssociateSecurityGroups) 用于安全组批量绑定多个指定实例。
+// 本接口 (AssociateSecurityGroups) 用于将一个安全组绑定于一个或多个数据库实例。创建实例时，未配置安全组，建议通过该接口，绑定安全组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -311,6 +314,7 @@ func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request
     if request == nil {
         request = NewAssociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "AssociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateSecurityGroups require credential")
@@ -343,7 +347,7 @@ func NewChangeInstanceRoleResponse() (response *ChangeInstanceRoleResponse) {
 }
 
 // ChangeInstanceRole
-// 复制组实例更换角色
+// 本接口（ChangeInstanceRole）用于更换复制组内实例的角色。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -361,7 +365,7 @@ func (c *Client) ChangeInstanceRole(request *ChangeInstanceRoleRequest) (respons
 }
 
 // ChangeInstanceRole
-// 复制组实例更换角色
+// 本接口（ChangeInstanceRole）用于更换复制组内实例的角色。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -378,6 +382,7 @@ func (c *Client) ChangeInstanceRoleWithContext(ctx context.Context, request *Cha
     if request == nil {
         request = NewChangeInstanceRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ChangeInstanceRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ChangeInstanceRole require credential")
@@ -447,6 +452,7 @@ func (c *Client) ChangeMasterInstanceWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewChangeMasterInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ChangeMasterInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ChangeMasterInstance require credential")
@@ -514,6 +520,7 @@ func (c *Client) ChangeReplicaToMasterWithContext(ctx context.Context, request *
     if request == nil {
         request = NewChangeReplicaToMasterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ChangeReplicaToMaster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ChangeReplicaToMaster require credential")
@@ -546,7 +553,7 @@ func NewCleanUpInstanceResponse() (response *CleanUpInstanceResponse) {
 }
 
 // CleanUpInstance
-// 回收站实例立即下线
+// 本接口（CleanUpInstance）用于立即下线回收站的实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -559,7 +566,7 @@ func (c *Client) CleanUpInstance(request *CleanUpInstanceRequest) (response *Cle
 }
 
 // CleanUpInstance
-// 回收站实例立即下线
+// 本接口（CleanUpInstance）用于立即下线回收站的实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -571,6 +578,7 @@ func (c *Client) CleanUpInstanceWithContext(ctx context.Context, request *CleanU
     if request == nil {
         request = NewCleanUpInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CleanUpInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CleanUpInstance require credential")
@@ -603,7 +611,7 @@ func NewClearInstanceResponse() (response *ClearInstanceResponse) {
 }
 
 // ClearInstance
-// 清空Redis实例的实例数据。
+// 本接口（ClearInstance）用于清空实例数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -617,7 +625,7 @@ func (c *Client) ClearInstance(request *ClearInstanceRequest) (response *ClearIn
 }
 
 // ClearInstance
-// 清空Redis实例的实例数据。
+// 本接口（ClearInstance）用于清空实例数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -630,6 +638,7 @@ func (c *Client) ClearInstanceWithContext(ctx context.Context, request *ClearIns
     if request == nil {
         request = NewClearInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ClearInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ClearInstance require credential")
@@ -741,6 +750,7 @@ func (c *Client) CloneInstancesWithContext(ctx context.Context, request *CloneIn
     if request == nil {
         request = NewCloneInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CloneInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloneInstances require credential")
@@ -749,6 +759,118 @@ func (c *Client) CloneInstancesWithContext(ctx context.Context, request *CloneIn
     request.SetContext(ctx)
     
     response = NewCloneInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCloseLogRequest() (request *CloseLogRequest) {
+    request = &CloseLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "CloseLog")
+    
+    
+    return
+}
+
+func NewCloseLogResponse() (response *CloseLogResponse) {
+    response = &CloseLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CloseLog
+// 关闭日志
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_ONLYVPCONSPECZONEID = "InvalidParameter.OnlyVPCOnSpecZoneId"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_BASENETWORKACCESSDENY = "InvalidParameterValue.BaseNetWorkAccessDeny"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEID = "InvalidParameterValue.InvalidInstanceTypeId"
+//  INVALIDPARAMETERVALUE_INVALIDSUBNETID = "InvalidParameterValue.InvalidSubnetId"
+//  INVALIDPARAMETERVALUE_PASSWORDEMPTY = "InvalidParameterValue.PasswordEmpty"
+//  INVALIDPARAMETERVALUE_PASSWORDFREEDENIED = "InvalidParameterValue.PasswordFreeDenied"
+//  INVALIDPARAMETERVALUE_PASSWORDRULEERROR = "InvalidParameterValue.PasswordRuleError"
+//  INVALIDPARAMETERVALUE_SECURITYGROUPIDSNOTEXISTS = "InvalidParameterValue.SecurityGroupIdsNotExists"
+//  INVALIDPARAMETERVALUE_UNVPCIDNOTEXISTS = "InvalidParameterValue.UnVpcIdNotExists"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
+//  LIMITEXCEEDED_INVALIDPARAMETERGOODSNUMNOTINRANGE = "LimitExceeded.InvalidParameterGoodsNumNotInRange"
+//  LIMITEXCEEDED_PERIODLESSTHANMINLIMIT = "LimitExceeded.PeriodLessThanMinLimit"
+//  LIMITEXCEEDED_REACHTHEAMOUNTLIMIT = "LimitExceeded.ReachTheAmountLimit"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND_ACCOUNTDOESNOTEXISTS = "ResourceNotFound.AccountDoesNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCEDELETED = "ResourceUnavailable.InstanceDeleted"
+//  RESOURCEUNAVAILABLE_NOENOUGHVIPINVPC = "ResourceUnavailable.NoEnoughVipInVPC"
+//  RESOURCEUNAVAILABLE_NOREDISSERVICE = "ResourceUnavailable.NoRedisService"
+//  RESOURCEUNAVAILABLE_NOSERVICEAVAILABLEFORTHISZONEID = "ResourceUnavailable.NoServiceAvailableForThisZoneId"
+//  RESOURCEUNAVAILABLE_SALEOUT = "ResourceUnavailable.SaleOut"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CloseLog(request *CloseLogRequest) (response *CloseLogResponse, err error) {
+    return c.CloseLogWithContext(context.Background(), request)
+}
+
+// CloseLog
+// 关闭日志
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_ONLYVPCONSPECZONEID = "InvalidParameter.OnlyVPCOnSpecZoneId"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_BASENETWORKACCESSDENY = "InvalidParameterValue.BaseNetWorkAccessDeny"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEID = "InvalidParameterValue.InvalidInstanceTypeId"
+//  INVALIDPARAMETERVALUE_INVALIDSUBNETID = "InvalidParameterValue.InvalidSubnetId"
+//  INVALIDPARAMETERVALUE_PASSWORDEMPTY = "InvalidParameterValue.PasswordEmpty"
+//  INVALIDPARAMETERVALUE_PASSWORDFREEDENIED = "InvalidParameterValue.PasswordFreeDenied"
+//  INVALIDPARAMETERVALUE_PASSWORDRULEERROR = "InvalidParameterValue.PasswordRuleError"
+//  INVALIDPARAMETERVALUE_SECURITYGROUPIDSNOTEXISTS = "InvalidParameterValue.SecurityGroupIdsNotExists"
+//  INVALIDPARAMETERVALUE_UNVPCIDNOTEXISTS = "InvalidParameterValue.UnVpcIdNotExists"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
+//  LIMITEXCEEDED_INVALIDPARAMETERGOODSNUMNOTINRANGE = "LimitExceeded.InvalidParameterGoodsNumNotInRange"
+//  LIMITEXCEEDED_PERIODLESSTHANMINLIMIT = "LimitExceeded.PeriodLessThanMinLimit"
+//  LIMITEXCEEDED_REACHTHEAMOUNTLIMIT = "LimitExceeded.ReachTheAmountLimit"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND_ACCOUNTDOESNOTEXISTS = "ResourceNotFound.AccountDoesNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCEDELETED = "ResourceUnavailable.InstanceDeleted"
+//  RESOURCEUNAVAILABLE_NOENOUGHVIPINVPC = "ResourceUnavailable.NoEnoughVipInVPC"
+//  RESOURCEUNAVAILABLE_NOREDISSERVICE = "ResourceUnavailable.NoRedisService"
+//  RESOURCEUNAVAILABLE_NOSERVICEAVAILABLEFORTHISZONEID = "ResourceUnavailable.NoServiceAvailableForThisZoneId"
+//  RESOURCEUNAVAILABLE_SALEOUT = "ResourceUnavailable.SaleOut"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CloseLogWithContext(ctx context.Context, request *CloseLogRequest) (response *CloseLogResponse, err error) {
+    if request == nil {
+        request = NewCloseLogRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CloseLog")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseLog require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloseLogResponse()
     err = c.Send(request, response)
     return
 }
@@ -773,7 +895,7 @@ func NewCloseSSLResponse() (response *CloseSSLResponse) {
 }
 
 // CloseSSL
-// 关闭SSL
+// 本接口（CloseSSL）用于关闭SSL加密认证。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -790,7 +912,7 @@ func (c *Client) CloseSSL(request *CloseSSLRequest) (response *CloseSSLResponse,
 }
 
 // CloseSSL
-// 关闭SSL
+// 本接口（CloseSSL）用于关闭SSL加密认证。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -806,6 +928,7 @@ func (c *Client) CloseSSLWithContext(ctx context.Context, request *CloseSSLReque
     if request == nil {
         request = NewCloseSSLRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CloseSSL")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseSSL require credential")
@@ -814,6 +937,72 @@ func (c *Client) CloseSSLWithContext(ctx context.Context, request *CloseSSLReque
     request.SetContext(ctx)
     
     response = NewCloseSSLResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateExportTaskRequest() (request *CreateExportTaskRequest) {
+    request = &CreateExportTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "CreateExportTask")
+    
+    
+    return
+}
+
+func NewCreateExportTaskResponse() (response *CreateExportTaskResponse) {
+    response = &CreateExportTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateExportTask
+// 创建日志下载任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+//  UNSUPPORTEDOPERATION_LIMITPROXYVERSION = "UnsupportedOperation.LimitProxyVersion"
+func (c *Client) CreateExportTask(request *CreateExportTaskRequest) (response *CreateExportTaskResponse, err error) {
+    return c.CreateExportTaskWithContext(context.Background(), request)
+}
+
+// CreateExportTask
+// 创建日志下载任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+//  UNSUPPORTEDOPERATION_LIMITPROXYVERSION = "UnsupportedOperation.LimitProxyVersion"
+func (c *Client) CreateExportTaskWithContext(ctx context.Context, request *CreateExportTaskRequest) (response *CreateExportTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateExportTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CreateExportTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateExportTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateExportTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -838,7 +1027,7 @@ func NewCreateInstanceAccountResponse() (response *CreateInstanceAccountResponse
 }
 
 // CreateInstanceAccount
-// 该接口（CreateInstanceAccount）用于自定义访问实例的账号。
+// 本接口（CreateInstanceAccount）用于自定义访问实例的账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -852,7 +1041,7 @@ func (c *Client) CreateInstanceAccount(request *CreateInstanceAccountRequest) (r
 }
 
 // CreateInstanceAccount
-// 该接口（CreateInstanceAccount）用于自定义访问实例的账号。
+// 本接口（CreateInstanceAccount）用于自定义访问实例的账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -865,6 +1054,7 @@ func (c *Client) CreateInstanceAccountWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateInstanceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CreateInstanceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceAccount require credential")
@@ -914,6 +1104,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  INVALIDPARAMETERVALUE_PASSWORDFREEDENIED = "InvalidParameterValue.PasswordFreeDenied"
 //  INVALIDPARAMETERVALUE_PASSWORDRULEERROR = "InvalidParameterValue.PasswordRuleError"
 //  INVALIDPARAMETERVALUE_SECURITYGROUPIDSNOTEXISTS = "InvalidParameterValue.SecurityGroupIdsNotExists"
+//  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
 //  INVALIDPARAMETERVALUE_UNVPCIDNOTEXISTS = "InvalidParameterValue.UnVpcIdNotExists"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
@@ -953,6 +1144,7 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 //  INVALIDPARAMETERVALUE_PASSWORDFREEDENIED = "InvalidParameterValue.PasswordFreeDenied"
 //  INVALIDPARAMETERVALUE_PASSWORDRULEERROR = "InvalidParameterValue.PasswordRuleError"
 //  INVALIDPARAMETERVALUE_SECURITYGROUPIDSNOTEXISTS = "InvalidParameterValue.SecurityGroupIdsNotExists"
+//  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
 //  INVALIDPARAMETERVALUE_UNVPCIDNOTEXISTS = "InvalidParameterValue.UnVpcIdNotExists"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
@@ -974,6 +1166,7 @@ func (c *Client) CreateInstancesWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CreateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstances require credential")
@@ -1006,7 +1199,7 @@ func NewCreateParamTemplateResponse() (response *CreateParamTemplateResponse) {
 }
 
 // CreateParamTemplate
-// 创建参数模板。
+// 该接口（CreateParamTemplate）用于创建参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1019,7 +1212,7 @@ func (c *Client) CreateParamTemplate(request *CreateParamTemplateRequest) (respo
 }
 
 // CreateParamTemplate
-// 创建参数模板。
+// 该接口（CreateParamTemplate）用于创建参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1031,6 +1224,7 @@ func (c *Client) CreateParamTemplateWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateParamTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CreateParamTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateParamTemplate require credential")
@@ -1063,7 +1257,7 @@ func NewCreateReplicationGroupResponse() (response *CreateReplicationGroupRespon
 }
 
 // CreateReplicationGroup
-// 该接口（CreateReplicationGroup）用于创建复制组。
+// 本接口（CreateReplicationGroup）用于创建复制组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1085,7 +1279,7 @@ func (c *Client) CreateReplicationGroup(request *CreateReplicationGroupRequest) 
 }
 
 // CreateReplicationGroup
-// 该接口（CreateReplicationGroup）用于创建复制组。
+// 本接口（CreateReplicationGroup）用于创建复制组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1106,6 +1300,7 @@ func (c *Client) CreateReplicationGroupWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateReplicationGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "CreateReplicationGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateReplicationGroup require credential")
@@ -1114,6 +1309,82 @@ func (c *Client) CreateReplicationGroupWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewCreateReplicationGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteExportTaskRequest() (request *DeleteExportTaskRequest) {
+    request = &DeleteExportTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DeleteExportTask")
+    
+    
+    return
+}
+
+func NewDeleteExportTaskResponse() (response *DeleteExportTaskResponse) {
+    response = &DeleteExportTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteExportTask
+// 删除日志下载任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_INSTANCENAMERULEERROR = "InvalidParameterValue.InstanceNameRuleError"
+//  INVALIDPARAMETERVALUE_NOTREPEATBIND = "InvalidParameterValue.NotRepeatBind"
+//  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
+//  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
+//  LIMITEXCEEDED_INSTANCENOTEMPTY = "LimitExceeded.InstanceNotEmpty"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_LIMITPROXYVERSION = "UnsupportedOperation.LimitProxyVersion"
+func (c *Client) DeleteExportTask(request *DeleteExportTaskRequest) (response *DeleteExportTaskResponse, err error) {
+    return c.DeleteExportTaskWithContext(context.Background(), request)
+}
+
+// DeleteExportTask
+// 删除日志下载任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_INSTANCENAMERULEERROR = "InvalidParameterValue.InstanceNameRuleError"
+//  INVALIDPARAMETERVALUE_NOTREPEATBIND = "InvalidParameterValue.NotRepeatBind"
+//  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
+//  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
+//  LIMITEXCEEDED_INSTANCENOTEMPTY = "LimitExceeded.InstanceNotEmpty"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_LIMITPROXYVERSION = "UnsupportedOperation.LimitProxyVersion"
+func (c *Client) DeleteExportTaskWithContext(ctx context.Context, request *DeleteExportTaskRequest) (response *DeleteExportTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteExportTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DeleteExportTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteExportTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteExportTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -1138,7 +1409,7 @@ func NewDeleteInstanceAccountResponse() (response *DeleteInstanceAccountResponse
 }
 
 // DeleteInstanceAccount
-// 删除实例子账号
+// 本接口（DeleteInstanceAccount）用于删除实例子账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1152,7 +1423,7 @@ func (c *Client) DeleteInstanceAccount(request *DeleteInstanceAccountRequest) (r
 }
 
 // DeleteInstanceAccount
-// 删除实例子账号
+// 本接口（DeleteInstanceAccount）用于删除实例子账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1165,6 +1436,7 @@ func (c *Client) DeleteInstanceAccountWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteInstanceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DeleteInstanceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstanceAccount require credential")
@@ -1197,7 +1469,7 @@ func NewDeleteParamTemplateResponse() (response *DeleteParamTemplateResponse) {
 }
 
 // DeleteParamTemplate
-// 删除参数模板
+// 本接口（DeleteParamTemplate）用于删除参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1210,7 +1482,7 @@ func (c *Client) DeleteParamTemplate(request *DeleteParamTemplateRequest) (respo
 }
 
 // DeleteParamTemplate
-// 删除参数模板
+// 本接口（DeleteParamTemplate）用于删除参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1222,6 +1494,7 @@ func (c *Client) DeleteParamTemplateWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteParamTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DeleteParamTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteParamTemplate require credential")
@@ -1254,7 +1527,7 @@ func NewDeleteReplicationInstanceResponse() (response *DeleteReplicationInstance
 }
 
 // DeleteReplicationInstance
-// 移除复制组成员 注：接口下线中，请使用 RemoveReplicationInstance
+// 本接口（DeleteReplicationInstance）移除复制组成员。注：该接口下线中，请使用 [RemoveReplicationInstance](https://cloud.tencent.com/document/product/239/90099)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1271,7 +1544,7 @@ func (c *Client) DeleteReplicationInstance(request *DeleteReplicationInstanceReq
 }
 
 // DeleteReplicationInstance
-// 移除复制组成员 注：接口下线中，请使用 RemoveReplicationInstance
+// 本接口（DeleteReplicationInstance）移除复制组成员。注：该接口下线中，请使用 [RemoveReplicationInstance](https://cloud.tencent.com/document/product/239/90099)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1287,6 +1560,7 @@ func (c *Client) DeleteReplicationInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteReplicationInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DeleteReplicationInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteReplicationInstance require credential")
@@ -1346,6 +1620,7 @@ func (c *Client) DescribeAutoBackupConfigWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeAutoBackupConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeAutoBackupConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoBackupConfig require credential")
@@ -1407,6 +1682,7 @@ func (c *Client) DescribeBackupDetailWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBackupDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeBackupDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupDetail require credential")
@@ -1464,6 +1740,7 @@ func (c *Client) DescribeBackupDownloadRestrictionWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeBackupDownloadRestrictionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeBackupDownloadRestriction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupDownloadRestriction require credential")
@@ -1537,6 +1814,7 @@ func (c *Client) DescribeBackupUrlWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeBackupUrlRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeBackupUrl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupUrl require credential")
@@ -1602,6 +1880,7 @@ func (c *Client) DescribeBandwidthRangeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeBandwidthRangeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeBandwidthRange")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBandwidthRange require credential")
@@ -1634,7 +1913,7 @@ func NewDescribeCommonDBInstancesResponse() (response *DescribeCommonDBInstances
 }
 
 // DescribeCommonDBInstances
-// 查询Redis实例列表信息。该接口已废弃。
+// 本接口（DescribeCommonDBInstances）用于查询Redis实例列表信息。当前该接口已废弃。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1649,7 +1928,7 @@ func (c *Client) DescribeCommonDBInstances(request *DescribeCommonDBInstancesReq
 }
 
 // DescribeCommonDBInstances
-// 查询Redis实例列表信息。该接口已废弃。
+// 本接口（DescribeCommonDBInstances）用于查询Redis实例列表信息。当前该接口已废弃。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1663,6 +1942,7 @@ func (c *Client) DescribeCommonDBInstancesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeCommonDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeCommonDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCommonDBInstances require credential")
@@ -1738,6 +2018,7 @@ func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDBSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeDBSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBSecurityGroups require credential")
@@ -1746,6 +2027,82 @@ func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeDBSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeExportTasksRequest() (request *DescribeExportTasksRequest) {
+    request = &DescribeExportTasksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeExportTasks")
+    
+    
+    return
+}
+
+func NewDescribeExportTasksResponse() (response *DescribeExportTasksResponse) {
+    response = &DescribeExportTasksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeExportTasks
+// 本接口（DescribeExportTasks）用于查询日志文件的下载任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
+//  FAILEDOPERATION_ASSOCIATESECURITYGROUPSFAILED = "FailedOperation.AssociateSecurityGroupsFailed"
+//  FAILEDOPERATION_CLEARINSTANCEINFOFAILED = "FailedOperation.ClearInstanceInfoFailed"
+//  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
+//  FAILEDOPERATION_GETSECURITYGROUPDETAILFAILED = "FailedOperation.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
+//  INTERNALERROR_NETWORKERR = "InternalError.NetWorkErr"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeExportTasks(request *DescribeExportTasksRequest) (response *DescribeExportTasksResponse, err error) {
+    return c.DescribeExportTasksWithContext(context.Background(), request)
+}
+
+// DescribeExportTasks
+// 本接口（DescribeExportTasks）用于查询日志文件的下载任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
+//  FAILEDOPERATION_ASSOCIATESECURITYGROUPSFAILED = "FailedOperation.AssociateSecurityGroupsFailed"
+//  FAILEDOPERATION_CLEARINSTANCEINFOFAILED = "FailedOperation.ClearInstanceInfoFailed"
+//  FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
+//  FAILEDOPERATION_GETSECURITYGROUPDETAILFAILED = "FailedOperation.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_LISTINSTANCESERROR = "InternalError.ListInstancesError"
+//  INTERNALERROR_NETWORKERR = "InternalError.NetWorkErr"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeExportTasksWithContext(ctx context.Context, request *DescribeExportTasksRequest) (response *DescribeExportTasksResponse, err error) {
+    if request == nil {
+        request = NewDescribeExportTasksRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeExportTasks")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeExportTasks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeExportTasksResponse()
     err = c.Send(request, response)
     return
 }
@@ -1770,7 +2127,7 @@ func NewDescribeGlobalReplicationAreaResponse() (response *DescribeGlobalReplica
 }
 
 // DescribeGlobalReplicationArea
-// 查询全球复制支持地域信息
+// 本接口（DescribeGlobalReplicationArea）用于查询全球复制支持地域信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1782,7 +2139,7 @@ func (c *Client) DescribeGlobalReplicationArea(request *DescribeGlobalReplicatio
 }
 
 // DescribeGlobalReplicationArea
-// 查询全球复制支持地域信息
+// 本接口（DescribeGlobalReplicationArea）用于查询全球复制支持地域信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1793,6 +2150,7 @@ func (c *Client) DescribeGlobalReplicationAreaWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeGlobalReplicationAreaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeGlobalReplicationArea")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGlobalReplicationArea require credential")
@@ -1825,7 +2183,7 @@ func NewDescribeInstanceAccountResponse() (response *DescribeInstanceAccountResp
 }
 
 // DescribeInstanceAccount
-// 本接口（DescribeInstanceAccount）用于查看实例子账号信息。
+// 本接口（DescribeInstanceAccount）用于查看实例账号信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1838,7 +2196,7 @@ func (c *Client) DescribeInstanceAccount(request *DescribeInstanceAccountRequest
 }
 
 // DescribeInstanceAccount
-// 本接口（DescribeInstanceAccount）用于查看实例子账号信息。
+// 本接口（DescribeInstanceAccount）用于查看实例账号信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1850,6 +2208,7 @@ func (c *Client) DescribeInstanceAccountWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeInstanceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceAccount require credential")
@@ -1913,6 +2272,7 @@ func (c *Client) DescribeInstanceBackupsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeInstanceBackupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceBackups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceBackups require credential")
@@ -1945,7 +2305,7 @@ func NewDescribeInstanceDTSInfoResponse() (response *DescribeInstanceDTSInfoResp
 }
 
 // DescribeInstanceDTSInfo
-// 查询实例DTS信息
+// 本接口（DescribeInstanceDTSInfo）用于查询实例 DTS 信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1956,7 +2316,7 @@ func (c *Client) DescribeInstanceDTSInfo(request *DescribeInstanceDTSInfoRequest
 }
 
 // DescribeInstanceDTSInfo
-// 查询实例DTS信息
+// 本接口（DescribeInstanceDTSInfo）用于查询实例 DTS 信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1966,6 +2326,7 @@ func (c *Client) DescribeInstanceDTSInfoWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeInstanceDTSInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceDTSInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceDTSInfo require credential")
@@ -2019,6 +2380,7 @@ func (c *Client) DescribeInstanceDealDetailWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeInstanceDealDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceDealDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceDealDetail require credential")
@@ -2080,6 +2442,7 @@ func (c *Client) DescribeInstanceEventsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceEvents require credential")
@@ -2131,6 +2494,7 @@ func (c *Client) DescribeInstanceLogDeliveryWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeInstanceLogDeliveryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceLogDelivery")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceLogDelivery require credential")
@@ -2180,6 +2544,7 @@ func (c *Client) DescribeInstanceMonitorBigKeyWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceMonitorBigKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorBigKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorBigKey require credential")
@@ -2229,6 +2594,7 @@ func (c *Client) DescribeInstanceMonitorBigKeySizeDistWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeInstanceMonitorBigKeySizeDistRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorBigKeySizeDist")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorBigKeySizeDist require credential")
@@ -2278,6 +2644,7 @@ func (c *Client) DescribeInstanceMonitorBigKeyTypeDistWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeInstanceMonitorBigKeyTypeDistRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorBigKeyTypeDist")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorBigKeyTypeDist require credential")
@@ -2327,6 +2694,7 @@ func (c *Client) DescribeInstanceMonitorHotKeyWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceMonitorHotKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorHotKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorHotKey require credential")
@@ -2359,7 +2727,7 @@ func NewDescribeInstanceMonitorSIPResponse() (response *DescribeInstanceMonitorS
 }
 
 // DescribeInstanceMonitorSIP
-// 该接口已下线，请使用数据库智能管家 DBbrain 接口 [DescribeProxyProcessStatistics] (https://cloud.tencent.com/document/product/1130/84544) 获取实例访问来源。
+// 该接口已下线，请使用数据库智能管家 DBbrain 接口 [DescribeProxyProcessStatistics](https://cloud.tencent.com/document/product/1130/84544) 获取实例访问来源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2368,7 +2736,7 @@ func (c *Client) DescribeInstanceMonitorSIP(request *DescribeInstanceMonitorSIPR
 }
 
 // DescribeInstanceMonitorSIP
-// 该接口已下线，请使用数据库智能管家 DBbrain 接口 [DescribeProxyProcessStatistics] (https://cloud.tencent.com/document/product/1130/84544) 获取实例访问来源。
+// 该接口已下线，请使用数据库智能管家 DBbrain 接口 [DescribeProxyProcessStatistics](https://cloud.tencent.com/document/product/1130/84544) 获取实例访问来源。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2376,6 +2744,7 @@ func (c *Client) DescribeInstanceMonitorSIPWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeInstanceMonitorSIPRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorSIP")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorSIP require credential")
@@ -2408,7 +2777,7 @@ func NewDescribeInstanceMonitorTookDistResponse() (response *DescribeInstanceMon
 }
 
 // DescribeInstanceMonitorTookDist
-// 查询实例访问的耗时分布
+// 本接口（DescribeInstanceMonitorTookDist）用于查询实例访问的耗时分布。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2417,7 +2786,7 @@ func (c *Client) DescribeInstanceMonitorTookDist(request *DescribeInstanceMonito
 }
 
 // DescribeInstanceMonitorTookDist
-// 查询实例访问的耗时分布
+// 本接口（DescribeInstanceMonitorTookDist）用于查询实例访问的耗时分布。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2425,6 +2794,7 @@ func (c *Client) DescribeInstanceMonitorTookDistWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeInstanceMonitorTookDistRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorTookDist")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorTookDist require credential")
@@ -2457,7 +2827,7 @@ func NewDescribeInstanceMonitorTopNCmdResponse() (response *DescribeInstanceMoni
 }
 
 // DescribeInstanceMonitorTopNCmd
-// 查询实例访问命令
+// 本接口（DescribeInstanceMonitorTopNCmd）用于查询实例访问命令。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2466,7 +2836,7 @@ func (c *Client) DescribeInstanceMonitorTopNCmd(request *DescribeInstanceMonitor
 }
 
 // DescribeInstanceMonitorTopNCmd
-// 查询实例访问命令
+// 本接口（DescribeInstanceMonitorTopNCmd）用于查询实例访问命令。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2474,6 +2844,7 @@ func (c *Client) DescribeInstanceMonitorTopNCmdWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeInstanceMonitorTopNCmdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorTopNCmd")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorTopNCmd require credential")
@@ -2506,7 +2877,7 @@ func NewDescribeInstanceMonitorTopNCmdTookResponse() (response *DescribeInstance
 }
 
 // DescribeInstanceMonitorTopNCmdTook
-// 查询实例CPU耗时
+// 本接口（DescribeInstanceMonitorTopNCmdTook）用于查询实例 CPU 耗时。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2515,7 +2886,7 @@ func (c *Client) DescribeInstanceMonitorTopNCmdTook(request *DescribeInstanceMon
 }
 
 // DescribeInstanceMonitorTopNCmdTook
-// 查询实例CPU耗时
+// 本接口（DescribeInstanceMonitorTopNCmdTook）用于查询实例 CPU 耗时。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REDOFLOWFAILED = "FailedOperation.RedoFlowFailed"
@@ -2523,6 +2894,7 @@ func (c *Client) DescribeInstanceMonitorTopNCmdTookWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeInstanceMonitorTopNCmdTookRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceMonitorTopNCmdTook")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceMonitorTopNCmdTook require credential")
@@ -2580,6 +2952,7 @@ func (c *Client) DescribeInstanceNodeInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeInstanceNodeInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceNodeInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceNodeInfo require credential")
@@ -2612,7 +2985,7 @@ func NewDescribeInstanceParamRecordsResponse() (response *DescribeInstanceParamR
 }
 
 // DescribeInstanceParamRecords
-// 查询参数修改历史列表
+// 本接口（DescribeInstanceParamRecords）用于查询参数修改历史列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2629,7 +3002,7 @@ func (c *Client) DescribeInstanceParamRecords(request *DescribeInstanceParamReco
 }
 
 // DescribeInstanceParamRecords
-// 查询参数修改历史列表
+// 本接口（DescribeInstanceParamRecords）用于查询参数修改历史列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2645,6 +3018,7 @@ func (c *Client) DescribeInstanceParamRecordsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeInstanceParamRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceParamRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceParamRecords require credential")
@@ -2716,6 +3090,7 @@ func (c *Client) DescribeInstanceParamsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceParamsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceParams")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceParams require credential")
@@ -2781,6 +3156,7 @@ func (c *Client) DescribeInstanceSecurityGroupWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceSecurityGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceSecurityGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceSecurityGroup require credential")
@@ -2834,6 +3210,7 @@ func (c *Client) DescribeInstanceShardsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceShardsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceShards")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceShards require credential")
@@ -2889,6 +3266,7 @@ func (c *Client) DescribeInstanceSpecBandwidthWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceSpecBandwidthRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceSpecBandwidth")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceSpecBandwidth require credential")
@@ -2944,6 +3322,7 @@ func (c *Client) DescribeInstanceSupportFeatureWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeInstanceSupportFeatureRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceSupportFeature")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceSupportFeature require credential")
@@ -3009,6 +3388,7 @@ func (c *Client) DescribeInstanceZoneInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeInstanceZoneInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstanceZoneInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceZoneInfo require credential")
@@ -3074,6 +3454,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -3082,6 +3463,138 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogInstanceListRequest() (request *DescribeLogInstanceListRequest) {
+    request = &DescribeLogInstanceListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeLogInstanceList")
+    
+    
+    return
+}
+
+func NewDescribeLogInstanceListResponse() (response *DescribeLogInstanceListResponse) {
+    response = &DescribeLogInstanceListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLogInstanceList
+// 日志实例列表查询
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeLogInstanceList(request *DescribeLogInstanceListRequest) (response *DescribeLogInstanceListResponse, err error) {
+    return c.DescribeLogInstanceListWithContext(context.Background(), request)
+}
+
+// DescribeLogInstanceList
+// 日志实例列表查询
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeLogInstanceListWithContext(ctx context.Context, request *DescribeLogInstanceListRequest) (response *DescribeLogInstanceListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogInstanceListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeLogInstanceList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogInstanceList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogInstanceListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogsRequest() (request *DescribeLogsRequest) {
+    request = &DescribeLogsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeLogs")
+    
+    
+    return
+}
+
+func NewDescribeLogsResponse() (response *DescribeLogsResponse) {
+    response = &DescribeLogsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLogs
+// 查询日志
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeLogs(request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
+    return c.DescribeLogsWithContext(context.Background(), request)
+}
+
+// DescribeLogs
+// 查询日志
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeLogsWithContext(ctx context.Context, request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeLogs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3129,6 +3642,7 @@ func (c *Client) DescribeMaintenanceWindowWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeMaintenanceWindowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeMaintenanceWindow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMaintenanceWindow require credential")
@@ -3190,6 +3704,7 @@ func (c *Client) DescribeParamTemplateInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeParamTemplateInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeParamTemplateInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeParamTemplateInfo require credential")
@@ -3222,7 +3737,7 @@ func NewDescribeParamTemplatesResponse() (response *DescribeParamTemplatesRespon
 }
 
 // DescribeParamTemplates
-// 查询参数模板列表
+// 本接口（DescribeParamTemplates）用于查询参数模板列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3235,7 +3750,7 @@ func (c *Client) DescribeParamTemplates(request *DescribeParamTemplatesRequest) 
 }
 
 // DescribeParamTemplates
-// 查询参数模板列表
+// 本接口（DescribeParamTemplates）用于查询参数模板列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3247,6 +3762,7 @@ func (c *Client) DescribeParamTemplatesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeParamTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeParamTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeParamTemplates require credential")
@@ -3304,6 +3820,7 @@ func (c *Client) DescribeProductInfoWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeProductInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeProductInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProductInfo require credential")
@@ -3336,7 +3853,7 @@ func NewDescribeProjectSecurityGroupResponse() (response *DescribeProjectSecurit
 }
 
 // DescribeProjectSecurityGroup
-// 查询项目安全组信息
+// 本接口（DescribeProjectSecurityGroup）用于查询项目安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3354,7 +3871,7 @@ func (c *Client) DescribeProjectSecurityGroup(request *DescribeProjectSecurityGr
 }
 
 // DescribeProjectSecurityGroup
-// 查询项目安全组信息
+// 本接口（DescribeProjectSecurityGroup）用于查询项目安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3371,6 +3888,7 @@ func (c *Client) DescribeProjectSecurityGroupWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeProjectSecurityGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeProjectSecurityGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProjectSecurityGroup require credential")
@@ -3403,7 +3921,7 @@ func NewDescribeProjectSecurityGroupsResponse() (response *DescribeProjectSecuri
 }
 
 // DescribeProjectSecurityGroups
-// 本接口(DescribeProjectSecurityGroups)用于查询项目的安全组详情。
+// 本接口（DescribeProjectSecurityGroups）用于查询项目的安全组详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -3422,7 +3940,7 @@ func (c *Client) DescribeProjectSecurityGroups(request *DescribeProjectSecurityG
 }
 
 // DescribeProjectSecurityGroups
-// 本接口(DescribeProjectSecurityGroups)用于查询项目的安全组详情。
+// 本接口（DescribeProjectSecurityGroups）用于查询项目的安全组详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -3440,6 +3958,7 @@ func (c *Client) DescribeProjectSecurityGroupsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeProjectSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeProjectSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProjectSecurityGroups require credential")
@@ -3503,6 +4022,7 @@ func (c *Client) DescribeProxySlowLogWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeProxySlowLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeProxySlowLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProxySlowLog require credential")
@@ -3535,7 +4055,7 @@ func NewDescribeRedisClusterOverviewResponse() (response *DescribeRedisClusterOv
 }
 
 // DescribeRedisClusterOverview
-// 查询Redis独享集群概览信息
+// 本接口（DescribeRedisClusterOverview）用于查询 Redis 独享集群概览信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3544,7 +4064,7 @@ func (c *Client) DescribeRedisClusterOverview(request *DescribeRedisClusterOverv
 }
 
 // DescribeRedisClusterOverview
-// 查询Redis独享集群概览信息
+// 本接口（DescribeRedisClusterOverview）用于查询 Redis 独享集群概览信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3552,6 +4072,7 @@ func (c *Client) DescribeRedisClusterOverviewWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeRedisClusterOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeRedisClusterOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRedisClusterOverview require credential")
@@ -3584,7 +4105,7 @@ func NewDescribeRedisClustersResponse() (response *DescribeRedisClustersResponse
 }
 
 // DescribeRedisClusters
-// 查询Redis独享集群列表
+// 本接口（DescribeRedisClusters）用于查询Redis独享集群列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -3595,7 +4116,7 @@ func (c *Client) DescribeRedisClusters(request *DescribeRedisClustersRequest) (r
 }
 
 // DescribeRedisClusters
-// 查询Redis独享集群列表
+// 本接口（DescribeRedisClusters）用于查询Redis独享集群列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -3605,6 +4126,7 @@ func (c *Client) DescribeRedisClustersWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeRedisClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeRedisClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRedisClusters require credential")
@@ -3656,6 +4178,7 @@ func (c *Client) DescribeReplicationGroupWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeReplicationGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeReplicationGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationGroup require credential")
@@ -3688,7 +4211,7 @@ func NewDescribeReplicationGroupInstanceResponse() (response *DescribeReplicatio
 }
 
 // DescribeReplicationGroupInstance
-// 查询复制组信息
+// 本接口（DescribeReplicationGroupInstance）用于查询复制组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3702,7 +4225,7 @@ func (c *Client) DescribeReplicationGroupInstance(request *DescribeReplicationGr
 }
 
 // DescribeReplicationGroupInstance
-// 查询复制组信息
+// 本接口（DescribeReplicationGroupInstance）用于查询复制组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3715,6 +4238,7 @@ func (c *Client) DescribeReplicationGroupInstanceWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeReplicationGroupInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeReplicationGroupInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReplicationGroupInstance require credential")
@@ -3778,6 +4302,7 @@ func (c *Client) DescribeSSLStatusWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeSSLStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeSSLStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSSLStatus require credential")
@@ -3786,6 +4311,64 @@ func (c *Client) DescribeSSLStatusWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeSSLStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSecondLevelBackupInfoRequest() (request *DescribeSecondLevelBackupInfoRequest) {
+    request = &DescribeSecondLevelBackupInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeSecondLevelBackupInfo")
+    
+    
+    return
+}
+
+func NewDescribeSecondLevelBackupInfoResponse() (response *DescribeSecondLevelBackupInfoResponse) {
+    response = &DescribeSecondLevelBackupInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSecondLevelBackupInfo
+// 本接口（DescribeSecondLevelBackupInfo）用于查询实例秒级备份信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeSecondLevelBackupInfo(request *DescribeSecondLevelBackupInfoRequest) (response *DescribeSecondLevelBackupInfoResponse, err error) {
+    return c.DescribeSecondLevelBackupInfoWithContext(context.Background(), request)
+}
+
+// DescribeSecondLevelBackupInfo
+// 本接口（DescribeSecondLevelBackupInfo）用于查询实例秒级备份信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeSecondLevelBackupInfoWithContext(ctx context.Context, request *DescribeSecondLevelBackupInfoRequest) (response *DescribeSecondLevelBackupInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecondLevelBackupInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeSecondLevelBackupInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecondLevelBackupInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecondLevelBackupInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -3839,6 +4422,7 @@ func (c *Client) DescribeSlowLogWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeSlowLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeSlowLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSlowLog require credential")
@@ -3892,6 +4476,7 @@ func (c *Client) DescribeTaskInfoWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeTaskInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeTaskInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTaskInfo require credential")
@@ -3926,6 +4511,10 @@ func NewDescribeTaskListResponse() (response *DescribeTaskListResponse) {
 // DescribeTaskList
 // 本接口（DescribeTaskList）用于查询指定实例的任务列表信息。
 //
+// 
+//
+// - 可查询近30天内任务列表数据。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
@@ -3938,6 +4527,10 @@ func (c *Client) DescribeTaskList(request *DescribeTaskListRequest) (response *D
 // DescribeTaskList
 // 本接口（DescribeTaskList）用于查询指定实例的任务列表信息。
 //
+// 
+//
+// - 可查询近30天内任务列表数据。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
@@ -3947,6 +4540,7 @@ func (c *Client) DescribeTaskListWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeTaskListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeTaskList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTaskList require credential")
@@ -3979,7 +4573,7 @@ func NewDescribeTendisSlowLogResponse() (response *DescribeTendisSlowLogResponse
 }
 
 // DescribeTendisSlowLog
-// 查询Tendis慢查询
+// 本接口（DescribeTendisSlowLog）用于查询 Tendis 实例慢查询。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
@@ -3992,7 +4586,7 @@ func (c *Client) DescribeTendisSlowLog(request *DescribeTendisSlowLogRequest) (r
 }
 
 // DescribeTendisSlowLog
-// 查询Tendis慢查询
+// 本接口（DescribeTendisSlowLog）用于查询 Tendis 实例慢查询。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
@@ -4004,6 +4598,7 @@ func (c *Client) DescribeTendisSlowLogWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeTendisSlowLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeTendisSlowLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTendisSlowLog require credential")
@@ -4036,7 +4631,7 @@ func NewDestroyPostpaidInstanceResponse() (response *DestroyPostpaidInstanceResp
 }
 
 // DestroyPostpaidInstance
-// 按量计费实例销毁
+// 本接口（DestroyPostpaidInstance）用于销毁按量计费实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4055,7 +4650,7 @@ func (c *Client) DestroyPostpaidInstance(request *DestroyPostpaidInstanceRequest
 }
 
 // DestroyPostpaidInstance
-// 按量计费实例销毁
+// 本接口（DestroyPostpaidInstance）用于销毁按量计费实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4073,6 +4668,7 @@ func (c *Client) DestroyPostpaidInstanceWithContext(ctx context.Context, request
     if request == nil {
         request = NewDestroyPostpaidInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DestroyPostpaidInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyPostpaidInstance require credential")
@@ -4105,7 +4701,7 @@ func NewDestroyPrepaidInstanceResponse() (response *DestroyPrepaidInstanceRespon
 }
 
 // DestroyPrepaidInstance
-// 包年包月实例退还
+// 本接口（DestroyPrepaidInstance）用于退还包年包月计费的 Redis 实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4126,7 +4722,7 @@ func (c *Client) DestroyPrepaidInstance(request *DestroyPrepaidInstanceRequest) 
 }
 
 // DestroyPrepaidInstance
-// 包年包月实例退还
+// 本接口（DestroyPrepaidInstance）用于退还包年包月计费的 Redis 实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4146,6 +4742,7 @@ func (c *Client) DestroyPrepaidInstanceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDestroyPrepaidInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DestroyPrepaidInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyPrepaidInstance require credential")
@@ -4178,7 +4775,7 @@ func NewDisableReplicaReadonlyResponse() (response *DisableReplicaReadonlyRespon
 }
 
 // DisableReplicaReadonly
-// 禁用读写分离
+// 本接口（DisableReplicaReadonly）用于禁用读写分离功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4192,7 +4789,7 @@ func (c *Client) DisableReplicaReadonly(request *DisableReplicaReadonlyRequest) 
 }
 
 // DisableReplicaReadonly
-// 禁用读写分离
+// 本接口（DisableReplicaReadonly）用于禁用读写分离功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4205,6 +4802,7 @@ func (c *Client) DisableReplicaReadonlyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDisableReplicaReadonlyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DisableReplicaReadonly")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableReplicaReadonly require credential")
@@ -4237,7 +4835,7 @@ func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGrou
 }
 
 // DisassociateSecurityGroups
-// 本接口(DisassociateSecurityGroups)用于安全组批量解绑实例。
+// 本接口（DisassociateSecurityGroups）用于安全组批量解绑实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -4254,7 +4852,7 @@ func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsR
 }
 
 // DisassociateSecurityGroups
-// 本接口(DisassociateSecurityGroups)用于安全组批量解绑实例。
+// 本接口（DisassociateSecurityGroups）用于安全组批量解绑实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -4270,6 +4868,7 @@ func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDisassociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DisassociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateSecurityGroups require credential")
@@ -4302,7 +4901,7 @@ func NewEnableReplicaReadonlyResponse() (response *EnableReplicaReadonlyResponse
 }
 
 // EnableReplicaReadonly
-// 启用读写分离
+// 本接口（EnableReplicaReadonly）用于启用读写分离功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4317,7 +4916,7 @@ func (c *Client) EnableReplicaReadonly(request *EnableReplicaReadonlyRequest) (r
 }
 
 // EnableReplicaReadonly
-// 启用读写分离
+// 本接口（EnableReplicaReadonly）用于启用读写分离功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4331,6 +4930,7 @@ func (c *Client) EnableReplicaReadonlyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewEnableReplicaReadonlyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "EnableReplicaReadonly")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableReplicaReadonly require credential")
@@ -4363,7 +4963,7 @@ func NewInquiryPriceCreateInstanceResponse() (response *InquiryPriceCreateInstan
 }
 
 // InquiryPriceCreateInstance
-// 查询新购实例价格
+// 本接口（InquiryPriceCreateInstance）用于查询新购实例价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4377,7 +4977,7 @@ func (c *Client) InquiryPriceCreateInstance(request *InquiryPriceCreateInstanceR
 }
 
 // InquiryPriceCreateInstance
-// 查询新购实例价格
+// 本接口（InquiryPriceCreateInstance）用于查询新购实例价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4390,6 +4990,7 @@ func (c *Client) InquiryPriceCreateInstanceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewInquiryPriceCreateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "InquiryPriceCreateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceCreateInstance require credential")
@@ -4453,6 +5054,7 @@ func (c *Client) InquiryPriceRenewInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewInquiryPriceRenewInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "InquiryPriceRenewInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRenewInstance require credential")
@@ -4485,7 +5087,7 @@ func NewInquiryPriceUpgradeInstanceResponse() (response *InquiryPriceUpgradeInst
 }
 
 // InquiryPriceUpgradeInstance
-// 查询实例扩容价格
+// 本接口（InquiryPriceUpgradeInstance）用于查询实例扩容价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4501,7 +5103,7 @@ func (c *Client) InquiryPriceUpgradeInstance(request *InquiryPriceUpgradeInstanc
 }
 
 // InquiryPriceUpgradeInstance
-// 查询实例扩容价格
+// 本接口（InquiryPriceUpgradeInstance）用于查询实例扩容价格。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4516,6 +5118,7 @@ func (c *Client) InquiryPriceUpgradeInstanceWithContext(ctx context.Context, req
     if request == nil {
         request = NewInquiryPriceUpgradeInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "InquiryPriceUpgradeInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceUpgradeInstance require credential")
@@ -4548,7 +5151,7 @@ func NewKillMasterGroupResponse() (response *KillMasterGroupResponse) {
 }
 
 // KillMasterGroup
-// 本接口（KillMasterGroup）模拟故障。
+// 本接口（KillMasterGroup）用于模拟故障。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4570,7 +5173,7 @@ func (c *Client) KillMasterGroup(request *KillMasterGroupRequest) (response *Kil
 }
 
 // KillMasterGroup
-// 本接口（KillMasterGroup）模拟故障。
+// 本接口（KillMasterGroup）用于模拟故障。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4591,6 +5194,7 @@ func (c *Client) KillMasterGroupWithContext(ctx context.Context, request *KillMa
     if request == nil {
         request = NewKillMasterGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "KillMasterGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("KillMasterGroup require credential")
@@ -4658,6 +5262,7 @@ func (c *Client) ManualBackupInstanceWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewManualBackupInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ManualBackupInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManualBackupInstance require credential")
@@ -4690,7 +5295,7 @@ func NewModfiyInstancePasswordResponse() (response *ModfiyInstancePasswordRespon
 }
 
 // ModfiyInstancePassword
-// 本接口（ModfiyInstancePassword）用于修改实例访问密码。
+// 本接口（ModfiyInstancePassword）用于修改实例访问密码。鉴于该接口名存在拼写错误，现已更正为（[ModifyInstancePassword](https://cloud.tencent.com/document/product/239/111555)）接口，推荐使用更正后的接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4708,7 +5313,7 @@ func (c *Client) ModfiyInstancePassword(request *ModfiyInstancePasswordRequest) 
 }
 
 // ModfiyInstancePassword
-// 本接口（ModfiyInstancePassword）用于修改实例访问密码。
+// 本接口（ModfiyInstancePassword）用于修改实例访问密码。鉴于该接口名存在拼写错误，现已更正为（[ModifyInstancePassword](https://cloud.tencent.com/document/product/239/111555)）接口，推荐使用更正后的接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4725,6 +5330,7 @@ func (c *Client) ModfiyInstancePasswordWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModfiyInstancePasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModfiyInstancePassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModfiyInstancePassword require credential")
@@ -4790,6 +5396,7 @@ func (c *Client) ModifyAutoBackupConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyAutoBackupConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyAutoBackupConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAutoBackupConfig require credential")
@@ -4847,6 +5454,7 @@ func (c *Client) ModifyBackupDownloadRestrictionWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyBackupDownloadRestrictionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyBackupDownloadRestriction")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBackupDownloadRestriction require credential")
@@ -4879,7 +5487,7 @@ func NewModifyConnectionConfigResponse() (response *ModifyConnectionConfigRespon
 }
 
 // ModifyConnectionConfig
-// 修改实例的连接配置，包括带宽和最大连接数。
+// 本接口（ModifyConnectionConfig）用于修改实例的连接配置，包括带宽和最大连接数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4889,7 +5497,7 @@ func (c *Client) ModifyConnectionConfig(request *ModifyConnectionConfigRequest) 
 }
 
 // ModifyConnectionConfig
-// 修改实例的连接配置，包括带宽和最大连接数。
+// 本接口（ModifyConnectionConfig）用于修改实例的连接配置，包括带宽和最大连接数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -4898,6 +5506,7 @@ func (c *Client) ModifyConnectionConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyConnectionConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyConnectionConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyConnectionConfig require credential")
@@ -4930,7 +5539,7 @@ func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecu
 }
 
 // ModifyDBInstanceSecurityGroups
-// 本接口(ModifyDBInstanceSecurityGroups)用于修改实例绑定的安全组。
+// 本接口（ModifyDBInstanceSecurityGroups）用于对实例原有的安全组列表进行修改。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -4951,7 +5560,7 @@ func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurit
 }
 
 // ModifyDBInstanceSecurityGroups
-// 本接口(ModifyDBInstanceSecurityGroups)用于修改实例绑定的安全组。
+// 本接口（ModifyDBInstanceSecurityGroups）用于对实例原有的安全组列表进行修改。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -4971,6 +5580,7 @@ func (c *Client) ModifyDBInstanceSecurityGroupsWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyDBInstanceSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyDBInstanceSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceSecurityGroups require credential")
@@ -5003,7 +5613,7 @@ func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
 }
 
 // ModifyInstance
-// 修改实例相关信息
+// 本接口（ModifyInstance）用于修改实例相关信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5019,7 +5629,7 @@ func (c *Client) ModifyInstance(request *ModifyInstanceRequest) (response *Modif
 }
 
 // ModifyInstance
-// 修改实例相关信息
+// 本接口（ModifyInstance）用于修改实例相关信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5034,6 +5644,7 @@ func (c *Client) ModifyInstanceWithContext(ctx context.Context, request *ModifyI
     if request == nil {
         request = NewModifyInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstance require credential")
@@ -5066,7 +5677,7 @@ func NewModifyInstanceAccountResponse() (response *ModifyInstanceAccountResponse
 }
 
 // ModifyInstanceAccount
-// 修改实例子账号
+// 本接口（ModifyInstanceAccount）用于修改实例账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5082,7 +5693,7 @@ func (c *Client) ModifyInstanceAccount(request *ModifyInstanceAccountRequest) (r
 }
 
 // ModifyInstanceAccount
-// 修改实例子账号
+// 本接口（ModifyInstanceAccount）用于修改实例账号。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5097,6 +5708,7 @@ func (c *Client) ModifyInstanceAccountWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyInstanceAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceAccount require credential")
@@ -5170,6 +5782,7 @@ func (c *Client) ModifyInstanceAvailabilityZonesWithContext(ctx context.Context,
     if request == nil {
         request = NewModifyInstanceAvailabilityZonesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceAvailabilityZones")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceAvailabilityZones require credential")
@@ -5178,6 +5791,116 @@ func (c *Client) ModifyInstanceAvailabilityZonesWithContext(ctx context.Context,
     request.SetContext(ctx)
     
     response = NewModifyInstanceAvailabilityZonesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceBackupModeRequest() (request *ModifyInstanceBackupModeRequest) {
+    request = &ModifyInstanceBackupModeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstanceBackupMode")
+    
+    
+    return
+}
+
+func NewModifyInstanceBackupModeResponse() (response *ModifyInstanceBackupModeResponse) {
+    response = &ModifyInstanceBackupModeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceBackupMode
+// 本接口（ModifyInstanceBackupMode）用于修改实例的备份模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) ModifyInstanceBackupMode(request *ModifyInstanceBackupModeRequest) (response *ModifyInstanceBackupModeResponse, err error) {
+    return c.ModifyInstanceBackupModeWithContext(context.Background(), request)
+}
+
+// ModifyInstanceBackupMode
+// 本接口（ModifyInstanceBackupMode）用于修改实例的备份模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) ModifyInstanceBackupModeWithContext(ctx context.Context, request *ModifyInstanceBackupModeRequest) (response *ModifyInstanceBackupModeResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceBackupModeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceBackupMode")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceBackupMode require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceBackupModeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceChargeTypeRequest() (request *ModifyInstanceChargeTypeRequest) {
+    request = &ModifyInstanceChargeTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstanceChargeType")
+    
+    
+    return
+}
+
+func NewModifyInstanceChargeTypeResponse() (response *ModifyInstanceChargeTypeResponse) {
+    response = &ModifyInstanceChargeTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceChargeType
+// 本接口用于变更实例的计费类型
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+func (c *Client) ModifyInstanceChargeType(request *ModifyInstanceChargeTypeRequest) (response *ModifyInstanceChargeTypeResponse, err error) {
+    return c.ModifyInstanceChargeTypeWithContext(context.Background(), request)
+}
+
+// ModifyInstanceChargeType
+// 本接口用于变更实例的计费类型
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+func (c *Client) ModifyInstanceChargeTypeWithContext(ctx context.Context, request *ModifyInstanceChargeTypeRequest) (response *ModifyInstanceChargeTypeResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceChargeTypeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceChargeType")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceChargeType require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceChargeTypeResponse()
     err = c.Send(request, response)
     return
 }
@@ -5227,6 +5950,7 @@ func (c *Client) ModifyInstanceEventWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyInstanceEventRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceEvent")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceEvent require credential")
@@ -5282,6 +6006,7 @@ func (c *Client) ModifyInstanceLogDeliveryWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyInstanceLogDeliveryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceLogDelivery")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceLogDelivery require credential")
@@ -5314,7 +6039,7 @@ func NewModifyInstanceParamsResponse() (response *ModifyInstanceParamsResponse) 
 }
 
 // ModifyInstanceParams
-// 本接口(ModifyInstanceParams)用于修改Redis实例的参数配置。
+// 本接口（ModifyInstanceParams）用于修改 Redis 实例的参数配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
@@ -5330,12 +6055,13 @@ func NewModifyInstanceParamsResponse() (response *ModifyInstanceParamsResponse) 
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
+//  UNSUPPORTEDOPERATION_LOWVERSION = "UnsupportedOperation.LowVersion"
 func (c *Client) ModifyInstanceParams(request *ModifyInstanceParamsRequest) (response *ModifyInstanceParamsResponse, err error) {
     return c.ModifyInstanceParamsWithContext(context.Background(), request)
 }
 
 // ModifyInstanceParams
-// 本接口(ModifyInstanceParams)用于修改Redis实例的参数配置。
+// 本接口（ModifyInstanceParams）用于修改 Redis 实例的参数配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
@@ -5351,10 +6077,12 @@ func (c *Client) ModifyInstanceParams(request *ModifyInstanceParamsRequest) (res
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
+//  UNSUPPORTEDOPERATION_LOWVERSION = "UnsupportedOperation.LowVersion"
 func (c *Client) ModifyInstanceParamsWithContext(ctx context.Context, request *ModifyInstanceParamsRequest) (response *ModifyInstanceParamsResponse, err error) {
     if request == nil {
         request = NewModifyInstanceParamsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceParams")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceParams require credential")
@@ -5363,6 +6091,74 @@ func (c *Client) ModifyInstanceParamsWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyInstanceParamsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstancePasswordRequest() (request *ModifyInstancePasswordRequest) {
+    request = &ModifyInstancePasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstancePassword")
+    
+    
+    return
+}
+
+func NewModifyInstancePasswordResponse() (response *ModifyInstancePasswordResponse) {
+    response = &ModifyInstancePasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstancePassword
+// 本接口（ModifyInstancePassword）用于修改实例访问密码。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_PASSWORDERROR = "InvalidParameterValue.PasswordError"
+//  INVALIDPARAMETERVALUE_PASSWORDRULEERROR = "InvalidParameterValue.PasswordRuleError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKEDERROR = "ResourceUnavailable.InstanceLockedError"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) ModifyInstancePassword(request *ModifyInstancePasswordRequest) (response *ModifyInstancePasswordResponse, err error) {
+    return c.ModifyInstancePasswordWithContext(context.Background(), request)
+}
+
+// ModifyInstancePassword
+// 本接口（ModifyInstancePassword）用于修改实例访问密码。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_PASSWORDERROR = "InvalidParameterValue.PasswordError"
+//  INVALIDPARAMETERVALUE_PASSWORDRULEERROR = "InvalidParameterValue.PasswordRuleError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKEDERROR = "ResourceUnavailable.InstanceLockedError"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) ModifyInstancePasswordWithContext(ctx context.Context, request *ModifyInstancePasswordRequest) (response *ModifyInstancePasswordResponse, err error) {
+    if request == nil {
+        request = NewModifyInstancePasswordRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstancePassword")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstancePassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstancePasswordResponse()
     err = c.Send(request, response)
     return
 }
@@ -5387,7 +6183,7 @@ func NewModifyInstanceReadOnlyResponse() (response *ModifyInstanceReadOnlyRespon
 }
 
 // ModifyInstanceReadOnly
-// 设置实例输入模式
+// 本接口（ModifyInstanceReadOnly）用于设置实例输入模式。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5401,7 +6197,7 @@ func (c *Client) ModifyInstanceReadOnly(request *ModifyInstanceReadOnlyRequest) 
 }
 
 // ModifyInstanceReadOnly
-// 设置实例输入模式
+// 本接口（ModifyInstanceReadOnly）用于设置实例输入模式。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5414,6 +6210,7 @@ func (c *Client) ModifyInstanceReadOnlyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyInstanceReadOnlyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstanceReadOnly")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceReadOnly require credential")
@@ -5422,6 +6219,66 @@ func (c *Client) ModifyInstanceReadOnlyWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyInstanceReadOnlyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyLogRequest() (request *ModifyLogRequest) {
+    request = &ModifyLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyLog")
+    
+    
+    return
+}
+
+func NewModifyLogResponse() (response *ModifyLogResponse) {
+    response = &ModifyLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyLog
+// 修改日志
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) ModifyLog(request *ModifyLogRequest) (response *ModifyLogResponse, err error) {
+    return c.ModifyLogWithContext(context.Background(), request)
+}
+
+// ModifyLog
+// 修改日志
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) ModifyLogWithContext(ctx context.Context, request *ModifyLogRequest) (response *ModifyLogResponse, err error) {
+    if request == nil {
+        request = NewModifyLogRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyLog")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyLog require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyLogResponse()
     err = c.Send(request, response)
     return
 }
@@ -5446,7 +6303,7 @@ func NewModifyMaintenanceWindowResponse() (response *ModifyMaintenanceWindowResp
 }
 
 // ModifyMaintenanceWindow
-// 修改实例维护时间窗时间，需要进行版本升级或者架构升级的实例，会在维护时间窗内进行时间切换。注意：已经发起版本升级或者架构升级的实例，无法修改维护时间窗。
+// 本接口（ModifyMaintenanceWindow）用于修改实例维护时间窗时间，需要进行版本升级或者架构升级的实例，会在维护时间窗内进行时间切换。注意：已经发起版本升级或者架构升级的实例，无法修改维护时间窗。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5460,7 +6317,7 @@ func (c *Client) ModifyMaintenanceWindow(request *ModifyMaintenanceWindowRequest
 }
 
 // ModifyMaintenanceWindow
-// 修改实例维护时间窗时间，需要进行版本升级或者架构升级的实例，会在维护时间窗内进行时间切换。注意：已经发起版本升级或者架构升级的实例，无法修改维护时间窗。
+// 本接口（ModifyMaintenanceWindow）用于修改实例维护时间窗时间，需要进行版本升级或者架构升级的实例，会在维护时间窗内进行时间切换。注意：已经发起版本升级或者架构升级的实例，无法修改维护时间窗。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5473,6 +6330,7 @@ func (c *Client) ModifyMaintenanceWindowWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyMaintenanceWindowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyMaintenanceWindow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyMaintenanceWindow require credential")
@@ -5550,6 +6408,7 @@ func (c *Client) ModifyNetworkConfigWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyNetworkConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyNetworkConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNetworkConfig require credential")
@@ -5582,7 +6441,7 @@ func NewModifyParamTemplateResponse() (response *ModifyParamTemplateResponse) {
 }
 
 // ModifyParamTemplate
-// 修改参数模板
+// 本接口（ModifyParamTemplate）用于修改参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5595,7 +6454,7 @@ func (c *Client) ModifyParamTemplate(request *ModifyParamTemplateRequest) (respo
 }
 
 // ModifyParamTemplate
-// 修改参数模板
+// 本接口（ModifyParamTemplate）用于修改参数模板。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5607,6 +6466,7 @@ func (c *Client) ModifyParamTemplateWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyParamTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyParamTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyParamTemplate require credential")
@@ -5639,7 +6499,7 @@ func NewModifyReplicationGroupResponse() (response *ModifyReplicationGroupRespon
 }
 
 // ModifyReplicationGroup
-// 修改复制组信息
+// 本接口（ModifyReplicationGroup）用于修改复制组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5653,7 +6513,7 @@ func (c *Client) ModifyReplicationGroup(request *ModifyReplicationGroupRequest) 
 }
 
 // ModifyReplicationGroup
-// 修改复制组信息
+// 本接口（ModifyReplicationGroup）用于修改复制组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5666,6 +6526,7 @@ func (c *Client) ModifyReplicationGroupWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyReplicationGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyReplicationGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyReplicationGroup require credential")
@@ -5674,6 +6535,66 @@ func (c *Client) ModifyReplicationGroupWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyReplicationGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewOpenLogRequest() (request *OpenLogRequest) {
+    request = &OpenLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "OpenLog")
+    
+    
+    return
+}
+
+func NewOpenLogResponse() (response *OpenLogResponse) {
+    response = &OpenLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// OpenLog
+// 开启日志
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) OpenLog(request *OpenLogRequest) (response *OpenLogResponse, err error) {
+    return c.OpenLogWithContext(context.Background(), request)
+}
+
+// OpenLog
+// 开启日志
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) OpenLogWithContext(ctx context.Context, request *OpenLogRequest) (response *OpenLogResponse, err error) {
+    if request == nil {
+        request = NewOpenLogRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "OpenLog")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenLog require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenLogResponse()
     err = c.Send(request, response)
     return
 }
@@ -5698,7 +6619,7 @@ func NewOpenSSLResponse() (response *OpenSSLResponse) {
 }
 
 // OpenSSL
-// 开启SSL
+// 本接口（OpenSSL）用于开启 SSL 加密认证功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5716,7 +6637,7 @@ func (c *Client) OpenSSL(request *OpenSSLRequest) (response *OpenSSLResponse, er
 }
 
 // OpenSSL
-// 开启SSL
+// 本接口（OpenSSL）用于开启 SSL 加密认证功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5733,6 +6654,7 @@ func (c *Client) OpenSSLWithContext(ctx context.Context, request *OpenSSLRequest
     if request == nil {
         request = NewOpenSSLRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "OpenSSL")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenSSL require credential")
@@ -5765,7 +6687,7 @@ func NewReleaseWanAddressResponse() (response *ReleaseWanAddressResponse) {
 }
 
 // ReleaseWanAddress
-// 关闭外网
+// 本接口（ReleaseWanAddress）用于关闭外网访问。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5776,7 +6698,7 @@ func (c *Client) ReleaseWanAddress(request *ReleaseWanAddressRequest) (response 
 }
 
 // ReleaseWanAddress
-// 关闭外网
+// 本接口（ReleaseWanAddress）用于关闭外网访问。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5786,6 +6708,7 @@ func (c *Client) ReleaseWanAddressWithContext(ctx context.Context, request *Rele
     if request == nil {
         request = NewReleaseWanAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ReleaseWanAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReleaseWanAddress require credential")
@@ -5794,6 +6717,72 @@ func (c *Client) ReleaseWanAddressWithContext(ctx context.Context, request *Rele
     request.SetContext(ctx)
     
     response = NewReleaseWanAddressResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRemoveReplicationGroupRequest() (request *RemoveReplicationGroupRequest) {
+    request = &RemoveReplicationGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "RemoveReplicationGroup")
+    
+    
+    return
+}
+
+func NewRemoveReplicationGroupResponse() (response *RemoveReplicationGroupResponse) {
+    response = &RemoveReplicationGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RemoveReplicationGroup
+// 本接口（RemoveReplicationGroup）用于删除复制组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_NETWORKERR = "InternalError.NetWorkErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) RemoveReplicationGroup(request *RemoveReplicationGroupRequest) (response *RemoveReplicationGroupResponse, err error) {
+    return c.RemoveReplicationGroupWithContext(context.Background(), request)
+}
+
+// RemoveReplicationGroup
+// 本接口（RemoveReplicationGroup）用于删除复制组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INTERNALERROR_NETWORKERR = "InternalError.NetWorkErr"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) RemoveReplicationGroupWithContext(ctx context.Context, request *RemoveReplicationGroupRequest) (response *RemoveReplicationGroupResponse, err error) {
+    if request == nil {
+        request = NewRemoveReplicationGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "RemoveReplicationGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveReplicationGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRemoveReplicationGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -5818,7 +6807,7 @@ func NewRemoveReplicationInstanceResponse() (response *RemoveReplicationInstance
 }
 
 // RemoveReplicationInstance
-// 移除复制组成员
+// 本接口（RemoveReplicationInstance）用于移除复制组中的实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5835,7 +6824,7 @@ func (c *Client) RemoveReplicationInstance(request *RemoveReplicationInstanceReq
 }
 
 // RemoveReplicationInstance
-// 移除复制组成员
+// 本接口（RemoveReplicationInstance）用于移除复制组中的实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5851,6 +6840,7 @@ func (c *Client) RemoveReplicationInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewRemoveReplicationInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "RemoveReplicationInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveReplicationInstance require credential")
@@ -5918,6 +6908,7 @@ func (c *Client) RenewInstanceWithContext(ctx context.Context, request *RenewIns
     if request == nil {
         request = NewRenewInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "RenewInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewInstance require credential")
@@ -5950,7 +6941,7 @@ func NewResetPasswordResponse() (response *ResetPasswordResponse) {
 }
 
 // ResetPassword
-// 重置密码
+// 本接口（ResetPassword）用于重置实例访问密码。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5968,7 +6959,7 @@ func (c *Client) ResetPassword(request *ResetPasswordRequest) (response *ResetPa
 }
 
 // ResetPassword
-// 重置密码
+// 本接口（ResetPassword）用于重置实例访问密码。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -5985,6 +6976,7 @@ func (c *Client) ResetPasswordWithContext(ctx context.Context, request *ResetPas
     if request == nil {
         request = NewResetPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ResetPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetPassword require credential")
@@ -6017,7 +7009,7 @@ func NewRestoreInstanceResponse() (response *RestoreInstanceResponse) {
 }
 
 // RestoreInstance
-// 恢复 CRS 实例
+// 本接口（RestoreInstance）用于恢复实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6039,7 +7031,7 @@ func (c *Client) RestoreInstance(request *RestoreInstanceRequest) (response *Res
 }
 
 // RestoreInstance
-// 恢复 CRS 实例
+// 本接口（RestoreInstance）用于恢复实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6060,6 +7052,7 @@ func (c *Client) RestoreInstanceWithContext(ctx context.Context, request *Restor
     if request == nil {
         request = NewRestoreInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "RestoreInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestoreInstance require credential")
@@ -6092,7 +7085,7 @@ func NewStartupInstanceResponse() (response *StartupInstanceResponse) {
 }
 
 // StartupInstance
-// 实例解隔离
+// 本接口（StartupInstance）用于实例解隔离。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
@@ -6110,7 +7103,7 @@ func (c *Client) StartupInstance(request *StartupInstanceRequest) (response *Sta
 }
 
 // StartupInstance
-// 实例解隔离
+// 本接口（StartupInstance）用于实例解隔离。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
@@ -6127,6 +7120,7 @@ func (c *Client) StartupInstanceWithContext(ctx context.Context, request *Startu
     if request == nil {
         request = NewStartupInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "StartupInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartupInstance require credential")
@@ -6184,6 +7178,7 @@ func (c *Client) SwitchAccessNewInstanceWithContext(ctx context.Context, request
     if request == nil {
         request = NewSwitchAccessNewInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "SwitchAccessNewInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchAccessNewInstance require credential")
@@ -6216,7 +7211,7 @@ func NewSwitchInstanceVipResponse() (response *SwitchInstanceVipResponse) {
 }
 
 // SwitchInstanceVip
-// 在通过DTS支持跨可用区灾备的场景中，通过该接口交换实例VIP完成实例灾备切换。交换VIP后目标实例可写，源和目标实例VIP互换，同时源与目标实例间DTS同步任务断开
+// 在通过 DTS 支持跨可用区灾备的场景中，通过该接口（SwitchInstanceVip）交换实例 VIP 完成实例灾备切换。交换 VIP 后目标实例可写，源和目标实例VIP互换，同时源与目标实例间 DTS 同步任务断开。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DTSSTATUSABNORMAL = "FailedOperation.DtsStatusAbnormal"
@@ -6232,7 +7227,7 @@ func (c *Client) SwitchInstanceVip(request *SwitchInstanceVipRequest) (response 
 }
 
 // SwitchInstanceVip
-// 在通过DTS支持跨可用区灾备的场景中，通过该接口交换实例VIP完成实例灾备切换。交换VIP后目标实例可写，源和目标实例VIP互换，同时源与目标实例间DTS同步任务断开
+// 在通过 DTS 支持跨可用区灾备的场景中，通过该接口（SwitchInstanceVip）交换实例 VIP 完成实例灾备切换。交换 VIP 后目标实例可写，源和目标实例VIP互换，同时源与目标实例间 DTS 同步任务断开。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DTSSTATUSABNORMAL = "FailedOperation.DtsStatusAbnormal"
@@ -6247,6 +7242,7 @@ func (c *Client) SwitchInstanceVipWithContext(ctx context.Context, request *Swit
     if request == nil {
         request = NewSwitchInstanceVipRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "SwitchInstanceVip")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchInstanceVip require credential")
@@ -6279,7 +7275,7 @@ func NewSwitchProxyResponse() (response *SwitchProxyResponse) {
 }
 
 // SwitchProxy
-// Proxy模拟故障接口
+// 本接口（SwitchProxy）为 Proxy 模拟故障接口。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6293,7 +7289,7 @@ func (c *Client) SwitchProxy(request *SwitchProxyRequest) (response *SwitchProxy
 }
 
 // SwitchProxy
-// Proxy模拟故障接口
+// 本接口（SwitchProxy）为 Proxy 模拟故障接口。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6306,6 +7302,7 @@ func (c *Client) SwitchProxyWithContext(ctx context.Context, request *SwitchProx
     if request == nil {
         request = NewSwitchProxyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "SwitchProxy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchProxy require credential")
@@ -6349,6 +7346,7 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 //  INVALIDPARAMETERVALUE_MEMSIZENOTINRANGE = "InvalidParameterValue.MemSizeNotInRange"
 //  INVALIDPARAMETERVALUE_REDUCECAPACITYNOTALLOWED = "InvalidParameterValue.ReduceCapacityNotAllowed"
 //  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -6358,6 +7356,7 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  RESOURCEUNAVAILABLE_SALEOUT = "ResourceUnavailable.SaleOut"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_LOWVERSION = "UnsupportedOperation.LowVersion"
 func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *UpgradeInstanceResponse, err error) {
     return c.UpgradeInstanceWithContext(context.Background(), request)
 }
@@ -6374,6 +7373,7 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 //  INVALIDPARAMETERVALUE_MEMSIZENOTINRANGE = "InvalidParameterValue.MemSizeNotInRange"
 //  INVALIDPARAMETERVALUE_REDUCECAPACITYNOTALLOWED = "InvalidParameterValue.ReduceCapacityNotAllowed"
 //  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
+//  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -6383,10 +7383,12 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  RESOURCEUNAVAILABLE_SALEOUT = "ResourceUnavailable.SaleOut"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNSUPPORTEDOPERATION_LOWVERSION = "UnsupportedOperation.LowVersion"
 func (c *Client) UpgradeInstanceWithContext(ctx context.Context, request *UpgradeInstanceRequest) (response *UpgradeInstanceResponse, err error) {
     if request == nil {
         request = NewUpgradeInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "UpgradeInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeInstance require credential")
@@ -6419,7 +7421,7 @@ func NewUpgradeInstanceVersionResponse() (response *UpgradeInstanceVersionRespon
 }
 
 // UpgradeInstanceVersion
-// 将当前实例升级到更高版本，或者将当前标准架构升级至集群架构。
+// 本接口（UpgradeInstanceVersion）用于将当前实例升级到更高版本，或者将当前标准架构升级至集群架构。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6432,7 +7434,7 @@ func (c *Client) UpgradeInstanceVersion(request *UpgradeInstanceVersionRequest) 
 }
 
 // UpgradeInstanceVersion
-// 将当前实例升级到更高版本，或者将当前标准架构升级至集群架构。
+// 本接口（UpgradeInstanceVersion）用于将当前实例升级到更高版本，或者将当前标准架构升级至集群架构。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6444,6 +7446,7 @@ func (c *Client) UpgradeInstanceVersionWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpgradeInstanceVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "UpgradeInstanceVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeInstanceVersion require credential")
@@ -6476,7 +7479,7 @@ func NewUpgradeProxyVersionResponse() (response *UpgradeProxyVersionResponse) {
 }
 
 // UpgradeProxyVersion
-// 实例proxy版本升级
+// 本接口（UpgradeProxyVersion）用于升级实例 Proxy 版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6487,7 +7490,7 @@ func (c *Client) UpgradeProxyVersion(request *UpgradeProxyVersionRequest) (respo
 }
 
 // UpgradeProxyVersion
-// 实例proxy版本升级
+// 本接口（UpgradeProxyVersion）用于升级实例 Proxy 版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6497,6 +7500,7 @@ func (c *Client) UpgradeProxyVersionWithContext(ctx context.Context, request *Up
     if request == nil {
         request = NewUpgradeProxyVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "UpgradeProxyVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeProxyVersion require credential")
@@ -6529,7 +7533,7 @@ func NewUpgradeSmallVersionResponse() (response *UpgradeSmallVersionResponse) {
 }
 
 // UpgradeSmallVersion
-// 实例小版本升级
+// 本接口（UpgradeSmallVersion）用于实例小版本升级。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6541,7 +7545,7 @@ func (c *Client) UpgradeSmallVersion(request *UpgradeSmallVersionRequest) (respo
 }
 
 // UpgradeSmallVersion
-// 实例小版本升级
+// 本接口（UpgradeSmallVersion）用于实例小版本升级。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6552,6 +7556,7 @@ func (c *Client) UpgradeSmallVersionWithContext(ctx context.Context, request *Up
     if request == nil {
         request = NewUpgradeSmallVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "UpgradeSmallVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeSmallVersion require credential")
@@ -6584,7 +7589,7 @@ func NewUpgradeVersionToMultiAvailabilityZonesResponse() (response *UpgradeVersi
 }
 
 // UpgradeVersionToMultiAvailabilityZones
-// 升级实例支持多AZ
+// 本接口已废弃。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6598,7 +7603,7 @@ func (c *Client) UpgradeVersionToMultiAvailabilityZones(request *UpgradeVersionT
 }
 
 // UpgradeVersionToMultiAvailabilityZones
-// 升级实例支持多AZ
+// 本接口已废弃。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -6611,6 +7616,7 @@ func (c *Client) UpgradeVersionToMultiAvailabilityZonesWithContext(ctx context.C
     if request == nil {
         request = NewUpgradeVersionToMultiAvailabilityZonesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "UpgradeVersionToMultiAvailabilityZones")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeVersionToMultiAvailabilityZones require credential")

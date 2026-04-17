@@ -1470,6 +1470,60 @@ func (me *ClsService) ClsCloudProductLogTaskStateRefreshFunc(ctx context.Context
 	}
 }
 
+func (me *ClsService) DescribeClsNoticeContentsByFilter(ctx context.Context, filters []*cls.Filter) (items []*cls.NoticeContentTemplate, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeNoticeContentsRequest()
+	request.Limit = helper.Int64(100)
+	request.Offset = helper.Int64(0)
+	request.Filters = filters
+
+	items = make([]*cls.NoticeContentTemplate, 0)
+
+	var (
+		total     int64
+		pageItems []*cls.NoticeContentTemplate
+	)
+
+	for {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, e := me.client.UseClsClient().DescribeNoticeContents(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if response == nil || response.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("describe cls notice contents failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+			if response.Response.TotalCount != nil {
+				total = *response.Response.TotalCount
+			}
+
+			pageItems = response.Response.NoticeContents
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		items = append(items, pageItems...)
+
+		if int64(len(items)) >= total {
+			break
+		}
+
+		*request.Offset += *request.Limit
+	}
+
+	return
+}
+
 func (me *ClsService) DescribeClsNoticeContentById(ctx context.Context, noticeContentId string) (ret *cls.NoticeContentTemplate, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

@@ -2,15 +2,19 @@ Use this data source to query detailed information of CAM policies
 
 Example Usage
 
-```hcl
-# query by policy_id
-data "tencentcloud_cam_policies" "foo" {
-  policy_id = tencentcloud_cam_policy.foo.id
-}
+Query all policies
 
-# query by policy_id and name
-data "tencentcloud_cam_policies" "bar" {
-  policy_id = tencentcloud_cam_policy.foo.id
-  name      = "tf-auto-test"
+```hcl
+data "tencentcloud_cam_policies" "example" {}
+```
+
+Query policies by filter
+
+```hcl
+data "tencentcloud_cam_policies" "example" {
+  name        = "tf-example"
+  policy_id   = "236215899"
+  type        = 1
+  create_mode = 2
 }
 ```

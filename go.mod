@@ -63,6 +63,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1115
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs v1.3.58
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.1145
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777
@@ -74,7 +76,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.63
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.1.42
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.1008
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.3.73
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.1034
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748
@@ -92,7 +94,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.46
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.38
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.53
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.79
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.857
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
@@ -107,6 +109,7 @@ require (
 )
 
 require (
+	github.com/agiledragon/gomonkey/v2 v2.14.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.68

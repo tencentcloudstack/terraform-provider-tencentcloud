@@ -234,10 +234,9 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 			"charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				Default:      REDIS_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{REDIS_CHARGE_TYPE_POSTPAID, REDIS_CHARGE_TYPE_PREPAID}),
-				Description:  "The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
+				Description:  "The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,
@@ -740,13 +739,36 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	d.Partial(true)
 
 	unsupportedUpdateFields := []string{
-		"prepaid_period",
 		"product_version",
 		"redis_cluster_id",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
 			return fmt.Errorf("tencentcloud_redis_instance update on %s is not support yet", field)
+		}
+	}
+
+	// charge_type
+	if d.HasChange("charge_type") {
+		newChargeType := d.Get("charge_type").(string)
+		period := 0
+		if newChargeType == REDIS_CHARGE_TYPE_PREPAID {
+			if v, ok := d.GetOk("prepaid_period"); ok {
+				period = v.(int)
+			} else {
+				return fmt.Errorf("prepaid_period must be set when charge_type is changed to PREPAID")
+			}
+		}
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			e := redisService.ModifyInstanceChargeType(ctx, id, newChargeType, period)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s redis ModifyInstanceChargeType error, reason:%s\n", logId, err.Error())
+			return err
 		}
 	}
 

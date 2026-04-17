@@ -258,9 +258,18 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 							Description:  "The image type. personal or enterprise.",
 						},
 						"image_uri": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The uri of image.",
+							Type:     schema.TypeString,
+							Required: true,
+							DiffSuppressFunc: func(k, oldVal, newVal string, d *schema.ResourceData) bool {
+								// oldVal is the API-returned value (always Format C: repo:tag@sha256:digest)
+								// newVal is the user-supplied config (Format A, B, or C)
+								// Suppress diff when they represent the same image.
+								return normalizeImageUri(oldVal, newVal) == newVal
+							},
+							Description: "The uri of image. Supports three formats:\n" +
+								"  - Format A: registry/repo:tag\n" +
+								"  - Format B: registry/repo@sha256:digest\n" +
+								"  - Format C: registry/repo:tag@sha256:digest.",
 						},
 						"registry_id": {
 							Type:        schema.TypeString,
@@ -1469,4 +1478,58 @@ func resourceTencentCloudScfFunctionDelete(d *schema.ResourceData, m interface{}
 	namespace, name := split[0], split[1]
 
 	return service.DeleteFunction(ctx, name, namespace)
+}
+
+// normalizeImageUri aligns the API-returned image URI (always Format C: registry/repo:tag@sha256:digest)
+// with the user-supplied format to prevent false plan diffs.
+//
+// Three valid user input formats:
+//
+//	A: registry/repo:tag
+//	B: registry/repo@sha256:digest
+//	C: registry/repo:tag@sha256:digest  ← what the API always returns
+func normalizeImageUri(apiValue, userValue string) string {
+	if apiValue == "" || userValue == "" {
+		return apiValue
+	}
+
+	// Determine format by checking whether the substring BEFORE "@" contains ":"
+	// Format C: "@" present AND part-before-"@" contains ":" (e.g. repo:tag@sha256:...)
+	// Format B: "@" present AND part-before-"@" has NO ":"   (e.g. repo@sha256:...)
+	// Format A: no "@" at all                                (e.g. repo:tag)
+	atIdx := strings.Index(userValue, "@")
+	if atIdx != -1 && strings.Contains(userValue[:atIdx], ":") {
+		// Format C: user already provided tag + digest, no normalization needed
+		return apiValue
+	}
+
+	// Parse the API value (always Format C): "registry/repo:tag@sha256:digest"
+	apiAtIdx := strings.LastIndex(apiValue, "@")
+	if apiAtIdx == -1 {
+		return apiValue
+	}
+	apiRepoTag := apiValue[:apiAtIdx]  // "registry/repo:tag"
+	apiDigest := apiValue[apiAtIdx+1:] // "sha256:digest"
+
+	apiColonIdx := strings.LastIndex(apiRepoTag, ":")
+	apiRepoOnly := apiRepoTag
+	if apiColonIdx != -1 {
+		apiRepoOnly = apiRepoTag[:apiColonIdx] // "registry/repo"
+	}
+
+	// Format A: no "@" → strip "@sha256:…" if repo:tag matches
+	if atIdx == -1 {
+		if apiRepoTag == userValue {
+			return userValue
+		}
+		return apiValue
+	}
+
+	// Format B: "@" present but no ":" before "@" → strip ":tag" if repo and digest match
+	userRepo := userValue[:atIdx]
+	userDigest := userValue[atIdx+1:]
+	if apiRepoOnly == userRepo && apiDigest == userDigest {
+		return userRepo + "@" + apiDigest
+	}
+	return apiValue
 }

@@ -262,6 +262,7 @@ tencentcloud_cam_oidc_config
 tencentcloud_cam_group_user_account
 tencentcloud_cam_sub_accounts
 tencentcloud_cam_role_detail
+tencentcloud_cam_policy_detail
 
 Resource
 tencentcloud_cam_role
@@ -724,6 +725,7 @@ tencentcloud_kubernetes_user_permissions
 tencentcloud_kubernetes_global_maintenance_window_and_exclusion
 tencentcloud_kubernetes_cluster_maintenance_window_and_exclusion
 tencentcloud_kubernetes_cancel_upgrade_plan_operation
+tencentcloud_kubernetes_cluster_scheduler_policy_config
 
 TDMQ for Pulsar(tpulsar)
 Data Source
@@ -959,6 +961,7 @@ tencentcloud_postgresql_clone_db_instance
 tencentcloud_postgresql_instance_network_access
 tencentcloud_postgresql_parameters
 tencentcloud_postgresql_instance_ssl_config
+tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
 
 TencentDB for Redis(crs)
@@ -1475,6 +1478,7 @@ tencentcloud_cls_dlc_deliver
 Data Source
 tencentcloud_cls_shipper_tasks
 tencentcloud_cls_machines
+tencentcloud_cls_notice_contents
 tencentcloud_cls_machine_group_configs
 tencentcloud_cls_logsets
 tencentcloud_cls_topics
@@ -1570,6 +1574,7 @@ tencentcloud_teo_customize_error_page
 tencentcloud_teo_origin_acl
 tencentcloud_teo_ddos_protection_config
 tencentcloud_teo_config_group_version
+tencentcloud_teo_create_cls_index_operation
 tencentcloud_teo_deploy_config_group_version
 
 TencentCloud ServiceMesh(TCM)
@@ -2617,3 +2622,11 @@ tencentcloud_config_remediation
 tencentcloud_config_start_config_rule_evaluation_operation
 tencentcloud_config_deliver_config
 tencentcloud_config_recorder_config
+
+GS
+Data Source
+tencentcloud_gs_android_instances
+
+KeeWiDB
+Data Source
+tencentcloud_keewidb_instances
