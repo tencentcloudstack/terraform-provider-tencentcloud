@@ -63,6 +63,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1115
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs v1.3.58
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.1145
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777
@@ -107,6 +109,7 @@ require (
 )
 
 require (
+	github.com/agiledragon/gomonkey/v2 v2.14.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.68
@@ -145,7 +148,6 @@ require (
 	github.com/GaijinEntertainment/go-exhaustruct/v2 v2.3.0 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OpenPeeDeeP/depguard v1.1.1 // indirect
-	github.com/agiledragon/gomonkey/v2 v2.14.0 // indirect
 	github.com/alexkohler/prealloc v1.0.0 // indirect
 	github.com/alingse/asasalint v0.0.11 // indirect
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883 // indirect

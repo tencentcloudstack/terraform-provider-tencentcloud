@@ -2619,3 +2619,11 @@ tencentcloud_config_remediation
 tencentcloud_config_start_config_rule_evaluation_operation
 tencentcloud_config_deliver_config
 tencentcloud_config_recorder_config
+
+GS
+Data Source
+tencentcloud_gs_android_instances
+
+KeeWiDB
+Data Source
+tencentcloud_keewidb_instances
