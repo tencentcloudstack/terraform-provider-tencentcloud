@@ -68,8 +68,10 @@ import (
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
 	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
 	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
+	keewidbv20220308 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -256,6 +258,8 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	gsv20191118Conn             *gsv20191118.Client
+	keewidbv20220308Conn        *keewidbv20220308.Client
 	vdbv20230616Conn            *vdbv20230616.Client
 	bhv20230418Conn             *bhv20230418.Client
 	vcubev20220410Conn          *vcubev20220410.Client
@@ -2249,4 +2253,28 @@ func (me *TencentCloudClient) UseVdbV20230616Client() *vdbv20230616.Client {
 	me.vdbv20230616Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.vdbv20230616Conn
+}
+
+// UseGsV20191118Client return GS client for service
+func (me *TencentCloudClient) UseGsV20191118Client() *gsv20191118.Client {
+	if me.gsv20191118Conn != nil {
+		return me.gsv20191118Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.gsv20191118Conn, _ = gsv20191118.NewClient(me.Credential, me.Region, cpf)
+	me.gsv20191118Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.gsv20191118Conn
+}
+
+// UseKeewidbV20220308Client return KeeWiDB client for service
+func (me *TencentCloudClient) UseKeewidbV20220308Client() *keewidbv20220308.Client {
+	if me.keewidbv20220308Conn != nil {
+		return me.keewidbv20220308Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.keewidbv20220308Conn, _ = keewidbv20220308.NewClient(me.Credential, me.Region, cpf)
+	me.keewidbv20220308Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.keewidbv20220308Conn
 }
