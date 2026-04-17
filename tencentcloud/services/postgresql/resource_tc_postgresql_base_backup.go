@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -24,6 +25,9 @@ func ResourceTencentCloudPostgresqlBaseBackup() *schema.Resource {
 		Delete: resourceTencentCloudPostgresqlBaseBackupDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(15 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
@@ -113,7 +117,7 @@ func resourceTencentCloudPostgresqlBaseBackupCreate(d *schema.ResourceData, meta
 		},
 	}
 
-	err = resource.Retry(tccommon.ReadRetryTimeout*10, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DescribeBaseBackupsWithContext(ctx, waitReq)
 		if e != nil {
 			return tccommon.RetryError(e)
