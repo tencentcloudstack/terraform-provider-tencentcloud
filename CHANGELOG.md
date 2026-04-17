@@ -1,3 +1,22 @@
+## 1.82.88(April 17, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cam_policy_detail` ([#4034](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4034))
+* **New Data Source:** `tencentcloud_gs_android_instances` ([#4038](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4038))
+* **New Data Source:** `tencentcloud_keewidb_instances` ([#4038](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4038))
+* **New Resource:** `tencentcloud_kubernetes_cluster_scheduler_policy_config` ([#4031](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4031))
+* **New Resource:** `tencentcloud_postgresql_restore_db_instance_objects_operation` ([#4037](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4037))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_storage: support change `storage_type` ([#4032](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4032))
+* resource/tencentcloud_mongodb_instance_srv_connection: optimize field `domain` ([#4035](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4035))
+* resource/tencentcloud_postgresql_base_backup: support `new_expire_time` in create step ([#4036](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4036))
+* resource/tencentcloud_redis_instance: update doc ([#4040](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4040))
+* resource/tencentcloud_scf_function: optimize the logic of `image_uri` ([#4039](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4039))
+* resource/tencentcloud_vpc_bandwidth_package: Adjusted Name Modification, Deprecated Tags, and Added Tags. ([#4029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4029))
+
 ## 1.82.87(April 15, 2026)
 
 FEATURES:
