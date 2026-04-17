@@ -1581,6 +1581,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_global_maintenance_window_and_exclusion":                       tke.ResourceTencentCloudKubernetesGlobalMaintenanceWindowAndExclusion(),
 			"tencentcloud_kubernetes_cluster_maintenance_window_and_exclusion":                      tke.ResourceTencentCloudKubernetesClusterMaintenanceWindowAndExclusion(),
 			"tencentcloud_kubernetes_cancel_upgrade_plan_operation":                                 tke.ResourceTencentCloudKubernetesCancelUpgradePlanOperation(),
+			"tencentcloud_kubernetes_cluster_scheduler_policy_config":                               tke.ResourceTencentCloudKubernetesClusterSchedulerPolicyConfig(),
 			"tencentcloud_mysql_backup_policy":                                                      cdb.ResourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                                            cdb.ResourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                                                  cdb.ResourceTencentCloudMysqlAccountPrivilege(),

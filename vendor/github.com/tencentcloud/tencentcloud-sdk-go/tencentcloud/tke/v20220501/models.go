@@ -607,6 +607,9 @@ type DescribeClusterInstancesRequestParams struct {
 
 	// 排序信息
 	SortBy *SortBy `json:"SortBy,omitnil,omitempty" name:"SortBy"`
+
+	// 是否返回节点云标签
+	NeedTags *bool `json:"NeedTags,omitnil,omitempty" name:"NeedTags"`
 }
 
 type DescribeClusterInstancesRequest struct {
@@ -627,6 +630,9 @@ type DescribeClusterInstancesRequest struct {
 
 	// 排序信息
 	SortBy *SortBy `json:"SortBy,omitnil,omitempty" name:"SortBy"`
+
+	// 是否返回节点云标签
+	NeedTags *bool `json:"NeedTags,omitnil,omitempty" name:"NeedTags"`
 }
 
 func (r *DescribeClusterInstancesRequest) ToJsonString() string {
@@ -646,6 +652,7 @@ func (r *DescribeClusterInstancesRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Filters")
 	delete(f, "SortBy")
+	delete(f, "NeedTags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterInstancesRequest has unknown keys!", "")
 	}
@@ -969,6 +976,71 @@ func (r *DescribeClustersResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeClustersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGPUInfoRequestParams struct {
+	// 实例机型名称，默认值""
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 操作系统oskey，默认值""
+	OsName *string `json:"OsName,omitnil,omitempty" name:"OsName"`
+}
+
+type DescribeGPUInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例机型名称，默认值""
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 操作系统oskey，默认值""
+	OsName *string `json:"OsName,omitnil,omitempty" name:"OsName"`
+}
+
+func (r *DescribeGPUInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGPUInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceType")
+	delete(f, "OsName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGPUInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGPUInfoResponseParams struct {
+	// GPU相关配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GPUParams []*GPUParams `json:"GPUParams,omitnil,omitempty" name:"GPUParams"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGPUInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGPUInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeGPUInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGPUInfoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1318,6 +1390,60 @@ func (r *DescribeNodePoolsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeNodePoolsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeZoneInstanceConfigInfosRequestParams struct {
+	// 机型过滤设置
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeZoneInstanceConfigInfosRequest struct {
+	*tchttp.BaseRequest
+	
+	// 机型过滤设置
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeZoneInstanceConfigInfosRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeZoneInstanceConfigInfosRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeZoneInstanceConfigInfosRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeZoneInstanceConfigInfosResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeZoneInstanceConfigInfosResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeZoneInstanceConfigInfosResponseParams `json:"Response"`
+}
+
+func (r *DescribeZoneInstanceConfigInfosResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeZoneInstanceConfigInfosResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2104,6 +2230,10 @@ type NativeNodeInfo struct {
 	// - eks-f8mvyaep 表示这个实例是一个 CXM 的实例
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 原生节点云标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type NativeNodePoolInfo struct {
@@ -2333,6 +2463,10 @@ type RegularNodeInfo struct {
 	// 自动伸缩组ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoscalingGroupId *string `json:"AutoscalingGroupId,omitnil,omitempty" name:"AutoscalingGroupId"`
+
+	// 普通节点云标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type RegularNodePoolInfo struct {
@@ -2382,6 +2516,74 @@ type RuntimeConfig struct {
 	// 运行时根目录
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuntimeRootDir *string `json:"RuntimeRootDir,omitnil,omitempty" name:"RuntimeRootDir"`
+}
+
+// Predefined struct for user
+type ScaleNodePoolRequestParams struct {
+	// <p>集群 ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>节点池 ID</p>
+	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
+
+	// <p>期望节点数</p>
+	Replicas *int64 `json:"Replicas,omitnil,omitempty" name:"Replicas"`
+}
+
+type ScaleNodePoolRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群 ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>节点池 ID</p>
+	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
+
+	// <p>期望节点数</p>
+	Replicas *int64 `json:"Replicas,omitnil,omitempty" name:"Replicas"`
+}
+
+func (r *ScaleNodePoolRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleNodePoolRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "NodePoolId")
+	delete(f, "Replicas")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ScaleNodePoolRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ScaleNodePoolResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ScaleNodePoolResponse struct {
+	*tchttp.BaseResponse
+	Response *ScaleNodePoolResponseParams `json:"Response"`
+}
+
+func (r *ScaleNodePoolResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleNodePoolResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -2651,6 +2853,15 @@ type SuperNodeInfo struct {
 	// 实例属性
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceAttribute *string `json:"InstanceAttribute,omitnil,omitempty" name:"InstanceAttribute"`
+
+	// 节点名称
+	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
+
+	// 包销时长
+	Duration *string `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// 预付费资源ID
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 }
 
 type SuperNodePoolInfo struct {

@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.52
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.58
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.75
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.79
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.75
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.69
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
@@ -92,7 +92,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.46
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.38
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.53
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.79
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.857
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
@@ -107,6 +107,7 @@ require (
 )
 
 require (
+	github.com/agiledragon/gomonkey/v2 v2.14.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.68
@@ -145,7 +146,6 @@ require (
 	github.com/GaijinEntertainment/go-exhaustruct/v2 v2.3.0 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OpenPeeDeeP/depguard v1.1.1 // indirect
-	github.com/agiledragon/gomonkey/v2 v2.14.0 // indirect
 	github.com/alexkohler/prealloc v1.0.0 // indirect
 	github.com/alingse/asasalint v0.0.11 // indirect
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883 // indirect
