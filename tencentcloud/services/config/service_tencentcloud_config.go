@@ -391,6 +391,7 @@ func (me *ConfigService) DescribeConfigAlarmPolicyById(ctx context.Context, alar
 
 	request := configv20220802.NewListAlarmPolicyRequest()
 	request.Offset = helper.Uint64(0)
+	request.Limit = helper.Uint64(200)
 
 	defer func() {
 		if errRet != nil {
