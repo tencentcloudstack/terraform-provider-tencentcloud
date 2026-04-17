@@ -369,7 +369,7 @@ The following arguments are supported:
 * `availability_zone` - (Required, String, ForceNew) The available zone of an instance to be created, like `ap-beijing-7`, please refer to `tencentcloud_redis_zone_config.list`.
 * `mem_size` - (Required, Int) The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding. `512MB` is supported only in master-slave instance.
 * `auto_renew_flag` - (Optional, Int, ForceNew) Auto-renew flag. 0 - default state (manual renewal); 1 - automatic renewal; 2 - explicit no automatic renewal.
-* `charge_type` - (Optional, String) The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Modification of this field takes effect immediately without instance recreation.
+* `charge_type` - (Optional, String) The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`.
 * `force_delete` - (Optional, Bool) Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
 * `ip` - (Optional, String) IP address of an instance. When the `operation_network` is `changeVip`, this parameter needs to be configured.
 * `name` - (Optional, String) Instance name.
