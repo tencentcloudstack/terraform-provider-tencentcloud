@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"log"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -88,7 +89,8 @@ func resourceTencentCloudMongodbInstanceSrvConnectionRead(d *schema.ResourceData
 	_ = d.Set("instance_id", instanceId)
 
 	if domain != nil {
-		_ = d.Set("domain", domain)
+		prefix := strings.SplitN(*domain, ".", 2)[0]
+		_ = d.Set("domain", prefix)
 	}
 
 	return nil
