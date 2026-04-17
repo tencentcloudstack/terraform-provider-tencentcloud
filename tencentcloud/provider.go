@@ -2543,6 +2543,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_config_start_config_rule_evaluation_operation":                            config.ResourceTencentCloudConfigStartConfigRuleEvaluationOperation(),
 			"tencentcloud_config_deliver_config":                                                    config.ResourceTencentCloudConfigDeliverConfig(),
 			"tencentcloud_config_recorder_config":                                                   config.ResourceTencentCloudConfigRecorderConfig(),
+			"tencentcloud_config_alarm_policy":                                                      config.ResourceTencentCloudConfigAlarmPolicy(),
+			"tencentcloud_config_rule":                                                              config.ResourceTencentCloudConfigRule(),
 			"tencentcloud_bh_acl":                                                                   bh.ResourceTencentCloudBhAcl(),
 			"tencentcloud_bh_access_white_list_rule":                                                bh.ResourceTencentCloudBhAccessWhiteListRule(),
 			"tencentcloud_bh_access_white_list_config":                                              bh.ResourceTencentCloudBhAccessWhiteListConfig(),
