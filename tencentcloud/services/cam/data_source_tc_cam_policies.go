@@ -50,6 +50,11 @@ func DataSourceTencentCloudCamPolicies() *schema.Resource {
 				Optional:    true,
 				Description: "Available values are 'All', 'QCS', and' Local '.' All 'retrieves all policies,' QCS' retrieves preset policies, 'Local' retrieves custom policies, and defaults to 'All'.",
 			},
+			"key_word": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Match by strategy name.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -137,6 +142,9 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 	}
 	if v, ok := d.GetOk("scope"); ok {
 		params["Scope"] = v.(string)
+	}
+	if v, ok := d.GetOk("key_word"); ok {
+		params["Keyword"] = v.(string)
 	}
 
 	camService := CamService{

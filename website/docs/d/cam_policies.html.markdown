@@ -36,6 +36,7 @@ The following arguments are supported:
 
 * `create_mode` - (Optional, Int) Mode of creation of policy strategy. Valid values: `1`, `2`. `1` means policy was created with console, and `2` means it was created by strategies.
 * `description` - (Optional, String) The description of the CAM policy.
+* `key_word` - (Optional, String) Match by strategy name.
 * `name` - (Optional, String) Name of the CAM policy to be queried.
 * `policy_id` - (Optional, String) ID of CAM policy to be queried.
 * `result_output_file` - (Optional, String) Used to save results.

@@ -803,6 +803,9 @@ func (me *CamService) DescribePoliciesByFilter(ctx context.Context, params map[s
 		if k == "Scope" {
 			request.Scope = helper.String(v.(string))
 		}
+		if k == "Keyword" {
+			request.Keyword = helper.String(v.(string))
+		}
 	}
 	policies = make([]*cam.StrategyInfo, 0)
 	for {
