@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_gs_android_instances
+```
+
+```release-note:new-data-source
+tencentcloud_keewidb_instances
+```
