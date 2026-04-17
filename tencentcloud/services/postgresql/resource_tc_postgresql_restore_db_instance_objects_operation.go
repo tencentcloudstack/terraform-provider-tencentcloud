@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,6 +19,9 @@ func ResourceTencentCloudPostgresqlRestoreDbInstanceObjectsOperation() *schema.R
 		Create: resourceTencentCloudPostgresqlRestoreDbInstanceObjectsOperationCreate,
 		Read:   resourceTencentCloudPostgresqlRestoreDbInstanceObjectsOperationRead,
 		Delete: resourceTencentCloudPostgresqlRestoreDbInstanceObjectsOperationDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(10 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
 				Type:        schema.TypeString,
@@ -114,7 +118,7 @@ func resourceTencentCloudPostgresqlRestoreDbInstanceObjectsOperationCreate(d *sc
 	// Poll DescribeTasks until Status == "Success"
 	flowRequest := postgresqlv20170312.NewDescribeTasksRequest()
 	flowRequest.TaskId = helper.Int64Uint64(taskId)
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client().DescribeTasksWithContext(ctx, flowRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
