@@ -6,13 +6,18 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
 func resourceTencentCloudTeoAccelerationDomainCreatePostHandleResponse0(ctx context.Context, resp *teo.CreateAccelerationDomainResponse) error {
-	return checkAccelerationDomainStatus(ctx, "online")
+	d := tccommon.ResourceDataFromContext(ctx)
+	if d == nil {
+		return fmt.Errorf("resource data can not be nil")
+	}
+	return checkAccelerationDomainStatus(ctx, d.Timeout(schema.TimeoutCreate), "online")
 }
 
 func resourceTencentCloudTeoAccelerationDomainUpdateOnExit(ctx context.Context) error {
@@ -24,14 +29,18 @@ func resourceTencentCloudTeoAccelerationDomainUpdateOnExit(ctx context.Context) 
 	if v, ok := d.GetOk("status"); ok {
 		status = v.(string)
 	}
-	return checkAccelerationDomainStatus(ctx, status)
+	return checkAccelerationDomainStatus(ctx, d.Timeout(schema.TimeoutUpdate), status)
 }
 
 func resourceTencentCloudTeoAccelerationDomainDeletePostHandleResponse0(ctx context.Context, resp *teo.ModifyAccelerationDomainStatusesResponse) error {
-	return checkAccelerationDomainStatus(ctx, "offline")
+	d := tccommon.ResourceDataFromContext(ctx)
+	if d == nil {
+		return fmt.Errorf("resource data can not be nil")
+	}
+	return checkAccelerationDomainStatus(ctx, d.Timeout(schema.TimeoutDelete), "offline")
 }
 
-func checkAccelerationDomainStatus(ctx context.Context, expectedStatuses ...string) error {
+func checkAccelerationDomainStatus(ctx context.Context, retryTimeout time.Duration, expectedStatuses ...string) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	if d == nil {
 		return fmt.Errorf("resource data can not be nil")
@@ -50,7 +59,6 @@ func checkAccelerationDomainStatus(ctx context.Context, expectedStatuses ...stri
 		domainName = v.(string)
 	}
 
-	retryTimeout, _ := ctx.Value(timeout).(time.Duration)
 	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	return resource.Retry(retryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)

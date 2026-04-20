@@ -15,8 +15,6 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-var timeout time.Duration
-
 func ResourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTeoAccelerationDomainCreate,
@@ -165,7 +163,7 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
-			context.WithValue(context.Background(), timeout, d.Timeout(schema.TimeoutCreate)), logId, d, meta)
+			context.Background(), logId, d, meta)
 		request    = teo.NewCreateAccelerationDomainRequest()
 		response   = teo.NewCreateAccelerationDomainResponse()
 		zoneId     string
@@ -324,7 +322,7 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
-			context.WithValue(context.Background(), timeout, d.Timeout(schema.TimeoutRead)), logId, d, meta)
+			context.Background(), logId, d, meta)
 		service = TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
@@ -443,7 +441,7 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
-			context.WithValue(context.Background(), timeout, d.Timeout(schema.TimeoutUpdate)), logId, d, meta)
+			context.Background(), logId, d, meta)
 	)
 
 	immutableArgs := []string{"https_origin_port"}
@@ -605,7 +603,7 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
-			context.WithValue(context.Background(), timeout, d.Timeout(schema.TimeoutDelete)), logId, d, meta)
+			context.Background(), logId, d, meta)
 		request  = teo.NewModifyAccelerationDomainStatusesRequest()
 		response = teo.NewModifyAccelerationDomainStatusesResponse()
 	)
