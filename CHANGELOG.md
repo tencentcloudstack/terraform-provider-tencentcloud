@@ -1,3 +1,9 @@
+## 1.82.89(April 20, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_teo_certificate_config: optimize `timeouts` ([#4041](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4041))
+
 ## 1.82.88(April 17, 2026)
 
 FEATURES:
