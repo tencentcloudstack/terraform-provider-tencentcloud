@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_teo_just_in_time_transcode_template
+```
