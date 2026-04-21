@@ -2070,6 +2070,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_identify_zone_operation":                                              teo.ResourceTencentCloudTeoIdentifyZoneOperation(),
 			"tencentcloud_teo_certificate_config":                                                   teo.ResourceTencentCloudTeoCertificateConfig(),
 			"tencentcloud_teo_create_cls_index_operation":                                           teo.ResourceTencentCloudTeoCreateCLSIndexOperation(),
+			"tencentcloud_teo_check_cname_status_operation":                                         teo.ResourceTencentCloudTeoCheckCnameStatusOperation(),
 			"tencentcloud_teo_acceleration_domain":                                                  teo.ResourceTencentCloudTeoAccelerationDomain(),
 			"tencentcloud_teo_application_proxy":                                                    teo.ResourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                                               teo.ResourceTencentCloudTeoApplicationProxyRule(),
