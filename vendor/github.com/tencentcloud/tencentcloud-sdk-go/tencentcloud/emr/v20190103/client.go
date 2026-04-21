@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -110,6 +110,7 @@ func (c *Client) AddMetricScaleStrategyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewAddMetricScaleStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "AddMetricScaleStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddMetricScaleStrategy require credential")
@@ -203,6 +204,7 @@ func (c *Client) AddNodeResourceConfigWithContext(ctx context.Context, request *
     if request == nil {
         request = NewAddNodeResourceConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "AddNodeResourceConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddNodeResourceConfig require credential")
@@ -241,9 +243,12 @@ func NewAddUsersForUserManagerResponse() (response *AddUsersForUserManagerRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBEXCEPTION = "FailedOperation.DBException"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
 //  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  LIMITEXCEEDED_REQUESTBACKLOGEXCEEDSLIMIT = "LimitExceeded.RequestBacklogExceedsLimit"
+//  LIMITEXCEEDED_USERCOUNTEXCEEDSLIMIT = "LimitExceeded.UserCountExceedsLimit"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 func (c *Client) AddUsersForUserManager(request *AddUsersForUserManagerRequest) (response *AddUsersForUserManagerResponse, err error) {
     return c.AddUsersForUserManagerWithContext(context.Background(), request)
@@ -256,14 +261,18 @@ func (c *Client) AddUsersForUserManager(request *AddUsersForUserManagerRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBEXCEPTION = "FailedOperation.DBException"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
 //  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  LIMITEXCEEDED_REQUESTBACKLOGEXCEEDSLIMIT = "LimitExceeded.RequestBacklogExceedsLimit"
+//  LIMITEXCEEDED_USERCOUNTEXCEEDSLIMIT = "LimitExceeded.UserCountExceedsLimit"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 func (c *Client) AddUsersForUserManagerWithContext(ctx context.Context, request *AddUsersForUserManagerRequest) (response *AddUsersForUserManagerResponse, err error) {
     if request == nil {
         request = NewAddUsersForUserManagerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "AddUsersForUserManager")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddUsersForUserManager require credential")
@@ -315,6 +324,7 @@ func (c *Client) AttachDisksWithContext(ctx context.Context, request *AttachDisk
     if request == nil {
         request = NewAttachDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "AttachDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachDisks require credential")
@@ -323,6 +333,60 @@ func (c *Client) AttachDisksWithContext(ctx context.Context, request *AttachDisk
     request.SetContext(ctx)
     
     response = NewAttachDisksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewConvertPreToPostClusterRequest() (request *ConvertPreToPostClusterRequest) {
+    request = &ConvertPreToPostClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ConvertPreToPostCluster")
+    
+    
+    return
+}
+
+func NewConvertPreToPostClusterResponse() (response *ConvertPreToPostClusterResponse) {
+    response = &ConvertPreToPostClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ConvertPreToPostCluster
+// 包月集群转按量集群（不含cdb）
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) ConvertPreToPostCluster(request *ConvertPreToPostClusterRequest) (response *ConvertPreToPostClusterResponse, err error) {
+    return c.ConvertPreToPostClusterWithContext(context.Background(), request)
+}
+
+// ConvertPreToPostCluster
+// 包月集群转按量集群（不含cdb）
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) ConvertPreToPostClusterWithContext(ctx context.Context, request *ConvertPreToPostClusterRequest) (response *ConvertPreToPostClusterResponse, err error) {
+    if request == nil {
+        request = NewConvertPreToPostClusterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ConvertPreToPostCluster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ConvertPreToPostCluster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewConvertPreToPostClusterResponse()
     err = c.Send(request, response)
     return
 }
@@ -427,6 +491,7 @@ func NewCreateCloudInstanceResponse() (response *CreateCloudInstanceResponse) {
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDDISKTYPE = "UnsupportedOperation.UnsupportedDiskType"
 func (c *Client) CreateCloudInstance(request *CreateCloudInstanceRequest) (response *CreateCloudInstanceResponse, err error) {
     return c.CreateCloudInstanceWithContext(context.Background(), request)
 }
@@ -512,10 +577,12 @@ func (c *Client) CreateCloudInstance(request *CreateCloudInstanceRequest) (respo
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDDISKTYPE = "UnsupportedOperation.UnsupportedDiskType"
 func (c *Client) CreateCloudInstanceWithContext(ctx context.Context, request *CreateCloudInstanceRequest) (response *CreateCloudInstanceResponse, err error) {
     if request == nil {
         request = NewCreateCloudInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "CreateCloudInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudInstance require credential")
@@ -567,6 +634,7 @@ func NewCreateClusterResponse() (response *CreateClusterResponse) {
 //  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
 //  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
 //  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
 //  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
 //  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
 //  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
@@ -604,6 +672,7 @@ func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateC
 //  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
 //  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
 //  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
 //  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
 //  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
 //  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
@@ -621,6 +690,7 @@ func (c *Client) CreateClusterWithContext(ctx context.Context, request *CreateCl
     if request == nil {
         request = NewCreateClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "CreateCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCluster require credential")
@@ -629,6 +699,114 @@ func (c *Client) CreateClusterWithContext(ctx context.Context, request *CreateCl
     request.SetContext(ctx)
     
     response = NewCreateClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGroupsSTDRequest() (request *CreateGroupsSTDRequest) {
+    request = &CreateGroupsSTDRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "CreateGroupsSTD")
+    
+    
+    return
+}
+
+func NewCreateGroupsSTDResponse() (response *CreateGroupsSTDResponse) {
+    response = &CreateGroupsSTDResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateGroupsSTD
+// 用户管理-批量创建用户组
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETCVMSERVERFAILED = "FailedOperation.GetCvmServerFailed"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INVALIDPARAMETER_HALESSMASTERCOUNT = "InvalidParameter.HALessMasterCount"
+//  INVALIDPARAMETER_INCORRECTMASTERCOUNT = "InvalidParameter.IncorrectMasterCount"
+//  INVALIDPARAMETER_INVALIDALLNODERESOURCESPEC = "InvalidParameter.InvalidAllNodeResourceSpec"
+//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDCOREDISKTYPE = "InvalidParameter.InvalidCoreDiskType"
+//  INVALIDPARAMETER_INVALIDCOSBUCKET = "InvalidParameter.InvalidCosBucket"
+//  INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
+//  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
+//  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
+//  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
+//  INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
+//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+//  INVALIDPARAMETER_INVALIDSCRIPTBOOTSTRAPACTIONCONFIG = "InvalidParameter.InvalidScriptBootstrapActionConfig"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_KERBEROSSUPPORT = "InvalidParameter.KerberosSupport"
+//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
+//  RESOURCENOTFOUND_SUBNETNOTFOUND = "ResourceNotFound.SubnetNotFound"
+//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+func (c *Client) CreateGroupsSTD(request *CreateGroupsSTDRequest) (response *CreateGroupsSTDResponse, err error) {
+    return c.CreateGroupsSTDWithContext(context.Background(), request)
+}
+
+// CreateGroupsSTD
+// 用户管理-批量创建用户组
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETCVMSERVERFAILED = "FailedOperation.GetCvmServerFailed"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INVALIDPARAMETER_HALESSMASTERCOUNT = "InvalidParameter.HALessMasterCount"
+//  INVALIDPARAMETER_INCORRECTMASTERCOUNT = "InvalidParameter.IncorrectMasterCount"
+//  INVALIDPARAMETER_INVALIDALLNODERESOURCESPEC = "InvalidParameter.InvalidAllNodeResourceSpec"
+//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDCOREDISKTYPE = "InvalidParameter.InvalidCoreDiskType"
+//  INVALIDPARAMETER_INVALIDCOSBUCKET = "InvalidParameter.InvalidCosBucket"
+//  INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
+//  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
+//  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
+//  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
+//  INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
+//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+//  INVALIDPARAMETER_INVALIDSCRIPTBOOTSTRAPACTIONCONFIG = "InvalidParameter.InvalidScriptBootstrapActionConfig"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_KERBEROSSUPPORT = "InvalidParameter.KerberosSupport"
+//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
+//  RESOURCENOTFOUND_SUBNETNOTFOUND = "ResourceNotFound.SubnetNotFound"
+//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+func (c *Client) CreateGroupsSTDWithContext(ctx context.Context, request *CreateGroupsSTDRequest) (response *CreateGroupsSTDResponse, err error) {
+    if request == nil {
+        request = NewCreateGroupsSTDRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "CreateGroupsSTD")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGroupsSTD require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGroupsSTDResponse()
     err = c.Send(request, response)
     return
 }
@@ -692,6 +870,7 @@ func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
 //  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
 //  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
 //  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
 //  INVALIDPARAMETER_INVALIDLOGINSETTING = "InvalidParameter.InvalidLoginSetting"
 //  INVALIDPARAMETER_INVALIDMETADATAJDBCURL = "InvalidParameter.InvalidMetaDataJdbcUrl"
 //  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
@@ -778,6 +957,7 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 //  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
 //  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
 //  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
 //  INVALIDPARAMETER_INVALIDLOGINSETTING = "InvalidParameter.InvalidLoginSetting"
 //  INVALIDPARAMETER_INVALIDMETADATAJDBCURL = "InvalidParameter.InvalidMetaDataJdbcUrl"
 //  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
@@ -824,6 +1004,7 @@ func (c *Client) CreateInstanceWithContext(ctx context.Context, request *CreateI
     if request == nil {
         request = NewCreateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "CreateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstance require credential")
@@ -856,9 +1037,9 @@ func NewCreateSLInstanceResponse() (response *CreateSLInstanceResponse) {
 }
 
 // CreateSLInstance
-// 本接口（CreateSLInstance）用于创建Serverless HBase实例
+// 本接口（CreateSLInstance）用于创建Serverless实例、如HBase、Starrocks、TCBase等
 //
-// - 接口调用成功，会创建Serverless HBase实例，创建实例请求成功会返回创建实例的InstaceId和请求的 RequestID。
+// - 接口调用成功，会创建Serverless实例，创建实例请求成功会返回创建实例的InstaceId和请求的 RequestID。
 //
 // - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用DescribeInstancesList查看当前实例的StatusDesc状态。
 //
@@ -887,9 +1068,9 @@ func (c *Client) CreateSLInstance(request *CreateSLInstanceRequest) (response *C
 }
 
 // CreateSLInstance
-// 本接口（CreateSLInstance）用于创建Serverless HBase实例
+// 本接口（CreateSLInstance）用于创建Serverless实例、如HBase、Starrocks、TCBase等
 //
-// - 接口调用成功，会创建Serverless HBase实例，创建实例请求成功会返回创建实例的InstaceId和请求的 RequestID。
+// - 接口调用成功，会创建Serverless实例，创建实例请求成功会返回创建实例的InstaceId和请求的 RequestID。
 //
 // - 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用DescribeInstancesList查看当前实例的StatusDesc状态。
 //
@@ -917,6 +1098,7 @@ func (c *Client) CreateSLInstanceWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateSLInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "CreateSLInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSLInstance require credential")
@@ -972,6 +1154,7 @@ func (c *Client) DeleteAutoScaleStrategyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteAutoScaleStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DeleteAutoScaleStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAutoScaleStrategy require credential")
@@ -980,6 +1163,62 @@ func (c *Client) DeleteAutoScaleStrategyWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDeleteAutoScaleStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGroupsSTDRequest() (request *DeleteGroupsSTDRequest) {
+    request = &DeleteGroupsSTDRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DeleteGroupsSTD")
+    
+    
+    return
+}
+
+func NewDeleteGroupsSTDResponse() (response *DeleteGroupsSTDResponse) {
+    response = &DeleteGroupsSTDResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGroupsSTD
+// 批量删除用户组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDSTRATEGYTYPE = "InvalidParameter.InvalidStrategyType"
+//  RESOURCENOTFOUND_STRATEGYNOTFOUND = "ResourceNotFound.StrategyNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) DeleteGroupsSTD(request *DeleteGroupsSTDRequest) (response *DeleteGroupsSTDResponse, err error) {
+    return c.DeleteGroupsSTDWithContext(context.Background(), request)
+}
+
+// DeleteGroupsSTD
+// 批量删除用户组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDSTRATEGYTYPE = "InvalidParameter.InvalidStrategyType"
+//  RESOURCENOTFOUND_STRATEGYNOTFOUND = "ResourceNotFound.StrategyNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) DeleteGroupsSTDWithContext(ctx context.Context, request *DeleteGroupsSTDRequest) (response *DeleteGroupsSTDResponse, err error) {
+    if request == nil {
+        request = NewDeleteGroupsSTDRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DeleteGroupsSTD")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGroupsSTD require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGroupsSTDResponse()
     err = c.Send(request, response)
     return
 }
@@ -1025,6 +1264,7 @@ func (c *Client) DeleteNodeResourceConfigWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteNodeResourceConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DeleteNodeResourceConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNodeResourceConfig require credential")
@@ -1080,6 +1320,7 @@ func (c *Client) DeleteUserManagerUserListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteUserManagerUserListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DeleteUserManagerUserList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteUserManagerUserList require credential")
@@ -1141,6 +1382,7 @@ func (c *Client) DeployYarnConfWithContext(ctx context.Context, request *DeployY
     if request == nil {
         request = NewDeployYarnConfRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DeployYarnConf")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeployYarnConf require credential")
@@ -1196,6 +1438,7 @@ func (c *Client) DescribeAutoScaleGroupGlobalConfWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeAutoScaleGroupGlobalConfRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeAutoScaleGroupGlobalConf")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScaleGroupGlobalConf require credential")
@@ -1249,6 +1492,7 @@ func (c *Client) DescribeAutoScaleRecordsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeAutoScaleRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeAutoScaleRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScaleRecords require credential")
@@ -1306,6 +1550,7 @@ func (c *Client) DescribeAutoScaleStrategiesWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeAutoScaleStrategiesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeAutoScaleStrategies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScaleStrategies require credential")
@@ -1314,6 +1559,66 @@ func (c *Client) DescribeAutoScaleStrategiesWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDescribeAutoScaleStrategiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBootScriptRequest() (request *DescribeBootScriptRequest) {
+    request = &DescribeBootScriptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeBootScript")
+    
+    
+    return
+}
+
+func NewDescribeBootScriptResponse() (response *DescribeBootScriptResponse) {
+    response = &DescribeBootScriptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBootScript
+// 获取引导脚本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDCOSFILEURI = "InvalidParameter.InvalidCosFileURI"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+//  UNSUPPORTEDOPERATION_SERVICENOTSUPPORT = "UnsupportedOperation.ServiceNotSupport"
+func (c *Client) DescribeBootScript(request *DescribeBootScriptRequest) (response *DescribeBootScriptResponse, err error) {
+    return c.DescribeBootScriptWithContext(context.Background(), request)
+}
+
+// DescribeBootScript
+// 获取引导脚本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDCOSFILEURI = "InvalidParameter.InvalidCosFileURI"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+//  UNSUPPORTEDOPERATION_SERVICENOTSUPPORT = "UnsupportedOperation.ServiceNotSupport"
+func (c *Client) DescribeBootScriptWithContext(ctx context.Context, request *DescribeBootScriptRequest) (response *DescribeBootScriptResponse, err error) {
+    if request == nil {
+        request = NewDescribeBootScriptRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeBootScript")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBootScript require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBootScriptResponse()
     err = c.Send(request, response)
     return
 }
@@ -1369,6 +1674,7 @@ func (c *Client) DescribeClusterFlowStatusDetailWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeClusterFlowStatusDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeClusterFlowStatusDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterFlowStatusDetail require credential")
@@ -1472,6 +1778,7 @@ func (c *Client) DescribeClusterNodesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeClusterNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeClusterNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterNodes require credential")
@@ -1525,6 +1832,7 @@ func (c *Client) DescribeCvmQuotaWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeCvmQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeCvmQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCvmQuota require credential")
@@ -1576,6 +1884,7 @@ func (c *Client) DescribeDAGInfoWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeDAGInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeDAGInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDAGInfo require credential")
@@ -1584,6 +1893,58 @@ func (c *Client) DescribeDAGInfoWithContext(ctx context.Context, request *Descri
     request.SetContext(ctx)
     
     response = NewDescribeDAGInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeEMREventListRequest() (request *DescribeEMREventListRequest) {
+    request = &DescribeEMREventListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeEMREventList")
+    
+    
+    return
+}
+
+func NewDescribeEMREventListResponse() (response *DescribeEMREventListResponse) {
+    response = &DescribeEMREventListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeEMREventList
+// 查询EMR事件监控数据
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeEMREventList(request *DescribeEMREventListRequest) (response *DescribeEMREventListResponse, err error) {
+    return c.DescribeEMREventListWithContext(context.Background(), request)
+}
+
+// DescribeEMREventList
+// 查询EMR事件监控数据
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeEMREventListWithContext(ctx context.Context, request *DescribeEMREventListRequest) (response *DescribeEMREventListResponse, err error) {
+    if request == nil {
+        request = NewDescribeEMREventListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeEMREventList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeEMREventList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeEMREventListResponse()
     err = c.Send(request, response)
     return
 }
@@ -1629,6 +1990,7 @@ func (c *Client) DescribeEmrApplicationStaticsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeEmrApplicationStaticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeEmrApplicationStatics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEmrApplicationStatics require credential")
@@ -1682,6 +2044,7 @@ func (c *Client) DescribeEmrOverviewMetricsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeEmrOverviewMetricsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeEmrOverviewMetrics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEmrOverviewMetrics require credential")
@@ -1741,6 +2104,7 @@ func (c *Client) DescribeGlobalConfigWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeGlobalConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeGlobalConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGlobalConfig require credential")
@@ -1749,6 +2113,66 @@ func (c *Client) DescribeGlobalConfigWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeGlobalConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGroupsSTDRequest() (request *DescribeGroupsSTDRequest) {
+    request = &DescribeGroupsSTDRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeGroupsSTD")
+    
+    
+    return
+}
+
+func NewDescribeGroupsSTDResponse() (response *DescribeGroupsSTDResponse) {
+    response = &DescribeGroupsSTDResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGroupsSTD
+// 查询用户组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeGroupsSTD(request *DescribeGroupsSTDRequest) (response *DescribeGroupsSTDResponse, err error) {
+    return c.DescribeGroupsSTDWithContext(context.Background(), request)
+}
+
+// DescribeGroupsSTD
+// 查询用户组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeGroupsSTDWithContext(ctx context.Context, request *DescribeGroupsSTDRequest) (response *DescribeGroupsSTDResponse, err error) {
+    if request == nil {
+        request = NewDescribeGroupsSTDRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeGroupsSTD")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGroupsSTD require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGroupsSTDResponse()
     err = c.Send(request, response)
     return
 }
@@ -1796,6 +2220,7 @@ func (c *Client) DescribeHBaseTableOverviewWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeHBaseTableOverviewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeHBaseTableOverview")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHBaseTableOverview require credential")
@@ -1804,6 +2229,118 @@ func (c *Client) DescribeHBaseTableOverviewWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeHBaseTableOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeHBaseTableRequestMetricRequest() (request *DescribeHBaseTableRequestMetricRequest) {
+    request = &DescribeHBaseTableRequestMetricRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeHBaseTableRequestMetric")
+    
+    
+    return
+}
+
+func NewDescribeHBaseTableRequestMetricResponse() (response *DescribeHBaseTableRequestMetricResponse) {
+    response = &DescribeHBaseTableRequestMetricResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeHBaseTableRequestMetric
+// Hbase的表粒度读取和写入速率
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DOOPENTSDBREQUESTEXCEPTION = "InternalError.DoOpenTSDBRequestException"
+//  INTERNALERROR_OPENTSDBHTTPRETURNCODENOTOK = "InternalError.OpenTSDBHttpReturnCodeNotOK"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeHBaseTableRequestMetric(request *DescribeHBaseTableRequestMetricRequest) (response *DescribeHBaseTableRequestMetricResponse, err error) {
+    return c.DescribeHBaseTableRequestMetricWithContext(context.Background(), request)
+}
+
+// DescribeHBaseTableRequestMetric
+// Hbase的表粒度读取和写入速率
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DOOPENTSDBREQUESTEXCEPTION = "InternalError.DoOpenTSDBRequestException"
+//  INTERNALERROR_OPENTSDBHTTPRETURNCODENOTOK = "InternalError.OpenTSDBHttpReturnCodeNotOK"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeHBaseTableRequestMetricWithContext(ctx context.Context, request *DescribeHBaseTableRequestMetricRequest) (response *DescribeHBaseTableRequestMetricResponse, err error) {
+    if request == nil {
+        request = NewDescribeHBaseTableRequestMetricRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeHBaseTableRequestMetric")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeHBaseTableRequestMetric require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeHBaseTableRequestMetricResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeHBaseTableStoreSizeMetricRequest() (request *DescribeHBaseTableStoreSizeMetricRequest) {
+    request = &DescribeHBaseTableStoreSizeMetricRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeHBaseTableStoreSizeMetric")
+    
+    
+    return
+}
+
+func NewDescribeHBaseTableStoreSizeMetricResponse() (response *DescribeHBaseTableStoreSizeMetricResponse) {
+    response = &DescribeHBaseTableStoreSizeMetricResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeHBaseTableStoreSizeMetric
+// 查询Hbase的表粒度StoreSize大小监控指标数据
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DOOPENTSDBREQUESTEXCEPTION = "InternalError.DoOpenTSDBRequestException"
+//  INTERNALERROR_OPENTSDBHTTPRETURNCODENOTOK = "InternalError.OpenTSDBHttpReturnCodeNotOK"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeHBaseTableStoreSizeMetric(request *DescribeHBaseTableStoreSizeMetricRequest) (response *DescribeHBaseTableStoreSizeMetricResponse, err error) {
+    return c.DescribeHBaseTableStoreSizeMetricWithContext(context.Background(), request)
+}
+
+// DescribeHBaseTableStoreSizeMetric
+// 查询Hbase的表粒度StoreSize大小监控指标数据
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DOOPENTSDBREQUESTEXCEPTION = "InternalError.DoOpenTSDBRequestException"
+//  INTERNALERROR_OPENTSDBHTTPRETURNCODENOTOK = "InternalError.OpenTSDBHttpReturnCodeNotOK"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeHBaseTableStoreSizeMetricWithContext(ctx context.Context, request *DescribeHBaseTableStoreSizeMetricRequest) (response *DescribeHBaseTableStoreSizeMetricResponse, err error) {
+    if request == nil {
+        request = NewDescribeHBaseTableStoreSizeMetricRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeHBaseTableStoreSizeMetric")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeHBaseTableStoreSizeMetric require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeHBaseTableStoreSizeMetricResponse()
     err = c.Send(request, response)
     return
 }
@@ -1851,6 +2388,7 @@ func (c *Client) DescribeHDFSStorageInfoWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeHDFSStorageInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeHDFSStorageInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHDFSStorageInfo require credential")
@@ -1906,6 +2444,7 @@ func (c *Client) DescribeHiveQueriesWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeHiveQueriesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeHiveQueries")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHiveQueries require credential")
@@ -1955,6 +2494,7 @@ func (c *Client) DescribeImpalaQueriesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeImpalaQueriesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeImpalaQueries")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImpalaQueries require credential")
@@ -2006,6 +2546,7 @@ func (c *Client) DescribeInsightListWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeInsightListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeInsightList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInsightList require credential")
@@ -2014,6 +2555,116 @@ func (c *Client) DescribeInsightListWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeInsightListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInspectionTaskResultRequest() (request *DescribeInspectionTaskResultRequest) {
+    request = &DescribeInspectionTaskResultRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeInspectionTaskResult")
+    
+    
+    return
+}
+
+func NewDescribeInspectionTaskResultResponse() (response *DescribeInspectionTaskResultResponse) {
+    response = &DescribeInspectionTaskResultResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInspectionTaskResult
+// 获取巡检任务结果列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeInspectionTaskResult(request *DescribeInspectionTaskResultRequest) (response *DescribeInspectionTaskResultResponse, err error) {
+    return c.DescribeInspectionTaskResultWithContext(context.Background(), request)
+}
+
+// DescribeInspectionTaskResult
+// 获取巡检任务结果列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeInspectionTaskResultWithContext(ctx context.Context, request *DescribeInspectionTaskResultRequest) (response *DescribeInspectionTaskResultResponse, err error) {
+    if request == nil {
+        request = NewDescribeInspectionTaskResultRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeInspectionTaskResult")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInspectionTaskResult require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInspectionTaskResultResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceOplogRequest() (request *DescribeInstanceOplogRequest) {
+    request = &DescribeInstanceOplogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeInstanceOplog")
+    
+    
+    return
+}
+
+func NewDescribeInstanceOplogResponse() (response *DescribeInstanceOplogResponse) {
+    response = &DescribeInstanceOplogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceOplog
+// 获取实例操作日志
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) DescribeInstanceOplog(request *DescribeInstanceOplogRequest) (response *DescribeInstanceOplogResponse, err error) {
+    return c.DescribeInstanceOplogWithContext(context.Background(), request)
+}
+
+// DescribeInstanceOplog
+// 获取实例操作日志
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) DescribeInstanceOplogWithContext(ctx context.Context, request *DescribeInstanceOplogRequest) (response *DescribeInstanceOplogResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceOplogRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeInstanceOplog")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceOplog require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceOplogResponse()
     err = c.Send(request, response)
     return
 }
@@ -2103,6 +2754,7 @@ func (c *Client) DescribeInstanceRenewNodesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeInstanceRenewNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeInstanceRenewNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceRenewNodes require credential")
@@ -2212,6 +2864,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -2317,6 +2970,7 @@ func (c *Client) DescribeInstancesListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeInstancesListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeInstancesList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesList require credential")
@@ -2370,6 +3024,7 @@ func (c *Client) DescribeJobFlowWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeJobFlowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeJobFlow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJobFlow require credential")
@@ -2421,6 +3076,7 @@ func (c *Client) DescribeKyuubiQueryInfoWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeKyuubiQueryInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeKyuubiQueryInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeKyuubiQueryInfo require credential")
@@ -2472,6 +3128,7 @@ func (c *Client) DescribeNodeDataDisksWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeNodeDataDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeNodeDataDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNodeDataDisks require credential")
@@ -2543,6 +3200,7 @@ func (c *Client) DescribeNodeResourceConfigFastWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeNodeResourceConfigFastRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeNodeResourceConfigFast")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNodeResourceConfigFast require credential")
@@ -2551,6 +3209,156 @@ func (c *Client) DescribeNodeResourceConfigFastWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewDescribeNodeResourceConfigFastResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNodeSpecRequest() (request *DescribeNodeSpecRequest) {
+    request = &DescribeNodeSpecRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeNodeSpec")
+    
+    
+    return
+}
+
+func NewDescribeNodeSpecResponse() (response *DescribeNodeSpecResponse) {
+    response = &DescribeNodeSpecResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNodeSpec
+// 查询节点规格
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETCVMCONFIGQUOTAFAILED = "FailedOperation.GetCvmConfigQuotaFailed"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  FAILEDOPERATION_SPECDELETEDENYFORAUTOSCALESTRATEGIES = "FailedOperation.SpecDeleteDenyForAutoScaleStrategies"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_TKEERROR = "InternalError.TKEError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APPIDRESOURCENOTMATCH = "InvalidParameter.AppIdResourceNotMatch"
+//  INVALIDPARAMETER_CPUTYPE = "InvalidParameter.CpuType"
+//  INVALIDPARAMETER_DISPLAYSTRATEGYNOTMATCH = "InvalidParameter.DisplayStrategyNotMatch"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDVENDORTYPE = "InvalidParameter.InvalidVendorType"
+//  INVALIDPARAMETER_INVALIDVOLUMETYPE = "InvalidParameter.InvalidVolumeType"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_LESSCOMMONCOUNT = "InvalidParameter.LessCommonCount"
+//  INVALIDPARAMETER_LESSTASKCOUNT = "InvalidParameter.LessTaskCount"
+//  INVALIDPARAMETER_MOREMAXLIMITNUM = "InvalidParameter.MoreMaxlimitNum"
+//  INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
+//  INVALIDPARAMETER_PAYMODERESOURCENOTMATCH = "InvalidParameter.PayModeResourceNotMatch"
+//  INVALIDPARAMETER_PROJECTRESOURCENOTMATCH = "InvalidParameter.ProjectResourceNotMatch"
+//  INVALIDPARAMETER_REPEATEDSTRATEGYNAME = "InvalidParameter.RepeatedStrategyName"
+//  INVALIDPARAMETER_RESOURCEPROVIDERTYPE = "InvalidParameter.ResourceProviderType"
+//  INVALIDPARAMETER_RESTARTSERVICEUNSUPPORTED = "InvalidParameter.RestartServiceUnsupported"
+//  INVALIDPARAMETER_SOFTWARENOTINPRODUCR = "InvalidParameter.SoftwareNotInProducr"
+//  INVALIDPARAMETER_UNGRANTEDPOLICY = "InvalidParameter.UngrantedPolicy"
+//  INVALIDPARAMETER_UNSATISFIEDSOFTDEPENDECY = "InvalidParameter.UnsatisfiedSoftDependecy"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDTKEINSTANCE = "InvalidParameterValue.InvalidTkeInstance"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSINGCORERESOURCE = "MissingParameter.MissingCoreResource"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_SPECNOTFOUND = "ResourceNotFound.SpecNotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTNODETYPE = "ResourceUnavailable.NotSupportNodeType"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhiteList"
+func (c *Client) DescribeNodeSpec(request *DescribeNodeSpecRequest) (response *DescribeNodeSpecResponse, err error) {
+    return c.DescribeNodeSpecWithContext(context.Background(), request)
+}
+
+// DescribeNodeSpec
+// 查询节点规格
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETCVMCONFIGQUOTAFAILED = "FailedOperation.GetCvmConfigQuotaFailed"
+//  FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
+//  FAILEDOPERATION_SPECDELETEDENYFORAUTOSCALESTRATEGIES = "FailedOperation.SpecDeleteDenyForAutoScaleStrategies"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_TKEERROR = "InternalError.TKEError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APPIDRESOURCENOTMATCH = "InvalidParameter.AppIdResourceNotMatch"
+//  INVALIDPARAMETER_CPUTYPE = "InvalidParameter.CpuType"
+//  INVALIDPARAMETER_DISPLAYSTRATEGYNOTMATCH = "InvalidParameter.DisplayStrategyNotMatch"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDVENDORTYPE = "InvalidParameter.InvalidVendorType"
+//  INVALIDPARAMETER_INVALIDVOLUMETYPE = "InvalidParameter.InvalidVolumeType"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_LESSCOMMONCOUNT = "InvalidParameter.LessCommonCount"
+//  INVALIDPARAMETER_LESSTASKCOUNT = "InvalidParameter.LessTaskCount"
+//  INVALIDPARAMETER_MOREMAXLIMITNUM = "InvalidParameter.MoreMaxlimitNum"
+//  INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
+//  INVALIDPARAMETER_PAYMODERESOURCENOTMATCH = "InvalidParameter.PayModeResourceNotMatch"
+//  INVALIDPARAMETER_PROJECTRESOURCENOTMATCH = "InvalidParameter.ProjectResourceNotMatch"
+//  INVALIDPARAMETER_REPEATEDSTRATEGYNAME = "InvalidParameter.RepeatedStrategyName"
+//  INVALIDPARAMETER_RESOURCEPROVIDERTYPE = "InvalidParameter.ResourceProviderType"
+//  INVALIDPARAMETER_RESTARTSERVICEUNSUPPORTED = "InvalidParameter.RestartServiceUnsupported"
+//  INVALIDPARAMETER_SOFTWARENOTINPRODUCR = "InvalidParameter.SoftwareNotInProducr"
+//  INVALIDPARAMETER_UNGRANTEDPOLICY = "InvalidParameter.UngrantedPolicy"
+//  INVALIDPARAMETER_UNSATISFIEDSOFTDEPENDECY = "InvalidParameter.UnsatisfiedSoftDependecy"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDTKEINSTANCE = "InvalidParameterValue.InvalidTkeInstance"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSINGCORERESOURCE = "MissingParameter.MissingCoreResource"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_SPECNOTFOUND = "ResourceNotFound.SpecNotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTNODETYPE = "ResourceUnavailable.NotSupportNodeType"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhiteList"
+func (c *Client) DescribeNodeSpecWithContext(ctx context.Context, request *DescribeNodeSpecRequest) (response *DescribeNodeSpecResponse, err error) {
+    if request == nil {
+        request = NewDescribeNodeSpecRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeNodeSpec")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNodeSpec require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNodeSpecResponse()
     err = c.Send(request, response)
     return
 }
@@ -2602,6 +3410,7 @@ func (c *Client) DescribeResourceScheduleWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeResourceScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeResourceSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceSchedule require credential")
@@ -2661,6 +3470,7 @@ func (c *Client) DescribeResourceScheduleDiffDetailWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeResourceScheduleDiffDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeResourceScheduleDiffDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceScheduleDiffDetail require credential")
@@ -2736,6 +3546,7 @@ func (c *Client) DescribeSLInstanceWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeSLInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeSLInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSLInstance require credential")
@@ -2921,6 +3732,7 @@ func (c *Client) DescribeSLInstanceListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeSLInstanceListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeSLInstanceList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSLInstanceList require credential")
@@ -2929,6 +3741,192 @@ func (c *Client) DescribeSLInstanceListWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeSLInstanceListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeServiceConfGroupInfosRequest() (request *DescribeServiceConfGroupInfosRequest) {
+    request = &DescribeServiceConfGroupInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeServiceConfGroupInfos")
+    
+    
+    return
+}
+
+func NewDescribeServiceConfGroupInfosResponse() (response *DescribeServiceConfGroupInfosResponse) {
+    response = &DescribeServiceConfGroupInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeServiceConfGroupInfos
+// 描述服务配置组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DISPLAYSTRATEGYNOTMATCH = "InvalidParameter.DisplayStrategyNotMatch"
+//  INVALIDPARAMETER_INVALIDAUTORENEW = "InvalidParameter.InvalidAutoRenew"
+//  INVALIDPARAMETER_INVALIDCLIENTTOKEN = "InvalidParameter.InvalidClientToken"
+//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
+//  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOGINSETTING = "InvalidParameter.InvalidLoginSetting"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDPREEXECUTEDFILE = "InvalidParameter.InvalidPreExecutedFile"
+//  INVALIDPARAMETER_INVALIDPRODUCTID = "InvalidParameter.InvalidProductId"
+//  INVALIDPARAMETER_INVALIDPROJECTID = "InvalidParameter.InvalidProjectId"
+//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+//  INVALIDPARAMETER_INVALIDSERCURITYGRPUPID = "InvalidParameter.InvalidSercurityGrpupId"
+//  INVALIDPARAMETER_INVALIDSERVICENAME = "InvalidParameter.InvalidServiceName"
+//  INVALIDPARAMETER_INVALIDSOFTDEPLOYINFO = "InvalidParameter.InvalidSoftDeployInfo"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDSOFTWARE = "InvalidParameter.InvalidSoftWare"
+//  INVALIDPARAMETER_INVALIDSOFTWARENAME = "InvalidParameter.InvalidSoftWareName"
+//  INVALIDPARAMETER_INVALIDSOFTWAREVERSION = "InvalidParameter.InvalidSoftWareVersion"
+//  INVALIDPARAMETER_INVALIDSUBNETID = "InvalidParameter.InvalidSubnetId"
+//  INVALIDPARAMETER_INVALIDSUPPORTHA = "InvalidParameter.InvalidSupportHA"
+//  INVALIDPARAMETER_INVALIDTIMESPAN = "InvalidParameter.InvalidTimeSpan"
+//  INVALIDPARAMETER_INVALIDTIMEUNIT = "InvalidParameter.InvalidTimeUnit"
+//  INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
+//  INVALIDPARAMETER_ORDERFIELDNOTMATCH = "InvalidParameter.OrderFieldNotMatch"
+//  INVALIDPARAMETER_PAYMODERESOURCENOTMATCH = "InvalidParameter.PayModeResourceNotMatch"
+//  INVALIDPARAMETER_SOFTWARENOTINPRODUCT = "InvalidParameter.SoftwareNotInProduct"
+//  INVALIDPARAMETER_UNGRANTEDPOLICY = "InvalidParameter.UngrantedPolicy"
+//  INVALIDPARAMETER_UNGRANTEDROLE = "InvalidParameter.UngrantedRole"
+//  INVALIDPARAMETER_ZONERESOURCENOTMATCH = "InvalidParameter.ZoneResourceNotMatch"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_DISKINSUFFICIENT = "ResourceInsufficient.DiskInsufficient"
+//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
+//  RESOURCENOTFOUND_TAGSNOTFOUND = "ResourceNotFound.TagsNotFound"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  RESOURCESSOLDOUT_CBSSOLDOUT = "ResourcesSoldOut.CbsSoldOut"
+//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServiceConfGroupInfos(request *DescribeServiceConfGroupInfosRequest) (response *DescribeServiceConfGroupInfosResponse, err error) {
+    return c.DescribeServiceConfGroupInfosWithContext(context.Background(), request)
+}
+
+// DescribeServiceConfGroupInfos
+// 描述服务配置组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DISPLAYSTRATEGYNOTMATCH = "InvalidParameter.DisplayStrategyNotMatch"
+//  INVALIDPARAMETER_INVALIDAUTORENEW = "InvalidParameter.InvalidAutoRenew"
+//  INVALIDPARAMETER_INVALIDCLIENTTOKEN = "InvalidParameter.InvalidClientToken"
+//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
+//  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+//  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDLOGINSETTING = "InvalidParameter.InvalidLoginSetting"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDPREEXECUTEDFILE = "InvalidParameter.InvalidPreExecutedFile"
+//  INVALIDPARAMETER_INVALIDPRODUCTID = "InvalidParameter.InvalidProductId"
+//  INVALIDPARAMETER_INVALIDPROJECTID = "InvalidParameter.InvalidProjectId"
+//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+//  INVALIDPARAMETER_INVALIDSERCURITYGRPUPID = "InvalidParameter.InvalidSercurityGrpupId"
+//  INVALIDPARAMETER_INVALIDSERVICENAME = "InvalidParameter.InvalidServiceName"
+//  INVALIDPARAMETER_INVALIDSOFTDEPLOYINFO = "InvalidParameter.InvalidSoftDeployInfo"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDSOFTWARE = "InvalidParameter.InvalidSoftWare"
+//  INVALIDPARAMETER_INVALIDSOFTWARENAME = "InvalidParameter.InvalidSoftWareName"
+//  INVALIDPARAMETER_INVALIDSOFTWAREVERSION = "InvalidParameter.InvalidSoftWareVersion"
+//  INVALIDPARAMETER_INVALIDSUBNETID = "InvalidParameter.InvalidSubnetId"
+//  INVALIDPARAMETER_INVALIDSUPPORTHA = "InvalidParameter.InvalidSupportHA"
+//  INVALIDPARAMETER_INVALIDTIMESPAN = "InvalidParameter.InvalidTimeSpan"
+//  INVALIDPARAMETER_INVALIDTIMEUNIT = "InvalidParameter.InvalidTimeUnit"
+//  INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
+//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+//  INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
+//  INVALIDPARAMETER_ORDERFIELDNOTMATCH = "InvalidParameter.OrderFieldNotMatch"
+//  INVALIDPARAMETER_PAYMODERESOURCENOTMATCH = "InvalidParameter.PayModeResourceNotMatch"
+//  INVALIDPARAMETER_SOFTWARENOTINPRODUCT = "InvalidParameter.SoftwareNotInProduct"
+//  INVALIDPARAMETER_UNGRANTEDPOLICY = "InvalidParameter.UngrantedPolicy"
+//  INVALIDPARAMETER_UNGRANTEDROLE = "InvalidParameter.UngrantedRole"
+//  INVALIDPARAMETER_ZONERESOURCENOTMATCH = "InvalidParameter.ZoneResourceNotMatch"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_DISKINSUFFICIENT = "ResourceInsufficient.DiskInsufficient"
+//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
+//  RESOURCENOTFOUND_TAGSNOTFOUND = "ResourceNotFound.TagsNotFound"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  RESOURCESSOLDOUT_CBSSOLDOUT = "ResourcesSoldOut.CbsSoldOut"
+//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServiceConfGroupInfosWithContext(ctx context.Context, request *DescribeServiceConfGroupInfosRequest) (response *DescribeServiceConfGroupInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeServiceConfGroupInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeServiceConfGroupInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServiceConfGroupInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServiceConfGroupInfosResponse()
     err = c.Send(request, response)
     return
 }
@@ -3018,6 +4016,7 @@ func (c *Client) DescribeServiceNodeInfosWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeServiceNodeInfosRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeServiceNodeInfos")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeServiceNodeInfos require credential")
@@ -3026,6 +4025,58 @@ func (c *Client) DescribeServiceNodeInfosWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeServiceNodeInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSparkApplicationsRequest() (request *DescribeSparkApplicationsRequest) {
+    request = &DescribeSparkApplicationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeSparkApplications")
+    
+    
+    return
+}
+
+func NewDescribeSparkApplicationsResponse() (response *DescribeSparkApplicationsResponse) {
+    response = &DescribeSparkApplicationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSparkApplications
+// 获取spark应用列表
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeSparkApplications(request *DescribeSparkApplicationsRequest) (response *DescribeSparkApplicationsResponse, err error) {
+    return c.DescribeSparkApplicationsWithContext(context.Background(), request)
+}
+
+// DescribeSparkApplications
+// 获取spark应用列表
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeSparkApplicationsWithContext(ctx context.Context, request *DescribeSparkApplicationsRequest) (response *DescribeSparkApplicationsResponse, err error) {
+    if request == nil {
+        request = NewDescribeSparkApplicationsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeSparkApplications")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSparkApplications require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSparkApplicationsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3069,6 +4120,7 @@ func (c *Client) DescribeSparkQueriesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeSparkQueriesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeSparkQueries")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSparkQueries require credential")
@@ -3120,6 +4172,7 @@ func (c *Client) DescribeStarRocksQueryInfoWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeStarRocksQueryInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeStarRocksQueryInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeStarRocksQueryInfo require credential")
@@ -3171,6 +4224,7 @@ func (c *Client) DescribeTrinoQueryInfoWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeTrinoQueryInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeTrinoQueryInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTrinoQueryInfo require credential")
@@ -3232,6 +4286,7 @@ func (c *Client) DescribeUsersForUserManagerWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeUsersForUserManagerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeUsersForUserManager")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUsersForUserManager require credential")
@@ -3285,6 +4340,7 @@ func (c *Client) DescribeYarnApplicationsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeYarnApplicationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeYarnApplications")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeYarnApplications require credential")
@@ -3340,6 +4396,7 @@ func (c *Client) DescribeYarnQueueWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeYarnQueueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeYarnQueue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeYarnQueue require credential")
@@ -3389,6 +4446,7 @@ func (c *Client) DescribeYarnScheduleHistoryWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeYarnScheduleHistoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeYarnScheduleHistory")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeYarnScheduleHistory require credential")
@@ -3492,6 +4550,7 @@ func (c *Client) InquirePriceRenewEmrWithContext(ctx context.Context, request *I
     if request == nil {
         request = NewInquirePriceRenewEmrRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "InquirePriceRenewEmr")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePriceRenewEmr require credential")
@@ -3627,6 +4686,7 @@ func (c *Client) InquiryPriceCreateInstanceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewInquiryPriceCreateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "InquiryPriceCreateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceCreateInstance require credential")
@@ -3732,6 +4792,7 @@ func (c *Client) InquiryPriceRenewInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewInquiryPriceRenewInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "InquiryPriceRenewInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRenewInstance require credential")
@@ -3845,6 +4906,7 @@ func (c *Client) InquiryPriceScaleOutInstanceWithContext(ctx context.Context, re
     if request == nil {
         request = NewInquiryPriceScaleOutInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "InquiryPriceScaleOutInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceScaleOutInstance require credential")
@@ -3950,6 +5012,7 @@ func (c *Client) InquiryPriceUpdateInstanceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewInquiryPriceUpdateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "InquiryPriceUpdateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceUpdateInstance require credential")
@@ -4007,6 +5070,7 @@ func (c *Client) ModifyAutoRenewFlagWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyAutoRenewFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyAutoRenewFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAutoRenewFlag require credential")
@@ -4078,6 +5142,7 @@ func (c *Client) ModifyAutoScaleStrategyWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyAutoScaleStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyAutoScaleStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAutoScaleStrategy require credential")
@@ -4086,6 +5151,70 @@ func (c *Client) ModifyAutoScaleStrategyWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewModifyAutoScaleStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyBootScriptRequest() (request *ModifyBootScriptRequest) {
+    request = &ModifyBootScriptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyBootScript")
+    
+    
+    return
+}
+
+func NewModifyBootScriptResponse() (response *ModifyBootScriptResponse) {
+    response = &ModifyBootScriptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyBootScript
+// 修改引导脚本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyBootScript(request *ModifyBootScriptRequest) (response *ModifyBootScriptResponse, err error) {
+    return c.ModifyBootScriptWithContext(context.Background(), request)
+}
+
+// ModifyBootScript
+// 修改引导脚本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyBootScriptWithContext(ctx context.Context, request *ModifyBootScriptRequest) (response *ModifyBootScriptResponse, err error) {
+    if request == nil {
+        request = NewModifyBootScriptRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyBootScript")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBootScript require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBootScriptResponse()
     err = c.Send(request, response)
     return
 }
@@ -4137,6 +5266,7 @@ func (c *Client) ModifyGlobalConfigWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyGlobalConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyGlobalConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyGlobalConfig require credential")
@@ -4145,6 +5275,56 @@ func (c *Client) ModifyGlobalConfigWithContext(ctx context.Context, request *Mod
     request.SetContext(ctx)
     
     response = NewModifyGlobalConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInspectionSettingsRequest() (request *ModifyInspectionSettingsRequest) {
+    request = &ModifyInspectionSettingsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyInspectionSettings")
+    
+    
+    return
+}
+
+func NewModifyInspectionSettingsResponse() (response *ModifyInspectionSettingsResponse) {
+    response = &ModifyInspectionSettingsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInspectionSettings
+// 设置巡检任务配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ModifyInspectionSettings(request *ModifyInspectionSettingsRequest) (response *ModifyInspectionSettingsResponse, err error) {
+    return c.ModifyInspectionSettingsWithContext(context.Background(), request)
+}
+
+// ModifyInspectionSettings
+// 设置巡检任务配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ModifyInspectionSettingsWithContext(ctx context.Context, request *ModifyInspectionSettingsRequest) (response *ModifyInspectionSettingsResponse, err error) {
+    if request == nil {
+        request = NewModifyInspectionSettingsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyInspectionSettings")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInspectionSettings require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInspectionSettingsResponse()
     err = c.Send(request, response)
     return
 }
@@ -4196,6 +5376,7 @@ func (c *Client) ModifyInstanceBasicWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyInstanceBasicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyInstanceBasic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceBasic require credential")
@@ -4259,6 +5440,7 @@ func (c *Client) ModifyPodNumWithContext(ctx context.Context, request *ModifyPod
     if request == nil {
         request = NewModifyPodNumRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyPodNum")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPodNum require credential")
@@ -4360,6 +5542,7 @@ func (c *Client) ModifyResourceWithContext(ctx context.Context, request *ModifyR
     if request == nil {
         request = NewModifyResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyResource require credential")
@@ -4392,6 +5575,10 @@ func NewModifyResourcePoolsResponse() (response *ModifyResourcePoolsResponse) {
 }
 
 // ModifyResourcePools
+// 已废弃，请使用DeployYarnConf\\n，近一年未被调用
+//
+// 
+//
 // 刷新YARN的动态资源池。已废弃，请使用`DeployYarnConf`
 //
 // 可能返回的错误码:
@@ -4407,6 +5594,10 @@ func (c *Client) ModifyResourcePools(request *ModifyResourcePoolsRequest) (respo
 }
 
 // ModifyResourcePools
+// 已废弃，请使用DeployYarnConf\\n，近一年未被调用
+//
+// 
+//
 // 刷新YARN的动态资源池。已废弃，请使用`DeployYarnConf`
 //
 // 可能返回的错误码:
@@ -4421,6 +5612,7 @@ func (c *Client) ModifyResourcePoolsWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyResourcePoolsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyResourcePools")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyResourcePools require credential")
@@ -4453,6 +5645,10 @@ func NewModifyResourceScheduleConfigResponse() (response *ModifyResourceSchedule
 }
 
 // ModifyResourceScheduleConfig
+// 已废弃，请使用ModifyYarnQueueV2来修改队列配置，近一年无相关日志
+//
+// 
+//
 // 修改YARN资源调度的资源配置。已废弃，请使用`ModifyYarnQueueV2`来修改队列配置
 //
 // 可能返回的错误码:
@@ -4468,6 +5664,10 @@ func (c *Client) ModifyResourceScheduleConfig(request *ModifyResourceScheduleCon
 }
 
 // ModifyResourceScheduleConfig
+// 已废弃，请使用ModifyYarnQueueV2来修改队列配置，近一年无相关日志
+//
+// 
+//
 // 修改YARN资源调度的资源配置。已废弃，请使用`ModifyYarnQueueV2`来修改队列配置
 //
 // 可能返回的错误码:
@@ -4482,6 +5682,7 @@ func (c *Client) ModifyResourceScheduleConfigWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyResourceScheduleConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyResourceScheduleConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyResourceScheduleConfig require credential")
@@ -4537,6 +5738,7 @@ func (c *Client) ModifyResourceSchedulerWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyResourceSchedulerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyResourceScheduler")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyResourceScheduler require credential")
@@ -4592,6 +5794,7 @@ func (c *Client) ModifyResourcesTagsWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyResourcesTagsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyResourcesTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyResourcesTags require credential")
@@ -4679,6 +5882,7 @@ func (c *Client) ModifySLInstanceWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifySLInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifySLInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifySLInstance require credential")
@@ -4738,6 +5942,7 @@ func (c *Client) ModifySLInstanceBasicWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifySLInstanceBasicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifySLInstanceBasic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifySLInstanceBasic require credential")
@@ -4746,6 +5951,66 @@ func (c *Client) ModifySLInstanceBasicWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifySLInstanceBasicResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyUserGroupRequest() (request *ModifyUserGroupRequest) {
+    request = &ModifyUserGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyUserGroup")
+    
+    
+    return
+}
+
+func NewModifyUserGroupResponse() (response *ModifyUserGroupResponse) {
+    response = &ModifyUserGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyUserGroup
+// 用户管理-修改用户组
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDJOBFLOW = "InvalidParameter.InvalidJobFlow"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyUserGroup(request *ModifyUserGroupRequest) (response *ModifyUserGroupResponse, err error) {
+    return c.ModifyUserGroupWithContext(context.Background(), request)
+}
+
+// ModifyUserGroup
+// 用户管理-修改用户组
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INVALIDPARAMETER_INVALIDJOBFLOW = "InvalidParameter.InvalidJobFlow"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyUserGroupWithContext(ctx context.Context, request *ModifyUserGroupRequest) (response *ModifyUserGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyUserGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyUserGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyUserGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyUserGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -4795,6 +6060,7 @@ func (c *Client) ModifyUserManagerPwdWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyUserManagerPwdRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyUserManagerPwd")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUserManagerPwd require credential")
@@ -4803,6 +6069,64 @@ func (c *Client) ModifyUserManagerPwdWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyUserManagerPwdResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyUsersOfGroupSTDRequest() (request *ModifyUsersOfGroupSTDRequest) {
+    request = &ModifyUsersOfGroupSTDRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyUsersOfGroupSTD")
+    
+    
+    return
+}
+
+func NewModifyUsersOfGroupSTDResponse() (response *ModifyUsersOfGroupSTDResponse) {
+    response = &ModifyUsersOfGroupSTDResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyUsersOfGroupSTD
+// 变更用户组用户信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyUsersOfGroupSTD(request *ModifyUsersOfGroupSTDRequest) (response *ModifyUsersOfGroupSTDResponse, err error) {
+    return c.ModifyUsersOfGroupSTDWithContext(context.Background(), request)
+}
+
+// ModifyUsersOfGroupSTD
+// 变更用户组用户信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyUsersOfGroupSTDWithContext(ctx context.Context, request *ModifyUsersOfGroupSTDRequest) (response *ModifyUsersOfGroupSTDResponse, err error) {
+    if request == nil {
+        request = NewModifyUsersOfGroupSTDRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyUsersOfGroupSTD")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyUsersOfGroupSTD require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyUsersOfGroupSTDResponse()
     err = c.Send(request, response)
     return
 }
@@ -4827,6 +6151,10 @@ func NewModifyYarnDeployResponse() (response *ModifyYarnDeployResponse) {
 }
 
 // ModifyYarnDeploy
+// 该接口已废弃，请使用DeployYarnConf完成部署生效
+//
+// 
+//
 // 部署生效。已废弃，请使用`DeployYarnConf`接口进行部署生效
 //
 // 可能返回的错误码:
@@ -4839,6 +6167,10 @@ func (c *Client) ModifyYarnDeploy(request *ModifyYarnDeployRequest) (response *M
 }
 
 // ModifyYarnDeploy
+// 该接口已废弃，请使用DeployYarnConf完成部署生效
+//
+// 
+//
 // 部署生效。已废弃，请使用`DeployYarnConf`接口进行部署生效
 //
 // 可能返回的错误码:
@@ -4850,6 +6182,7 @@ func (c *Client) ModifyYarnDeployWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyYarnDeployRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyYarnDeploy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyYarnDeploy require credential")
@@ -4905,6 +6238,7 @@ func (c *Client) ModifyYarnQueueV2WithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyYarnQueueV2Request()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyYarnQueueV2")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyYarnQueueV2 require credential")
@@ -4966,6 +6300,7 @@ func (c *Client) ResetYarnConfigWithContext(ctx context.Context, request *ResetY
     if request == nil {
         request = NewResetYarnConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ResetYarnConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetYarnConfig require credential")
@@ -4998,7 +6333,7 @@ func NewResizeDataDisksResponse() (response *ResizeDataDisksResponse) {
 }
 
 // ResizeDataDisks
-// 云盘扩容
+// 云数据盘扩容
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
@@ -5009,7 +6344,7 @@ func (c *Client) ResizeDataDisks(request *ResizeDataDisksRequest) (response *Res
 }
 
 // ResizeDataDisks
-// 云盘扩容
+// 云数据盘扩容
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
@@ -5019,6 +6354,7 @@ func (c *Client) ResizeDataDisksWithContext(ctx context.Context, request *Resize
     if request == nil {
         request = NewResizeDataDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ResizeDataDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResizeDataDisks require credential")
@@ -5150,6 +6486,7 @@ func (c *Client) RunJobFlowWithContext(ctx context.Context, request *RunJobFlowR
     if request == nil {
         request = NewRunJobFlowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "RunJobFlow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RunJobFlow require credential")
@@ -5219,6 +6556,7 @@ func (c *Client) ScaleOutClusterWithContext(ctx context.Context, request *ScaleO
     if request == nil {
         request = NewScaleOutClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ScaleOutCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleOutCluster require credential")
@@ -5386,6 +6724,7 @@ func (c *Client) ScaleOutInstanceWithContext(ctx context.Context, request *Scale
     if request == nil {
         request = NewScaleOutInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ScaleOutInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleOutInstance require credential")
@@ -5443,6 +6782,7 @@ func (c *Client) SetNodeResourceConfigDefaultWithContext(ctx context.Context, re
     if request == nil {
         request = NewSetNodeResourceConfigDefaultRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "SetNodeResourceConfigDefault")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SetNodeResourceConfigDefault require credential")
@@ -5508,6 +6848,7 @@ func (c *Client) StartStopServiceOrMonitorWithContext(ctx context.Context, reque
     if request == nil {
         request = NewStartStopServiceOrMonitorRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "StartStopServiceOrMonitor")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartStopServiceOrMonitor require credential")
@@ -5685,6 +7026,7 @@ func (c *Client) SyncPodStateWithContext(ctx context.Context, request *SyncPodSt
     if request == nil {
         request = NewSyncPodStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "SyncPodState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SyncPodState require credential")
@@ -5742,6 +7084,7 @@ func (c *Client) TerminateClusterNodesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewTerminateClusterNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "TerminateClusterNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateClusterNodes require credential")
@@ -5817,6 +7160,7 @@ func (c *Client) TerminateInstanceWithContext(ctx context.Context, request *Term
     if request == nil {
         request = NewTerminateInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "TerminateInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateInstance require credential")
@@ -5894,6 +7238,7 @@ func (c *Client) TerminateSLInstanceWithContext(ctx context.Context, request *Te
     if request == nil {
         request = NewTerminateSLInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "TerminateSLInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateSLInstance require credential")
@@ -5999,6 +7344,7 @@ func (c *Client) TerminateTasksWithContext(ctx context.Context, request *Termina
     if request == nil {
         request = NewTerminateTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "TerminateTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateTasks require credential")
