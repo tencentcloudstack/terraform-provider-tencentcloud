@@ -112,10 +112,10 @@ func DataSourceTencentCloudAsScalingGroups() *schema.Resource {
 							Description: "A list of traditional clb ids which the CVM instances attached to.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
-						"forward_balancer_ids": {
+						"forward_load_balancers": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "A list of application clb ids.",
+							Description: "A list of application clb.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"load_balancer_id": {
@@ -267,10 +267,10 @@ func dataSourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta inter
 					targetAttributes = append(targetAttributes, targetAttribute)
 				}
 				forwardLoadBalancer := map[string]interface{}{
-					"load_balancer_id":  v.LoadBalancerId,
-					"listener_id":       v.ListenerId,
-					"target_attributes": targetAttributes,
-					"location_id":       v.LocationId,
+					"load_balancer_id": v.LoadBalancerId,
+					"listener_id":      v.ListenerId,
+					"target_attribute": targetAttributes,
+					"location_id":      v.LocationId,
 				}
 				forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
 			}

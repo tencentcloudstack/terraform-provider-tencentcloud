@@ -68,11 +68,10 @@ func ResourceTencentCloudAsScalingConfig() *schema.Resource {
 				Description:  "Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.",
 			},
 			"system_disk_size": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      50,
-				ValidateFunc: tccommon.ValidateIntegerInRange(50, 500),
-				Description:  "Volume of system disk in GB. Default is `50`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     50,
+				Description: "Volume of system disk in GB. Default is `50`.",
 			},
 			"data_disk": {
 				Type:        schema.TypeList,
