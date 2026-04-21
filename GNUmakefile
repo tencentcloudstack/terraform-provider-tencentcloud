@@ -23,7 +23,6 @@ testacc: fmtcheck
 
 fmt:
 	@echo "==> Fixing source code with gofmt..."
-	goimports -w ./$(PKG_NAME)
 	gofmt -s -w ./$(PKG_NAME)
 
 fmt-faster:
@@ -32,7 +31,6 @@ fmt-faster:
 		exit 0; \
 	else \
 		echo "==> [Faster]Fixing source code with gofmt...\n $(CHANGED_FILES) \n"; \
-		goimports -w $(CHANGED_FILES); \
 		gofmt -s -w $(CHANGED_FILES); \
 	fi
 

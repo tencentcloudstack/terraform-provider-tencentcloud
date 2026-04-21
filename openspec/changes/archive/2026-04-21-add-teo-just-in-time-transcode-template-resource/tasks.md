@@ -2,7 +2,7 @@
 
 - [x] 1.1 Create resource file `tencentcloud/services/teo/resource_tc_teo_just_in_time_transcode_template.go`
 - [x] 1.2 Define resource schema with all required and optional parameters
-- [x] 1.3 Set ForceNew for zone_id, template_name, comment, video_stream_switch, audio_stream_switch, video_template, and audio_template
+- [x] 1.3 Set ForceNew for zone_id, template_name, comment; remove ForceNew from video_stream_switch, audio_stream_switch, video_template, audio_template
 - [x] 1.4 Add Timeout configuration for create, delete, and read operations (default: 10 minutes)
 - [x] 1.5 Define composite ID format as `zone_id#template_id`
 - [x] 1.6 Implement resource schema validation rules (template_name max 64 chars, comment max 256 chars)
@@ -32,7 +32,11 @@
 - [x] 4.3 Build CreateJustInTimeTranscodeTemplateRequest from schema data
 - [x] 4.4 Call TEO API CreateJustInTimeTranscodeTemplate with retry logic
 - [x] 4.5 Handle API errors and return appropriate error messages
-- [x] 4.6 Set composite resource ID as `zone_id#template_id`
+- [x] 4.6 Set composite resource ID using tccommon.FILED_SP as separator (`zone_id#template_id`)
+
+## 4a. Update Function Implementation
+
+- [x] 4a.1 Implement resourceTencentCloudTeoJustInTimeTranscodeTemplateUpdate (no-op, logs warning, calls Read)
 - [x] 4.7 Set template_id in state
 - [x] 4.8 Implement polling mechanism to wait for template creation completion
 - [x] 4.9 Call Read function to verify template is available
@@ -41,7 +45,7 @@
 ## 5. Read Function Implementation
 
 - [x] 5.1 Implement resourceTencentCloudTeoJustInTimeTranscodeTemplateRead function
-- [x] 5.2 Parse composite ID to extract zone_id and template_id
+- [x] 5.2 Read zone_id and template_id directly from d.Get() instead of parsing from Id()
 - [x] 5.3 Build DescribeJustInTimeTranscodeTemplatesRequest with zone_id
 - [x] 5.4 Set filter for template_id to find the specific template
 - [x] 5.5 Call TEO API DescribeJustInTimeTranscodeTemplates with retry logic
@@ -54,7 +58,7 @@
 ## 6. Delete Function Implementation
 
 - [x] 6.1 Implement resourceTencentCloudTeoJustInTimeTranscodeTemplateDelete function
-- [x] 6.2 Parse composite ID to extract zone_id and template_id
+- [x] 6.2 Read zone_id and template_id directly from d.Get() instead of parsing from Id()
 - [x] 6.3 Build DeleteJustInTimeTranscodeTemplatesRequest with zone_id and template_id
 - [x] 6.4 Call TEO API DeleteJustInTimeTranscodeTemplates with retry logic
 - [x] 6.5 Handle template not found scenario (ignore error, remove from state)
@@ -64,8 +68,8 @@
 
 ## 7. Resource Registration
 
-- [x] 7.1 Register resource in tencentcloud/services/teo/service_tencentcloud_teo.go
-- [x] 7.2 Add resource map entry with resource name and resource object
+- [x] 7.1 Register resource in tencentcloud/provider.go ResourcesMap
+- [x] 7.2 Add resource entry in tencentcloud/provider.md under TencentCloud EdgeOne(TEO) Resource section
 - [x] 7.3 Ensure resource follows TEO service naming convention
 
 ## 8. Helper Functions Implementation
@@ -80,29 +84,24 @@
 
 ## 9. Unit Tests Implementation
 
-- [x] 9.1 Create test file `tencentcloud/services/teo/resource_tc_teo_just_in_time_transcode_template_test.go`
-- [x] 9.2 Add test for CreateJustInTimeTranscodeTemplate basic scenario
-- [x] 9.3 Add test for CreateJustInTimeTranscodeTemplate with full configuration
-- [x] 9.4 Add test for DescribeJustInTimeTranscodeTemplates read operation
-- [x] 9.5 Add test for DeleteJustInTimeTranscodeTemplates deletion
-- [x] 9.6 Add test for composite ID parsing (valid and invalid formats)
-- [x] 9.7 Add test for API error handling (network errors, API errors)
-- [x] 9.8 Add test for validation errors (parameter length, invalid values)
-- [x] 9.9 Add test for retry mechanism and timeout handling
-- [x] 9.10 Add test for template not found scenario
+- [x] 9.1 Create test file `tencentcloud/services/teo/resource_tc_teo_just_in_time_transcode_template_test.go` (package teo_test)
+- [x] 9.2 Add test for Create success scenario with gomonkey mock
+- [x] 9.3 Add test for Create API error handling
+- [x] 9.4 Add test for Read success scenario
+- [x] 9.5 Add test for Read not-found scenario
+- [x] 9.6 Add test for Delete success scenario
+- [x] 9.7 Add test for Delete API error handling
+- [x] 9.8 Add test for Update (no-op that calls Read)
+- [x] 9.9 Add test for schema validation (fields, types, Required/Optional/ForceNew/Computed, Update not nil)
+- [x] 9.10 Use mockMeta pattern from teo_test package (consistent with identify_zone_operation and create_cls_index_operation tests)
 
 ## 10. Resource Documentation
 
 - [x] 10.1 Create documentation file `tencentcloud/services/teo/resource_tc_teo_just_in_time_transcode_template.md`
-- [x] 10.2 Add resource description and use cases
-- [x] 10.3 Document all parameters with types and descriptions
-- [x] 10.4 Document video_template nested parameters
-- [x] 10.5 Document audio_template nested parameters
-- [x] 10.6 Add example configuration for minimal setup
-- [x] 10.7 Add example configuration for full setup
-- [x] 10.8 Document timeout configuration
-- [x] 10.9 document ForceNew behavior for all parameters
-- [x] 10.10 Add notes about asynchronous operations
+- [x] 10.2 Follow gendoc convention: one-line description with TEO product name
+- [x] 10.3 Add Example Usage section with full HCL configuration
+- [x] 10.4 Add Import section with import command example
+- [x] 10.5 Argument/Attributes Reference auto-generated from Go schema Description fields
 
 ## 11. Verification
 

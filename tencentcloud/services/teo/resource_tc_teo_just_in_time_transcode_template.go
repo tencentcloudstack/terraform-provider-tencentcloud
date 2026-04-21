@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,14 +17,10 @@ func ResourceTencentCloudTeoJustInTimeTranscodeTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTeoJustInTimeTranscodeTemplateCreate,
 		Read:   resourceTencentCloudTeoJustInTimeTranscodeTemplateRead,
+		Update: resourceTencentCloudTeoJustInTimeTranscodeTemplateUpdate,
 		Delete: resourceTencentCloudTeoJustInTimeTranscodeTemplateDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
-		},
-		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(10 * time.Minute),
-			Read:   schema.DefaultTimeout(10 * time.Minute),
-			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
@@ -43,27 +38,23 @@ func ResourceTencentCloudTeoJustInTimeTranscodeTemplate() *schema.Resource {
 			"comment": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Template description. Max length: 256 characters.",
 			},
 			"video_stream_switch": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"on", "off"}),
 				Description:  "Video stream switch. Valid values: on, off. Default: on.",
 			},
 			"audio_stream_switch": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"on", "off"}),
 				Description:  "Audio stream switch. Valid values: on, off. Default: on.",
 			},
 			"video_template": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				MaxItems:    1,
 				Computed:    true,
 				Description: "Video stream configuration parameters. Required when video_stream_switch is on.",
@@ -113,7 +104,6 @@ func ResourceTencentCloudTeoJustInTimeTranscodeTemplate() *schema.Resource {
 			"audio_template": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				MaxItems:    1,
 				Computed:    true,
 				Description: "Audio stream configuration parameters. Required when audio_stream_switch is on.",
@@ -165,7 +155,8 @@ func resourceTencentCloudTeoJustInTimeTranscodeTemplateCreate(d *schema.Resource
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
-		zoneId string
+		zoneId   string
+		response *teo.CreateJustInTimeTranscodeTemplateResponse
 	)
 
 	zoneId = d.Get("zone_id").(string)
@@ -212,14 +203,21 @@ func resourceTencentCloudTeoJustInTimeTranscodeTemplateCreate(d *schema.Resource
 			return tccommon.RetryError(e)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		d.SetId(fmt.Sprintf("%s#%s", zoneId, *result.Response.TemplateId))
-		d.Set("template_id", result.Response.TemplateId)
+
+		if result == nil || result.Response == nil || result.Response.TemplateId == nil {
+			return resource.NonRetryableError(fmt.Errorf("create teo just-in-time transcode template failed, response is nil"))
+		}
+
+		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITICAL]%s create teo just-in-time transcode template failed, reason: %s", logId, err.Error())
 		return err
 	}
+
+	d.SetId(zoneId + tccommon.FILED_SP + *response.Response.TemplateId)
 
 	return resourceTencentCloudTeoJustInTimeTranscodeTemplateRead(d, meta)
 }
@@ -230,15 +228,12 @@ func resourceTencentCloudTeoJustInTimeTranscodeTemplateRead(d *schema.ResourceDa
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	id := d.Id()
-	if id == "" {
-		return fmt.Errorf("resource ID is missing")
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("resource id is broken, id is %s", d.Id())
 	}
-
-	zoneId, templateId, err := resourceTencentCloudTeoJustInTimeTranscodeTemplateParseId(id)
-	if err != nil {
-		return err
-	}
+	zoneId := idSplit[0]
+	templateId := idSplit[1]
 
 	request := teo.NewDescribeJustInTimeTranscodeTemplatesRequest()
 	request.ZoneId = helper.String(zoneId)
@@ -251,7 +246,7 @@ func resourceTencentCloudTeoJustInTimeTranscodeTemplateRead(d *schema.ResourceDa
 	request.Limit = helper.Int64(10)
 
 	var template *teo.JustInTimeTranscodeTemplate
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeJustInTimeTranscodeTemplates(request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -276,19 +271,36 @@ func resourceTencentCloudTeoJustInTimeTranscodeTemplateRead(d *schema.ResourceDa
 	}
 
 	if template == nil {
+		log.Printf("[CRITICAL]%s read teo just-in-time transcode template failed, reason: template(id:%s) not found", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
 	_ = d.Set("zone_id", zoneId)
-	_ = d.Set("template_id", template.TemplateId)
-	_ = d.Set("template_name", template.TemplateName)
-	_ = d.Set("comment", template.Comment)
-	_ = d.Set("video_stream_switch", template.VideoStreamSwitch)
-	_ = d.Set("audio_stream_switch", template.AudioStreamSwitch)
-	_ = d.Set("type", template.Type)
-	_ = d.Set("create_time", template.CreateTime)
-	_ = d.Set("update_time", template.UpdateTime)
+	if template.TemplateId != nil {
+		_ = d.Set("template_id", template.TemplateId)
+	}
+	if template.TemplateName != nil {
+		_ = d.Set("template_name", template.TemplateName)
+	}
+	if template.Comment != nil {
+		_ = d.Set("comment", template.Comment)
+	}
+	if template.VideoStreamSwitch != nil {
+		_ = d.Set("video_stream_switch", template.VideoStreamSwitch)
+	}
+	if template.AudioStreamSwitch != nil {
+		_ = d.Set("audio_stream_switch", template.AudioStreamSwitch)
+	}
+	if template.Type != nil {
+		_ = d.Set("type", template.Type)
+	}
+	if template.CreateTime != nil {
+		_ = d.Set("create_time", template.CreateTime)
+	}
+	if template.UpdateTime != nil {
+		_ = d.Set("update_time", template.UpdateTime)
+	}
 
 	if template.VideoTemplate != nil {
 		if err := d.Set("video_template", []interface{}{mapVideoTemplateInfoToSchema(template.VideoTemplate)}); err != nil {
@@ -305,27 +317,39 @@ func resourceTencentCloudTeoJustInTimeTranscodeTemplateRead(d *schema.ResourceDa
 	return nil
 }
 
+func resourceTencentCloudTeoJustInTimeTranscodeTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_just_in_time_transcode_template.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	immutableArgs := []string{"comment", "video_stream_switch", "audio_stream_switch", "video_template", "audio_template"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	return resourceTencentCloudTeoJustInTimeTranscodeTemplateRead(d, meta)
+}
+
 func resourceTencentCloudTeoJustInTimeTranscodeTemplateDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_just_in_time_transcode_template.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	id := d.Id()
-	if id == "" {
-		return fmt.Errorf("resource ID is missing")
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("resource id is broken, id is %s", d.Id())
 	}
-
-	zoneId, templateId, err := resourceTencentCloudTeoJustInTimeTranscodeTemplateParseId(id)
-	if err != nil {
-		return err
-	}
+	zoneId := idSplit[0]
+	templateId := idSplit[1]
 
 	request := teo.NewDeleteJustInTimeTranscodeTemplatesRequest()
 	request.ZoneId = helper.String(zoneId)
 	request.TemplateIds = []*string{helper.String(templateId)}
 
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteJustInTimeTranscodeTemplates(request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -339,16 +363,7 @@ func resourceTencentCloudTeoJustInTimeTranscodeTemplateDelete(d *schema.Resource
 		return err
 	}
 
-	d.SetId("")
 	return nil
-}
-
-func resourceTencentCloudTeoJustInTimeTranscodeTemplateParseId(id string) (string, string, error) {
-	items := strings.Split(id, "#")
-	if len(items) != 2 {
-		return "", "", fmt.Errorf("invalid resource ID format, expected: zone_id#template_id, got: %s", id)
-	}
-	return items[0], items[1], nil
 }
 
 func buildVideoTemplateInfo(videoTemplateMap map[string]interface{}) *teo.VideoTemplateInfo {

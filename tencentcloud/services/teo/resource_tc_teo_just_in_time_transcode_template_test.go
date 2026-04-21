@@ -1,521 +1,364 @@
-package teo
+package teo_test
 
 import (
-	"context"
 	"fmt"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/stretchr/testify/assert"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
-func TestResourceTencentCloudTeoJustInTimeTranscodeTemplate_Create(t *testing.T) {
-	var (
-		zoneId            = "zone-1234567890"
-		templateId        = "tpl-abcdefghij"
-		templateName      = "test-template"
-		comment           = "test comment"
-		videoStreamSwitch = "on"
-		audioStreamSwitch = "on"
-	)
+// go test ./tencentcloud/services/teo/ -run "TestJustInTimeTranscodeTemplate" -v -count=1 -gcflags="all=-l"
 
-	r := ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
-	d := r.Data(nil)
-	d.Set("zone_id", zoneId)
-	d.Set("template_name", templateName)
-	d.Set("comment", comment)
-	d.Set("video_stream_switch", videoStreamSwitch)
-	d.Set("audio_stream_switch", audioStreamSwitch)
-	d.Set("video_template", []interface{}{
-		map[string]interface{}{
-			"video_codec":         "H.264",
-			"fps":                 float64(30),
-			"bitrate":             2000,
-			"resolution_adaptive": "open",
-			"width":               1280,
-			"height":              720,
-			"fill_type":           "black",
-		},
-	})
-	d.Set("audio_template", []interface{}{
-		map[string]interface{}{
-			"codec":         "libfdk_aac",
-			"audio_channel": 2,
-		},
+// TestJustInTimeTranscodeTemplate_Create_Success tests Create calls API and sets ID
+func TestJustInTimeTranscodeTemplate_Create_Success(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "CreateJustInTimeTranscodeTemplate", func(request *teov20220901.CreateJustInTimeTranscodeTemplateRequest) (*teov20220901.CreateJustInTimeTranscodeTemplateResponse, error) {
+		resp := teov20220901.NewCreateJustInTimeTranscodeTemplateResponse()
+		resp.Response = &teov20220901.CreateJustInTimeTranscodeTemplateResponseParams{
+			TemplateId: ptrString("tpl-abcdefghij"),
+			RequestId:  ptrString("fake-request-id"),
+		}
+		return resp, nil
 	})
 
-	createResp := &teo.CreateJustInTimeTranscodeTemplateResponse{
-		Response: &teo.CreateJustInTimeTranscodeTemplateResponseParams{
-			TemplateId: helper.String(templateId),
-			RequestId:  helper.String("test-request-id"),
-		},
-	}
-
-	describeResp := &teo.DescribeJustInTimeTranscodeTemplatesResponse{
-		Response: &teo.DescribeJustInTimeTranscodeTemplatesResponseParams{
-			TotalCount: helper.Uint64(1),
-			TemplateSet: []*teo.JustInTimeTranscodeTemplate{
+	patches.ApplyMethodFunc(teoClient, "DescribeJustInTimeTranscodeTemplates", func(request *teov20220901.DescribeJustInTimeTranscodeTemplatesRequest) (*teov20220901.DescribeJustInTimeTranscodeTemplatesResponse, error) {
+		resp := teov20220901.NewDescribeJustInTimeTranscodeTemplatesResponse()
+		resp.Response = &teov20220901.DescribeJustInTimeTranscodeTemplatesResponseParams{
+			TotalCount: ptrUint64(1),
+			TemplateSet: []*teov20220901.JustInTimeTranscodeTemplate{
 				{
-					TemplateId:        helper.String(templateId),
-					TemplateName:      helper.String(templateName),
-					Comment:           helper.String(comment),
-					VideoStreamSwitch: helper.String(videoStreamSwitch),
-					AudioStreamSwitch: helper.String(audioStreamSwitch),
-					Type:              helper.String("custom"),
-					VideoTemplate: &teo.VideoTemplateInfo{
-						Codec:              helper.String("H.264"),
-						Fps:                helper.Float64(30),
-						Bitrate:            helper.Uint64(2000),
-						ResolutionAdaptive: helper.String("open"),
-						Width:              helper.Uint64(1280),
-						Height:             helper.Uint64(720),
-						FillType:           helper.String("black"),
+					TemplateId:        ptrString("tpl-abcdefghij"),
+					TemplateName:      ptrString("test-template"),
+					Comment:           ptrString("test comment"),
+					VideoStreamSwitch: ptrString("on"),
+					AudioStreamSwitch: ptrString("on"),
+					Type:              ptrString("custom"),
+					VideoTemplate: &teov20220901.VideoTemplateInfo{
+						Codec:              ptrString("H.264"),
+						Fps:                ptrFloat64(30),
+						Bitrate:            ptrUint64(2000),
+						ResolutionAdaptive: ptrString("open"),
+						Width:              ptrUint64(1280),
+						Height:             ptrUint64(720),
+						FillType:           ptrString("black"),
 					},
-					AudioTemplate: &teo.AudioTemplateInfo{
-						Codec:        helper.String("libfdk_aac"),
-						AudioChannel: helper.Uint64(2),
+					AudioTemplate: &teov20220901.AudioTemplateInfo{
+						Codec:        ptrString("libfdk_aac"),
+						AudioChannel: ptrUint64(2),
 					},
 				},
 			},
-			RequestId: helper.String("test-request-id"),
-		},
-	}
-
-	// Mock CreateJustInTimeTranscodeTemplate
-	patch1 := gomonkey.ApplyFunc(common.NewClient, func(region string, secretId, secretKey, token string, clientProfile *common.ClientProfile) (client *common.Client, err error) {
-		return nil, nil
-	})
-	defer patch1.Reset()
-
-	// Mock the client method
-	patch2 := gomonkey.ApplyMethod((*resource.ResourceData)(nil), "Id", func(_ *resource.ResourceData) string {
-		return ""
-	})
-	defer patch2.Reset()
-
-	// Test Create
-	createFunc := func() (interface{}, error) {
-		meta := &tccommon.ProviderMeta{
-			TencentV2Client: &tencentcloudV2Client{
-				teoClient: &teo.Client{},
-			},
+			RequestId: ptrString("fake-request-id"),
 		}
-		return nil, resourceTencentCloudTeoJustInTimeTranscodeTemplateCreate(d, meta)
-	}
-
-	// Mock API call
-	patch3 := gomonkey.ApplyMethod(&teo.Client{}, "CreateJustInTimeTranscodeTemplate", func(_ *teo.Client, req *teo.CreateJustInTimeTranscodeTemplateRequest) (resp *teo.CreateJustInTimeTranscodeTemplateResponse, err error) {
-		return createResp, nil
+		return resp, nil
 	})
-	defer patch3.Reset()
 
-	patch4 := gomonkey.ApplyMethod(&teo.Client{}, "DescribeJustInTimeTranscodeTemplates", func(_ *teo.Client, req *teo.DescribeJustInTimeTranscodeTemplatesRequest) (resp *teo.DescribeJustInTimeTranscodeTemplatesResponse, err error) {
-		return describeResp, nil
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":             "zone-1234567890",
+		"template_name":       "test-template",
+		"comment":             "test comment",
+		"video_stream_switch": "on",
+		"audio_stream_switch": "on",
 	})
-	defer patch4.Reset()
 
-	err := createFunc()
-	if err != nil {
-		t.Fatalf("create failed: %v", err)
-	}
-
-	expectedId := fmt.Sprintf("%s#%s", zoneId, templateId)
-	if d.Id() != expectedId {
-		t.Errorf("expected id %s, got %s", expectedId, d.Id())
-	}
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "zone-1234567890#tpl-abcdefghij", d.Id())
 }
 
-func TestResourceTencentCloudTeoJustInTimeTranscodeTemplate_Read(t *testing.T) {
-	var (
-		zoneId            = "zone-1234567890"
-		templateId        = "tpl-abcdefghij"
-		templateName      = "test-template"
-		comment           = "test comment"
-		videoStreamSwitch = "on"
-		audioStreamSwitch = "on"
-	)
+// TestJustInTimeTranscodeTemplate_Create_APIError tests Create handles API error
+func TestJustInTimeTranscodeTemplate_Create_APIError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
 
-	describeResp := &teo.DescribeJustInTimeTranscodeTemplatesResponse{
-		Response: &teo.DescribeJustInTimeTranscodeTemplatesResponseParams{
-			TotalCount: helper.Uint64(1),
-			TemplateSet: []*teo.JustInTimeTranscodeTemplate{
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "CreateJustInTimeTranscodeTemplate", func(request *teov20220901.CreateJustInTimeTranscodeTemplateRequest) (*teov20220901.CreateJustInTimeTranscodeTemplateResponse, error) {
+		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
+	})
+
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-invalid",
+		"template_name": "test-template",
+	})
+
+	err := res.Create(d, meta)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "InvalidParameter")
+}
+
+// TestJustInTimeTranscodeTemplate_Read_Success tests Read retrieves template data
+func TestJustInTimeTranscodeTemplate_Read_Success(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeJustInTimeTranscodeTemplates", func(request *teov20220901.DescribeJustInTimeTranscodeTemplatesRequest) (*teov20220901.DescribeJustInTimeTranscodeTemplatesResponse, error) {
+		resp := teov20220901.NewDescribeJustInTimeTranscodeTemplatesResponse()
+		resp.Response = &teov20220901.DescribeJustInTimeTranscodeTemplatesResponseParams{
+			TotalCount: ptrUint64(1),
+			TemplateSet: []*teov20220901.JustInTimeTranscodeTemplate{
 				{
-					TemplateId:        helper.String(templateId),
-					TemplateName:      helper.String(templateName),
-					Comment:           helper.String(comment),
-					VideoStreamSwitch: helper.String(videoStreamSwitch),
-					AudioStreamSwitch: helper.String(audioStreamSwitch),
-					Type:              helper.String("custom"),
-					VideoTemplate: &teo.VideoTemplateInfo{
-						Codec:              helper.String("H.264"),
-						Fps:                helper.Float64(30),
-						Bitrate:            helper.Uint64(2000),
-						ResolutionAdaptive: helper.String("open"),
-						Width:              helper.Uint64(1280),
-						Height:             helper.Uint64(720),
-						FillType:           helper.String("black"),
+					TemplateId:        ptrString("tpl-abcdefghij"),
+					TemplateName:      ptrString("test-template"),
+					Comment:           ptrString("test comment"),
+					VideoStreamSwitch: ptrString("on"),
+					AudioStreamSwitch: ptrString("on"),
+					Type:              ptrString("custom"),
+					VideoTemplate: &teov20220901.VideoTemplateInfo{
+						Codec:              ptrString("H.264"),
+						Fps:                ptrFloat64(30),
+						Bitrate:            ptrUint64(2000),
+						ResolutionAdaptive: ptrString("open"),
+						Width:              ptrUint64(1280),
+						Height:             ptrUint64(720),
+						FillType:           ptrString("black"),
 					},
-					AudioTemplate: &teo.AudioTemplateInfo{
-						Codec:        helper.String("libfdk_aac"),
-						AudioChannel: helper.Uint64(2),
+					AudioTemplate: &teov20220901.AudioTemplateInfo{
+						Codec:        ptrString("libfdk_aac"),
+						AudioChannel: ptrUint64(2),
 					},
 				},
 			},
-			RequestId: helper.String("test-request-id"),
-		},
-	}
-
-	r := ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
-	d := r.Data(nil)
-	d.SetId(fmt.Sprintf("%s#%s", zoneId, templateId))
-
-	// Mock API call
-	patch := gomonkey.ApplyMethod(&teo.Client{}, "DescribeJustInTimeTranscodeTemplates", func(_ *teo.Client, req *teo.DescribeJustInTimeTranscodeTemplatesRequest) (resp *teo.DescribeJustInTimeTranscodeTemplatesResponse, err error) {
-		return describeResp, nil
-	})
-	defer patch.Reset()
-
-	readFunc := func() error {
-		meta := &tccommon.ProviderMeta{
-			TencentV2Client: &tencentcloudV2Client{
-				teoClient: &teo.Client{},
-			},
+			RequestId: ptrString("fake-request-id"),
 		}
-		return resourceTencentCloudTeoJustInTimeTranscodeTemplateRead(context.Background(), d, meta)
-	}
-
-	err := readFunc()
-	if err != nil {
-		t.Fatalf("read failed: %v", err)
-	}
-
-	// Verify schema values
-	if d.Get("template_name") != templateName {
-		t.Errorf("expected template_name %s, got %s", templateName, d.Get("template_name"))
-	}
-	if d.Get("comment") != comment {
-		t.Errorf("expected comment %s, got %s", comment, d.Get("comment"))
-	}
-	if d.Get("video_stream_switch") != videoStreamSwitch {
-		t.Errorf("expected video_stream_switch %s, got %s", videoStreamSwitch, d.Get("video_stream_switch"))
-	}
-	if d.Get("audio_stream_switch") != audioStreamSwitch {
-		t.Errorf("expected audio_stream_switch %s, got %s", audioStreamSwitch, d.Get("audio_stream_switch"))
-	}
-}
-
-func TestResourceTencentCloudTeoJustInTimeTranscodeTemplate_Delete(t *testing.T) {
-	var (
-		zoneId     = "zone-1234567890"
-		templateId = "tpl-abcdefghij"
-	)
-
-	deleteResp := &teo.DeleteJustInTimeTranscodeTemplatesResponse{
-		Response: &teo.DeleteJustInTimeTranscodeTemplatesResponseParams{
-			RequestId: helper.String("test-request-id"),
-		},
-	}
-
-	r := ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
-	d := r.Data(nil)
-	d.SetId(fmt.Sprintf("%s#%s", zoneId, templateId))
-
-	// Mock API call
-	patch := gomonkey.ApplyMethod(&teo.Client{}, "DeleteJustInTimeTranscodeTemplates", func(_ *teo.Client, req *teo.DeleteJustInTimeTranscodeTemplatesRequest) (resp *teo.DeleteJustInTimeTranscodeTemplatesResponse, err error) {
-		return deleteResp, nil
+		return resp, nil
 	})
-	defer patch.Reset()
 
-	deleteFunc := func() error {
-		meta := &tccommon.ProviderMeta{
-			TencentV2Client: &tencentcloudV2Client{
-				teoClient: &teo.Client{},
-			},
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-1234567890",
+		"template_name": "test-template",
+		"template_id":   "tpl-abcdefghij",
+	})
+	d.SetId("zone-1234567890#tpl-abcdefghij")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "test-template", d.Get("template_name"))
+	assert.Equal(t, "test comment", d.Get("comment"))
+	assert.Equal(t, "on", d.Get("video_stream_switch"))
+	assert.Equal(t, "on", d.Get("audio_stream_switch"))
+}
+
+// TestJustInTimeTranscodeTemplate_Read_NotFound tests Read handles template not found
+func TestJustInTimeTranscodeTemplate_Read_NotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeJustInTimeTranscodeTemplates", func(request *teov20220901.DescribeJustInTimeTranscodeTemplatesRequest) (*teov20220901.DescribeJustInTimeTranscodeTemplatesResponse, error) {
+		resp := teov20220901.NewDescribeJustInTimeTranscodeTemplatesResponse()
+		resp.Response = &teov20220901.DescribeJustInTimeTranscodeTemplatesResponseParams{
+			TotalCount:  ptrUint64(0),
+			TemplateSet: []*teov20220901.JustInTimeTranscodeTemplate{},
+			RequestId:   ptrString("fake-request-id"),
 		}
-		return resourceTencentCloudTeoJustInTimeTranscodeTemplateDelete(context.Background(), d, meta)
-	}
+		return resp, nil
+	})
 
-	err := deleteFunc()
-	if err != nil {
-		t.Fatalf("delete failed: %v", err)
-	}
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-1234567890",
+		"template_name": "test-template",
+		"template_id":   "tpl-abcdefghij",
+	})
+	d.SetId("zone-1234567890#tpl-abcdefghij")
 
-	if d.Id() != "" {
-		t.Errorf("expected id to be empty after delete, got %s", d.Id())
-	}
+	err := res.Read(d, meta)
+	assert.Error(t, err)
 }
 
-func TestResourceTencentCloudTeoJustInTimeTranscodeTemplate_ParseId(t *testing.T) {
-	tests := []struct {
-		name     string
-		id       string
-		wantZone string
-		wantTemp string
-		wantErr  bool
-	}{
-		{
-			name:     "valid id",
-			id:       "zone-123#tpl-456",
-			wantZone: "zone-123",
-			wantTemp: "tpl-456",
-			wantErr:  false,
-		},
-		{
-			name:     "valid id with special chars",
-			id:       "zone_abc-123#tpl_xyz-456",
-			wantZone: "zone_abc-123",
-			wantTemp: "tpl_xyz-456",
-			wantErr:  false,
-		},
-		{
-			name:    "invalid id - no separator",
-			id:      "zone-123",
-			wantErr: true,
-		},
-		{
-			name:    "invalid id - too many separators",
-			id:      "zone-123#tpl-456#extra",
-			wantErr: true,
-		},
-		{
-			name:    "invalid id - empty parts",
-			id:      "#",
-			wantErr: true,
-		},
-		{
-			name:    "invalid id - empty first part",
-			id:      "#tpl-456",
-			wantErr: true,
-		},
-		{
-			name:    "invalid id - empty second part",
-			id:      "zone-123#",
-			wantErr: true,
-		},
-	}
+// TestJustInTimeTranscodeTemplate_Update tests Update is a no-op that calls Read
+func TestJustInTimeTranscodeTemplate_Update(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			zone, temp, err := resourceTencentCloudTeoJustInTimeTranscodeTemplateParseId(tt.id)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseId() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !tt.wantErr {
-				if zone != tt.wantZone {
-					t.Errorf("ParseId() zone = %v, want %v", zone, tt.wantZone)
-				}
-				if temp != tt.wantTemp {
-					t.Errorf("ParseId() template = %v, want %v", temp, tt.wantTemp)
-				}
-			}
-		})
-	}
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeJustInTimeTranscodeTemplates", func(request *teov20220901.DescribeJustInTimeTranscodeTemplatesRequest) (*teov20220901.DescribeJustInTimeTranscodeTemplatesResponse, error) {
+		resp := teov20220901.NewDescribeJustInTimeTranscodeTemplatesResponse()
+		resp.Response = &teov20220901.DescribeJustInTimeTranscodeTemplatesResponseParams{
+			TotalCount: ptrUint64(1),
+			TemplateSet: []*teov20220901.JustInTimeTranscodeTemplate{
+				{
+					TemplateId:        ptrString("tpl-abcdefghij"),
+					TemplateName:      ptrString("test-template"),
+					Comment:           ptrString("test comment"),
+					VideoStreamSwitch: ptrString("on"),
+					AudioStreamSwitch: ptrString("on"),
+					Type:              ptrString("custom"),
+				},
+			},
+			RequestId: ptrString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-1234567890",
+		"template_name": "test-template",
+		"template_id":   "tpl-abcdefghij",
+	})
+	d.SetId("zone-1234567890#tpl-abcdefghij")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
 }
 
-func TestBuildVideoTemplateInfo(t *testing.T) {
-	tests := []struct {
-		name string
-		data map[string]interface{}
-		want *teo.VideoTemplateInfo
-	}{
-		{
-			name: "full configuration",
-			data: map[string]interface{}{
-				"video_codec":         "H.264",
-				"fps":                 float64(30),
-				"bitrate":             2000,
-				"resolution_adaptive": "open",
-				"width":               1280,
-				"height":              720,
-				"fill_type":           "black",
-			},
-			want: &teo.VideoTemplateInfo{
-				Codec:              helper.String("H.264"),
-				Fps:                helper.Float64(30),
-				Bitrate:            helper.Uint64(2000),
-				ResolutionAdaptive: helper.String("open"),
-				Width:              helper.Uint64(1280),
-				Height:             helper.Uint64(720),
-				FillType:           helper.String("black"),
-			},
-		},
-		{
-			name: "minimal configuration",
-			data: map[string]interface{}{
-				"video_codec": "H.265",
-			},
-			want: &teo.VideoTemplateInfo{
-				Codec: helper.String("H.265"),
-			},
-		},
-		{
-			name: "empty configuration",
-			data: map[string]interface{}{},
-			want: &teo.VideoTemplateInfo{},
-		},
-	}
+// TestJustInTimeTranscodeTemplate_Delete_Success tests Delete removes template
+func TestJustInTimeTranscodeTemplate_Delete_Success(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := buildVideoTemplateInfo(tt.data)
-			if got.Codec != nil && tt.want.Codec != nil && *got.Codec != *tt.want.Codec {
-				t.Errorf("Codec mismatch, got %v, want %v", *got.Codec, *tt.want.Codec)
-			}
-			if got.Fps != nil && tt.want.Fps != nil && *got.Fps != *tt.want.Fps {
-				t.Errorf("Fps mismatch, got %v, want %v", *got.Fps, *tt.want.Fps)
-			}
-			if got.Bitrate != nil && tt.want.Bitrate != nil && *got.Bitrate != *tt.want.Bitrate {
-				t.Errorf("Bitrate mismatch, got %v, want %v", *got.Bitrate, *tt.want.Bitrate)
-			}
-		})
-	}
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DeleteJustInTimeTranscodeTemplates", func(request *teov20220901.DeleteJustInTimeTranscodeTemplatesRequest) (*teov20220901.DeleteJustInTimeTranscodeTemplatesResponse, error) {
+		resp := teov20220901.NewDeleteJustInTimeTranscodeTemplatesResponse()
+		resp.Response = &teov20220901.DeleteJustInTimeTranscodeTemplatesResponseParams{
+			RequestId: ptrString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-1234567890",
+		"template_name": "test-template",
+		"template_id":   "tpl-abcdefghij",
+	})
+	d.SetId("zone-1234567890#tpl-abcdefghij")
+
+	err := res.Delete(d, meta)
+	assert.NoError(t, err)
 }
 
-func TestBuildAudioTemplateInfo(t *testing.T) {
-	tests := []struct {
-		name string
-		data map[string]interface{}
-		want *teo.AudioTemplateInfo
-	}{
-		{
-			name: "full configuration",
-			data: map[string]interface{}{
-				"codec":         "libfdk_aac",
-				"audio_channel": 2,
-			},
-			want: &teo.AudioTemplateInfo{
-				Codec:        helper.String("libfdk_aac"),
-				AudioChannel: helper.Uint64(2),
-			},
-		},
-		{
-			name: "minimal configuration",
-			data: map[string]interface{}{
-				"codec": "libfdk_aac",
-			},
-			want: &teo.AudioTemplateInfo{
-				Codec: helper.String("libfdk_aac"),
-			},
-		},
-		{
-			name: "empty configuration",
-			data: map[string]interface{}{},
-			want: &teo.AudioTemplateInfo{},
-		},
-	}
+// TestJustInTimeTranscodeTemplate_Delete_APIError tests Delete handles API error
+func TestJustInTimeTranscodeTemplate_Delete_APIError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := buildAudioTemplateInfo(tt.data)
-			if got.Codec != nil && tt.want.Codec != nil && *got.Codec != *tt.want.Codec {
-				t.Errorf("Codec mismatch, got %v, want %v", *got.Codec, *tt.want.Codec)
-			}
-			if got.AudioChannel != nil && tt.want.AudioChannel != nil && *got.AudioChannel != *tt.want.AudioChannel {
-				t.Errorf("AudioChannel mismatch, got %v, want %v", *got.AudioChannel, *tt.want.AudioChannel)
-			}
-		})
-	}
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DeleteJustInTimeTranscodeTemplates", func(request *teov20220901.DeleteJustInTimeTranscodeTemplatesRequest) (*teov20220901.DeleteJustInTimeTranscodeTemplatesResponse, error) {
+		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceNotFound, Message=Template not found")
+	})
+
+	meta := newMockMeta()
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-1234567890",
+		"template_name": "test-template",
+		"template_id":   "tpl-abcdefghij",
+	})
+	d.SetId("zone-1234567890#tpl-abcdefghij")
+
+	err := res.Delete(d, meta)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "ResourceNotFound")
 }
 
-func TestMapVideoTemplateInfoToSchema(t *testing.T) {
-	tests := []struct {
-		name string
-		info *teo.VideoTemplateInfo
-		want map[string]interface{}
-	}{
-		{
-			name: "full configuration",
-			info: &teo.VideoTemplateInfo{
-				Codec:              helper.String("H.264"),
-				Fps:                helper.Float64(30),
-				Bitrate:            helper.Uint64(2000),
-				ResolutionAdaptive: helper.String("open"),
-				Width:              helper.Uint64(1280),
-				Height:             helper.Uint64(720),
-				FillType:           helper.String("black"),
-			},
-			want: map[string]interface{}{
-				"video_codec":         "H.264",
-				"fps":                 float64(30),
-				"bitrate":             2000,
-				"resolution_adaptive": "open",
-				"width":               1280,
-				"height":              720,
-				"fill_type":           "black",
-			},
-		},
-		{
-			name: "nil values",
-			info: &teo.VideoTemplateInfo{},
-			want: map[string]interface{}{},
-		},
-	}
+// TestJustInTimeTranscodeTemplate_Schema validates schema definition
+func TestJustInTimeTranscodeTemplate_Schema(t *testing.T) {
+	res := teo.ResourceTencentCloudTeoJustInTimeTranscodeTemplate()
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := mapVideoTemplateInfoToSchema(tt.info)
-			if got["video_codec"] != tt.want["video_codec"] {
-				t.Errorf("video_codec mismatch, got %v, want %v", got["video_codec"], tt.want["video_codec"])
-			}
-			if got["fps"] != tt.want["fps"] {
-				t.Errorf("fps mismatch, got %v, want %v", got["fps"], tt.want["fps"])
-			}
-			if got["bitrate"] != tt.want["bitrate"] {
-				t.Errorf("bitrate mismatch, got %v, want %v", got["bitrate"], tt.want["bitrate"])
-			}
-		})
-	}
+	assert.NotNil(t, res)
+	assert.NotNil(t, res.Create)
+	assert.NotNil(t, res.Read)
+	assert.NotNil(t, res.Update)
+	assert.NotNil(t, res.Delete)
+	assert.NotNil(t, res.Importer)
+
+	// Check required fields with ForceNew
+	assert.Contains(t, res.Schema, "zone_id")
+	zoneId := res.Schema["zone_id"]
+	assert.Equal(t, schema.TypeString, zoneId.Type)
+	assert.True(t, zoneId.Required)
+	assert.True(t, zoneId.ForceNew)
+
+	assert.Contains(t, res.Schema, "template_name")
+	templateName := res.Schema["template_name"]
+	assert.Equal(t, schema.TypeString, templateName.Type)
+	assert.True(t, templateName.Required)
+	assert.True(t, templateName.ForceNew)
+
+	// Check optional fields WITHOUT ForceNew
+	assert.Contains(t, res.Schema, "comment")
+	comment := res.Schema["comment"]
+	assert.Equal(t, schema.TypeString, comment.Type)
+	assert.True(t, comment.Optional)
+	assert.False(t, comment.ForceNew)
+
+	assert.Contains(t, res.Schema, "video_stream_switch")
+	videoSwitch := res.Schema["video_stream_switch"]
+	assert.Equal(t, schema.TypeString, videoSwitch.Type)
+	assert.True(t, videoSwitch.Optional)
+	assert.False(t, videoSwitch.ForceNew)
+
+	assert.Contains(t, res.Schema, "audio_stream_switch")
+	audioSwitch := res.Schema["audio_stream_switch"]
+	assert.Equal(t, schema.TypeString, audioSwitch.Type)
+	assert.True(t, audioSwitch.Optional)
+	assert.False(t, audioSwitch.ForceNew)
+
+	assert.Contains(t, res.Schema, "video_template")
+	videoTemplate := res.Schema["video_template"]
+	assert.Equal(t, schema.TypeList, videoTemplate.Type)
+	assert.True(t, videoTemplate.Optional)
+	assert.False(t, videoTemplate.ForceNew)
+
+	assert.Contains(t, res.Schema, "audio_template")
+	audioTemplate := res.Schema["audio_template"]
+	assert.Equal(t, schema.TypeList, audioTemplate.Type)
+	assert.True(t, audioTemplate.Optional)
+	assert.False(t, audioTemplate.ForceNew)
+
+	// Check computed fields
+	assert.Contains(t, res.Schema, "template_id")
+	templateId := res.Schema["template_id"]
+	assert.Equal(t, schema.TypeString, templateId.Type)
+	assert.True(t, templateId.Computed)
+
+	assert.Contains(t, res.Schema, "type")
+	typeField := res.Schema["type"]
+	assert.Equal(t, schema.TypeString, typeField.Type)
+	assert.True(t, typeField.Computed)
+
+	assert.Contains(t, res.Schema, "create_time")
+	assert.Contains(t, res.Schema, "update_time")
 }
 
-func TestMapAudioTemplateInfoToSchema(t *testing.T) {
-	tests := []struct {
-		name string
-		info *teo.AudioTemplateInfo
-		want map[string]interface{}
-	}{
-		{
-			name: "full configuration",
-			info: &teo.AudioTemplateInfo{
-				Codec:        helper.String("libfdk_aac"),
-				AudioChannel: helper.Uint64(2),
-			},
-			want: map[string]interface{}{
-				"codec":         "libfdk_aac",
-				"audio_channel": 2,
-			},
-		},
-		{
-			name: "nil values",
-			info: &teo.AudioTemplateInfo{},
-			want: map[string]interface{}{},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := mapAudioTemplateInfoToSchema(tt.info)
-			if got["codec"] != tt.want["codec"] {
-				t.Errorf("codec mismatch, got %v, want %v", got["codec"], tt.want["codec"])
-			}
-			if got["audio_channel"] != tt.want["audio_channel"] {
-				t.Errorf("audio_channel mismatch, got %v, want %v", got["audio_channel"], tt.want["audio_channel"])
-			}
-		})
-	}
+func ptrFloat64(f float64) *float64 {
+	return &f
 }
 
-// Mock structs for testing
-type tccommon struct {
-	TencentV2Client *tencentcloudV2Client
-}
-
-type tencentcloudV2Client struct {
-	teoClient interface{}
+func ptrUint64(u uint64) *uint64 {
+	return &u
 }
