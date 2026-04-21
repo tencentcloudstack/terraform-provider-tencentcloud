@@ -57,7 +57,7 @@ func ResourceTencentCloudClbRedirection() *schema.Resource {
 			"target_rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
-				Optional:    true,
+				Required:    true,
 				Description: "Rule ID of target listener.",
 			},
 			"rewrite_code": {
