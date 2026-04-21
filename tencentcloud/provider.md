@@ -1403,6 +1403,7 @@ tencentcloud_serverless_hbase_instance
 tencentcloud_emr_yarn
 tencentcloud_emr_deploy_yarn_operation
 tencentcloud_emr_auto_scale_strategy
+tencentcloud_emr_boot_script
 
 DNSPod
 Resource

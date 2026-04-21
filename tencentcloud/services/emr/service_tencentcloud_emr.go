@@ -1127,6 +1127,36 @@ func (me *EMRService) DeleteAutoScaleStrategy(ctx context.Context, instanceId, s
 
 }
 
+func (me *EMRService) DescribeEmrBootScript(ctx context.Context, instanceId, bootType string) (ret *emr.DescribeBootScriptRsp, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := emr.NewDescribeBootScriptRequest()
+	request.InstanceId = helper.String(instanceId)
+	request.BootType = helper.String(bootType)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeBootScript(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	ret = response.Response.Detail
+	return
+}
+
 func (me *EMRService) DescribeEmrClusterNewById(ctx context.Context, instanceId string) (ret *emr.ClusterInstancesInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

@@ -2620,6 +2620,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr_yarn":                                                                 emr.ResourceTencentCloudEmrYarn(),
 			"tencentcloud_emr_deploy_yarn_operation":                                                emr.ResourceTencentCloudEmrDeployYarnOperation(),
 			"tencentcloud_emr_auto_scale_strategy":                                                  emr.ResourceTencentCloudEmrAutoScaleStrategy(),
+			"tencentcloud_emr_boot_script":                                                          emr.ResourceTencentCloudEmrBootScript(),
 			"tencentcloud_tcss_image_registry":                                                      tcss.ResourceTencentCloudTcssImageRegistry(),
 			"tencentcloud_tcss_cluster_access":                                                      tcss.ResourceTencentCloudTcssClusterAccess(),
 			"tencentcloud_tcss_refresh_task_operation":                                              tcss.ResourceTencentCloudTcssRefreshTaskOperation(),
