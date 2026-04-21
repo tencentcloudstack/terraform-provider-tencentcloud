@@ -57,8 +57,29 @@ func ResourceTencentCloudClbRedirection() *schema.Resource {
 			"target_rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
-				Required:    true,
+				Optional:    true,
 				Description: "Rule ID of target listener.",
+			},
+			"rewrite_code": {
+				Type:        schema.TypeInt,
+				ForceNew:    true,
+				Optional:    true,
+				Computed:    true,
+				Description: "Redirection status codes, with possible values of `301`, `302`, `307`.",
+			},
+			"take_url": {
+				Type:        schema.TypeBool,
+				ForceNew:    true,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether the redirect carries a matching URL is required when configuring `rewrite_code`.",
+			},
+			"source_domian": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Computed:    true,
+				Description: "The domain name for source forwarding must be the domain name corresponding to `source_rule_id`, which is required when configuring `rewrite_code`. Only support `is_auto_rewrite` is `false`.",
 			},
 			"is_auto_rewrite": {
 				Type:        schema.TypeBool,
@@ -258,10 +279,21 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		request.LoadBalancerId = helper.String(clbId)
 		request.SourceListenerId = helper.String(sourceListenerId)
 		request.TargetListenerId = helper.String(targetListenerId)
-
 		var rewriteInfo clb.RewriteLocationMap
 		rewriteInfo.SourceLocationId = helper.String(sourceLocId)
 		rewriteInfo.TargetLocationId = helper.String(targetLocId)
+		if v, ok := d.GetOkExists("rewrite_code"); ok {
+			rewriteInfo.RewriteCode = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("take_url"); ok {
+			rewriteInfo.TakeUrl = helper.Bool(v.(bool))
+		}
+
+		if v, ok := d.GetOk("source_domian"); ok {
+			rewriteInfo.SourceDomain = helper.String(v.(string))
+		}
+
 		request.RewriteInfos = []*clb.RewriteLocationMap{&rewriteInfo}
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ManualRewrite(request)
@@ -306,7 +338,7 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	clbService := ClbService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
-	var instance *map[string]string
+	var instance *RedirectionInfo
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := clbService.DescribeRedirectionById(ctx, rewriteId)
 		if e != nil {
@@ -320,16 +352,28 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	if instance == nil || len(*instance) == 0 {
+	if instance == nil {
 		d.SetId("")
 		return nil
 	}
 
-	_ = d.Set("clb_id", (*instance)["clb_id"])
-	_ = d.Set("source_listener_id", (*instance)["source_listener_id"])
-	_ = d.Set("target_listener_id", (*instance)["target_listener_id"])
-	_ = d.Set("source_rule_id", (*instance)["source_rule_id"])
-	_ = d.Set("target_rule_id", (*instance)["target_rule_id"])
+	_ = d.Set("clb_id", instance.ClbId)
+	_ = d.Set("source_listener_id", instance.SourceListenerId)
+	_ = d.Set("target_listener_id", instance.TargetListenerId)
+	_ = d.Set("source_rule_id", instance.SourceRuleId)
+	_ = d.Set("target_rule_id", instance.TargetRuleId)
+
+	if isAutoRewrite {
+
+	} else {
+		if instance.RewriteCode != nil {
+			_ = d.Set("rewrite_code", instance.RewriteCode)
+		}
+		if instance.TakeUrl != nil {
+			_ = d.Set("take_url", instance.TakeUrl)
+		}
+		_ = d.Set("source_domian", instance.SourceDomain)
+	}
 
 	return nil
 }

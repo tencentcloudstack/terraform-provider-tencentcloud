@@ -661,7 +661,20 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	return nil
 }
 
-func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId string) (rewriteInfo *map[string]string, errRet error) {
+// RedirectionInfo holds the full information of a CLB redirection rule,
+// including non-string fields RewriteCode (*int64) and TakeUrl (*bool).
+type RedirectionInfo struct {
+	SourceRuleId     string
+	TargetRuleId     string
+	SourceListenerId string
+	TargetListenerId string
+	ClbId            string
+	RewriteCode      *int64
+	TakeUrl          *bool
+	SourceDomain     string
+}
+
+func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId string) (rewriteInfo *RedirectionInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
@@ -674,7 +687,6 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	sourceListenerId := items[2]
 	targetListenerId := items[3]
 	clbId := items[4]
-	result := make(map[string]string)
 	request := clb.NewDescribeRewriteRequest()
 	request.LoadBalancerId = &clbId
 	request.SourceListenerIds = []*string{&sourceListenerId}
@@ -702,12 +714,16 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 		//sometimes the response returns all the rules under a certain url, so filter again in the code
 		if v.RewriteTarget != nil {
 			if *v.RewriteTarget.TargetListenerId == targetListenerId && *v.RewriteTarget.TargetLocationId == targetLocId {
-				result["source_rule_id"] = sourceLocId
-				result["target_rule_id"] = targetLocId
-				result["source_listener_id"] = sourceListenerId
-				result["target_listener_id"] = targetListenerId
-				result["clb_id"] = clbId
-				rewriteInfo = &result
+				rewriteInfo = &RedirectionInfo{
+					SourceRuleId:     sourceLocId,
+					TargetRuleId:     targetLocId,
+					SourceListenerId: sourceListenerId,
+					TargetListenerId: targetListenerId,
+					ClbId:            clbId,
+					RewriteCode:      v.RewriteTarget.RewriteCode,
+					TakeUrl:          v.RewriteTarget.TakeUrl,
+					SourceDomain:     *v.Domain,
+				}
 				return
 			}
 		}
