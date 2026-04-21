@@ -40,5 +40,12 @@
 
 ## 6. 验证
 
-- [ ] 6.1 运行单元测试 `go test -v ./tencentcloud/services/teo/... -run TestAccTeoCheckCnameStatus`
-- [ ] 6.2 使用 `make doc` 命令生成 website 文档，验证文档生成正确
+- [x] 6.1 运行单元测试 `go test -v ./tencentcloud/services/teo/... -run TestAccTeoCheckCnameStatus`
+- [x] 6.2 使用 `make doc` 命令生成 website 文档，验证文档生成正确
+
+## 7. 资源注册（补充）
+
+- [x] 7.1 在 `tencentcloud/provider.go` 中注册 `tencentcloud_teo_check_cname_status_operation` 资源（已存在）
+- [x] 7.2 在 `tencentcloud/provider.md` 中添加 `tencentcloud_teo_check_cname_status_operation` 索引条目
+- [x] 7.3 修复 `.md` 源文件中不必要的 Import 部分
+- [x] 7.4 重新执行 `make doc` 生成更新后的文档

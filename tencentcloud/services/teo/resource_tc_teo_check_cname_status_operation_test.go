@@ -9,25 +9,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
-// mockMeta implements tccommon.ProviderMeta
-type mockMetaCheckCnameStatus struct {
-	client *connectivity.TencentCloudClient
-}
-
-func (m *mockMetaCheckCnameStatus) GetAPIV3Conn() *connectivity.TencentCloudClient {
-	return m.client
-}
-
-var _ tccommon.ProviderMeta = &mockMetaCheckCnameStatus{}
-
-func newMockMetaCheckCnameStatus() *mockMetaCheckCnameStatus {
-	return &mockMetaCheckCnameStatus{client: &connectivity.TencentCloudClient{}}
-}
+// mockMetaCheckCnameStatus is an alias for mockMeta, reusing the shared definition.
 
 // go test ./tencentcloud/services/teo/ -run "TestAccTeoCheckCnameStatus" -v -count=1 -gcflags="all=-l"
 // TestAccTeoCheckCnameStatus_MultipleDomains tests checking CNAME status for multiple domains
@@ -37,7 +22,7 @@ func TestAccTeoCheckCnameStatus_MultipleDomains(t *testing.T) {
 
 	// Patch UseTeoV20220901Client to return a non-nil client
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaCheckCnameStatus().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
 
 	// Patch CheckCnameStatus to return success with multiple domains
 	patches.ApplyMethodFunc(teoClient, "CheckCnameStatus", func(request *teov20220901.CheckCnameStatusRequest) (*teov20220901.CheckCnameStatusResponse, error) {
@@ -63,7 +48,7 @@ func TestAccTeoCheckCnameStatus_MultipleDomains(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaCheckCnameStatus()
+	meta := newMockMeta()
 	res := teo.ResourceTencentCloudTeoCheckCnameStatusOperation()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-12345678",
@@ -97,7 +82,7 @@ func TestAccTeoCheckCnameStatus_SingleDomain(t *testing.T) {
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaCheckCnameStatus().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "CheckCnameStatus", func(request *teov20220901.CheckCnameStatusRequest) (*teov20220901.CheckCnameStatusResponse, error) {
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
@@ -117,7 +102,7 @@ func TestAccTeoCheckCnameStatus_SingleDomain(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaCheckCnameStatus()
+	meta := newMockMeta()
 	res := teo.ResourceTencentCloudTeoCheckCnameStatusOperation()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-12345678",
@@ -141,7 +126,7 @@ func TestAccTeoCheckCnameStatus_SingleDomain(t *testing.T) {
 
 // TestAccTeoCheckCnameStatus_EmptyRecordNames tests handling empty record_names list
 func TestAccTeoCheckCnameStatus_EmptyRecordNames(t *testing.T) {
-	meta := newMockMetaCheckCnameStatus()
+	meta := newMockMeta()
 	res := teo.ResourceTencentCloudTeoCheckCnameStatusOperation()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id":      "zone-12345678",
@@ -159,13 +144,13 @@ func TestAccTeoCheckCnameStatus_APIError(t *testing.T) {
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaCheckCnameStatus().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "CheckCnameStatus", func(request *teov20220901.CheckCnameStatusRequest) (*teov20220901.CheckCnameStatusResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
 	})
 
-	meta := newMockMetaCheckCnameStatus()
+	meta := newMockMeta()
 	res := teo.ResourceTencentCloudTeoCheckCnameStatusOperation()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-invalid",
@@ -181,7 +166,7 @@ func TestAccTeoCheckCnameStatus_APIError(t *testing.T) {
 
 // TestAccTeoCheckCnameStatus_MissingZoneId tests error handling when zone_id is missing
 func TestAccTeoCheckCnameStatus_MissingZoneId(t *testing.T) {
-	meta := newMockMetaCheckCnameStatus()
+	meta := newMockMeta()
 	res := teo.ResourceTencentCloudTeoCheckCnameStatusOperation()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"record_names": []interface{}{
@@ -196,7 +181,7 @@ func TestAccTeoCheckCnameStatus_MissingZoneId(t *testing.T) {
 
 // TestAccTeoCheckCnameStatus_MissingRecordNames tests error handling when record_names is missing
 func TestAccTeoCheckCnameStatus_MissingRecordNames(t *testing.T) {
-	meta := newMockMetaCheckCnameStatus()
+	meta := newMockMeta()
 	res := teo.ResourceTencentCloudTeoCheckCnameStatusOperation()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-12345678",
@@ -264,8 +249,4 @@ func TestAccTeoCheckCnameStatus_Schema(t *testing.T) {
 	cnameStatus := res.Schema["cname_status"]
 	assert.Equal(t, schema.TypeList, cnameStatus.Type)
 	assert.True(t, cnameStatus.Computed)
-}
-
-func ptrString(s string) *string {
-	return &s
 }
