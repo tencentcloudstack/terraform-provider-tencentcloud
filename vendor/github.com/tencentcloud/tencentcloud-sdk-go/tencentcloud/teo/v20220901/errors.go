@@ -194,6 +194,12 @@ const (
 	// 函数名称不符合命名规范。
 	INVALIDPARAMETER_BADFUNCTIONNAME = "InvalidParameter.BadFunctionName"
 
+	// 命名空间名称不合法。
+	INVALIDPARAMETER_BADNAMESPACENAME = "InvalidParameter.BadNamespaceName"
+
+	// 绑定变量不存在。
+	INVALIDPARAMETER_BINDINGNOTFOUND = "InvalidParameter.BindingNotFound"
+
 	// 无效的查询字符串。
 	INVALIDPARAMETER_CACHEKEYQUERYSTRINGREQUIRESFULLURLCACHEOFF = "InvalidParameter.CacheKeyQueryStringRequiresFullUrlCacheOff"
 
@@ -238,6 +244,9 @@ const (
 
 	// 当前域名已开启流量调度功能。
 	INVALIDPARAMETER_DOMAINONTRAFFICSCHEDULING = "InvalidParameter.DomainOnTrafficScheduling"
+
+	// 绑定变量名称已存在。
+	INVALIDPARAMETER_DUPLICATEBINDINGNAME = "InvalidParameter.DuplicateBindingName"
 
 	// 重复规则。
 	INVALIDPARAMETER_DUPLICATERULE = "InvalidParameter.DuplicateRule"
@@ -331,6 +340,9 @@ const (
 
 	// 条件为空。
 	INVALIDPARAMETER_ERRNILCONDITION = "InvalidParameter.ErrNilCondition"
+
+	// 绑定名已存在。如需覆盖，请使用 bind-override。
+	INVALIDPARAMETER_FUNCTIONBINDVARIABLENAMECONFLICT = "InvalidParameter.FunctionBindVariableNameConflict"
 
 	// 函数名称和本账号下其他函数冲突。
 	INVALIDPARAMETER_FUNCTIONNAMECONFLICT = "InvalidParameter.FunctionNameConflict"
@@ -494,6 +506,9 @@ const (
 	// 无效查询维度。
 	INVALIDPARAMETER_INVALIDMETRIC = "InvalidParameter.InvalidMetric"
 
+	// 操作类型不合法。
+	INVALIDPARAMETER_INVALIDOPERATION = "InvalidParameter.InvalidOperation"
+
 	// 无效的源站。
 	INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 
@@ -590,6 +605,15 @@ const (
 	// 无效的回源Host。
 	INVALIDPARAMETER_INVALIDSERVERNAME = "InvalidParameter.InvalidServerName"
 
+	// 设置的匹配条件不支持EdgeOne Shield操作，请删除相关配置项或联系智能客服提交工单处理。
+	INVALIDPARAMETER_INVALIDSHIELDUNSUPPORTED = "InvalidParameter.InvalidShieldUnsupported"
+
+	// 排序字段不合法。
+	INVALIDPARAMETER_INVALIDSORTBY = "InvalidParameter.InvalidSortBy"
+
+	// 排序方向不合法。
+	INVALIDPARAMETER_INVALIDSORTORDER = "InvalidParameter.InvalidSortOrder"
+
 	// edgeone的debug配置无效。
 	INVALIDPARAMETER_INVALIDSTANDARDDEBUG = "InvalidParameter.InvalidStandardDebug"
 
@@ -619,6 +643,9 @@ const (
 
 	// 无效的缓存键。
 	INVALIDPARAMETER_KEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.KeyRulesInvalidQueryStringValue"
+
+	// 请求的Key数量超过限制。
+	INVALIDPARAMETER_KEYSTOOMANY = "InvalidParameter.KeysTooMany"
 
 	// 参数长度超过限制。
 	INVALIDPARAMETER_LENGTHEXCEEDSLIMIT = "InvalidParameter.LengthExceedsLimit"
@@ -652,6 +679,9 @@ const (
 
 	// 不支持智能路由
 	INVALIDPARAMETER_MULTIPLYLAYERNOTSUPPORTSMARTROUTING = "InvalidParameter.MultiplyLayerNotSupportSmartRouting"
+
+	// 命名空间正在使用中，无法删除。
+	INVALIDPARAMETER_NAMESPACEINUSE = "InvalidParameter.NamespaceInUse"
 
 	// 操作配置存在不支持的预设变量。
 	INVALIDPARAMETER_NOTSUPPORTTHISPRESET = "InvalidParameter.NotSupportThisPreset"
@@ -731,6 +761,9 @@ const (
 	// 实时日志推送任务数据超过了限制
 	INVALIDPARAMETER_REALTIMELOGNUMSEXCEEDLIMIT = "InvalidParameter.RealtimeLogNumsExceedLimit"
 
+	// 命名空间备注信息过长。
+	INVALIDPARAMETER_REMARKTOOLONG = "InvalidParameter.RemarkTooLong"
+
 	// 无效的响应头header。
 	INVALIDPARAMETER_RESPONSEHEADERCACHECONTROLNOTALLOWDELETE = "InvalidParameter.ResponseHeaderCacheControlNotAllowDelete"
 
@@ -760,6 +793,30 @@ const (
 
 	// 配置项参数错误。
 	INVALIDPARAMETER_SETTINGINVALIDPARAM = "InvalidParameter.SettingInvalidParam"
+
+	// 当前域名不支持同时开启EdgeOne Shield和缓存预刷新。
+	INVALIDPARAMETER_SHIELDNOTSUPPORTHOSTCACHEPREFRESH = "InvalidParameter.ShieldNotSupportHostCachePrefresh"
+
+	// 当前域名不支持同时开启EdgeOne Shield和源站防护。
+	INVALIDPARAMETER_SHIELDNOTSUPPORTHOSTORIGINWHITELIST = "InvalidParameter.ShieldNotSupportHostOriginWhitelist"
+
+	// 当前域名不支持同时开启EdgeOne Shield和智能加速。
+	INVALIDPARAMETER_SHIELDNOTSUPPORTHOSTSMARTROUTING = "InvalidParameter.ShieldNotSupportHostSmartRouting"
+
+	// 当前站点不支持同时开启EdgeOne Shield和缓存预刷新。
+	INVALIDPARAMETER_SHIELDNOTSUPPORTZONECACHEPREFRESH = "InvalidParameter.ShieldNotSupportZoneCachePrefresh"
+
+	// 当前站点不支持同时开启EdgeOne Shield和智能加速。
+	INVALIDPARAMETER_SHIELDNOTSUPPORTZONESMARTROUTING = "InvalidParameter.ShieldNotSupportZoneSmartRouting"
+
+	// EdgeOne Shield空间查询不到。
+	INVALIDPARAMETER_SHIELDSPACENOTFOUND = "InvalidParameter.ShieldSpaceNotFound"
+
+	// EdgeOne Shield空间参数必填。
+	INVALIDPARAMETER_SHIELDSPACEREQUIREDERROR = "InvalidParameter.ShieldSpaceRequiredError"
+
+	// EdgeOne Shield空间状态必须为在线。
+	INVALIDPARAMETER_SHIELDSPACESTATUSMUSTONLINE = "InvalidParameter.ShieldSpaceStatusMustOnline"
 
 	// 一些绑定的源站组不存在。
 	INVALIDPARAMETER_SOMEORIGINGROUPNOTEXIST = "InvalidParameter.SomeOriginGroupNotExist"
@@ -920,6 +977,9 @@ const (
 	// DNS 代理域名源站错误。
 	INVALIDPARAMETERVALUE_INVALIDPROXYORIGIN = "InvalidParameterValue.InvalidProxyOrigin"
 
+	// 存在源站故障转移配置项配置在不支持的匹配条件下，请删除相关配置项或联系智能客服提交工单处理。
+	INVALIDPARAMETERVALUE_INVALIDSITEFAILOVERUNSUPPORTED = "InvalidParameterValue.InvalidSiteFailoverUnsupported"
+
 	// 标签值存在不合法字符。
 	INVALIDPARAMETERVALUE_INVALIDTAGVALUE = "InvalidParameterValue.InvalidTagValue"
 
@@ -958,6 +1018,15 @@ const (
 
 	// 请输入合法的共享 CNAME 前缀，最大支持50个字符。
 	INVALIDPARAMETERVALUE_SHAREDCNAMEPREFIXNOTMATCH = "InvalidParameterValue.SharedCNAMEPrefixNotMatch"
+
+	// 不支持同时开启源站故障转移和回源限频。
+	INVALIDPARAMETERVALUE_SITEFAILOVERNOTSUPPORTHOSTORIGINPULLRATELIMIT = "InvalidParameterValue.SiteFailoverNotSupportHostOriginPullRateLimit"
+
+	// 源站故障转移不支持源站为VOD类型。
+	INVALIDPARAMETERVALUE_SITEFAILOVERNOTSUPPORTHOSTORIGINTYPEVOD = "InvalidParameterValue.SiteFailoverNotSupportHostOriginTypeVod"
+
+	// 不支持同时开启源站故障转移和回源双向认证/源站证书校验。
+	INVALIDPARAMETERVALUE_SITEFAILOVERNOTSUPPORTHOSTUPSTREAMVERIFY = "InvalidParameterValue.SiteFailoverNotSupportHostUpstreamVerify"
 
 	// 输入模板中包含不是自定义模板类型的模板。
 	INVALIDPARAMETERVALUE_TEMPLATENOTCUSTOM = "InvalidParameterValue.TemplateNotCustom"
@@ -1015,6 +1084,9 @@ const (
 
 	// 负载均衡数量超过限制。
 	LIMITEXCEEDED_LOADBALANCINGCOUNTLIMITEXCEEDED = "LimitExceeded.LoadBalancingCountLimitExceeded"
+
+	// 站点下 KV 命名空间数量已达上限
+	LIMITEXCEEDED_NAMESPACELIMITEXCEEDED = "LimitExceeded.NamespaceLimitExceeded"
 
 	// 计费套餐不支持。
 	LIMITEXCEEDED_PACKNOTALLOW = "LimitExceeded.PackNotAllow"
@@ -1088,6 +1160,9 @@ const (
 	// 域名被封禁，暂时无法操作。
 	OPERATIONDENIED_DOMAINISBLOCKED = "OperationDenied.DomainIsBlocked"
 
+	// 域名必须在IP SSL共享CNAME所属站点中且必须在IP SSL共享CNAME中
+	OPERATIONDENIED_DOMAINMUSTINIPSSLSHAREDCNAMEZONEANDINSHAREDCNAME = "OperationDenied.DomainMustInIPSSLSharedCNAMEZoneAndInSharedCNAME"
+
 	// 域名尚未备案。
 	OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 
@@ -1123,6 +1198,9 @@ const (
 
 	// 待变更域名源站证书校验配置不一致，请确认变更域名配置一致后重试。
 	OPERATIONDENIED_HOSTSUPSTREAMCERTIFICATEVERIFYINCONSISTENCY = "OperationDenied.HostsUpstreamCertificateVerifyInconsistency"
+
+	// IP SSL已绑定到其他域名，不允许操作。
+	OPERATIONDENIED_IPSSLALREADYBOUNDANOTHERDOMAIN = "OperationDenied.IPSSLAlreadyBoundAnotherDomain"
 
 	// 开启高防时必须保证安全是开启状态。
 	OPERATIONDENIED_INVALIDADVANCEDDEFENSESECURITYTYPE = "OperationDenied.InvalidAdvancedDefenseSecurityType"
@@ -1169,6 +1247,9 @@ const (
 	// 存在加速域名处于部署中状态，暂不支持停用站点。
 	OPERATIONDENIED_L7HOSTINPROCESSSTATUS = "OperationDenied.L7HostInProcessStatus"
 
+	// 上一次 IP SSL 操作关联的域名尚未上线完成，请等待上线完成后再进行操作。
+	OPERATIONDENIED_LASTIPSSLOPERATIONNOTCOMPLETE = "OperationDenied.LastIPSSLOperationNotComplete"
+
 	// 回源白名单已经是最新版本，无需更新。
 	OPERATIONDENIED_LATESTVERSIONNOW = "OperationDenied.LatestVersionNow"
 
@@ -1198,6 +1279,12 @@ const (
 
 	// 不在预热回源限速配置白名单中，请提交工单。
 	OPERATIONDENIED_NOTINPREFETCHORIGINLIMITWHITELIST = "OperationDenied.NotInPrefetchOriginLimitWhiteList"
+
+	// 当前EdgeOne Shield功能仅针对白名单用户开放。
+	OPERATIONDENIED_NOTINSHIELDSPACEWHITELIST = "OperationDenied.NotInShieldSpaceWhiteList"
+
+	// 当前源站故障转移功能仅针对白名单用户开放。
+	OPERATIONDENIED_NOTINSITEFAILOVERWHITELIST = "OperationDenied.NotInSiteFailoverWhiteList"
 
 	// 当前回源双向认证功能仅针对白名单用户开放。
 	OPERATIONDENIED_NOTINUPSTREAMMTLSWHITELIST = "OperationDenied.NotInUpstreamMTLSWhiteList"
@@ -1396,6 +1483,9 @@ const (
 
 	// 域名不存在或未开启代理。
 	RESOURCEUNAVAILABLE_HOSTNOTFOUND = "ResourceUnavailable.HostNotFound"
+
+	// KV命名空间不存在。
+	RESOURCEUNAVAILABLE_NAMESPACENOTFOUND = "ResourceUnavailable.NamespaceNotFound"
 
 	// 规则不存在或不属于该账号。
 	RESOURCEUNAVAILABLE_RULENOTFOUND = "ResourceUnavailable.RuleNotFound"
