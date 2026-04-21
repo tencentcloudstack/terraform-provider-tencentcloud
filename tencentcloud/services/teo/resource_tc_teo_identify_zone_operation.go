@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func ResourceTencentCloudTeoIdentifyZoneOperation() *schema.Resource {
@@ -32,7 +32,6 @@ func ResourceTencentCloudTeoIdentifyZoneOperation() *schema.Resource {
 			"ascription": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "DNS verification information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -57,7 +56,6 @@ func ResourceTencentCloudTeoIdentifyZoneOperation() *schema.Resource {
 			"file_ascription": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "File verification information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -106,7 +104,16 @@ func resourceTencentCloudTeoIdentifyZoneCreate(d *schema.ResourceData, meta inte
 	// Call IdentifyZone API
 	log.Printf("[DEBUG]%s api[%s] request body [%s]\n", logId, request.GetAction(), request.ToJsonString())
 
-	ascription, fileAscription, err := service.TeoIdentifyZone(zoneName, domain)
+	var ascription *teov20220901.AscriptionInfo
+	var fileAscription *teov20220901.FileAscriptionInfo
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		var e error
+		ascription, fileAscription, e = service.TeoIdentifyZone(zoneName, domain)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
 	if err != nil {
 		return fmt.Errorf("IdentifyZone failed: %s", err.Error())
 	}
@@ -115,7 +122,7 @@ func resourceTencentCloudTeoIdentifyZoneCreate(d *schema.ResourceData, meta inte
 		logId, request.GetAction(), ascription, fileAscription)
 
 	// Set ID
-	d.SetId(zoneName)
+	d.SetId(helper.BuildToken())
 
 	// Set ascription
 	if ascription != nil {
