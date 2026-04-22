@@ -12,7 +12,6 @@ Query with filters
 
 ```hcl
 data "tencentcloud_teo_default_certificate" "example" {
-  zone_id = "zone-2qtuhspy7cr6"
   filters {
     name = "zone-id"
     values = [

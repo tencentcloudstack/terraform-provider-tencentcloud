@@ -1,13 +1,15 @@
 package teo
 
 import (
-	"context"
+	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func DataSourceTencentCloudTeoDefaultCertificate() *schema.Resource {
@@ -16,14 +18,14 @@ func DataSourceTencentCloudTeoDefaultCertificate() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Zone ID.",
+				Optional:    true,
+				Description: "Zone ID. At least one of `zone_id` or `filters` must be specified.",
 			},
 
 			"filters": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Filter conditions, the upper limit of Filters.Values is 5. The detailed filtering conditions are as follows: zone-id - Filter by zone ID.",
+				Description: "Filter conditions, the upper limit of Filters.Values is 5. The detailed filtering conditions are as follows: zone-id - Filter by zone ID. At least one of `zone_id` or `filters` must be specified.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -115,15 +117,12 @@ func dataSourceTencentCloudTeoDefaultCertificateRead(d *schema.ResourceData, met
 	defer tccommon.LogElapsed("data_source.tencentcloud_teo_default_certificate.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var (
-		logId   = tccommon.GetLogId(nil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		service = TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient()
 
-	paramMap := make(map[string]interface{})
+	request := teo.NewDescribeDefaultCertificatesRequest()
 	if v, ok := d.GetOk("zone_id"); ok {
-		paramMap["ZoneId"] = helper.String(v.(string))
+		request.ZoneId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("filters"); ok {
@@ -135,85 +134,103 @@ func dataSourceTencentCloudTeoDefaultCertificateRead(d *schema.ResourceData, met
 			if v, ok := filterMap["name"].(string); ok && v != "" {
 				filter.Name = helper.String(v)
 			}
-
 			if v, ok := filterMap["values"]; ok {
 				valuesSet := v.(*schema.Set).List()
+				if len(valuesSet) > 5 {
+					return fmt.Errorf("the number of values in filter `%s` cannot exceed 5", *filter.Name)
+				}
 				filter.Values = helper.InterfacesStringsPoint(valuesSet)
 			}
-
 			tmpSet = append(tmpSet, &filter)
 		}
-
-		paramMap["Filters"] = tmpSet
+		request.Filters = tmpSet
 	}
 
 	var certificates []*teo.DefaultServerCertInfo
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeTeoDefaultCertificatesByFilter(ctx, paramMap)
-		if e != nil {
-			return tccommon.RetryError(e)
+	var offset int64 = 0
+	var limit int64 = 100
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+
+		var response *teo.DescribeDefaultCertificatesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			resp, e := client.DescribeDefaultCertificates(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = resp
+			return nil
+		})
+		if err != nil {
+			return err
 		}
-		certificates = result
-		return nil
-	})
-	if err != nil {
-		return err
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.DefaultServerCertInfo) < 1 {
+			break
+		}
+		certificates = append(certificates, response.Response.DefaultServerCertInfo...)
+		if len(response.Response.DefaultServerCertInfo) < int(limit) {
+			break
+		}
+		offset += limit
 	}
 
 	ids := make([]string, 0, len(certificates))
 	certInfoList := make([]map[string]interface{}, 0, len(certificates))
-	if certificates != nil {
-		for _, certInfo := range certificates {
-			certInfoMap := map[string]interface{}{}
+	for _, certInfo := range certificates {
+		certInfoMap := map[string]interface{}{}
 
-			if certInfo.CertId != nil {
-				certInfoMap["cert_id"] = certInfo.CertId
-				ids = append(ids, *certInfo.CertId)
-			}
-
-			if certInfo.Alias != nil {
-				certInfoMap["alias"] = certInfo.Alias
-			}
-
-			if certInfo.Type != nil {
-				certInfoMap["type"] = certInfo.Type
-			}
-
-			if certInfo.ExpireTime != nil {
-				certInfoMap["expire_time"] = certInfo.ExpireTime
-			}
-
-			if certInfo.EffectiveTime != nil {
-				certInfoMap["effective_time"] = certInfo.EffectiveTime
-			}
-
-			if certInfo.CommonName != nil {
-				certInfoMap["common_name"] = certInfo.CommonName
-			}
-
-			if certInfo.SubjectAltName != nil {
-				certInfoMap["subject_alt_name"] = certInfo.SubjectAltName
-			}
-
-			if certInfo.Status != nil {
-				certInfoMap["status"] = certInfo.Status
-			}
-
-			if certInfo.Message != nil {
-				certInfoMap["message"] = certInfo.Message
-			}
-
-			if certInfo.SignAlgo != nil {
-				certInfoMap["sign_algo"] = certInfo.SignAlgo
-			}
-
-			certInfoList = append(certInfoList, certInfoMap)
+		if certInfo.CertId != nil {
+			certInfoMap["cert_id"] = certInfo.CertId
+			ids = append(ids, *certInfo.CertId)
 		}
 
-		_ = d.Set("default_server_cert_info", certInfoList)
+		if certInfo.Alias != nil {
+			certInfoMap["alias"] = certInfo.Alias
+		}
+
+		if certInfo.Type != nil {
+			certInfoMap["type"] = certInfo.Type
+		}
+
+		if certInfo.ExpireTime != nil {
+			certInfoMap["expire_time"] = certInfo.ExpireTime
+		}
+
+		if certInfo.EffectiveTime != nil {
+			certInfoMap["effective_time"] = certInfo.EffectiveTime
+		}
+
+		if certInfo.CommonName != nil {
+			certInfoMap["common_name"] = certInfo.CommonName
+		}
+
+		if certInfo.SubjectAltName != nil {
+			certInfoMap["subject_alt_name"] = certInfo.SubjectAltName
+		}
+
+		if certInfo.Status != nil {
+			certInfoMap["status"] = certInfo.Status
+		}
+
+		if certInfo.Message != nil {
+			certInfoMap["message"] = certInfo.Message
+		}
+
+		if certInfo.SignAlgo != nil {
+			certInfoMap["sign_algo"] = certInfo.SignAlgo
+		}
+
+		certInfoList = append(certInfoList, certInfoMap)
 	}
 
-	d.SetId(helper.DataResourceIdsHash(ids))
+	_ = d.Set("default_server_cert_info", certInfoList)
+	d.SetId(helper.BuildToken())
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), certInfoList); e != nil {

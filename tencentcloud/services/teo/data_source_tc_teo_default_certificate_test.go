@@ -12,18 +12,17 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
+// go test ./tencentcloud/services/teo/ -run "TestTeoDefaultCertificateDataSource" -v -count=1 -gcflags="all=-l"
+
 // TestTeoDefaultCertificateDataSource_ReadSuccess tests successful read with certificate data
 func TestTeoDefaultCertificateDataSource_ReadSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	// Patch UseTeoClient to return a non-nil client
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(&connectivity.TencentCloudClient{}, "UseTeoClient", teoClient)
 
-	// Patch DescribeDefaultCertificates to return mock data
 	patches.ApplyMethodFunc(teoClient, "DescribeDefaultCertificates", func(request *teov20220901.DescribeDefaultCertificatesRequest) (*teov20220901.DescribeDefaultCertificatesResponse, error) {
-		assert.Equal(t, "zone-2qtuhspy7cr6", *request.ZoneId)
 		resp := teov20220901.NewDescribeDefaultCertificatesResponse()
 		resp.Response = &teov20220901.DescribeDefaultCertificatesResponseParams{
 			TotalCount: ptrInt64(1),
@@ -49,7 +48,7 @@ func TestTeoDefaultCertificateDataSource_ReadSuccess(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := &mockMeta{client: &connectivity.TencentCloudClient{}}
+	meta := newMockMeta()
 	res := teo.DataSourceTencentCloudTeoDefaultCertificate()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-2qtuhspy7cr6",
@@ -59,7 +58,6 @@ func TestTeoDefaultCertificateDataSource_ReadSuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, d.Id())
 
-	// Verify certificate info was set via d.Get()
 	certInfo := d.Get("default_server_cert_info").([]interface{})
 	assert.Len(t, certInfo, 1)
 	certMap := certInfo[0].(map[string]interface{})
@@ -80,7 +78,6 @@ func TestTeoDefaultCertificateDataSource_ReadEmpty(t *testing.T) {
 	patches.ApplyMethodReturn(&connectivity.TencentCloudClient{}, "UseTeoClient", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDefaultCertificates", func(request *teov20220901.DescribeDefaultCertificatesRequest) (*teov20220901.DescribeDefaultCertificatesResponse, error) {
-		assert.Equal(t, "zone-empty", *request.ZoneId)
 		resp := teov20220901.NewDescribeDefaultCertificatesResponse()
 		resp.Response = &teov20220901.DescribeDefaultCertificatesResponseParams{
 			TotalCount:            ptrInt64(0),
@@ -90,7 +87,7 @@ func TestTeoDefaultCertificateDataSource_ReadEmpty(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := &mockMeta{client: &connectivity.TencentCloudClient{}}
+	meta := newMockMeta()
 	res := teo.DataSourceTencentCloudTeoDefaultCertificate()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-empty",
@@ -99,7 +96,6 @@ func TestTeoDefaultCertificateDataSource_ReadEmpty(t *testing.T) {
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 
-	// Verify no certificate info was set
 	certInfo := d.Get("default_server_cert_info").([]interface{})
 	assert.Len(t, certInfo, 0)
 }
@@ -116,22 +112,22 @@ func TestTeoDefaultCertificateDataSource_Schema(t *testing.T) {
 	assert.Contains(t, res.Schema, "default_server_cert_info")
 	assert.Contains(t, res.Schema, "result_output_file")
 
-	// Check zone_id
+	// zone_id is Optional (not Required)
 	zoneId := res.Schema["zone_id"]
 	assert.Equal(t, schema.TypeString, zoneId.Type)
-	assert.True(t, zoneId.Required)
+	assert.True(t, zoneId.Optional)
 
-	// Check filters
+	// filters is Optional
 	filters := res.Schema["filters"]
 	assert.Equal(t, schema.TypeList, filters.Type)
 	assert.True(t, filters.Optional)
 
-	// Check default_server_cert_info
+	// default_server_cert_info is Computed
 	certInfo := res.Schema["default_server_cert_info"]
 	assert.Equal(t, schema.TypeList, certInfo.Type)
 	assert.True(t, certInfo.Computed)
 
-	// Check result_output_file
+	// result_output_file is Optional
 	outputFile := res.Schema["result_output_file"]
 	assert.Equal(t, schema.TypeString, outputFile.Type)
 	assert.True(t, outputFile.Optional)

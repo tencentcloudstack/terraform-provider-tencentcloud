@@ -23,7 +23,6 @@ data "tencentcloud_teo_default_certificate" "example" {
 
 ```hcl
 data "tencentcloud_teo_default_certificate" "example" {
-  zone_id = "zone-2qtuhspy7cr6"
   filters {
     name = "zone-id"
     values = [
@@ -37,9 +36,9 @@ data "tencentcloud_teo_default_certificate" "example" {
 
 The following arguments are supported:
 
-* `zone_id` - (Required, String) Zone ID.
-* `filters` - (Optional, List) Filter conditions, the upper limit of Filters.Values is 5. The detailed filtering conditions are as follows: zone-id - Filter by zone ID.
+* `filters` - (Optional, List) Filter conditions, the upper limit of Filters.Values is 5. The detailed filtering conditions are as follows: zone-id - Filter by zone ID. At least one of `zone_id` or `filters` must be specified.
 * `result_output_file` - (Optional, String) Used to save results.
+* `zone_id` - (Optional, String) Zone ID. At least one of `zone_id` or `filters` must be specified.
 
 The `filters` object supports the following:
 

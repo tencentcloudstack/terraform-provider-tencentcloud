@@ -652,56 +652,6 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context,
 	return
 }
 
-func (me *TeoService) DescribeTeoDefaultCertificatesByFilter(ctx context.Context, paramMap map[string]interface{}) (ret []*teo.DefaultServerCertInfo, errRet error) {
-	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = teo.NewDescribeDefaultCertificatesRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	for k, v := range paramMap {
-		if k == "ZoneId" {
-			request.ZoneId = v.(*string)
-		}
-		if k == "Filters" {
-			request.Filters = v.([]*teo.Filter)
-		}
-	}
-
-	var (
-		offset int64 = 0
-		limit  int64 = 100
-	)
-
-	for {
-		request.Offset = &offset
-		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTeoClient().DescribeDefaultCertificates(request)
-		if err != nil {
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || response.Response == nil || len(response.Response.DefaultServerCertInfo) < 1 {
-			break
-		}
-		ret = append(ret, response.Response.DefaultServerCertInfo...)
-		if len(response.Response.DefaultServerCertInfo) < int(limit) {
-			break
-		}
-		offset += limit
-	}
-
-	return
-}
-
 func (me *TeoService) DescribeTeoZoneAvailablePlansByFilter(ctx context.Context, param map[string]interface{}) (ret []*teo.PlanInfo, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)

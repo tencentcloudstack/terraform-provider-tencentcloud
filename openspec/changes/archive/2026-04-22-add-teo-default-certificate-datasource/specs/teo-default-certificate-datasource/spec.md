@@ -2,7 +2,7 @@
 
 ### Requirement: Datasource schema definition
 The `tencentcloud_teo_default_certificate` datasource SHALL define the following schema:
-- `zone_id` (TypeString, Required): Zone ID for querying default certificates
+- `zone_id` (TypeString, Optional): Zone ID for querying default certificates
 - `filters` (TypeList, Optional): Filter criteria with nested schema containing `name` (TypeString, Required), `values` (TypeSet of TypeString, Required)
 - `default_server_cert_info` (TypeList, Computed): List of default certificate information with nested schema containing `cert_id` (TypeString), `alias` (TypeString), `type` (TypeString), `expire_time` (TypeString), `effective_time` (TypeString), `common_name` (TypeString), `subject_alt_name` (TypeSet of TypeString), `status` (TypeString), `message` (TypeString), `sign_algo` (TypeString)
 - `result_output_file` (TypeString, Optional): File path to save query results
