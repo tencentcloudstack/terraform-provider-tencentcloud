@@ -950,6 +950,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_zones":                                             teo.DataSourceTencentCloudTeoZones(),
 			"tencentcloud_teo_plans":                                             teo.DataSourceTencentCloudTeoPlans(),
 			"tencentcloud_teo_origin_acl":                                        teo.DataSourceTencentCloudTeoOriginAcl(),
+			"tencentcloud_teo_default_certificate":                               teo.DataSourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_teo_environments":                                      teo.DataSourceTencentCloudTeoEnvironments(),
 			"tencentcloud_teo_config_group_versions":                             teo.DataSourceTencentCloudTeoConfigGroupVersions(),
 			"tencentcloud_teo_config_group_version_detail":                       teo.DataSourceTencentCloudTeoConfigGroupVersionDetail(),
