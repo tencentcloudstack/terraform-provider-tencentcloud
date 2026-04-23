@@ -29,15 +29,16 @@ TEO (TencentCloud EdgeOne) 是腾讯云的边缘安全加速平台。当前 Terr
 **理由**: 遵循 provider 中已有数据源的模式（如 `tencentcloud_teo_origin_acl`），保持一致的用户体验。
 
 ### 2. 资源 ID 策略
-- 使用 `zone_id` 作为数据源的 ID，与 `tencentcloud_teo_origin_acl` 等类似数据源保持一致
+- 使用 `helper.BuildToken()` 生成随机 token 作为数据源的 ID
 
-**理由**: 此数据源以 `zone_id` 为唯一查询条件，使用其作为 ID 符合现有模式。
+**理由**: 数据源每次读取都应视为独立查询，使用随机 token 避免 ID 冲突，同时简化实现。
 
 ### 3. API 调用方式
-- 直接调用 `ExportZoneConfig` API，使用 `resource.Retry` 包装以 `tccommon.ReadRetryTimeout` 为超时时间
+- 在 service 层 `ExportZoneConfigByFilter` 中调用 `ExportZoneConfig` API，service 层已使用 `resource.Retry` 包装以 `tccommon.ReadRetryTimeout` 为超时时间
+- data source 的 Read 函数直接调用 service 方法，不再额外包装 retry，避免重复 retry
 - 不需要轮询，因为 `ExportZoneConfig` 是同步接口
 
-**理由**: 同步接口直接调用即可，仅需 retry 处理临时错误。
+**理由**: retry 逻辑统一放在 service 层，data source 层无需重复包装。
 
 ### 4. 测试策略
 - 使用 gomonkey mock 方式进行单元测试，不使用 Terraform 测试套件

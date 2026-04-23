@@ -3,9 +3,7 @@ package teo
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -53,13 +51,11 @@ func dataSourceTencentCloudTeoExportZoneConfigRead(d *schema.ResourceData, meta 
 		logId   = tccommon.GetLogId(nil)
 		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service = TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		zoneId  string
 	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("zone_id"); ok {
 		paramMap["ZoneId"] = helper.String(v.(string))
-		zoneId = v.(string)
 	}
 
 	if v, ok := d.GetOk("types"); ok {
@@ -71,27 +67,17 @@ func dataSourceTencentCloudTeoExportZoneConfigRead(d *schema.ResourceData, meta 
 		paramMap["Types"] = types
 	}
 
-	var respData interface{}
-	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.ExportZoneConfigByFilter(ctx, paramMap)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-
-		respData = result
-		return nil
-	})
-
-	if reqErr != nil {
-		return reqErr
+	respData, err := service.ExportZoneConfigByFilter(ctx, paramMap)
+	if err != nil {
+		return err
 	}
 
-	exportResult := respData.(*teo.ExportZoneConfigResponseParams)
+	exportResult := respData
 	if exportResult.Content != nil {
 		_ = d.Set("content", exportResult.Content)
 	}
 
-	d.SetId(zoneId)
+	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		resultMap := map[string]interface{}{}

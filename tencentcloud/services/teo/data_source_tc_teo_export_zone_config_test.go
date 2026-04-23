@@ -40,7 +40,7 @@ func TestExportZoneConfigDataSource_ExportAll(t *testing.T) {
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "zone-3fkff38fyw8s", d.Id())
+	assert.NotEmpty(t, d.Id())
 	assert.Equal(t, `{"L7AccelerationConfig":{},"WebSecurity":{}}`, d.Get("content"))
 }
 
@@ -75,7 +75,7 @@ func TestExportZoneConfigDataSource_ExportWithTypes(t *testing.T) {
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "zone-3fkff38fyw8s", d.Id())
+	assert.NotEmpty(t, d.Id())
 	assert.Equal(t, `{"L7AccelerationConfig":{}}`, d.Get("content"))
 }
 
@@ -109,7 +109,7 @@ func TestExportZoneConfigDataSource_ExportWithMultipleTypes(t *testing.T) {
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "zone-3fkff38fyw8s", d.Id())
+	assert.NotEmpty(t, d.Id())
 	assert.Equal(t, `{"L7AccelerationConfig":{},"WebSecurity":{}}`, d.Get("content"))
 }
 

@@ -1,7 +1,7 @@
 ## 1. 数据源代码实现
 
 - [x] 1.1 创建数据源文件 `tencentcloud/services/teo/data_source_tc_teo_export_zone_config.go`，实现 `DataSourceTencentCloudTeoExportZoneConfig()` 函数，定义 Schema（zone_id: Required StringType, types: Optional List of StringType, content: Computed StringType, result_output_file: Optional StringType）和 Read 函数
-- [x] 1.2 实现 `dataSourceTencentCloudTeoExportZoneConfigRead()` 函数：构建 ExportZoneConfigRequest 请求，使用 resource.Retry(tccommon.ReadRetryTimeout) 包装 API 调用，解析 response.Response.Content 设置到 content 字段，设置 d.SetId(zone_id)
+- [x] 1.2 实现 `dataSourceTencentCloudTeoExportZoneConfigRead()` 函数：构建请求参数，直接调用 service.ExportZoneConfigByFilter()（service 层已包含 retry 逻辑），解析 response Content 设置到 content 字段，设置 d.SetId(helper.BuildToken())
 
 ## 2. Provider 注册
 
