@@ -41,7 +41,7 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 			"task_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address.",
+				Description: "The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address; `log_analysis`: push to EdgeOne log analysis.",
 			},
 
 			"entity_list": {
