@@ -1546,6 +1546,7 @@ tencentcloud_teo_config_group_versions
 tencentcloud_teo_config_group_version_detail
 tencentcloud_teo_deploy_config_version_history
 tencentcloud_teo_export_zone_config
+tencentcloud_teo_ip_region
 
 Resource
 tencentcloud_teo_zone
