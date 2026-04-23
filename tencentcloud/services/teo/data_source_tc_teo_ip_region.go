@@ -1,29 +1,9 @@
-/*
-Use this data source to query detailed information of TEO IP region
-
-# Example Usage
-
-# Query IP region info
-
-```hcl
-
-	data "tencentcloud_teo_ip_region" "example" {
-	  i_ps = [
-	    "1.1.1.1",
-	    "2.2.2.2"
-	  ]
-	}
-
-```
-*/
 package teo
 
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -32,7 +12,7 @@ func DataSourceTencentCloudTeoIPRegion() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTeoIPRegionRead,
 		Schema: map[string]*schema.Schema{
-			"i_ps": {
+			"ips": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    100,
@@ -82,7 +62,7 @@ func dataSourceTencentCloudTeoIPRegionRead(d *schema.ResourceData, meta interfac
 	)
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("i_ps"); ok {
+	if v, ok := d.GetOk("ips"); ok {
 		ipsList := v.([]interface{})
 		ips := make([]*string, 0, len(ipsList))
 		for _, item := range ipsList {
@@ -91,15 +71,7 @@ func dataSourceTencentCloudTeoIPRegionRead(d *schema.ResourceData, meta interfac
 		paramMap["IPs"] = ips
 	}
 
-	var ipRegionInfo []*teo.IPRegionInfo
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeTeoIPRegionByFilter(ctx, paramMap)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		ipRegionInfo = result
-		return nil
-	})
+	ipRegionInfo, err := service.DescribeTeoIPRegionByFilter(ctx, paramMap)
 	if err != nil {
 		return err
 	}

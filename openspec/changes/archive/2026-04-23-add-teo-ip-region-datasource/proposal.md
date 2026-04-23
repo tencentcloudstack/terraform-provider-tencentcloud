@@ -5,7 +5,7 @@
 ## What Changes
 
 - 新增数据源 `tencentcloud_teo_ip_region`，调用 TEO 的 `DescribeIPRegion` 接口查询 IP 归属信息
-- 数据源入参 `i_ps`：待查询的 IP 列表（支持 IPv4 和 IPv6，最大 100 条）
+- 数据源入参 `ips`：待查询的 IP 列表（支持 IPv4 和 IPv6，最大 100 条）
 - 数据源出参 `ip_region_info`：IP 归属信息列表，包含 IP 地址和是否属于 EdgeOne 节点的标识
 - 在 `provider.go` 和 `provider.md` 中注册新数据源
 - 新增数据源文档 `data_source_tc_teo_ip_region.md`
@@ -19,7 +19,7 @@
 
 ## Impact
 
-- 新增文件：`tencentcloud/services/teo/data_source_tc_teo_ip_region.go`、`tencentcloud/services/teo/data_source_tc_teo_ip_region_extension.go`、`tencentcloud/services/teo/data_source_tc_teo_ip_region_test.go`
+- 新增文件：`tencentcloud/services/teo/data_source_tc_teo_ip_region.go`、`tencentcloud/services/teo/data_source_tc_teo_ip_region_test.go`
 - 修改文件：`tencentcloud/provider.go`（注册数据源）、`tencentcloud/provider.md`（文档）
 - 新增文档：`gendoc/teo/data_source_tc_teo_ip_region.md`
 - 依赖云 API：`teo.v20220901.DescribeIPRegion`

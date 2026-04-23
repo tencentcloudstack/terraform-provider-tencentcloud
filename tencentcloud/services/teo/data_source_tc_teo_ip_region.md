@@ -6,7 +6,7 @@ Query IP region info
 
 ```hcl
 data "tencentcloud_teo_ip_region" "example" {
-  i_ps = [
+  ips = [
     "1.1.1.1",
     "2.2.2.2"
   ]

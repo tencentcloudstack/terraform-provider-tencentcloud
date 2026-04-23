@@ -4,9 +4,8 @@
 
 ## 2. Data Source Schema & Read
 
-- [x] 2.1 创建 `tencentcloud/services/teo/data_source_tc_teo_ip_region.go`，定义 `DataSourceTencentCloudTeoIPRegion()` 函数，包含 schema 定义（`i_ps`、`ip_region_info`、`result_output_file`）和 Read 函数
-- [x] 2.2 实现 `dataSourceTencentCloudTeoIPRegionRead` 函数：从 schema 获取 `i_ps` 参数，调用服务层方法（带 retry），将结果映射到 `ip_region_info`，设置数据源 ID，处理 `result_output_file` 输出
-- [x] 2.3 创建 `tencentcloud/services/teo/data_source_tc_teo_ip_region_extension.go` 扩展文件（仅包含 `package teo`）
+- [x] 2.1 创建 `tencentcloud/services/teo/data_source_tc_teo_ip_region.go`，定义 `DataSourceTencentCloudTeoIPRegion()` 函数，包含 schema 定义（`ips`、`ip_region_info`、`result_output_file`）和 Read 函数
+- [x] 2.2 实现 `dataSourceTencentCloudTeoIPRegionRead` 函数：从 schema 获取 `ips` 参数，调用服务层方法，将结果映射到 `ip_region_info`，设置数据源 ID，处理 `result_output_file` 输出
 
 ## 3. Provider Registration
 

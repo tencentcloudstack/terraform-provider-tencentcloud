@@ -23,7 +23,7 @@ Terraform Provider for TencentCloud 当前已支持 TEO 产品的多种数据源
 ## Decisions
 
 ### 1. Schema 设计
-**决策**：入参 `i_ps` 使用 `schema.TypeList` + `schema.TypeString` 元素类型，出参 `ip_region_info` 使用 `schema.TypeList` + `schema.Resource` 元素类型。
+**决策**：入参 `ips` 使用 `schema.TypeList` + `schema.TypeString` 元素类型，出参 `ip_region_info` 使用 `schema.TypeList` + `schema.Resource` 元素类型。
 
 **理由**：与云 API 的 `[]*string` 和 `[]*IPRegionInfo` 类型一致。参考现有 TEO 数据源（如 `tencentcloud_teo_zones`）的模式，`ip_region_info` 内嵌 `ip`（TypeString）和 `is_edge_one_ip`（TypeString）两个 Computed 字段。
 

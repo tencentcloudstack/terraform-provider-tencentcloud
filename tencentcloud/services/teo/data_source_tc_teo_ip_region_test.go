@@ -48,7 +48,7 @@ func TestTeoIPRegionDataSource_Success(t *testing.T) {
 	meta := &ipRegionMockMeta{client: mockClient}
 	res := teo.DataSourceTencentCloudTeoIPRegion()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"i_ps": []interface{}{"1.1.1.1", "2.2.2.2"},
+		"ips": []interface{}{"1.1.1.1", "2.2.2.2"},
 	})
 
 	err := res.Read(d, meta)
@@ -83,7 +83,7 @@ func TestTeoIPRegionDataSource_APIError(t *testing.T) {
 	meta := &ipRegionMockMeta{client: mockClient}
 	res := teo.DataSourceTencentCloudTeoIPRegion()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"i_ps": []interface{}{"invalid-ip"},
+		"ips": []interface{}{"invalid-ip"},
 	})
 
 	err := res.Read(d, meta)
@@ -98,11 +98,11 @@ func TestTeoIPRegionDataSource_Schema(t *testing.T) {
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Read)
 
-	assert.Contains(t, res.Schema, "i_ps")
+	assert.Contains(t, res.Schema, "ips")
 	assert.Contains(t, res.Schema, "ip_region_info")
 	assert.Contains(t, res.Schema, "result_output_file")
 
-	iPs := res.Schema["i_ps"]
+	iPs := res.Schema["ips"]
 	assert.Equal(t, schema.TypeList, iPs.Type)
 	assert.True(t, iPs.Required)
 	assert.Equal(t, 100, iPs.MaxItems)

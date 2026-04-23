@@ -17,7 +17,7 @@ Use this data source to query detailed information of TEO IP region
 
 ```hcl
 data "tencentcloud_teo_ip_region" "example" {
-  i_ps = [
+  ips = [
     "1.1.1.1",
     "2.2.2.2"
   ]
@@ -28,7 +28,7 @@ data "tencentcloud_teo_ip_region" "example" {
 
 The following arguments are supported:
 
-* `i_ps` - (Required, List: [`String`]) List of IP addresses (IPv4/IPv6) to query, up to 100 entries.
+* `ips` - (Required, List: [`String`]) List of IP addresses (IPv4/IPv6) to query, up to 100 entries.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference

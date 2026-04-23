@@ -2,7 +2,7 @@
 
 ### Requirement: Data source schema for tencentcloud_teo_ip_region
 The system SHALL provide a Terraform data source named `tencentcloud_teo_ip_region` with the following schema:
-- `i_ps`: Required, TypeList of TypeString, maximum 100 items, representing the list of IP addresses (IPv4/IPv6) to query.
+- `ips`: Required, TypeList of TypeString, maximum 100 items, representing the list of IP addresses (IPv4/IPv6) to query.
 - `ip_region_info`: Computed, TypeList of TypeResource, containing the IP region information results.
 - `result_output_file`: Optional, TypeString, used to save query results to a file.
 
@@ -11,7 +11,7 @@ Each element in `ip_region_info` SHALL contain:
 - `is_edge_one_ip`: Computed, TypeString, whether the IP belongs to an EdgeOne node ("yes" or "no").
 
 #### Scenario: Query with valid IP list
-- **WHEN** user provides a list of IP addresses via `i_ps` parameter
+- **WHEN** user provides a list of IP addresses via `ips` parameter
 - **THEN** the data source SHALL call `DescribeIPRegion` API and return the `ip_region_info` list with each IP's `ip` and `is_edge_one_ip` fields populated
 
 #### Scenario: IP belongs to EdgeOne
