@@ -147,7 +147,7 @@ resource "tencentcloud_teo_l7_acc_rule_priority_operation" "teo_l7_acc_rule_prio
 The following arguments are supported:
 
 * `rule_ids` - (Required, List: [`String`], ForceNew) Complete list of rule IDs under site ID.
-* `zone_id` - (Required, String, ForceNew) Zone id.
+* `zone_id` - (Required, String, ForceNew) Zone id. Required field, cannot be null or empty string.
 
 ## Attributes Reference
 
