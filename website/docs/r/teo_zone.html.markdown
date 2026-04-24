@@ -88,6 +88,7 @@ In addition to all arguments above, the following attributes are exported:
     * `record_value` - Record the value.
     * `subdomain` - Host record.
 * `status` - Site status. Valid values: `active`: NS is switched; `pending`: NS is not switched; `moved`: NS is moved; `deactivated`: this site is blocked.
+* `zone_id` - Site ID.
 
 
 ## Import

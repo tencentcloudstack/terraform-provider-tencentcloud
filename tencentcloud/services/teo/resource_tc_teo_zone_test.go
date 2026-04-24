@@ -57,6 +57,7 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 				Config: testAccTeoZone,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckZoneExists("tencentcloud_teo_zone.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "zone_name", "tf-teo.xyz"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "area", "overseas"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "alias_zone_name", "tf-test"),
@@ -82,6 +83,7 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 				Config: testAccTeoZoneUp,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckZoneExists("tencentcloud_teo_zone.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "zone_name", "tf-teo.xyz"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "area", "overseas"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "alias_zone_name", "tf-test-up"),

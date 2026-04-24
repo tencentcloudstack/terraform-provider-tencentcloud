@@ -25,6 +25,12 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"zone_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Site ID.",
+			},
+
 			"zone_name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -241,6 +247,10 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 	}
 	if respData.ZoneName != nil {
 		_ = d.Set("zone_name", respData.ZoneName)
+	}
+
+	if respData.ZoneId != nil {
+		_ = d.Set("zone_id", respData.ZoneId)
 	}
 
 	if respData.NameServers != nil {
