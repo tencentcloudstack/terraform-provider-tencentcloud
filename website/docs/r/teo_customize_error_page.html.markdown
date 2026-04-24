@@ -96,6 +96,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `page_id` - Page ID.
+* `references` - List of business IDs that reference this error page.
 
 
 ## Import

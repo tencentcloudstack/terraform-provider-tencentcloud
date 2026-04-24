@@ -61,6 +61,15 @@ func ResourceTencentCloudTeoCustomizeErrorPage() *schema.Resource {
 				Computed:    true,
 				Description: "Page ID.",
 			},
+
+			"references": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of business IDs that reference this error page.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -176,6 +185,16 @@ func resourceTencentCloudTeoCustomizeErrorPageRead(d *schema.ResourceData, meta 
 	if respData.Content != nil {
 		_ = d.Set("content", respData.Content)
 	}
+
+	referencesList := make([]string, 0)
+	if respData.References != nil {
+		for _, ref := range respData.References {
+			if ref.BusinessId != nil {
+				referencesList = append(referencesList, *ref.BusinessId)
+			}
+		}
+	}
+	_ = d.Set("references", referencesList)
 
 	return nil
 }
