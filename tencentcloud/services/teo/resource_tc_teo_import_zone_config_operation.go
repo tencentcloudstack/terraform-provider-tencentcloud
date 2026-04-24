@@ -28,7 +28,7 @@ func ResourceTencentCloudTeoImportZoneConfigOperation() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The configuration content to import. It must be in JSON format and encoded in UTF-8. You can obtain the configuration content via the ExportZoneConfig API.",
+				Description: "The configuration content to import. It must be in JSON format and encoded in UTF-8. You can obtain the configuration content via the tencentcloud_teo_export_zone_config data source.",
 			},
 			"task_id": {
 				Type:        schema.TypeString,
@@ -149,7 +149,7 @@ func resourceTencentCloudTeoImportZoneConfigOperationCreate(d *schema.ResourceDa
 		return err
 	}
 
-	d.SetId(zoneId)
+	d.SetId(zoneId + tccommon.FILED_SP + taskId)
 
 	return resourceTencentCloudTeoImportZoneConfigOperationRead(d, meta)
 }

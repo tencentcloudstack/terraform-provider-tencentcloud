@@ -25,9 +25,9 @@ TEO（TencentCloud EdgeOne）是腾讯云的边缘安全加速平台，支持站
 ## Decisions
 
 ### 1. 资源 ID 格式
-使用 `zone_id` 作为资源 ID，与现有 TEO 操作资源（如 `check_cname_status_operation`、`create_cls_index_operation`）保持一致。
+使用 `zone_id` 和 `task_id` 的联合 ID（以 `tccommon.FILED_SP` 分隔）作为资源 ID。
 
-**理由**：zone_id 是操作的核心标识，且 DescribeZoneConfigImportResult 也需要 zone_id 和 task_id 进行查询。task_id 作为 computed 属性保存，用于异步轮询。
+**理由**：zone_id 和 task_id 共同唯一标识一次导入操作，使用联合 ID 可以确保每次导入操作都有唯一的资源标识。DescribeZoneConfigImportResult 也需要 zone_id 和 task_id 进行查询。
 
 ### 2. 异步轮询策略
 调用 ImportZoneConfig 获取 TaskId 后，使用 `resource.Retry` 轮询 DescribeZoneConfigImportResult，超时时间为 `6 * tccommon.ReadRetryTimeout`。

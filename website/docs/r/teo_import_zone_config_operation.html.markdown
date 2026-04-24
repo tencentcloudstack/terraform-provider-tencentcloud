@@ -4,47 +4,24 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_import_zone_config_operation"
 sidebar_current: "docs-tencentcloud-resource-teo_import_zone_config_operation"
 description: |-
-  Provides a resource to import TEO site configuration.
+  Provides a resource to import TEO zone configuration.
 ---
 
 # tencentcloud_teo_import_zone_config_operation
 
-Provides a resource to import TEO site configuration.
+Provides a resource to import TEO zone configuration.
 
 ## Example Usage
 
 ```hcl
+data "tencentcloud_teo_export_zone_config" "example" {
+  zone_id = "zone-id1"
+  types   = ["L7AccelerationConfig"]
+}
+
 resource "tencentcloud_teo_import_zone_config_operation" "example" {
-  zone_id = "zone-2qtuhspy7cr6"
-  content = jsonencode({
-    GlobalAccelerate = {
-      AccelerateMainland = {
-        Switch = "off"
-      }
-      OverseeAccelerate = {
-        Switch = "off"
-      }
-    }
-    RuleEngine = [
-      {
-        Rules = [
-          {
-            Actions = [
-              {
-                NormalAction = {
-                  Action = "UpstreamUrlRewrite"
-                  Parameters = {
-                    Type  = "all"
-                    Value = "/redirect-path"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  })
+  zone_id = "zone-id2"
+  content = data.tencentcloud_teo_export_zone_config.example.content
 }
 ```
 
@@ -52,7 +29,7 @@ resource "tencentcloud_teo_import_zone_config_operation" "example" {
 
 The following arguments are supported:
 
-* `content` - (Required, String, ForceNew) The configuration content to import. It must be in JSON format and encoded in UTF-8. You can obtain the configuration content via the ExportZoneConfig API.
+* `content` - (Required, String, ForceNew) The configuration content to import. It must be in JSON format and encoded in UTF-8. You can obtain the configuration content via the tencentcloud_teo_export_zone_config data source.
 * `zone_id` - (Required, String, ForceNew) Site ID.
 
 ## Attributes Reference
