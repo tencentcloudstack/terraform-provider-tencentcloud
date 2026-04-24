@@ -1,4 +1,4 @@
-Provides a resource to create a teo certificate
+Provides a resource to create a TEO certificate config
 
 Example Usage
 
@@ -24,9 +24,30 @@ resource "tencentcloud_teo_certificate_config" "certificate" {
 }
 ```
 
+Configure SSL certificate with edge mutual TLS
+
+```hcl
+resource "tencentcloud_teo_certificate_config" "certificate" {
+  host    = "test.tencentcloud-terraform-provider.cn"
+  mode    = "sslcert"
+  zone_id = "zone-2o1t24kgy362"
+
+  server_cert_info {
+    cert_id     = "8xiUJIJd"
+  }
+
+  client_cert_info {
+    switch = "on"
+    cert_infos {
+      cert_id = "cert-client-001"
+    }
+  }
+}
+```
+
 Import
 
-teo certificate can be imported using the id, e.g.
+TEO certificate config can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_teo_certificate_config.certificate zone_id#host

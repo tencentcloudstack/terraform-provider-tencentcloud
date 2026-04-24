@@ -161,6 +161,68 @@ func ResourceTencentCloudTeoCertificateConfig() *schema.Resource {
 				},
 			},
 
+			"client_cert_info": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Edge mutual TLS authentication configuration, where client CA certificates are deployed on EO nodes for client-to-EO-node authentication. Disabled by default; leaving the field blank will retain the current configuration. This feature is currently in beta testing. please [contact us](https://cloud.tencent.com/online-service) to request access.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Edge mutual TLS configuration switch, the values are: `on`: enable; `off`: disable.",
+						},
+						"cert_infos": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							Description: "Mutual TLS certificate list.\nNote: When using ClientCertInfo as an input parameter in ModifyHostsCertificate, you only need to provide the CertId of the corresponding certificate. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"cert_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Certificate ID, which originates from the SSL side. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).",
+									},
+									"alias": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Alias of the certificate.",
+									},
+									"type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Type of the certificate. Values: `default`: Default certificate; `upload`: Specified certificate; `managed`: Tencent Cloud-managed certificate.",
+									},
+									"expire_time": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The certificate expiration time.",
+									},
+									"deploy_time": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Time when the certificate is deployed.",
+									},
+									"sign_algo": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Signature algorithm.",
+									},
+									"status": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Certificate status.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
 			"mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
