@@ -61,6 +61,49 @@ func ResourceTencentCloudTeoCustomizeErrorPage() *schema.Resource {
 				Computed:    true,
 				Description: "Page ID.",
 			},
+
+			"error_pages": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of custom error pages. Each element contains the following attributes:",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"page_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Custom error page ID.",
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Custom error page name.",
+						},
+						"content_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Custom error page type.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Custom error page description.",
+						},
+						"content": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Custom error page content.",
+						},
+						"references": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "List of business IDs that reference this error page.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -176,6 +219,35 @@ func resourceTencentCloudTeoCustomizeErrorPageRead(d *schema.ResourceData, meta 
 	if respData.Content != nil {
 		_ = d.Set("content", respData.Content)
 	}
+
+	errorPagesList := make([]map[string]interface{}, 0, 1)
+	errorPage := map[string]interface{}{}
+	if respData.PageId != nil {
+		errorPage["page_id"] = respData.PageId
+	}
+	if respData.Name != nil {
+		errorPage["name"] = respData.Name
+	}
+	if respData.ContentType != nil {
+		errorPage["content_type"] = respData.ContentType
+	}
+	if respData.Description != nil {
+		errorPage["description"] = respData.Description
+	}
+	if respData.Content != nil {
+		errorPage["content"] = respData.Content
+	}
+	referencesList := make([]string, 0)
+	if respData.References != nil {
+		for _, ref := range respData.References {
+			if ref.BusinessId != nil {
+				referencesList = append(referencesList, *ref.BusinessId)
+			}
+		}
+	}
+	errorPage["references"] = referencesList
+	errorPagesList = append(errorPagesList, errorPage)
+	_ = d.Set("error_pages", errorPagesList)
 
 	return nil
 }
