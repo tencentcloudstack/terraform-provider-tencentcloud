@@ -110,12 +110,56 @@ func resourceTencentCloudTeoCertificateConfigReadPostHandleResponse0(ctx context
 							certInfosMap["sign_algo"] = certInfos.SignAlgo
 						}
 
+						if certInfos.Status != nil {
+							certInfosMap["status"] = certInfos.Status
+						}
+
 						certInfosList = append(certInfosList, certInfosMap)
 					}
 
 					upstreamMutualTLSMap["cert_infos"] = certInfosList
 				}
 				upstreamCertInfoMap["upstream_mutual_tls"] = []interface{}{upstreamMutualTLSMap}
+			}
+
+			if accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify != nil {
+				upstreamCertificateVerifyMap := map[string]interface{}{}
+
+				if accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.VerificationMode != nil {
+					upstreamCertificateVerifyMap["verification_mode"] = accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.VerificationMode
+				}
+
+				customCACertsList := make([]map[string]interface{}, 0)
+				if accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.CustomCACerts != nil {
+					for _, certInfo := range accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.CustomCACerts {
+						certInfoMap := map[string]interface{}{}
+						if certInfo.CertId != nil {
+							certInfoMap["cert_id"] = certInfo.CertId
+						}
+						if certInfo.Alias != nil {
+							certInfoMap["alias"] = certInfo.Alias
+						}
+						if certInfo.Type != nil {
+							certInfoMap["type"] = certInfo.Type
+						}
+						if certInfo.ExpireTime != nil {
+							certInfoMap["expire_time"] = certInfo.ExpireTime
+						}
+						if certInfo.DeployTime != nil {
+							certInfoMap["deploy_time"] = certInfo.DeployTime
+						}
+						if certInfo.SignAlgo != nil {
+							certInfoMap["sign_algo"] = certInfo.SignAlgo
+						}
+						if certInfo.Status != nil {
+							certInfoMap["status"] = certInfo.Status
+						}
+						customCACertsList = append(customCACertsList, certInfoMap)
+					}
+					upstreamCertificateVerifyMap["custom_ca_certs"] = customCACertsList
+				}
+
+				upstreamCertInfoMap["upstream_certificate_verify"] = []interface{}{upstreamCertificateVerifyMap}
 			}
 
 			_ = d.Set("upstream_cert_info", []interface{}{upstreamCertInfoMap})
@@ -270,6 +314,23 @@ func resourceTencentCloudTeoCertificateConfigUpdateOnStart(ctx context.Context) 
 				}
 			}
 			upstreamCertInfo.UpstreamMutualTLS = &mutualTLS2
+		}
+		if upstreamCertVerifyMap, ok := helper.ConvertInterfacesHeadToMap(upstreamCertInfoMap["upstream_certificate_verify"]); ok {
+			certVerify := teo.OriginCertificateVerify{}
+			if v, ok := upstreamCertVerifyMap["verification_mode"].(string); ok && v != "" {
+				certVerify.VerificationMode = helper.String(v)
+			}
+			if v, ok := upstreamCertVerifyMap["custom_ca_certs"]; ok {
+				for _, item := range v.([]interface{}) {
+					certMap := item.(map[string]interface{})
+					certInfo := teo.CertificateInfo{}
+					if v, ok := certMap["cert_id"].(string); ok && v != "" {
+						certInfo.CertId = helper.String(v)
+					}
+					certVerify.CustomCACerts = append(certVerify.CustomCACerts, &certInfo)
+				}
+			}
+			upstreamCertInfo.UpstreamCertificateVerify = &certVerify
 		}
 		request.UpstreamCertInfo = &upstreamCertInfo
 	}

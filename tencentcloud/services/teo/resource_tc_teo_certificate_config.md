@@ -45,6 +45,52 @@ resource "tencentcloud_teo_certificate_config" "certificate" {
 }
 ```
 
+Configure SSL certificate with upstream mutual TLS
+
+```hcl
+resource "tencentcloud_teo_certificate_config" "certificate" {
+  host    = "test.tencentcloud-terraform-provider.cn"
+  mode    = "sslcert"
+  zone_id = "zone-2o1t24kgy362"
+
+  server_cert_info {
+    cert_id = "8xiUJIJd"
+  }
+
+  upstream_cert_info {
+    upstream_mutual_tls {
+      switch = "on"
+      cert_infos {
+        cert_id = "cert-upstream-001"
+      }
+    }
+  }
+}
+```
+
+Configure SSL certificate with upstream certificate verification
+
+```hcl
+resource "tencentcloud_teo_certificate_config" "certificate" {
+  host    = "test.tencentcloud-terraform-provider.cn"
+  mode    = "sslcert"
+  zone_id = "zone-2o1t24kgy362"
+
+  server_cert_info {
+    cert_id = "8xiUJIJd"
+  }
+
+  upstream_cert_info {
+    upstream_certificate_verify {
+      verification_mode = "custom_ca"
+      custom_ca_certs {
+        cert_id = "cert-ca-001"
+      }
+    }
+  }
+}
+```
+
 Import
 
 TEO certificate config can be imported using the id, e.g.

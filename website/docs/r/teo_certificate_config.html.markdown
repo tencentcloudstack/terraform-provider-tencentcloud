@@ -56,6 +56,52 @@ resource "tencentcloud_teo_certificate_config" "certificate" {
 }
 ```
 
+### Configure SSL certificate with upstream mutual TLS
+
+```hcl
+resource "tencentcloud_teo_certificate_config" "certificate" {
+  host    = "test.tencentcloud-terraform-provider.cn"
+  mode    = "sslcert"
+  zone_id = "zone-2o1t24kgy362"
+
+  server_cert_info {
+    cert_id = "8xiUJIJd"
+  }
+
+  upstream_cert_info {
+    upstream_mutual_tls {
+      switch = "on"
+      cert_infos {
+        cert_id = "cert-upstream-001"
+      }
+    }
+  }
+}
+```
+
+### Configure SSL certificate with upstream certificate verification
+
+```hcl
+resource "tencentcloud_teo_certificate_config" "certificate" {
+  host    = "test.tencentcloud-terraform-provider.cn"
+  mode    = "sslcert"
+  zone_id = "zone-2o1t24kgy362"
+
+  server_cert_info {
+    cert_id = "8xiUJIJd"
+  }
+
+  upstream_cert_info {
+    upstream_certificate_verify {
+      verification_mode = "custom_ca"
+      custom_ca_certs {
+        cert_id = "cert-ca-001"
+      }
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -69,17 +115,21 @@ The following arguments are supported:
 
 The `cert_infos` object of `client_cert_info` supports the following:
 
-* `cert_id` - (Required, String) Certificate ID, which originates from the SSL side. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).
+* `cert_id` - (Optional, String) Certificate ID, which originates from the SSL side. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).
 
 The `cert_infos` object of `upstream_mutual_tls` supports the following:
 
-* `cert_id` - (Required, String) Certificate ID, which originates from the SSL side. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).
+* `cert_id` - (Optional, String) Certificate ID, which originates from the SSL side. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).
 
 The `client_cert_info` object supports the following:
 
 * `switch` - (Required, String) Edge mutual TLS configuration switch, the values are: `on`: enable; `off`: disable.
 * `cert_infos` - (Optional, List) Mutual TLS certificate list.
 Note: When using ClientCertInfo as an input parameter in ModifyHostsCertificate, you only need to provide the CertId of the corresponding certificate. You can check the CertId from the [SSL Certificate List](https://console.cloud.tencent.com/ssl).
+
+The `custom_ca_certs` object of `upstream_certificate_verify` supports the following:
+
+* `cert_id` - (Optional, String) Certificate ID, which originates from the SSL side.
 
 The `server_cert_info` object supports the following:
 
@@ -93,7 +143,14 @@ The `server_cert_info` object supports the following:
 
 The `upstream_cert_info` object supports the following:
 
+* `upstream_certificate_verify` - (Optional, List) In the origin certificate verification scenario, this field is the CA certificate used by EO nodes during origin-pull for verifying the origin server's certificate. Deployed on EO nodes for EO to authenticate the server certificate. When used as an input parameter, leaving it blank means retaining the original configuration.
 * `upstream_mutual_tls` - (Optional, List) In the origin-pull mutual authentication scenario, this field represents the certificate (including the public and private keys) carried during EO node origin-pull, which is deployed in the EO node for the origin server to authenticate the EO node. When used as an input parameter, it is left blank to indicate retaining the original configuration.
+
+The `upstream_certificate_verify` object of `upstream_cert_info` supports the following:
+
+* `custom_ca_certs` - (Optional, List) List of specified trusted CA certificates. The origin certificate must be signed by this CA to pass verification.
+Note: Only required when VerificationMode is custom_ca. When used as input in ModifyHostsCertificate, you only need to provide the CertId.
+* `verification_mode` - (Optional, String) Origin certificate verification mode. Values: `disable`: Disable origin certificate verification; `custom_ca`: Use specified trusted CA certificate for verification.
 
 The `upstream_mutual_tls` object of `upstream_cert_info` supports the following:
 
