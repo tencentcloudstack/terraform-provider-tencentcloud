@@ -95,14 +95,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `error_pages` - A list of custom error pages. Each element contains the following attributes:
-  * `content_type` - Custom error page type.
-  * `content` - Custom error page content.
-  * `description` - Custom error page description.
-  * `name` - Custom error page name.
-  * `page_id` - Custom error page ID.
-  * `references` - List of business IDs that reference this error page.
 * `page_id` - Page ID.
+* `references` - List of business IDs that reference this error page.
 
 
 ## Import
