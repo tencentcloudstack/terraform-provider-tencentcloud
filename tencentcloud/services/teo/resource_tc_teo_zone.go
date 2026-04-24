@@ -485,10 +485,6 @@ func resourceTencentCloudTeoZoneDelete(d *schema.ResourceData, meta interface{})
 
 	zoneId := d.Id()
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		zoneId = v.(string)
-	}
-
 	var (
 		request  = teo.NewDeleteZoneRequest()
 		response = teo.NewDeleteZoneResponse()
