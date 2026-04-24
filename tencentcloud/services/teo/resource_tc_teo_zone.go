@@ -25,6 +25,12 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"zone_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Site ID.",
+			},
+
 			"zone_name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -241,6 +247,10 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 	}
 	if respData.ZoneName != nil {
 		_ = d.Set("zone_name", respData.ZoneName)
+	}
+
+	if respData.ZoneId != nil {
+		_ = d.Set("zone_id", respData.ZoneId)
 	}
 
 	if respData.NameServers != nil {
@@ -474,6 +484,10 @@ func resourceTencentCloudTeoZoneDelete(d *schema.ResourceData, meta interface{})
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	zoneId := d.Id()
+
+	if v, ok := d.GetOk("zone_id"); ok {
+		zoneId = v.(string)
+	}
 
 	var (
 		request  = teo.NewDeleteZoneRequest()
