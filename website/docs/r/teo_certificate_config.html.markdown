@@ -41,7 +41,7 @@ The following arguments are supported:
 
 * `host` - (Required, String, ForceNew) Acceleration domain name that needs to modify the certificate configuration.
 * `zone_id` - (Required, String, ForceNew) Site ID.
-* `mode` - (Optional, String) Mode of configuring the certificate, the values are: `disable`: Do not configure the certificate; `eofreecert`: Configure EdgeOne free certificate; `sslcert`: Configure SSL certificate. If not filled in, the default value is `disable`.
+* `mode` - (Optional, String) Mode of configuring the certificate, the values are: `disable`: Do not configure the certificate; `eofreecert`: Configure EdgeOne free certificate; `eofreecert_manual`: Deploy a free certificate applied for through DNS delegation validation or file validation; `sslcert`: Configure SSL certificate. If not filled in, the default value is `disable`.
 * `server_cert_info` - (Optional, List) SSL certificate configuration, this parameter takes effect only when mode = sslcert, just enter the corresponding CertId. You can go to the SSL certificate list to view the CertId.
 * `upstream_cert_info` - (Optional, List) Configures the certificate presented by the EO node during origin-pull for mutual TLS authentication. Disabled by default; leaving the field blank will retain the current configuration. This feature is currently in beta testing. please [contact us](https://cloud.tencent.com/online-service) to request access.
 
