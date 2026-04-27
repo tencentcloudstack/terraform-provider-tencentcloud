@@ -1584,6 +1584,7 @@ tencentcloud_teo_import_zone_config_operation
 tencentcloud_teo_deploy_config_group_version
 tencentcloud_teo_identify_zone_operation
 tencentcloud_teo_just_in_time_transcode_template
+tencentcloud_teo_security_api_service
 
 TencentCloud ServiceMesh(TCM)
 Data Source

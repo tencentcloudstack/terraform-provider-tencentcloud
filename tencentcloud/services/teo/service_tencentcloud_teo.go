@@ -2634,3 +2634,133 @@ func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[st
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoSecurityAPIServiceById(ctx context.Context, zoneId string) (ret *teov20220901.DescribeSecurityAPIServiceResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		request  = teov20220901.NewDescribeSecurityAPIServiceRequest()
+		response = teov20220901.NewDescribeSecurityAPIServiceResponse()
+	)
+
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	var allAPIServices []*teov20220901.APIService
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		ratelimit.Check(request.GetAction())
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityAPIService(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.APIServices) < 1 {
+			break
+		}
+
+		allAPIServices = append(allAPIServices, response.Response.APIServices...)
+
+		if len(response.Response.APIServices) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	if len(allAPIServices) == 0 {
+		return
+	}
+
+	ret = &teov20220901.DescribeSecurityAPIServiceResponseParams{
+		APIServices: allAPIServices,
+		TotalCount:  helper.IntInt64(len(allAPIServices)),
+	}
+	return
+}
+
+func (me *TeoService) DescribeTeoSecurityAPIResourceById(ctx context.Context, zoneId string) (ret *teov20220901.DescribeSecurityAPIResourceResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		request  = teov20220901.NewDescribeSecurityAPIResourceRequest()
+		response = teov20220901.NewDescribeSecurityAPIResourceResponse()
+	)
+
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	var allAPIResources []*teov20220901.APIResource
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		ratelimit.Check(request.GetAction())
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityAPIResource(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.APIResources) < 1 {
+			break
+		}
+
+		allAPIResources = append(allAPIResources, response.Response.APIResources...)
+
+		if len(response.Response.APIResources) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	if len(allAPIResources) == 0 {
+		return
+	}
+
+	ret = &teov20220901.DescribeSecurityAPIResourceResponseParams{
+		APIResources: allAPIResources,
+		TotalCount:   helper.IntInt64(len(allAPIResources)),
+	}
+	return
+}
