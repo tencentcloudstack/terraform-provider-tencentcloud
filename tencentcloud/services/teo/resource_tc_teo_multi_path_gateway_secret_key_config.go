@@ -90,36 +90,69 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d *schema.Reso
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request = teov20220901.NewModifyMultiPathGatewaySecretKeyRequest()
-		zoneId  = d.Id()
+		logId  = tccommon.GetLogId(tccommon.ContextNil)
+		ctx    = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		zoneId = d.Id()
 	)
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		request.ZoneId = helper.String(v.(string))
-	} else {
-		request.ZoneId = helper.String(zoneId)
-	}
+	if d.IsNewResource() {
+		// Create operation: call CreateMultiPathGatewaySecretKey API
+		request := teov20220901.NewCreateMultiPathGatewaySecretKeyRequest()
 
-	if v, ok := d.GetOk("secret_key"); ok {
-		request.SecretKey = helper.String(v.(string))
-	}
-
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyMultiPathGatewaySecretKeyWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
+		if v, ok := d.GetOk("zone_id"); ok {
+			request.ZoneId = helper.String(v.(string))
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			request.ZoneId = helper.String(zoneId)
 		}
 
-		return nil
-	})
+		if v, ok := d.GetOk("secret_key"); ok {
+			request.SecretKey = helper.String(v.(string))
+		}
 
-	if reqErr != nil {
-		log.Printf("[CRITAL]%s update teo multi path gateway secret key failed, reason:%+v", logId, reqErr)
-		return reqErr
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateMultiPathGatewaySecretKeyWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s create teo multi path gateway secret key failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+	} else {
+		// Update operation: call ModifyMultiPathGatewaySecretKey API
+		request := teov20220901.NewModifyMultiPathGatewaySecretKeyRequest()
+
+		if v, ok := d.GetOk("zone_id"); ok {
+			request.ZoneId = helper.String(v.(string))
+		} else {
+			request.ZoneId = helper.String(zoneId)
+		}
+
+		if v, ok := d.GetOk("secret_key"); ok {
+			request.SecretKey = helper.String(v.(string))
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyMultiPathGatewaySecretKeyWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update teo multi path gateway secret key failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
 	}
 
 	return resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigRead(d, meta)

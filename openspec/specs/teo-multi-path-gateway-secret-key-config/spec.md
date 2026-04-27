@@ -18,16 +18,16 @@ The resource SHALL support import via `schema.ImportStatePassthrough`.
 - **AND** the Read method SHALL populate `secret_key` from the cloud API
 
 ### Requirement: Create operation
-The Create operation SHALL set `zone_id` as the resource ID and then invoke the Update operation to apply the secret key configuration via the `ModifyMultiPathGatewaySecretKey` API.
+The Create operation SHALL set `zone_id` as the resource ID and then invoke the Update operation. In the Update function, when `d.IsNewResource()` is true, the `CreateMultiPathGatewaySecretKey` API SHALL be called; otherwise, the `ModifyMultiPathGatewaySecretKey` API SHALL be called.
 
 #### Scenario: Creating a new secret key config
 - **WHEN** a user creates a `tencentcloud_teo_multi_path_gateway_secret_key` resource with `zone_id` and `secret_key`
 - **THEN** the resource ID SHALL be set to the value of `zone_id`
-- **AND** the `ModifyMultiPathGatewaySecretKey` API SHALL be called with `ZoneId` and `SecretKey` parameters
+- **AND** the `CreateMultiPathGatewaySecretKey` API SHALL be called with `ZoneId` and `SecretKey` parameters
 
 #### Scenario: Create with retry on API failure
-- **WHEN** the `ModifyMultiPathGatewaySecretKey` API call fails during Create
-- **THEN** the operation SHALL retry with `tccommon.ReadRetryTimeout`
+- **WHEN** the `CreateMultiPathGatewaySecretKey` API call fails during Create
+- **THEN** the operation SHALL retry with `tccommon.WriteRetryTimeout`
 - **AND** return a wrapped error via `tccommon.RetryError()`
 
 ### Requirement: Read operation
@@ -56,7 +56,7 @@ The Update operation SHALL call the `ModifyMultiPathGatewaySecretKey` API to upd
 
 #### Scenario: Update with retry on API failure
 - **WHEN** the `ModifyMultiPathGatewaySecretKey` API call fails during Update
-- **THEN** the operation SHALL retry with `tccommon.ReadRetryTimeout`
+- **THEN** the operation SHALL retry with `tccommon.WriteRetryTimeout`
 - **AND** return a wrapped error via `tccommon.RetryError()`
 
 ### Requirement: Delete operation

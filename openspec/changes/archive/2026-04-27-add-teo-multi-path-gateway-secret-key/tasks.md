@@ -1,9 +1,9 @@
 ## 1. Resource Implementation
 
 - [x] 1.1 Create resource file `tencentcloud/services/teo/resource_tc_teo_multi_path_gateway_secret_key_config.go` with schema definition (zone_id: Required/ForceNew/TypeString, secret_key: Required/TypeString/Sensitive) and Import support
-- [x] 1.2 Implement Create function: set zone_id as resource ID, then call Update function (which calls ModifyMultiPathGatewaySecretKey API)
+- [x] 1.2 Implement Create function: set zone_id as resource ID, then call Update function (which calls CreateMultiPathGatewaySecretKey API for new resources)
 - [x] 1.3 Implement Read function: call DescribeMultiPathGatewaySecretKey API with ZoneId, populate secret_key from response, handle resource-not-found by removing from state
-- [x] 1.4 Implement Update function: call ModifyMultiPathGatewaySecretKey API with ZoneId and SecretKey, include retry logic with tccommon.ReadRetryTimeout
+- [x] 1.4 Implement Update function: if d.IsNewResource(), call CreateMultiPathGatewaySecretKey API; otherwise call ModifyMultiPathGatewaySecretKey API with ZoneId and SecretKey, include retry logic with tccommon.WriteRetryTimeout
 - [x] 1.5 Implement Delete function: remove resource from Terraform state only (no API call needed)
 
 ## 2. Provider Registration

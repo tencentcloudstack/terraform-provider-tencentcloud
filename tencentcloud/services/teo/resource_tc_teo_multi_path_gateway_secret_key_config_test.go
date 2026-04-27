@@ -36,20 +36,23 @@ func ptrStringForSecretKey(s string) *string {
 
 // go test ./tencentcloud/services/teo/ -run "TestMultiPathGatewaySecretKeyConfig" -v -count=1 -gcflags="all=-l"
 
-// TestMultiPathGatewaySecretKeyConfig_CreateSuccess tests Create sets zone_id as ID and calls Update
+// TestMultiPathGatewaySecretKeyConfig_CreateSuccess tests Create sets zone_id as ID and calls CreateMultiPathGatewaySecretKey API
 func TestMultiPathGatewaySecretKeyConfig_CreateSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	// Patch IsNewResource to return true during Create
+	patches.ApplyMethodReturn(&schema.ResourceData{}, "IsNewResource", true)
+
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaForSecretKey().client, "UseTeoV20220901Client", teoClient)
 
-	// Patch ModifyMultiPathGatewaySecretKeyWithContext (called by Update during Create)
-	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
+	// Patch CreateMultiPathGatewaySecretKeyWithContext (called by Update during Create)
+	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
 		assert.Equal(t, "dGVzdC1zZWNyZXQta2V5", *request.SecretKey)
-		resp := teov20220901.NewModifyMultiPathGatewaySecretKeyResponse()
-		resp.Response = &teov20220901.ModifyMultiPathGatewaySecretKeyResponseParams{
+		resp := teov20220901.NewCreateMultiPathGatewaySecretKeyResponse()
+		resp.Response = &teov20220901.CreateMultiPathGatewaySecretKeyResponseParams{
 			RequestId: ptrStringForSecretKey("fake-request-id"),
 		}
 		return resp, nil
@@ -84,10 +87,13 @@ func TestMultiPathGatewaySecretKeyConfig_CreateAPIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	// Patch IsNewResource to return true during Create
+	patches.ApplyMethodReturn(&schema.ResourceData{}, "IsNewResource", true)
+
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaForSecretKey().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
 	})
 
@@ -165,6 +171,9 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	// Patch IsNewResource to return false during Update
+	patches.ApplyMethodReturn(&schema.ResourceData{}, "IsNewResource", false)
+
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaForSecretKey().client, "UseTeoV20220901Client", teoClient)
 
@@ -204,6 +213,9 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateSuccess(t *testing.T) {
 func TestMultiPathGatewaySecretKeyConfig_UpdateAPIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
+
+	// Patch IsNewResource to return false during Update
+	patches.ApplyMethodReturn(&schema.ResourceData{}, "IsNewResource", false)
 
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaForSecretKey().client, "UseTeoV20220901Client", teoClient)
