@@ -957,6 +957,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_deploy_config_version_history":                     teo.DataSourceTencentCloudTeoDeployConfigVersionHistory(),
 			"tencentcloud_teo_export_zone_config":                                teo.DataSourceTencentCloudTeoExportZoneConfig(),
 			"tencentcloud_teo_ip_region":                                         teo.DataSourceTencentCloudTeoIPRegion(),
+			"tencentcloud_teo_multi_path_gateway":                                teo.DataSourceTencentCloudTeoMultiPathGateway(),
 			"tencentcloud_sts_caller_identity":                                   sts.DataSourceTencentCloudStsCallerIdentity(),
 			"tencentcloud_dcdb_instances":                                        dcdb.DataSourceTencentCloudDcdbInstances(),
 			"tencentcloud_dcdb_accounts":                                         dcdb.DataSourceTencentCloudDcdbAccounts(),

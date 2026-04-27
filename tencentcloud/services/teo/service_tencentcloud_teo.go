@@ -2634,3 +2634,63 @@ func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[st
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoMultiPathGatewaysByFilter(ctx context.Context, paramMap map[string]interface{}) (ret []*teov20220901.MultiPathGateway, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeMultiPathGatewaysRequest()
+	response := teo.NewDescribeMultiPathGatewaysResponse()
+
+	for k, v := range paramMap {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*teov20220901.Filter)
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 1000
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoClient().DescribeMultiPathGateways(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe multi path gateways failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.Gateways) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Gateways...)
+		if len(response.Response.Gateways) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
