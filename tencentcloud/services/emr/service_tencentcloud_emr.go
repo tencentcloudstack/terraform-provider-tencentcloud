@@ -489,6 +489,111 @@ func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, node
 	return
 }
 
+// DescribeEmrClusterV2ById wraps the DescribeInstances API for the new
+// tencentcloud_emr_cluster_v2 resource. It returns the first matching cluster,
+// or nil if no cluster is found (including when the API reports
+// ResourceNotFound.ClusterNotFound / InstanceNotFound).
+func (me *EMRService) DescribeEmrClusterV2ById(ctx context.Context, instanceId string) (cluster *emr.ClusterInstancesInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := emr.NewDescribeInstancesRequest()
+	request.ProjectId = helper.IntInt64(-1)
+	request.DisplayStrategy = helper.String(DisplayStrategyIsclusterList)
+	request.InstanceIds = []*string{helper.String(instanceId)}
+
+	var response *emr.DescribeInstancesResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseEmrClient().DescribeInstances(request)
+		if e != nil {
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound.ClusterNotFound" || sdkError.Code == "InternalError.ClusterNotFound" || sdkError.Code == "ResourceNotFound.InstanceNotFound" {
+					return nil
+				}
+			}
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ClusterList) == 0 {
+		return
+	}
+	cluster = response.Response.ClusterList[0]
+	return
+}
+
+// DescribeEmrClusterV2Nodes paginates DescribeClusterNodes for the new
+// tencentcloud_emr_cluster_v2 resource. nodeFlag follows the EMR API contract
+// (e.g. "all", "master", "core", "task", "common", "router").
+func (me *EMRService) DescribeEmrClusterV2Nodes(ctx context.Context, instanceId, nodeFlag string) (nodes []*emr.NodeHardwareInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request := emr.NewDescribeClusterNodesRequest()
+		request.InstanceId = helper.String(instanceId)
+		request.NodeFlag = helper.String(nodeFlag)
+		request.Offset = helper.IntInt64(int(offset))
+		request.Limit = helper.IntInt64(int(limit))
+
+		var response *emr.DescribeClusterNodesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseEmrClient().DescribeClusterNodes(request)
+			if e != nil {
+				if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "ResourceNotFound.ClusterNotFound" || sdkError.Code == "InternalError.ClusterNotFound" || sdkError.Code == "ResourceNotFound.InstanceNotFound" {
+						return nil
+					}
+				}
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		if response == nil || response.Response == nil {
+			break
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		page := response.Response.NodeList
+		if len(page) == 0 {
+			break
+		}
+		nodes = append(nodes, page...)
+		if int64(len(page)) < limit {
+			break
+		}
+		offset += limit
+	}
+	return
+}
+
 func (me *EMRService) ModifyResourcesTags(ctx context.Context, region string, instanceId string, oldTags, newTags map[string]interface{}) error {
 	resourceName := tccommon.BuildTagResourceName("emr", "emr-instance", region, instanceId)
 	rTags, dTags := svctag.DiffTags(oldTags, newTags)
