@@ -365,6 +365,89 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `zone_name` - Zone name.
+* `zone_setting` - Site acceleration configuration computed from the API response.
+  * `zone_config` - Site acceleration global configuration.
+    * `accelerate_mainland` - Accelerate optimization and configuration in mainland china.
+      * `switch` - Mainland china acceleration optimization switch.
+    * `cache_key` - The node cache key configuration.
+      * `full_url_cache` - Whether to enable full-path cache.
+      * `ignore_case` - Whether to ignore case in the cache key.
+      * `query_string` - Query string retention configuration parameter.
+        * `action` - Actions to retain/ignore specified parameters in the query string.
+        * `switch` - Query string retain/ignore specified parameter switch.
+        * `values` - List of parameter names to be retained/ignored in the query string.
+    * `cache_prefresh` - Cache prefresh configuration.
+      * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time.
+      * `switch` - Whether to enable cache prefresh.
+    * `cache` - Node cache expiration time configuration.
+      * `custom_time` - Custom cache time configuration.
+        * `cache_time` - Custom cache time value, unit: seconds.
+        * `switch` - Custom cache time switch. values:
+on: Enable;
+off: Disable.
+      * `follow_origin` - Follow origin server cache configuration.
+        * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header.
+        * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header.
+        * `default_cache` - Whether to cache when an origin server does not return the cache-control header.
+        * `switch` - Whether to enable the configuration of following the origin server. Valid values:
+on: Enable;
+off: Disable.
+      * `no_cache` - No cache configuration.
+        * `switch` - Whether to enable no-cache configuration. Valid values:
+on: Enable;
+off: Disable.
+    * `client_ip_country` - Client ip origin-pull request header configuration.
+      * `header_name` - Name of the request header that contains the client IP region.
+      * `switch` - Whether to enable configuration.
+    * `client_ip_header` - Client ip origin-pull request header configuration.
+      * `header_name` - Name of the request header containing the client ip address for origin-pull.
+      * `switch` - Whether to enable configuration.
+    * `compression` - Smart compression configuration.
+      * `algorithms` - Supported compression algorithm list.
+      * `switch` - Whether to enable smart compression.
+    * `force_redirect_https` - Forced https redirect configuration for access protocols.
+      * `redirect_status_code` - Redirection status code.
+      * `switch` - Whether to enable forced redirect configuration switch.
+    * `grpc` - Configuration of grpc support.
+      * `switch` - Whether to enable grpc.
+    * `hsts` - HSTS configuration.
+      * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header.
+      * `preload` - Whether to allow the browser to preload the hsts header.
+      * `switch` - Whether to enable hsts.
+      * `timeout` - Cache hsts header time, unit: seconds.
+    * `http2` - HTTP/2 configuration.
+      * `switch` - Whether to enable http2 access.
+    * `ipv6` - IPv6 access configuration.
+      * `switch` - Whether to enable ipv6 access functionality.
+    * `max_age` - Browser cache rule configuration.
+      * `cache_time` - Custom cache time value, unit: seconds.
+      * `follow_origin` - Specifies whether to follow the origin server cache-control configuration.
+    * `ocsp_stapling` - OCSP stapling configuration.
+      * `switch` - Whether to enable ocsp stapling configuration switch.
+    * `offline_cache` - Offline cache configuration.
+      * `switch` - Whether to enable offline caching.
+    * `post_max_size` - POST request transport configuration.
+      * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes.
+      * `switch` - Whether to enable post request file upload limit.
+    * `quic` - QUIC access configuration.
+      * `switch` - Whether to enable quic.
+    * `smart_routing` - Intelligent acceleration configuration.
+      * `switch` - Whether to enable smart acceleration. values:
+on: Enable;
+off: Disable.
+    * `standard_debug` - Standard debugging configuration.
+      * `allow_client_ip_list` - The client ip to allow.
+      * `expires` - Debug feature expiration time.
+      * `switch` - Whether to enable standard debugging.
+    * `tls_config` - TLS configuration.
+      * `cipher_suite` - Cipher suite.
+      * `version` - TLS version.
+    * `upstream_http2` - HTTP2 origin-pull configuration.
+      * `switch` - Whether to enable http2 origin-pull.
+    * `web_socket` - WebSocket configuration.
+      * `switch` - Whether to enable websocket connection timeout.
+      * `timeout` - Timeout, unit: seconds.
+  * `zone_name` - Zone name.
 
 
 ## Import

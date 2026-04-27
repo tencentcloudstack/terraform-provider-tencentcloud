@@ -547,6 +547,533 @@ func ResourceTencentCloudTeoL7AccSetting() *schema.Resource {
 					},
 				},
 			},
+			"zone_setting": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Site acceleration configuration computed from the API response.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"zone_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Zone name.",
+						},
+						"zone_config": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Site acceleration global configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"smart_routing": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Intelligent acceleration configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable smart acceleration. values:\non: Enable;\noff: Disable.",
+												},
+											},
+										},
+									},
+									"cache": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Node cache expiration time configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"follow_origin": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													MaxItems:    1,
+													Description: "Follow origin server cache configuration.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"switch": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Whether to enable the configuration of following the origin server. Valid values:\non: Enable;\noff: Disable.",
+															},
+															"default_cache": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Whether to cache when an origin server does not return the cache-control header.",
+															},
+															"default_cache_strategy": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Whether to use the default caching policy when an origin server does not return the cache-control header.",
+															},
+															"default_cache_time": {
+																Type:        schema.TypeInt,
+																Computed:    true,
+																Description: "The default cache time in seconds when an origin server does not return the cache-control header.",
+															},
+														},
+													},
+												},
+												"no_cache": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													MaxItems:    1,
+													Description: "No cache configuration.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"switch": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Whether to enable no-cache configuration. Valid values:\non: Enable;\noff: Disable.",
+															},
+														},
+													},
+												},
+												"custom_time": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													MaxItems:    1,
+													Description: "Custom cache time configuration.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"switch": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Custom cache time switch. values:\non: Enable;\noff: Disable.",
+															},
+															"cache_time": {
+																Type:        schema.TypeInt,
+																Computed:    true,
+																Description: "Custom cache time value, unit: seconds.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"max_age": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Browser cache rule configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"follow_origin": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Specifies whether to follow the origin server cache-control configuration.",
+												},
+												"cache_time": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Custom cache time value, unit: seconds.",
+												},
+											},
+										},
+									},
+									"cache_key": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "The node cache key configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"full_url_cache": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable full-path cache.",
+												},
+												"ignore_case": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to ignore case in the cache key.",
+												},
+												"query_string": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													MaxItems:    1,
+													Description: "Query string retention configuration parameter.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"switch": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Query string retain/ignore specified parameter switch.",
+															},
+															"action": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Actions to retain/ignore specified parameters in the query string.",
+															},
+															"values": {
+																Type:        schema.TypeSet,
+																Computed:    true,
+																Description: "List of parameter names to be retained/ignored in the query string.",
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"cache_prefresh": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Cache prefresh configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable cache prefresh.",
+												},
+												"cache_time_percent": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Prefresh interval set as a percentage of the node cache time.",
+												},
+											},
+										},
+									},
+									"offline_cache": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Offline cache configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable offline caching.",
+												},
+											},
+										},
+									},
+									"compression": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Smart compression configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable smart compression.",
+												},
+												"algorithms": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "Supported compression algorithm list.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
+									},
+									"force_redirect_https": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Forced https redirect configuration for access protocols.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable forced redirect configuration switch.",
+												},
+												"redirect_status_code": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Redirection status code.",
+												},
+											},
+										},
+									},
+									"hsts": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "HSTS configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable hsts.",
+												},
+												"timeout": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Cache hsts header time, unit: seconds.",
+												},
+												"include_sub_domains": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to allow other subdomains to inherit the same hsts header.",
+												},
+												"preload": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to allow the browser to preload the hsts header.",
+												},
+											},
+										},
+									},
+									"tls_config": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "TLS configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"version": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "TLS version.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"cipher_suite": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Cipher suite.",
+												},
+											},
+										},
+									},
+									"ocsp_stapling": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "OCSP stapling configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable ocsp stapling configuration switch.",
+												},
+											},
+										},
+									},
+									"http2": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "HTTP/2 configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable http2 access.",
+												},
+											},
+										},
+									},
+									"quic": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "QUIC access configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable quic.",
+												},
+											},
+										},
+									},
+									"upstream_http2": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "HTTP2 origin-pull configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable http2 origin-pull.",
+												},
+											},
+										},
+									},
+									"ipv6": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "IPv6 access configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable ipv6 access functionality.",
+												},
+											},
+										},
+									},
+									"web_socket": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "WebSocket configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable websocket connection timeout.",
+												},
+												"timeout": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Timeout, unit: seconds.",
+												},
+											},
+										},
+									},
+									"post_max_size": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "POST request transport configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable post request file upload limit.",
+												},
+												"max_size": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Maximum size of the file uploaded for streaming via a post request, in bytes.",
+												},
+											},
+										},
+									},
+									"client_ip_header": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Client ip origin-pull request header configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable configuration.",
+												},
+												"header_name": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Name of the request header containing the client ip address for origin-pull.",
+												},
+											},
+										},
+									},
+									"client_ip_country": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Client ip origin-pull request header configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable configuration.",
+												},
+												"header_name": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Name of the request header that contains the client IP region.",
+												},
+											},
+										},
+									},
+									"grpc": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Configuration of grpc support.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable grpc.",
+												},
+											},
+										},
+									},
+									"accelerate_mainland": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Accelerate optimization and configuration in mainland china.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Mainland china acceleration optimization switch.",
+												},
+											},
+										},
+									},
+									"standard_debug": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Standard debugging configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Whether to enable standard debugging.",
+												},
+												"allow_client_ip_list": {
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "The client ip to allow.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"expires": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Debug feature expiration time.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -940,6 +1467,289 @@ func resourceTencentCloudTeoL7AccSettingRead(d *schema.ResourceData, meta interf
 
 		_ = d.Set("zone_config", []interface{}{zoneConfigMap})
 	}
+
+	// Populate zone_setting computed attribute from the API response
+	zoneSettingMap := map[string]interface{}{}
+
+	if respData.ZoneName != nil {
+		zoneSettingMap["zone_name"] = respData.ZoneName
+	}
+
+	if respData.ZoneConfig != nil {
+		zoneSettingZoneConfigMap := map[string]interface{}{}
+
+		if respData.ZoneConfig.SmartRouting != nil {
+			smartRoutingMap := map[string]interface{}{}
+			if respData.ZoneConfig.SmartRouting.Switch != nil {
+				smartRoutingMap["switch"] = respData.ZoneConfig.SmartRouting.Switch
+			}
+			zoneSettingZoneConfigMap["smart_routing"] = []interface{}{smartRoutingMap}
+		}
+
+		if respData.ZoneConfig.Cache != nil {
+			cacheMap := map[string]interface{}{}
+
+			if respData.ZoneConfig.Cache.FollowOrigin != nil {
+				followOriginMap := map[string]interface{}{}
+				if respData.ZoneConfig.Cache.FollowOrigin.Switch != nil {
+					followOriginMap["switch"] = respData.ZoneConfig.Cache.FollowOrigin.Switch
+				}
+				if respData.ZoneConfig.Cache.FollowOrigin.DefaultCache != nil {
+					followOriginMap["default_cache"] = respData.ZoneConfig.Cache.FollowOrigin.DefaultCache
+				}
+				if respData.ZoneConfig.Cache.FollowOrigin.DefaultCacheStrategy != nil {
+					followOriginMap["default_cache_strategy"] = respData.ZoneConfig.Cache.FollowOrigin.DefaultCacheStrategy
+				}
+				if respData.ZoneConfig.Cache.FollowOrigin.DefaultCacheTime != nil {
+					followOriginMap["default_cache_time"] = respData.ZoneConfig.Cache.FollowOrigin.DefaultCacheTime
+				}
+				cacheMap["follow_origin"] = []interface{}{followOriginMap}
+			}
+
+			if respData.ZoneConfig.Cache.NoCache != nil {
+				noCacheMap := map[string]interface{}{}
+				if respData.ZoneConfig.Cache.NoCache.Switch != nil {
+					noCacheMap["switch"] = respData.ZoneConfig.Cache.NoCache.Switch
+				}
+				cacheMap["no_cache"] = []interface{}{noCacheMap}
+			}
+
+			if respData.ZoneConfig.Cache.CustomTime != nil {
+				customTimeMap := map[string]interface{}{}
+				if respData.ZoneConfig.Cache.CustomTime.Switch != nil {
+					customTimeMap["switch"] = respData.ZoneConfig.Cache.CustomTime.Switch
+				}
+				if respData.ZoneConfig.Cache.CustomTime.CacheTime != nil {
+					customTimeMap["cache_time"] = respData.ZoneConfig.Cache.CustomTime.CacheTime
+				}
+				cacheMap["custom_time"] = []interface{}{customTimeMap}
+			}
+
+			zoneSettingZoneConfigMap["cache"] = []interface{}{cacheMap}
+		}
+
+		if respData.ZoneConfig.MaxAge != nil {
+			maxAgeMap := map[string]interface{}{}
+			if respData.ZoneConfig.MaxAge.FollowOrigin != nil {
+				maxAgeMap["follow_origin"] = respData.ZoneConfig.MaxAge.FollowOrigin
+			}
+			if respData.ZoneConfig.MaxAge.CacheTime != nil {
+				maxAgeMap["cache_time"] = respData.ZoneConfig.MaxAge.CacheTime
+			}
+			zoneSettingZoneConfigMap["max_age"] = []interface{}{maxAgeMap}
+		}
+
+		if respData.ZoneConfig.CacheKey != nil {
+			cacheKeyMap := map[string]interface{}{}
+			if respData.ZoneConfig.CacheKey.FullURLCache != nil {
+				cacheKeyMap["full_url_cache"] = respData.ZoneConfig.CacheKey.FullURLCache
+			}
+			if respData.ZoneConfig.CacheKey.IgnoreCase != nil {
+				cacheKeyMap["ignore_case"] = respData.ZoneConfig.CacheKey.IgnoreCase
+			}
+			if respData.ZoneConfig.CacheKey.QueryString != nil {
+				queryStringMap := map[string]interface{}{}
+				if respData.ZoneConfig.CacheKey.QueryString.Switch != nil {
+					queryStringMap["switch"] = respData.ZoneConfig.CacheKey.QueryString.Switch
+				}
+				if respData.ZoneConfig.CacheKey.QueryString.Action != nil {
+					queryStringMap["action"] = respData.ZoneConfig.CacheKey.QueryString.Action
+				}
+				if respData.ZoneConfig.CacheKey.QueryString.Values != nil {
+					queryStringMap["values"] = respData.ZoneConfig.CacheKey.QueryString.Values
+				}
+				cacheKeyMap["query_string"] = []interface{}{queryStringMap}
+			}
+			zoneSettingZoneConfigMap["cache_key"] = []interface{}{cacheKeyMap}
+		}
+
+		if respData.ZoneConfig.CachePrefresh != nil {
+			cachePrefreshMap := map[string]interface{}{}
+			if respData.ZoneConfig.CachePrefresh.Switch != nil {
+				cachePrefreshMap["switch"] = respData.ZoneConfig.CachePrefresh.Switch
+			}
+			if respData.ZoneConfig.CachePrefresh.CacheTimePercent != nil {
+				cachePrefreshMap["cache_time_percent"] = respData.ZoneConfig.CachePrefresh.CacheTimePercent
+			}
+			zoneSettingZoneConfigMap["cache_prefresh"] = []interface{}{cachePrefreshMap}
+		}
+
+		if respData.ZoneConfig.OfflineCache != nil {
+			offlineCacheMap := map[string]interface{}{}
+			if respData.ZoneConfig.OfflineCache.Switch != nil {
+				offlineCacheMap["switch"] = respData.ZoneConfig.OfflineCache.Switch
+			}
+			zoneSettingZoneConfigMap["offline_cache"] = []interface{}{offlineCacheMap}
+		}
+
+		if respData.ZoneConfig.Compression != nil {
+			compressionMap := map[string]interface{}{}
+			if respData.ZoneConfig.Compression.Switch != nil {
+				compressionMap["switch"] = respData.ZoneConfig.Compression.Switch
+			}
+			if respData.ZoneConfig.Compression.Algorithms != nil {
+				compressionMap["algorithms"] = respData.ZoneConfig.Compression.Algorithms
+			}
+			zoneSettingZoneConfigMap["compression"] = []interface{}{compressionMap}
+		}
+
+		if respData.ZoneConfig.ForceRedirectHTTPS != nil {
+			forceRedirectHTTPSMap := map[string]interface{}{}
+			if respData.ZoneConfig.ForceRedirectHTTPS.Switch != nil {
+				forceRedirectHTTPSMap["switch"] = respData.ZoneConfig.ForceRedirectHTTPS.Switch
+			}
+			if respData.ZoneConfig.ForceRedirectHTTPS.RedirectStatusCode != nil {
+				forceRedirectHTTPSMap["redirect_status_code"] = respData.ZoneConfig.ForceRedirectHTTPS.RedirectStatusCode
+			}
+			zoneSettingZoneConfigMap["force_redirect_https"] = []interface{}{forceRedirectHTTPSMap}
+		}
+
+		if respData.ZoneConfig.HSTS != nil {
+			hSTSMap := map[string]interface{}{}
+			if respData.ZoneConfig.HSTS.Switch != nil {
+				hSTSMap["switch"] = respData.ZoneConfig.HSTS.Switch
+			}
+			if respData.ZoneConfig.HSTS.Timeout != nil {
+				hSTSMap["timeout"] = respData.ZoneConfig.HSTS.Timeout
+			}
+			if respData.ZoneConfig.HSTS.IncludeSubDomains != nil {
+				hSTSMap["include_sub_domains"] = respData.ZoneConfig.HSTS.IncludeSubDomains
+			}
+			if respData.ZoneConfig.HSTS.Preload != nil {
+				hSTSMap["preload"] = respData.ZoneConfig.HSTS.Preload
+			}
+			zoneSettingZoneConfigMap["hsts"] = []interface{}{hSTSMap}
+		}
+
+		if respData.ZoneConfig.TLSConfig != nil {
+			tLSConfigMap := map[string]interface{}{}
+			if respData.ZoneConfig.TLSConfig.Version != nil {
+				tLSConfigMap["version"] = respData.ZoneConfig.TLSConfig.Version
+			}
+			if respData.ZoneConfig.TLSConfig.CipherSuite != nil {
+				tLSConfigMap["cipher_suite"] = respData.ZoneConfig.TLSConfig.CipherSuite
+			}
+			zoneSettingZoneConfigMap["tls_config"] = []interface{}{tLSConfigMap}
+		}
+
+		if respData.ZoneConfig.OCSPStapling != nil {
+			oCSPStaplingMap := map[string]interface{}{}
+			if respData.ZoneConfig.OCSPStapling.Switch != nil {
+				oCSPStaplingMap["switch"] = respData.ZoneConfig.OCSPStapling.Switch
+			}
+			zoneSettingZoneConfigMap["ocsp_stapling"] = []interface{}{oCSPStaplingMap}
+		}
+
+		if respData.ZoneConfig.HTTP2 != nil {
+			hTTP2Map := map[string]interface{}{}
+			if respData.ZoneConfig.HTTP2.Switch != nil {
+				hTTP2Map["switch"] = respData.ZoneConfig.HTTP2.Switch
+			}
+			zoneSettingZoneConfigMap["http2"] = []interface{}{hTTP2Map}
+		}
+
+		if respData.ZoneConfig.QUIC != nil {
+			qUICMap := map[string]interface{}{}
+			if respData.ZoneConfig.QUIC.Switch != nil {
+				qUICMap["switch"] = respData.ZoneConfig.QUIC.Switch
+			}
+			zoneSettingZoneConfigMap["quic"] = []interface{}{qUICMap}
+		}
+
+		if respData.ZoneConfig.UpstreamHTTP2 != nil {
+			upstreamHTTP2Map := map[string]interface{}{}
+			if respData.ZoneConfig.UpstreamHTTP2.Switch != nil {
+				upstreamHTTP2Map["switch"] = respData.ZoneConfig.UpstreamHTTP2.Switch
+			}
+			zoneSettingZoneConfigMap["upstream_http2"] = []interface{}{upstreamHTTP2Map}
+		}
+
+		if respData.ZoneConfig.IPv6 != nil {
+			iPv6Map := map[string]interface{}{}
+			if respData.ZoneConfig.IPv6.Switch != nil {
+				iPv6Map["switch"] = respData.ZoneConfig.IPv6.Switch
+			}
+			zoneSettingZoneConfigMap["ipv6"] = []interface{}{iPv6Map}
+		}
+
+		if respData.ZoneConfig.WebSocket != nil {
+			webSocketMap := map[string]interface{}{}
+			if respData.ZoneConfig.WebSocket.Switch != nil {
+				webSocketMap["switch"] = respData.ZoneConfig.WebSocket.Switch
+			}
+			if respData.ZoneConfig.WebSocket.Timeout != nil {
+				webSocketMap["timeout"] = respData.ZoneConfig.WebSocket.Timeout
+			}
+			zoneSettingZoneConfigMap["web_socket"] = []interface{}{webSocketMap}
+		}
+
+		if respData.ZoneConfig.PostMaxSize != nil {
+			postMaxSizeMap := map[string]interface{}{}
+			if respData.ZoneConfig.PostMaxSize.Switch != nil {
+				postMaxSizeMap["switch"] = respData.ZoneConfig.PostMaxSize.Switch
+			}
+			if respData.ZoneConfig.PostMaxSize.MaxSize != nil {
+				postMaxSizeMap["max_size"] = respData.ZoneConfig.PostMaxSize.MaxSize
+			}
+			zoneSettingZoneConfigMap["post_max_size"] = []interface{}{postMaxSizeMap}
+		}
+
+		if respData.ZoneConfig.ClientIPHeader != nil {
+			clientIPHeaderMap := map[string]interface{}{}
+			if respData.ZoneConfig.ClientIPHeader.Switch != nil {
+				clientIPHeaderMap["switch"] = respData.ZoneConfig.ClientIPHeader.Switch
+			}
+			if respData.ZoneConfig.ClientIPHeader.HeaderName != nil {
+				clientIPHeaderMap["header_name"] = respData.ZoneConfig.ClientIPHeader.HeaderName
+			}
+			zoneSettingZoneConfigMap["client_ip_header"] = []interface{}{clientIPHeaderMap}
+		}
+
+		if respData.ZoneConfig.ClientIPCountry != nil {
+			clientIPCountryMap := map[string]interface{}{}
+			if respData.ZoneConfig.ClientIPCountry.Switch != nil {
+				clientIPCountryMap["switch"] = respData.ZoneConfig.ClientIPCountry.Switch
+			}
+			if respData.ZoneConfig.ClientIPCountry.HeaderName != nil {
+				clientIPCountryMap["header_name"] = respData.ZoneConfig.ClientIPCountry.HeaderName
+			}
+			zoneSettingZoneConfigMap["client_ip_country"] = []interface{}{clientIPCountryMap}
+		}
+
+		if respData.ZoneConfig.Grpc != nil {
+			grpcMap := map[string]interface{}{}
+			if respData.ZoneConfig.Grpc.Switch != nil {
+				grpcMap["switch"] = respData.ZoneConfig.Grpc.Switch
+			}
+			zoneSettingZoneConfigMap["grpc"] = []interface{}{grpcMap}
+		}
+
+		if respData.ZoneConfig.AccelerateMainland != nil {
+			accelerateMainlandMap := map[string]interface{}{}
+			if respData.ZoneConfig.AccelerateMainland.Switch != nil {
+				accelerateMainlandMap["switch"] = respData.ZoneConfig.AccelerateMainland.Switch
+			}
+			zoneSettingZoneConfigMap["accelerate_mainland"] = []interface{}{accelerateMainlandMap}
+		}
+
+		if respData.ZoneConfig.StandardDebug != nil {
+			standardDebugMap := map[string]interface{}{}
+			if respData.ZoneConfig.StandardDebug.Switch != nil {
+				standardDebugMap["switch"] = respData.ZoneConfig.StandardDebug.Switch
+			}
+			if respData.ZoneConfig.StandardDebug.AllowClientIPList != nil {
+				standardDebugMap["allow_client_ip_list"] = respData.ZoneConfig.StandardDebug.AllowClientIPList
+			}
+			if respData.ZoneConfig.StandardDebug.Expires != nil {
+				standardDebugMap["expires"] = respData.ZoneConfig.StandardDebug.Expires
+			}
+			zoneSettingZoneConfigMap["standard_debug"] = []interface{}{standardDebugMap}
+		}
+
+		zoneSettingMap["zone_config"] = []interface{}{zoneSettingZoneConfigMap}
+	}
+
+	_ = d.Set("zone_setting", []interface{}{zoneSettingMap})
 
 	return nil
 }
