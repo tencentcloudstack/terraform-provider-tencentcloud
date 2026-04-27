@@ -2094,6 +2094,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_customize_error_page":                                                 teo.ResourceTencentCloudTeoCustomizeErrorPage(),
 			"tencentcloud_teo_origin_acl":                                                           teo.ResourceTencentCloudTeoOriginAcl(),
 			"tencentcloud_teo_ddos_protection_config":                                               teo.ResourceTencentCloudTeoDdosProtectionConfig(),
+			"tencentcloud_teo_multi_path_gateway_secret_key":                                        teo.ResourceTencentCloudTeoMultiPathGatewaySecretKeyConfig(),
 			"tencentcloud_teo_config_group_version":                                                 teo.ResourceTencentCloudTeoConfigGroupVersion(),
 			"tencentcloud_teo_deploy_config_group_version":                                          teo.ResourceTencentCloudTeoDeployConfigGroupVersion(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),

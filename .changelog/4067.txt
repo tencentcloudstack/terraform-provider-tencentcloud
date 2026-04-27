@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_teo_multi_path_gateway_secret_key
+```
