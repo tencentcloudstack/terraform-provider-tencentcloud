@@ -58,7 +58,7 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 						"priority": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Priority, format: `priority_` + number, highest priority is `priority_1`. Valid values: `priority_1`, `priority_2`, ..., `priority_10`.",
+							Description: "Priority, format: `priority_` + number, highest priority is `priority_1`. Valid values: `priority_1`, `priority_2`..., `priority_10`.",
 						},
 						"origin_group_id": {
 							Type:        schema.TypeString,
