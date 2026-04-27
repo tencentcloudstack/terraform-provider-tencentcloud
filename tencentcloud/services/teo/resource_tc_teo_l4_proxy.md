@@ -1,4 +1,4 @@
-Provides a resource to create a teo teo_l4_proxy
+Provides a resource to create a TEO L4 proxy instance
 
 Example Usage
 
@@ -11,12 +11,16 @@ resource "tencentcloud_teo_l4_proxy" "proxy" {
   static_ip           = "off"
   zone_id             = "zone-2qtuhspy6cr7"
 }
+
+output "l4_proxy_id" {
+  value = tencentcloud_teo_l4_proxy.proxy.proxy_id
+}
 ```
 
 Import
 
-teo teo_l4_proxy can be imported using the id, e.g.
+TEO L4 proxy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_l4_proxy.teo_l4_proxy teo_l4_proxy_id
+terraform import tencentcloud_teo_l4_proxy.teo_l4_proxy zone_id#proxy_id
 ```
