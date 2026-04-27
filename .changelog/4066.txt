@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_teo_confirm_multi_path_gateway_origin_acl
+```
