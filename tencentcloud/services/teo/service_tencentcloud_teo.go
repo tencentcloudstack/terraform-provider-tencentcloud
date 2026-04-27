@@ -2551,6 +2551,49 @@ func (me *TeoService) DescribeTeoIPRegionByFilter(ctx context.Context, param map
 	return
 }
 
+func (me *TeoService) DescribeTeoMultiPathGatewayRegionByFilter(ctx context.Context, param map[string]interface{}) (ret []*teo.GatewayRegion, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = teo.NewDescribeMultiPathGatewayRegionsRequest()
+		response = teo.NewDescribeMultiPathGatewayRegionsResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoClient().DescribeMultiPathGatewayRegions(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || len(response.Response.GatewayRegions) < 1 {
+		return
+	}
+
+	ret = response.Response.GatewayRegions
+	return
+}
+
 func (me *TeoService) TeoIdentifyZone(zoneName, domain string) (ascription *teov20220901.AscriptionInfo, fileAscription *teov20220901.FileAscriptionInfo, errRet error) {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
