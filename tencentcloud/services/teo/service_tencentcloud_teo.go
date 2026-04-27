@@ -2634,3 +2634,61 @@ func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[st
 	ret = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoSecurityClientAttesterById(ctx context.Context, zoneId string) (ret *teo.DescribeSecurityClientAttesterResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeSecurityClientAttesterRequest()
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	allClientAttesters := make([]*teo.ClientAttester, 0)
+	var totalCount int64 = 0
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response := teo.NewDescribeSecurityClientAttesterResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityClientAttester(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response.Response != nil && response.Response.ClientAttesters != nil {
+			allClientAttesters = append(allClientAttesters, response.Response.ClientAttesters...)
+			if totalCount == 0 {
+				totalCount = *response.Response.TotalCount
+			}
+		}
+
+		if int64(len(allClientAttesters)) >= totalCount {
+			break
+		}
+
+		offset += pageSize
+	}
+
+	ret = &teo.DescribeSecurityClientAttesterResponseParams{
+		ClientAttesters: allClientAttesters,
+		TotalCount:      &totalCount,
+	}
+	return
+}
