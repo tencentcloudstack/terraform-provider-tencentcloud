@@ -32,6 +32,12 @@ func ResourceTencentCloudTeoL4Proxy() *schema.Resource {
 				Description: "Site ID.",
 			},
 
+			"proxy_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "L4 proxy instance ID.",
+			},
+
 			"proxy_name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -60,12 +66,6 @@ func ResourceTencentCloudTeoL4Proxy() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Specifies whether to enable network optimization in the Chinese mainland. The default value off is used if left empty. This configuration can only be enabled in certain acceleration zones and security protection configurations. For details, see [Creating an L4 Proxy Instance](https://intl.cloud.tencent.com/document/product/1552/90025?from_cn_redirect=1). Valid values: `on`: Enable; `off`: Disable.",
-			},
-
-			"proxy_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "L4 proxy instance ID.",
 			},
 
 			"ddos_protection_config": {

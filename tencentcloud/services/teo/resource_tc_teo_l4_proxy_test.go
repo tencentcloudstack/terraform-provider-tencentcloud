@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -16,7 +17,6 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svcteo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
@@ -159,9 +159,12 @@ resource "tencentcloud_teo_l4_proxy" "teo_l4_proxy" {
 }
 `
 
-// go test ./tencentcloud/services/teo/ -run "TestAccTeoL4ProxyProxyId_Create" -v -count=1 -gcflags="all=-l"
-// TestAccTeoL4ProxyProxyId_Create tests that proxy_id is set correctly after Create
-func TestAccTeoL4ProxyProxyId_Create(t *testing.T) {
+// ---- Unit Tests (gomonkey mock) ----
+
+// go test ./tencentcloud/services/teo/ -run "TestTeoL4Proxy_" -v -count=1 -gcflags="all=-l"
+
+// TestTeoL4Proxy_Create tests that proxy_id is set correctly after Create
+func TestTeoL4Proxy_Create(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -214,9 +217,8 @@ func TestAccTeoL4ProxyProxyId_Create(t *testing.T) {
 	assert.Equal(t, "zone-test1234#proxy-12345678", d.Id())
 }
 
-// go test ./tencentcloud/services/teo/ -run "TestAccTeoL4ProxyProxyId_Read" -v -count=1 -gcflags="all=-l"
-// TestAccTeoL4ProxyProxyId_Read tests that proxy_id is set correctly after Read
-func TestAccTeoL4ProxyProxyId_Read(t *testing.T) {
+// TestTeoL4Proxy_Read tests that proxy_id is set correctly after Read
+func TestTeoL4Proxy_Read(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -249,4 +251,41 @@ func TestAccTeoL4ProxyProxyId_Read(t *testing.T) {
 	// Verify proxy_id is set correctly from Read
 	proxyId := d.Get("proxy_id").(string)
 	assert.Equal(t, "proxy-87654321", proxyId)
+}
+
+// TestTeoL4Proxy_Read_NotFound tests read when resource is not found
+func TestTeoL4Proxy_Read_NotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	// Mock TeoService.DescribeTeoL4ProxyById to return nil (not found)
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoL4ProxyById", func(_ context.Context, zoneId string, proxyId string) (*teov20220901.L4Proxy, error) {
+		return nil, nil
+	})
+
+	meta := newMockMetaL4Proxy()
+	res := svcteo.ResourceTencentCloudTeoL4Proxy()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":    "zone-test123",
+		"proxy_name": "test-proxy",
+	})
+	d.SetId("zone-test123#proxy-abc123")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "", d.Id())
+}
+
+// TestTeoL4Proxy_Schema tests that proxy_id is defined as computed attribute in schema
+func TestTeoL4Proxy_Schema(t *testing.T) {
+	res := svcteo.ResourceTencentCloudTeoL4Proxy()
+
+	assert.NotNil(t, res)
+
+	assert.Contains(t, res.Schema, "proxy_id")
+	proxyIdSchema := res.Schema["proxy_id"]
+	assert.Equal(t, schema.TypeString, proxyIdSchema.Type)
+	assert.True(t, proxyIdSchema.Computed)
+	assert.False(t, proxyIdSchema.Optional)
+	assert.False(t, proxyIdSchema.Required)
 }
