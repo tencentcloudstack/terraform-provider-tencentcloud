@@ -60,6 +60,14 @@ func ResourceTencentCloudTeoL7AccRuleV2() *schema.Resource {
 				Computed:    true,
 				Description: "Rule ID. Unique identifier of the rule.",
 			},
+			"rule_ids": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Rule ID list.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"rule_priority": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -77,6 +85,8 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 	var (
 		zoneId string
 		ruleId string
+		result *teov20220901.CreateL7AccRulesResponse
+		e      error
 	)
 	zoneId = d.Get("zone_id").(string)
 	request := teov20220901.NewCreateL7AccRulesRequest()
@@ -103,7 +113,7 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 
 	request.Rules = []*teov20220901.RuleEngineItem{rule}
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateL7AccRules(request)
+		result, e = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateL7AccRules(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -119,6 +129,14 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 	}
 
 	d.SetId(zoneId + tccommon.FILED_SP + ruleId)
+
+	ruleIds := make([]string, 0, len(result.Response.RuleIds))
+	for _, v := range result.Response.RuleIds {
+		if v != nil {
+			ruleIds = append(ruleIds, *v)
+		}
+	}
+	_ = d.Set("rule_ids", ruleIds)
 
 	return ResourceTencentCloudTeoL7AccRuleV2Read(d, meta)
 }
@@ -160,6 +178,14 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 		_ = d.Set("description", rule.Description)
 		_ = d.Set("rule_priority", rule.RulePriority)
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
+
+		ruleIds := make([]string, 0, len(respData.Rules))
+		for _, r := range respData.Rules {
+			if r.RuleId != nil {
+				ruleIds = append(ruleIds, *r.RuleId)
+			}
+		}
+		_ = d.Set("rule_ids", ruleIds)
 	}
 
 	return nil
