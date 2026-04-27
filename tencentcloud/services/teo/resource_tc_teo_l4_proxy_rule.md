@@ -1,4 +1,4 @@
-Provides a resource to create a teo teo_l4_proxy_rule
+Provides a resource to create a TEO (EdgeOne) L4 proxy rule
 
 Example Usage
 

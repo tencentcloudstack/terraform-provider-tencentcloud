@@ -110,6 +110,15 @@ func ResourceTencentCloudTeoL4ProxyRule() *schema.Resource {
 					},
 				},
 			},
+
+			"l4proxy_rule_ids": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of L4 proxy rule IDs returned by the CreateL4ProxyRules API.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -207,6 +216,14 @@ func resourceTencentCloudTeoL4ProxyRuleCreate(d *schema.ResourceData, meta inter
 	}
 	ruleId := *response.Response.L4ProxyRuleIds[0]
 
+	l4proxyRuleIds := make([]string, 0, len(response.Response.L4ProxyRuleIds))
+	for _, id := range response.Response.L4ProxyRuleIds {
+		if id != nil {
+			l4proxyRuleIds = append(l4proxyRuleIds, *id)
+		}
+	}
+	_ = d.Set("l4proxy_rule_ids", l4proxyRuleIds)
+
 	if err := resourceTencentCloudTeoL4ProxyRuleCreatePostHandleResponse0(ctx, response); err != nil {
 		return err
 	}
@@ -300,6 +317,8 @@ func resourceTencentCloudTeoL4ProxyRuleRead(d *schema.ResourceData, meta interfa
 
 		_ = d.Set("l4_proxy_rules", l4ProxyRuleList)
 	}
+
+	_ = d.Set("l4proxy_rule_ids", []string{ruleId})
 
 	return nil
 }

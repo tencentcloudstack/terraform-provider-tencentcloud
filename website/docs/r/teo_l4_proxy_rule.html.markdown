@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_l4_proxy_rule"
 sidebar_current: "docs-tencentcloud-resource-teo_l4_proxy_rule"
 description: |-
-  Provides a resource to create a teo teo_l4_proxy_rule
+  Provides a resource to create a TEO (EdgeOne) L4 proxy rule
 ---
 
 # tencentcloud_teo_l4_proxy_rule
 
-Provides a resource to create a teo teo_l4_proxy_rule
+Provides a resource to create a TEO (EdgeOne) L4 proxy rule
 
 ## Example Usage
 
@@ -92,7 +92,7 @@ Note: This parameter is optional when L4ProxyRule is used as an input parameter 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `l4proxy_rule_ids` - List of L4 proxy rule IDs returned by the CreateL4ProxyRules API.
 
 
 ## Import
