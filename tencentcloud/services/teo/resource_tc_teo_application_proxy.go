@@ -471,15 +471,16 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	zoneId := d.Get("zone_id").(string)
+	proxyId := d.Get("proxy_id").(string)
+
+	if zoneId == "" {
+		return fmt.Errorf("zone_id is required for deletion")
 	}
-	zoneId := idSplit[0]
-	proxyId := idSplit[1]
+	if proxyId == "" {
+		return fmt.Errorf("proxy_id is required for deletion")
+	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		e := resourceTencentCloudTeoApplicationProxyRead(d, meta)
@@ -510,7 +511,22 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 		return err
 	}
 
-	if err = service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
+	request := teo.NewDeleteApplicationProxyRequest()
+	request.ZoneId = &zoneId
+	request.ProxyId = &proxyId
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteApplicationProxy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s delete teo applicationProxy failed, reason:%+v", logId, err)
 		return err
 	}
 
