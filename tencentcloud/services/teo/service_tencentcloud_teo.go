@@ -2587,6 +2587,74 @@ func (me *TeoService) TeoIdentifyZone(zoneName, domain string) (ascription *teov
 	return
 }
 
+func (me *TeoService) DescribeSecurityAPIResourceById(ctx context.Context, zoneId string) (ret *teov20220901.DescribeSecurityAPIResourceResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeSecurityAPIResourceRequest()
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	apiResources := make([]*teov20220901.APIResource, 0)
+	var totalCount int64 = 0
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+
+		response := teov20220901.NewDescribeSecurityAPIResourceResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityAPIResourceWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			break
+		}
+
+		if response.Response.TotalCount != nil {
+			totalCount = *response.Response.TotalCount
+		}
+
+		if response.Response.APIResources != nil {
+			apiResources = append(apiResources, response.Response.APIResources...)
+		}
+
+		if int64(len(apiResources)) >= totalCount {
+			break
+		}
+
+		offset += pageSize
+	}
+
+	if len(apiResources) == 0 {
+		return
+	}
+
+	ret = &teov20220901.DescribeSecurityAPIResourceResponseParams{
+		TotalCount:   helper.Int64(totalCount),
+		APIResources: apiResources,
+	}
+	return
+}
+
 func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[string]interface{}) (ret *teo.ExportZoneConfigResponseParams, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
