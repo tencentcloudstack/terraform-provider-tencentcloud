@@ -2904,3 +2904,49 @@ func (me *TeoService) DescribeTeoSecurityClientAttesterById(ctx context.Context,
 		offset += limit
 	}
 }
+
+func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId, instanceId string) (loadBalancer *teo.LoadBalancer, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeLoadBalancerListRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.Offset = helper.IntUint64(0)
+	request.Limit = helper.IntUint64(20)
+	request.Filters = []*teo.Filter{
+		{
+			Name:   helper.String("InstanceId"),
+			Values: []*string{helper.String(instanceId)},
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeLoadBalancerList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeLoadBalancerList response is nil"))
+		}
+
+		if len(result.Response.LoadBalancerList) == 0 {
+			return nil
+		}
+
+		loadBalancer = result.Response.LoadBalancerList[0]
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+	return
+}
