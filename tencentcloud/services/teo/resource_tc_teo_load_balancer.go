@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -23,6 +24,10 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(10 * time.Minute),
+			Update: schema.DefaultTimeout(10 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -34,26 +39,26 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Instance name, can be 1-200 characters, allowed characters are a-z, A-Z, 0-9, _, -.",
+				Description: "Load balancer instance name, 1-200 characters, allowed characters: `a-z`, `A-Z`, `0-9`, `_`, `-`.",
 			},
 
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Instance type, valid values: `HTTP` (HTTP dedicated type), `GENERAL` (general type).",
+				Description: "Instance type. Valid values: `HTTP` (HTTP-specific, supports HTTP-specific and general origin groups, only referenced by site acceleration services); `GENERAL` (general, only supports general origin groups, can be referenced by site acceleration and Layer-4 proxy).",
 			},
 
 			"origin_groups": {
 				Type:        schema.TypeList,
 				Required:    true,
-				Description: "Origin group list and corresponding failover scheduling priority.",
+				Description: "Source origin group list with failover priority.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"priority": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Priority, format is 'priority_' + 'number', the highest priority is 'priority_1'. Valid values: priority_1 to priority_10.",
+							Description: "Priority, format: `priority_` + number, highest priority is `priority_1`. Valid values: `priority_1`, `priority_2`..., `priority_10`.",
 						},
 						"origin_group_id": {
 							Type:        schema.TypeString,
@@ -66,92 +71,90 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 
 			"health_checker": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Optional:    true,
-				Description: "Health check policy.",
+				MaxItems:    1,
+				Description: "Health check policy. If not set, health check is disabled by default.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Health check policy type, valid values: `HTTP`, `HTTPS`, `TCP`, `UDP`, `ICMP Ping`, `NoCheck`.",
+							Description: "Health check type. Valid values: `HTTP`, `HTTPS`, `TCP`, `UDP`, `ICMP Ping`, `NoCheck`. `NoCheck` means health check is disabled.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Check port. Required when Type=HTTP, HTTPS, TCP or UDP.",
+							Description: "Check port. Required when `type` is `HTTP`, `HTTPS`, `TCP`, or `UDP`.",
 						},
 						"interval": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Check frequency, how often to initiate a health check task, in seconds. Valid values: 30, 60, 180, 300, 600.",
+							Description: "Check interval in seconds. Valid values: `30`, `60`, `180`, `300`, `600`.",
 						},
 						"timeout": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Timeout for each health check, in seconds, default is 5s, must be less than Interval.",
+							Description: "Timeout in seconds for each health check. Must be less than `interval`. Default: 5.",
 						},
 						"health_threshold": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Health threshold, the number of consecutive health checks that are 'healthy' before judging the origin as 'healthy', default 3, minimum 1.",
+							Description: "Number of consecutive healthy results to mark the origin as healthy. Default: 3, minimum: 1.",
 						},
 						"critical_threshold": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Unhealthy threshold, the number of consecutive health checks that are 'unhealthy' before judging the origin as 'unhealthy', default 2.",
+							Description: "Number of consecutive unhealthy results to mark the origin as unhealthy. Default: 2.",
 						},
 						"path": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Detection path, only valid when Type=HTTP or HTTPS. Need to fill in the complete host/path, excluding the protocol part.",
+							Description: "Probe path, valid when `type` is `HTTP` or `HTTPS`. Full host/path without protocol, e.g., `www.example.com/test`.",
 						},
 						"method": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Request method, only valid when Type=HTTP or HTTPS. Valid values: `GET`, `HEAD`.",
+							Description: "Request method, valid when `type` is `HTTP` or `HTTPS`. Valid values: `GET`, `HEAD`.",
 						},
 						"expected_codes": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "Expected status codes for health determination, only valid when Type=HTTP or HTTPS.",
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Expected response status codes, valid when `type` is `HTTP` or `HTTPS`. e.g., `[\"200\", \"301\"]`.",
+						},
+						"follow_redirect": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Whether to follow 301/302 redirects, valid when `type` is `HTTP` or `HTTPS`. Valid values: `true`, `false`.",
 						},
 						"headers": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "Custom HTTP request headers for detection, only valid when Type=HTTP or HTTPS, up to 10.",
+							Description: "Custom HTTP request headers (up to 10), valid when `type` is `HTTP` or `HTTPS`.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Custom header Key.",
+										Description: "Custom header key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Custom header Value.",
+										Description: "Custom header value.",
 									},
 								},
 							},
 						},
-						"follow_redirect": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Whether to enable 301/302 redirect following, only valid when Type=HTTP or HTTPS.",
-						},
 						"send_context": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Content sent by health check, only valid when Type=UDP. Only ASCII visible characters, max 500 characters.",
+							Description: "Content to send during health check, valid when `type` is `UDP`. Only ASCII visible characters allowed, max length 500.",
 						},
 						"recv_context": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Expected response from origin for health check, only valid when Type=UDP. Only ASCII visible characters, max 500 characters.",
+							Description: "Expected response content from origin, valid when `type` is `UDP`. Only ASCII visible characters allowed, max length 500.",
 						},
 					},
 				},
@@ -160,117 +163,20 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 			"steering_policy": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Traffic scheduling policy between origin groups, valid values: `Pritory` (failover by priority order). Default is Pritory.",
+				Description: "Traffic steering policy between origin groups. Valid value: `Pritory` (failover by priority). Default: `Pritory`.",
 			},
 
 			"failover_policy": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Request retry policy when accessing an origin fails, valid values: `OtherOriginGroup` (retry next priority origin group), `OtherRecordInOriginGroup` (retry other origins in the same group). Default is OtherRecordInOriginGroup.",
+				Description: "Retry policy on request failure. Valid values: `OtherOriginGroup` (retry next priority origin group); `OtherRecordInOriginGroup` (retry another origin in the same group). Default: `OtherRecordInOriginGroup`.",
 			},
 
+			// computed
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Load balancer instance ID.",
-			},
-
-			"status": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Load balancer status, valid values: `Pending` (deploying), `Deleting` (deleting), `Running` (effective).",
-			},
-
-			"origin_group_health_status": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Origin group health status.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"origin_group_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Origin group ID.",
-						},
-						"origin_group_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Origin group name.",
-						},
-						"origin_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Origin group type, valid values: `HTTP`, `GENERAL`.",
-						},
-						"priority": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Priority.",
-						},
-						"origin_health_status": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: "Health status of origins in the origin group.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"origin": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Origin.",
-									},
-									"healthy": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Origin health status, valid values: `Healthy`, `Unhealthy`, `Undetected`.",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-
-			"l4_used_list": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "List of L4 proxy instances bound to this load balancer instance.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-
-			"l7_used_list": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "List of L7 domain names bound to this load balancer instance.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-
-			"references": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "List of instances that reference this load balancer.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"instance_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Reference service type.",
-						},
-						"instance_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Reference instance ID.",
-						},
-						"instance_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Reference instance name.",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -280,22 +186,19 @@ func resourceTencentCloudTeoLoadBalancerCreate(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_load_balancer.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request    = teo.NewCreateLoadBalancerRequest()
+		response   = teo.NewCreateLoadBalancerResponse()
 		zoneId     string
 		instanceId string
 	)
-	var (
-		request  = teo.NewCreateLoadBalancerRequest()
-		response = teo.NewCreateLoadBalancerResponse()
-	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
+		request.ZoneId = helper.String(v.(string))
 		zoneId = v.(string)
 	}
-	request.ZoneId = helper.String(zoneId)
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -307,76 +210,20 @@ func resourceTencentCloudTeoLoadBalancerCreate(d *schema.ResourceData, meta inte
 
 	if v, ok := d.GetOk("origin_groups"); ok {
 		for _, item := range v.([]interface{}) {
-			originGroupsMap := item.(map[string]interface{})
-			originGroupInLB := teo.OriginGroupInLoadBalancer{}
-			if v, ok := originGroupsMap["priority"]; ok {
-				originGroupInLB.Priority = helper.String(v.(string))
+			ogMap := item.(map[string]interface{})
+			og := &teo.OriginGroupInLoadBalancer{}
+			if val, ok := ogMap["priority"].(string); ok && val != "" {
+				og.Priority = helper.String(val)
 			}
-			if v, ok := originGroupsMap["origin_group_id"]; ok {
-				originGroupInLB.OriginGroupId = helper.String(v.(string))
+			if val, ok := ogMap["origin_group_id"].(string); ok && val != "" {
+				og.OriginGroupId = helper.String(val)
 			}
-			request.OriginGroups = append(request.OriginGroups, &originGroupInLB)
+			request.OriginGroups = append(request.OriginGroups, og)
 		}
 	}
 
 	if v, ok := d.GetOk("health_checker"); ok {
-		for _, item := range v.([]interface{}) {
-			healthCheckerMap := item.(map[string]interface{})
-			healthChecker := teo.HealthChecker{}
-			if v, ok := healthCheckerMap["type"]; ok {
-				healthChecker.Type = helper.String(v.(string))
-			}
-			if v, ok := healthCheckerMap["port"]; ok {
-				healthChecker.Port = helper.IntUint64(v.(int))
-			}
-			if v, ok := healthCheckerMap["interval"]; ok {
-				healthChecker.Interval = helper.IntUint64(v.(int))
-			}
-			if v, ok := healthCheckerMap["timeout"]; ok {
-				healthChecker.Timeout = helper.IntUint64(v.(int))
-			}
-			if v, ok := healthCheckerMap["health_threshold"]; ok {
-				healthChecker.HealthThreshold = helper.IntUint64(v.(int))
-			}
-			if v, ok := healthCheckerMap["critical_threshold"]; ok {
-				healthChecker.CriticalThreshold = helper.IntUint64(v.(int))
-			}
-			if v, ok := healthCheckerMap["path"]; ok {
-				healthChecker.Path = helper.String(v.(string))
-			}
-			if v, ok := healthCheckerMap["method"]; ok {
-				healthChecker.Method = helper.String(v.(string))
-			}
-			if v, ok := healthCheckerMap["expected_codes"]; ok {
-				expectedCodesList := v.([]interface{})
-				for _, code := range expectedCodesList {
-					healthChecker.ExpectedCodes = append(healthChecker.ExpectedCodes, helper.String(code.(string)))
-				}
-			}
-			if v, ok := healthCheckerMap["headers"]; ok {
-				for _, item := range v.([]interface{}) {
-					headersMap := item.(map[string]interface{})
-					customizedHeader := teo.CustomizedHeader{}
-					if v, ok := headersMap["key"]; ok {
-						customizedHeader.Key = helper.String(v.(string))
-					}
-					if v, ok := headersMap["value"]; ok {
-						customizedHeader.Value = helper.String(v.(string))
-					}
-					healthChecker.Headers = append(healthChecker.Headers, &customizedHeader)
-				}
-			}
-			if v, ok := healthCheckerMap["follow_redirect"]; ok {
-				healthChecker.FollowRedirect = helper.String(v.(string))
-			}
-			if v, ok := healthCheckerMap["send_context"]; ok {
-				healthChecker.SendContext = helper.String(v.(string))
-			}
-			if v, ok := healthCheckerMap["recv_context"]; ok {
-				healthChecker.RecvContext = helper.String(v.(string))
-			}
-			request.HealthChecker = &healthChecker
-		}
+		request.HealthChecker = buildTeoHealthChecker(v.([]interface{}))
 	}
 
 	if v, ok := d.GetOk("steering_policy"); ok {
@@ -387,31 +234,58 @@ func resourceTencentCloudTeoLoadBalancerCreate(d *schema.ResourceData, meta inte
 		request.FailoverPolicy = helper.String(v.(string))
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateLoadBalancerWithContext(ctx, request)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateLoadBalancerWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create teo load balancer failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo load balancer failed, reason:%+v", logId, err)
-		return err
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s create teo load balancer failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	if response.Response == nil {
-		return fmt.Errorf("create teo load balancer response is nil")
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil.")
 	}
 
 	instanceId = *response.Response.InstanceId
-	if instanceId == "" {
-		return fmt.Errorf("create teo load balancer response InstanceId is empty")
-	}
-
 	d.SetId(strings.Join([]string{zoneId, instanceId}, tccommon.FILED_SP))
+
+	// Wait for load balancer to become Running
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	if _, err := (&resource.StateChangeConf{
+		Delay:      5 * time.Second,
+		MinTimeout: 3 * time.Second,
+		Pending:    []string{"Pending"},
+		Target:     []string{"Running"},
+		Timeout:    d.Timeout(schema.TimeoutCreate),
+		Refresh: func() (interface{}, string, error) {
+			lb, e := service.DescribeTeoLoadBalancerById(ctx, zoneId, instanceId)
+			if e != nil {
+				return nil, "", e
+			}
+			if lb == nil {
+				return nil, "Pending", nil
+			}
+			status := "Pending"
+			if lb.Status != nil {
+				status = *lb.Status
+			}
+			return lb, status, nil
+		},
+	}).WaitForStateContext(ctx); err != nil {
+		return fmt.Errorf("waiting for teo load balancer (%s) to become Running: %s", d.Id(), err)
+	}
 
 	return resourceTencentCloudTeoLoadBalancerRead(d, meta)
 }
@@ -420,19 +294,19 @@ func resourceTencentCloudTeoLoadBalancerRead(d *schema.ResourceData, meta interf
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_load_balancer.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+		return fmt.Errorf("id is broken, %s", d.Id())
 	}
+
 	zoneId := idSplit[0]
 	instanceId := idSplit[1]
-
-	_ = d.Set("zone_id", zoneId)
 
 	respData, err := service.DescribeTeoLoadBalancerById(ctx, zoneId, instanceId)
 	if err != nil {
@@ -440,10 +314,12 @@ func resourceTencentCloudTeoLoadBalancerRead(d *schema.ResourceData, meta interf
 	}
 
 	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_teo_load_balancer` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_load_balancer` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	_ = d.Set("zone_id", zoneId)
 
 	if respData.InstanceId != nil {
 		_ = d.Set("instance_id", respData.InstanceId)
@@ -465,171 +341,28 @@ func resourceTencentCloudTeoLoadBalancerRead(d *schema.ResourceData, meta interf
 		_ = d.Set("failover_policy", respData.FailoverPolicy)
 	}
 
-	if respData.Status != nil {
-		_ = d.Set("status", respData.Status)
-	}
-
-	originGroupsList := make([]map[string]interface{}, 0)
 	if respData.OriginGroupHealthStatus != nil {
-		for _, ogHealthStatus := range respData.OriginGroupHealthStatus {
+		ogList := make([]map[string]interface{}, 0, len(respData.OriginGroupHealthStatus))
+		for _, og := range respData.OriginGroupHealthStatus {
+			if og == nil {
+				continue
+			}
 			ogMap := map[string]interface{}{}
-			if ogHealthStatus.OriginGroupID != nil {
-				ogMap["origin_group_id"] = ogHealthStatus.OriginGroupID
+			if og.Priority != nil {
+				ogMap["priority"] = og.Priority
 			}
-			if ogHealthStatus.Priority != nil {
-				ogMap["priority"] = ogHealthStatus.Priority
+			if og.OriginGroupID != nil {
+				ogMap["origin_group_id"] = og.OriginGroupID
 			}
-			originGroupsList = append(originGroupsList, ogMap)
+			ogList = append(ogList, ogMap)
 		}
-		_ = d.Set("origin_groups", originGroupsList)
+		_ = d.Set("origin_groups", ogList)
 	}
 
 	if respData.HealthChecker != nil {
-		healthCheckerList := make([]map[string]interface{}, 0, 1)
-		healthCheckerMap := map[string]interface{}{}
-
-		if respData.HealthChecker.Type != nil {
-			healthCheckerMap["type"] = respData.HealthChecker.Type
-		}
-		if respData.HealthChecker.Port != nil {
-			healthCheckerMap["port"] = int(*respData.HealthChecker.Port)
-		}
-		if respData.HealthChecker.Interval != nil {
-			healthCheckerMap["interval"] = int(*respData.HealthChecker.Interval)
-		}
-		if respData.HealthChecker.Timeout != nil {
-			healthCheckerMap["timeout"] = int(*respData.HealthChecker.Timeout)
-		}
-		if respData.HealthChecker.HealthThreshold != nil {
-			healthCheckerMap["health_threshold"] = int(*respData.HealthChecker.HealthThreshold)
-		}
-		if respData.HealthChecker.CriticalThreshold != nil {
-			healthCheckerMap["critical_threshold"] = int(*respData.HealthChecker.CriticalThreshold)
-		}
-		if respData.HealthChecker.Path != nil {
-			healthCheckerMap["path"] = respData.HealthChecker.Path
-		}
-		if respData.HealthChecker.Method != nil {
-			healthCheckerMap["method"] = respData.HealthChecker.Method
-		}
-		if respData.HealthChecker.ExpectedCodes != nil {
-			expectedCodes := make([]string, 0, len(respData.HealthChecker.ExpectedCodes))
-			for _, code := range respData.HealthChecker.ExpectedCodes {
-				if code != nil {
-					expectedCodes = append(expectedCodes, *code)
-				}
-			}
-			healthCheckerMap["expected_codes"] = expectedCodes
-		}
-		if respData.HealthChecker.Headers != nil {
-			headersList := make([]map[string]interface{}, 0, len(respData.HealthChecker.Headers))
-			for _, header := range respData.HealthChecker.Headers {
-				headerMap := map[string]interface{}{}
-				if header.Key != nil {
-					headerMap["key"] = header.Key
-				}
-				if header.Value != nil {
-					headerMap["value"] = header.Value
-				}
-				headersList = append(headersList, headerMap)
-			}
-			healthCheckerMap["headers"] = headersList
-		}
-		if respData.HealthChecker.FollowRedirect != nil {
-			healthCheckerMap["follow_redirect"] = respData.HealthChecker.FollowRedirect
-		}
-		if respData.HealthChecker.SendContext != nil {
-			healthCheckerMap["send_context"] = respData.HealthChecker.SendContext
-		}
-		if respData.HealthChecker.RecvContext != nil {
-			healthCheckerMap["recv_context"] = respData.HealthChecker.RecvContext
-		}
-
-		healthCheckerList = append(healthCheckerList, healthCheckerMap)
-		_ = d.Set("health_checker", healthCheckerList)
+		_ = d.Set("health_checker", flattenTeoHealthChecker(respData.HealthChecker))
 	}
 
-	originGroupHealthStatusList := make([]map[string]interface{}, 0, len(respData.OriginGroupHealthStatus))
-	if respData.OriginGroupHealthStatus != nil {
-		for _, ogHealthStatus := range respData.OriginGroupHealthStatus {
-			ogHealthStatusMap := map[string]interface{}{}
-
-			if ogHealthStatus.OriginGroupID != nil {
-				ogHealthStatusMap["origin_group_id"] = ogHealthStatus.OriginGroupID
-			}
-			if ogHealthStatus.OriginGroupName != nil {
-				ogHealthStatusMap["origin_group_name"] = ogHealthStatus.OriginGroupName
-			}
-			if ogHealthStatus.OriginType != nil {
-				ogHealthStatusMap["origin_type"] = ogHealthStatus.OriginType
-			}
-			if ogHealthStatus.Priority != nil {
-				ogHealthStatusMap["priority"] = ogHealthStatus.Priority
-			}
-
-			originHealthStatusList := make([]map[string]interface{}, 0, len(ogHealthStatus.OriginHealthStatus))
-			if ogHealthStatus.OriginHealthStatus != nil {
-				for _, ohs := range ogHealthStatus.OriginHealthStatus {
-					ohsMap := map[string]interface{}{}
-					if ohs.Origin != nil {
-						ohsMap["origin"] = ohs.Origin
-					}
-					if ohs.Healthy != nil {
-						ohsMap["healthy"] = ohs.Healthy
-					}
-					originHealthStatusList = append(originHealthStatusList, ohsMap)
-				}
-				ogHealthStatusMap["origin_health_status"] = originHealthStatusList
-			}
-
-			originGroupHealthStatusList = append(originGroupHealthStatusList, ogHealthStatusMap)
-		}
-
-		_ = d.Set("origin_group_health_status", originGroupHealthStatusList)
-	}
-
-	if respData.L4UsedList != nil {
-		l4UsedList := make([]string, 0, len(respData.L4UsedList))
-		for _, v := range respData.L4UsedList {
-			if v != nil {
-				l4UsedList = append(l4UsedList, *v)
-			}
-		}
-		_ = d.Set("l4_used_list", l4UsedList)
-	}
-
-	if respData.L7UsedList != nil {
-		l7UsedList := make([]string, 0, len(respData.L7UsedList))
-		for _, v := range respData.L7UsedList {
-			if v != nil {
-				l7UsedList = append(l7UsedList, *v)
-			}
-		}
-		_ = d.Set("l7_used_list", l7UsedList)
-	}
-
-	referencesList := make([]map[string]interface{}, 0, len(respData.References))
-	if respData.References != nil {
-		for _, ref := range respData.References {
-			refMap := map[string]interface{}{}
-
-			if ref.InstanceType != nil {
-				refMap["instance_type"] = ref.InstanceType
-			}
-			if ref.InstanceId != nil {
-				refMap["instance_id"] = ref.InstanceId
-			}
-			if ref.InstanceName != nil {
-				refMap["instance_name"] = ref.InstanceName
-			}
-
-			referencesList = append(referencesList, refMap)
-		}
-
-		_ = d.Set("references", referencesList)
-	}
-
-	_ = zoneId
 	return nil
 }
 
@@ -637,130 +370,88 @@ func resourceTencentCloudTeoLoadBalancerUpdate(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_load_balancer.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = teo.NewModifyLoadBalancerRequest()
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	zoneId := idSplit[0]
-	instanceId := idSplit[1]
-
-	needChange := false
-	mutableArgs := []string{"name", "origin_groups", "health_checker", "steering_policy", "failover_policy"}
-	for _, v := range mutableArgs {
-		if d.HasChange(v) {
-			needChange = true
-			break
-		}
+		return fmt.Errorf("id is broken, %s", d.Id())
 	}
 
-	if needChange {
-		request := teo.NewModifyLoadBalancerRequest()
+	request.ZoneId = helper.String(idSplit[0])
+	request.InstanceId = helper.String(idSplit[1])
 
-		request.ZoneId = helper.String(zoneId)
-		request.InstanceId = helper.String(instanceId)
+	if v, ok := d.GetOk("name"); ok {
+		request.Name = helper.String(v.(string))
+	}
 
-		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("origin_groups"); ok {
-			for _, item := range v.([]interface{}) {
-				originGroupsMap := item.(map[string]interface{})
-				originGroupInLB := teo.OriginGroupInLoadBalancer{}
-				if v, ok := originGroupsMap["priority"]; ok {
-					originGroupInLB.Priority = helper.String(v.(string))
-				}
-				if v, ok := originGroupsMap["origin_group_id"]; ok {
-					originGroupInLB.OriginGroupId = helper.String(v.(string))
-				}
-				request.OriginGroups = append(request.OriginGroups, &originGroupInLB)
+	if v, ok := d.GetOk("origin_groups"); ok {
+		for _, item := range v.([]interface{}) {
+			ogMap := item.(map[string]interface{})
+			og := &teo.OriginGroupInLoadBalancer{}
+			if val, ok := ogMap["priority"].(string); ok && val != "" {
+				og.Priority = helper.String(val)
 			}
-		}
-
-		if v, ok := d.GetOk("health_checker"); ok {
-			for _, item := range v.([]interface{}) {
-				healthCheckerMap := item.(map[string]interface{})
-				healthChecker := teo.HealthChecker{}
-				if v, ok := healthCheckerMap["type"]; ok {
-					healthChecker.Type = helper.String(v.(string))
-				}
-				if v, ok := healthCheckerMap["port"]; ok {
-					healthChecker.Port = helper.IntUint64(v.(int))
-				}
-				if v, ok := healthCheckerMap["interval"]; ok {
-					healthChecker.Interval = helper.IntUint64(v.(int))
-				}
-				if v, ok := healthCheckerMap["timeout"]; ok {
-					healthChecker.Timeout = helper.IntUint64(v.(int))
-				}
-				if v, ok := healthCheckerMap["health_threshold"]; ok {
-					healthChecker.HealthThreshold = helper.IntUint64(v.(int))
-				}
-				if v, ok := healthCheckerMap["critical_threshold"]; ok {
-					healthChecker.CriticalThreshold = helper.IntUint64(v.(int))
-				}
-				if v, ok := healthCheckerMap["path"]; ok {
-					healthChecker.Path = helper.String(v.(string))
-				}
-				if v, ok := healthCheckerMap["method"]; ok {
-					healthChecker.Method = helper.String(v.(string))
-				}
-				if v, ok := healthCheckerMap["expected_codes"]; ok {
-					expectedCodesList := v.([]interface{})
-					for _, code := range expectedCodesList {
-						healthChecker.ExpectedCodes = append(healthChecker.ExpectedCodes, helper.String(code.(string)))
-					}
-				}
-				if v, ok := healthCheckerMap["headers"]; ok {
-					for _, item := range v.([]interface{}) {
-						headersMap := item.(map[string]interface{})
-						customizedHeader := teo.CustomizedHeader{}
-						if v, ok := headersMap["key"]; ok {
-							customizedHeader.Key = helper.String(v.(string))
-						}
-						if v, ok := headersMap["value"]; ok {
-							customizedHeader.Value = helper.String(v.(string))
-						}
-						healthChecker.Headers = append(healthChecker.Headers, &customizedHeader)
-					}
-				}
-				if v, ok := healthCheckerMap["follow_redirect"]; ok {
-					healthChecker.FollowRedirect = helper.String(v.(string))
-				}
-				if v, ok := healthCheckerMap["send_context"]; ok {
-					healthChecker.SendContext = helper.String(v.(string))
-				}
-				if v, ok := healthCheckerMap["recv_context"]; ok {
-					healthChecker.RecvContext = helper.String(v.(string))
-				}
-				request.HealthChecker = &healthChecker
+			if val, ok := ogMap["origin_group_id"].(string); ok && val != "" {
+				og.OriginGroupId = helper.String(val)
 			}
+			request.OriginGroups = append(request.OriginGroups, og)
 		}
+	}
 
-		if v, ok := d.GetOk("steering_policy"); ok {
-			request.SteeringPolicy = helper.String(v.(string))
+	if v, ok := d.GetOk("health_checker"); ok {
+		request.HealthChecker = buildTeoHealthChecker(v.([]interface{}))
+	}
+
+	if v, ok := d.GetOk("steering_policy"); ok {
+		request.SteeringPolicy = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("failover_policy"); ok {
+		request.FailoverPolicy = helper.String(v.(string))
+	}
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyLoadBalancerWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
-		if v, ok := d.GetOk("failover_policy"); ok {
-			request.FailoverPolicy = helper.String(v.(string))
-		}
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s update teo load balancer failed, reason:%+v", logId, reqErr)
+		return reqErr
+	}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().ModifyLoadBalancerWithContext(ctx, request)
+	// Wait for load balancer to become Running after update
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	if _, err := (&resource.StateChangeConf{
+		Delay:      5 * time.Second,
+		MinTimeout: 3 * time.Second,
+		Pending:    []string{"Pending"},
+		Target:     []string{"Running"},
+		Timeout:    d.Timeout(schema.TimeoutUpdate),
+		Refresh: func() (interface{}, string, error) {
+			lb, e := service.DescribeTeoLoadBalancerById(ctx, *request.ZoneId, *request.InstanceId)
 			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				return nil, "", e
 			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update teo load balancer failed, reason:%+v", logId, err)
-			return err
-		}
+			if lb == nil {
+				return nil, "Pending", nil
+			}
+			status := "Pending"
+			if lb.Status != nil {
+				status = *lb.Status
+			}
+			return lb, status, nil
+		},
+	}).WaitForStateContext(ctx); err != nil {
+		return fmt.Errorf("waiting for teo load balancer (%s) to become Running: %s", d.Id(), err)
 	}
 
 	return resourceTencentCloudTeoLoadBalancerRead(d, meta)
@@ -770,39 +461,163 @@ func resourceTencentCloudTeoLoadBalancerDelete(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_load_balancer.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = teo.NewDeleteLoadBalancerRequest()
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+		return fmt.Errorf("id is broken, %s", d.Id())
 	}
-	zoneId := idSplit[0]
-	instanceId := idSplit[1]
 
-	var (
-		request  = teo.NewDeleteLoadBalancerRequest()
-		response = teo.NewDeleteLoadBalancerResponse()
-	)
+	request.ZoneId = helper.String(idSplit[0])
+	request.InstanceId = helper.String(idSplit[1])
 
-	request.ZoneId = helper.String(zoneId)
-	request.InstanceId = helper.String(instanceId)
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DeleteLoadBalancerWithContext(ctx, request)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteLoadBalancerWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s delete teo load balancer failed, reason:%+v", logId, err)
-		return err
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s delete teo load balancer failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	_ = response
 	return nil
+}
+
+// buildTeoHealthChecker converts the health_checker schema list to *teo.HealthChecker.
+func buildTeoHealthChecker(v []interface{}) *teo.HealthChecker {
+	if len(v) == 0 {
+		return nil
+	}
+	m := v[0].(map[string]interface{})
+	hc := &teo.HealthChecker{}
+
+	if val, ok := m["type"].(string); ok && val != "" {
+		hc.Type = helper.String(val)
+	}
+	if val, ok := m["port"].(int); ok && val != 0 {
+		hc.Port = helper.IntUint64(val)
+	}
+	if val, ok := m["interval"].(int); ok && val != 0 {
+		hc.Interval = helper.IntUint64(val)
+	}
+	if val, ok := m["timeout"].(int); ok && val != 0 {
+		hc.Timeout = helper.IntUint64(val)
+	}
+	if val, ok := m["health_threshold"].(int); ok && val != 0 {
+		hc.HealthThreshold = helper.IntUint64(val)
+	}
+	if val, ok := m["critical_threshold"].(int); ok && val != 0 {
+		hc.CriticalThreshold = helper.IntUint64(val)
+	}
+	if val, ok := m["path"].(string); ok && val != "" {
+		hc.Path = helper.String(val)
+	}
+	if val, ok := m["method"].(string); ok && val != "" {
+		hc.Method = helper.String(val)
+	}
+	if val, ok := m["expected_codes"].([]interface{}); ok && len(val) > 0 {
+		for _, code := range val {
+			hc.ExpectedCodes = append(hc.ExpectedCodes, helper.String(code.(string)))
+		}
+	}
+	if val, ok := m["follow_redirect"].(string); ok && val != "" {
+		hc.FollowRedirect = helper.String(val)
+	}
+	if val, ok := m["headers"].([]interface{}); ok && len(val) > 0 {
+		for _, h := range val {
+			hMap := h.(map[string]interface{})
+			header := &teo.CustomizedHeader{}
+			if k, ok := hMap["key"].(string); ok && k != "" {
+				header.Key = helper.String(k)
+			}
+			if v, ok := hMap["value"].(string); ok && v != "" {
+				header.Value = helper.String(v)
+			}
+			hc.Headers = append(hc.Headers, header)
+		}
+	}
+	if val, ok := m["send_context"].(string); ok && val != "" {
+		hc.SendContext = helper.String(val)
+	}
+	if val, ok := m["recv_context"].(string); ok && val != "" {
+		hc.RecvContext = helper.String(val)
+	}
+	return hc
+}
+
+// flattenTeoHealthChecker converts *teo.HealthChecker to the schema list format.
+func flattenTeoHealthChecker(hc *teo.HealthChecker) []map[string]interface{} {
+	if hc == nil {
+		return nil
+	}
+	m := map[string]interface{}{}
+	if hc.Type != nil {
+		m["type"] = hc.Type
+	}
+	if hc.Port != nil {
+		m["port"] = int(*hc.Port)
+	}
+	if hc.Interval != nil {
+		m["interval"] = int(*hc.Interval)
+	}
+	if hc.Timeout != nil {
+		m["timeout"] = int(*hc.Timeout)
+	}
+	if hc.HealthThreshold != nil {
+		m["health_threshold"] = int(*hc.HealthThreshold)
+	}
+	if hc.CriticalThreshold != nil {
+		m["critical_threshold"] = int(*hc.CriticalThreshold)
+	}
+	if hc.Path != nil {
+		m["path"] = hc.Path
+	}
+	if hc.Method != nil {
+		m["method"] = hc.Method
+	}
+	if len(hc.ExpectedCodes) > 0 {
+		codes := make([]string, 0, len(hc.ExpectedCodes))
+		for _, c := range hc.ExpectedCodes {
+			if c != nil {
+				codes = append(codes, *c)
+			}
+		}
+		m["expected_codes"] = codes
+	}
+	if hc.FollowRedirect != nil {
+		m["follow_redirect"] = hc.FollowRedirect
+	}
+	if len(hc.Headers) > 0 {
+		headerList := make([]map[string]interface{}, 0, len(hc.Headers))
+		for _, h := range hc.Headers {
+			if h == nil {
+				continue
+			}
+			hMap := map[string]interface{}{}
+			if h.Key != nil {
+				hMap["key"] = h.Key
+			}
+			if h.Value != nil {
+				hMap["value"] = h.Value
+			}
+			headerList = append(headerList, hMap)
+		}
+		m["headers"] = headerList
+	}
+	if hc.SendContext != nil {
+		m["send_context"] = hc.SendContext
+	}
+	if hc.RecvContext != nil {
+		m["recv_context"] = hc.RecvContext
+	}
+	return []map[string]interface{}{m}
 }

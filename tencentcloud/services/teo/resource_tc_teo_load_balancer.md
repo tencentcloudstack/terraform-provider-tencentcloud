@@ -1,40 +1,29 @@
-Provides a resource to create a TEO load balancer instance
+Provides a resource to create a TEO load balancer instance.
 
 Example Usage
 
-Create a load balancer with HTTP health checker
-
 ```hcl
 resource "tencentcloud_teo_load_balancer" "example" {
-  zone_id = "zone-197z8rf93cfw"
-  name    = "test-lb"
+  zone_id = "zone-3fkff38fyw8s"
+  name    = "tf-example"
   type    = "HTTP"
 
   origin_groups {
     priority        = "priority_1"
-    origin_group_id = "og-aaa"
+    origin_group_id = "og-3pfz5626nmbb"
   }
 
   origin_groups {
     priority        = "priority_2"
-    origin_group_id = "og-bbb"
+    origin_group_id = "og-3pfz1ztltzo0"
   }
 
   health_checker {
-    type        = "HTTP"
-    port        = 80
-    interval    = 30
-    timeout     = 5
-    path        = "/health"
-    method      = "GET"
-    follow_redirect = "on"
-
-    expected_codes = ["200", "301"]
-
-    headers {
-      key   = "X-Custom-Header"
-      value = "health-check"
-    }
+    type               = "ICMP Ping"
+    interval           = 30
+    timeout            = 5
+    health_threshold   = 3
+    critical_threshold = 2
   }
 
   steering_policy = "Pritory"
@@ -42,55 +31,10 @@ resource "tencentcloud_teo_load_balancer" "example" {
 }
 ```
 
-Create a load balancer with UDP health checker
-
-```hcl
-resource "tencentcloud_teo_load_balancer" "example" {
-  zone_id = "zone-197z8rf93cfw"
-  name    = "test-lb-udp"
-  type    = "GENERAL"
-
-  origin_groups {
-    priority        = "priority_1"
-    origin_group_id = "og-aaa"
-  }
-
-  health_checker {
-    type          = "UDP"
-    port          = 53
-    interval      = 30
-    timeout       = 5
-    send_context  = "health_check"
-    recv_context  = "ok"
-  }
-
-  steering_policy = "Pritory"
-  failover_policy = "OtherRecordInOriginGroup"
-}
-```
-
-Create a load balancer without health checker
-
-```hcl
-resource "tencentcloud_teo_load_balancer" "example" {
-  zone_id = "zone-197z8rf93cfw"
-  name    = "test-lb-nocheck"
-  type    = "GENERAL"
-
-  origin_groups {
-    priority        = "priority_1"
-    origin_group_id = "og-aaa"
-  }
-
-  steering_policy = "Pritory"
-  failover_policy = "OtherRecordInOriginGroup"
-}
-```
-
 Import
 
-teo load_balancer can be imported using the zone_id#instance_id, e.g.
+TEO load balancer can be imported using the zoneId#instanceId, e.g.
 
 ```
-terraform import tencentcloud_teo_load_balancer.example zone-297z8rf93cfw#lb-12345678
+terraform import tencentcloud_teo_load_balancer.example zone-3fkff38fyw8s#lb-3pfzdob8hh3d
 ```

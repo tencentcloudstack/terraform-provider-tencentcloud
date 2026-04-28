@@ -2635,18 +2635,19 @@ func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[st
 	return
 }
 
-func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId string, instanceId string) (ret *teo.LoadBalancer, errRet error) {
+func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId, instanceId string) (loadBalancer *teo.LoadBalancer, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teo.NewDescribeLoadBalancerListRequest()
 	request.ZoneId = helper.String(zoneId)
-	filter := &teo.Filter{
-		Name:   helper.String("InstanceId"),
-		Values: []*string{helper.String(instanceId)},
+	request.Offset = helper.IntUint64(0)
+	request.Limit = helper.IntUint64(20)
+	request.Filters = []*teo.Filter{
+		{
+			Name:   helper.String("InstanceId"),
+			Values: []*string{helper.String(instanceId)},
+		},
 	}
-	request.Filters = append(request.Filters, filter)
-	var limit uint64 = 1
-	request.Limit = &limit
 
 	defer func() {
 		if errRet != nil {
@@ -2654,27 +2655,28 @@ func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId st
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response := teo.NewDescribeLoadBalancerListResponse()
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := me.client.UseTeoClient().DescribeLoadBalancerList(request)
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeLoadBalancerList(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		response = result
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeLoadBalancerList response is nil"))
+		}
+
+		if len(result.Response.LoadBalancerList) == 0 {
+			return nil
+		}
+
+		loadBalancer = result.Response.LoadBalancerList[0]
 		return nil
 	})
+
 	if err != nil {
 		errRet = err
-		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || response.Response == nil || len(response.Response.LoadBalancerList) < 1 {
-		return
-	}
-
-	ret = response.Response.LoadBalancerList[0]
 	return
 }
