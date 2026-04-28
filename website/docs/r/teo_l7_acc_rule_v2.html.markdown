@@ -503,6 +503,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `rule_id` - Rule ID. Unique identifier of the rule.
+* `rule_ids` - Rule ID list. List of unique identifiers of the rules.
 * `rule_priority` - Rule priority. only used as an output parameter.
 
 
