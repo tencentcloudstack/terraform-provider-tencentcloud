@@ -163,15 +163,15 @@ func resourceTencentCloudTeoSecurityAPIResourceRead(d *schema.ResourceData, meta
 	apiResMap := map[string]interface{}{}
 
 	if respData.Id != nil {
-		apiResMap["id"] = *respData.Id
+		apiResMap["id"] = respData.Id
 	}
 
 	if respData.Name != nil {
-		apiResMap["name"] = *respData.Name
+		apiResMap["name"] = respData.Name
 	}
 
 	if respData.Path != nil {
-		apiResMap["path"] = *respData.Path
+		apiResMap["path"] = respData.Path
 	}
 
 	if len(respData.APIServiceIds) > 0 {
@@ -195,7 +195,7 @@ func resourceTencentCloudTeoSecurityAPIResourceRead(d *schema.ResourceData, meta
 	}
 
 	if respData.RequestConstraint != nil {
-		apiResMap["request_constraint"] = *respData.RequestConstraint
+		apiResMap["request_constraint"] = respData.RequestConstraint
 	}
 
 	_ = d.Set("api_resources", []interface{}{apiResMap})
