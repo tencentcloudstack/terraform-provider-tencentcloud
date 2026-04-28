@@ -2748,3 +2748,55 @@ func (me *TeoService) DescribeTeoAliasDomainById(ctx context.Context, zoneId, al
 		offset += limit
 	}
 }
+
+// DescribeTeoSecurityAPIServiceById paginates DescribeSecurityAPIService and
+// returns the APIService whose Id matches apiServiceId, or nil if not found.
+func (me *TeoService) DescribeTeoSecurityAPIServiceById(ctx context.Context, zoneId, apiServiceId string) (apiService *teo.APIService, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		limit  int64 = 100
+		offset int64 = 0
+	)
+
+	for {
+		request := teo.NewDescribeSecurityAPIServiceRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.Limit = &limit
+		request.Offset = &offset
+
+		var pageServices []*teo.APIService
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityAPIService(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeSecurityAPIService response is nil"))
+			}
+			pageServices = result.Response.APIServices
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		for _, s := range pageServices {
+			if s.Id != nil && *s.Id == apiServiceId {
+				apiService = s
+				return
+			}
+		}
+
+		if int64(len(pageServices)) < limit {
+			// Last page, not found
+			return
+		}
+		offset += limit
+	}
+}
