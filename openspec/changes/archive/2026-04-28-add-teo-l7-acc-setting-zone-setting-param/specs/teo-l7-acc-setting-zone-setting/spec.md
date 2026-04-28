@@ -1,11 +1,13 @@
-## Requirements
+## MODIFIED Requirements
 
-### Requirement: No zone_setting computed attribute
+### Requirement: Remove zone_setting computed attribute
 The `tencentcloud_teo_l7_acc_setting` resource SHALL NOT have a `zone_setting` computed attribute. The `zone_name` and `zone_config` top-level attributes provide the same data.
 
-#### Scenario: zone_setting is not in schema
+#### Scenario: zone_setting is removed from schema
 - **WHEN** a user inspects the `tencentcloud_teo_l7_acc_setting` resource schema
 - **THEN** there SHALL NOT be a `zone_setting` attribute
+
+## ADDED Requirements
 
 ### Requirement: network_error_logging configuration in zone_config
 The `tencentcloud_teo_l7_acc_setting` resource's `zone_config` attribute SHALL include a `network_error_logging` sub-field of type `TypeList` with `MaxItems: 1` and `Optional: true`, mapping to `ZoneConfig.NetworkErrorLogging` (`NetworkErrorLoggingParameters`) in the cloud API.
