@@ -2099,6 +2099,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_deploy_config_group_version":                                          teo.ResourceTencentCloudTeoDeployConfigGroupVersion(),
 			"tencentcloud_teo_confirm_origin_acl_update_operation":                                  teo.ResourceTencentCloudTeoConfirmOriginAclUpdateOperation(),
 			"tencentcloud_teo_alias_domain":                                                         teo.ResourceTencentCloudTeoAliasDomain(),
+			"tencentcloud_teo_multi_path_gateway":                                                   teo.ResourceTencentCloudTeoMultiPathGateway(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                   tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                                tcm.ResourceTencentCloudTcmPrometheusAttachment(),

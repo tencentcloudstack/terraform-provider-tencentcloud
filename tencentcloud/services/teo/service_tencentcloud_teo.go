@@ -2748,3 +2748,70 @@ func (me *TeoService) DescribeTeoAliasDomainById(ctx context.Context, zoneId, al
 		offset += limit
 	}
 }
+
+func (me *TeoService) DescribeTeoMultiPathGatewayById(ctx context.Context, zoneId, gatewayId string) (gateway *teo.MultiPathGateway, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		request = teo.NewDescribeMultiPathGatewayRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = &zoneId
+	request.GatewayId = &gatewayId
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeMultiPathGateway(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil {
+			errRet = fmt.Errorf("DescribeMultiPathGateway response is nil")
+			return resource.NonRetryableError(errRet)
+		}
+		gateway = result.Response.GatewayDetail
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *TeoService) DeleteTeoMultiPathGateway(ctx context.Context, zoneId, gatewayId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDeleteMultiPathGatewayRequest()
+	request.ZoneId = &zoneId
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTeoV20220901Client().DeleteMultiPathGateway(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

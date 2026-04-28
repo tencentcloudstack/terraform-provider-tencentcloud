@@ -1587,6 +1587,7 @@ tencentcloud_teo_identify_zone_operation
 tencentcloud_teo_just_in_time_transcode_template
 tencentcloud_teo_confirm_origin_acl_update_operation
 tencentcloud_teo_alias_domain
+tencentcloud_teo_multi_path_gateway
 
 TencentCloud ServiceMesh(TCM)
 Data Source
