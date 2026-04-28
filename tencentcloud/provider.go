@@ -2101,6 +2101,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_security_api_service":                                                 teo.ResourceTencentCloudTeoSecurityAPIService(),
 			"tencentcloud_teo_confirm_origin_acl_update_operation":                                  teo.ResourceTencentCloudTeoConfirmOriginAclUpdateOperation(),
 			"tencentcloud_teo_alias_domain":                                                         teo.ResourceTencentCloudTeoAliasDomain(),
+			"tencentcloud_teo_security_js_injection_rule":                                           teo.ResourceTencentCloudTeoSecurityJSInjectionRule(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                   tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                                tcm.ResourceTencentCloudTcmPrometheusAttachment(),

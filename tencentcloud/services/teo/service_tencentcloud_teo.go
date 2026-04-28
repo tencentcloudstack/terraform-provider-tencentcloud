@@ -2643,6 +2643,58 @@ func (me *TeoService) DescribeTeoSecurityAPIResourceById(ctx context.Context, zo
 	}
 }
 
+// DescribeTeoSecurityJSInjectionRuleById paginates DescribeSecurityJSInjectionRule and
+// returns the JSInjectionRule whose RuleId matches jsInjectionRuleId, or nil if not found.
+func (me *TeoService) DescribeTeoSecurityJSInjectionRuleById(ctx context.Context, zoneId, jsInjectionRuleId string) (jsInjectionRule *teo.JSInjectionRule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		limit  int64 = 100
+		offset int64 = 0
+	)
+
+	for {
+		request := teo.NewDescribeSecurityJSInjectionRuleRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.Limit = &limit
+		request.Offset = &offset
+
+		var pageRules []*teo.JSInjectionRule
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityJSInjectionRule(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeSecurityJSInjectionRule response is nil"))
+			}
+			pageRules = result.Response.JSInjectionRules
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		for _, r := range pageRules {
+			if r.RuleId != nil && *r.RuleId == jsInjectionRuleId {
+				jsInjectionRule = r
+				return
+			}
+		}
+
+		if int64(len(pageRules)) < limit {
+			// Last page, not found
+			return
+		}
+		offset += limit
+	}
+}
+
 func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[string]interface{}) (ret *teo.ExportZoneConfigResponseParams, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)

@@ -1589,6 +1589,7 @@ tencentcloud_teo_just_in_time_transcode_template
 tencentcloud_teo_security_api_service
 tencentcloud_teo_confirm_origin_acl_update_operation
 tencentcloud_teo_alias_domain
+tencentcloud_teo_security_js_injection_rule
 
 TencentCloud ServiceMesh(TCM)
 Data Source
