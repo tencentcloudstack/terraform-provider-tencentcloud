@@ -511,6 +511,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_image_quota":                                       cvm.DataSourceTencentCloudCvmImageQuota(),
 			"tencentcloud_cvm_import_image_os":                                   cvm.DataSourceTencentCloudCvmImportImageOs(),
 			"tencentcloud_cvm_image_share_permission":                            cvm.DataSourceTencentCloudCvmImageSharePermission(),
+			"tencentcloud_cvm_repair_tasks":                                      cvm.DataSourceTencentCloudCvmRepairTasks(),
 			"tencentcloud_vpc_instances":                                         vpc.DataSourceTencentCloudVpcInstances(),
 			"tencentcloud_vpc_subnets":                                           vpc.DataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":                                      vpc.DataSourceTencentCloudVpcRouteTables(),
