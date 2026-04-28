@@ -43,12 +43,9 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigCreate(d *schema.Reso
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_multi_path_gateway_secret_key_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	var zoneId string
-	if v, ok := d.GetOk("zone_id"); ok {
-		zoneId = v.(string)
-	}
-
+	zoneId := d.Get("zone_id").(string)
 	d.SetId(zoneId)
+
 	return resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d, meta)
 }
 
@@ -98,12 +95,7 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d *schema.Reso
 	if d.IsNewResource() {
 		// Create operation: call CreateMultiPathGatewaySecretKey API
 		request := teov20220901.NewCreateMultiPathGatewaySecretKeyRequest()
-
-		if v, ok := d.GetOk("zone_id"); ok {
-			request.ZoneId = helper.String(v.(string))
-		} else {
-			request.ZoneId = helper.String(zoneId)
-		}
+		request.ZoneId = helper.String(zoneId)
 
 		if v, ok := d.GetOk("secret_key"); ok {
 			request.SecretKey = helper.String(v.(string))
@@ -127,12 +119,7 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d *schema.Reso
 	} else {
 		// Update operation: call ModifyMultiPathGatewaySecretKey API
 		request := teov20220901.NewModifyMultiPathGatewaySecretKeyRequest()
-
-		if v, ok := d.GetOk("zone_id"); ok {
-			request.ZoneId = helper.String(v.(string))
-		} else {
-			request.ZoneId = helper.String(zoneId)
-		}
+		request.ZoneId = helper.String(zoneId)
 
 		if v, ok := d.GetOk("secret_key"); ok {
 			request.SecretKey = helper.String(v.(string))
