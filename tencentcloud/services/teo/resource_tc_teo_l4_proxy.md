@@ -11,10 +11,6 @@ resource "tencentcloud_teo_l4_proxy" "proxy" {
   static_ip           = "off"
   zone_id             = "zone-2qtuhspy6cr7"
 }
-
-output "l4_proxy_id" {
-  value = tencentcloud_teo_l4_proxy.proxy.proxy_id
-}
 ```
 
 Import
