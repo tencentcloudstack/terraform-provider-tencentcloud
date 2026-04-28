@@ -1,33 +1,38 @@
-Provides a resource to create a TEO (EdgeOne) alias domain.
+Provides a resource to create a TEO alias domain.
+
+~> **NOTE:** This feature is only supported by the Enterprise edition plan and is currently in beta testing. Please [contact us](https://cloud.tencent.com/online-service?from=connect-us) if you need to use it.
 
 Example Usage
 
-Alias domain with no certificate
-
 ```hcl
 resource "tencentcloud_teo_alias_domain" "example" {
-  zone_id     = "zone-297z8rf93cfw"
-  alias_name  = "alias.example.com"
-  target_name = "target.example.com"
+  zone_id     = "zone-3fkff38fyw8s"
+  alias_name  = "alias.demo.com"
+  target_name = "target.demo.com"
+  cert_type   = "none"
 }
 ```
 
-Alias domain with SSL managed certificate
+With SSL hosted certificate
 
 ```hcl
 resource "tencentcloud_teo_alias_domain" "example" {
-  zone_id     = "zone-297z8rf93cfw"
-  alias_name  = "alias.example.com"
-  target_name = "target.example.com"
+  zone_id     = "zone-3fkff38fyw8s"
+  alias_name  = "alias.demo.com"
+  target_name = "target.demo.com"
   cert_type   = "hosting"
-  cert_id     = ["cert-abc123"]
+  cert_id     = ["your-cert-id"]
 }
 ```
 
-Import
+With disabled status
 
-teo alias_domain can be imported using the zone_id#alias_name, e.g.
-
-```
-terraform import tencentcloud_teo_alias_domain.example zone-297z8rf93cfw#alias.example.com
+```hcl
+resource "tencentcloud_teo_alias_domain" "example" {
+  zone_id     = "zone-3fkff38fyw8s"
+  alias_name  = "alias.demo.com"
+  target_name = "target.demo.com"
+  cert_type   = "none"
+  paused      = true
+}
 ```
