@@ -1,28 +1,24 @@
-Provides a resource to create a TEO security js injection rule
+Provides a resource to create a TEO security JavaScript injection rule.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_teo_security_js_injection_rule" "example" {
-  zone_id = "zone-2qtuhspy7cr6"
+  zone_id = "zone-3fkff38fyw8s"
+
   js_injection_rules {
-    name      = "test-rule-1"
-    condition = "${http.request.host} in ['example.com']"
-    inject_js = "inject-sdk-only"
-  }
-  js_injection_rules {
-    name      = "test-rule-2"
-    priority  = 10
-    condition = "${http.request.uri.path} in ['/api/*']"
-    inject_js = "no-injection"
+    name      = "tf-example"
+    priority  = 50
+    condition = "$${http.request.host} in ['www.demo.com']"
+    inject_j_s = "inject-sdk-only"
   }
 }
 ```
 
 Import
 
-TEO security js injection rule can be imported using the zone_id, e.g.
+TEO security JavaScript injection rule can be imported using the zoneId#ruleId, e.g.
 
 ```
-terraform import tencentcloud_teo_security_js_injection_rule.example zone-2qtuhspy7cr6
+terraform import tencentcloud_teo_security_js_injection_rule.example zone-3fkff38fyw8s#inject-0000040467
 ```
