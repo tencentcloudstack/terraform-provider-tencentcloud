@@ -15,47 +15,46 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
-// mockMetaForSecurityApiResource implements tccommon.ProviderMeta
-type mockMetaForSecurityApiResource struct {
+// mockMetaForSecurityAPIResource implements tccommon.ProviderMeta
+type mockMetaForSecurityAPIResource struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (m *mockMetaForSecurityApiResource) GetAPIV3Conn() *connectivity.TencentCloudClient {
+func (m *mockMetaForSecurityAPIResource) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
 
-var _ tccommon.ProviderMeta = &mockMetaForSecurityApiResource{}
+var _ tccommon.ProviderMeta = &mockMetaForSecurityAPIResource{}
 
-func newMockMetaForSecurityApiResource() *mockMetaForSecurityApiResource {
-	return &mockMetaForSecurityApiResource{client: &connectivity.TencentCloudClient{}}
+func newMockMetaForSecurityAPIResource() *mockMetaForSecurityAPIResource {
+	return &mockMetaForSecurityAPIResource{client: &connectivity.TencentCloudClient{}}
 }
 
-func ptrStringForSecurityApiResource(s string) *string {
+func ptrStrForSecurityAPIResource(s string) *string {
 	return &s
 }
 
-func ptrInt64ForSecurityApiResource(i int64) *int64 {
+func ptrInt64ForSecurityAPIResource(i int64) *int64 {
 	return &i
 }
 
-// go test ./tencentcloud/services/teo/ -run "TestSecurityApiResource" -v -count=1 -gcflags="all=-l"
+// go test ./tencentcloud/services/teo/ -run "TestSecurityAPIResource" -v -count=1 -gcflags="all=-l"
 
-// TestSecurityApiResource_Create_Success tests Create calls API and sets ID
-func TestSecurityApiResource_Create_Success(t *testing.T) {
+// TestSecurityAPIResource_Create_Success tests Create calls API and sets composite ID
+func TestSecurityAPIResource_Create_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "CreateSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.CreateSecurityAPIResourceRequest) (*teov20220901.CreateSecurityAPIResourceResponse, error) {
 		resp := teov20220901.NewCreateSecurityAPIResourceResponse()
 		resp.Response = &teov20220901.CreateSecurityAPIResourceResponseParams{
 			APIResourceIds: []*string{
-				ptrStringForSecurityApiResource("res-001"),
-				ptrStringForSecurityApiResource("res-002"),
+				ptrStrForSecurityAPIResource("apires-001"),
 			},
-			RequestId: ptrStringForSecurityApiResource("fake-request-id"),
+			RequestId: ptrStrForSecurityAPIResource("fake-request-id"),
 		}
 		return resp, nil
 	})
@@ -63,73 +62,61 @@ func TestSecurityApiResource_Create_Success(t *testing.T) {
 	patches.ApplyMethodFunc(teoClient, "DescribeSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityAPIResourceRequest) (*teov20220901.DescribeSecurityAPIResourceResponse, error) {
 		resp := teov20220901.NewDescribeSecurityAPIResourceResponse()
 		resp.Response = &teov20220901.DescribeSecurityAPIResourceResponseParams{
-			TotalCount: ptrInt64ForSecurityApiResource(2),
+			TotalCount: ptrInt64ForSecurityAPIResource(1),
 			APIResources: []*teov20220901.APIResource{
 				{
-					Id:   ptrStringForSecurityApiResource("res-001"),
-					Name: ptrStringForSecurityApiResource("test-api-1"),
-					Path: ptrStringForSecurityApiResource("/api/v1/test"),
+					Id:   ptrStrForSecurityAPIResource("apires-001"),
+					Name: ptrStrForSecurityAPIResource("test-api-1"),
+					Path: ptrStrForSecurityAPIResource("/api/v1/orders"),
 					Methods: []*string{
-						ptrStringForSecurityApiResource("GET"),
-						ptrStringForSecurityApiResource("POST"),
-					},
-				},
-				{
-					Id:   ptrStringForSecurityApiResource("res-002"),
-					Name: ptrStringForSecurityApiResource("test-api-2"),
-					Path: ptrStringForSecurityApiResource("/api/v2/test"),
-					Methods: []*string{
-						ptrStringForSecurityApiResource("GET"),
+						ptrStrForSecurityAPIResource("GET"),
+						ptrStrForSecurityAPIResource("POST"),
 					},
 				},
 			},
-			RequestId: ptrStringForSecurityApiResource("fake-request-id"),
+			RequestId: ptrStrForSecurityAPIResource("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-1234567890",
 		"api_resources": []interface{}{
 			map[string]interface{}{
 				"name":    "test-api-1",
-				"path":    "/api/v1/test",
+				"path":    "/api/v1/orders",
 				"methods": []interface{}{"GET", "POST"},
-			},
-			map[string]interface{}{
-				"name":    "test-api-2",
-				"path":    "/api/v2/test",
-				"methods": []interface{}{"GET"},
 			},
 		},
 	})
 
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "zone-1234567890", d.Id())
+	assert.Equal(t, "zone-1234567890#apires-001", d.Id())
 }
 
-// TestSecurityApiResource_Create_APIError tests Create handles API error
-func TestSecurityApiResource_Create_APIError(t *testing.T) {
+// TestSecurityAPIResource_Create_APIError tests Create handles API error
+func TestSecurityAPIResource_Create_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "CreateSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.CreateSecurityAPIResourceRequest) (*teov20220901.CreateSecurityAPIResourceResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-invalid",
 		"api_resources": []interface{}{
 			map[string]interface{}{
 				"name": "test-api",
+				"path": "/api/v1/test",
 			},
 		},
 	})
@@ -139,102 +126,104 @@ func TestSecurityApiResource_Create_APIError(t *testing.T) {
 	assert.Contains(t, err.Error(), "InvalidParameter")
 }
 
-// TestSecurityApiResource_Read_Success tests Read retrieves API resource data
-func TestSecurityApiResource_Read_Success(t *testing.T) {
+// TestSecurityAPIResource_Read_Success tests Read retrieves API resource data
+func TestSecurityAPIResource_Read_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "DescribeSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityAPIResourceRequest) (*teov20220901.DescribeSecurityAPIResourceResponse, error) {
 		resp := teov20220901.NewDescribeSecurityAPIResourceResponse()
 		resp.Response = &teov20220901.DescribeSecurityAPIResourceResponseParams{
-			TotalCount: ptrInt64ForSecurityApiResource(1),
+			TotalCount: ptrInt64ForSecurityAPIResource(1),
 			APIResources: []*teov20220901.APIResource{
 				{
-					Id:   ptrStringForSecurityApiResource("res-001"),
-					Name: ptrStringForSecurityApiResource("test-api-1"),
-					Path: ptrStringForSecurityApiResource("/api/v1/test"),
+					Id:   ptrStrForSecurityAPIResource("apires-001"),
+					Name: ptrStrForSecurityAPIResource("test-api-1"),
+					Path: ptrStrForSecurityAPIResource("/api/v1/orders"),
 					Methods: []*string{
-						ptrStringForSecurityApiResource("GET"),
-						ptrStringForSecurityApiResource("POST"),
+						ptrStrForSecurityAPIResource("GET"),
+						ptrStrForSecurityAPIResource("POST"),
 					},
 					APIServiceIds: []*string{
-						ptrStringForSecurityApiResource("svc-001"),
+						ptrStrForSecurityAPIResource("svc-001"),
 					},
-					RequestConstraint: ptrStringForSecurityApiResource(`{"key":"value"}`),
+					RequestConstraint: ptrStrForSecurityAPIResource(`{"key":"value"}`),
 				},
 			},
-			RequestId: ptrStringForSecurityApiResource("fake-request-id"),
+			RequestId: ptrStrForSecurityAPIResource("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-1234567890",
 		"api_resources": []interface{}{
 			map[string]interface{}{
 				"name": "test-api-1",
+				"path": "/api/v1/orders",
 			},
 		},
 	})
-	d.SetId("zone-1234567890")
+	d.SetId("zone-1234567890#apires-001")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "zone-1234567890", d.Id())
+	assert.Equal(t, "zone-1234567890#apires-001", d.Id())
 }
 
-// TestSecurityApiResource_Read_NotFound tests Read handles resource not found
-func TestSecurityApiResource_Read_NotFound(t *testing.T) {
+// TestSecurityAPIResource_Read_NotFound tests Read handles resource not found
+func TestSecurityAPIResource_Read_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "DescribeSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityAPIResourceRequest) (*teov20220901.DescribeSecurityAPIResourceResponse, error) {
 		resp := teov20220901.NewDescribeSecurityAPIResourceResponse()
 		resp.Response = &teov20220901.DescribeSecurityAPIResourceResponseParams{
-			TotalCount:   ptrInt64ForSecurityApiResource(0),
+			TotalCount:   ptrInt64ForSecurityAPIResource(0),
 			APIResources: []*teov20220901.APIResource{},
-			RequestId:    ptrStringForSecurityApiResource("fake-request-id"),
+			RequestId:    ptrStrForSecurityAPIResource("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-1234567890",
 		"api_resources": []interface{}{
 			map[string]interface{}{
 				"name": "test-api-1",
+				"path": "/api/v1/orders",
 			},
 		},
 	})
-	d.SetId("zone-1234567890")
+	d.SetId("zone-1234567890#apires-nonexistent")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "", d.Id())
 }
 
-// TestSecurityApiResource_Update_Success tests Update modifies API resources
-func TestSecurityApiResource_Update_Success(t *testing.T) {
+// TestSecurityAPIResource_Update_Success tests Update modifies API resources
+func TestSecurityAPIResource_Update_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "ModifySecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.ModifySecurityAPIResourceRequest) (*teov20220901.ModifySecurityAPIResourceResponse, error) {
 		resp := teov20220901.NewModifySecurityAPIResourceResponse()
 		resp.Response = &teov20220901.ModifySecurityAPIResourceResponseParams{
-			RequestId: ptrStringForSecurityApiResource("fake-request-id"),
+			RequestId: ptrStrForSecurityAPIResource("fake-request-id"),
 		}
 		return resp, nil
 	})
@@ -242,137 +231,136 @@ func TestSecurityApiResource_Update_Success(t *testing.T) {
 	patches.ApplyMethodFunc(teoClient, "DescribeSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityAPIResourceRequest) (*teov20220901.DescribeSecurityAPIResourceResponse, error) {
 		resp := teov20220901.NewDescribeSecurityAPIResourceResponse()
 		resp.Response = &teov20220901.DescribeSecurityAPIResourceResponseParams{
-			TotalCount: ptrInt64ForSecurityApiResource(1),
+			TotalCount: ptrInt64ForSecurityAPIResource(1),
 			APIResources: []*teov20220901.APIResource{
 				{
-					Id:   ptrStringForSecurityApiResource("res-001"),
-					Name: ptrStringForSecurityApiResource("test-api-1-updated"),
-					Path: ptrStringForSecurityApiResource("/api/v1/updated"),
+					Id:   ptrStrForSecurityAPIResource("apires-001"),
+					Name: ptrStrForSecurityAPIResource("test-api-1-updated"),
+					Path: ptrStrForSecurityAPIResource("/api/v1/updated"),
 					Methods: []*string{
-						ptrStringForSecurityApiResource("GET"),
+						ptrStrForSecurityAPIResource("GET"),
 					},
 				},
 			},
-			RequestId: ptrStringForSecurityApiResource("fake-request-id"),
+			RequestId: ptrStrForSecurityAPIResource("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-1234567890",
 		"api_resources": []interface{}{
 			map[string]interface{}{
-				"id":      "res-001",
 				"name":    "test-api-1-updated",
 				"path":    "/api/v1/updated",
 				"methods": []interface{}{"GET"},
 			},
 		},
 	})
-	d.SetId("zone-1234567890")
+	d.SetId("zone-1234567890#apires-001")
 
 	err := res.Update(d, meta)
 	assert.NoError(t, err)
 }
 
-// TestSecurityApiResource_Update_APIError tests Update handles API error
-func TestSecurityApiResource_Update_APIError(t *testing.T) {
+// TestSecurityAPIResource_Update_APIError tests Update handles API error
+func TestSecurityAPIResource_Update_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "ModifySecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.ModifySecurityAPIResourceRequest) (*teov20220901.ModifySecurityAPIResourceResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid parameter")
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-1234567890",
 		"api_resources": []interface{}{
 			map[string]interface{}{
-				"id":   "res-001",
 				"name": "test-api-1",
+				"path": "/api/v1/test",
 			},
 		},
 	})
-	d.SetId("zone-1234567890")
+	d.SetId("zone-1234567890#apires-001")
 
 	err := res.Update(d, meta)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "InvalidParameter")
 }
 
-// TestSecurityApiResource_Delete_Success tests Delete removes API resources
-func TestSecurityApiResource_Delete_Success(t *testing.T) {
+// TestSecurityAPIResource_Delete_Success tests Delete removes API resources
+func TestSecurityAPIResource_Delete_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "DeleteSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.DeleteSecurityAPIResourceRequest) (*teov20220901.DeleteSecurityAPIResourceResponse, error) {
 		resp := teov20220901.NewDeleteSecurityAPIResourceResponse()
 		resp.Response = &teov20220901.DeleteSecurityAPIResourceResponseParams{
-			RequestId: ptrStringForSecurityApiResource("fake-request-id"),
+			RequestId: ptrStrForSecurityAPIResource("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-1234567890",
 		"api_resources": []interface{}{
 			map[string]interface{}{
 				"name": "test-api-1",
+				"path": "/api/v1/orders",
 			},
 		},
-		"api_resource_ids": []interface{}{"res-001", "res-002"},
 	})
-	d.SetId("zone-1234567890")
+	d.SetId("zone-1234567890#apires-001")
 
 	err := res.Delete(d, meta)
 	assert.NoError(t, err)
 }
 
-// TestSecurityApiResource_Delete_APIError tests Delete handles API error
-func TestSecurityApiResource_Delete_APIError(t *testing.T) {
+// TestSecurityAPIResource_Delete_APIError tests Delete handles API error
+func TestSecurityAPIResource_Delete_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForSecurityApiResource().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMetaForSecurityAPIResource().client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "DeleteSecurityAPIResourceWithContext", func(ctx context.Context, request *teov20220901.DeleteSecurityAPIResourceRequest) (*teov20220901.DeleteSecurityAPIResourceResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceNotFound, Message=API resource not found")
 	})
 
-	meta := newMockMetaForSecurityApiResource()
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+	meta := newMockMetaForSecurityAPIResource()
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id": "zone-1234567890",
 		"api_resources": []interface{}{
 			map[string]interface{}{
 				"name": "test-api-1",
+				"path": "/api/v1/orders",
 			},
 		},
-		"api_resource_ids": []interface{}{"res-001"},
 	})
-	d.SetId("zone-1234567890")
+	d.SetId("zone-1234567890#apires-001")
 
 	err := res.Delete(d, meta)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "ResourceNotFound")
 }
 
-// TestSecurityApiResource_Schema validates schema definition
-func TestSecurityApiResource_Schema(t *testing.T) {
-	res := teo.ResourceTencentCloudTeoSecurityApiResource()
+// TestSecurityAPIResource_Schema validates schema definition
+func TestSecurityAPIResource_Schema(t *testing.T) {
+	res := teo.ResourceTencentCloudTeoSecurityAPIResource()
 
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Create)
@@ -393,10 +381,14 @@ func TestSecurityApiResource_Schema(t *testing.T) {
 	apiResources := res.Schema["api_resources"]
 	assert.Equal(t, schema.TypeList, apiResources.Type)
 	assert.True(t, apiResources.Required)
+	assert.Equal(t, 1, apiResources.MaxItems)
 
-	// Check api_resource_ids field
-	assert.Contains(t, res.Schema, "api_resource_ids")
-	apiResourceIds := res.Schema["api_resource_ids"]
-	assert.Equal(t, schema.TypeList, apiResourceIds.Type)
-	assert.True(t, apiResourceIds.Computed)
+	// Check nested schema has path as Required
+	elemRes := apiResources.Elem.(*schema.Resource)
+	assert.Contains(t, elemRes.Schema, "path")
+	assert.True(t, elemRes.Schema["path"].Required)
+
+	// Check nested schema has id as Computed
+	assert.Contains(t, elemRes.Schema, "id")
+	assert.True(t, elemRes.Schema["id"].Computed)
 }

@@ -4,29 +4,34 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_security_api_resource"
 sidebar_current: "docs-tencentcloud-resource-teo_security_api_resource"
 description: |-
-  Provides a resource to create a TEO (EdgeOne) security API resource, which is used to define API endpoints and their associated API services for security protection.
+  Provides a resource to create a TEO API security resource.
 ---
 
 # tencentcloud_teo_security_api_resource
 
-Provides a resource to create a TEO (EdgeOne) security API resource, which is used to define API endpoints and their associated API services for security protection.
+Provides a resource to create a TEO API security resource.
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_security_api_resource" "example" {
-  zone_id = "zone-2qtuhspy7cr6"
-  api_resources {
-    name               = "test-api-resource"
-    api_service_ids    = ["svc-123"]
-    path               = "/api/v1/test"
-    methods            = ["GET", "POST"]
-    request_constraint = jsonencode({ "key" : "value" })
+resource "tencentcloud_teo_security_api_service" "example" {
+  zone_id = "zone-3fkff38fyw8s"
+
+  api_services {
+    name      = "tf-example"
+    base_path = "/api/v1"
   }
+}
+
+resource "tencentcloud_teo_security_api_resource" "example" {
+  zone_id = "zone-3fkff38fyw8s"
+
   api_resources {
-    name    = "test-api-resource-2"
-    path    = "/api/v2/test"
-    methods = ["GET"]
+    name               = "tf-example"
+    path               = "/api/v1/orders"
+    api_service_ids    = [tencentcloud_teo_security_api_service.example.api_services[0].id]
+    methods            = ["GET", "POST"]
+    request_constraint = "$${http.request.body.form['operationType']} in ['query', 'create']"
   }
 }
 ```
@@ -35,30 +40,30 @@ resource "tencentcloud_teo_security_api_resource" "example" {
 
 The following arguments are supported:
 
-* `api_resources` - (Required, List) API resource list.
+* `api_resources` - (Required, List) API resource configuration. Only one resource is allowed per request.
 * `zone_id` - (Required, String, ForceNew) Site ID.
 
 The `api_resources` object supports the following:
 
 * `name` - (Required, String) API resource name.
-* `api_service_ids` - (Optional, List) API service IDs associated with the API resource.
-* `methods` - (Optional, List) Request method list. Supported values: GET, POST, PUT, HEAD, PATCH, OPTIONS, DELETE.
-* `path` - (Optional, String) Resource path.
-* `request_constraint` - (Optional, String) Request content matching rule, must conform to expression syntax.
+* `path` - (Required, String) API resource path, e.g. `/ava`.
+* `api_service_ids` - (Optional, List) Associated API service ID list.
+* `methods` - (Optional, List) Allowed HTTP methods. Valid values: `GET`, `POST`, `PUT`, `HEAD`, `PATCH`, `OPTIONS`, `DELETE`.
+* `request_constraint` - (Optional, String) Request content matching rule expression.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `api_resource_ids` - API resource IDs returned by server after creation.
+
 
 
 ## Import
 
-teo security_api_resource can be imported using the id, e.g.
+TEO security API resource can be imported using the zoneId#apiResourceId, e.g.
 
 ```
-terraform import tencentcloud_teo_security_api_resource.example zone_id
+terraform import tencentcloud_teo_security_api_resource.example zone-3fkff38fyw8s#apires-0000039154
 ```
 

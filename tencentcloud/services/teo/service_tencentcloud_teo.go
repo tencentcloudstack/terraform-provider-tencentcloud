@@ -2587,7 +2587,7 @@ func (me *TeoService) TeoIdentifyZone(zoneName, domain string) (ascription *teov
 	return
 }
 
-func (me *TeoService) DescribeSecurityAPIResourceById(ctx context.Context, zoneId string) (ret *teov20220901.DescribeSecurityAPIResourceResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoSecurityAPIResourceById(ctx context.Context, zoneId string, apiResourceId string) (ret *teov20220901.APIResource, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := teov20220901.NewDescribeSecurityAPIResourceRequest()
@@ -2601,7 +2601,6 @@ func (me *TeoService) DescribeSecurityAPIResourceById(ctx context.Context, zoneI
 
 	var offset int64 = 0
 	var pageSize int64 = 100
-	apiResources := make([]*teov20220901.APIResource, 0)
 	var totalCount int64 = 0
 
 	for {
@@ -2634,24 +2633,21 @@ func (me *TeoService) DescribeSecurityAPIResourceById(ctx context.Context, zoneI
 		}
 
 		if response.Response.APIResources != nil {
-			apiResources = append(apiResources, response.Response.APIResources...)
+			for _, apiRes := range response.Response.APIResources {
+				if apiRes.Id != nil && *apiRes.Id == apiResourceId {
+					ret = apiRes
+					return
+				}
+			}
 		}
 
-		if int64(len(apiResources)) >= totalCount {
+		if int64(offset+pageSize) >= totalCount {
 			break
 		}
 
 		offset += pageSize
 	}
 
-	if len(apiResources) == 0 {
-		return
-	}
-
-	ret = &teov20220901.DescribeSecurityAPIResourceResponseParams{
-		TotalCount:   helper.Int64(totalCount),
-		APIResources: apiResources,
-	}
 	return
 }
 
