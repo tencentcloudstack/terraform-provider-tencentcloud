@@ -2587,6 +2587,62 @@ func (me *TeoService) TeoIdentifyZone(zoneName, domain string) (ascription *teov
 	return
 }
 
+// DescribeTeoSecurityAPIResourceById paginates DescribeSecurityAPIResource and
+// returns the APIResource whose Id matches apiResourceId, or nil if not found.
+func (me *TeoService) DescribeTeoSecurityAPIResourceById(ctx context.Context, zoneId, apiResourceId string) (apiResource *teo.APIResource, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		limit  int64 = 100
+		offset int64 = 0
+	)
+
+	for {
+		request := teo.NewDescribeSecurityAPIResourceRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.Limit = &limit
+		request.Offset = &offset
+
+		var (
+			pageResources []*teo.APIResource
+			pageErr       error
+		)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityAPIResource(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				pageErr = fmt.Errorf("DescribeSecurityAPIResource response is nil")
+				return resource.NonRetryableError(pageErr)
+			}
+			pageResources = result.Response.APIResources
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		for _, r := range pageResources {
+			if r.Id != nil && *r.Id == apiResourceId {
+				apiResource = r
+				return
+			}
+		}
+
+		if int64(len(pageResources)) < limit {
+			// Last page, not found
+			return
+		}
+		offset += limit
+	}
+}
+
 func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[string]interface{}) (ret *teo.ExportZoneConfigResponseParams, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
