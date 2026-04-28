@@ -110,6 +110,10 @@ func resourceTencentCloudTeoCertificateConfigReadPostHandleResponse0(ctx context
 							certInfosMap["sign_algo"] = certInfos.SignAlgo
 						}
 
+						if certInfos.Status != nil {
+							certInfosMap["status"] = certInfos.Status
+						}
+
 						certInfosList = append(certInfosList, certInfosMap)
 					}
 
@@ -118,7 +122,95 @@ func resourceTencentCloudTeoCertificateConfigReadPostHandleResponse0(ctx context
 				upstreamCertInfoMap["upstream_mutual_tls"] = []interface{}{upstreamMutualTLSMap}
 			}
 
+			if accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify != nil {
+				upstreamCertificateVerifyMap := map[string]interface{}{}
+
+				if accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.VerificationMode != nil {
+					upstreamCertificateVerifyMap["verification_mode"] = accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.VerificationMode
+				}
+
+				customCACertsList := make([]map[string]interface{}, 0)
+				if accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.CustomCACerts != nil {
+					for _, certInfo := range accelerationDomain.Certificate.UpstreamCertInfo.UpstreamCertificateVerify.CustomCACerts {
+						certInfoMap := map[string]interface{}{}
+						if certInfo.CertId != nil {
+							certInfoMap["cert_id"] = certInfo.CertId
+						}
+						if certInfo.Alias != nil {
+							certInfoMap["alias"] = certInfo.Alias
+						}
+						if certInfo.Type != nil {
+							certInfoMap["type"] = certInfo.Type
+						}
+						if certInfo.ExpireTime != nil {
+							certInfoMap["expire_time"] = certInfo.ExpireTime
+						}
+						if certInfo.DeployTime != nil {
+							certInfoMap["deploy_time"] = certInfo.DeployTime
+						}
+						if certInfo.SignAlgo != nil {
+							certInfoMap["sign_algo"] = certInfo.SignAlgo
+						}
+						if certInfo.Status != nil {
+							certInfoMap["status"] = certInfo.Status
+						}
+						customCACertsList = append(customCACertsList, certInfoMap)
+					}
+					upstreamCertificateVerifyMap["custom_ca_certs"] = customCACertsList
+				}
+
+				upstreamCertInfoMap["upstream_certificate_verify"] = []interface{}{upstreamCertificateVerifyMap}
+			}
+
 			_ = d.Set("upstream_cert_info", []interface{}{upstreamCertInfoMap})
+		}
+
+		clientCertInfoMap := map[string]interface{}{}
+		if accelerationDomain.Certificate.ClientCertInfo != nil {
+			if accelerationDomain.Certificate.ClientCertInfo.Switch != nil {
+				clientCertInfoMap["switch"] = accelerationDomain.Certificate.ClientCertInfo.Switch
+			}
+
+			clientCertInfosList := make([]map[string]interface{}, 0, len(accelerationDomain.Certificate.ClientCertInfo.CertInfos))
+			if accelerationDomain.Certificate.ClientCertInfo.CertInfos != nil {
+				for _, certInfos := range accelerationDomain.Certificate.ClientCertInfo.CertInfos {
+					certInfosMap := map[string]interface{}{}
+
+					if certInfos.CertId != nil {
+						certInfosMap["cert_id"] = certInfos.CertId
+					}
+
+					if certInfos.Alias != nil {
+						certInfosMap["alias"] = certInfos.Alias
+					}
+
+					if certInfos.Type != nil {
+						certInfosMap["type"] = certInfos.Type
+					}
+
+					if certInfos.ExpireTime != nil {
+						certInfosMap["expire_time"] = certInfos.ExpireTime
+					}
+
+					if certInfos.DeployTime != nil {
+						certInfosMap["deploy_time"] = certInfos.DeployTime
+					}
+
+					if certInfos.SignAlgo != nil {
+						certInfosMap["sign_algo"] = certInfos.SignAlgo
+					}
+
+					if certInfos.Status != nil {
+						certInfosMap["status"] = certInfos.Status
+					}
+
+					clientCertInfosList = append(clientCertInfosList, certInfosMap)
+				}
+
+				clientCertInfoMap["cert_infos"] = clientCertInfosList
+			}
+
+			_ = d.Set("client_cert_info", []interface{}{clientCertInfoMap})
 		}
 
 		if certificate.Mode != nil {
@@ -223,7 +315,42 @@ func resourceTencentCloudTeoCertificateConfigUpdateOnStart(ctx context.Context) 
 			}
 			upstreamCertInfo.UpstreamMutualTLS = &mutualTLS2
 		}
+		if upstreamCertVerifyMap, ok := helper.ConvertInterfacesHeadToMap(upstreamCertInfoMap["upstream_certificate_verify"]); ok {
+			certVerify := teo.OriginCertificateVerify{}
+			if v, ok := upstreamCertVerifyMap["verification_mode"].(string); ok && v != "" {
+				certVerify.VerificationMode = helper.String(v)
+			}
+			if v, ok := upstreamCertVerifyMap["custom_ca_certs"]; ok {
+				for _, item := range v.([]interface{}) {
+					certMap := item.(map[string]interface{})
+					certInfo := teo.CertificateInfo{}
+					if v, ok := certMap["cert_id"].(string); ok && v != "" {
+						certInfo.CertId = helper.String(v)
+					}
+					certVerify.CustomCACerts = append(certVerify.CustomCACerts, &certInfo)
+				}
+			}
+			upstreamCertInfo.UpstreamCertificateVerify = &certVerify
+		}
 		request.UpstreamCertInfo = &upstreamCertInfo
+	}
+
+	if clientCertInfoMap, ok := helper.InterfacesHeadMap(d, "client_cert_info"); ok {
+		clientCertInfo := teo.MutualTLS{}
+		if v, ok := clientCertInfoMap["switch"].(string); ok && v != "" {
+			clientCertInfo.Switch = helper.String(v)
+		}
+		if v, ok := clientCertInfoMap["cert_infos"]; ok {
+			for _, item := range v.([]interface{}) {
+				certInfosMap := item.(map[string]interface{})
+				certificateInfo := teo.CertificateInfo{}
+				if v, ok := certInfosMap["cert_id"].(string); ok && v != "" {
+					certificateInfo.CertId = helper.String(v)
+				}
+				clientCertInfo.CertInfos = append(clientCertInfo.CertInfos, &certificateInfo)
+			}
+		}
+		request.ClientCertInfo = &clientCertInfo
 	}
 
 	if v, ok := d.GetOk("mode"); ok {
