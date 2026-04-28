@@ -10,7 +10,7 @@ resource "tencentcloud_teo_security_js_injection_rule" "example" {
     name      = "tf-example"
     priority  = 50
     condition = "$${http.request.host} in ['www.demo.com']"
-    inject_j_s = "inject-sdk-only"
+    inject_js = "inject-sdk-only"
   }
 }
 ```

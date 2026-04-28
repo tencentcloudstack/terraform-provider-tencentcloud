@@ -22,7 +22,7 @@ func TestAccTencentCloudTeoSecurityJSInjectionRuleResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_security_js_injection_rule.example", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_security_js_injection_rule.example", "js_injection_rules.0.name", "tf-example"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_security_js_injection_rule.example", "js_injection_rules.0.priority", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_security_js_injection_rule.example", "js_injection_rules.0.inject_j_s", "inject-sdk-only"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_security_js_injection_rule.example", "js_injection_rules.0.inject_js", "inject-sdk-only"),
 					resource.TestCheckResourceAttrSet("tencentcloud_teo_security_js_injection_rule.example", "js_injection_rules.0.rule_id"),
 				),
 			},
@@ -50,7 +50,7 @@ resource "tencentcloud_teo_security_js_injection_rule" "example" {
     name      = "tf-example"
     priority  = 50
     condition = "$${http.request.host} in ['test.makn.cn']"
-    inject_j_s = "inject-sdk-only"
+    inject_js = "inject-sdk-only"
   }
 }
 `
@@ -63,7 +63,7 @@ resource "tencentcloud_teo_security_js_injection_rule" "example" {
     name      = "tf-example-update"
     priority  = 60
     condition = "$${http.request.host} in ['test.makn.cn']"
-    inject_j_s = "inject-sdk-only"
+    inject_js = "inject-sdk-only"
   }
 }
 `

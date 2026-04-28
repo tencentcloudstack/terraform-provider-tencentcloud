@@ -18,10 +18,10 @@ resource "tencentcloud_teo_security_js_injection_rule" "example" {
   zone_id = "zone-3fkff38fyw8s"
 
   js_injection_rules {
-    name       = "tf-example"
-    priority   = 50
-    condition  = "$${http.request.host} in ['www.demo.com']"
-    inject_j_s = "inject-sdk-only"
+    name      = "tf-example"
+    priority  = 50
+    condition = "$${http.request.host} in ['www.demo.com']"
+    inject_js = "inject-sdk-only"
   }
 }
 ```
@@ -36,7 +36,7 @@ The following arguments are supported:
 The `js_injection_rules` object supports the following:
 
 * `condition` - (Required, String) Match condition expression, e.g. `${http.request.host} in ['www.example.com'] and ${http.request.uri.path} in ['/path']`.
-* `inject_j_s` - (Required, String) JavaScript injection option. Valid values: `no-injection` (do not inject JS); `inject-sdk-only` (inject SDK for all supported authentication methods, currently TC-RCE and TC-CAPTCHA).
+* `inject_js` - (Required, String) JavaScript injection option. Valid values: `no-injection` (do not inject JS); `inject-sdk-only` (inject SDK for all supported authentication methods, currently TC-RCE and TC-CAPTCHA).
 * `name` - (Required, String) Rule name.
 * `priority` - (Required, Int) Rule priority. Range: 0-100, smaller value means higher priority. Default: 0.
 

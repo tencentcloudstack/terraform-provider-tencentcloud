@@ -53,7 +53,7 @@ func ResourceTencentCloudTeoSecurityJSInjectionRule() *schema.Resource {
 							Required:    true,
 							Description: "Match condition expression, e.g. `${http.request.host} in ['www.example.com'] and ${http.request.uri.path} in ['/path']`.",
 						},
-						"inject_j_s": {
+						"inject_js": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "JavaScript injection option. Valid values: `no-injection` (do not inject JS); `inject-sdk-only` (inject SDK for all supported authentication methods, currently TC-RCE and TC-CAPTCHA).",
@@ -172,7 +172,7 @@ func resourceTencentCloudTeoSecurityJSInjectionRuleRead(d *schema.ResourceData, 
 	}
 
 	if respData.InjectJS != nil {
-		ruleMap["inject_j_s"] = *respData.InjectJS
+		ruleMap["inject_js"] = *respData.InjectJS
 	}
 
 	_ = d.Set("js_injection_rules", []interface{}{ruleMap})
@@ -278,7 +278,7 @@ func buildJSInjectionRuleFromMap(m map[string]interface{}, ruleId string) *teo.J
 		rule.Condition = helper.String(val)
 	}
 
-	if val, ok := m["inject_j_s"].(string); ok && val != "" {
+	if val, ok := m["inject_js"].(string); ok && val != "" {
 		rule.InjectJS = helper.String(val)
 	}
 
