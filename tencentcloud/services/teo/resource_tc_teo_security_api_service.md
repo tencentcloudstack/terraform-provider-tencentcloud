@@ -1,29 +1,22 @@
-Provides a resource to create a TEO security API service.
+Provides a resource to create a TEO API security service.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_teo_security_api_service" "example" {
-  zone_id = "zone-2qtuhspy7cr6"
+  zone_id = "zone-3fkff38fyw8s"
 
   api_services {
-    name      = "my-api-service"
+    name      = "tf-example"
     base_path = "/api/v1"
-  }
-
-  api_resources {
-    name            = "my-api-resource"
-    api_service_ids = ["svc-id-12345"]
-    path            = "/api/v1/users"
-    methods         = ["GET", "POST"]
   }
 }
 ```
 
 Import
 
-TEO security API service can be imported using the joint id "zone_id#api_service_ids", e.g.
+TEO security API service can be imported using the zoneId#apiServiceId, e.g.
 
 ```
-terraform import tencentcloud_teo_security_api_service.example zone-2qtuhspy7cr6#svc-id-12345,svc-id-67890
+terraform import tencentcloud_teo_security_api_service.example zone-3fkff38fyw8s#apisrv-0000038524
 ```
