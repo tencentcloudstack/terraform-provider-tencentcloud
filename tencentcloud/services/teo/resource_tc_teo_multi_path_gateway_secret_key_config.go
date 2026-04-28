@@ -87,13 +87,24 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d *schema.Reso
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId  = tccommon.GetLogId(tccommon.ContextNil)
-		ctx    = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		zoneId = d.Id()
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		zoneId  = d.Id()
 	)
 
-	if d.IsNewResource() {
-		// Create operation: call CreateMultiPathGatewaySecretKey API
+	// First, call Describe API to check if the secret key already exists
+	existingKey, err := service.DescribeTeoMultiPathGatewaySecretKeyById(ctx, zoneId)
+	if err != nil {
+		if !strings.Contains(err.Error(), "ResourceNotFound") {
+			return err
+		}
+		// ResourceNotFound means the key does not exist, treat as nil
+		existingKey = nil
+	}
+
+	if existingKey != nil {
+		// Key exists: call CreateMultiPathGatewaySecretKey API to replace the key
 		request := teov20220901.NewCreateMultiPathGatewaySecretKeyRequest()
 		request.ZoneId = helper.String(zoneId)
 
@@ -117,7 +128,7 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d *schema.Reso
 			return reqErr
 		}
 	} else {
-		// Update operation: call ModifyMultiPathGatewaySecretKey API
+		// Key does not exist: call ModifyMultiPathGatewaySecretKey API to set the key
 		request := teov20220901.NewModifyMultiPathGatewaySecretKeyRequest()
 		request.ZoneId = helper.String(zoneId)
 

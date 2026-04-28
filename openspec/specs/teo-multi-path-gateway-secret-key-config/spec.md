@@ -18,15 +18,22 @@ The resource SHALL support import via `schema.ImportStatePassthrough`.
 - **AND** the Read method SHALL populate `secret_key` from the cloud API
 
 ### Requirement: Create operation
-The Create operation SHALL set `zone_id` as the resource ID and then invoke the Update operation. In the Update function, when `d.IsNewResource()` is true, the `CreateMultiPathGatewaySecretKey` API SHALL be called; otherwise, the `ModifyMultiPathGatewaySecretKey` API SHALL be called.
+The Create operation SHALL set `zone_id` as the resource ID and then invoke the Update operation. The Update operation SHALL first call `DescribeMultiPathGatewaySecretKey` to check whether the secret key already exists. If the key exists, the `CreateMultiPathGatewaySecretKey` API SHALL be called; if the key does not exist, the `ModifyMultiPathGatewaySecretKey` API SHALL be called.
 
-#### Scenario: Creating a new secret key config
+#### Scenario: Creating a new secret key config when key does not exist
 - **WHEN** a user creates a `tencentcloud_teo_multi_path_gateway_secret_key` resource with `zone_id` and `secret_key`
+- **AND** the Describe API returns nil SecretKey (key does not exist)
+- **THEN** the resource ID SHALL be set to the value of `zone_id`
+- **AND** the `ModifyMultiPathGatewaySecretKey` API SHALL be called with `ZoneId` and `SecretKey` parameters
+
+#### Scenario: Creating a new secret key config when key already exists
+- **WHEN** a user creates a `tencentcloud_teo_multi_path_gateway_secret_key` resource with `zone_id` and `secret_key`
+- **AND** the Describe API returns an existing SecretKey (key exists)
 - **THEN** the resource ID SHALL be set to the value of `zone_id`
 - **AND** the `CreateMultiPathGatewaySecretKey` API SHALL be called with `ZoneId` and `SecretKey` parameters
 
 #### Scenario: Create with retry on API failure
-- **WHEN** the `CreateMultiPathGatewaySecretKey` API call fails during Create
+- **WHEN** the `CreateMultiPathGatewaySecretKey` or `ModifyMultiPathGatewaySecretKey` API call fails during Create
 - **THEN** the operation SHALL retry with `tccommon.WriteRetryTimeout`
 - **AND** return a wrapped error via `tccommon.RetryError()`
 
@@ -48,14 +55,20 @@ The Read operation SHALL call the `DescribeMultiPathGatewaySecretKey` API to ret
 - **AND** return a wrapped error via `tccommon.RetryError()`
 
 ### Requirement: Update operation
-The Update operation SHALL call the `ModifyMultiPathGatewaySecretKey` API to update the secret key configuration when `secret_key` changes.
+The Update operation SHALL first call `DescribeMultiPathGatewaySecretKey` to check whether the secret key already exists. If the key exists, the `CreateMultiPathGatewaySecretKey` API SHALL be called to replace the key; if the key does not exist, the `ModifyMultiPathGatewaySecretKey` API SHALL be called to set the key.
 
-#### Scenario: Updating the secret key
+#### Scenario: Updating the secret key when key exists
 - **WHEN** a user updates the `secret_key` field of an existing resource
+- **AND** the Describe API returns an existing SecretKey (key exists)
+- **THEN** the `CreateMultiPathGatewaySecretKey` API SHALL be called with the `ZoneId` and the new `SecretKey`
+
+#### Scenario: Updating the secret key when key does not exist
+- **WHEN** a user updates the `secret_key` field of an existing resource
+- **AND** the Describe API returns nil SecretKey (key does not exist)
 - **THEN** the `ModifyMultiPathGatewaySecretKey` API SHALL be called with the `ZoneId` and the new `SecretKey`
 
 #### Scenario: Update with retry on API failure
-- **WHEN** the `ModifyMultiPathGatewaySecretKey` API call fails during Update
+- **WHEN** the `CreateMultiPathGatewaySecretKey` or `ModifyMultiPathGatewaySecretKey` API call fails during Update
 - **THEN** the operation SHALL retry with `tccommon.WriteRetryTimeout`
 - **AND** return a wrapped error via `tccommon.RetryError()`
 
@@ -88,4 +101,5 @@ The resource SHALL have unit tests in `tencentcloud/services/teo/resource_tc_teo
 #### Scenario: Unit tests cover CRUD operations
 - **WHEN** unit tests are executed
 - **THEN** tests SHALL cover the Create, Read, Update, and Delete operations using gomonkey mocks
+- **AND** tests SHALL cover both key-exists and key-not-exists scenarios for Create and Update operations
 - **AND** tests SHALL pass with `go test -gcflags=all=-l`

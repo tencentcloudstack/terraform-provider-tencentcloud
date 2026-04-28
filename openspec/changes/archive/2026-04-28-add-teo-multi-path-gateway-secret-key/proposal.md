@@ -6,9 +6,9 @@
 
 - 新增 Terraform 资源 `tencentcloud_teo_multi_path_gateway_secret_key`，类型为 RESOURCE_KIND_CONFIG
 - 资源文件: `tencentcloud/services/teo/resource_tc_teo_multi_path_gateway_secret_key_config.go`
-- 实现创建（Create）: 设置 zone_id 为资源 ID，然后调用 Update 方法（Update 中判断 IsNewResource 为 true 时调用 CreateMultiPathGatewaySecretKey API）
+- 实现创建（Create）: 设置 zone_id 为资源 ID，然后调用 Update 方法（Update 中先查询密钥是否存在，密钥存在时调用 CreateMultiPathGatewaySecretKey API，密钥不存在时调用 ModifyMultiPathGatewaySecretKey API）
 - 实现读取（Read）: 调用 `DescribeMultiPathGatewaySecretKey` 接口查询密钥配置
-- 实现更新（Update）: 调用 `ModifyMultiPathGatewaySecretKey` 接口修改密钥（IsNewResource 为 false 时）
+- 实现更新（Update）: 先查询密钥是否存在，密钥存在时调用 `CreateMultiPathGatewaySecretKey` 接口替换密钥，密钥不存在时调用 `ModifyMultiPathGatewaySecretKey` 接口设置密钥
 - 实现删除（Delete）: 从 Terraform state 中移除资源（密钥配置无法删除，仅做资源清理）
 - 支持 Import 导入已有配置
 - 在 `tencentcloud/provider.go` 和 `tencentcloud/provider.md` 中注册新资源
