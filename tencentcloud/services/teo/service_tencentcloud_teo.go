@@ -2635,60 +2635,54 @@ func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[st
 	return
 }
 
-func (me *TeoService) DescribeTeoSecurityClientAttesterById(ctx context.Context, zoneId string) (ret *teo.DescribeSecurityClientAttesterResponseParams, errRet error) {
+// DescribeTeoSecurityClientAttesterById paginates DescribeSecurityClientAttester and
+// returns the ClientAttester whose Id matches clientAttesterId, or nil if not found.
+func (me *TeoService) DescribeTeoSecurityClientAttesterById(ctx context.Context, zoneId, clientAttesterId string) (clientAttester *teo.ClientAttester, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := teo.NewDescribeSecurityClientAttesterRequest()
-	request.ZoneId = helper.String(zoneId)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	var offset int64 = 0
-	var pageSize int64 = 100
-	allClientAttesters := make([]*teo.ClientAttester, 0)
-	var totalCount int64 = 0
+	var (
+		limit  int64 = 100
+		offset int64 = 0
+	)
 
 	for {
+		request := teo.NewDescribeSecurityClientAttesterRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.Limit = &limit
 		request.Offset = &offset
-		request.Limit = &pageSize
-		ratelimit.Check(request.GetAction())
-		response := teo.NewDescribeSecurityClientAttesterResponse()
+
+		var pageAttesters []*teo.ClientAttester
+
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
 			result, e := me.client.UseTeoV20220901Client().DescribeSecurityClientAttester(request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			}
-			response = result
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeSecurityClientAttester response is nil"))
+			}
+			pageAttesters = result.Response.ClientAttesters
 			return nil
 		})
+
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response.Response != nil && response.Response.ClientAttesters != nil {
-			allClientAttesters = append(allClientAttesters, response.Response.ClientAttesters...)
-			if totalCount == 0 {
-				totalCount = *response.Response.TotalCount
+		for _, a := range pageAttesters {
+			if a.Id != nil && *a.Id == clientAttesterId {
+				clientAttester = a
+				return
 			}
 		}
 
-		if int64(len(allClientAttesters)) >= totalCount {
-			break
+		if int64(len(pageAttesters)) < limit {
+			// Last page, not found
+			return
 		}
-
-		offset += pageSize
+		offset += limit
 	}
-
-	ret = &teo.DescribeSecurityClientAttesterResponseParams{
-		ClientAttesters: allClientAttesters,
-		TotalCount:      &totalCount,
-	}
-	return
 }

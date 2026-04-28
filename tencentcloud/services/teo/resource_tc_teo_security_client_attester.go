@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -34,40 +34,41 @@ func ResourceTencentCloudTeoSecurityClientAttester() *schema.Resource {
 			"client_attesters": {
 				Type:        schema.TypeList,
 				Required:    true,
-				Description: "Client attestation option list.",
+				MaxItems:    1,
+				Description: "Client attester configuration. Only one attester is allowed per request.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Attestation option name.",
+							Description: "Attester name.",
 						},
 						"attester_source": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Authentication method. Values: TC-RCE, TC-CAPTCHA, TC-EO-CAPTCHA.",
+							Description: "Authentication method. Valid values: `TC-RCE` (Tencent Cloud RCE), `TC-CAPTCHA` (Tencent CAPTCHA), `TC-EO-CAPTCHA` (EdgeOne CAPTCHA).",
 						},
 						"attester_duration": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Authentication validity duration. Default 60s. Supported units: s (60-43200), m (1-720), h (1-12).",
+							Description: "Authentication validity duration. Default `60s`. Supported units: `s` (60-43200), `m` (1-720), `h` (1-12). e.g. `300s`, `5m`, `1h`.",
 						},
 						"tc_rce_option": {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
-							Description: "TC-RCE authentication configuration, required when attester_source is TC-RCE.",
+							Description: "TC-RCE authentication configuration. Required when `attester_source` is `TC-RCE`.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"channel": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Channel information.",
+										Description: "TC-RCE channel ID.",
 									},
 									"region": {
 										Type:        schema.TypeString,
-										Required:    true,
-										Description: "RCE Channel region.",
+										Optional:    true,
+										Description: "TC-RCE channel region. Valid values: `ap-beijing`, `ap-jakarta`, `ap-singapore`, `eu-frankfurt`, `na-siliconvalley`.",
 									},
 								},
 							},
@@ -76,18 +77,19 @@ func ResourceTencentCloudTeoSecurityClientAttester() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
-							Description: "TC-CAPTCHA authentication configuration, required when attester_source is TC-CAPTCHA.",
+							Description: "TC-CAPTCHA authentication configuration. Required when `attester_source` is `TC-CAPTCHA`.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"captcha_app_id": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "CaptchaAppId information.",
+										Description: "CaptchaAppId.",
 									},
 									"app_secret_key": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "AppSecretKey information.",
+										Sensitive:   true,
+										Description: "AppSecretKey.",
 									},
 								},
 							},
@@ -96,13 +98,13 @@ func ResourceTencentCloudTeoSecurityClientAttester() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
-							Description: "TC-EO-CAPTCHA authentication configuration, required when attester_source is TC-EO-CAPTCHA.",
+							Description: "TC-EO-CAPTCHA authentication configuration. Required when `attester_source` is `TC-EO-CAPTCHA`.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"captcha_mode": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "EdgeOne human-machine verification mode. Values: Invisible, Adaptive.",
+										Description: "EdgeOne CAPTCHA mode. Valid values: `Invisible`, `Adaptive`.",
 									},
 								},
 							},
@@ -110,23 +112,14 @@ func ResourceTencentCloudTeoSecurityClientAttester() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Attestation option ID.",
+							Description: "Client attester ID, e.g. `attest-xxxxxxxx`.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Rule type. Values: PRESET, CUSTOM.",
+							Description: "Attester rule type (read-only). Valid values: `PRESET` (system preset), `CUSTOM` (user defined).",
 						},
 					},
-				},
-			},
-
-			"client_attester_ids": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "List of client attestation option IDs.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
 				},
 			},
 		},
@@ -137,97 +130,51 @@ func resourceTencentCloudTeoSecurityClientAttesterCreate(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_client_attester.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
-		zoneId            string
-		clientAttesterIds []string
-	)
-	var (
-		request  = teov20220901.NewCreateSecurityClientAttesterRequest()
-		response = teov20220901.NewCreateSecurityClientAttesterResponse()
+		logId            = tccommon.GetLogId(tccommon.ContextNil)
+		ctx              = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request          = teo.NewCreateSecurityClientAttesterRequest()
+		response         = teo.NewCreateSecurityClientAttesterResponse()
+		zoneId           string
+		clientAttesterId string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
+		request.ZoneId = helper.String(v.(string))
 		zoneId = v.(string)
 	}
 
-	request.ZoneId = helper.String(zoneId)
-
-	if clientAttesters, ok := d.Get("client_attesters").([]interface{}); ok {
-		for _, item := range clientAttesters {
-			clientAttesterMap := item.(map[string]interface{})
-			clientAttester := teov20220901.ClientAttester{}
-
-			if v, ok := clientAttesterMap["name"]; ok {
-				clientAttester.Name = helper.String(v.(string))
-			}
-			if v, ok := clientAttesterMap["attester_source"]; ok {
-				clientAttester.AttesterSource = helper.String(v.(string))
-			}
-			if v, ok := clientAttesterMap["attester_duration"]; ok {
-				clientAttester.AttesterDuration = helper.String(v.(string))
-			}
-			if tcRceOptions, ok := clientAttesterMap["tc_rce_option"].([]interface{}); ok && len(tcRceOptions) > 0 {
-				tcRceOptionMap := tcRceOptions[0].(map[string]interface{})
-				tcRceOption := teov20220901.TCRCEOption{}
-				if v, ok := tcRceOptionMap["channel"]; ok {
-					tcRceOption.Channel = helper.String(v.(string))
-				}
-				if v, ok := tcRceOptionMap["region"]; ok {
-					tcRceOption.Region = helper.String(v.(string))
-				}
-				clientAttester.TCRCEOption = &tcRceOption
-			}
-			if tcCaptchaOptions, ok := clientAttesterMap["tc_captcha_option"].([]interface{}); ok && len(tcCaptchaOptions) > 0 {
-				tcCaptchaOptionMap := tcCaptchaOptions[0].(map[string]interface{})
-				tcCaptchaOption := teov20220901.TCCaptchaOption{}
-				if v, ok := tcCaptchaOptionMap["captcha_app_id"]; ok {
-					tcCaptchaOption.CaptchaAppId = helper.String(v.(string))
-				}
-				if v, ok := tcCaptchaOptionMap["app_secret_key"]; ok {
-					tcCaptchaOption.AppSecretKey = helper.String(v.(string))
-				}
-				clientAttester.TCCaptchaOption = &tcCaptchaOption
-			}
-			if tcEoCaptchaOptions, ok := clientAttesterMap["tc_eo_captcha_option"].([]interface{}); ok && len(tcEoCaptchaOptions) > 0 {
-				tcEoCaptchaOptionMap := tcEoCaptchaOptions[0].(map[string]interface{})
-				tcEoCaptchaOption := teov20220901.TCEOCaptchaOption{}
-				if v, ok := tcEoCaptchaOptionMap["captcha_mode"]; ok {
-					tcEoCaptchaOption.CaptchaMode = helper.String(v.(string))
-				}
-				clientAttester.TCEOCaptchaOption = &tcEoCaptchaOption
-			}
-
-			request.ClientAttesters = append(request.ClientAttesters, &clientAttester)
-		}
+	if v, ok := d.GetOk("client_attesters"); ok {
+		m := v.([]interface{})[0].(map[string]interface{})
+		request.ClientAttesters = []*teo.ClientAttester{buildClientAttesterFromMap(m, "")}
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateSecurityClientAttester(request)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateSecurityClientAttesterWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create teo security client attester failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo security client attester failed, reason:%+v", logId, err)
-		return err
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s create teo security client attester failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	if response.Response != nil && response.Response.ClientAttesterIds != nil {
-		for _, id := range response.Response.ClientAttesterIds {
-			clientAttesterIds = append(clientAttesterIds, *id)
-		}
+	if len(response.Response.ClientAttesterIds) == 0 || response.Response.ClientAttesterIds[0] == nil {
+		return fmt.Errorf("ClientAttesterIds is empty.")
 	}
 
-	_ = d.Set("client_attester_ids", clientAttesterIds)
-
-	d.SetId(strings.Join([]string{zoneId, strings.Join(clientAttesterIds, ",")}, tccommon.FILED_SP))
-
+	clientAttesterId = *response.Response.ClientAttesterIds[0]
+	d.SetId(strings.Join([]string{zoneId, clientAttesterId}, tccommon.FILED_SP))
 	return resourceTencentCloudTeoSecurityClientAttesterRead(d, meta)
 }
 
@@ -235,119 +182,86 @@ func resourceTencentCloudTeoSecurityClientAttesterRead(d *schema.ResourceData, m
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_client_attester.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
-	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+		return fmt.Errorf("id is broken, %s", d.Id())
 	}
+
 	zoneId := idSplit[0]
-	clientAttesterIdsStr := idSplit[1]
+	clientAttesterId := idSplit[1]
 
-	_ = d.Set("zone_id", zoneId)
-
-	respData, err := service.DescribeTeoSecurityClientAttesterById(ctx, zoneId)
+	respData, err := service.DescribeTeoSecurityClientAttesterById(ctx, zoneId, clientAttesterId)
 	if err != nil {
 		return err
 	}
 
-	if respData == nil || len(respData.ClientAttesters) == 0 {
+	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_teo_security_client_attester` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_security_client_attester` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	// Filter by client_attester_ids from composite ID
-	targetIds := strings.Split(clientAttesterIdsStr, ",")
-	targetIdSet := make(map[string]bool)
-	for _, id := range targetIds {
-		targetIdSet[id] = true
+	_ = d.Set("zone_id", zoneId)
+
+	attesterMap := map[string]interface{}{}
+
+	if respData.Id != nil {
+		attesterMap["id"] = *respData.Id
 	}
 
-	clientAttestersList := make([]map[string]interface{}, 0)
-	matchedIds := make([]string, 0)
-	for _, clientAttester := range respData.ClientAttesters {
-		if clientAttester.Id != nil && targetIdSet[*clientAttester.Id] {
-			clientAttesterMap := map[string]interface{}{}
+	if respData.Type != nil {
+		attesterMap["type"] = *respData.Type
+	}
 
-			if clientAttester.Id != nil {
-				clientAttesterMap["id"] = *clientAttester.Id
-				matchedIds = append(matchedIds, *clientAttester.Id)
-			}
+	if respData.Name != nil {
+		attesterMap["name"] = *respData.Name
+	}
 
-			if clientAttester.Name != nil {
-				clientAttesterMap["name"] = *clientAttester.Name
-			}
+	if respData.AttesterSource != nil {
+		attesterMap["attester_source"] = *respData.AttesterSource
+	}
 
-			if clientAttester.Type != nil {
-				clientAttesterMap["type"] = *clientAttester.Type
-			}
+	if respData.AttesterDuration != nil {
+		attesterMap["attester_duration"] = *respData.AttesterDuration
+	}
 
-			if clientAttester.AttesterSource != nil {
-				clientAttesterMap["attester_source"] = *clientAttester.AttesterSource
-			}
-
-			if clientAttester.AttesterDuration != nil {
-				clientAttesterMap["attester_duration"] = *clientAttester.AttesterDuration
-			}
-
-			if clientAttester.TCRCEOption != nil {
-				tcRceOptionList := make([]map[string]interface{}, 0, 1)
-				tcRceOptionMap := map[string]interface{}{}
-				if clientAttester.TCRCEOption.Channel != nil {
-					tcRceOptionMap["channel"] = *clientAttester.TCRCEOption.Channel
-				}
-				if clientAttester.TCRCEOption.Region != nil {
-					tcRceOptionMap["region"] = *clientAttester.TCRCEOption.Region
-				}
-				tcRceOptionList = append(tcRceOptionList, tcRceOptionMap)
-				clientAttesterMap["tc_rce_option"] = tcRceOptionList
-			} else {
-				clientAttesterMap["tc_rce_option"] = []interface{}{}
-			}
-
-			if clientAttester.TCCaptchaOption != nil {
-				tcCaptchaOptionList := make([]map[string]interface{}, 0, 1)
-				tcCaptchaOptionMap := map[string]interface{}{}
-				if clientAttester.TCCaptchaOption.CaptchaAppId != nil {
-					tcCaptchaOptionMap["captcha_app_id"] = *clientAttester.TCCaptchaOption.CaptchaAppId
-				}
-				if clientAttester.TCCaptchaOption.AppSecretKey != nil {
-					tcCaptchaOptionMap["app_secret_key"] = *clientAttester.TCCaptchaOption.AppSecretKey
-				}
-				tcCaptchaOptionList = append(tcCaptchaOptionList, tcCaptchaOptionMap)
-				clientAttesterMap["tc_captcha_option"] = tcCaptchaOptionList
-			} else {
-				clientAttesterMap["tc_captcha_option"] = []interface{}{}
-			}
-
-			if clientAttester.TCEOCaptchaOption != nil {
-				tcEoCaptchaOptionList := make([]map[string]interface{}, 0, 1)
-				tcEoCaptchaOptionMap := map[string]interface{}{}
-				if clientAttester.TCEOCaptchaOption.CaptchaMode != nil {
-					tcEoCaptchaOptionMap["captcha_mode"] = *clientAttester.TCEOCaptchaOption.CaptchaMode
-				}
-				tcEoCaptchaOptionList = append(tcEoCaptchaOptionList, tcEoCaptchaOptionMap)
-				clientAttesterMap["tc_eo_captcha_option"] = tcEoCaptchaOptionList
-			} else {
-				clientAttesterMap["tc_eo_captcha_option"] = []interface{}{}
-			}
-
-			clientAttestersList = append(clientAttestersList, clientAttesterMap)
+	if respData.TCRCEOption != nil {
+		opt := map[string]interface{}{}
+		if respData.TCRCEOption.Channel != nil {
+			opt["channel"] = *respData.TCRCEOption.Channel
 		}
+		if respData.TCRCEOption.Region != nil {
+			opt["region"] = *respData.TCRCEOption.Region
+		}
+		attesterMap["tc_rce_option"] = []interface{}{opt}
 	}
 
-	if len(clientAttestersList) == 0 {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_security_client_attester` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
+	if respData.TCCaptchaOption != nil {
+		opt := map[string]interface{}{}
+		if respData.TCCaptchaOption.CaptchaAppId != nil {
+			opt["captcha_app_id"] = *respData.TCCaptchaOption.CaptchaAppId
+		}
+		if respData.TCCaptchaOption.AppSecretKey != nil {
+			opt["app_secret_key"] = *respData.TCCaptchaOption.AppSecretKey
+		}
+		attesterMap["tc_captcha_option"] = []interface{}{opt}
 	}
 
-	_ = d.Set("client_attesters", clientAttestersList)
-	_ = d.Set("client_attester_ids", matchedIds)
+	if respData.TCEOCaptchaOption != nil {
+		opt := map[string]interface{}{}
+		if respData.TCEOCaptchaOption.CaptchaMode != nil {
+			opt["captcha_mode"] = *respData.TCEOCaptchaOption.CaptchaMode
+		}
+		attesterMap["tc_eo_captcha_option"] = []interface{}{opt}
+	}
+
+	_ = d.Set("client_attesters", []interface{}{attesterMap})
 
 	return nil
 }
@@ -356,89 +270,39 @@ func resourceTencentCloudTeoSecurityClientAttesterUpdate(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_client_attester.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = teo.NewModifySecurityClientAttesterRequest()
+	)
 
-	zoneId := d.Get("zone_id").(string)
-
-	needChange := false
-	mutableArgs := []string{"client_attesters"}
-	for _, v := range mutableArgs {
-		if d.HasChange(v) {
-			needChange = true
-			break
-		}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken, %s", d.Id())
 	}
 
-	if needChange {
-		request := teov20220901.NewModifySecurityClientAttesterRequest()
+	zoneId := idSplit[0]
+	clientAttesterId := idSplit[1]
 
-		request.ZoneId = helper.String(zoneId)
+	request.ZoneId = helper.String(zoneId)
 
-		if clientAttesters, ok := d.Get("client_attesters").([]interface{}); ok {
-			for _, item := range clientAttesters {
-				clientAttesterMap := item.(map[string]interface{})
-				clientAttester := teov20220901.ClientAttester{}
+	if v, ok := d.GetOk("client_attesters"); ok {
+		m := v.([]interface{})[0].(map[string]interface{})
+		request.ClientAttesters = []*teo.ClientAttester{buildClientAttesterFromMap(m, clientAttesterId)}
+	}
 
-				if v, ok := clientAttesterMap["id"]; ok && v.(string) != "" {
-					clientAttester.Id = helper.String(v.(string))
-				}
-				if v, ok := clientAttesterMap["name"]; ok {
-					clientAttester.Name = helper.String(v.(string))
-				}
-				if v, ok := clientAttesterMap["attester_source"]; ok {
-					clientAttester.AttesterSource = helper.String(v.(string))
-				}
-				if v, ok := clientAttesterMap["attester_duration"]; ok {
-					clientAttester.AttesterDuration = helper.String(v.(string))
-				}
-				if tcRceOptions, ok := clientAttesterMap["tc_rce_option"].([]interface{}); ok && len(tcRceOptions) > 0 {
-					tcRceOptionMap := tcRceOptions[0].(map[string]interface{})
-					tcRceOption := teov20220901.TCRCEOption{}
-					if v, ok := tcRceOptionMap["channel"]; ok {
-						tcRceOption.Channel = helper.String(v.(string))
-					}
-					if v, ok := tcRceOptionMap["region"]; ok {
-						tcRceOption.Region = helper.String(v.(string))
-					}
-					clientAttester.TCRCEOption = &tcRceOption
-				}
-				if tcCaptchaOptions, ok := clientAttesterMap["tc_captcha_option"].([]interface{}); ok && len(tcCaptchaOptions) > 0 {
-					tcCaptchaOptionMap := tcCaptchaOptions[0].(map[string]interface{})
-					tcCaptchaOption := teov20220901.TCCaptchaOption{}
-					if v, ok := tcCaptchaOptionMap["captcha_app_id"]; ok {
-						tcCaptchaOption.CaptchaAppId = helper.String(v.(string))
-					}
-					if v, ok := tcCaptchaOptionMap["app_secret_key"]; ok {
-						tcCaptchaOption.AppSecretKey = helper.String(v.(string))
-					}
-					clientAttester.TCCaptchaOption = &tcCaptchaOption
-				}
-				if tcEoCaptchaOptions, ok := clientAttesterMap["tc_eo_captcha_option"].([]interface{}); ok && len(tcEoCaptchaOptions) > 0 {
-					tcEoCaptchaOptionMap := tcEoCaptchaOptions[0].(map[string]interface{})
-					tcEoCaptchaOption := teov20220901.TCEOCaptchaOption{}
-					if v, ok := tcEoCaptchaOptionMap["captcha_mode"]; ok {
-						tcEoCaptchaOption.CaptchaMode = helper.String(v.(string))
-					}
-					clientAttester.TCEOCaptchaOption = &tcEoCaptchaOption
-				}
-
-				request.ClientAttesters = append(request.ClientAttesters, &clientAttester)
-			}
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifySecurityClientAttesterWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifySecurityClientAttester(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update teo security client attester failed, reason:%+v", logId, err)
-			return err
-		}
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s update teo security client attester failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
 	return resourceTencentCloudTeoSecurityClientAttesterRead(d, meta)
@@ -448,37 +312,90 @@ func resourceTencentCloudTeoSecurityClientAttesterDelete(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_security_client_attester.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	zoneId := d.Get("zone_id").(string)
-	clientAttesterIdsRaw := d.Get("client_attester_ids").([]interface{})
-
 	var (
-		request  = teov20220901.NewDeleteSecurityClientAttesterRequest()
-		response = teov20220901.NewDeleteSecurityClientAttesterResponse()
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = teo.NewDeleteSecurityClientAttesterRequest()
 	)
 
-	request.ZoneId = helper.String(zoneId)
-
-	for _, idRaw := range clientAttesterIdsRaw {
-		request.ClientAttesterIds = append(request.ClientAttesterIds, helper.String(idRaw.(string)))
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken, %s", d.Id())
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteSecurityClientAttester(request)
+	request.ZoneId = helper.String(idSplit[0])
+	request.ClientAttesterIds = []*string{helper.String(idSplit[1])}
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteSecurityClientAttesterWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s delete teo security client attester failed, reason:%+v", logId, err)
-		return err
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s delete teo security client attester failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	_ = response
 	return nil
+}
+
+// buildClientAttesterFromMap converts a schema map block to *teo.ClientAttester.
+// Pass id="" when creating (API does not accept Id on create).
+func buildClientAttesterFromMap(m map[string]interface{}, id string) *teo.ClientAttester {
+	attester := &teo.ClientAttester{}
+
+	if id != "" {
+		attester.Id = helper.String(id)
+	}
+
+	if val, ok := m["name"].(string); ok && val != "" {
+		attester.Name = helper.String(val)
+	}
+
+	if val, ok := m["attester_source"].(string); ok && val != "" {
+		attester.AttesterSource = helper.String(val)
+	}
+
+	if val, ok := m["attester_duration"].(string); ok && val != "" {
+		attester.AttesterDuration = helper.String(val)
+	}
+
+	if val, ok := m["tc_rce_option"].([]interface{}); ok && len(val) > 0 {
+		opt := val[0].(map[string]interface{})
+		rce := &teo.TCRCEOption{}
+		if v, ok := opt["channel"].(string); ok && v != "" {
+			rce.Channel = helper.String(v)
+		}
+		if v, ok := opt["region"].(string); ok && v != "" {
+			rce.Region = helper.String(v)
+		}
+		attester.TCRCEOption = rce
+	}
+
+	if val, ok := m["tc_captcha_option"].([]interface{}); ok && len(val) > 0 {
+		opt := val[0].(map[string]interface{})
+		cap := &teo.TCCaptchaOption{}
+		if v, ok := opt["captcha_app_id"].(string); ok && v != "" {
+			cap.CaptchaAppId = helper.String(v)
+		}
+		if v, ok := opt["app_secret_key"].(string); ok && v != "" {
+			cap.AppSecretKey = helper.String(v)
+		}
+		attester.TCCaptchaOption = cap
+	}
+
+	if val, ok := m["tc_eo_captcha_option"].([]interface{}); ok && len(val) > 0 {
+		opt := val[0].(map[string]interface{})
+		eoOpt := &teo.TCEOCaptchaOption{}
+		if v, ok := opt["captcha_mode"].(string); ok && v != "" {
+			eoOpt.CaptchaMode = helper.String(v)
+		}
+		attester.TCEOCaptchaOption = eoOpt
+	}
+
+	return attester
 }
