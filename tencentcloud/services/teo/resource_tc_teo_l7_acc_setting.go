@@ -501,6 +501,21 @@ func ResourceTencentCloudTeoL7AccSetting() *schema.Resource {
 								},
 							},
 						},
+						"network_error_logging": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Network error logging configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Whether to enable network error logging. Valid values:\non: Enable;\noff: Disable.",
+									},
+								},
+							},
+						},
 						"accelerate_mainland": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -910,6 +925,16 @@ func resourceTencentCloudTeoL7AccSettingRead(d *schema.ResourceData, meta interf
 			zoneConfigMap["grpc"] = []interface{}{grpcMap}
 		}
 
+		networkErrorLoggingMap := map[string]interface{}{}
+
+		if respData.ZoneConfig.NetworkErrorLogging != nil {
+			if respData.ZoneConfig.NetworkErrorLogging.Switch != nil {
+				networkErrorLoggingMap["switch"] = respData.ZoneConfig.NetworkErrorLogging.Switch
+			}
+
+			zoneConfigMap["network_error_logging"] = []interface{}{networkErrorLoggingMap}
+		}
+
 		accelerateMainlandMap := map[string]interface{}{}
 
 		if respData.ZoneConfig.AccelerateMainland != nil {
@@ -1203,6 +1228,13 @@ func resourceTencentCloudTeoL7AccSettingUpdate(d *schema.ResourceData, meta inte
 					grpcParameters.Switch = helper.String(v)
 				}
 				zoneConfig.Grpc = &grpcParameters
+			}
+			if networkErrorLoggingMap, ok := helper.ConvertInterfacesHeadToMap(zoneConfigMap["network_error_logging"]); ok {
+				networkErrorLoggingParameters := teov20220901.NetworkErrorLoggingParameters{}
+				if v, ok := networkErrorLoggingMap["switch"].(string); ok && v != "" {
+					networkErrorLoggingParameters.Switch = helper.String(v)
+				}
+				zoneConfig.NetworkErrorLogging = &networkErrorLoggingParameters
 			}
 			if accelerateMainlandMap, ok := helper.ConvertInterfacesHeadToMap(zoneConfigMap["accelerate_mainland"]); ok {
 				accelerateMainlandParameters := teov20220901.AccelerateMainlandParameters{}
