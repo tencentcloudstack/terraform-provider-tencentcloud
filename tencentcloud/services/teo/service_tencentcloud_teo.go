@@ -2634,3 +2634,61 @@ func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[st
 	ret = response.Response
 	return
 }
+
+// DescribeTeoAliasDomainById queries DescribeAliasDomains and returns the AliasDomain
+// whose AliasName matches aliasName under the given zoneId, or nil if not found.
+func (me *TeoService) DescribeTeoAliasDomainById(ctx context.Context, zoneId, aliasName string) (aliasDomain *teo.AliasDomain, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		limit  int64 = 100
+		offset int64 = 0
+	)
+
+	for {
+		request := teo.NewDescribeAliasDomainsRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.Limit = helper.Int64(limit)
+		request.Offset = helper.Int64(offset)
+		request.Filters = []*teo.AdvancedFilter{
+			{
+				Name:   helper.String("alias-name"),
+				Values: []*string{helper.String(aliasName)},
+			},
+		}
+
+		var pageItems []*teo.AliasDomain
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoV20220901Client().DescribeAliasDomains(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeAliasDomains response is nil"))
+			}
+			pageItems = result.Response.AliasDomains
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		for _, item := range pageItems {
+			if item.AliasName != nil && *item.AliasName == aliasName &&
+				item.ZoneId != nil && *item.ZoneId == zoneId {
+				aliasDomain = item
+				return
+			}
+		}
+
+		if int64(len(pageItems)) < limit {
+			return
+		}
+		offset += limit
+	}
+}
