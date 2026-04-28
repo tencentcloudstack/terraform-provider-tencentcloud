@@ -2800,3 +2800,55 @@ func (me *TeoService) DescribeTeoSecurityAPIServiceById(ctx context.Context, zon
 		offset += limit
 	}
 }
+
+// DescribeTeoSecurityClientAttesterById paginates DescribeSecurityClientAttester and
+// returns the ClientAttester whose Id matches clientAttesterId, or nil if not found.
+func (me *TeoService) DescribeTeoSecurityClientAttesterById(ctx context.Context, zoneId, clientAttesterId string) (clientAttester *teo.ClientAttester, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		limit  int64 = 100
+		offset int64 = 0
+	)
+
+	for {
+		request := teo.NewDescribeSecurityClientAttesterRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.Limit = &limit
+		request.Offset = &offset
+
+		var pageAttesters []*teo.ClientAttester
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoV20220901Client().DescribeSecurityClientAttester(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeSecurityClientAttester response is nil"))
+			}
+			pageAttesters = result.Response.ClientAttesters
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		for _, a := range pageAttesters {
+			if a.Id != nil && *a.Id == clientAttesterId {
+				clientAttester = a
+				return
+			}
+		}
+
+		if int64(len(pageAttesters)) < limit {
+			// Last page, not found
+			return
+		}
+		offset += limit
+	}
+}

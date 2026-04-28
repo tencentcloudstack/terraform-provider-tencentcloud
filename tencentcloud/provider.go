@@ -2081,6 +2081,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_realtime_log_delivery":                                                teo.ResourceTencentCloudTeoRealtimeLogDelivery(),
 			"tencentcloud_teo_security_ip_group":                                                    teo.ResourceTencentCloudTeoSecurityIpGroup(),
 			"tencentcloud_teo_security_api_resource":                                                teo.ResourceTencentCloudTeoSecurityAPIResource(),
+			"tencentcloud_teo_security_client_attester":                                             teo.ResourceTencentCloudTeoSecurityClientAttester(),
 			"tencentcloud_teo_function":                                                             teo.ResourceTencentCloudTeoFunction(),
 			"tencentcloud_teo_function_rule":                                                        teo.ResourceTencentCloudTeoFunctionRule(),
 			"tencentcloud_teo_function_rule_priority":                                               teo.ResourceTencentCloudTeoFunctionRulePriority(),
