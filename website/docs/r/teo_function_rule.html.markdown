@@ -4,20 +4,21 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_function_rule"
 sidebar_current: "docs-tencentcloud-resource-teo_function_rule"
 description: |-
-  Provides a resource to create a teo teo_function_rule
+  Provides a resource to create a TEO function rule
 ---
 
 # tencentcloud_teo_function_rule
 
-Provides a resource to create a teo teo_function_rule
+Provides a resource to create a TEO function rule
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_teo_function_rule" "teo_function_rule" {
-  function_id = "ef-txx7fnua"
-  remark      = "aaa"
-  zone_id     = "zone-2qtuhspy7cr6"
+  function_id  = "ef-txx7fnua"
+  remark       = "aaa"
+  trigger_type = "direct"
+  zone_id      = "zone-2qtuhspy7cr6"
 
   function_rule_conditions {
     rule_conditions {
@@ -70,6 +71,7 @@ The following arguments are supported:
 * `function_rule_conditions` - (Required, List) The list of rule conditions, where the conditions are connected by an "OR" relationship.
 * `zone_id` - (Required, String, ForceNew) ID of the site.
 * `remark` - (Optional, String) Rule description, maximum support of 60 characters.
+* `trigger_type` - (Optional, String) Function selection configuration type. Valid values: `direct`, `weight`, `region`. Defaults to `direct` when not specified.
 
 The `function_rule_conditions` object supports the following:
 

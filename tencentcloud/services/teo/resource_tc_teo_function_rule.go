@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
@@ -50,6 +51,13 @@ func ResourceTencentCloudTeoFunctionRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Rule description, maximum support of 60 characters.",
+			},
+
+			"trigger_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringInSlice([]string{"direct", "weight", "region"}, false),
+				Description:  "Function selection configuration type. Valid values: `direct`, `weight`, `region`. Defaults to `direct` when not specified.",
 			},
 
 			"function_name": {
@@ -181,6 +189,10 @@ func resourceTencentCloudTeoFunctionRuleCreate(d *schema.ResourceData, meta inte
 		request.Remark = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("trigger_type"); ok {
+		request.TriggerType = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateFunctionRuleWithContext(ctx, request)
 		if e != nil {
@@ -257,6 +269,10 @@ func resourceTencentCloudTeoFunctionRuleRead(d *schema.ResourceData, meta interf
 		_ = d.Set("remark", respData.Remark)
 	}
 
+	if respData.TriggerType != nil {
+		_ = d.Set("trigger_type", respData.TriggerType)
+	}
+
 	if respData.Priority != nil {
 		_ = d.Set("priority", respData.Priority)
 	}
@@ -322,7 +338,7 @@ func resourceTencentCloudTeoFunctionRuleUpdate(d *schema.ResourceData, meta inte
 	ruleId := idSplit[2]
 
 	needChange := false
-	mutableArgs := []string{"function_rule_conditions", "remark"}
+	mutableArgs := []string{"function_rule_conditions", "remark", "trigger_type"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -375,6 +391,10 @@ func resourceTencentCloudTeoFunctionRuleUpdate(d *schema.ResourceData, meta inte
 
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("trigger_type"); ok {
+			request.TriggerType = helper.String(v.(string))
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

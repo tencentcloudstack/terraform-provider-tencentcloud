@@ -1,4 +1,4 @@
-Provides a resource to create a teo teo_function_rule
+Provides a resource to create a TEO function rule
 
 Example Usage
 
@@ -6,6 +6,7 @@ Example Usage
 resource "tencentcloud_teo_function_rule" "teo_function_rule" {
     function_id   = "ef-txx7fnua"
     remark        = "aaa"
+    trigger_type  = "direct"
     zone_id       = "zone-2qtuhspy7cr6"
 
     function_rule_conditions {
