@@ -44,10 +44,9 @@ The following arguments are supported:
 	- SRV: identifies a server using a service, commonly used in microsoft's directory management.
 Different record types, such as SRV and CAA records, have different requirements for host record names and record value formats. for detailed descriptions and format examples of each record type, please refer to: [introduction to dns record types](https://intl.cloud.tencent.com/document/product/1552/90453?from_cn_redirect=1#2f681022-91ab-4a9e-ac3d-0a6c454d954e).
 * `zone_id` - (Required, String, ForceNew) Zone id.
-* `location` - (Optional, String) DNS record resolution route. if not specified, the default is DEFAULT, which means the default resolution route and is effective in all regions.
-
-- resolution route configuration is only applicable when type (dns record type) is A, AAAA, or CNAME.
-- resolution route configuration is only applicable to standard version and enterprise edition packages. for valid values, please refer to: [resolution routes and corresponding code enumeration](https://intl.cloud.tencent.com/document/product/1552/112542?from_cn_redirect=1).
+* `location` - (Optional, String) DNS record resolution route, not specified as default, indicates the default resolution route, which is effective for all regions.
+-The resolution of line configuration is only applicable when the Type (DNS record type) is A, AAAA, or CNAME.
+-The analysis of line configuration is only applicable to standard and enterprise packages. Please refer to the analysis of line and corresponding code enumeration for values.
 * `priority` - (Optional, Int) MX record priority, which takes effect only when type (dns record type) is MX. the smaller the value, the higher the priority. users can specify a value range of 0-50. the default value is 0 if not specified.
 * `status` - (Optional, String) DNS record resolution status, the following values:
 	- enable: has taken effect;
