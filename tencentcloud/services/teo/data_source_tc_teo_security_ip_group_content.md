@@ -4,7 +4,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_teo_security_ip_group_content" "example" {
-  zone_id  = "zone-2qtuhspy7cr6"
-  group_id = 123
+  zone_id  = "zone-3fkff38fyw8s"
+  group_id = 33711
 }
 ```
