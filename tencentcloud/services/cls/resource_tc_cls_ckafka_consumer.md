@@ -28,6 +28,7 @@ resource "tencentcloud_cls_ckafka_consumer" "example" {
     ]
     tag_json_not_tiled = true
     timestamp_accuracy = 2
+    json_type          = 1
   }
 }
 ```
