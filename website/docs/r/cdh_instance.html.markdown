@@ -46,7 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the instance.
 * `cvm_instance_ids` - Id of CVM instances that have been created on the CDH instance.
 * `expired_time` - Expired time of the instance.
-* `host_id` - Id of the CDH instance.
 * `host_resource` - An information list of host resource. Each element contains the following attributes:
   * `cpu_available_num` - The number of available CPU cores of the instance.
   * `cpu_total_num` - The number of total CPU cores of the instance.

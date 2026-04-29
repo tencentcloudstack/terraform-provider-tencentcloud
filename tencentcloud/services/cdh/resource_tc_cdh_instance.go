@@ -72,11 +72,6 @@ func ResourceTencentCloudCdhInstance() *schema.Resource {
 				Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when charge_type is set to `PREPAID`.",
 			},
 			//computed
-			"host_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Id of the CDH instance.",
-			},
 			"host_state": {
 				Type:        schema.TypeString,
 				Computed:    true,
