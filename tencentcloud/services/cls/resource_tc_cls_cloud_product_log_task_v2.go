@@ -103,6 +103,18 @@ func ResourceTencentCloudClsCloudProductLogTaskV2() *schema.Resource {
 				Optional:    true,
 				Description: "Indicate whether to forcibly delete the corresponding logset and topic. If set to true, it will be forcibly deleted. Default is false.",
 			},
+
+			"is_delete_topic": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to delete the associated Topic when deleting the log collection task. This field only takes effect when `force_delete` is false. Default is false.",
+			},
+
+			"is_delete_logset": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to delete the associated Logset when deleting the log collection task. This field only takes effect when `force_delete` is false. If the Logset has other Topics, it will not be deleted. Default is false.",
+			},
 		},
 	}
 }
@@ -349,10 +361,12 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId       = tccommon.GetLogId(tccommon.ContextNil)
-		ctx         = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request     = clsv20201016.NewDeleteCloudProductLogCollectionRequest()
-		deleteForce bool
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request        = clsv20201016.NewDeleteCloudProductLogCollectionRequest()
+		deleteForce    bool
+		isDeleteTopic  bool
+		isDeleteLogset bool
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
@@ -369,6 +383,41 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 	request.AssumerName = helper.String(assumerName)
 	request.LogType = helper.String(logType)
 	request.CloudProductRegion = helper.String(cloudProductRegion)
+
+	// 读取删除选项配置
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		deleteForce = v.(bool)
+	}
+
+	// 参数校验：force_delete 为 true 时，不允许配置 is_delete_* 字段
+	if deleteForce {
+		if _, ok := d.GetOkExists("is_delete_topic"); ok {
+			return fmt.Errorf("`is_delete_topic` cannot be set when `force_delete` is true")
+		}
+		if _, ok := d.GetOkExists("is_delete_logset"); ok {
+			return fmt.Errorf("`is_delete_logset` cannot be set when `force_delete` is true")
+		}
+	}
+
+	// 读取 is_delete_* 字段（仅在 force_delete 为 false 时使用）
+	if !deleteForce {
+		if v, ok := d.GetOkExists("is_delete_topic"); ok {
+			isDeleteTopic = v.(bool)
+		}
+
+		if v, ok := d.GetOkExists("is_delete_logset"); ok {
+			isDeleteLogset = v.(bool)
+		}
+
+		// 设置 API 参数（仅在 force_delete 为 false 时）
+		if isDeleteTopic {
+			request.IsDeleteTopic = helper.Bool(true)
+		}
+		if isDeleteLogset {
+			request.IsDeleteLogset = helper.Bool(true)
+		}
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsV20201016Client().DeleteCloudProductLogCollectionWithContext(ctx, request)
 		if e != nil {
@@ -392,10 +441,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 		return e
 	}
 
-	if v, ok := d.GetOkExists("force_delete"); ok {
-		deleteForce = v.(bool)
-	}
-
+	// force_delete 为 true 时，手动删除 Topic 和 Logset
 	if deleteForce {
 		var (
 			request1 = clsv20201016.NewDeleteTopicRequest()

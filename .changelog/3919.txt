@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_cloud_product_log_task_v2: support `is_delete_topic` and `is_delete_logset`
+```

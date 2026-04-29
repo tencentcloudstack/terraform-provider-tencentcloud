@@ -68,6 +68,8 @@ The following arguments are supported:
 * `log_type` - (Required, String, ForceNew) Log type, Values: CDS-AUDIT, CDS-RISK, CDB-AUDIT, TDSQL-C-AUDIT, MongoDB-AUDIT, MongoDB-SlowLog, MongoDB-ErrorLog, TDMYSQL-SLOW, DCDB-AUDIT, DCDB-SLOW, DCDB-ERROR, MariaDB-AUDIT, MariaDB-SLOW, MariaDB-ERROR, PostgreSQL-SLOW, PostgreSQL-ERROR, PostgreSQL-AUDIT, BH-FILELOG, BH-COMMANDLOG, APIS-ACCESS.
 * `extend` - (Optional, String) Log configuration extension information, generally used to store additional log delivery configurations.
 * `force_delete` - (Optional, Bool) Indicate whether to forcibly delete the corresponding logset and topic. If set to true, it will be forcibly deleted. Default is false.
+* `is_delete_logset` - (Optional, Bool) Whether to delete the associated Logset when deleting the log collection task. This field only takes effect when `force_delete` is false. If the Logset has other Topics, it will not be deleted. Default is false.
+* `is_delete_topic` - (Optional, Bool) Whether to delete the associated Topic when deleting the log collection task. This field only takes effect when `force_delete` is false. Default is false.
 * `logset_id` - (Optional, String, ForceNew) Log set ID.
 * `logset_name` - (Optional, String, ForceNew) Log set name, required if `logset_id` is not filled in. If the log set does not exist, it will be automatically created.
 * `topic_id` - (Optional, String, ForceNew) Log theme ID.
