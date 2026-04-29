@@ -561,6 +561,11 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 							ForceNew:    true,
 							Description: "Node pool type. Example value: `NativeCVM` or `Native`. Default is `Native`.",
 						},
+						"automation_service": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Native Node Pool Node Automation Assistant Toggle.",
+						},
 					},
 				},
 			},
@@ -932,6 +937,9 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		}
 		if v, ok := nativeMap["machine_type"]; ok {
 			createNativeNodePoolParam.MachineType = helper.String(v.(string))
+		}
+		if v, ok := nativeMap["automation_service"]; ok {
+			createNativeNodePoolParam.AutomationService = helper.Bool(v.(bool))
 		}
 		request.Native = &createNativeNodePoolParam
 	}
@@ -1391,6 +1399,30 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 
 			nativeMap["data_disks"] = dataDisksList
 		}
+
+		// TODO for automation_service
+		// if respData.Native.AutomationService != nil {
+		// 	nativeMap["automation_service"] = respData.Native.AutomationService
+		// }
+
+		if respData.Annotations != nil {
+			for _, annotations := range respData.Annotations {
+				if annotations.Name != nil && tkeNativeNodePoolAnnotationsMap[*annotations.Name] != "" {
+					continue
+				}
+
+				if annotations.Name != nil && *annotations.Name == "node.tke.cloud.tencent.com/automation-service" {
+					if annotations.Value != nil {
+						if *annotations.Value == "true" {
+							nativeMap["automation_service"] = true
+						} else {
+							nativeMap["automation_service"] = false
+						}
+					}
+				}
+			}
+		}
+
 		_ = d.Set("native", []interface{}{nativeMap})
 	}
 
@@ -1751,6 +1783,9 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 					keyIds := keyIdsSet[i].(string)
 					updateNativeNodePoolParam.KeyIds = append(updateNativeNodePoolParam.KeyIds, helper.String(keyIds))
 				}
+			}
+			if v, ok := nativeMap["automation_service"]; ok {
+				updateNativeNodePoolParam.AutomationService = helper.Bool(v.(bool))
 			}
 			request.Native = &updateNativeNodePoolParam
 		}
