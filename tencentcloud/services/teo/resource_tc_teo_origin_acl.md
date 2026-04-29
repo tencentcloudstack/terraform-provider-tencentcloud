@@ -6,14 +6,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_origin_acl" "example" {
-  zone_id        = "zone-39quuimqg8r6"
-  l7_hosts       = [
+  zone_id           = "zone-3fkff38fyw8s"
+  origin_acl_family = "gaz"
+  l7_hosts = [
     "example1.com",
     "example2.com",
     "example3.com",
   ]
 
-  l4_proxy_ids   = [
+  l4_proxy_ids = [
     "sid-3dwf5252ravl",
     "sid-3dwfxzt8ed3l",
     "sid-3dwfy5mpwnk4",
@@ -30,8 +31,9 @@ resource "tencentcloud_teo_origin_acl" "example" {
 
 Import
 
-TEO origin acl can be imported using the zone_id, e.g.
+TEO origin acl can be imported using the id, e.g.
 
 ````
-terraform import tencentcloud_teo_origin_acl.example zone-39quuimqg8r6
+terraform import tencentcloud_teo_origin_acl.example zone-3fkff38fyw8s
 ````
+
