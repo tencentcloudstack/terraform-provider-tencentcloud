@@ -2950,3 +2950,32 @@ func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId, i
 	}
 	return
 }
+
+func (me *TeoService) DescribeTeoMultiPathGatewayById(ctx context.Context, zoneId, gatewayId string) (gateway *teo.MultiPathGateway, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeMultiPathGatewayRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.GatewayId = helper.String(gatewayId)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeMultiPathGatewayWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeMultiPathGateway response is nil"))
+		}
+
+		gateway = result.Response.GatewayDetail
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+	return
+}
