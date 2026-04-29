@@ -17,8 +17,8 @@ Provides a resource to create a TEO origin acl
 
 ```hcl
 resource "tencentcloud_teo_origin_acl" "example" {
-  zone_id           = "zone-39quuimqg8r6"
-  origin_acl_family = "mlc"
+  zone_id           = "zone-3fkff38fyw8s"
+  origin_acl_family = "gaz"
   l7_hosts = [
     "example1.com",
     "example2.com",
@@ -66,9 +66,9 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 ## Import
 
-TEO origin acl can be imported using the zone_id, e.g.
+TEO origin acl can be imported using the id, e.g.
 
 ````
-terraform import tencentcloud_teo_origin_acl.example zone-39quuimqg8r6
+terraform import tencentcloud_teo_origin_acl.example zone-3fkff38fyw8s
 ````
 
