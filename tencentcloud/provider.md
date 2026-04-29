@@ -1549,6 +1549,7 @@ tencentcloud_teo_deploy_config_version_history
 tencentcloud_teo_export_zone_config
 tencentcloud_teo_ip_region
 tencentcloud_teo_security_ip_group_content
+tencentcloud_teo_web_security_templates
 
 Resource
 tencentcloud_teo_zone

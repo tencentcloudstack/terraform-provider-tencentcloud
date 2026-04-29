@@ -2314,6 +2314,48 @@ func (me *TeoService) DescribeTeoWebSecurityTemplateNameById(ctx context.Context
 	return
 }
 
+func (me *TeoService) DescribeTeoWebSecurityTemplatesByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.SecurityPolicyTemplateInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewDescribeWebSecurityTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := param["ZoneIds"]; ok {
+		zoneIds := v.([]*string)
+		request.ZoneIds = zoneIds
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var response *teov20220901.DescribeWebSecurityTemplatesResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplates(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.SecurityPolicyTemplates == nil {
+		return
+	}
+
+	ret = response.Response.SecurityPolicyTemplates
+	return
+}
+
 func (me *TeoService) DescribeTeoEnvironmentsByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.EnvInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
