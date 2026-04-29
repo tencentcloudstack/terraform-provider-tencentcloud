@@ -9,7 +9,7 @@ Basic usage
 ```hcl
 
 resource "tencentcloud_teo_web_security_template" "web_security_template" {
-  template_name = "tf-test"
+  template_name = "tf_example"
   zone_id       = "zone-3fkff38fyw8s"
   security_policy {
     bot_management {
@@ -80,12 +80,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
               session_invalid_action {
                 name = "Deny"
                 deny_action_parameters {
-                  block_ip           = null
-                  block_ip_duration  = null
-                  error_page_id      = null
-                  response_code      = null
-                  return_custom_page = null
-                  stall              = "on"
+                  stall = "on"
                 }
               }
               session_rate_control {
@@ -108,12 +103,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
             security_action {
               name = "Deny"
               deny_action_parameters {
-                block_ip           = null
-                block_ip_duration  = null
-                error_page_id      = null
-                response_code      = null
-                return_custom_page = null
-                stall              = "on"
+                stall = "on"
               }
             }
           }
@@ -171,9 +161,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         action {
           name = "Challenge"
           challenge_action_parameters {
-            attester_id      = null
             challenge_option = "JSChallenge"
-            interval         = null
           }
         }
       }
@@ -188,9 +176,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         action {
           name = "Challenge"
           challenge_action_parameters {
-            attester_id      = null
             challenge_option = "JSChallenge"
-            interval         = null
           }
         }
       }
@@ -223,9 +209,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         action {
           name = "Challenge"
           challenge_action_parameters {
-            attester_id      = null
             challenge_option = "JSChallenge"
-            interval         = null
           }
         }
       }
@@ -234,11 +218,12 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
       managed_rules {
         return_custom_page = "on"
         response_code      = "567"
-        error_page_id      = "page-001"
+        error_page_id      = "default"
       }
       other_modules {
-        block_ip          = "on"
-        block_ip_duration = "86400"
+        return_custom_page = "on"
+        response_code      = "567"
+        error_page_id      = "default"
       }
     }
   }
@@ -250,5 +235,5 @@ Import
 teo web security template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_web_security_template.example zone-37u62pwxfo8s#temp-05dtxkyw
+terraform import tencentcloud_teo_web_security_template.example zone-3fkff38fyw8s#temp-rpccs7c6
 ```

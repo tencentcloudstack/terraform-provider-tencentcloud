@@ -39,6 +39,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 			"security_policy": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Web security policy template configuration. Generates default config if empty. Supported: Exception rules, custom rules, rate limiting rules, managed rules. Not supported: Bot management rules (under development).",
 				Elem: &schema.Resource{
