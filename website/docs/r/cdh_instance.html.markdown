@@ -11,19 +11,17 @@ description: |-
 
 Provides a resource to manage CDH instance.
 
+~> **NOTE:** CHD instance not supported delete, please contact the work order for processing
+
 ## Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_cdh_instance" "foo" {
-  availability_zone  = var.availability_zone
+resource "tencentcloud_cdh_instance" "example" {
+  availability_zone  = "ap-guangzhou-6"
   host_type          = "HC20"
   charge_type        = "PREPAID"
   prepaid_period     = 1
-  host_name          = "test"
+  host_name          = "tf-example"
   prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
 ```
@@ -48,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the instance.
 * `cvm_instance_ids` - Id of CVM instances that have been created on the CDH instance.
 * `expired_time` - Expired time of the instance.
+* `host_id` - Id of the CDH instance.
 * `host_resource` - An information list of host resource. Each element contains the following attributes:
   * `cpu_available_num` - The number of available CPU cores of the instance.
   * `cpu_total_num` - The number of total CPU cores of the instance.
@@ -64,6 +63,6 @@ In addition to all arguments above, the following attributes are exported:
 CDH instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cdh_instance.foo host-d6s7i5q4
+terraform import tencentcloud_cdh_instance.example host-d6s7i5q4
 ```
 
