@@ -1565,6 +1565,147 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 								},
 							},
 						},
+						"bot_management_lite": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Basic Bot management configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"captcha_page_challenge": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: "CAPTCHA page challenge configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Whether CAPTCHA page challenge is enabled. Valid values: `on`, `off`.",
+												},
+											},
+										},
+									},
+									"ai_crawler_detection": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: "AI crawler detection configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Whether AI crawler detection is enabled. Valid values: `on`, `off`.",
+												},
+												"action": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													MaxItems:    1,
+													Description: "Execution action when Enabled is on. When Enabled is on, this field is required. SecurityAction Name value supports: Deny, Monitor, Allow, Challenge.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "The security action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`.",
+															},
+															"deny_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameters when Name is Deny.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"block_ip": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Whether to extend the blocking of source IP. Valid values: `on`, `off`.",
+																		},
+																		"block_ip_duration": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "When BlockIP is on, the IP blocking duration.",
+																		},
+																		"return_custom_page": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Whether to use custom pages. Valid values: `on`, `off`.",
+																		},
+																		"response_code": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Customize the status code of the page.",
+																		},
+																		"error_page_id": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "The PageId of the custom page.",
+																		},
+																		"stall": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Whether to ignore the request source suspension. Valid values: `on`, `off`.",
+																		},
+																	},
+																},
+															},
+															"allow_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameters when Name is Allow.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"min_delay_time": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Minimum delay response time. Supported unit: seconds, range 0-5.",
+																		},
+																		"max_delay_time": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Maximum delay response time. Supported unit: seconds, range 5-10.",
+																		},
+																	},
+																},
+															},
+															"challenge_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameters when Name is Challenge.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"challenge_option": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "The specific challenge action to be executed safely. Valid values: `JSChallenge`, `ManagedChallenge`.",
+																		},
+																		"interval": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "The time interval for repeating the challenge.",
+																		},
+																		"attester_id": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Client authentication method ID.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -2638,6 +2779,104 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 		}
 	}
 
+	if respData.BotManagementLite != nil {
+		botManagementLiteMap := map[string]interface{}{}
+
+		if respData.BotManagementLite.CAPTCHAPageChallenge != nil {
+			captchaPageChallengeMap := map[string]interface{}{}
+
+			if respData.BotManagementLite.CAPTCHAPageChallenge.Enabled != nil {
+				captchaPageChallengeMap["enabled"] = respData.BotManagementLite.CAPTCHAPageChallenge.Enabled
+			}
+
+			botManagementLiteMap["captcha_page_challenge"] = []interface{}{captchaPageChallengeMap}
+		}
+
+		if respData.BotManagementLite.AICrawlerDetection != nil {
+			aiCrawlerDetectionMap := map[string]interface{}{}
+
+			if respData.BotManagementLite.AICrawlerDetection.Enabled != nil {
+				aiCrawlerDetectionMap["enabled"] = respData.BotManagementLite.AICrawlerDetection.Enabled
+			}
+
+			if respData.BotManagementLite.AICrawlerDetection.Action != nil {
+				actionMap := map[string]interface{}{}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.Name != nil {
+					actionMap["name"] = respData.BotManagementLite.AICrawlerDetection.Action.Name
+				}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters != nil {
+					denyActionParametersMap := map[string]interface{}{}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIp != nil {
+						denyActionParametersMap["block_ip"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIp
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIpDuration != nil {
+						denyActionParametersMap["block_ip_duration"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIpDuration
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ReturnCustomPage != nil {
+						denyActionParametersMap["return_custom_page"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ReturnCustomPage
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ResponseCode != nil {
+						denyActionParametersMap["response_code"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ResponseCode
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ErrorPageId != nil {
+						denyActionParametersMap["error_page_id"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ErrorPageId
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.Stall != nil {
+						denyActionParametersMap["stall"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.Stall
+					}
+
+					actionMap["deny_action_parameters"] = []interface{}{denyActionParametersMap}
+				}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters != nil {
+					allowActionParametersMap := map[string]interface{}{}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MinDelayTime != nil {
+						allowActionParametersMap["min_delay_time"] = respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MinDelayTime
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MaxDelayTime != nil {
+						allowActionParametersMap["max_delay_time"] = respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MaxDelayTime
+					}
+
+					actionMap["allow_action_parameters"] = []interface{}{allowActionParametersMap}
+				}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters != nil {
+					challengeActionParametersMap := map[string]interface{}{}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.ChallengeOption != nil {
+						challengeActionParametersMap["challenge_option"] = respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.ChallengeOption
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.Interval != nil {
+						challengeActionParametersMap["interval"] = respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.Interval
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.AttesterId != nil {
+						challengeActionParametersMap["attester_id"] = respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.AttesterId
+					}
+
+					actionMap["challenge_action_parameters"] = []interface{}{challengeActionParametersMap}
+				}
+
+				aiCrawlerDetectionMap["action"] = []interface{}{actionMap}
+			}
+
+			botManagementLiteMap["ai_crawler_detection"] = []interface{}{aiCrawlerDetectionMap}
+		}
+
+		securityPolicyMap["bot_management_lite"] = []interface{}{botManagementLiteMap}
+	}
+
 	securityPolicyList = append(securityPolicyList, securityPolicyMap)
 	_ = d.Set("security_policy", securityPolicyList)
 	return nil
@@ -3624,6 +3863,97 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 			securityPolicy.ExceptionRules = &teov20220901.ExceptionRules{
 				Rules: []*teov20220901.ExceptionRule{},
 			}
+		}
+
+		if botManagementLiteMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["bot_management_lite"]); ok {
+			botManagementLite := teov20220901.BotManagementLite{}
+			if captchaPageChallengeMap, ok := helper.InterfaceToMap(botManagementLiteMap, "captcha_page_challenge"); ok {
+				captchaPageChallenge := teov20220901.CAPTCHAPageChallenge{}
+				if v, ok := captchaPageChallengeMap["enabled"]; ok {
+					captchaPageChallenge.Enabled = helper.String(v.(string))
+				}
+
+				botManagementLite.CAPTCHAPageChallenge = &captchaPageChallenge
+			}
+
+			if aiCrawlerDetectionMap, ok := helper.InterfaceToMap(botManagementLiteMap, "ai_crawler_detection"); ok {
+				aiCrawlerDetection := teov20220901.AICrawlerDetection{}
+				if v, ok := aiCrawlerDetectionMap["enabled"]; ok {
+					aiCrawlerDetection.Enabled = helper.String(v.(string))
+				}
+
+				if actionMap, ok := helper.InterfaceToMap(aiCrawlerDetectionMap, "action"); ok {
+					securityAction := teov20220901.SecurityAction{}
+					if v, ok := actionMap["name"]; ok {
+						securityAction.Name = helper.String(v.(string))
+					}
+
+					if denyActionParametersMap, ok := helper.InterfaceToMap(actionMap, "deny_action_parameters"); ok {
+						denyActionParameters := teov20220901.DenyActionParameters{}
+						if v, ok := denyActionParametersMap["block_ip"]; ok {
+							denyActionParameters.BlockIp = helper.String(v.(string))
+						}
+
+						if v, ok := denyActionParametersMap["block_ip_duration"]; ok {
+							denyActionParameters.BlockIpDuration = helper.String(v.(string))
+						}
+
+						if v, ok := denyActionParametersMap["return_custom_page"]; ok {
+							denyActionParameters.ReturnCustomPage = helper.String(v.(string))
+						}
+
+						if v, ok := denyActionParametersMap["response_code"]; ok {
+							denyActionParameters.ResponseCode = helper.String(v.(string))
+						}
+
+						if v, ok := denyActionParametersMap["error_page_id"]; ok {
+							denyActionParameters.ErrorPageId = helper.String(v.(string))
+						}
+
+						if v, ok := denyActionParametersMap["stall"]; ok {
+							denyActionParameters.Stall = helper.String(v.(string))
+						}
+
+						securityAction.DenyActionParameters = &denyActionParameters
+					}
+
+					if allowActionParametersMap, ok := helper.InterfaceToMap(actionMap, "allow_action_parameters"); ok {
+						allowActionParameters := teov20220901.AllowActionParameters{}
+						if v, ok := allowActionParametersMap["min_delay_time"]; ok {
+							allowActionParameters.MinDelayTime = helper.String(v.(string))
+						}
+
+						if v, ok := allowActionParametersMap["max_delay_time"]; ok {
+							allowActionParameters.MaxDelayTime = helper.String(v.(string))
+						}
+
+						securityAction.AllowActionParameters = &allowActionParameters
+					}
+
+					if challengeActionParametersMap, ok := helper.InterfaceToMap(actionMap, "challenge_action_parameters"); ok {
+						challengeActionParameters := teov20220901.ChallengeActionParameters{}
+						if v, ok := challengeActionParametersMap["challenge_option"]; ok {
+							challengeActionParameters.ChallengeOption = helper.String(v.(string))
+						}
+
+						if v, ok := challengeActionParametersMap["interval"]; ok {
+							challengeActionParameters.Interval = helper.String(v.(string))
+						}
+
+						if v, ok := challengeActionParametersMap["attester_id"]; ok {
+							challengeActionParameters.AttesterId = helper.String(v.(string))
+						}
+
+						securityAction.ChallengeActionParameters = &challengeActionParameters
+					}
+
+					aiCrawlerDetection.Action = &securityAction
+				}
+
+				botManagementLite.AICrawlerDetection = &aiCrawlerDetection
+			}
+
+			securityPolicy.BotManagementLite = &botManagementLite
 		}
 
 		request.SecurityPolicy = &securityPolicy

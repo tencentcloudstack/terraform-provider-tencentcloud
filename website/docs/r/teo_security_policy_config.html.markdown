@@ -268,6 +268,23 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         enabled                            = "off"
       }
     }
+
+    bot_management_lite {
+      captcha_page_challenge {
+        enabled = "on"
+      }
+
+      ai_crawler_detection {
+        enabled = "on"
+        action {
+          name = "Deny"
+          deny_action_parameters {
+            block_ip          = "on"
+            block_ip_duration = "120s"
+          }
+        }
+      }
+    }
   }
 }
 ```
@@ -661,6 +678,13 @@ The `action` object of `adaptive_frequency_control` supports the following:
 * `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
 * `return_custom_page_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is ReturnCustomPage.
 
+The `action` object of `ai_crawler_detection` supports the following:
+
+* `name` - (Required, String) The security action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`.
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
+
 The `action` object of `bandwidth_abuse_defense` supports the following:
 
 * `name` - (Required, String) The specific action of security execution. The values are:
@@ -783,6 +807,16 @@ The `adaptive_frequency_control` object of `http_ddos_protection` supports the f
 * `action` - (Optional, List) The handling method of adaptive frequency control. When Enabled is on, this field is required. SecurityAction's Name value supports: <li>Monitor: Observe; </li><li>Deny: Intercept; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge. </li>.
 * `sensitivity` - (Optional, String) The restriction level of adaptive frequency control. When Enabled is on, this field is required. The values are: <li>Loose: loose; </li><li>Moderate: moderate; </li><li>Strict: strict. </li>.
 
+The `ai_crawler_detection` object of `bot_management_lite` supports the following:
+
+* `enabled` - (Required, String) Whether AI crawler detection is enabled. Valid values: `on`, `off`.
+* `action` - (Optional, List) Execution action when Enabled is on. When Enabled is on, this field is required. SecurityAction Name value supports: Deny, Monitor, Allow, Challenge.
+
+The `allow_action_parameters` object of `action` supports the following:
+
+* `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
+* `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
+
 The `auto_update` object of `managed_rules` supports the following:
 
 * `auto_update_to_latest_version` - (Required, String) Indicates whether to enable automatic update to the latest version. valid values: <li>on: enabled</li> <li>off: disabled</li>.
@@ -808,11 +842,26 @@ The `block_ip_action_parameters` object of `action` supports the following:
 
 * `duration` - (Required, String) The penalty duration for banning an IP. Supported units are: <li>s: seconds, value range 1 to 120; </li><li>m: minutes, value range 1 to 120; </li><li>h: hours, value range 1 to 48. </li>.
 
+The `bot_management_lite` object of `security_policy` supports the following:
+
+* `ai_crawler_detection` - (Optional, List) AI crawler detection configuration.
+* `captcha_page_challenge` - (Optional, List) CAPTCHA page challenge configuration.
+
+The `captcha_page_challenge` object of `bot_management_lite` supports the following:
+
+* `enabled` - (Required, String) Whether CAPTCHA page challenge is enabled. Valid values: `on`, `off`.
+
 The `challenge_action_parameters` object of `action` supports the following:
 
 * `challenge_option` - (Required, String) The specific challenge action to be executed safely. The possible values are: <li> InterstitialChallenge: interstitial challenge; </li><li> InlineChallenge: embedded challenge; </li><li> JSChallenge: JavaScript challenge; </li><li> ManagedChallenge: managed challenge. </li>.
 * `attester_id` - (Optional, String) Client authentication method ID. This field is required when Name is InterstitialChallenge/InlineChallenge.
 * `interval` - (Optional, String) The time interval for repeating the challenge. When Name is InterstitialChallenge/InlineChallenge, this field is required. The default value is 300s. Supported units are: <li>s: seconds, value range 1 to 60; </li><li>m: minutes, value range 1 to 60; </li><li>h: hours, value range 1 to 24. </li>.
+
+The `challenge_action_parameters` object of `action` supports the following:
+
+* `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `JSChallenge`, `ManagedChallenge`.
+* `attester_id` - (Optional, String) Client authentication method ID.
+* `interval` - (Optional, String) The time interval for repeating the challenge.
 
 The `client_filtering` object of `http_ddos_protection` supports the following:
 
@@ -845,6 +894,15 @@ Note: This option cannot be enabled at the same time as the BlockIp or Stall opt
 <li>off: Disable.</li>
 After enabling, it will no longer respond to requests in the current connection session and will not actively disconnect. It is used to fight against crawlers and consume client connection resources.
 Note: This option cannot be enabled at the same time as the BlockIp or ReturnCustomPage options.
+
+The `deny_action_parameters` object of `action` supports the following:
+
+* `block_ip_duration` - (Optional, String) When BlockIP is on, the IP blocking duration.
+* `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
+* `error_page_id` - (Optional, String) The PageId of the custom page.
+* `response_code` - (Optional, String) Customize the status code of the page.
+* `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
+* `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
 
 The `exception_rules` object of `security_policy` supports the following:
 
@@ -982,6 +1040,7 @@ The `rules` object of `rate_limiting_rules` supports the following:
 
 The `security_policy` object supports the following:
 
+* `bot_management_lite` - (Optional, List) Basic Bot management configuration.
 * `custom_rules` - (Optional, List) Custom rule configuration.
 * `exception_rules` - (Optional, List) Exception rule configuration.
 * `http_ddos_protection` - (Optional, List) HTTP DDOS protection configuration.
