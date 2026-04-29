@@ -36,7 +36,7 @@ func ptrStringForSecretKey(s string) *string {
 
 // go test ./tencentcloud/services/teo/ -run "TestMultiPathGatewaySecretKeyConfig" -v -count=1 -gcflags="all=-l"
 
-// TestMultiPathGatewaySecretKeyConfig_CreateSuccess tests Create sets zone_id as ID and calls ModifyMultiPathGatewaySecretKey API
+// TestMultiPathGatewaySecretKeyConfig_CreateSuccess tests Create sets zone_id as ID and calls CreateMultiPathGatewaySecretKey API
 // when the key does not exist (Describe returns nil)
 func TestMultiPathGatewaySecretKeyConfig_CreateSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -47,8 +47,8 @@ func TestMultiPathGatewaySecretKeyConfig_CreateSuccess(t *testing.T) {
 
 	describeCallCount := 0
 	// Patch DescribeMultiPathGatewaySecretKey:
-	// - 1st call (from Update's check): return nil (key does not exist)
-	// - 2nd call (from Read after Modify): return the new key
+	// - 1st call (from Update's check): return nil (key does not exist → Create path)
+	// - 2nd call (from Read after Create): return the new key
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewaySecretKey", func(request *teov20220901.DescribeMultiPathGatewaySecretKeyRequest) (*teov20220901.DescribeMultiPathGatewaySecretKeyResponse, error) {
 		describeCallCount++
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
@@ -67,12 +67,12 @@ func TestMultiPathGatewaySecretKeyConfig_CreateSuccess(t *testing.T) {
 		return resp, nil
 	})
 
-	// Patch ModifyMultiPathGatewaySecretKeyWithContext (called when key does not exist → Modify path)
-	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
+	// Patch CreateMultiPathGatewaySecretKeyWithContext (called when key does not exist → Create path)
+	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
 		assert.Equal(t, "dGVzdC1zZWNyZXQta2V5", *request.SecretKey)
-		resp := teov20220901.NewModifyMultiPathGatewaySecretKeyResponse()
-		resp.Response = &teov20220901.ModifyMultiPathGatewaySecretKeyResponseParams{
+		resp := teov20220901.NewCreateMultiPathGatewaySecretKeyResponse()
+		resp.Response = &teov20220901.CreateMultiPathGatewaySecretKeyResponseParams{
 			RequestId: ptrStringForSecretKey("fake-request-id"),
 		}
 		return resp, nil
@@ -91,7 +91,7 @@ func TestMultiPathGatewaySecretKeyConfig_CreateSuccess(t *testing.T) {
 	assert.Equal(t, "dGVzdC1zZWNyZXQta2V5", d.Get("secret_key"))
 }
 
-// TestMultiPathGatewaySecretKeyConfig_CreateWithExistingKey tests Create calls Create API when key already exists
+// TestMultiPathGatewaySecretKeyConfig_CreateWithExistingKey tests Create calls Modify API when key already exists
 func TestMultiPathGatewaySecretKeyConfig_CreateWithExistingKey(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -101,8 +101,8 @@ func TestMultiPathGatewaySecretKeyConfig_CreateWithExistingKey(t *testing.T) {
 
 	describeCallCount := 0
 	// Patch DescribeMultiPathGatewaySecretKey:
-	// - 1st call (from Update's check): return existing key (key exists → Create path)
-	// - 2nd call (from Read after Create): return the new key
+	// - 1st call (from Update's check): return existing key (key exists → Modify path)
+	// - 2nd call (from Read after Modify): return the new key
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewaySecretKey", func(request *teov20220901.DescribeMultiPathGatewaySecretKeyRequest) (*teov20220901.DescribeMultiPathGatewaySecretKeyResponse, error) {
 		describeCallCount++
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
@@ -121,12 +121,12 @@ func TestMultiPathGatewaySecretKeyConfig_CreateWithExistingKey(t *testing.T) {
 		return resp, nil
 	})
 
-	// Patch CreateMultiPathGatewaySecretKeyWithContext (called when key exists → Create path)
-	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
+	// Patch ModifyMultiPathGatewaySecretKeyWithContext (called when key exists → Modify path)
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
 		assert.Equal(t, "bmV3LXNlY3JldC1rZXk=", *request.SecretKey)
-		resp := teov20220901.NewCreateMultiPathGatewaySecretKeyResponse()
-		resp.Response = &teov20220901.CreateMultiPathGatewaySecretKeyResponseParams{
+		resp := teov20220901.NewModifyMultiPathGatewaySecretKeyResponse()
+		resp.Response = &teov20220901.ModifyMultiPathGatewaySecretKeyResponseParams{
 			RequestId: ptrStringForSecretKey("fake-request-id"),
 		}
 		return resp, nil
@@ -153,13 +153,13 @@ func TestMultiPathGatewaySecretKeyConfig_CreateAPIError(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaForSecretKey().client, "UseTeoV20220901Client", teoClient)
 
-	// Patch DescribeMultiPathGatewaySecretKey to return ResourceNotFound (key does not exist)
+	// Patch DescribeMultiPathGatewaySecretKey to return ResourceNotFound (key does not exist → Create path)
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewaySecretKey", func(request *teov20220901.DescribeMultiPathGatewaySecretKeyRequest) (*teov20220901.DescribeMultiPathGatewaySecretKeyResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceNotFound, Message=Zone not found")
 	})
 
-	// When key does not exist, Modify API is called; test Modify API error
-	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
+	// When key does not exist, Create API is called; test Create API error
+	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
 	})
 
@@ -232,7 +232,7 @@ func TestMultiPathGatewaySecretKeyConfig_ReadNotFound(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-// TestMultiPathGatewaySecretKeyConfig_UpdateSuccess tests Update calls Create API when key exists
+// TestMultiPathGatewaySecretKeyConfig_UpdateSuccess tests Update calls Modify API when key exists
 func TestMultiPathGatewaySecretKeyConfig_UpdateSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -242,8 +242,8 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateSuccess(t *testing.T) {
 
 	describeCallCount := 0
 	// Patch DescribeMultiPathGatewaySecretKey:
-	// - 1st call (from Update's check): return existing key (key exists → Create path)
-	// - 2nd call (from Read after Create): return the new key
+	// - 1st call (from Update's check): return existing key (key exists → Modify path)
+	// - 2nd call (from Read after Modify): return the new key
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewaySecretKey", func(request *teov20220901.DescribeMultiPathGatewaySecretKeyRequest) (*teov20220901.DescribeMultiPathGatewaySecretKeyResponse, error) {
 		describeCallCount++
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
@@ -262,11 +262,11 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateSuccess(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
 		assert.Equal(t, "dXBkYXRlZC1zZWNyZXQta2V5", *request.SecretKey)
-		resp := teov20220901.NewCreateMultiPathGatewaySecretKeyResponse()
-		resp.Response = &teov20220901.CreateMultiPathGatewaySecretKeyResponseParams{
+		resp := teov20220901.NewModifyMultiPathGatewaySecretKeyResponse()
+		resp.Response = &teov20220901.ModifyMultiPathGatewaySecretKeyResponseParams{
 			RequestId: ptrStringForSecretKey("fake-request-id"),
 		}
 		return resp, nil
@@ -293,7 +293,7 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateAPIError(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaForSecretKey().client, "UseTeoV20220901Client", teoClient)
 
-	// Patch DescribeMultiPathGatewaySecretKey to return existing key (key exists → Create path)
+	// Patch DescribeMultiPathGatewaySecretKey to return existing key (key exists → Modify path)
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewaySecretKey", func(request *teov20220901.DescribeMultiPathGatewaySecretKeyRequest) (*teov20220901.DescribeMultiPathGatewaySecretKeyResponse, error) {
 		resp := teov20220901.NewDescribeMultiPathGatewaySecretKeyResponse()
 		resp.Response = &teov20220901.DescribeMultiPathGatewaySecretKeyResponseParams{
@@ -303,7 +303,7 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateAPIError(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid secret_key")
 	})
 
@@ -320,7 +320,7 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateAPIError(t *testing.T) {
 	assert.Contains(t, err.Error(), "InvalidParameter")
 }
 
-// TestMultiPathGatewaySecretKeyConfig_UpdateWithNoExistingKey tests Update calls Modify API when key does not exist
+// TestMultiPathGatewaySecretKeyConfig_UpdateWithNoExistingKey tests Update calls Create API when key does not exist
 func TestMultiPathGatewaySecretKeyConfig_UpdateWithNoExistingKey(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -330,8 +330,8 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateWithNoExistingKey(t *testing.T) {
 
 	describeCallCount := 0
 	// Patch DescribeMultiPathGatewaySecretKey:
-	// - 1st call (from Update's check): return nil (key does not exist → Modify path)
-	// - 2nd call (from Read after Modify): return the new key
+	// - 1st call (from Update's check): return nil (key does not exist → Create path)
+	// - 2nd call (from Read after Create): return the new key
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewaySecretKey", func(request *teov20220901.DescribeMultiPathGatewaySecretKeyRequest) (*teov20220901.DescribeMultiPathGatewaySecretKeyResponse, error) {
 		describeCallCount++
 		resp := teov20220901.NewDescribeMultiPathGatewaySecretKeyResponse()
@@ -349,12 +349,12 @@ func TestMultiPathGatewaySecretKeyConfig_UpdateWithNoExistingKey(t *testing.T) {
 		return resp, nil
 	})
 
-	// Patch ModifyMultiPathGatewaySecretKeyWithContext (called when key does not exist → Modify path)
-	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewaySecretKeyRequest) (*teov20220901.ModifyMultiPathGatewaySecretKeyResponse, error) {
+	// Patch CreateMultiPathGatewaySecretKeyWithContext (called when key does not exist → Create path)
+	patches.ApplyMethodFunc(teoClient, "CreateMultiPathGatewaySecretKeyWithContext", func(_ context.Context, request *teov20220901.CreateMultiPathGatewaySecretKeyRequest) (*teov20220901.CreateMultiPathGatewaySecretKeyResponse, error) {
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
 		assert.Equal(t, "bmV3LXNlY3JldC1rZXk=", *request.SecretKey)
-		resp := teov20220901.NewModifyMultiPathGatewaySecretKeyResponse()
-		resp.Response = &teov20220901.ModifyMultiPathGatewaySecretKeyResponseParams{
+		resp := teov20220901.NewCreateMultiPathGatewaySecretKeyResponse()
+		resp.Response = &teov20220901.CreateMultiPathGatewaySecretKeyResponseParams{
 			RequestId: ptrStringForSecretKey("fake-request-id"),
 		}
 		return resp, nil

@@ -103,8 +103,8 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d *schema.Reso
 		existingKey = nil
 	}
 
-	if existingKey != nil {
-		// Key exists: call CreateMultiPathGatewaySecretKey API to replace the key
+	if existingKey == nil {
+		// Key does not exist: call CreateMultiPathGatewaySecretKey API to create the key
 		request := teov20220901.NewCreateMultiPathGatewaySecretKeyRequest()
 		request.ZoneId = helper.String(zoneId)
 
@@ -128,7 +128,7 @@ func resourceTencentCloudTeoMultiPathGatewaySecretKeyConfigUpdate(d *schema.Reso
 			return reqErr
 		}
 	} else {
-		// Key does not exist: call ModifyMultiPathGatewaySecretKey API to set the key
+		// Key exists: call ModifyMultiPathGatewaySecretKey API to update the key
 		request := teov20220901.NewModifyMultiPathGatewaySecretKeyRequest()
 		request.ZoneId = helper.String(zoneId)
 
