@@ -60,14 +60,6 @@ func ResourceTencentCloudTeoL7AccRuleV2() *schema.Resource {
 				Computed:    true,
 				Description: "Rule ID. Unique identifier of the rule.",
 			},
-			"rule_ids": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Rule ID list. List of unique identifiers of the rules.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"rule_priority": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -83,9 +75,8 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
-		zoneId  string
-		ruleId  string
-		ruleIds []string
+		zoneId string
+		ruleId string
 	)
 	zoneId = d.Get("zone_id").(string)
 	request := teov20220901.NewCreateL7AccRulesRequest()
@@ -121,13 +112,6 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 		if result.Response != nil && len(result.Response.RuleIds) > 0 && result.Response.RuleIds[0] != nil {
 			ruleId = *result.Response.RuleIds[0]
 		}
-		if result.Response != nil && len(result.Response.RuleIds) > 0 {
-			for _, v := range result.Response.RuleIds {
-				if v != nil {
-					ruleIds = append(ruleIds, *v)
-				}
-			}
-		}
 		return nil
 	})
 	if err != nil {
@@ -135,8 +119,6 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 	}
 
 	d.SetId(zoneId + tccommon.FILED_SP + ruleId)
-
-	_ = d.Set("rule_ids", ruleIds)
 
 	return ResourceTencentCloudTeoL7AccRuleV2Read(d, meta)
 }
@@ -178,13 +160,6 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 		_ = d.Set("description", rule.Description)
 		_ = d.Set("rule_priority", rule.RulePriority)
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
-		ruleIds := make([]string, 0, len(respData.Rules))
-		for _, r := range respData.Rules {
-			if r.RuleId != nil {
-				ruleIds = append(ruleIds, *r.RuleId)
-			}
-		}
-		_ = d.Set("rule_ids", ruleIds)
 	}
 
 	return nil
