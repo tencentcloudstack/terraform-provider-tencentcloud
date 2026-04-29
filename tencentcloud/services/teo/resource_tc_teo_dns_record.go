@@ -93,6 +93,11 @@ func ResourceTencentCloudTeoDnsRecord() *schema.Resource {
 					"	- enable: has taken effect;\n" +
 					"	- disable: has been disabled.",
 			},
+			"record_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "DNS record id.",
+			},
 			"created_on": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -239,6 +244,10 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 
 	if respData.Status != nil {
 		_ = d.Set("status", respData.Status)
+	}
+
+	if respData.RecordId != nil {
+		_ = d.Set("record_id", respData.RecordId)
 	}
 
 	if respData.CreatedOn != nil {

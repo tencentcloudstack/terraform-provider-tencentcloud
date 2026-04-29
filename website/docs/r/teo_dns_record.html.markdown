@@ -61,6 +61,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `created_on` - Creation time.
 * `modified_on` - Modify time.
+* `record_id` - DNS record id.
 
 
 ## Import
