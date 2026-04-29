@@ -157,10 +157,9 @@ func resourceTencentCloudTeoMultiPathGatewayLineRead(d *schema.ResourceData, met
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
+	zoneId := idSplit[0]
+	gatewayId := idSplit[1]
 	lineId := idSplit[2]
-
-	zoneId := d.Get("zone_id").(string)
-	gatewayId := d.Get("gateway_id").(string)
 
 	respData, err := service.DescribeTeoMultiPathGatewayLine(ctx, zoneId, gatewayId, lineId)
 	if err != nil {
@@ -210,10 +209,9 @@ func resourceTencentCloudTeoMultiPathGatewayLineUpdate(d *schema.ResourceData, m
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
+	zoneId := idSplit[0]
+	gatewayId := idSplit[1]
 	lineId := idSplit[2]
-
-	zoneId := d.Get("zone_id").(string)
-	gatewayId := d.Get("gateway_id").(string)
 
 	needChange := false
 	mutableArgs := []string{"line_type", "line_address", "proxy_id", "rule_id"}
@@ -281,10 +279,9 @@ func resourceTencentCloudTeoMultiPathGatewayLineDelete(d *schema.ResourceData, m
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
+	zoneId := idSplit[0]
+	gatewayId := idSplit[1]
 	lineId := idSplit[2]
-
-	zoneId := d.Get("zone_id").(string)
-	gatewayId := d.Get("gateway_id").(string)
 
 	request.ZoneId = &zoneId
 	request.GatewayId = &gatewayId
