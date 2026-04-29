@@ -230,6 +230,17 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         }
       }
     }
+    default_deny_security_action_parameters {
+      managed_rules {
+        return_custom_page = "on"
+        response_code      = "567"
+        error_page_id      = "page-001"
+      }
+      other_modules {
+        block_ip          = "on"
+        block_ip_duration = "86400"
+      }
+    }
   }
 }
 ```
