@@ -56,6 +56,7 @@ func ResourceTencentCloudTeoFunctionRule() *schema.Resource {
 			"trigger_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: validation.StringInSlice([]string{"direct", "weight", "region"}, false),
 				Description:  "Function selection configuration type. Valid values: `direct`, `weight`, `region`. Defaults to `direct` when not specified.",
 			},

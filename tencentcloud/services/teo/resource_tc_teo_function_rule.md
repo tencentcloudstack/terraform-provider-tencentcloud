@@ -3,49 +3,27 @@ Provides a resource to create a TEO function rule
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_function_rule" "teo_function_rule" {
-    function_id   = "ef-txx7fnua"
-    remark        = "aaa"
+resource "tencentcloud_teo_function_rule" "example" {
+    function_id   = "ef-m01xn26e"
+    remark        = "remark."
     trigger_type  = "direct"
-    zone_id       = "zone-2qtuhspy7cr6"
+    zone_id       = "zone-3fkff38fyw8s"
 
     function_rule_conditions {
         rule_conditions {
             ignore_case = false
-            name        = null
             operator    = "equal"
             target      = "host"
             values      = [
-                "aaa.makn.cn",
+                "test.makn.cn",
             ]
         }
         rule_conditions {
             ignore_case = false
-            name        = null
             operator    = "equal"
-            target      = "extension"
+            target      = "url"
             values      = [
-                ".txt",
-            ]
-        }
-    }
-    function_rule_conditions {
-        rule_conditions {
-            ignore_case = false
-            name        = null
-            operator    = "notequal"
-            target      = "host"
-            values      = [
-                "aaa.makn.cn",
-            ]
-        }
-        rule_conditions {
-            ignore_case = false
-            name        = null
-            operator    = "equal"
-            target      = "extension"
-            values      = [
-                ".png",
+                "/path",
             ]
         }
     }
@@ -54,8 +32,8 @@ resource "tencentcloud_teo_function_rule" "teo_function_rule" {
 
 Import
 
-teo teo_function_rule can be imported using the id, e.g.
+teo teo_function_rule can be imported using the zoneId#functionId#ruleId, e.g.
 
 ```
-terraform import tencentcloud_teo_function_rule.teo_function_rule zone_id#function_id#rule_id
+terraform import tencentcloud_teo_function_rule.example zone-3fkff38fyw8s#ef-m01xn26e#rule-yuvufj6h
 ```
