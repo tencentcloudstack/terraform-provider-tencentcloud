@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_l4_proxy"
 sidebar_current: "docs-tencentcloud-resource-teo_l4_proxy"
 description: |-
-  Provides a resource to create a teo teo_l4_proxy
+  Provides a resource to create a TEO L4 proxy instance
 ---
 
 # tencentcloud_teo_l4_proxy
 
-Provides a resource to create a teo teo_l4_proxy
+Provides a resource to create a TEO L4 proxy instance
 
 ## Example Usage
 
@@ -32,7 +32,7 @@ The following arguments are supported:
 * `zone_id` - (Required, String, ForceNew) Site ID.
 * `accelerate_mainland` - (Optional, String) Specifies whether to enable network optimization in the Chinese mainland. The default value off is used if left empty. This configuration can only be enabled in certain acceleration zones and security protection configurations. For details, see [Creating an L4 Proxy Instance](https://intl.cloud.tencent.com/document/product/1552/90025?from_cn_redirect=1). Valid values: `on`: Enable; `off`: Disable.
 * `area` - (Optional, String) Acceleration zone of the Layer 4 proxy instance. `mainland`: Availability zone in the Chinese mainland; `overseas`: Global availability zone (excluding the Chinese mainland); `global`: Global availability zone.
-* `ddos_protection_config` - (Optional, List) Layer 3/Layer 4 DDoS protection. The default protection option of the platform will be used if it is left empty. For details, see [Exclusive DDoS Protection Usage](https://intl.cloud.tencent.com/document/product/1552/95994?from_cn_redirect=1).
+* `ddos_protection_config` - (Optional, List, **Deprecated**) It has been deprecated from version 1.82.90. Please do not use this field anymore. Layer 3/Layer 4 DDoS protection. The default protection option of the platform will be used if it is left empty. For details, see [Exclusive DDoS Protection Usage](https://intl.cloud.tencent.com/document/product/1552/95994?from_cn_redirect=1).
 * `ipv6` - (Optional, String) Specifies whether to enable IPv6 access. The default value off is used if left empty. This configuration can only be enabled in certain acceleration zones and security protection configurations. For details, see [Creating an L4 Proxy Instance](https://intl.cloud.tencent.com/document/product/1552/90025?from_cn_redirect=1). Valid values: `on`: Enable; `off`: Disable.
 * `static_ip` - (Optional, String) Specifies whether to enable the fixed IP address. The default value off is used if left empty. This configuration can only be enabled in certain acceleration zones and security protection configurations. For details, see [Creating an L4 Proxy Instance](https://intl.cloud.tencent.com/document/product/1552/90025?from_cn_redirect=1). Valid values: `on`: Enable; `off`: Disable.
 
@@ -47,14 +47,14 @@ The `ddos_protection_config` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `proxy_id` - L4 proxy instance ID.
 
 
 ## Import
 
-teo teo_l4_proxy can be imported using the id, e.g.
+TEO L4 proxy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_l4_proxy.teo_l4_proxy teo_l4_proxy_id
+terraform import tencentcloud_teo_l4_proxy.teo_l4_proxy zone_id#proxy_id
 ```
 

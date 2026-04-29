@@ -80,6 +80,9 @@ resource "tencentcloud_teo_l7_acc_setting" "teo_l7_acc_setting" {
       cache_time    = 600
       follow_origin = "on"
     }
+    network_error_logging {
+      switch = "off"
+    }
     ocsp_stapling {
       switch = "off"
     }
@@ -249,6 +252,12 @@ Note: When followorigin is off, it means not following the origin server and usi
 on: Follow the origin server and ignore the field cachetime;
 off: Do not follow the origin server and apply the field cachetime.
 
+The `network_error_logging` object of `zone_config` supports the following:
+
+* `switch` - (Optional, String) Whether to enable network error logging. Valid values:
+on: Enable;
+off: Disable.
+
 The `no_cache` object of `cache` supports the following:
 
 * `switch` - (Required, String) Whether to enable no-cache configuration. Valid values:
@@ -349,6 +358,7 @@ The `zone_config` object supports the following:
 * `http2` - (Optional, List) HTTP/2 configuration.
 * `ipv6` - (Optional, List) IPv6 access configuration.
 * `max_age` - (Optional, List) Browser cache rule configuration, which is used to set the default value of maxage and is disabled by default.
+* `network_error_logging` - (Optional, List) Network error logging configuration.
 * `ocsp_stapling` - (Optional, List) OCSP stapling configuration.
 * `offline_cache` - (Optional, List) Offline cache configuration.
 * `post_max_size` - (Optional, List) POST request transport configuration.

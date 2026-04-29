@@ -4,8 +4,11 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
+
+// go test ./tencentcloud/services/teo/ -run "TestL7AccSetting" -v -count=1 -gcflags="all=-l"
 
 func TestAccTencentCloudTeoL7AccSettingResource_basic(t *testing.T) {
 	t.Parallel()
@@ -39,6 +42,7 @@ func TestAccTencentCloudTeoL7AccSettingResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.force_redirect_https.0.redirect_status_code", "302"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.force_redirect_https.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.grpc.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.network_error_logging.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.include_sub_domains", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.preload", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.switch", "off"),
@@ -93,6 +97,7 @@ func TestAccTencentCloudTeoL7AccSettingResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.force_redirect_https.0.redirect_status_code", "302"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.force_redirect_https.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.grpc.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.network_error_logging.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.include_sub_domains", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.preload", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.switch", "off"),
@@ -142,6 +147,7 @@ func TestAccTencentCloudTeoL7AccSettingResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.force_redirect_https.0.redirect_status_code", "302"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.force_redirect_https.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.grpc.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.network_error_logging.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.include_sub_domains", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.preload", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_l7_acc_setting.teo_l7_acc_setting", "zone_config.0.hsts.0.switch", "off"),
@@ -219,6 +225,9 @@ resource "tencentcloud_teo_l7_acc_setting" "teo_l7_acc_setting" {
       switch               = "off"
     }
     grpc {
+      switch = "off"
+    }
+    network_error_logging {
       switch = "off"
     }
     hsts {
@@ -323,6 +332,9 @@ resource "tencentcloud_teo_l7_acc_setting" "teo_l7_acc_setting" {
       switch               = "off"
     }
     grpc {
+      switch = "off"
+    }
+    network_error_logging {
       switch = "off"
     }
     hsts {
