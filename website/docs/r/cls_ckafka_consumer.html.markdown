@@ -4,18 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cls_ckafka_consumer"
 sidebar_current: "docs-tencentcloud-resource-cls_ckafka_consumer"
 description: |-
-  Provides a resource to create a cls ckafka_consumer
+  Provides a resource to create a CLS ckafka consumer
 ---
 
 # tencentcloud_cls_ckafka_consumer
 
-Provides a resource to create a cls ckafka_consumer
+Provides a resource to create a CLS ckafka consumer
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cls_ckafka_consumer" "ckafka_consumer" {
-  compression  = 1
+resource "tencentcloud_cls_ckafka_consumer" "example" {
+  compression  = 0
   need_content = true
   topic_id     = "7e34a3a7-635e-4da8-9005-88106c1fde69"
 
@@ -66,6 +66,9 @@ The `content` object supports the following:
 
 * `enable_tag` - (Required, Bool) whether to deliver the TAG info.
 * `meta_fields` - (Required, Set) metadata info list.
+* `json_type` - (Optional, Int) JSON format for delivery. Valid values:
+- `0`: consistent with the original log, no escaping.
+- `1`: escaped.
 * `tag_json_not_tiled` - (Optional, Bool) whether to tiling tag json.
 * `timestamp_accuracy` - (Optional, Int) delivery timestamp precision,1 for second, 2 for millisecond.
 
@@ -82,6 +85,6 @@ In addition to all arguments above, the following attributes are exported:
 cls ckafka_consumer can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_ckafka_consumer.ckafka_consumer topic_id
+terraform import tencentcloud_cls_ckafka_consumer.example 7e34a3a7-635e-4da8-9005-88106c1fde69
 ```
 
