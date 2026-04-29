@@ -64,7 +64,13 @@ The following arguments are supported:
   - mainland: Chinese mainland availability zone.
   - overseas: Global availability zone (excluding Chinese mainland).
 * `plan_id` - (Required, String, ForceNew) The target Plan ID to be bound. When you have an existing Plan in your account, you can fill in this parameter to directly bind the site to the Plan. If you do not have a Plan that can be bound at the moment, please go to the console to purchase a Plan to complete the site creation.
-* `type` - (Required, String) Site access type. The value of this parameter is as follows, and the default is partial if not filled in:partial: CNAME access; full: NS access; noDomainAccess: No domain access.
+* `type` - (Required, String) Site Access Type. The possible values for this parameter are as follows; if left unspecified, the default value is `partial`:
+
+- `partial`: CNAME Access;
+- `full`: NS Access;
+- `noDomainAccess`: No-Domain Access;
+- `dnsPodAccess`: DNSPod Managed Access (this mode requires your domain to already be hosted on DNSPod);
+- `ai`: Edge Inference Access.
 * `zone_name` - (Required, String, ForceNew) Site name. When accessing CNAME/NS, please pass the second-level domain (example.com) as the site name; when accessing without a domain name, please leave this value empty.
 * `alias_zone_name` - (Optional, String) Alias site identifier. Limit the input to a combination of numbers, English, - and _, within 20 characters. For details, refer to the alias site identifier. If there is no such usage scenario, leave this field empty.
 * `paused` - (Optional, Bool) Indicates whether the site is disabled.

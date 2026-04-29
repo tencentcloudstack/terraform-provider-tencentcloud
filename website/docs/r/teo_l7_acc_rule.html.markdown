@@ -392,7 +392,10 @@ The `actions` object of `branches` supports the following:
 - `ModifyResponseHeader`: Modify HTTP node response header;
 - `ModifyRequestHeader`: Modify HTTP node request header;
 - `ResponseSpeedLimit`: Single connection download speed limit.
-- `SetContentIdentifierParameters`: Set content identifier.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
 * `access_url_redirect_parameters` - (Optional, List) The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
 * `authentication_parameters` - (Optional, List) Token authentication configuration parameter. this parameter is required when name is authentication.
 * `cache_key_parameters` - (Optional, List) Custom cache key configuration parameter. when name is cachekey, this parameter is required.
@@ -415,6 +418,7 @@ The `actions` object of `branches` supports the following:
 * `modify_response_header_parameters` - (Optional, List) Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
 * `ocsp_stapling_parameters` - (Optional, List) OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
 * `offline_cache_parameters` - (Optional, List) Offline cache configuration parameter. this parameter is required when name is offlinecache.
+* `origin_authentication_parameters` - (Optional, List) Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
 * `origin_pull_protocol_parameters` - (Optional, List) Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
 * `post_max_size_parameters` - (Optional, List) Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
 * `quic_parameters` - (Optional, List) The quic configuration parameter. this parameter is required when name is quic.
@@ -428,6 +432,7 @@ The `actions` object of `branches` supports the following:
 * `upstream_http2_parameters` - (Optional, List) HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
 * `upstream_request_parameters` - (Optional, List) Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
 * `upstream_url_rewrite_parameters` - (Optional, List) The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+* `vary_parameters` - (Optional, List) Vary configuration parameter. This parameter is required when Name is set to Vary.
 * `web_socket_parameters` - (Optional, List) The websocket configuration parameter. this parameter is required when name is websocket.
 
 The `authentication_parameters` object of `actions` supports the following:
@@ -467,7 +472,7 @@ The `cache_key_parameters` object of `actions` supports the following:
 * `cookie` - (Optional, List) Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
 * `full_url_cache` - (Optional, String) Switch for retaining the complete query string. values: on: enable; off: disable.
 * `header` - (Optional, List) HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
-* `ignore_case` - (Optional, String) Switch for ignoring case. values: enable; off: disable.note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+* `ignore_case` - (Optional, String) Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
 * `query_string` - (Optional, List) Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
 * `scheme` - (Optional, String) Request protocol switch. valid values: on: enable; off: disable.
 
@@ -480,11 +485,11 @@ The `cache_parameters` object of `actions` supports the following:
 The `cache_prefresh_parameters` object of `actions` supports the following:
 
 * `cache_time_percent` - (Optional, Int) Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
-* `switch` - (Optional, String) Whether to enable cache prefresh. values: enable; off: disable.
+* `switch` - (Optional, String) Whether to enable cache prefresh. values: on: enable; off: disable.
 
 The `client_ip_country_parameters` object of `actions` supports the following:
 
-* `header_name` - (Optional, String) Name of the request header that contains the client ip region. it is valid when switch=on. the default value eo-client-ipcountry is used when it is not specified.
+* `header_name` - (Optional, String) Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
 * `switch` - (Optional, String) Whether to enable configuration. values: on: enable; off: disable.
 
 The `client_ip_header_parameters` object of `actions` supports the following:
@@ -533,7 +538,7 @@ The `follow_origin` object of `cache_parameters` supports the following:
 * `switch` - (Required, String) Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
 * `default_cache_strategy` - (Optional, String) Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
 * `default_cache_time` - (Optional, Int) The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
-* `default_cache` - (Optional, String) Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: On: cache; Off: do not cache.
+* `default_cache` - (Optional, String) Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
 
 The `force_redirect_https_parameters` object of `actions` supports the following:
 
@@ -596,7 +601,7 @@ The `modify_origin_parameters` object of `actions` supports the following:
 
 * `http_origin_port` - (Optional, Int) Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
 * `https_origin_port` - (Optional, Int) Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
-* `origin_protocol` - (Optional, String) Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: Http: use http protocol; Https: use https protocol; Follow: follow the protocol.
+* `origin_protocol` - (Optional, String) Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
 * `origin_type` - (Optional, String) The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
 * `origin` - (Optional, String) Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
 * `private_access` - (Optional, String) Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
@@ -620,7 +625,11 @@ The `ocsp_stapling_parameters` object of `actions` supports the following:
 
 The `offline_cache_parameters` object of `actions` supports the following:
 
-* `switch` - (Optional, String) Whether to enable offline caching. values: on: enable; Off: disable.
+* `switch` - (Optional, String) Whether to enable offline caching. values: on: enable; off: disable.
+
+The `origin_authentication_parameters` object of `actions` supports the following:
+
+* `request_properties` - (Required, List) Origin authentication request properties.
 
 The `origin_pull_protocol_parameters` object of `actions` supports the following:
 
@@ -660,7 +669,13 @@ The `quic_parameters` object of `actions` supports the following:
 
 The `range_origin_pull_parameters` object of `actions` supports the following:
 
-* `switch` - (Optional, String) Whether to enable range gets. values are: on: enable; Off: disable.
+* `switch` - (Optional, String) Whether to enable range gets. values are: on: enable; off: disable.
+
+The `request_properties` object of `origin_authentication_parameters` supports the following:
+
+* `name` - (Required, String) Origin authentication parameter name.
+* `type` - (Required, String) Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+* `value` - (Required, String) Origin authentication parameter value.
 
 The `response_speed_limit_parameters` object of `actions` supports the following:
 
@@ -681,7 +696,7 @@ The `set_content_identifier_parameters` object of `actions` supports the followi
 
 The `smart_routing_parameters` object of `actions` supports the following:
 
-* `switch` - (Optional, String) Whether to enable smart acceleration. values: on: enable; Off: disable.
+* `switch` - (Optional, String) Whether to enable smart acceleration. values: on: enable; off: disable.
 
 The `status_code_cache_parameters` object of `actions` supports the following:
 
@@ -700,7 +715,7 @@ The `sub_rules` object of `branches` supports the following:
 The `tls_config_parameters` object of `actions` supports the following:
 
 * `cipher_suite` - (Optional, String) Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
-* `version` - (Optional, List) TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable tls1, 1.1, 1.2, and 1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: tlsv1: tlsv1 version; `tlsv1.1`: tlsv1.1 version; `tlsv1.2`: tlsv1.2 version; `tlsv1.3`: tlsv1.3 version.
+* `version` - (Optional, List) TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
 
 The `upstream_follow_redirect_parameters` object of `actions` supports the following:
 
@@ -728,6 +743,10 @@ The `url_path` object of `access_url_redirect_parameters` supports the following
 * `action` - (Optional, String) Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
 * `regex` - (Optional, String) Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
 * `value` - (Optional, String) Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+
+The `vary_parameters` object of `actions` supports the following:
+
+* `switch` - (Required, String) Whether to enable Vary feature. Valid values: on: enable; off: disable.
 
 The `web_socket_parameters` object of `actions` supports the following:
 
