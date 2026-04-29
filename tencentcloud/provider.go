@@ -1392,6 +1392,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                                                  project.ResourceTencentCloudProject(),
 			"tencentcloud_emr_cluster":                                                              emr.ResourceTencentCloudEmrCluster(),
+			"tencentcloud_emr_cluster_v2":                                                           emr.ResourceTencentCloudEmrClusterV2(),
 			"tencentcloud_emr_user_manager":                                                         emr.ResourceTencentCloudEmrUserManager(),
 			"tencentcloud_instance":                                                                 cvm.ResourceTencentCloudInstance(),
 			"tencentcloud_instance_set":                                                             cvm.ResourceTencentCloudInstanceSet(),
