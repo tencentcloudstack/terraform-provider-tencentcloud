@@ -7,6 +7,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_teo_origin_acl" "example" {
   zone_id        = "zone-39quuimqg8r6"
+  origin_acl_family = "mlc"
   l7_hosts       = [
     "example1.com",
     "example2.com",

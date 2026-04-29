@@ -17,7 +17,8 @@ Provides a resource to create a TEO origin acl
 
 ```hcl
 resource "tencentcloud_teo_origin_acl" "example" {
-  zone_id = "zone-39quuimqg8r6"
+  zone_id           = "zone-39quuimqg8r6"
+  origin_acl_family = "mlc"
   l7_hosts = [
     "example1.com",
     "example2.com",
@@ -46,6 +47,7 @@ The following arguments are supported:
 * `zone_id` - (Required, String, ForceNew) Specifies the site ID.
 * `l4_proxy_ids` - (Optional, Set: [`String`]) he list of L4 proxy Instances that require enabling origin ACLs. This list must be empty when the request parameter L4EnableMode is set to 'all'.
 * `l7_hosts` - (Optional, Set: [`String`]) The list of L7 acceleration domains that require enabling the origin ACLs. This list must be empty when the request parameter L7EnableMode is set to 'all'.
+* `origin_acl_family` - (Optional, String) Origin ACL control domain. Valid values: gaz, mlc, emc, plat-gaz, plat-mlc, plat-emc.
 
 ## Attributes Reference
 
