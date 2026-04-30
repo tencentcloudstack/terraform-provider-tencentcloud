@@ -3,6 +3,7 @@ package teo
 import (
 	"fmt"
 	"log"
+	"time"
 
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -17,6 +18,9 @@ func ResourceTencentCloudTeoPrefetchTaskOperation() *schema.Resource {
 		Create: resourceTencentCloudTeoPrefetchTaskOperationCreate,
 		Read:   resourceTencentCloudTeoPrefetchTaskOperationRead,
 		Delete: resourceTencentCloudTeoPrefetchTaskOperationDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(10 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -208,7 +212,7 @@ func resourceTencentCloudTeoPrefetchTaskOperationCreate(d *schema.ResourceData, 
 		},
 	}
 
-	err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribePrefetchTasks(describeRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
