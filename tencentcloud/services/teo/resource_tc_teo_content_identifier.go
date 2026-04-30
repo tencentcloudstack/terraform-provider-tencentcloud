@@ -73,6 +73,12 @@ func ResourceTencentCloudTeoContentIdentifier() *schema.Resource {
 				Computed:    true,
 				Description: "The time of the latest update, in Coordinated Universal Time (UTC), following the ISO 8601 date and time format..",
 			},
+
+			"status": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Content identifier status. Valid values: `active` (effective), `deleted` (deleted).",
+			},
 		},
 	}
 }
@@ -199,6 +205,10 @@ func resourceTencentCloudTeoContentIdentifierRead(d *schema.ResourceData, meta i
 
 	if respData.ModifiedOn != nil {
 		_ = d.Set("modified_on", respData.ModifiedOn)
+	}
+
+	if respData.Status != nil {
+		_ = d.Set("status", respData.Status)
 	}
 
 	return nil
