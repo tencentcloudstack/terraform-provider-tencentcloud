@@ -473,6 +473,7 @@ tencentcloud_cvm_chc_denied_actions
 tencentcloud_cvm_image_quota
 tencentcloud_cvm_image_share_permission
 tencentcloud_cvm_import_image_os
+tencentcloud_cvm_account_quota
 tencentcloud_cvm_repair_tasks
 
 Resource
