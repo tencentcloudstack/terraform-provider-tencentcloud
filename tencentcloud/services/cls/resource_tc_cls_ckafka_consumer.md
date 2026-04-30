@@ -1,10 +1,10 @@
-Provides a resource to create a cls ckafka_consumer
+Provides a resource to create a CLS ckafka consumer
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_cls_ckafka_consumer" "ckafka_consumer" {
-  compression  = 1
+resource "tencentcloud_cls_ckafka_consumer" "example" {
+  compression  = 0
   need_content = true
   topic_id     = "7e34a3a7-635e-4da8-9005-88106c1fde69"
 
@@ -28,6 +28,7 @@ resource "tencentcloud_cls_ckafka_consumer" "ckafka_consumer" {
     ]
     tag_json_not_tiled = true
     timestamp_accuracy = 2
+    json_type          = 1
   }
 }
 ```
@@ -37,5 +38,5 @@ Import
 cls ckafka_consumer can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_ckafka_consumer.ckafka_consumer topic_id
+terraform import tencentcloud_cls_ckafka_consumer.example 7e34a3a7-635e-4da8-9005-88106c1fde69
 ```

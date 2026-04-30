@@ -66,6 +66,11 @@ func ResourceTencentCloudClsCkafkaConsumer() *schema.Resource {
 							Optional:    true,
 							Description: "delivery timestamp precision,1 for second, 2 for millisecond.",
 						},
+						"json_type": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "JSON format for delivery. Valid values:\n- `0`: consistent with the original log, no escaping.\n- `1`: escaped.",
+						},
 					},
 				},
 			},
@@ -156,6 +161,9 @@ func resourceTencentCloudClsCkafkaConsumerCreate(d *schema.ResourceData, meta in
 		}
 		if v, ok := dMap["timestamp_accuracy"]; ok {
 			consumerContent.TimestampAccuracy = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["json_type"]; ok {
+			consumerContent.JsonType = helper.IntInt64(v.(int))
 		}
 		request.Content = &consumerContent
 	}
@@ -254,6 +262,10 @@ func resourceTencentCloudClsCkafkaConsumerRead(d *schema.ResourceData, meta inte
 			contentMap["timestamp_accuracy"] = ckafkaConsumer.Content.TimestampAccuracy
 		}
 
+		if ckafkaConsumer.Content.JsonType != nil {
+			contentMap["json_type"] = ckafkaConsumer.Content.JsonType
+		}
+
 		_ = d.Set("content", []interface{}{contentMap})
 	}
 
@@ -339,6 +351,9 @@ func resourceTencentCloudClsCkafkaConsumerUpdate(d *schema.ResourceData, meta in
 			}
 			if v, ok := dMap["timestamp_accuracy"]; ok {
 				consumerContent.TimestampAccuracy = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["json_type"]; ok {
+				consumerContent.JsonType = helper.IntInt64(v.(int))
 			}
 			request.Content = &consumerContent
 		}
