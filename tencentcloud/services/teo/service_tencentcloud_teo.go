@@ -3152,6 +3152,56 @@ func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId, i
 	return
 }
 
+func (me *TeoService) DescribeTeoPrefetchOriginLimitById(ctx context.Context, zoneId, domainName, area string) (ret *teo.PrefetchOriginLimit, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribePrefetchOriginLimitRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.Limit = helper.Int64(int64(100))
+	request.Filters = []*teo.Filter{
+		{
+			Name:   helper.String("domain-name"),
+			Values: []*string{helper.String(domainName)},
+		},
+		{
+			Name:   helper.String("area"),
+			Values: []*string{helper.String(area)},
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribePrefetchOriginLimit(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribePrefetchOriginLimit response is nil"))
+		}
+
+		for _, item := range result.Response.Limits {
+			if item.DomainName != nil && *item.DomainName == domainName && item.Area != nil && *item.Area == area {
+				ret = item
+				return nil
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
 func (me *TeoService) DescribeTeoContentQuotaByFilter(ctx context.Context, param map[string]interface{}) (purgeQuota []*teo.Quota, prefetchQuota []*teo.Quota, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
