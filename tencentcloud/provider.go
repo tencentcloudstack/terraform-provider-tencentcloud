@@ -2110,6 +2110,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_alias_domain":                                                         teo.ResourceTencentCloudTeoAliasDomain(),
 			"tencentcloud_teo_security_js_injection_rule":                                           teo.ResourceTencentCloudTeoSecurityJSInjectionRule(),
 			"tencentcloud_teo_load_balancer":                                                        teo.ResourceTencentCloudTeoLoadBalancer(),
+			"tencentcloud_teo_purge_task":                                                           teo.ResourceTencentCloudTeoPurgeTaskOperation(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                   tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                                tcm.ResourceTencentCloudTcmPrometheusAttachment(),
