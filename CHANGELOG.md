@@ -1,3 +1,40 @@
+## 1.82.91(April 30, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cvm_account_quota` ([#4100](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4100))
+* **New Data Source:** `tencentcloud_teo_content_quota` ([#4105](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4105))
+* **New Data Source:** `tencentcloud_teo_multi_path_gateway_origin_acl` ([#4106](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4106))
+* **New Data Source:** `tencentcloud_teo_multi_path_gateway_region` ([#4065](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4065))
+* **New Data Source:** `tencentcloud_teo_multi_path_gateways` ([#4092](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4092))
+* **New Data Source:** `tencentcloud_teo_security_ip_group_content` ([#4086](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4086))
+* **New Data Source:** `tencentcloud_teo_web_security_templates` ([#4088](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4088))
+* **New Resource:** `tencentcloud_cvm_repair_task_control_operation` ([#4103](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4103))
+* **New Resource:** `tencentcloud_teo_confirm_multi_path_gateway_origin_acl` ([#4066](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4066))
+* **New Resource:** `tencentcloud_teo_multi_path_gateway` ([#4099](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4099))
+* **New Resource:** `tencentcloud_teo_multi_path_gateway_line` ([#4069](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4069))
+* **New Resource:** `tencentcloud_teo_multi_path_gateway_secret_key_config` ([#4067](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4067))
+* **New Resource:** `tencentcloud_teo_prefetch_origin_limit` ([#4091](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4091))
+* **New Resource:** `tencentcloud_teo_prefetch_task_operation` ([#4098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4098))
+* **New Resource:** `tencentcloud_teo_purge_task` ([#4102](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4102))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdh_instance: optimize create function code logic ([#4085](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4085))
+* resource/tencentcloud_cls_ckafka_consumer: support `json_type` ([#4096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4096))
+* resource/tencentcloud_lighthouse_instance: update document ([#4095](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4095))
+* resource/tencentcloud_tcr_instance: support `deletion_protection` ([#4107](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4107))
+* resource/tencentcloud_teo_content_identifier: add status computed attribute to expose content identifier lifecycle status ([#4090](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4090))
+* resource/tencentcloud_teo_dns_record: update resolution_route field description ([#4081](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4081))
+* resource/tencentcloud_teo_function_rule: add trigger_type parameter to support function selection configuration type ([#4084](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4084))
+* resource/tencentcloud_teo_l7_acc_rule_v2: add OriginAuthentication and Vary support to tencentcloud_teo_l7_acc_rule_v2 ([#4078](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4078))
+* resource/tencentcloud_teo_l7_acc_setting: add zone_setting network_error_logging parameter ([#4076](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4076))
+* resource/tencentcloud_teo_origin_acl: add origin_acl_family parameter to support origin ACL control domain configuration ([#4087](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4087))
+* resource/tencentcloud_teo_origin_group: add zone_id, zone_name and alias_zone_name fields to references block ([#4093](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4093))
+* resource/tencentcloud_teo_security_policy_config: add bot_management_lite parameter to support CAPTCHA page challenge and AI crawler detection configuration ([#4097](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4097))
+* resource/tencentcloud_teo_web_security_template: add default_deny_security_action_parameters parameter to support managed_rules and other_modules deny action configuration ([#4094](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4094))
+* resource/tencentcloud_teo_zone: update type parameter description with detailed access modes ([#4089](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4089))
+
 ## 1.82.90(April 28, 2026)
 
 FEATURES:
