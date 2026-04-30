@@ -39,6 +39,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 			"security_policy": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Web security policy template configuration. Generates default config if empty. Supported: Exception rules, custom rules, rate limiting rules, managed rules. Not supported: Bot management rules (under development).",
 				Elem: &schema.Resource{
@@ -5930,6 +5931,99 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 								},
 							},
 						},
+						"default_deny_security_action_parameters": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Default deny security action parameters configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"managed_rules": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Default deny action parameters for managed rules.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"block_ip": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies whether to extend the ban on the source IP. valid values. - `on`: Enable;  - off: Disable.  After enabled, continuously blocks client ips that trigger the rule. when this option is enabled, the BlockIpDuration parameter must be simultaneously designated. Note: this option cannot intersect with ReturnCustomPage or Stall.",
+												},
+												"block_ip_duration": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "The ban duration when BlockIP is on.",
+												},
+												"return_custom_page": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies whether to use a custom page. valid values:. - `on`: Enable;  - off: Disable.  Enabled, use custom page content to intercept requests. when this option is enabled, ResponseCode and ErrorPageId parameters must be specified simultaneously. Note: this option cannot intersect with the BlockIp or Stall option.",
+												},
+												"response_code": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Status code of the custom page.",
+												},
+												"error_page_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the page id of the custom page.",
+												},
+												"stall": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies whether to suspend the request source without processing. valid values:. - `on`: Enable;  - off: Disable.  Enabled, no longer responds to requests in the current connection session and does not actively disconnect. used for crawler combat to consume client connection resources. Note: this option cannot intersect with BlockIp or ReturnCustomPage options.",
+												},
+											},
+										},
+									},
+									"other_modules": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "Default deny action parameters for other security modules (custom rules, rate limiting, bot management).",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"block_ip": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies whether to extend the ban on the source IP. valid values. - `on`: Enable;  - off: Disable.  After enabled, continuously blocks client ips that trigger the rule. when this option is enabled, the BlockIpDuration parameter must be simultaneously designated. Note: this option cannot intersect with ReturnCustomPage or Stall.",
+												},
+												"block_ip_duration": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "The ban duration when BlockIP is on.",
+												},
+												"return_custom_page": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies whether to use a custom page. valid values:. - `on`: Enable;  - off: Disable.  Enabled, use custom page content to intercept requests. when this option is enabled, ResponseCode and ErrorPageId parameters must be specified simultaneously. Note: this option cannot intersect with the BlockIp or Stall option.",
+												},
+												"response_code": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Status code of the custom page.",
+												},
+												"error_page_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies the page id of the custom page.",
+												},
+												"stall": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specifies whether to suspend the request source without processing. valid values:. - `on`: Enable;  - off: Disable.  Enabled, no longer responds to requests in the current connection session and does not actively disconnect. used for crawler combat to consume client connection resources. Note: this option cannot intersect with BlockIp or ReturnCustomPage options.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -9020,6 +9114,54 @@ func resourceTencentCloudTeoWebSecurityTemplateCreate(d *schema.ResourceData, me
 				botManagement.BrowserImpersonationDetection = &browserImpersonationDetection
 			}
 			securityPolicy.BotManagement = &botManagement
+		}
+		if defaultDenySecurityActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["default_deny_security_action_parameters"]); ok {
+			defaultDenySecurityActionParameters := teov20220901.DefaultDenySecurityActionParameters{}
+			if managedRulesMap, ok := helper.ConvertInterfacesHeadToMap(defaultDenySecurityActionParametersMap["managed_rules"]); ok {
+				managedRulesDenyParams := teov20220901.DenyActionParameters{}
+				if v, ok := managedRulesMap["block_ip"].(string); ok && v != "" {
+					managedRulesDenyParams.BlockIp = helper.String(v)
+				}
+				if v, ok := managedRulesMap["block_ip_duration"].(string); ok && v != "" {
+					managedRulesDenyParams.BlockIpDuration = helper.String(v)
+				}
+				if v, ok := managedRulesMap["return_custom_page"].(string); ok && v != "" {
+					managedRulesDenyParams.ReturnCustomPage = helper.String(v)
+				}
+				if v, ok := managedRulesMap["response_code"].(string); ok && v != "" {
+					managedRulesDenyParams.ResponseCode = helper.String(v)
+				}
+				if v, ok := managedRulesMap["error_page_id"].(string); ok && v != "" {
+					managedRulesDenyParams.ErrorPageId = helper.String(v)
+				}
+				if v, ok := managedRulesMap["stall"].(string); ok && v != "" {
+					managedRulesDenyParams.Stall = helper.String(v)
+				}
+				defaultDenySecurityActionParameters.ManagedRules = &managedRulesDenyParams
+			}
+			if otherModulesMap, ok := helper.ConvertInterfacesHeadToMap(defaultDenySecurityActionParametersMap["other_modules"]); ok {
+				otherModulesDenyParams := teov20220901.DenyActionParameters{}
+				if v, ok := otherModulesMap["block_ip"].(string); ok && v != "" {
+					otherModulesDenyParams.BlockIp = helper.String(v)
+				}
+				if v, ok := otherModulesMap["block_ip_duration"].(string); ok && v != "" {
+					otherModulesDenyParams.BlockIpDuration = helper.String(v)
+				}
+				if v, ok := otherModulesMap["return_custom_page"].(string); ok && v != "" {
+					otherModulesDenyParams.ReturnCustomPage = helper.String(v)
+				}
+				if v, ok := otherModulesMap["response_code"].(string); ok && v != "" {
+					otherModulesDenyParams.ResponseCode = helper.String(v)
+				}
+				if v, ok := otherModulesMap["error_page_id"].(string); ok && v != "" {
+					otherModulesDenyParams.ErrorPageId = helper.String(v)
+				}
+				if v, ok := otherModulesMap["stall"].(string); ok && v != "" {
+					otherModulesDenyParams.Stall = helper.String(v)
+				}
+				defaultDenySecurityActionParameters.OtherModules = &otherModulesDenyParams
+			}
+			securityPolicy.DefaultDenySecurityActionParameters = &defaultDenySecurityActionParameters
 		}
 		request.SecurityPolicy = &securityPolicy
 	}
@@ -13287,6 +13429,58 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 		securityPolicyMap["bot_management"] = []interface{}{botManagementMap}
 	}
 
+	if respData.DefaultDenySecurityActionParameters != nil {
+		defaultDenySecurityActionParametersMap := map[string]interface{}{}
+
+		if respData.DefaultDenySecurityActionParameters.ManagedRules != nil {
+			managedRulesMap := map[string]interface{}{}
+			if respData.DefaultDenySecurityActionParameters.ManagedRules.BlockIp != nil {
+				managedRulesMap["block_ip"] = respData.DefaultDenySecurityActionParameters.ManagedRules.BlockIp
+			}
+			if respData.DefaultDenySecurityActionParameters.ManagedRules.BlockIpDuration != nil {
+				managedRulesMap["block_ip_duration"] = respData.DefaultDenySecurityActionParameters.ManagedRules.BlockIpDuration
+			}
+			if respData.DefaultDenySecurityActionParameters.ManagedRules.ReturnCustomPage != nil {
+				managedRulesMap["return_custom_page"] = respData.DefaultDenySecurityActionParameters.ManagedRules.ReturnCustomPage
+			}
+			if respData.DefaultDenySecurityActionParameters.ManagedRules.ResponseCode != nil {
+				managedRulesMap["response_code"] = respData.DefaultDenySecurityActionParameters.ManagedRules.ResponseCode
+			}
+			if respData.DefaultDenySecurityActionParameters.ManagedRules.ErrorPageId != nil {
+				managedRulesMap["error_page_id"] = respData.DefaultDenySecurityActionParameters.ManagedRules.ErrorPageId
+			}
+			if respData.DefaultDenySecurityActionParameters.ManagedRules.Stall != nil {
+				managedRulesMap["stall"] = respData.DefaultDenySecurityActionParameters.ManagedRules.Stall
+			}
+			defaultDenySecurityActionParametersMap["managed_rules"] = []interface{}{managedRulesMap}
+		}
+
+		if respData.DefaultDenySecurityActionParameters.OtherModules != nil {
+			otherModulesMap := map[string]interface{}{}
+			if respData.DefaultDenySecurityActionParameters.OtherModules.BlockIp != nil {
+				otherModulesMap["block_ip"] = respData.DefaultDenySecurityActionParameters.OtherModules.BlockIp
+			}
+			if respData.DefaultDenySecurityActionParameters.OtherModules.BlockIpDuration != nil {
+				otherModulesMap["block_ip_duration"] = respData.DefaultDenySecurityActionParameters.OtherModules.BlockIpDuration
+			}
+			if respData.DefaultDenySecurityActionParameters.OtherModules.ReturnCustomPage != nil {
+				otherModulesMap["return_custom_page"] = respData.DefaultDenySecurityActionParameters.OtherModules.ReturnCustomPage
+			}
+			if respData.DefaultDenySecurityActionParameters.OtherModules.ResponseCode != nil {
+				otherModulesMap["response_code"] = respData.DefaultDenySecurityActionParameters.OtherModules.ResponseCode
+			}
+			if respData.DefaultDenySecurityActionParameters.OtherModules.ErrorPageId != nil {
+				otherModulesMap["error_page_id"] = respData.DefaultDenySecurityActionParameters.OtherModules.ErrorPageId
+			}
+			if respData.DefaultDenySecurityActionParameters.OtherModules.Stall != nil {
+				otherModulesMap["stall"] = respData.DefaultDenySecurityActionParameters.OtherModules.Stall
+			}
+			defaultDenySecurityActionParametersMap["other_modules"] = []interface{}{otherModulesMap}
+		}
+
+		securityPolicyMap["default_deny_security_action_parameters"] = []interface{}{defaultDenySecurityActionParametersMap}
+	}
+
 	if len(securityPolicyMap) > 0 {
 		_ = d.Set("security_policy", []interface{}{securityPolicyMap})
 	}
@@ -16398,6 +16592,54 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 					botManagement.BrowserImpersonationDetection = &browserImpersonationDetection
 				}
 				securityPolicy.BotManagement = &botManagement
+			}
+			if defaultDenySecurityActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["default_deny_security_action_parameters"]); ok {
+				defaultDenySecurityActionParameters := teov20220901.DefaultDenySecurityActionParameters{}
+				if managedRulesMap, ok := helper.ConvertInterfacesHeadToMap(defaultDenySecurityActionParametersMap["managed_rules"]); ok {
+					managedRulesDenyParams := teov20220901.DenyActionParameters{}
+					if v, ok := managedRulesMap["block_ip"].(string); ok && v != "" {
+						managedRulesDenyParams.BlockIp = helper.String(v)
+					}
+					if v, ok := managedRulesMap["block_ip_duration"].(string); ok && v != "" {
+						managedRulesDenyParams.BlockIpDuration = helper.String(v)
+					}
+					if v, ok := managedRulesMap["return_custom_page"].(string); ok && v != "" {
+						managedRulesDenyParams.ReturnCustomPage = helper.String(v)
+					}
+					if v, ok := managedRulesMap["response_code"].(string); ok && v != "" {
+						managedRulesDenyParams.ResponseCode = helper.String(v)
+					}
+					if v, ok := managedRulesMap["error_page_id"].(string); ok && v != "" {
+						managedRulesDenyParams.ErrorPageId = helper.String(v)
+					}
+					if v, ok := managedRulesMap["stall"].(string); ok && v != "" {
+						managedRulesDenyParams.Stall = helper.String(v)
+					}
+					defaultDenySecurityActionParameters.ManagedRules = &managedRulesDenyParams
+				}
+				if otherModulesMap, ok := helper.ConvertInterfacesHeadToMap(defaultDenySecurityActionParametersMap["other_modules"]); ok {
+					otherModulesDenyParams := teov20220901.DenyActionParameters{}
+					if v, ok := otherModulesMap["block_ip"].(string); ok && v != "" {
+						otherModulesDenyParams.BlockIp = helper.String(v)
+					}
+					if v, ok := otherModulesMap["block_ip_duration"].(string); ok && v != "" {
+						otherModulesDenyParams.BlockIpDuration = helper.String(v)
+					}
+					if v, ok := otherModulesMap["return_custom_page"].(string); ok && v != "" {
+						otherModulesDenyParams.ReturnCustomPage = helper.String(v)
+					}
+					if v, ok := otherModulesMap["response_code"].(string); ok && v != "" {
+						otherModulesDenyParams.ResponseCode = helper.String(v)
+					}
+					if v, ok := otherModulesMap["error_page_id"].(string); ok && v != "" {
+						otherModulesDenyParams.ErrorPageId = helper.String(v)
+					}
+					if v, ok := otherModulesMap["stall"].(string); ok && v != "" {
+						otherModulesDenyParams.Stall = helper.String(v)
+					}
+					defaultDenySecurityActionParameters.OtherModules = &otherModulesDenyParams
+				}
+				securityPolicy.DefaultDenySecurityActionParameters = &defaultDenySecurityActionParameters
 			}
 			request.SecurityPolicy = &securityPolicy
 		}
