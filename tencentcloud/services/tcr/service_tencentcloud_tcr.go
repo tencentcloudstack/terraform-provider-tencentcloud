@@ -72,6 +72,9 @@ func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instan
 		}
 		request.TagSpecification = &tagSpec
 	}
+	if v, ok := params["deletion_protection"]; ok {
+		request.DeletionProtection = helper.Bool(v.(bool))
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().CreateInstance(request)
@@ -320,7 +323,7 @@ func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string,
 	return
 }
 
-func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryType string) (errRet error) {
+func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryType string, deletionProtection bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tcr.NewModifyInstanceRequest()
 	defer func() {
@@ -329,7 +332,11 @@ func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryTy
 		}
 	}()
 	request.RegistryId = helper.String(registryId)
-	request.RegistryType = helper.String(registryType)
+	if registryType != "" {
+		request.RegistryType = helper.String(registryType)
+	}
+
+	request.DeletionProtection = helper.Bool(deletionProtection)
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTCRClient().ModifyInstance(request)
 	return err
