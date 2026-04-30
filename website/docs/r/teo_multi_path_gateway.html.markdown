@@ -45,7 +45,7 @@ The following arguments are supported:
 * `zone_id` - (Required, String, ForceNew) Site ID.
 * `gateway_ip` - (Optional, String) Gateway IP address, required when GatewayType is private.
 * `gateway_port` - (Optional, Int) Gateway port, range 1-65535 (excluding 8888).
-* `region_id` - (Optional, String) Gateway region, required when GatewayType is cloud.
+* `region_id` - (Optional, String, ForceNew) Gateway region, required when GatewayType is cloud.
 
 ## Attributes Reference
 

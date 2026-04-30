@@ -1,4 +1,4 @@
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Resource Schema Definition
 The system SHALL define a Terraform resource `tencentcloud_teo_multi_path_gateway` with the following schema fields:
@@ -6,7 +6,7 @@ The system SHALL define a Terraform resource `tencentcloud_teo_multi_path_gatewa
 - `gateway_type` (Required, ForceNew, TypeString): 网关类型，取值 cloud 或 private
 - `gateway_name` (Required, TypeString): 网关名称，16 个字符以内
 - `gateway_port` (Optional, Computed, TypeInt): 网关端口，范围 1～65535（除去 8888）
-- `region_id` (Optional, Computed, TypeString): 网关地域，GatewayType 为 cloud 时必填
+- `region_id` (Optional, Computed, ForceNew, TypeString): 网关地域，GatewayType 为 cloud 时必填
 - `gateway_ip` (Optional, Computed, TypeString): 网关地址，GatewayType 为 private 时必填
 - `gateway_id` (Computed, TypeString): 网关 ID
 - `status` (Computed, TypeString): 网关状态
@@ -17,7 +17,7 @@ The system SHALL define a Terraform resource `tencentcloud_teo_multi_path_gatewa
 - **THEN** it SHALL include zone_id, gateway_type, gateway_name, gateway_port, region_id, gateway_ip, gateway_id, status, and need_confirm fields with correct types and constraints
 
 #### Scenario: ForceNew fields prevent in-place update
-- **WHEN** zone_id or gateway_type is changed in the Terraform configuration
+- **WHEN** zone_id, gateway_type, or region_id is changed in the Terraform configuration
 - **THEN** the resource SHALL be destroyed and recreated
 
 ### Requirement: Resource Create Operation

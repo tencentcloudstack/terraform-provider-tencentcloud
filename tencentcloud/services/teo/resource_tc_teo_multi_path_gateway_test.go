@@ -405,6 +405,7 @@ func TestMultiPathGateway_Schema(t *testing.T) {
 	assert.Equal(t, schema.TypeString, regionId.Type)
 	assert.True(t, regionId.Optional)
 	assert.True(t, regionId.Computed)
+	assert.True(t, regionId.ForceNew)
 
 	gatewayIp := res.Schema["gateway_ip"]
 	assert.Equal(t, schema.TypeString, gatewayIp.Type)

@@ -1,6 +1,6 @@
 ## 1. Schema 定义与 CRUD 函数实现
 
-- [x] 1.1 创建 `tencentcloud/services/teo/resource_tc_teo_multi_path_gateway.go` 文件，定义 ResourceTencentCloudTeoMultiPathGateway 资源，包含 Schema 定义（zone_id/ForceNew, gateway_type/ForceNew, gateway_name, gateway_port, region_id, gateway_ip, gateway_id/Computed, status/Computed, need_confirm/Computed）和 CRUD 函数框架
+- [x] 1.1 创建 `tencentcloud/services/teo/resource_tc_teo_multi_path_gateway.go` 文件，定义 ResourceTencentCloudTeoMultiPathGateway 资源，包含 Schema 定义（zone_id/ForceNew, gateway_type/ForceNew, gateway_name, gateway_port, region_id/ForceNew, gateway_ip, gateway_id/Computed, status/Computed, need_confirm/Computed）和 CRUD 函数框架
 - [x] 1.2 实现 resourceTencentCloudTeoMultiPathGatewayCreate 函数：调用 CreateMultiPathGateway API，使用 helper.Retry 包裹，设置复合 ID（ZoneId:GatewayId），检查返回的 GatewayId 是否为空
 - [x] 1.3 实现 resourceTencentCloudTeoMultiPathGatewayRead 函数：调用 DescribeMultiPathGateways API，使用 helper.Retry 包裹，从返回的 Gateways 列表中匹配 GatewayId，设置各字段值，处理网关不存在的情况
 - [x] 1.4 实现 resourceTencentCloudTeoMultiPathGatewayUpdate 函数：调用 ModifyMultiPathGateway API，传入 ZoneId、GatewayId、GatewayName、GatewayIP、GatewayPort

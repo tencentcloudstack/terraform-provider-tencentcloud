@@ -55,6 +55,7 @@ func ResourceTencentCloudTeoMultiPathGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "Gateway region, required when GatewayType is cloud.",
 			},
 
@@ -152,6 +153,30 @@ func resourceTencentCloudTeoMultiPathGatewayCreate(d *schema.ResourceData, meta 
 
 	gatewayId = *response.Response.GatewayId
 	d.SetId(strings.Join([]string{zoneId, gatewayId}, tccommon.FILED_SP))
+
+	// Wait for gateway to be online (CreateMultiPathGateway is async)
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		respData, e := service.DescribeTeoMultiPathGatewayById(ctx, zoneId, gatewayId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if respData == nil {
+			return resource.RetryableError(fmt.Errorf("teo multi path gateway is still creating"))
+		}
+		if respData.Status != nil && *respData.Status == "creating" {
+			return resource.RetryableError(fmt.Errorf("teo multi path gateway is still creating, current status: %s", *respData.Status))
+		}
+		if respData.Status != nil && *respData.Status == "online" {
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("teo multi path gateway status is unexpected: %s", *respData.Status))
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for teo multi path gateway online failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return resourceTencentCloudTeoMultiPathGatewayRead(d, meta)
 }
 
@@ -199,7 +224,7 @@ func resourceTencentCloudTeoMultiPathGatewayRead(d *schema.ResourceData, meta in
 	}
 
 	if respData.GatewayPort != nil {
-		_ = d.Set("gateway_port", respData.GatewayPort)
+		_ = d.Set("gateway_port", int(*respData.GatewayPort))
 	}
 
 	if respData.Status != nil {
@@ -278,6 +303,26 @@ func resourceTencentCloudTeoMultiPathGatewayUpdate(d *schema.ResourceData, meta 
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update teo multi path gateway failed, reason:%+v", logId, reqErr)
 			return reqErr
+		}
+
+		// Wait for gateway to be stable after modify (ModifyMultiPathGateway is async)
+		service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			respData, e := service.DescribeTeoMultiPathGatewayById(ctx, zoneId, gatewayId)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			if respData == nil {
+				return resource.NonRetryableError(fmt.Errorf("teo multi path gateway not found after update"))
+			}
+			if respData.Status != nil && *respData.Status == "creating" {
+				return resource.RetryableError(fmt.Errorf("teo multi path gateway is still being modified, current status: %s", *respData.Status))
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s wait for teo multi path gateway stable after update failed, reason:%+v", logId, err)
+			return err
 		}
 	}
 

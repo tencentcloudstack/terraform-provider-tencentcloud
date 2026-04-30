@@ -41,7 +41,7 @@ Terraform Provider for TencentCloud 需要新增 `tencentcloud_teo_multi_path_ga
 - `gateway_type`: Required, ForceNew — 网关类型创建后不可变更
 - `gateway_name`: Required — 可通过 ModifyMultiPathGateway 修改
 - `gateway_port`: Optional, Computed — 可通过 ModifyMultiPathGateway 修改（仅 private 类型）
-- `region_id`: Optional, Computed — 仅 cloud 类型需要，创建后不可变更
+- `region_id`: Optional, Computed, ForceNew — 仅 cloud 类型需要，创建后不可变更（ModifyMultiPathGateway 不接受 RegionId 参数）
 - `gateway_ip`: Optional, Computed — 仅 private 类型需要，可通过 ModifyMultiPathGateway 修改
 - `gateway_id`: Computed — 由云 API 返回
 - `status`: Computed — 由云 API 返回
