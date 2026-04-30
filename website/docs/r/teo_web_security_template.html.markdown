@@ -19,7 +19,7 @@ Provides a resource to create a teo web security template
 
 ```hcl
 resource "tencentcloud_teo_web_security_template" "web_security_template" {
-  template_name = "tf-test"
+  template_name = "tf_example"
   zone_id       = "zone-3fkff38fyw8s"
   security_policy {
     bot_management {
@@ -90,12 +90,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
               session_invalid_action {
                 name = "Deny"
                 deny_action_parameters {
-                  block_ip           = null
-                  block_ip_duration  = null
-                  error_page_id      = null
-                  response_code      = null
-                  return_custom_page = null
-                  stall              = "on"
+                  stall = "on"
                 }
               }
               session_rate_control {
@@ -118,12 +113,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
             security_action {
               name = "Deny"
               deny_action_parameters {
-                block_ip           = null
-                block_ip_duration  = null
-                error_page_id      = null
-                response_code      = null
-                return_custom_page = null
-                stall              = "on"
+                stall = "on"
               }
             }
           }
@@ -181,9 +171,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         action {
           name = "Challenge"
           challenge_action_parameters {
-            attester_id      = null
             challenge_option = "JSChallenge"
-            interval         = null
           }
         }
       }
@@ -198,9 +186,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         action {
           name = "Challenge"
           challenge_action_parameters {
-            attester_id      = null
             challenge_option = "JSChallenge"
-            interval         = null
           }
         }
       }
@@ -233,11 +219,21 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         action {
           name = "Challenge"
           challenge_action_parameters {
-            attester_id      = null
             challenge_option = "JSChallenge"
-            interval         = null
           }
         }
+      }
+    }
+    default_deny_security_action_parameters {
+      managed_rules {
+        return_custom_page = "on"
+        response_code      = "567"
+        error_page_id      = "default"
+      }
+      other_modules {
+        return_custom_page = "on"
+        response_code      = "567"
+        error_page_id      = "default"
       }
     }
   }
@@ -775,6 +771,11 @@ The `custom_rules` object of `security_policy` supports the following:
 
 * `rules` - (Optional, List) The custom rule. When modifying the Web protection configuration using ModifySecurityPolicy: - if the Rules parameter is not specified or the parameter length of Rules is zero: clear all custom rule configurations; - if the Rules parameter is not specified: keep the existing custom rule configuration without modification.
 
+The `default_deny_security_action_parameters` object of `security_policy` supports the following:
+
+* `managed_rules` - (Optional, List) Default deny action parameters for managed rules.
+* `other_modules` - (Optional, List) Default deny action parameters for other security modules (custom rules, rate limiting, bot management).
+
 The `deny_action_parameters` object of `action` supports the following:
 
 * `block_ip_duration` - (Optional, String) The ban duration when BlockIP is on.
@@ -1059,6 +1060,15 @@ The `low_rate_session_action` object of `session_rate_control` supports the foll
 * `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
 * `return_custom_page_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is ReturnCustomPage.
 
+The `managed_rules` object of `default_deny_security_action_parameters` supports the following:
+
+* `block_ip_duration` - (Optional, String) The ban duration when BlockIP is on.
+* `block_ip` - (Optional, String) Specifies whether to extend the ban on the source IP. valid values. - `on`: Enable;  - off: Disable.  After enabled, continuously blocks client ips that trigger the rule. when this option is enabled, the BlockIpDuration parameter must be simultaneously designated. Note: this option cannot intersect with ReturnCustomPage or Stall.
+* `error_page_id` - (Optional, String) Specifies the page id of the custom page.
+* `response_code` - (Optional, String) Status code of the custom page.
+* `return_custom_page` - (Optional, String) Specifies whether to use a custom page. valid values:. - `on`: Enable;  - off: Disable.  Enabled, use custom page content to intercept requests. when this option is enabled, ResponseCode and ErrorPageId parameters must be specified simultaneously. Note: this option cannot intersect with the BlockIp or Stall option.
+* `stall` - (Optional, String) Specifies whether to suspend the request source without processing. valid values:. - `on`: Enable;  - off: Disable.  Enabled, no longer responds to requests in the current connection session and does not actively disconnect. used for crawler combat to consume client connection resources. Note: this option cannot intersect with BlockIp or ReturnCustomPage options.
+
 The `managed_rules` object of `security_policy` supports the following:
 
 * `detection_only` - (Required, String) Evaluation mode is enabled or not, it is valid only when the `Enabled` parameter is set to `on`. Values: - `on`: enabled, all managed rules take effect in `observe` mode. - off: disabled, all managed rules take effect according to the specified configuration.
@@ -1097,6 +1107,15 @@ The `minimal_request_body_transfer_rate` object of `slow_attack_defense` support
 * `counting_period` - (Required, String) Minimum body transfer rate statistical time range, valid values: - 10s: 10 seconds; - 30s: 30 seconds; - 60s: 60 seconds; - 120s: 120 seconds.
 * `enabled` - (Required, String) Specifies whether the minimum body transfer rate threshold is enabled. valid values: - on: enable; - off: disable.
 * `minimal_avg_transfer_rate_threshold` - (Required, String) Minimum body transfer rate threshold, the measurement unit is only supported in bps.
+
+The `other_modules` object of `default_deny_security_action_parameters` supports the following:
+
+* `block_ip_duration` - (Optional, String) The ban duration when BlockIP is on.
+* `block_ip` - (Optional, String) Specifies whether to extend the ban on the source IP. valid values. - `on`: Enable;  - off: Disable.  After enabled, continuously blocks client ips that trigger the rule. when this option is enabled, the BlockIpDuration parameter must be simultaneously designated. Note: this option cannot intersect with ReturnCustomPage or Stall.
+* `error_page_id` - (Optional, String) Specifies the page id of the custom page.
+* `response_code` - (Optional, String) Status code of the custom page.
+* `return_custom_page` - (Optional, String) Specifies whether to use a custom page. valid values:. - `on`: Enable;  - off: Disable.  Enabled, use custom page content to intercept requests. when this option is enabled, ResponseCode and ErrorPageId parameters must be specified simultaneously. Note: this option cannot intersect with the BlockIp or Stall option.
+* `stall` - (Optional, String) Specifies whether to suspend the request source without processing. valid values:. - `on`: Enable;  - off: Disable.  Enabled, no longer responds to requests in the current connection session and does not actively disconnect. used for crawler combat to consume client connection resources. Note: this option cannot intersect with BlockIp or ReturnCustomPage options.
 
 The `rate_limiting_rules` object of `security_policy` supports the following:
 
@@ -1352,6 +1371,7 @@ The `security_policy` object supports the following:
 
 * `bot_management` - (Optional, List) Bot management configuration.
 * `custom_rules` - (Optional, List) Custom rules. If the parameter is null or not filled, the configuration last set will be used by default. Note: This field may return null, indicating that no valid value can be obtained.
+* `default_deny_security_action_parameters` - (Optional, List) Default deny security action parameters configuration.
 * `exception_rules` - (Optional, List) Exception rule configuration.
 * `http_ddos_protection` - (Optional, List) HTTP DDOS protection configuration.
 * `managed_rules` - (Optional, List) Managed. If the parameter is null or not filled, the configuration last set will be used by default. Note: This field may return null, indicating that no valid value can be obtained.
@@ -1419,6 +1439,6 @@ In addition to all arguments above, the following attributes are exported:
 teo web security template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_web_security_template.example zone-37u62pwxfo8s#temp-05dtxkyw
+terraform import tencentcloud_teo_web_security_template.example zone-3fkff38fyw8s#temp-rpccs7c6
 ```
 
