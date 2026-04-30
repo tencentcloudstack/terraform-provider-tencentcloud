@@ -3111,3 +3111,49 @@ func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId, i
 	}
 	return
 }
+
+func (me *TeoService) DescribeTeoContentQuotaByFilter(ctx context.Context, param map[string]interface{}) (purgeQuota []*teo.Quota, prefetchQuota []*teo.Quota, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = teo.NewDescribeContentQuotaRequest()
+		response = teo.NewDescribeContentQuotaResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := param["zone_id"]; ok {
+		request.ZoneId = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoClient().DescribeContentQuota(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	if response.Response.PurgeQuota != nil {
+		purgeQuota = response.Response.PurgeQuota
+	}
+	if response.Response.PrefetchQuota != nil {
+		prefetchQuota = response.Response.PrefetchQuota
+	}
+	return
+}
