@@ -303,6 +303,189 @@ func TestMultiPathGateway_Update_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+// TestMultiPathGateway_Update_StatusToOffline tests Update calls ModifyMultiPathGatewayStatus when status changes to offline
+func TestMultiPathGateway_Update_StatusToOffline(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMultiPathGateway().client, "UseTeoV20220901Client", teoClient)
+
+	modifyStatusCalled := 0
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewayStatusWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewayStatusRequest) (*teov20220901.ModifyMultiPathGatewayStatusResponse, error) {
+		modifyStatusCalled++
+		assert.Equal(t, "zone-12345678", *request.ZoneId)
+		assert.Equal(t, "mpgw-abcdefgh", *request.GatewayId)
+		assert.Equal(t, "offline", *request.GatewayStatus)
+		resp := teov20220901.NewModifyMultiPathGatewayStatusResponse()
+		resp.Response = &teov20220901.ModifyMultiPathGatewayStatusResponseParams{
+			RequestId: ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Note: TestResourceDataRaw treats every configured key as a change vs. empty state,
+	// so ModifyMultiPathGatewayWithContext may also be invoked for gateway_name etc.
+	// We mock it as a no-op and focus on asserting the status branch below.
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewayWithContext", func(_ context.Context, _ *teov20220901.ModifyMultiPathGatewayRequest) (*teov20220901.ModifyMultiPathGatewayResponse, error) {
+		resp := teov20220901.NewModifyMultiPathGatewayResponse()
+		resp.Response = &teov20220901.ModifyMultiPathGatewayResponseParams{
+			RequestId: ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGateways", func(request *teov20220901.DescribeMultiPathGatewaysRequest) (*teov20220901.DescribeMultiPathGatewaysResponse, error) {
+		resp := teov20220901.NewDescribeMultiPathGatewaysResponse()
+		resp.Response = &teov20220901.DescribeMultiPathGatewaysResponseParams{
+			Gateways: []*teov20220901.MultiPathGateway{
+				{
+					GatewayId:   ptrStrMPG("mpgw-abcdefgh"),
+					GatewayName: ptrStrMPG("test-gateway"),
+					GatewayType: ptrStrMPG("cloud"),
+					Status:      ptrStrMPG("offline"),
+					RegionId:    ptrStrMPG("ap-guangzhou"),
+				},
+			},
+			TotalCount: ptrInt64MPG(1),
+			RequestId:  ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForMultiPathGateway()
+	res := teo.ResourceTencentCloudTeoMultiPathGateway()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":      "zone-12345678",
+		"gateway_type": "cloud",
+		"gateway_name": "test-gateway",
+		"status":       "offline",
+	})
+	d.SetId("zone-12345678#mpgw-abcdefgh")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, modifyStatusCalled, "ModifyMultiPathGatewayStatusWithContext should be called exactly once")
+}
+
+// TestMultiPathGateway_Update_StatusToOnline tests Update calls ModifyMultiPathGatewayStatus when status changes to online
+func TestMultiPathGateway_Update_StatusToOnline(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMultiPathGateway().client, "UseTeoV20220901Client", teoClient)
+
+	modifyStatusCalled := 0
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewayStatusWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewayStatusRequest) (*teov20220901.ModifyMultiPathGatewayStatusResponse, error) {
+		modifyStatusCalled++
+		assert.Equal(t, "zone-12345678", *request.ZoneId)
+		assert.Equal(t, "mpgw-abcdefgh", *request.GatewayId)
+		assert.Equal(t, "online", *request.GatewayStatus)
+		resp := teov20220901.NewModifyMultiPathGatewayStatusResponse()
+		resp.Response = &teov20220901.ModifyMultiPathGatewayStatusResponseParams{
+			RequestId: ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewayWithContext", func(_ context.Context, _ *teov20220901.ModifyMultiPathGatewayRequest) (*teov20220901.ModifyMultiPathGatewayResponse, error) {
+		resp := teov20220901.NewModifyMultiPathGatewayResponse()
+		resp.Response = &teov20220901.ModifyMultiPathGatewayResponseParams{
+			RequestId: ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGateways", func(request *teov20220901.DescribeMultiPathGatewaysRequest) (*teov20220901.DescribeMultiPathGatewaysResponse, error) {
+		resp := teov20220901.NewDescribeMultiPathGatewaysResponse()
+		resp.Response = &teov20220901.DescribeMultiPathGatewaysResponseParams{
+			Gateways: []*teov20220901.MultiPathGateway{
+				{
+					GatewayId:   ptrStrMPG("mpgw-abcdefgh"),
+					GatewayName: ptrStrMPG("test-gateway"),
+					GatewayType: ptrStrMPG("cloud"),
+					Status:      ptrStrMPG("online"),
+					RegionId:    ptrStrMPG("ap-guangzhou"),
+				},
+			},
+			TotalCount: ptrInt64MPG(1),
+			RequestId:  ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForMultiPathGateway()
+	res := teo.ResourceTencentCloudTeoMultiPathGateway()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":      "zone-12345678",
+		"gateway_type": "cloud",
+		"gateway_name": "test-gateway",
+		"status":       "online",
+	})
+	d.SetId("zone-12345678#mpgw-abcdefgh")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, modifyStatusCalled, "ModifyMultiPathGatewayStatusWithContext should be called exactly once")
+}
+
+// TestMultiPathGateway_Update_StatusNotSet tests that Update does NOT call ModifyMultiPathGatewayStatus when status is not configured
+func TestMultiPathGateway_Update_StatusNotSet(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMultiPathGateway().client, "UseTeoV20220901Client", teoClient)
+
+	// ModifyMultiPathGatewayStatusWithContext MUST NOT be called when status is not in config.
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewayStatusWithContext", func(_ context.Context, _ *teov20220901.ModifyMultiPathGatewayStatusRequest) (*teov20220901.ModifyMultiPathGatewayStatusResponse, error) {
+		t.Fatalf("ModifyMultiPathGatewayStatusWithContext should not be called when status is not set in configuration")
+		return nil, nil
+	})
+
+	patches.ApplyMethodFunc(teoClient, "ModifyMultiPathGatewayWithContext", func(_ context.Context, request *teov20220901.ModifyMultiPathGatewayRequest) (*teov20220901.ModifyMultiPathGatewayResponse, error) {
+		assert.Equal(t, "zone-12345678", *request.ZoneId)
+		assert.Equal(t, "mpgw-abcdefgh", *request.GatewayId)
+		resp := teov20220901.NewModifyMultiPathGatewayResponse()
+		resp.Response = &teov20220901.ModifyMultiPathGatewayResponseParams{
+			RequestId: ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGateways", func(request *teov20220901.DescribeMultiPathGatewaysRequest) (*teov20220901.DescribeMultiPathGatewaysResponse, error) {
+		resp := teov20220901.NewDescribeMultiPathGatewaysResponse()
+		resp.Response = &teov20220901.DescribeMultiPathGatewaysResponseParams{
+			Gateways: []*teov20220901.MultiPathGateway{
+				{
+					GatewayId:   ptrStrMPG("mpgw-abcdefgh"),
+					GatewayName: ptrStrMPG("renamed-gateway"),
+					GatewayType: ptrStrMPG("cloud"),
+					Status:      ptrStrMPG("online"),
+					RegionId:    ptrStrMPG("ap-guangzhou"),
+				},
+			},
+			TotalCount: ptrInt64MPG(1),
+			RequestId:  ptrStrMPG("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForMultiPathGateway()
+	res := teo.ResourceTencentCloudTeoMultiPathGateway()
+	// Note: `status` field is intentionally omitted from config
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":      "zone-12345678",
+		"gateway_type": "cloud",
+		"gateway_name": "renamed-gateway",
+	})
+	d.SetId("zone-12345678#mpgw-abcdefgh")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+}
+
 // TestMultiPathGateway_Delete_Success tests Delete calls API successfully
 func TestMultiPathGateway_Delete_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -420,6 +603,7 @@ func TestMultiPathGateway_Schema(t *testing.T) {
 
 	status := res.Schema["status"]
 	assert.Equal(t, schema.TypeString, status.Type)
+	assert.True(t, status.Optional)
 	assert.True(t, status.Computed)
 
 	needConfirm := res.Schema["need_confirm"]

@@ -10,6 +10,7 @@ resource "tencentcloud_teo_multi_path_gateway" "cloud" {
   gateway_type = "cloud"
   gateway_name = "test-cloud-gw"
   region_id    = "ap-guangzhou"
+  status       = "online"
 }
 ```
 
@@ -22,8 +23,16 @@ resource "tencentcloud_teo_multi_path_gateway" "private" {
   gateway_name = "test-private-gw"
   gateway_ip   = "1.2.3.4"
   gateway_port = 8080
+  status       = "online"
 }
 ```
+
+The `status` attribute is optional and accepts the following values:
+
+- `online`: enable the gateway.
+- `offline`: disable the gateway.
+
+If `status` is not set, the value is populated by the server automatically.
 
 Import
 

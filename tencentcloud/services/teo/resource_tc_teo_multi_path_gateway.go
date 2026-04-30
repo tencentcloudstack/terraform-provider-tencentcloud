@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -22,6 +23,10 @@ func ResourceTencentCloudTeoMultiPathGateway() *schema.Resource {
 		Delete: resourceTencentCloudTeoMultiPathGatewayDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(20 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
@@ -66,17 +71,18 @@ func ResourceTencentCloudTeoMultiPathGateway() *schema.Resource {
 				Description: "Gateway IP address, required when GatewayType is private.",
 			},
 
+			"status": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Gateway status. Valid values: `online` (enable), `offline` (disable). If not set, the value is populated by the server.",
+			},
+
 			// computed
 			"gateway_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Gateway ID.",
-			},
-
-			"status": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Gateway status.",
 			},
 
 			"need_confirm": {
@@ -228,7 +234,12 @@ func resourceTencentCloudTeoMultiPathGatewayRead(d *schema.ResourceData, meta in
 	}
 
 	if respData.Status != nil {
-		_ = d.Set("status", respData.Status)
+		// // disable -> offline: The modification API now supports the 'offline' status; however, since the actual result returned is 'disable', this scenario is handled for backward compatibility.
+		if *respData.Status == "disable" {
+			_ = d.Set("status", "offline")
+		} else {
+			_ = d.Set("status", respData.Status)
+		}
 	}
 
 	if respData.GatewayIP != nil {
@@ -323,6 +334,56 @@ func resourceTencentCloudTeoMultiPathGatewayUpdate(d *schema.ResourceData, meta 
 		if err != nil {
 			log.Printf("[CRITAL]%s wait for teo multi path gateway stable after update failed, reason:%+v", logId, err)
 			return err
+		}
+	}
+
+	if d.HasChange("status") {
+		if v, ok := d.GetOk("status"); ok {
+			targetStatus := v.(string)
+			statusRequest := teov20220901.NewModifyMultiPathGatewayStatusRequest()
+			statusRequest.ZoneId = &zoneId
+			statusRequest.GatewayId = &gatewayId
+			statusRequest.GatewayStatus = helper.String(targetStatus)
+
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyMultiPathGatewayStatusWithContext(ctx, statusRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, statusRequest.GetAction(), statusRequest.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s modify teo multi path gateway status failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+
+			// Wait for gateway status to reach the target value (ModifyMultiPathGatewayStatus is async)
+			service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+				respData, e := service.DescribeTeoMultiPathGatewayById(ctx, zoneId, gatewayId)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+				if respData == nil {
+					return resource.NonRetryableError(fmt.Errorf("teo multi path gateway not found after modify status"))
+				}
+				if respData.Status != nil && *respData.Status == "creating" {
+					return resource.RetryableError(fmt.Errorf("teo multi path gateway is still transitioning, current status: %s", *respData.Status))
+				}
+				if respData.Status != nil && (*respData.Status == targetStatus || (targetStatus == "offline" && *respData.Status == "disable")) {
+					return nil
+				}
+				// Still keep retrying while status has not yet converged to target value.
+				return resource.RetryableError(fmt.Errorf("teo multi path gateway status has not reached target %s, current status: %v", targetStatus, respData.Status))
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s wait for teo multi path gateway status to reach target failed, reason:%+v", logId, err)
+				return err
+			}
 		}
 	}
 
