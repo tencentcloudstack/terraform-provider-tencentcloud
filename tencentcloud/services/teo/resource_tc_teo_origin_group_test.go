@@ -204,10 +204,6 @@ func ptrUint64OriginGroup(u uint64) *uint64 {
 	return &u
 }
 
-func ptrBoolOriginGroup(b bool) *bool {
-	return &b
-}
-
 // TestTeoOriginGroup_Read_WithZoneFields tests Read populates zone_id, zone_name, alias_zone_name in references
 func TestTeoOriginGroup_Read_WithZoneFields(t *testing.T) {
 	patches := gomonkey.NewPatches()
