@@ -1425,6 +1425,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_image":                                                                    cvm.ResourceTencentCloudImage(),
 			"tencentcloud_cvm_hpc_cluster":                                                          cvm.ResourceTencentCloudCvmHpcCluster(),
 			"tencentcloud_cvm_resource_pool_pack":                                                   cvm.ResourceTencentCloudCvmResourcePoolPack(),
+			"tencentcloud_cvm_repair_task_control_operation":                                        cvm.ResourceTencentCloudCvmRepairTaskControlOperation(),
 			"tencentcloud_cbs_snapshot":                                                             cbs.ResourceTencentCloudCbsSnapshot(),
 			"tencentcloud_cbs_snapshot_policy":                                                      cbs.ResourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                                                              cbs.ResourceTencentCloudCbsStorage(),
