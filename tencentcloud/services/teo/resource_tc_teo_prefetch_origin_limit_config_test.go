@@ -79,7 +79,6 @@ func TestPrefetchOriginLimit_Create_Success(t *testing.T) {
 		"domain_name": "example.com",
 		"area":        "Overseas",
 		"bandwidth":   200,
-		"enabled":     "on",
 	})
 
 	err := res.Create(d, meta)
@@ -106,7 +105,6 @@ func TestPrefetchOriginLimit_Create_APIError(t *testing.T) {
 		"domain_name": "example.com",
 		"area":        "Overseas",
 		"bandwidth":   200,
-		"enabled":     "on",
 	})
 
 	err := res.Create(d, meta)
@@ -146,7 +144,6 @@ func TestPrefetchOriginLimit_Read_Success(t *testing.T) {
 		"domain_name": "example.com",
 		"area":        "Overseas",
 		"bandwidth":   200,
-		"enabled":     "on",
 	})
 	d.SetId("zone-1234567890#example.com#Overseas")
 
@@ -182,7 +179,6 @@ func TestPrefetchOriginLimit_Read_NotFound(t *testing.T) {
 		"domain_name": "example.com",
 		"area":        "Overseas",
 		"bandwidth":   200,
-		"enabled":     "on",
 	})
 	d.SetId("zone-1234567890#example.com#Overseas")
 
@@ -231,7 +227,6 @@ func TestPrefetchOriginLimit_Update_Success(t *testing.T) {
 		"domain_name": "example.com",
 		"area":        "Overseas",
 		"bandwidth":   500,
-		"enabled":     "on",
 	})
 	d.SetId("zone-1234567890#example.com#Overseas")
 
@@ -263,7 +258,6 @@ func TestPrefetchOriginLimit_Delete_Success(t *testing.T) {
 		"domain_name": "example.com",
 		"area":        "Overseas",
 		"bandwidth":   200,
-		"enabled":     "on",
 	})
 	d.SetId("zone-1234567890#example.com#Overseas")
 
@@ -290,7 +284,6 @@ func TestPrefetchOriginLimit_Delete_APIError(t *testing.T) {
 		"domain_name": "example.com",
 		"area":        "Overseas",
 		"bandwidth":   200,
-		"enabled":     "on",
 	})
 	d.SetId("zone-1234567890#example.com#Overseas")
 
@@ -335,10 +328,4 @@ func TestPrefetchOriginLimit_Schema(t *testing.T) {
 	assert.Equal(t, schema.TypeInt, bandwidth.Type)
 	assert.True(t, bandwidth.Required)
 	assert.False(t, bandwidth.ForceNew)
-
-	assert.Contains(t, res.Schema, "enabled")
-	enabled := res.Schema["enabled"]
-	assert.Equal(t, schema.TypeString, enabled.Type)
-	assert.True(t, enabled.Required)
-	assert.False(t, enabled.ForceNew)
 }

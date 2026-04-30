@@ -47,11 +47,6 @@ func ResourceTencentCloudTeoPrefetchOriginLimit() *schema.Resource {
 				Required:    true,
 				Description: "Prefetch origin bandwidth limit. Value range: 100-100000, in Mbps.",
 			},
-			"enabled": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Prefetch origin limit switch. Valid values: `on`, `off`.",
-			},
 		},
 	}
 }
@@ -68,7 +63,7 @@ func resourceTencentCloudTeoPrefetchOriginLimitConfigCreate(d *schema.ResourceDa
 		domainName = d.Get("domain_name").(string)
 		area       = d.Get("area").(string)
 		bandwidth  = d.Get("bandwidth").(int)
-		enabled    = d.Get("enabled").(string)
+		enabled    = "on"
 		request    = teov20220901.NewModifyPrefetchOriginLimitRequest()
 	)
 
@@ -175,13 +170,13 @@ func resourceTencentCloudTeoPrefetchOriginLimitConfigUpdate(d *schema.ResourceDa
 	domainName := idParts[1]
 	area := idParts[2]
 
-	if d.HasChange("bandwidth") || d.HasChange("enabled") {
+	if d.HasChange("bandwidth") {
 		request := teov20220901.NewModifyPrefetchOriginLimitRequest()
 		request.ZoneId = &zoneId
 		request.DomainName = &domainName
 		request.Area = &area
 		bandwidth := d.Get("bandwidth").(int)
-		enabled := d.Get("enabled").(string)
+		enabled := "on"
 		request.Bandwidth = helper.Int64(int64(bandwidth))
 		request.Enabled = &enabled
 

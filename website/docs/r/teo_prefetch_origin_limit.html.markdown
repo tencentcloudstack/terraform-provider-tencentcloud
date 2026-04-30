@@ -21,7 +21,6 @@ resource "tencentcloud_teo_prefetch_origin_limit" "example" {
   domain_name = "example.com"
   area        = "Overseas"
   bandwidth   = 200
-  enabled     = "on"
 }
 ```
 
@@ -33,7 +32,6 @@ resource "tencentcloud_teo_prefetch_origin_limit" "example" {
   domain_name = "example.com"
   area        = "MainlandChina"
   bandwidth   = 500
-  enabled     = "on"
 }
 ```
 
@@ -44,7 +42,6 @@ The following arguments are supported:
 * `area` - (Required, String, ForceNew) Acceleration area for prefetch origin limit. Valid values: `Overseas`, `MainlandChina`.
 * `bandwidth` - (Required, Int) Prefetch origin bandwidth limit. Value range: 100-100000, in Mbps.
 * `domain_name` - (Required, String, ForceNew) Accelerated domain name.
-* `enabled` - (Required, String) Prefetch origin limit switch. Valid values: `on`, `off`.
 * `zone_id` - (Required, String, ForceNew) Site ID.
 
 ## Attributes Reference

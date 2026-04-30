@@ -10,7 +10,6 @@ resource "tencentcloud_teo_prefetch_origin_limit" "example" {
   domain_name = "example.com"
   area        = "Overseas"
   bandwidth   = 200
-  enabled     = "on"
 }
 ```
 
@@ -22,7 +21,6 @@ resource "tencentcloud_teo_prefetch_origin_limit" "example" {
   domain_name = "example.com"
   area        = "MainlandChina"
   bandwidth   = 500
-  enabled     = "on"
 }
 ```
 
