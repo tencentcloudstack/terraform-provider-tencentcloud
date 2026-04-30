@@ -91,7 +91,7 @@ func ResourceTencentCloudLighthouseInstance() *schema.Resource {
 						"auto_generate_password": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "whether auto generate password. if false, need set password.",
+							Description: "`YES` represents selecting to automatically generate a password, without specifying the Password field. `NO` represents selecting a custom password, in which case the Password field needs to be specified.",
 						},
 						"password": {
 							Type:        schema.TypeString,
