@@ -51,21 +51,18 @@ func ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl() *schema.Resource 
 			"multi_path_gateway_origin_acl_info": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "Multi-path gateway origin ACL info.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"multi_path_gateway_current_origin_acl": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "Current active origin ACL info.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"entire_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "Current origin IP segment details.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -100,7 +97,6 @@ func ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl() *schema.Resource 
 						"multi_path_gateway_next_origin_acl": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "Next version origin ACL info when there is a pending update.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -112,7 +108,6 @@ func ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl() *schema.Resource 
 									"entire_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "Next version origin IP segment details.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -134,7 +129,6 @@ func ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl() *schema.Resource 
 									"added_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "Added IP segments compared to current ACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -156,7 +150,6 @@ func ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl() *schema.Resource 
 									"removed_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "Removed IP segments compared to current ACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -178,7 +171,6 @@ func ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl() *schema.Resource 
 									"no_change_addresses": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "Unchanged IP segments compared to current ACL.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -314,34 +306,37 @@ func resourceTencentCloudTeoConfirmMultiPathGatewayOriginAclUpdate(d *schema.Res
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
-	zoneId := d.Get("zone_id").(string)
-	gatewayId := d.Get("gateway_id").(string)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
 
-	if d.HasChange("origin_acl_version") {
-		request := teov20220901.NewConfirmMultiPathGatewayOriginACLRequest()
-		request.ZoneId = &zoneId
-		request.GatewayId = &gatewayId
+	zoneId := idSplit[0]
+	gatewayId := idSplit[1]
 
-		if v, ok := d.GetOkExists("origin_acl_version"); ok {
-			originAclVersion := int64(v.(int))
-			request.OriginACLVersion = &originAclVersion
+	request := teov20220901.NewConfirmMultiPathGatewayOriginACLRequest()
+	request.ZoneId = &zoneId
+	request.GatewayId = &gatewayId
+
+	if v, ok := d.GetOkExists("origin_acl_version"); ok {
+		originAclVersion := int64(v.(int))
+		request.OriginACLVersion = &originAclVersion
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ConfirmMultiPathGatewayOriginACLWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ConfirmMultiPathGatewayOriginACLWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
+		return nil
+	})
 
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update teo confirm multi path gateway origin acl failed, reason:%+v", logId, err)
-			return err
-		}
+	if err != nil {
+		log.Printf("[CRITAL]%s update teo confirm multi path gateway origin acl failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudTeoConfirmMultiPathGatewayOriginAclRead(d, meta)

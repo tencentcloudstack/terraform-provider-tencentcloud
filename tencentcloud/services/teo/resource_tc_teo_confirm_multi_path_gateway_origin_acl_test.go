@@ -45,8 +45,18 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_Create(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	meta := newMockMetaConfirmMpgwAcl()
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaConfirmMpgwAcl().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(meta.client, "UseTeoV20220901Client", teoClient)
+
+	// Patch ConfirmMultiPathGatewayOriginACLWithContext (called even when origin_acl_version=0)
+	patches.ApplyMethodFunc(teoClient, "ConfirmMultiPathGatewayOriginACLWithContext", func(_ context.Context, request *teov20220901.ConfirmMultiPathGatewayOriginACLRequest) (*teov20220901.ConfirmMultiPathGatewayOriginACLResponse, error) {
+		resp := teov20220901.NewConfirmMultiPathGatewayOriginACLResponse()
+		resp.Response = &teov20220901.ConfirmMultiPathGatewayOriginACLResponseParams{
+			RequestId: ptrStringConfirmMpgwAcl("fake-request-id"),
+		}
+		return resp, nil
+	})
 
 	// Patch DescribeMultiPathGatewayOriginACL for Read after Update
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewayOriginACL", func(request *teov20220901.DescribeMultiPathGatewayOriginACLRequest) (*teov20220901.DescribeMultiPathGatewayOriginACLResponse, error) {
@@ -67,7 +77,6 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_Create(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaConfirmMpgwAcl()
 	res := teo.ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id":    "zone-12345678",
@@ -86,8 +95,9 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_CreateWithVersion(t *testing.T) 
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	meta := newMockMetaConfirmMpgwAcl()
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaConfirmMpgwAcl().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(meta.client, "UseTeoV20220901Client", teoClient)
 
 	// Patch ConfirmMultiPathGatewayOriginACL for Update
 	patches.ApplyMethodFunc(teoClient, "ConfirmMultiPathGatewayOriginACLWithContext", func(_ context.Context, request *teov20220901.ConfirmMultiPathGatewayOriginACLRequest) (*teov20220901.ConfirmMultiPathGatewayOriginACLResponse, error) {
@@ -121,7 +131,6 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_CreateWithVersion(t *testing.T) 
 		return resp, nil
 	})
 
-	meta := newMockMetaConfirmMpgwAcl()
 	res := teo.ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id":            "zone-12345678",
@@ -139,8 +148,9 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_Read(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	meta := newMockMetaConfirmMpgwAcl()
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaConfirmMpgwAcl().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(meta.client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewayOriginACL", func(request *teov20220901.DescribeMultiPathGatewayOriginACLRequest) (*teov20220901.DescribeMultiPathGatewayOriginACLResponse, error) {
 		assert.Equal(t, "zone-12345678", *request.ZoneId)
@@ -182,7 +192,6 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_Read(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaConfirmMpgwAcl()
 	res := teo.ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id":    "zone-12345678",
@@ -223,8 +232,9 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_ReadNotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	meta := newMockMetaConfirmMpgwAcl()
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaConfirmMpgwAcl().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(meta.client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "DescribeMultiPathGatewayOriginACL", func(request *teov20220901.DescribeMultiPathGatewayOriginACLRequest) (*teov20220901.DescribeMultiPathGatewayOriginACLResponse, error) {
 		resp := teov20220901.NewDescribeMultiPathGatewayOriginACLResponse()
@@ -235,7 +245,6 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_ReadNotFound(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaConfirmMpgwAcl()
 	res := teo.ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id":    "zone-12345678",
@@ -253,8 +262,9 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_Update(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	meta := newMockMetaConfirmMpgwAcl()
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaConfirmMpgwAcl().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(meta.client, "UseTeoV20220901Client", teoClient)
 
 	confirmCalled := false
 	patches.ApplyMethodFunc(teoClient, "ConfirmMultiPathGatewayOriginACLWithContext", func(_ context.Context, request *teov20220901.ConfirmMultiPathGatewayOriginACLRequest) (*teov20220901.ConfirmMultiPathGatewayOriginACLResponse, error) {
@@ -288,7 +298,6 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_Update(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaConfirmMpgwAcl()
 	res := teo.ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id":            "zone-12345678",
@@ -307,14 +316,14 @@ func TestAccTeoConfirmMultiPathGatewayOriginAcl_UpdateAPIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
+	meta := newMockMetaConfirmMpgwAcl()
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaConfirmMpgwAcl().client, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(meta.client, "UseTeoV20220901Client", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "ConfirmMultiPathGatewayOriginACLWithContext", func(_ context.Context, request *teov20220901.ConfirmMultiPathGatewayOriginACLRequest) (*teov20220901.ConfirmMultiPathGatewayOriginACLResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
 	})
 
-	meta := newMockMetaConfirmMpgwAcl()
 	res := teo.ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"zone_id":            "zone-invalid",

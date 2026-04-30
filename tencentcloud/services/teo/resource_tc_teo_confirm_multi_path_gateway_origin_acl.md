@@ -12,15 +12,6 @@ resource "tencentcloud_teo_confirm_multi_path_gateway_origin_acl" "example" {
 }
 ```
 
-Read-only without confirming
-
-```hcl
-resource "tencentcloud_teo_confirm_multi_path_gateway_origin_acl" "example" {
-  zone_id    = "zone-3edjdliiw3he"
-  gateway_id = "gw-abc12345"
-}
-```
-
 Import
 
 TEO confirm multi-path gateway origin ACL can be imported using the id, e.g.
