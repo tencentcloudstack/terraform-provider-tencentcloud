@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_origin_group"
 sidebar_current: "docs-tencentcloud-resource-teo_origin_group"
 description: |-
-  Provides a resource to create a teo origin_group
+  Provides a resource to create a TEO origin_group
 ---
 
 # tencentcloud_teo_origin_group
 
-Provides a resource to create a teo origin_group
+Provides a resource to create a TEO origin_group
 
 ~> **NOTE:** Please note that `tencentcloud_teo_origin_group` had to undergo incompatible changes in version v1.81.96.
 
@@ -80,6 +80,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Origin site group creation time.
 * `origin_group_id` - OriginGroup ID.
 * `references` - List of referenced instances of the origin site group.
+  * `alias_zone_name` - The alias zone name of the referenced instance.
   * `instance_id` - The instance ID of the reference type.
   * `instance_name` - Instance name of the application type.
   * `instance_type` - Reference service type, the values are:
@@ -87,6 +88,8 @@ In addition to all arguments above, the following attributes are exported:
   - `RuleEngine`: Rule engine.
   - `Loadbalance`: Load balancing.
   - `ApplicationProxy`: Four-layer proxy.
+  * `zone_id` - The zone ID of the referenced instance.
+  * `zone_name` - The zone name of the referenced instance.
 * `update_time` - Origin site group update time.
 
 
