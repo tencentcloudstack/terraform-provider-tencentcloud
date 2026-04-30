@@ -133,6 +133,21 @@ func ResourceTencentCloudTeoOriginGroup() *schema.Resource {
 							Computed:    true,
 							Description: "Instance name of the application type.",
 						},
+						"zone_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The zone ID of the referenced instance.",
+						},
+						"zone_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The zone name of the referenced instance.",
+						},
+						"alias_zone_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The alias zone name of the referenced instance.",
+						},
 					},
 				},
 			},
@@ -347,6 +362,18 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 
 			if references.InstanceName != nil {
 				referencesMap["instance_name"] = references.InstanceName
+			}
+
+			if references.ZoneId != nil {
+				referencesMap["zone_id"] = references.ZoneId
+			}
+
+			if references.ZoneName != nil {
+				referencesMap["zone_name"] = references.ZoneName
+			}
+
+			if references.AliasZoneName != nil {
+				referencesMap["alias_zone_name"] = references.AliasZoneName
 			}
 
 			referencesList = append(referencesList, referencesMap)
