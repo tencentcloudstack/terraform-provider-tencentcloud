@@ -2108,6 +2108,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_multi_path_gateway_secret_key":                                        teo.ResourceTencentCloudTeoMultiPathGatewaySecretKeyConfig(),
 			"tencentcloud_teo_config_group_version":                                                 teo.ResourceTencentCloudTeoConfigGroupVersion(),
 			"tencentcloud_teo_deploy_config_group_version":                                          teo.ResourceTencentCloudTeoDeployConfigGroupVersion(),
+			"tencentcloud_teo_confirm_multi_path_gateway_origin_acl":                                teo.ResourceTencentCloudTeoConfirmMultiPathGatewayOriginAcl(),
 			"tencentcloud_teo_multi_path_gateway_line":                                              teo.ResourceTencentCloudTeoMultiPathGatewayLine(),
 			"tencentcloud_teo_security_api_service":                                                 teo.ResourceTencentCloudTeoSecurityAPIService(),
 			"tencentcloud_teo_confirm_origin_acl_update_operation":                                  teo.ResourceTencentCloudTeoConfirmOriginAclUpdateOperation(),

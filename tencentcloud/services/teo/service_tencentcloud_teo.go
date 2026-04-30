@@ -2865,6 +2865,46 @@ func (me *TeoService) ExportZoneConfigByFilter(ctx context.Context, param map[st
 	return
 }
 
+func (me *TeoService) DescribeTeoConfirmMultiPathGatewayOriginAclById(ctx context.Context, zoneId string, gatewayId string) (ret *teo.MultiPathGatewayOriginACLInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeMultiPathGatewayOriginACLRequest()
+	response := teo.NewDescribeMultiPathGatewayOriginACLResponse()
+	request.ZoneId = &zoneId
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeMultiPathGatewayOriginACL(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe teo confirm multi path gateway origin acl failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.MultiPathGatewayOriginACLInfo
+	return
+}
+
 func (me *TeoService) DescribeTeoMultiPathGatewayLine(ctx context.Context, zoneId, gatewayId, lineId string) (ret *teo.MultiPathGatewayLine, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
