@@ -257,6 +257,23 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         enabled                            = "off"
       }
     }
+
+    bot_management_lite {
+      captcha_page_challenge {
+        enabled = "on"
+      }
+
+      ai_crawler_detection {
+        enabled = "on"
+        action {
+          name = "Deny"
+          deny_action_parameters {
+            block_ip         = "on"
+            block_ip_duration = "120s"
+          }
+        }
+      }
+    }
   }
 }
 ```
