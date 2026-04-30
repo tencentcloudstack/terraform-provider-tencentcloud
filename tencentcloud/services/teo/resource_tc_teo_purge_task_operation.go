@@ -3,6 +3,7 @@ package teo
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,6 +17,9 @@ func ResourceTencentCloudTeoPurgeTaskOperation() *schema.Resource {
 		Create: resourceTencentCloudTeoPurgeTaskCreate,
 		Read:   resourceTencentCloudTeoPurgeTaskRead,
 		Delete: resourceTencentCloudTeoPurgeTaskDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(10 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -196,7 +200,7 @@ func resourceTencentCloudTeoPurgeTaskCreate(d *schema.ResourceData, meta interfa
 		},
 	}
 
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribePurgeTasks(describeRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
