@@ -298,7 +298,7 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 			Optional:     true,
 			ValidateFunc: tccommon.ValidateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
-			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.",
+			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0/8.4, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.",
 		},
 		"engine_type": {
 			Type:        schema.TypeString,
