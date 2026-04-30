@@ -91,6 +91,7 @@ The following arguments are supported:
 * `instance_type` - (Required, String) TCR types. Valid values are: `standard`, `basic`, `premium`.
 * `name` - (Required, String, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
+* `deletion_protection` - (Optional, Bool) Whether to enable Instance Deletion Protection.
 * `instance_charge_type_prepaid_period` - (Optional, Int) Length of time to purchase an instance (in month). Must set when registry_charge_type is prepaid.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, Int) Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.
 * `open_public_operation` - (Optional, Bool) Control public network access.
