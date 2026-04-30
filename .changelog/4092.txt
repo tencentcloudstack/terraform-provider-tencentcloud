@@ -1,3 +1,3 @@
-```release-note:enhancement
-resource/tencentcloud_teo_multi_path_gateways: update documentation
+```release-note:new-data-source
+tencentcloud_teo_multi_path_gateways
 ```
