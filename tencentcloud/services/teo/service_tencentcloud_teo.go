@@ -3112,6 +3112,54 @@ func (me *TeoService) DescribeTeoLoadBalancerById(ctx context.Context, zoneId, i
 	return
 }
 
+func (me *TeoService) DescribeTeoMultiPathGatewayOriginAclByFilter(ctx context.Context, param map[string]interface{}) (ret *teo.DescribeMultiPathGatewayOriginACLResponseParams, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = teo.NewDescribeMultiPathGatewayOriginACLRequest()
+		response = teo.NewDescribeMultiPathGatewayOriginACLResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoClient().DescribeMultiPathGatewayOriginACL(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe teo multi path gateway origin acl failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
 func (me *TeoService) DescribeTeoMultiPathGatewaysByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.MultiPathGateway, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
