@@ -1219,6 +1219,7 @@ tencentcloud_vod_sample_snapshot_template
 tencentcloud_vod_transcode_template
 tencentcloud_vod_watermark_template
 tencentcloud_vod_event_config
+tencentcloud_vod_aigc_api_token
 
 Oceanus
 Data Source

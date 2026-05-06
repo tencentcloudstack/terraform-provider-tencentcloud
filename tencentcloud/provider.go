@@ -1937,6 +1937,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_audit_service":                                                    cynosdb.ResourceTencentCloudCynosdbAuditService(),
 			"tencentcloud_cynosdb_cls_delivery":                                                     cynosdb.ResourceTencentCloudCynosdbClsDelivery(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":                                  vod.ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
+			"tencentcloud_vod_aigc_api_token":                                                       vod.ResourceTencentCloudVodAigcApiToken(),
 			"tencentcloud_vod_image_sprite_template":                                                vod.ResourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                                                   vod.ResourceTencentCloudVodProcedureTemplate(),
 			"tencentcloud_vod_snapshot_by_time_offset_template":                                     vod.ResourceTencentCloudVodSnapshotByTimeOffsetTemplate(),

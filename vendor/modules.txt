@@ -1381,7 +1381,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb v1.3.27
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb/v20230616
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.40
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.90
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.62

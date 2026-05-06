@@ -135,141 +135,141 @@ type AccelerateAreaInfo struct {
 }
 
 type AdaptiveDynamicStreamingInfoItem struct {
-	// 转自适应码流规格。
+	// <p>转自适应码流规格。</p>
 	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// 打包格式，取值范围：
-	// <li>HLS；</li>
-	// <li>DASH。</li>
+	// <p>打包格式，取值范围：</p><li>HLS；</li><li>DASH。</li>
 	Package *string `json:"Package,omitnil,omitempty" name:"Package"`
 
-	// 加密类型。
+	// <p>加密类型。</p>
 	DrmType *string `json:"DrmType,omitnil,omitempty" name:"DrmType"`
 
-	// 播放地址。
+	// <p>播放地址。</p>
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
 
-	// 媒体文件大小，单位：字节。
-	// <li>当媒体文件为 HLS 时，大小是 m3u8 和 ts 文件大小的总和；</li>
-	// <li>当媒体文件为 DASH 时，大小是 mpd 和分片文件大小的总和；</li>
-	// <li><font color=red>注意</font>：在 2022-01-10T16:00:00Z 前处理生成的自适应码流文件此字段为0。</li>
+	// <p>媒体文件大小，单位：字节。</p><li>当媒体文件为 HLS 时，大小是 m3u8 和 ts 文件大小的总和；</li><li>当媒体文件为 DASH 时，大小是 mpd 和分片文件大小的总和；</li><li><font color="red">注意</font>：在 2022-01-10T16:00:00Z 前处理生成的自适应码流文件此字段为0。</li>
 	Size *int64 `json:"Size,omitnil,omitempty" name:"Size"`
 
-	// 数字水印类型。可选值：
-	// <li>Trace 表示经过溯源水印处理；</li>
-	// <li>CopyRight 表示经过版权水印处理；</li>
-	// <li>None 表示没有经过数字水印处理。</li>
+	// <p>数字水印类型。可选值：</p><li>Trace 表示经过溯源水印处理；</li><li>CopyRight 表示经过版权水印处理；</li><li>None 表示没有经过数字水印处理。</li>
 	DigitalWatermarkType *string `json:"DigitalWatermarkType,omitnil,omitempty" name:"DigitalWatermarkType"`
 
-	// 子流信息列表。
+	// <p>子流信息列表。</p>
 	SubStreamSet []*MediaSubStreamInfoItem `json:"SubStreamSet,omitnil,omitempty" name:"SubStreamSet"`
 
-	// 版权信息。
+	// <p>版权信息。</p>
 	CopyRightWatermarkText *string `json:"CopyRightWatermarkText,omitnil,omitempty" name:"CopyRightWatermarkText"`
 
-	// 字幕信息列表。
+	// <p>数字水印模板id。</p>
+	BlindWatermarkDefinition *int64 `json:"BlindWatermarkDefinition,omitnil,omitempty" name:"BlindWatermarkDefinition"`
+
+	// <p>字幕信息列表。</p>
 	SubtitleSet []*MediaSubtitleItem `json:"SubtitleSet,omitnil,omitempty" name:"SubtitleSet"`
 
-	// 默认字幕的唯一标识。
+	// <p>默认字幕的唯一标识。</p>
 	DefaultSubtitleId *string `json:"DefaultSubtitleId,omitnil,omitempty" name:"DefaultSubtitleId"`
+
+	// <p>DRM加密方法。</p>
+	DrmEncryptType *string `json:"DrmEncryptType,omitnil,omitempty" name:"DrmEncryptType"`
 }
 
 type AdaptiveDynamicStreamingTaskInput struct {
-	// 转自适应码流模板 ID。
+	// <p>转自适应码流模板 ID。</p>
 	Definition *uint64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// 水印列表，支持多张图片或文字水印，最大可支持 10 张。
+	// <p>水印列表，支持多张图片或文字水印，最大可支持 10 张。</p>
 	WatermarkSet []*WatermarkInput `json:"WatermarkSet,omitnil,omitempty" name:"WatermarkSet"`
 
-	// 溯源水印。
+	// <p>溯源水印。</p>
 	TraceWatermark *TraceWatermarkInput `json:"TraceWatermark,omitnil,omitempty" name:"TraceWatermark"`
 
-	// 版权水印。
+	// <p>版权水印。</p>
 	CopyRightWatermark *CopyRightWatermarkInput `json:"CopyRightWatermark,omitnil,omitempty" name:"CopyRightWatermark"`
 
-	// 字幕列表，元素为字幕 ID，支持多个字幕，最大可支持16个。
+	// <p>数字水印。</p>
+	BlindWatermark *BlindWatermarkInput `json:"BlindWatermark,omitnil,omitempty" name:"BlindWatermark"`
+
+	// <p>外挂字幕列表，元素为字幕 ID，支持多个字幕，最大可支持16个。</p>
 	SubtitleSet []*string `json:"SubtitleSet,omitnil,omitempty" name:"SubtitleSet"`
+
+	// <p>字幕压制信息列表。最大可支持 2 个。</p>
+	SubtitleInfoSet []*SubtitleInfoInput `json:"SubtitleInfoSet,omitnil,omitempty" name:"SubtitleInfoSet"`
 }
 
 type AdaptiveDynamicStreamingTemplate struct {
-	// 转自适应码流模板唯一标识。
+	// <p>转自适应码流模板唯一标识。</p>
 	Definition *uint64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// 模板类型，取值范围：
-	// <li>Preset：系统预置模板；</li>
-	// <li>Custom：用户自定义模板。</li>
+	// <p>模板类型，取值范围：</p><li>Preset：系统预置模板；</li><li>Custom：用户自定义模板。</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 转自适应码流模板名称。
+	// <p>转自适应码流模板名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 转自适应码流模板描述信息。
+	// <p>转自适应码流模板描述信息。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 自适应转码格式，取值范围：
-	// <li>HLS。</li>
+	// <p>自适应转码格式，取值范围：</p><li>HLS。</li>
 	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
 
-	// DRM 类型，取值范围：
-	// <li>SimpleAES</li>
-	// <li>Widevine</li>
-	// <li>FairPlay</li>
-	// 如果取值为空字符串，代表不对视频做 DRM 保护。
+	// <p>DRM 类型，取值范围：</p><li>SimpleAES</li><li>Widevine</li><li>FairPlay</li><li>Widevine+FairPlay</li>如果取值为空字符串，代表不对视频做 DRM 保护。
 	DrmType *string `json:"DrmType,omitnil,omitempty" name:"DrmType"`
 
-	// DRM 的密钥提供商，取值范围：
-	// <li>SDMC：华曦达；</li>
-	// <li>VOD：云点播。</li>
-	// 默认值为 VOD 。
+	// <p>DRM 的密钥提供商，取值范围：</p><li>SDMC：华曦达；</li><li>VOD：云点播。</li>默认值为 VOD 。<p>华曦达服务后续逐步下线，请使用VOD DRM加密服务。</p>
 	DrmKeyProvider *string `json:"DrmKeyProvider,omitnil,omitempty" name:"DrmKeyProvider"`
 
-	// 自适应转码输入流参数信息，最多输入10路流。
+	// <p>DRM的加密类型，取值范围：{&quot;cbcs&quot;, &quot;cenc&quot;}</p>
+	DrmEncryptType *string `json:"DrmEncryptType,omitnil,omitempty" name:"DrmEncryptType"`
+
+	// <p>自适应转码输入流参数信息，最多输入10路流。</p>
 	StreamInfos []*AdaptiveStreamTemplate `json:"StreamInfos,omitnil,omitempty" name:"StreamInfos"`
 
-	// 是否禁止视频低码率转高码率，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
+	// <p>是否禁止视频低码率转高码率，取值范围：</p><li>0：否，</li><li>1：是。</li>
 	DisableHigherVideoBitrate *uint64 `json:"DisableHigherVideoBitrate,omitnil,omitempty" name:"DisableHigherVideoBitrate"`
 
-	// 是否禁止视频分辨率转高分辨率，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
+	// <p>是否禁止视频分辨率转高分辨率，取值范围：</p><li>0：否，</li><li>1：是。</li>
 	DisableHigherVideoResolution *uint64 `json:"DisableHigherVideoResolution,omitnil,omitempty" name:"DisableHigherVideoResolution"`
 
-	// 模板创建时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>模板创建时间，使用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 模板最后修改时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>模板最后修改时间，使用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 切片类型，仅当 Format 为 HLS 时有效。
+	// <p>切片类型，仅当 Format 为 HLS 时有效。</p>
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
 }
 
 type AdaptiveStreamTemplate struct {
-	// 视频参数信息。
+	// <p>视频参数信息。</p>
 	Video *VideoTemplateInfo `json:"Video,omitnil,omitempty" name:"Video"`
 
-	// 音频参数信息。
+	// <p>音频参数信息。</p>
 	Audio *AudioTemplateInfo `json:"Audio,omitnil,omitempty" name:"Audio"`
 
-	// 是否移除音频流，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
+	// <p>是否移除音频流，取值范围：</p><li>0：否，</li><li>1：是。</li>
 	RemoveAudio *uint64 `json:"RemoveAudio,omitnil,omitempty" name:"RemoveAudio"`
 
-	// 是否移除视频流，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
+	// <p>是否移除视频流，取值范围：</p><li>0：否，</li><li>1：是。</li>
 	RemoveVideo *uint64 `json:"RemoveVideo,omitnil,omitempty" name:"RemoveVideo"`
 
-	// 极速高清转码参数。
+	// <p>极速高清转码参数。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TEHDConfig *TEHDConfig `json:"TEHDConfig,omitnil,omitempty" name:"TEHDConfig"`
 
-	// 音视频增强配置。
+	// <p>音视频增强配置。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnhanceConfig *EnhanceConfig `json:"EnhanceConfig,omitnil,omitempty" name:"EnhanceConfig"`
+
+	// <p>扩展参数。</p>
+	StdExtInfo *string `json:"StdExtInfo,omitnil,omitempty" name:"StdExtInfo"`
+}
+
+type AdvancedElementInfo struct {
+	// <p>主体 ID。</p>
+	ElementId *string `json:"ElementId,omitnil,omitempty" name:"ElementId"`
+
+	// <p>主体信息。</p>
+	ElementInfo *string `json:"ElementInfo,omitnil,omitempty" name:"ElementInfo"`
 }
 
 type AdvancedSuperResolutionConfig struct {
@@ -299,6 +299,14 @@ type AdvancedSuperResolutionConfig struct {
 
 	// 目标图片高度，不能超过4096。
 	Height *int64 `json:"Height,omitnil,omitempty" name:"Height"`
+
+	// 目标图片长边长度，不能超过4096。
+	// 注意：当Mode等于aspect或fixed，且未配置Width和Height字段时使用此配置。
+	LongSide *int64 `json:"LongSide,omitnil,omitempty" name:"LongSide"`
+
+	// 目标图片短边长度，不能超过4096。
+	// 注意：当Mode等于aspect或fixed，且未配置Width和Height字段时使用此配置。
+	ShortSide *int64 `json:"ShortSide,omitnil,omitempty" name:"ShortSide"`
 }
 
 type AiAnalysisResult struct {
@@ -1920,107 +1928,145 @@ type AiSampleWordInfo struct {
 	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
+type AigcFaceIdentityInfo struct {
+	// 视频中的人脸 ID。同一个人脸在视频中间隔超过1s时会视作不同 ID。
+	FaceId *string `json:"FaceId,omitnil,omitempty" name:"FaceId"`
+
+	// 从视频中截取的人脸示意图。
+	FaceImage *string `json:"FaceImage,omitnil,omitempty" name:"FaceImage"`
+
+	// 该人脸可对口型区间的起点时间，可作为对口型最佳开始时间。单位：毫秒。
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 该人脸可对口型区间的终点时间；注：此结果存在毫秒级误差，会长于实际区间终点。单位：毫秒。
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+type AigcFaceInfo struct {
+	// 主体 ID。需自行记录下返回的主体 ID。
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// 人脸信息列表。
+	FaceInfoList []*AigcFaceIdentityInfo `json:"FaceInfoList,omitnil,omitempty" name:"FaceInfoList"`
+}
+
+type AigcFaceInputFileInfo struct {
+	// 输入的视频文件类型。取值有： <li>File：点播媒体文件；</li> <li>Url：可访问的 Url；</li> 
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。当 Type 取值为 File 时，本参数有效。
+	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
+
+	// 可访问的文件 URL。当 Type 取值为 Url 时，本参数有效。
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+}
+
 type AigcImageOutputConfig struct {
-	// 存储模式。取值有： <li>Permanent：永久存储，生成的图片文件将存储到云点播，可在事件通知中获取到 FileId；</li> <li>Temporary：临时存储，生成的图片文件不会存储到云点播，可在事件通知中获取到临时访问的 URL；</li>
-	// 默认值：Temporary
+	// <p>存储模式</p><p>枚举值：</p><ul><li>Temporary： 临时存储，生成的视频文件不会存储到云点播，可在事件通知中获取到临时访问的 URL，有效期 7 天</li><li>Permanent： 永久存储，生成的视频文件将存储到云点播，可在事件通知中获取到 FileId</li></ul><p>默认值：Temporary</p>
 	StorageMode *string `json:"StorageMode,omitnil,omitempty" name:"StorageMode"`
 
-	// 输出文件名，最长 64 个字符。缺省由系统指定生成文件名。
+	// <p>输出文件名，最长 64 个字符。缺省由系统指定生成文件名。</p>
 	MediaName *string `json:"MediaName,omitnil,omitempty" name:"MediaName"`
 
-	// 分类ID，用于对媒体进行分类管理，可通过 [创建分类](/document/product/266/7812) 接口，创建分类，获得分类 ID。
-	// <li>默认值：0，表示其他分类。</li>
+	// <p>分类ID，用于对媒体进行分类管理，可通过 <a href="/document/product/266/7812">创建分类</a> 接口，创建分类，获得分类 ID。</p><li>默认值：0，表示其他分类。</li>
 	ClassId *int64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
 
-	// 输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式说明</a>。</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 生成图片的分辨率。可选值为 720P、1080P、2K、4K、1024x1024、2048x2048、2304x1728、2496x1664、2560x1440、3024x1296、4096x4096、4694x3520、4992x3328、5404x3040、6198x2656。
+	// <p>生成图片的分辨率。各模型可选值：</p><ul><li>OG：1080P、2K、4K；</li><li>GG 2.5：1K、2K、4K，默认1K；</li><li>GG 3.0：1K、2K、4K，默认1K；</li><li>GG 3.1：512、1K、2K、4K，默认1K；</li><li>Kling 2.1：1k、2k，默认1k；</li><li>Kling 3.0：1k、2k，默认1k；</li><li>Kling 3.0-Omni：1k、2k、4k，默认1k；</li><li>Kling O1：1k、2k、4k，默认1k；</li><li>SI 4.0：1K、2K、4K，默认1K；</li><li>SI 4.5：2K、4K，默认2K；</li><li>SI 5.0-lite：2K、3K，默认2K；</li><li>Vidu q2：1080p、2K、4K，默认1080p；</li><li>Hunyuan 3.0：暂不支持本字段，可通过<code>ExtInfo</code>字段设置分辨率；</li><li>Qwen 0925：暂不支持本字段，可通过<code>ExtInfo</code>字段设置分辨率；</li></ul>
 	Resolution *string `json:"Resolution,omitnil,omitempty" name:"Resolution"`
 
-	// 指定所生成图片的宽高比。<li>当 ModelName 是 GEM，可选值是 1:1、3:2、2:3、3:4、4:3、4:5、5:4、9:16、16:9 和 21:9；</li><li>当 ModelName 是 Qwen，则暂不支持。</li>
+	// <p>指定所生成图片的宽高比。</p><ul><li>OG：1:1, 3:2, 2:3, 3:4, 4:3, 16:9, 9:16, 21:9, 9:21；</li><li>GG 2.5：1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9；</li><li>GG 3.0：1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9；</li><li>GG 3.1：1:1, 1:4, 1:8, 2:3, 3:2, 3:4, 4:1, 4:3, 4:5, 5:4, 8:1, 9:16, 16:9, 21:9；</li><li>Kling 2.1：16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9；</li><li>Kling 3.0：16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9；</li><li>Kling 3.0-Omni：16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9, auto；</li><li>Kling O1：16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9, auto；</li><li>Vidu q2：16:9、9:16、1:1、3:4、4:3、21:9、2:3、3:2；</li><li>SI 4.0：<strong>不支持</strong>此参数，可通过prompt指定16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9；</li><li>SI 4.5：<strong>不支持</strong>此参数，可通过prompt指定16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9；</li><li>SI 5.0-lite：<strong>不支持</strong>此参数，可通过prompt指定16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9；</li><li>Hunyuan 3.0：不支持；</li><li>Qwen 2.0：不支持；</li><li>Qwen 0925：不支持；</li></ul>
 	AspectRatio *string `json:"AspectRatio,omitnil,omitempty" name:"AspectRatio"`
 
-	// 是否允许人物或人脸生成。取值有： <li>AllowAdult：允许生成成人；</li> <li>Disallowed：禁止在图片中包含人物或人脸；</li> 
+	// <p>是否允许人物或人脸生成。取值有： <li>AllowAdult：允许生成成人；</li> <li>Disallowed：禁止在图片中包含人物或人脸；</li></p>
 	PersonGeneration *string `json:"PersonGeneration,omitnil,omitempty" name:"PersonGeneration"`
 
-	// 是否开启输入内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否开启输入内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	InputComplianceCheck *string `json:"InputComplianceCheck,omitnil,omitempty" name:"InputComplianceCheck"`
 
-	// 是否开启输出内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否开启输出内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	OutputComplianceCheck *string `json:"OutputComplianceCheck,omitnil,omitempty" name:"OutputComplianceCheck"`
+
+	// <p>生成图片张数。各模型可选值：</p><ul><li>Kling：可选值 1-9；</li><li>OG：可选值1-8；</li></ul><p><strong>其他模型不生效。</strong></p>
+	OutputImageCount *uint64 `json:"OutputImageCount,omitnil,omitempty" name:"OutputImageCount"`
 }
 
 type AigcImageSceneInfo struct {
-	// AI生图场景类型，可选值：
-	// - change_clothes：AI换衣。
-	// - product_image：AI生商品图。
+	// <p>AI生图场景类型，可选值：</p><ul><li>change_clothes：常规场景换衣。</li><li>change_clothes_under：特殊场景换衣。</li><li>change_clothes_top_wear：上半身换衣。</li><li>change_clothes_bottom_wear：下半身换衣。</li><li>change_clothes_full_wear：全身换衣。</li><li>product_image：AI生商品图。</li><li>outpainting: AI扩图。</li></ul>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 当 Type 为 change_clothes 时有效，则该项为必填，表示AI 换衣生图配置参数。
+	// <p>当 Type 下列类型时，则该项为必填，表示AI 换衣生图配置参数：</p><ul><li>change_clothes</li><li>change_clothes_under</li><li>change_clothes_full_wear</li><li>change_clothes_top_wear</li><li>change_clothes_bottom_wear</li></ul>
 	ChangeClothesConfig *ChangeClothesConfig `json:"ChangeClothesConfig,omitnil,omitempty" name:"ChangeClothesConfig"`
 
-	// 当 Type 为 product_image 时有效，表示AI 生商品图配置参数。
+	// <p>当 Type 为 product_image 时有效，表示AI 生商品图配置参数。</p>
 	ProductImageConfig *ProductImageConfig `json:"ProductImageConfig,omitnil,omitempty" name:"ProductImageConfig"`
 }
 
 type AigcImageTask struct {
-	// 任务 ID。
+	// <p>任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务状态，取值：<li>PROCESSING：处理中；</li><li>FINISH：已完成。</li>
+	// <p>任务状态，取值：<li>PROCESSING：处理中；</li><li>FINISH：已完成。</li></p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。
+	// <p>错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。</p>
 	ErrCode *int64 `json:"ErrCode,omitnil,omitempty" name:"ErrCode"`
 
-	// 错误信息。
+	// <p>扩展错误码。空字符串表示成功，其它值表示失败。</p><p>枚举值：</p><ul><li>RequestLimitExceeded： 模型调用超出并发限制。</li><li>InvalidParameter.VoilationContent： 输入 prompt 违反内容安全策略。</li><li>InvalidParameterValue： 参数错误。</li><li>FailedOperation： 模型任务堆积。</li><li>InternalError： 内部错误。</li></ul>
+	ErrCodeExt *string `json:"ErrCodeExt,omitnil,omitempty" name:"ErrCodeExt"`
+
+	// <p>错误信息。</p>
 	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
-	// 任务进度，取值范围 [0-100] 。
+	// <p>任务进度，取值范围 [0-100] 。</p>
 	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
 
-	// AIGC 生图任务的输入信息。
+	// <p>AIGC 生图任务的输入信息。</p>
 	Input *AigcImageTaskInput `json:"Input,omitnil,omitempty" name:"Input"`
 
-	// AIGC 生图任务的输出信息。
+	// <p>AIGC 生图任务的输出信息。</p>
 	Output *AigcImageTaskOutput `json:"Output,omitnil,omitempty" name:"Output"`
 
-	// 用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 }
 
 type AigcImageTaskInput struct {
-	// 模型名称。
+	// <p>模型名称。</p>
 	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
 
-	// 模型版本。
+	// <p>模型版本。</p>
 	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
 
-	// AIGC生图任务输入文件信息。
+	// <p>AIGC生图任务输入文件信息。</p>
 	FileInfos []*AigcImageTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
 
-	// 生成图片的提示词。最大支持1000字符，当 FileInfos 为空时，此参数必填。
+	// <p>生成图片的提示词。最大支持1000字符，当 FileInfos 为空时，此参数必填。</p>
 	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
 
-	// 要阻止模型生成图片的提示词。最大支持1000字符。
+	// <p>要阻止模型生成图片的提示词。最大支持1000字符。</p>
 	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
 
-	// 是否自动优化提示词。开启时将自动优化传入的Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否自动优化提示词。开启时将自动优化传入的Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
 
-	// 生成模式。取值有： <li>Standard：标准模式；</li> <li>Professional：高品质模式；</li> 
+	// <p>生成模式。取值有： <li>Standard：标准模式；</li> <li>Professional：高品质模式；</li></p>
 	GenerationMode *string `json:"GenerationMode,omitnil,omitempty" name:"GenerationMode"`
 
-	// AIGC 生图输出结果文件输出。
+	// <p>AIGC 生图输出结果文件输出。</p>
 	OutputConfig *AigcImageOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
+
+	// <p>模型随机种子。</p>
+	Seed *int64 `json:"Seed,omitnil,omitempty" name:"Seed"`
 }
 
 type AigcImageTaskInputFileInfo struct {
-	// 输入的视频文件类型。取值有： <li>File：点播媒体文件；</li> <li>Url：可访问的 URL；</li> 
+	// 输入的视频文件类型。取值有： <li>File：点播媒体文件；</li> <li>Url：可访问的 Url；</li> 
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 图片文件的媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。当 Type 取值为 File 时，本参数有效。
@@ -2071,110 +2117,157 @@ type AigcImageTaskOutputFileInfo struct {
 }
 
 type AigcUsageDataItem struct {
-	// AIGC规格。
-	// 取值有：
-	// <li>Qwen2.0</li>
-	// <li>Gem2.5</li>
-	// <li>Gem3.0_1K</li>
-	// <li>Gem3.0_2K</li>
-	// <li>Gem3.0_4K</li>
-	// <li>Sora2</li>
-	// <li>Veo3.1Fast</li>
-	// <li>Veo3.1Standard</li>
-	// <li>Kling2.5pro_720P</li>
-	// <li>Kling2.5pro_1080P</li>
-	// <li>KlingO1_1080P</li>
-	// <li>Kling2.0&2.1std_720P</li>
-	// <li>Kling2.0&2.1pro_1080P</li>
-	// <li>KlingO1_720P</li>
-	// <li>Hailuo02&2.3_1080P</li>
-	// <li>Hailuo02&2.3_768P</li>
-	// <li>Hailuo2.3fast_768P</li>
-	// <li>Hailuo2.3fast_1080P</li>
-	// <li>ViduQ2_720P</li>
-	// <li>ViduQ2_1080P</li>
-	// <li>ViduQ2pro_720P</li>
-	// <li>ViduQ2pro_1080P</li>
-	// <li>ViduQ2turbo_720P</li>
-	// <li>ViduQ2turbo_1080P</li>
-	// <li>ViduQ2_720P_OffPeak</li>
-	// <li>ViduQ2_1080P_OffPeak</li>
-	// <li>ViduQ2turbo_720P_OffPeak</li>
-	// <li>ViduQ2turbo_1080P_OffPeak</li>
-	// <li>ViduQ2pro_720P_OffPeak</li>
-	// <li>ViduQ2pro_1080P_OffPeak</li>
-	// <li>Hunyuan1.5_720P</li>
-	// <li>Hunyuan1.5_1080P</li>
-	// <li>Hunyuan3.0_1K</li>
-	// <li>Hunyuan3.0_2K</li>
-	// <li>Hunyuan3.0_4K</li>
-	// <li>Mingmou1.0_1080P</li>
-	// <li>Mingmou1.0_1K</li>
-	// <li>Mingmou1.0_2K</li>
-	// <li>Mingmou1.0_4K</li>
-	// <li>Mingmou1.0_720P</li>
-	// <li> unknown</li>
+	// <p>AIGC规格。<br>取值有：</p><li>Qwen2.0</li><li>Hunyuan3.0_1K</li><li>Hunyuan3.0_2K</li><li>Hunyuan3.0_4K</li><li>Mingmou1.0_1K</li><li>Mingmou1.0_2K</li><li>Mingmou1.0_4K</li><li>ViduQ2_T2i_1080P</li><li>ViduQ2_T2i_2K</li><li>ViduQ2_T2i_4K</li><li>ViduQ2_I2i_1080P</li><li>ViduQ2_I2i_2K</li><li>ViduQ2_I2i_4K</li><li>ViduQ2_Refer2i_1080P</li><li>ViduQ2_Refer2i_2K</li><li>ViduQ2_Refer2i_4K</li><li>Kling2.1_T2i_1K2K</li><li>Kling2.1_T2i_4K</li><li>Kling2.1_Refer2i_1K</li><li>Kling2.1_Refer2i_2K</li><li>Kling2.1_Refer2i_4K</li><li>Veo3.1Standard</li><li>Veo3.1Fast</li><li>Kling2.0&amp;2.1std_720P</li><li>Kling2.0&amp;2.1pro_1080P</li><li>Kling2.5pro_720P</li><li>Kling2.5pro_1080P</li><li>KlingO1_720P</li><li>KlingO1_1080P</li><li>KlingO1_NoVideo_720P</li><li>KlingO1_NoVideo_1080P</li><li>Kling2.6</li><li>Kling2.6Sound</li><li>Kling2.6MotionControl_720P</li><li>Kling2.6MotionControl_1080P</li><li>Kling3.0_720P</li><li>Kling3.0Sound_720P</li><li>Kling3.0CustomVoice_720P</li><li>Kling3.0_1080P</li><li>Kling3.0Sound_1080P</li><li>Kling3.0CustomVoice_1080P</li><li>Kling3.0CustomVoice_2K</li><li>Kling3.0CustomVoice_4K</li><li>Kling3.0MotionControl_720P</li><li>Kling3.0MotionControl_1080P</li><li>Kling3.0MotionControl_2K</li><li>Kling3.0MotionControl_4K</li><li>Kling_Avatar_I2v_720P</li><li>Kling_Avatar_I2v_1080P</li><li>Kling_Identifyface</li><li>Hailuo02&amp;2.3_768P</li><li>Hailuo02&amp;2.3_1080P</li><li>Hailuo2.3fast_768P</li><li>Hailuo2.3fast_1080P</li><li>ViduQ2_720P</li><li>ViduQ2_720P_OffPeak</li><li>ViduQ2_1080P</li><li>ViduQ2_1080P_OffPeak</li><li>ViduQ2_Refer_540P</li><li>ViduQ2_Refer_540P_OffPeak</li><li>ViduQ2_Refer_720P</li><li>ViduQ2_Refer_720P_OffPeak</li><li>ViduQ2_Refer_1080P</li><li>ViduQ2_Refer_1080P_OffPeak</li><li>ViduQ2pro_720P</li><li>ViduQ2pro_720P_OffPeak</li><li>ViduQ2pro_1080P</li><li>ViduQ2pro_1080P_OffPeak</li><li>ViduQ2pro_Refer_720P</li><li>ViduQ2pro_Refer_720P_OffPeak</li><li>ViduQ2pro_Refer_720P</li><li>ViduQ2pro_Refer_720P_OffPeak</li><li>ViduQ2pro_Refer_1080P</li><li>ViduQ2pro_Refer_1080P_OffPeak</li><li>ViduQ2turbo_720P</li><li>ViduQ2turbo_720P_OffPeak</li><li>ViduQ2turbo_1080P</li><li>ViduQ2turbo_1080P_OffPeak</li><li>ViduQ3_Refer_720P</li><li>ViduQ3_Refer_720P_OffPeak</li><li>ViduQ3_Refer_1080P</li><li>ViduQ3_Refer_1080P_OffPeak</li><li>ViduQ3_Refer_2K</li><li>ViduQ3_Refer_2K_OffPeak</li><li>ViduQ3_Refer_4K</li><li>ViduQ3_Refer_4K_OffPeak</li><li>ViduQ3pro_540P</li><li>ViduQ3pro_540P_OffPeak</li><li>ViduQ3pro_720P</li><li>ViduQ3pro_720P_OffPeak</li><li>ViduQ3pro_1080P</li><li>ViduQ3pro_1080P_OffPeak</li><li>ViduQ3turbo_540P</li><li>ViduQ3turbo_540P_OffPeak</li><li>ViduQ3turbo_720P</li><li>ViduQ3turbo_720P_OffPeak</li><li>ViduQ3turbo_1080P</li><li>ViduQ3turbo_1080P_OffPeak</li><li>ViduQ3turbo_2K</li><li>ViduQ3turbo_2K_OffPeak</li><li>ViduQ3turbo_4K</li><li>ViduQ3turbo_4K_OffPeak</li><li>Vidu_TemplateEffect</li><li>Hunyuan1.5_720P</li><li>Hunyuan1.5_1080P</li><li>Mingmou1.0_720P</li><li>Mingmou1.0_1080P</li><li>ImageProductImage</li><li>ImageChangeClothes</li><li>VideoProductShowcase</li><li>ImageOutPainting</li><li>FaceInfo</li><li>CustomVoice</li><li>Subject</li><li>unknown</li>
 	Specification *string `json:"Specification,omitnil,omitempty" name:"Specification"`
 
-	// 用量数据。
+	// <p>用量数据。</p>
 	DataSet []*TaskStatDataItem `json:"DataSet,omitnil,omitempty" name:"DataSet"`
 }
 
 type AigcVideoOutputConfig struct {
-	// 存储模式。取值有： <li>Permanent：永久存储，生成的视频文件将存储到云点播，可在事件通知中获取到 FileId；</li> <li>Temporary：临时存储，生成的视频文件不会存储到云点播，可在事件通知中获取到临时访问的 URL；</li>
-	// 默认值：Temporary
+	// <p>存储模式</p><p>枚举值：</p><ul><li>Temporary： 临时存储，生成的视频文件不会存储到云点播，可在事件通知中获取到临时访问的 URL，有效期 7 天</li><li>Permanent： 永久存储，生成的视频文件将存储到云点播，可在事件通知中获取到 FileId</li></ul><p>默认值：Temporary</p>
 	StorageMode *string `json:"StorageMode,omitnil,omitempty" name:"StorageMode"`
 
-	// 输出媒体文件名，最长 64 个字符。缺省由系统指定生成文件名。
+	// <p>输出媒体文件名，最长 64 个字符。缺省由系统指定生成文件名。</p>
 	MediaName *string `json:"MediaName,omitnil,omitempty" name:"MediaName"`
 
-	// 分类ID，用于对媒体进行分类管理，可通过 [创建分类](/document/product/266/7812) 接口，创建分类，获得分类 ID。
-	// <li>默认值：0，表示其他分类。</li>
+	// <p>分类ID，用于对媒体进行分类管理，可通过 <a href="/document/product/266/7812">创建分类</a> 接口，创建分类，获得分类 ID。</p><li>默认值：0，表示其他分类。</li>
 	ClassId *int64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
 
-	// 输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式说明</a>。</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 生成视频的时长，单位：秒。<li>当 ModelName 是 Kling，可选值为 5、10，默认为 5；</li><li>当 ModelName 是 Hailuo，可选值为 6、10，默认为 6；</li><li>当 ModelName 是 Vidu，可指定1-10；</li><li>当 ModelName 是 GV，可选值为 8，默认为 8；</li><li>当 ModelName 是 OS，可选值为 4、8、12，默认为 8；</li>
+	// <p>生成视频的时长，单位：秒。</p><li>当 ModelName 是 Kling，可选值为 5、10，默认为 5；</li><li>当 ModelName 是 Hailuo，可选值为 6、10，默认为 6；</li><li>当 ModelName 是 Vidu，可指定1-10；</li><li>当 ModelName 是 GV，可选值为 8，默认为 8；</li><li>当 ModelName 是 OS，可选值为 4、8、12，默认为 8；</li><li>当 ModelName 是 PixVerse，可指定1-15，默认为5；</li>
 	Duration *float64 `json:"Duration,omitnil,omitempty" name:"Duration"`
 
-	// 生成视频的分辨率。
-	// <li>当 ModelName 是 Kling，可选值为 720P、1080P，默认为 720P；</li>
-	// <li>当 ModelName 是 Hailuo，可选值为 768P、1080P，默认为 768P；</li>
-	// <li>当 ModelName 是 Vidu，可选值为 720P、1080P，默认为 720P；</li>
-	// <li>当 ModelName 是 GV，可选值为 720P、1080P，默认为 720P；</li>
-	// <li>当 ModelName 是 OS，可选值为 720P；</li>
+	// <p>生成视频的分辨率。</p><li>当 ModelName 是 Kling，可选值为 720P、1080P，默认为 720P；</li><li>当 ModelName 是 Hailuo，可选值为 768P、1080P，默认为 768P；</li><li>当 ModelName 是 Vidu，可选值为 720P、1080P，默认为 720P；</li><li>当 ModelName 是 GV，可选值为 720P、1080P，默认为 720P；</li><li>当 ModelName 是 OS，可选值为 720P；</li><li>当 ModelName 是 PixVerse，可选值为 540p、720p、1080p、2k、4k，默认为720p；</li>
 	Resolution *string `json:"Resolution,omitnil,omitempty" name:"Resolution"`
 
-	// 指定所生成视频的宽高比。
-	// <li>当 ModelName 是 Kling，当文生视频时，则可选值为 16:9、9:16、 1:1，默认为16:9；</li>
-	// <li>当 ModelName 是 Vidu，当文生视频时和使用参考图片生成时，则可选值为 16:9、9:16、4:3、3:4、1:1，其中仅版本q2支持4:3、3:4</li>
-	// <li>当 ModelName 是 GV，则可选值为 16:9、9:16，默认为 16:9；</li>
-	// <li>当 ModelName 是 OS，当文生视频时，则可选值为 16:9、9:16，默认为 16:9；</li>
-	// <li>当 ModelName 是 Hailuo，则暂不支持。</li>
+	// <p>指定所生成视频的宽高比。</p><li>当 ModelName 是 Kling，当文生视频时，则可选值为 16:9、9:16、 1:1，默认为16:9；</li><li>当 ModelName 是 Vidu，当文生视频时和使用参考图片生成时，则可选值为 16:9、9:16、4:3、3:4、1:1，其中仅版本q2支持4:3、3:4</li><li>当 ModelName 是 GV，则可选值为 16:9、9:16，默认为 16:9；</li><li>当 ModelName 是 OS，当文生视频时，则可选值为 16:9、9:16，默认为 16:9；</li><li>当 ModelName 是 Hailuo，则暂不支持;</li><li>当 ModelName 是PixVerse，则可选值为 16:9，4:3，1:1，3:4，9:16，2:3，3:2，21:9;</li>
 	AspectRatio *string `json:"AspectRatio,omitnil,omitempty" name:"AspectRatio"`
 
-	// 是否生成音频。支持的模型包括 GV、OS、Vidu。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li>
-	// 默认值：Disabled
+	// <p>是否生成音频。支持的模型包括 GV、OS、Vidu、Jimeng、Kling。</p><p>枚举值：</p><ul><li>Enabled： 开启</li><li>Disabled： 关闭</li></ul><p>默认值：Disabled</p>
 	AudioGeneration *string `json:"AudioGeneration,omitnil,omitempty" name:"AudioGeneration"`
 
-	// 是否允许人物或人脸生成。取值有： <li>AllowAdult：允许生成成人；</li> <li>Disallowed：禁止在图片中包含人物或人脸；</li> 
+	// <p>是否允许人物或人脸生成。取值有： <li>AllowAdult：允许生成成人；</li> <li>Disallowed：禁止在图片中包含人物或人脸；</li></p>
 	PersonGeneration *string `json:"PersonGeneration,omitnil,omitempty" name:"PersonGeneration"`
 
-	// 是否开启输入内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否开启输入内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	InputComplianceCheck *string `json:"InputComplianceCheck,omitnil,omitempty" name:"InputComplianceCheck"`
 
-	// 是否开启输出内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否开启输出内容的合规性检查。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	OutputComplianceCheck *string `json:"OutputComplianceCheck,omitnil,omitempty" name:"OutputComplianceCheck"`
 
-	// 是否启用视频增强。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
-	// 说明：
-	// 1. 对于选择的分辨率超过模型可生成分辨率时，默认会启用增强。
-	// 2. 对于模型可以直出的分辨率，也可以主动选择模型直出低分辨率，使用增强获得指定分辨率。
+	// <p>是否启用视频增强。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li><br>说明：</p><ol><li>对于选择的分辨率超过模型可生成分辨率时，默认会启用增强。</li><li>对于模型可以直出的分辨率，也可以主动选择模型直出低分辨率，使用增强获得指定分辨率。</li></ol>
 	EnhanceSwitch *string `json:"EnhanceSwitch,omitnil,omitempty" name:"EnhanceSwitch"`
 
-	// 是否开启vidu智能插帧。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否开启错峰。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
+	OffPeak *string `json:"OffPeak,omitnil,omitempty" name:"OffPeak"`
+
+	// <p>是否开启vidu智能插帧。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	FrameInterpolate *string `json:"FrameInterpolate,omitnil,omitempty" name:"FrameInterpolate"`
+
+	// <p>是否开启图标水印。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li><br>目前支持的模型有 Vidu，其他模型暂不支持。</p>
+	LogoAdd *string `json:"LogoAdd,omitnil,omitempty" name:"LogoAdd"`
+
+	// <p>是否为生成的视频添加背景音乐。</p><p>枚举值：</p><ul><li>Enabled： 系统将从预设 BGM 库中自动挑选合适的音乐并添加。</li><li>Disabled： 不添加BGM。</li></ul><p>默认值：Disabled</p>
+	EnableBGM *string `json:"EnableBGM,omitnil,omitempty" name:"EnableBGM"`
+}
+
+type AigcVideoRedrawOutputConfig struct {
+	// <p>存储模式。取值有： <li>Permanent：永久存储，生成的视频文件将存储到云点播，可在事件通知中获取到 FileId；</li> <li>Temporary：临时存储，生成的视频文件不会存储到云点播，可在事件通知中获取到临时访问的 URL；</li>默认值：Temporary</p>
+	StorageMode *string `json:"StorageMode,omitnil,omitempty" name:"StorageMode"`
+
+	// <p>输出媒体文件名，最长 64 个字符。缺省由系统指定生成文件名。</p>
+	MediaName *string `json:"MediaName,omitnil,omitempty" name:"MediaName"`
+
+	// <p>分类ID，用于对媒体进行分类管理，可通过 <a href="/document/product/266/7812">创建分类</a> 接口，创建分类，获得分类 ID。<li>默认值：0，表示其他分类。</li></p>
+	ClassId *int64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
+
+	// <p>输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式说明</a>。</p><p>参数格式：2025-12-28T00:35:00Z</p>
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+}
+
+type AigcVideoRedrawOutputFileInfo struct {
+	// <p>存储模式。取值有： <li>Permanent：永久存储；</li> <li>Temporary：临时存储；</li>默认值：Temporary</p>
+	StorageMode *string `json:"StorageMode,omitnil,omitempty" name:"StorageMode"`
+
+	// <p>输出文件名，最长 64 个字符。缺省由系统指定生成文件名。当 StorageMode 为 Permanent 时有效。</p>
+	MediaName *string `json:"MediaName,omitnil,omitempty" name:"MediaName"`
+
+	// <p>分类ID，用于对媒体进行分类管理，可通过 <a href="/document/product/266/7812">创建分类</a> 接口，创建分类，获得分类 ID。当 StorageMode 为 Permanent 时有效。</p>
+	ClassId *int64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
+
+	// <p>输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式说明</a>。</p>
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+
+	// <p>文件类型，例如 mp4、flv 等。</p>
+	FileType *string `json:"FileType,omitnil,omitempty" name:"FileType"`
+
+	// <p>媒体文件播放地址。</p>
+	FileUrl *string `json:"FileUrl,omitnil,omitempty" name:"FileUrl"`
+
+	// <p>媒体文件 ID。当 StorageMode 为 Permanent 时有效。</p>
+	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
+
+	// <p>输出视频的元信息。当 StorageMode 为 Permanent 时有效。</p>
+	MetaData *MediaMetaData `json:"MetaData,omitnil,omitempty" name:"MetaData"`
+}
+
+type AigcVideoRedrawTask struct {
+	// <p>任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>任务状态，取值：<li>PROCESSING：处理中；</li><li>FINISH：已完成。</li></p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。</p>
+	ErrCode *int64 `json:"ErrCode,omitnil,omitempty" name:"ErrCode"`
+
+	// <p>扩展错误码。</p>
+	ErrCodeExt *string `json:"ErrCodeExt,omitnil,omitempty" name:"ErrCodeExt"`
+
+	// <p>错误信息。</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// <p>任务进度，取值范围 [0-100] 。</p>
+	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
+
+	// <p>AIGC 视频转绘任务的输入信息。</p>
+	Input *AigcVideoRedrawTaskInput `json:"Input,omitnil,omitempty" name:"Input"`
+
+	// <p>AIGC 视频转绘任务的输出信息。</p>
+	Output *AigcVideoRedrawTaskOutput `json:"Output,omitnil,omitempty" name:"Output"`
+
+	// <p>用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+}
+
+type AigcVideoRedrawTaskInput struct {
+	// <p>AIGC 视频转绘任务输入文件信息。</p>
+	FileInfo *AigcVideoRedrawTaskInputFileInfo `json:"FileInfo,omitnil,omitempty" name:"FileInfo"`
+
+	// <p>AIGC 视频转绘输出配置。</p>
+	OutputConfig *AigcVideoRedrawOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
+}
+
+type AigcVideoRedrawTaskInputFileInfo struct {
+	// <p>输入的视频文件类型。取值有： <li>File：点播媒体文件；</li> <li>Url：可访问的 Url；</li></p>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 <a href="/document/product/266/7830">视频上传完成事件通知</a> 或 <a href="https://console.cloud.tencent.com/vod/media">云点播控制台</a> 获取该字段。当 Type 取值为 File 时，本参数有效。说明：1. 推荐使用小于10M的图片；2. 图片格式的取值为：jpeg，jpg, png。</p>
+	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
+
+	// <p>可访问的文件 URL。当 Type 取值为 Url 时，本参数有效。说明：1. 推荐使用小于10M的图片；2. 图片格式的取值为：jpeg，jpg, png。</p>
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+}
+
+type AigcVideoRedrawTaskOutput struct {
+	// <p>AIGC 视频转绘任务的输出文件信息。</p>
+	FileInfo *AigcVideoRedrawOutputFileInfo `json:"FileInfo,omitnil,omitempty" name:"FileInfo"`
 }
 
 type AigcVideoSceneInfo struct {
@@ -2187,109 +2280,125 @@ type AigcVideoSceneInfo struct {
 }
 
 type AigcVideoTask struct {
-	// 任务 ID。
+	// <p>任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务状态，取值：<li>PROCESSING：处理中；</li><li>FINISH：已完成。</li>
+	// <p>任务状态，取值：<li>PROCESSING：处理中；</li><li>FINISH：已完成。</li></p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。
+	// <p>错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。</p>
 	ErrCode *int64 `json:"ErrCode,omitnil,omitempty" name:"ErrCode"`
 
-	// 错误信息。
+	// <p>扩展错误码。</p><p>枚举值：</p><ul><li>RequestLimitExceeded： 调用超出并发限制。</li><li>InvalidParameter.VoilationContent： 输入 prompt 违反内容安全策略。</li><li>InvalidParameterValue： 参数错误。</li><li>FailedOperation： 模型任务堆积。</li><li>InternalError： 内部错误。</li></ul>
+	ErrCodeExt *string `json:"ErrCodeExt,omitnil,omitempty" name:"ErrCodeExt"`
+
+	// <p>错误信息。</p>
 	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
-	// 任务进度，取值范围 [0-100] 。
+	// <p>任务进度，取值范围 [0-100] 。</p>
 	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
 
-	// AIGC 生视频任务的输入信息。
+	// <p>AIGC 生视频任务的输入信息。</p>
 	Input *AigcVideoTaskInput `json:"Input,omitnil,omitempty" name:"Input"`
 
-	// AIGC 生视频任务的输出信息。
+	// <p>AIGC 生视频任务的输出信息。</p>
 	Output *AigcVideoTaskOutput `json:"Output,omitnil,omitempty" name:"Output"`
 
-	// 用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 }
 
 type AigcVideoTaskInput struct {
-	// 模型名称。
+	// <p>模型名称。</p>
 	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
 
-	// 模型版本。
+	// <p>模型版本。</p>
 	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
 
-	// AIGC生图任务输入文件信息。
+	// <p>AIGC 生视频任务输入文件信息。</p>
 	FileInfos []*AigcVideoTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
 
-	// 用于作为尾帧画面来生成视频的媒体文件 ID。该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。
+	// <p>AIGC 任务固定主体输入信息。</p>
+	SubjectInfos []*AigcVideoTaskInputSubjectInfo `json:"SubjectInfos,omitnil,omitempty" name:"SubjectInfos"`
+
+	// <p>用于作为尾帧画面来生成视频的媒体文件 ID。该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 <a href="/document/product/266/7830">视频上传完成事件通知</a> 或 <a href="https://console.cloud.tencent.com/vod/media">云点播控制台</a> 获取该字段。</p>
 	LastFrameFileId *string `json:"LastFrameFileId,omitnil,omitempty" name:"LastFrameFileId"`
 
-	// 用于作为尾帧画面来生成视频的媒体文件 URL。说明：
-	// 1. 只支持模型 GV 、Kling、Vidu，其他模型暂不支持。当 ModelName 为 GV 时，如果指定该参数，则需同时指定 FileInfos 作为待生成视频的首帧。当 ModelName 为 Kling 、ModelVersion 为 2.1 并且指定输出分辨率 Resolution 为 1080P 时，才能指定该参数。当 ModelName 为 Vidu、ModelVersion 为 q2-pro、q2-turbo 时，才能指定该参数。
-	// 2. 图片大小需小于5M。
-	// 3. 3. 图片格式的取值为：jpeg，jpg, png, webp。
+	// <p>用于作为尾帧画面来生成视频的媒体文件 URL。说明：</p><ol><li>只支持模型 GV 、Kling、Vidu，其他模型暂不支持。当 ModelName 为 GV 时，如果指定该参数，则需同时指定 FileInfos 作为待生成视频的首帧。当 ModelName 为 Kling 、ModelVersion 为 2.1 并且指定输出分辨率 Resolution 为 1080P 时，才能指定该参数。当 ModelName 为 Vidu、ModelVersion 为 q2-pro、q2-turbo 时，才能指定该参数。</li><li>图片大小需小于5M。</li><li><ol start="3"><li>图片格式的取值为：jpeg，jpg, png, webp。</li></ol></li></ol>
 	LastFrameUrl *string `json:"LastFrameUrl,omitnil,omitempty" name:"LastFrameUrl"`
 
-	// 生成视频的提示词。最大支持1000字符，当 FileInfos 为空时，此参数必填。
+	// <p>生成视频的提示词。最大支持1000字符，当 FileInfos 为空时，此参数必填。</p>
 	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
 
-	// 要阻止模型生成视频的提示词。最大支持1000字符。
+	// <p>要阻止模型生成视频的提示词。最大支持1000字符。</p>
 	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
 
-	// 是否自动优化提示词。开启时将自动优化传入的Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否自动优化提示词。开启时将自动优化传入的Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
 
-	// 生成模式。取值有： <li>Standard：标准模式；</li> <li>Professional：高品质模式；</li> 
+	// <p>生成模式。取值有： <li>Standard：标准模式；</li> <li>Professional：高品质模式；</li></p>
 	GenerationMode *string `json:"GenerationMode,omitnil,omitempty" name:"GenerationMode"`
 
-	// AIGC 生图输出结果文件输出。
+	// <p>AIGC 生图输出结果文件输出。</p>
 	OutputConfig *AigcVideoOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
 
-	// 输入文件的区域信息。当文件url是国外地址时候，可选Oversea。默认Mainland。
+	// <p>输入文件的区域信息。当文件url是国外地址时候，可选Oversea。默认Mainland。</p>
 	InputRegion *string `json:"InputRegion,omitnil,omitempty" name:"InputRegion"`
 
-	// 场景类型。取值如下：<li>当 ModelName 为 Kling 时，取值 motion_control 表示动作控制；</li><li>其他 ModelName 暂不支持。</li>
+	// <p>场景类型。取值如下：<li>当 ModelName 为 Kling 时，取值 motion_control 表示动作控制；</li><li>其他 ModelName 暂不支持。</li></p>
 	SceneType *string `json:"SceneType,omitnil,omitempty" name:"SceneType"`
+
+	// <p>模型随机种子。</p>
+	Seed *int64 `json:"Seed,omitnil,omitempty" name:"Seed"`
 }
 
 type AigcVideoTaskInputFileInfo struct {
-	// 输入的视频文件类型。取值有： <li>File：点播媒体文件；</li> <li>Url：可访问的 URL；</li> 
+	// <p>输入的视频文件类型。取值有： <li>File：点播媒体文件；</li> <li>Url：可访问的 Url；</li></p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 文件分类。取值为：
-	// <li>Image: 图片；</li>
-	// <li>Video: 视频。</li>
+	// <p>文件分类。取值为：</p><ul><li>Image: 图片；<strong>注意，要使用Usage字段定义图片类型</strong>。</li><li>Video: 视频。</li></ul>
 	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
 
-	// 媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。当 Type 取值为 File 时，本参数有效。说明：
-	// 1. 推荐使用小于10M的图片；
-	// 2. 图片格式的取值为：jpeg，jpg, png。
+	// <p>媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 <a href="/document/product/266/7830">视频上传完成事件通知</a> 或 <a href="https://console.cloud.tencent.com/vod/media">云点播控制台</a> 获取该字段。当 Type 取值为 File 时，本参数有效。说明：</p><ol><li>推荐使用小于10M的图片；</li><li>图片格式的取值为：jpeg，jpg, png。</li></ol>
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
-	// 可访问的文件 URL。当 Type 取值为 Url 时，本参数有效。
-	// 说明：
-	// 1. 推荐使用小于10M的图片；
-	// 2. 图片格式的取值为：jpeg，jpg, png。
+	// <p>可访问的文件 URL。当 Type 取值为 Url 时，本参数有效。<br>说明：</p><ol><li>推荐使用小于10M的图片；</li><li>图片格式的取值为：jpeg，jpg, png。</li></ol>
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
 
-	// 参考类型，GV模型适用。
-	// 注意：
-	// 
-	// 当使用GV模型时，可作为参考方式,可选asset(素材)、style(风格)。
+	// <p>参考类型，GV模型适用。<br>注意：<br>当使用 GV 模型时，可作为参考方式，可选值：asset 表示素材、style 表示风格；<br>当使用 Kling 模型以及 Category 为 Video 时，可区分参考视频类型，feature 表示特征参考视频，base 表示待编辑视频。</p>
 	ReferenceType *string `json:"ReferenceType,omitnil,omitempty" name:"ReferenceType"`
 
-	// 主体id.
-	// 适用模型：Vidu-q2.
-	// 当需要对图片标识主体时，需要每个图片都带主体id，后续生成时可以通过@主体id的方式使用。
+	// <p>用法：Vidu主体Id。<br>Vidu主体Id：prompt可以通过 @主体Id 的方式使用。当 Category 为 Image 时有效。</p>
 	ObjectId *string `json:"ObjectId,omitnil,omitempty" name:"ObjectId"`
 
-	// 适用于Vidu-q2模型。
-	// 当全部图片携带主体id时，可针对主体设置音色id。 音色列表：https://shengshu.feishu.cn/sheets/EgFvs6DShhiEBStmjzccr5gonOg
+	// <p>适用于 Vidu-q2 模型。<br>当全部图片携带主体 Id 时，可针对主体设置音色 Id。 当 Category 为 Image 时有效。音色列表：https://shengshu.feishu.cn/sheets/EgFvs6DShhiEBStmjzccr5gonOg</p>
 	VoiceId *string `json:"VoiceId,omitnil,omitempty" name:"VoiceId"`
+
+	// <p>是否保留视频原声。当 Category 为 Video 时有效。取值如下：</p><li>Enabled：保留</li><li>Disabled：不保留</li>
+	KeepOriginalSound *string `json:"KeepOriginalSound,omitnil,omitempty" name:"KeepOriginalSound"`
+
+	// <p>用于区分输入是首帧或参考帧。可选值：</p><ul><li>FirstFrame：首帧；</li><li>Reference：参考帧；</li></ul><p><strong>注意，默认是FirstFrame</strong></p>
+	Usage *string `json:"Usage,omitnil,omitempty" name:"Usage"`
+}
+
+type AigcVideoTaskInputSubjectInfo struct {
+	// <p>固定主体Id。</p><ul><li>Kling主体<strong>必选</strong>；</li><li>Vidu主体可选。</li></ul>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>固定名称。</p><ul><li>Vidu主体<strong>必选</strong>，可在 prompt 中加入 [@name] 使用。如 name 为小明时，prompt 中描述为 [@小明] 。</li><li>Kling主体可选。</li></ul>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p><strong>仅Vidu有效。</strong>音色ID用来决定视频中的声音音色，为空时系统会自动推荐。</p>
+	VoiceId *string `json:"VoiceId,omitnil,omitempty" name:"VoiceId"`
+
+	// <p><strong>仅Vidu有效。</strong>临时主体图片，最多3张图片<br>注1：支持传入图片URL（确保可访问）；<br>注2：图片支持 png、jpeg、jpg、webp格式；<br>注3：图片像素不能小于 128*128，且比例需要小于1:4或者4:1。</p>
+	ImageUrls []*string `json:"ImageUrls,omitnil,omitempty" name:"ImageUrls"`
+
+	// <p><strong>仅Vidu有效。</strong>临时主体视频，最多1个5秒视频注1：仅参考生viduq2-pro模型支持使用视频主体；注2：最多支持上传 1个5秒 的视频；注3：视频支持 mp4、avi、mov格式；注4：视频像素不能小于 128*128，且比例需要小于1:4或者4:1；</p>
+	VideoUrls []*string `json:"VideoUrls,omitnil,omitempty" name:"VideoUrls"`
 }
 
 type AigcVideoTaskOutput struct {
@@ -2396,84 +2505,80 @@ type AnimatedGraphicsTemplate struct {
 
 // Predefined struct for user
 type ApplyUploadRequestParams struct {
-	// 媒体类型，可选值请参考 [上传能力综述](/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B)。
+	// <p>媒体类型，可选值请参考 <a href="/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B">上传能力综述</a>。</p>
 	MediaType *string `json:"MediaType,omitnil,omitempty" name:"MediaType"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 媒体名称。
+	// <p>媒体名称。</p>
 	MediaName *string `json:"MediaName,omitnil,omitempty" name:"MediaName"`
 
-	// 封面类型，可选值请参考 [上传能力综述](/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B)。
+	// <p>封面类型，可选值请参考 <a href="/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B">上传能力综述</a>。</p>
 	CoverType *string `json:"CoverType,omitnil,omitempty" name:"CoverType"`
 
-	// 媒体后续任务处理操作，即完成媒体上传后，可自动发起任务流操作。参数值为任务流模板名，云点播支持 [创建任务流模板](/document/product/266/33819) 并为模板命名。
+	// <p>媒体后续任务处理操作，即完成媒体上传后，可自动发起任务流操作。参数值为任务流模板名，云点播支持 <a href="/document/product/266/33819">创建任务流模板</a> 并为模板命名。</p>
 	Procedure *string `json:"Procedure,omitnil,omitempty" name:"Procedure"`
 
-	// 媒体文件过期时间，格式按照 ISO 8601 标准表示，详见 [ISO 日期格式说明](/document/product/266/11732#iso-.E6.97.A5.E6.9C.9F.E6.A0.BC.E5.BC.8F)。
+	// <p>媒体文件过期时间，格式按照 ISO 8601 标准表示，详见 <a href="/document/product/266/11732#iso-.E6.97.A5.E6.9C.9F.E6.A0.BC.E5.BC.8F">ISO 日期格式说明</a>。</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 指定上传园区，仅适用于对上传地域有特殊需求的用户。
+	// <p>指定上传园区，仅适用于对上传地域有特殊需求的用户。</p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// 分类ID，用于对媒体进行分类管理，可通过 [创建分类](/document/product/266/7812) 接口，创建分类，获得分类 ID。
-	// <li>默认值：0，表示其他分类。</li>
+	// <p>分类ID，用于对媒体进行分类管理，可通过 <a href="/document/product/266/7812">创建分类</a> 接口，创建分类，获得分类 ID。</p><li>默认值：0，表示其他分类。</li>
 	ClassId *int64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
 
-	// 来源上下文，用于透传用户请求信息，[上传完成回调](/document/product/266/7830) 将返回该字段值，最长 250 个字符。
+	// <p>来源上下文，用于透传用户请求信息，<a href="/document/product/266/7830">上传完成回调</a> 将返回该字段值，最长 250 个字符。</p>
 	SourceContext *string `json:"SourceContext,omitnil,omitempty" name:"SourceContext"`
 
-	// 会话上下文，用于透传用户请求信息，当指定 Procedure 参数后，[任务流状态变更回调](/document/product/266/9636) 将返回该字段值，最长 1000 个字符。
+	// <p>会话上下文，用于透传用户请求信息，当指定 Procedure 参数后，<a href="/document/product/266/9636">任务流状态变更回调</a> 将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 
-	// 媒体存储路径，以/开头。
-	// 只有[FileID + Path 模式](https://cloud.tencent.com/document/product/266/126825)的子应用可以指定存储路径。
+	// <p>媒体存储路径，以/开头。<br>只有<a href="https://cloud.tencent.com/document/product/266/126825">FileID + Path 模式</a>的子应用可以指定存储路径。</p>
 	MediaStoragePath *string `json:"MediaStoragePath,omitnil,omitempty" name:"MediaStoragePath"`
 }
 
 type ApplyUploadRequest struct {
 	*tchttp.BaseRequest
 	
-	// 媒体类型，可选值请参考 [上传能力综述](/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B)。
+	// <p>媒体类型，可选值请参考 <a href="/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B">上传能力综述</a>。</p>
 	MediaType *string `json:"MediaType,omitnil,omitempty" name:"MediaType"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 媒体名称。
+	// <p>媒体名称。</p>
 	MediaName *string `json:"MediaName,omitnil,omitempty" name:"MediaName"`
 
-	// 封面类型，可选值请参考 [上传能力综述](/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B)。
+	// <p>封面类型，可选值请参考 <a href="/document/product/266/9760#.E6.96.87.E4.BB.B6.E7.B1.BB.E5.9E.8B">上传能力综述</a>。</p>
 	CoverType *string `json:"CoverType,omitnil,omitempty" name:"CoverType"`
 
-	// 媒体后续任务处理操作，即完成媒体上传后，可自动发起任务流操作。参数值为任务流模板名，云点播支持 [创建任务流模板](/document/product/266/33819) 并为模板命名。
+	// <p>媒体后续任务处理操作，即完成媒体上传后，可自动发起任务流操作。参数值为任务流模板名，云点播支持 <a href="/document/product/266/33819">创建任务流模板</a> 并为模板命名。</p>
 	Procedure *string `json:"Procedure,omitnil,omitempty" name:"Procedure"`
 
-	// 媒体文件过期时间，格式按照 ISO 8601 标准表示，详见 [ISO 日期格式说明](/document/product/266/11732#iso-.E6.97.A5.E6.9C.9F.E6.A0.BC.E5.BC.8F)。
+	// <p>媒体文件过期时间，格式按照 ISO 8601 标准表示，详见 <a href="/document/product/266/11732#iso-.E6.97.A5.E6.9C.9F.E6.A0.BC.E5.BC.8F">ISO 日期格式说明</a>。</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 指定上传园区，仅适用于对上传地域有特殊需求的用户。
+	// <p>指定上传园区，仅适用于对上传地域有特殊需求的用户。</p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// 分类ID，用于对媒体进行分类管理，可通过 [创建分类](/document/product/266/7812) 接口，创建分类，获得分类 ID。
-	// <li>默认值：0，表示其他分类。</li>
+	// <p>分类ID，用于对媒体进行分类管理，可通过 <a href="/document/product/266/7812">创建分类</a> 接口，创建分类，获得分类 ID。</p><li>默认值：0，表示其他分类。</li>
 	ClassId *int64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
 
-	// 来源上下文，用于透传用户请求信息，[上传完成回调](/document/product/266/7830) 将返回该字段值，最长 250 个字符。
+	// <p>来源上下文，用于透传用户请求信息，<a href="/document/product/266/7830">上传完成回调</a> 将返回该字段值，最长 250 个字符。</p>
 	SourceContext *string `json:"SourceContext,omitnil,omitempty" name:"SourceContext"`
 
-	// 会话上下文，用于透传用户请求信息，当指定 Procedure 参数后，[任务流状态变更回调](/document/product/266/9636) 将返回该字段值，最长 1000 个字符。
+	// <p>会话上下文，用于透传用户请求信息，当指定 Procedure 参数后，<a href="/document/product/266/9636">任务流状态变更回调</a> 将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 
-	// 媒体存储路径，以/开头。
-	// 只有[FileID + Path 模式](https://cloud.tencent.com/document/product/266/126825)的子应用可以指定存储路径。
+	// <p>媒体存储路径，以/开头。<br>只有<a href="https://cloud.tencent.com/document/product/266/126825">FileID + Path 模式</a>的子应用可以指定存储路径。</p>
 	MediaStoragePath *string `json:"MediaStoragePath,omitnil,omitempty" name:"MediaStoragePath"`
 }
 
@@ -2509,22 +2614,22 @@ func (r *ApplyUploadRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ApplyUploadResponseParams struct {
-	// 存储桶，用于上传接口 URL 的 bucket_name。
+	// <p>存储桶，用于上传接口 URL 的 bucket_name。</p>
 	StorageBucket *string `json:"StorageBucket,omitnil,omitempty" name:"StorageBucket"`
 
-	// 存储园区，用于上传接口 Host 的 Region。
+	// <p>存储园区，用于上传接口 Host 的 Region。</p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// 点播会话，用于确认上传接口的参数 VodSessionKey。
+	// <p>点播会话，用于确认上传接口的参数 VodSessionKey。</p>
 	VodSessionKey *string `json:"VodSessionKey,omitnil,omitempty" name:"VodSessionKey"`
 
-	// 媒体存储路径，用于上传接口存储媒体的对象键（Key）。
+	// <p>媒体存储路径，用于上传接口存储媒体的对象键（Key）。</p>
 	MediaStoragePath *string `json:"MediaStoragePath,omitnil,omitempty" name:"MediaStoragePath"`
 
-	// 封面存储路径，用于上传接口存储封面的对象键（Key）。
+	// <p>封面存储路径，用于上传接口存储封面的对象键（Key）。</p>
 	CoverStoragePath *string `json:"CoverStoragePath,omitnil,omitempty" name:"CoverStoragePath"`
 
-	// 临时凭证，用于上传接口的权限验证。
+	// <p>临时凭证，用于上传接口的权限验证。</p>
 	TempCertificate *TempCertificate `json:"TempCertificate,omitnil,omitempty" name:"TempCertificate"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3212,6 +3317,34 @@ type BlackWhiteEdgeConfigureInfoForUpdate struct {
 	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
 }
 
+type BlindWatermarkInput struct {
+	// 数字水印模板ID
+	Definition *uint64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+}
+
+type BlindWatermarkTemplate struct {
+	// 数字水印模板唯一标识。
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li><li>blind-nagra：NAGRA取证水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 数字水印模板名称。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数字水印模板文本内容，长度不超过64个字符。
+	TextContent *string `json:"TextContent,omitnil,omitempty" name:"TextContent"`
+
+	// 数字水印模板描述信息。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 数字水印模板创建时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/862/37710#52)。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 数字水印模板最后修改时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/862/37710#52)。
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
 type BlurConfigureInfo struct {
 	// 视频画面模糊检测开关，可选值：
 	// <li>ON：开启；</li>
@@ -3280,10 +3413,10 @@ type CdnLogInfo struct {
 }
 
 type ChangeClothesConfig struct {
-	// 输入需要更换的**衣物**图片列表。目前最大支持4张图片。
+	// <p>输入需要更换的<strong>衣物</strong>图片列表。各类型最大支持衣物数量：</p><ul><li>change_clothes：4 张图片；</li><li>change_clothes_under：1 张图片；</li><li>change_clothes_full_wear：1 张图片；</li><li>change_clothes_top_wear：1 张图片；</li><li>change_clothes_bottom_wear：1 张图片；</li></ul>
 	ClothesFileInfos []*SceneAigcImageTaskInputFileInfo `json:"ClothesFileInfos,omitnil,omitempty" name:"ClothesFileInfos"`
 
-	// AI换衣的提示词。
+	// <p>AI换衣的提示词。<strong>仅Type为change_clothes有效。</strong></p>
 	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
 }
 
@@ -3347,20 +3480,20 @@ type ColorEnhanceInfo struct {
 
 // Predefined struct for user
 type CommitUploadRequestParams struct {
-	// 点播会话，取申请上传接口的返回值 VodSessionKey。
+	// <p>点播会话，取申请上传接口的返回值 VodSessionKey。</p>
 	VodSessionKey *string `json:"VodSessionKey,omitnil,omitempty" name:"VodSessionKey"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
 type CommitUploadRequest struct {
 	*tchttp.BaseRequest
 	
-	// 点播会话，取申请上传接口的返回值 VodSessionKey。
+	// <p>点播会话，取申请上传接口的返回值 VodSessionKey。</p>
 	VodSessionKey *string `json:"VodSessionKey,omitnil,omitempty" name:"VodSessionKey"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
@@ -3386,13 +3519,13 @@ func (r *CommitUploadRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CommitUploadResponseParams struct {
-	// 媒体文件的唯一标识。
+	// <p>媒体文件的唯一标识。</p>
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
-	// 媒体播放地址。
+	// <p>媒体播放地址。</p>
 	MediaUrl *string `json:"MediaUrl,omitnil,omitempty" name:"MediaUrl"`
 
-	// 媒体封面地址。
+	// <p>媒体封面地址。</p>
 	CoverUrl *string `json:"CoverUrl,omitnil,omitempty" name:"CoverUrl"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4208,106 +4341,74 @@ func (r *CreateAIRecognitionTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAdaptiveDynamicStreamingTemplateRequestParams struct {
-	// 自适应转码格式，取值范围：
-	// <li>HLS；</li>
-	// <li>MPEG-DASH。</li>
+	// <p>自适应转码格式，取值范围：</p><li>HLS；</li><li>MPEG-DASH。</li>
 	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
 
-	// 自适应转码输出子流参数信息，最多输出10路子流。
-	// 注意：各个子流的帧率必须保持一致；如果不一致，采用第一个子流的帧率作为输出帧率。
+	// <p>自适应转码输出子流参数信息，最多输出10路子流。<br>注意：各个子流的帧率必须保持一致；如果不一致，采用第一个子流的帧率作为输出帧率。</p>
 	StreamInfos []*AdaptiveStreamTemplate `json:"StreamInfos,omitnil,omitempty" name:"StreamInfos"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 模板名称，长度限制：64 个字符。
+	// <p>模板名称，长度限制：64 个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// DRM 方案类型，取值范围：
-	// <li>SimpleAES</li>
-	// <li>Widevine</li>
-	// <li>FairPlay</li>
-	// 默认值为空字符串，如果取值为空字符串，代表不对视频做 DRM 保护。
+	// <p>DRM 方案类型，取值范围：</p><li>SimpleAES</li><li>Widevine</li><li>FairPlay</li><li>Widevine+FairPlay</li>默认值为空字符串，如果取值为空字符串，代表不对视频做 DRM 保护。
 	DrmType *string `json:"DrmType,omitnil,omitempty" name:"DrmType"`
 
-	// DRM 的密钥提供商，取值范围：
-	// <li>SDMC：华曦达；</li>
-	// <li>VOD：云点播。</li>
-	// 默认为 VOD 。
+	// <p>DRM 的密钥提供商，取值范围：</p><li>SDMC：华曦达；</li><li>VOD：云点播。</li>默认为 VOD 。<p>华曦达服务后续逐步下线，请使用VOD DRM加密服务。</p>
 	DrmKeyProvider *string `json:"DrmKeyProvider,omitnil,omitempty" name:"DrmKeyProvider"`
 
-	// 是否禁止视频低码率转高码率，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
-	// 默认为否。
+	// <p>加密方式，可选值：<br>cbcs：Widevine，FairPlay，WideVine+FairPlay支持；<br>cenc：Widevine支持；   </p><p>若不填<br>FairPlay 默认cbcs;<br>Widevine 默认cenc;<br>WideVine+FairPlay默认cbcs;</p>
+	DrmEncryptType *string `json:"DrmEncryptType,omitnil,omitempty" name:"DrmEncryptType"`
+
+	// <p>是否禁止视频低码率转高码率，取值范围：</p><li>0：否，</li><li>1：是。</li>默认为否。
 	DisableHigherVideoBitrate *uint64 `json:"DisableHigherVideoBitrate,omitnil,omitempty" name:"DisableHigherVideoBitrate"`
 
-	// 是否禁止视频分辨率转高分辨率，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
-	// 默认为否。
+	// <p>是否禁止视频分辨率转高分辨率，取值范围：</p><li>0：否，</li><li>1：是。</li>默认为否。
 	DisableHigherVideoResolution *uint64 `json:"DisableHigherVideoResolution,omitnil,omitempty" name:"DisableHigherVideoResolution"`
 
-	// 模板描述信息，长度限制：256 个字符。
+	// <p>模板描述信息，长度限制：256 个字符。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 切片类型，当 Format 为 HLS 时有效，可选值：
-	// <li>ts：ts 切片；</li>
-	// <li>fmp4：fmp4 切片。</li>
-	// 默认值：ts。
+	// <p>切片类型，当 Format 为 HLS 时有效，可选值：</p><li>ts：ts 切片；</li><li>fmp4：fmp4 切片。</li>默认值：ts。
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
 }
 
 type CreateAdaptiveDynamicStreamingTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 自适应转码格式，取值范围：
-	// <li>HLS；</li>
-	// <li>MPEG-DASH。</li>
+	// <p>自适应转码格式，取值范围：</p><li>HLS；</li><li>MPEG-DASH。</li>
 	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
 
-	// 自适应转码输出子流参数信息，最多输出10路子流。
-	// 注意：各个子流的帧率必须保持一致；如果不一致，采用第一个子流的帧率作为输出帧率。
+	// <p>自适应转码输出子流参数信息，最多输出10路子流。<br>注意：各个子流的帧率必须保持一致；如果不一致，采用第一个子流的帧率作为输出帧率。</p>
 	StreamInfos []*AdaptiveStreamTemplate `json:"StreamInfos,omitnil,omitempty" name:"StreamInfos"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 模板名称，长度限制：64 个字符。
+	// <p>模板名称，长度限制：64 个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// DRM 方案类型，取值范围：
-	// <li>SimpleAES</li>
-	// <li>Widevine</li>
-	// <li>FairPlay</li>
-	// 默认值为空字符串，如果取值为空字符串，代表不对视频做 DRM 保护。
+	// <p>DRM 方案类型，取值范围：</p><li>SimpleAES</li><li>Widevine</li><li>FairPlay</li><li>Widevine+FairPlay</li>默认值为空字符串，如果取值为空字符串，代表不对视频做 DRM 保护。
 	DrmType *string `json:"DrmType,omitnil,omitempty" name:"DrmType"`
 
-	// DRM 的密钥提供商，取值范围：
-	// <li>SDMC：华曦达；</li>
-	// <li>VOD：云点播。</li>
-	// 默认为 VOD 。
+	// <p>DRM 的密钥提供商，取值范围：</p><li>SDMC：华曦达；</li><li>VOD：云点播。</li>默认为 VOD 。<p>华曦达服务后续逐步下线，请使用VOD DRM加密服务。</p>
 	DrmKeyProvider *string `json:"DrmKeyProvider,omitnil,omitempty" name:"DrmKeyProvider"`
 
-	// 是否禁止视频低码率转高码率，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
-	// 默认为否。
+	// <p>加密方式，可选值：<br>cbcs：Widevine，FairPlay，WideVine+FairPlay支持；<br>cenc：Widevine支持；   </p><p>若不填<br>FairPlay 默认cbcs;<br>Widevine 默认cenc;<br>WideVine+FairPlay默认cbcs;</p>
+	DrmEncryptType *string `json:"DrmEncryptType,omitnil,omitempty" name:"DrmEncryptType"`
+
+	// <p>是否禁止视频低码率转高码率，取值范围：</p><li>0：否，</li><li>1：是。</li>默认为否。
 	DisableHigherVideoBitrate *uint64 `json:"DisableHigherVideoBitrate,omitnil,omitempty" name:"DisableHigherVideoBitrate"`
 
-	// 是否禁止视频分辨率转高分辨率，取值范围：
-	// <li>0：否，</li>
-	// <li>1：是。</li>
-	// 默认为否。
+	// <p>是否禁止视频分辨率转高分辨率，取值范围：</p><li>0：否，</li><li>1：是。</li>默认为否。
 	DisableHigherVideoResolution *uint64 `json:"DisableHigherVideoResolution,omitnil,omitempty" name:"DisableHigherVideoResolution"`
 
-	// 模板描述信息，长度限制：256 个字符。
+	// <p>模板描述信息，长度限制：256 个字符。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 切片类型，当 Format 为 HLS 时有效，可选值：
-	// <li>ts：ts 切片；</li>
-	// <li>fmp4：fmp4 切片。</li>
-	// 默认值：ts。
+	// <p>切片类型，当 Format 为 HLS 时有效，可选值：</p><li>ts：ts 切片；</li><li>fmp4：fmp4 切片。</li>默认值：ts。
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
 }
 
@@ -4329,6 +4430,7 @@ func (r *CreateAdaptiveDynamicStreamingTemplateRequest) FromJsonString(s string)
 	delete(f, "Name")
 	delete(f, "DrmType")
 	delete(f, "DrmKeyProvider")
+	delete(f, "DrmEncryptType")
 	delete(f, "DisableHigherVideoBitrate")
 	delete(f, "DisableHigherVideoResolution")
 	delete(f, "Comment")
@@ -4341,7 +4443,7 @@ func (r *CreateAdaptiveDynamicStreamingTemplateRequest) FromJsonString(s string)
 
 // Predefined struct for user
 type CreateAdaptiveDynamicStreamingTemplateResponseParams struct {
-	// 自适应转码模板唯一标识。
+	// <p>自适应转码模板唯一标识。</p>
 	Definition *uint64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4361,6 +4463,250 @@ func (r *CreateAdaptiveDynamicStreamingTemplateResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAdaptiveDynamicStreamingTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateAigcAdvancedCustomElementInput struct {
+	// <p>主体名称。</p>
+	ElementName *string `json:"ElementName,omitnil,omitempty" name:"ElementName"`
+
+	// <p>主体描述。</p>
+	ElementDescription *string `json:"ElementDescription,omitnil,omitempty" name:"ElementDescription"`
+
+	// <p>主体参考方式。</p>
+	ReferenceType *string `json:"ReferenceType,omitnil,omitempty" name:"ReferenceType"`
+
+	// <p>主体音色。</p>
+	ElementVoiceId *string `json:"ElementVoiceId,omitnil,omitempty" name:"ElementVoiceId"`
+
+	// <p>主体参考视频。</p>
+	ElementVideoList *string `json:"ElementVideoList,omitnil,omitempty" name:"ElementVideoList"`
+
+	// <p>主体参考图。</p>
+	ElementImageList *string `json:"ElementImageList,omitnil,omitempty" name:"ElementImageList"`
+
+	// <p>主体配置标签。</p>
+	TagList *string `json:"TagList,omitnil,omitempty" name:"TagList"`
+}
+
+type CreateAigcAdvancedCustomElementOutput struct {
+	// <p>自定义主体列表。</p>
+	InfoList []*AdvancedElementInfo `json:"InfoList,omitnil,omitempty" name:"InfoList"`
+}
+
+// Predefined struct for user
+type CreateAigcAdvancedCustomElementRequestParams struct {
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>主体名称，不能超过20个字符。</p>
+	ElementName *string `json:"ElementName,omitnil,omitempty" name:"ElementName"`
+
+	// <p>主体描述，不能超过100个字符。</p>
+	ElementDescription *string `json:"ElementDescription,omitnil,omitempty" name:"ElementDescription"`
+
+	// <p>主体参考方式。通过视频定制的主体和通过图片定制的主体的可用范围不同。</p><p>枚举值：</p><ul><li>video_refer： 视频角色主体，此时将参考element_video_list定义主体外表。</li><li>image_refer： 多图主体，此时将参考element_image_list定义主体外表。</li></ul>
+	ReferenceType *string `json:"ReferenceType,omitnil,omitempty" name:"ReferenceType"`
+
+	// <p>主体音色，可绑定音色库中已有音色。</p><ul><li>当前参数为空时，当前主体不绑定音色。</li><li>仅视频定制的主体支持绑定音色。</li></ul>
+	ElementVoiceId *string `json:"ElementVoiceId,omitnil,omitempty" name:"ElementVoiceId"`
+
+	// <p>主体参考视频，可通过视频设定主体及其细节。</p><ul><li>可上传有声视频，有声视频包含人声则触发音色定制（定制+入音色库+与主体绑定）</li><li>参考视频时当前参数必填，参考图片时当前参数无效</li><li>用key:value承载，如下：<br><pre><code>{  &quot;refer_videos&quot;:[    {      &quot;video_url&quot;:&quot;video_url_1&quot;    }  ]}</code></pre>● 视频格式仅支持MP4/MOV<br>● 仅支持时长介于3s～8s之间、宽高比例需为16:9或9:16的1080P视频<br>● 至多仅支持上传1段视频，视频大小不超过200MB<br>● video_url参数值不得为空</li></ul>
+	ElementVideoList *string `json:"ElementVideoList,omitnil,omitempty" name:"ElementVideoList"`
+
+	// <p>主体参考图，可通过多张图片设定主体及其细节。</p><ul><li>包括正面参考图和其他角度或特写参考图，其中：<ul><li>至少包括1张正面参考图，由frontal_image参数定义。</li><li>需包括1～3张其他参考图，需与正面参考图有差异，由image_url参数定义。</li></ul></li><li>用key:value承载，如下：<br><pre><code>{  &quot;frontal_image&quot;:&quot;image_url_0&quot;,  &quot;refer_images&quot;:[    {      &quot;image_url&quot;:&quot;image_url_1&quot;    },    {      &quot;image_url&quot;:&quot;image_url_2&quot;    },    {      &quot;image_url&quot;:&quot;image_url_3&quot;    }  ]}</code></pre></li></ul>
+	ElementImageList *string `json:"ElementImageList,omitnil,omitempty" name:"ElementImageList"`
+
+	// <p>为主体配置标签，一个主体可以配置多个标签。</p><ul><li>用key:value承载，其中具体如下：</li></ul><p><pre><code>[  {        &quot;tag_id&quot;: &quot;o_101&quot;  }, {        &quot;tag_id&quot;: &quot;o_102&quot;    }]</code></pre></p>
+	TagList *string `json:"TagList,omitnil,omitempty" name:"TagList"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+type CreateAigcAdvancedCustomElementRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>主体名称，不能超过20个字符。</p>
+	ElementName *string `json:"ElementName,omitnil,omitempty" name:"ElementName"`
+
+	// <p>主体描述，不能超过100个字符。</p>
+	ElementDescription *string `json:"ElementDescription,omitnil,omitempty" name:"ElementDescription"`
+
+	// <p>主体参考方式。通过视频定制的主体和通过图片定制的主体的可用范围不同。</p><p>枚举值：</p><ul><li>video_refer： 视频角色主体，此时将参考element_video_list定义主体外表。</li><li>image_refer： 多图主体，此时将参考element_image_list定义主体外表。</li></ul>
+	ReferenceType *string `json:"ReferenceType,omitnil,omitempty" name:"ReferenceType"`
+
+	// <p>主体音色，可绑定音色库中已有音色。</p><ul><li>当前参数为空时，当前主体不绑定音色。</li><li>仅视频定制的主体支持绑定音色。</li></ul>
+	ElementVoiceId *string `json:"ElementVoiceId,omitnil,omitempty" name:"ElementVoiceId"`
+
+	// <p>主体参考视频，可通过视频设定主体及其细节。</p><ul><li>可上传有声视频，有声视频包含人声则触发音色定制（定制+入音色库+与主体绑定）</li><li>参考视频时当前参数必填，参考图片时当前参数无效</li><li>用key:value承载，如下：<br><pre><code>{  &quot;refer_videos&quot;:[    {      &quot;video_url&quot;:&quot;video_url_1&quot;    }  ]}</code></pre>● 视频格式仅支持MP4/MOV<br>● 仅支持时长介于3s～8s之间、宽高比例需为16:9或9:16的1080P视频<br>● 至多仅支持上传1段视频，视频大小不超过200MB<br>● video_url参数值不得为空</li></ul>
+	ElementVideoList *string `json:"ElementVideoList,omitnil,omitempty" name:"ElementVideoList"`
+
+	// <p>主体参考图，可通过多张图片设定主体及其细节。</p><ul><li>包括正面参考图和其他角度或特写参考图，其中：<ul><li>至少包括1张正面参考图，由frontal_image参数定义。</li><li>需包括1～3张其他参考图，需与正面参考图有差异，由image_url参数定义。</li></ul></li><li>用key:value承载，如下：<br><pre><code>{  &quot;frontal_image&quot;:&quot;image_url_0&quot;,  &quot;refer_images&quot;:[    {      &quot;image_url&quot;:&quot;image_url_1&quot;    },    {      &quot;image_url&quot;:&quot;image_url_2&quot;    },    {      &quot;image_url&quot;:&quot;image_url_3&quot;    }  ]}</code></pre></li></ul>
+	ElementImageList *string `json:"ElementImageList,omitnil,omitempty" name:"ElementImageList"`
+
+	// <p>为主体配置标签，一个主体可以配置多个标签。</p><ul><li>用key:value承载，其中具体如下：</li></ul><p><pre><code>[  {        &quot;tag_id&quot;: &quot;o_101&quot;  }, {        &quot;tag_id&quot;: &quot;o_102&quot;    }]</code></pre></p>
+	TagList *string `json:"TagList,omitnil,omitempty" name:"TagList"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+func (r *CreateAigcAdvancedCustomElementRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcAdvancedCustomElementRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "ElementName")
+	delete(f, "ElementDescription")
+	delete(f, "ReferenceType")
+	delete(f, "ElementVoiceId")
+	delete(f, "ElementVideoList")
+	delete(f, "ElementImageList")
+	delete(f, "TagList")
+	delete(f, "SessionId")
+	delete(f, "SessionContext")
+	delete(f, "TasksPriority")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAigcAdvancedCustomElementRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAigcAdvancedCustomElementResponseParams struct {
+	// <p>任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateAigcAdvancedCustomElementResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateAigcAdvancedCustomElementResponseParams `json:"Response"`
+}
+
+func (r *CreateAigcAdvancedCustomElementResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcAdvancedCustomElementResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateAigcAdvancedCustomElementTask struct {
+	// <p>任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>任务状态。</p><p>枚举值：</p><ul><li>PROCESSING： 处理中</li><li>FINISH： 已完成</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。</p>
+	ErrCode *int64 `json:"ErrCode,omitnil,omitempty" name:"ErrCode"`
+
+	// <p>扩展错误码。空字符串表示成功，其它值表示失败。</p>
+	ErrCodeExt *string `json:"ErrCodeExt,omitnil,omitempty" name:"ErrCodeExt"`
+
+	// <p>错误信息。</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// <p>任务进度，取值范围 [0-100] 。</p>
+	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
+
+	// <p>创建 AIGC 自定义主体任务的输入信息。</p>
+	Input *CreateAigcAdvancedCustomElementInput `json:"Input,omitnil,omitempty" name:"Input"`
+
+	// <p>创建 AIGC 自定义主体任务输出信息。</p>
+	Output *CreateAigcAdvancedCustomElementOutput `json:"Output,omitnil,omitempty" name:"Output"`
+
+	// <p>用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+}
+
+// Predefined struct for user
+type CreateAigcApiTokenRequestParams struct {
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+type CreateAigcApiTokenRequest struct {
+	*tchttp.BaseRequest
+	
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+func (r *CreateAigcApiTokenRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcApiTokenRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAigcApiTokenRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAigcApiTokenResponseParams struct {
+	// API的Token
+	ApiToken *string `json:"ApiToken,omitnil,omitempty" name:"ApiToken"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateAigcApiTokenResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateAigcApiTokenResponseParams `json:"Response"`
+}
+
+func (r *CreateAigcApiTokenResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcApiTokenResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4452,94 +4798,241 @@ func (r *CreateAigcCustomElementResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateAigcCustomVoiceInput struct {
+	// <p>音色名称。</p>
+	VoiceName *string `json:"VoiceName,omitnil,omitempty" name:"VoiceName"`
+
+	// <p>音色数据文件获取链接。</p>
+	VoiceUrl *string `json:"VoiceUrl,omitnil,omitempty" name:"VoiceUrl"`
+
+	// <p>历史作品 ID，可通过引用历史作品提供音频素材。</p>
+	VideoId *string `json:"VideoId,omitnil,omitempty" name:"VideoId"`
+}
+
+type CreateAigcCustomVoiceOutput struct {
+	// <p>自定义音色列表。</p>
+	InfoList []*CustomVoiceInfo `json:"InfoList,omitnil,omitempty" name:"InfoList"`
+}
+
 // Predefined struct for user
-type CreateAigcImageTaskRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+type CreateAigcCustomVoiceRequestParams struct {
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 模型名称。取值：
-	// <li>GEM：Gemini；</li>
-	// <li>Qwen：千问。</li>
-	// <li>Hunyuan：混元。</li>
-	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
+	// <p>音色名称，文本内容最大长度 20 个字符</p>
+	VoiceName *string `json:"VoiceName,omitnil,omitempty" name:"VoiceName"`
 
-	// 模型版本。取值：
-	// <li>当 ModelName 是 GEM，可选值为 2.5、3.0；</li>
-	// <li>当 ModelName 是 Qwen，可选值为 0925；</li>
-	// <li>当 ModelName 是 Hunyuan，可选值为 3.0；</li>
-	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
+	// <p>音色数据文件获取链接，支持 .mp3 / .wav / .mp4 / .mov 格式的音视频文件。音频中人声需干净无杂音，有且只能有一种人声，时长不短于 5 秒且不长于 30 秒。</p>
+	VoiceUrl *string `json:"VoiceUrl,omitnil,omitempty" name:"VoiceUrl"`
 
-	// AIGC 生图任务的输入图片的文件信息。默认只支持指定1个，使用模型 GEM 时，版本2.5最多指定3个，版本3.0最多指定14个。
-	FileInfos []*AigcImageTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
+	// <p>历史作品 ID，可通过引用历史作品提供音频素材。</p>
+	VideoId *string `json:"VideoId,omitnil,omitempty" name:"VideoId"`
 
-	// 生成图片的提示词。当 FileInfos 为空时，此参数必填。
-	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
-
-	// 要阻止模型生成图片的提示词。
-	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
-
-	// 是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
-	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
-
-	// 生图任务的输出媒体文件配置。
-	OutputConfig *AigcImageOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
-
-	// 用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，任务完成回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+type CreateAigcCustomVoiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>音色名称，文本内容最大长度 20 个字符</p>
+	VoiceName *string `json:"VoiceName,omitnil,omitempty" name:"VoiceName"`
+
+	// <p>音色数据文件获取链接，支持 .mp3 / .wav / .mp4 / .mov 格式的音视频文件。音频中人声需干净无杂音，有且只能有一种人声，时长不短于 5 秒且不长于 30 秒。</p>
+	VoiceUrl *string `json:"VoiceUrl,omitnil,omitempty" name:"VoiceUrl"`
+
+	// <p>历史作品 ID，可通过引用历史作品提供音频素材。</p>
+	VideoId *string `json:"VideoId,omitnil,omitempty" name:"VideoId"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+func (r *CreateAigcCustomVoiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcCustomVoiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "VoiceName")
+	delete(f, "VoiceUrl")
+	delete(f, "VideoId")
+	delete(f, "SessionId")
+	delete(f, "SessionContext")
+	delete(f, "TasksPriority")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAigcCustomVoiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAigcCustomVoiceResponseParams struct {
+	// <p>任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateAigcCustomVoiceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateAigcCustomVoiceResponseParams `json:"Response"`
+}
+
+func (r *CreateAigcCustomVoiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcCustomVoiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateAigcCustomVoiceTask struct {
+	// <p>任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>任务状态。</p><p>枚举值：</p><ul><li>PROCESSING： 处理中</li><li>FINISH： 已完成</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。</p>
+	ErrCode *int64 `json:"ErrCode,omitnil,omitempty" name:"ErrCode"`
+
+	// <p>扩展错误码。空字符串表示成功，其它值表示失败。</p>
+	ErrCodeExt *string `json:"ErrCodeExt,omitnil,omitempty" name:"ErrCodeExt"`
+
+	// <p>错误信息。</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// <p>任务进度，取值范围 [0-100] 。</p>
+	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
+
+	// <p>创建 AIGC 自定义音色输入信息。</p>
+	Input *CreateAigcCustomVoiceInput `json:"Input,omitnil,omitempty" name:"Input"`
+
+	// <p>创建 AIGC 自定义音色输出信息。</p>
+	Output *CreateAigcCustomVoiceOutput `json:"Output,omitnil,omitempty" name:"Output"`
+
+	// <p>用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+}
+
+// Predefined struct for user
+type CreateAigcImageTaskRequestParams struct {
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>模型名称。取值：</p><li>OG</li><li>GG</li><li>SI</li><li>Qwen</li><li>Hunyuan</li><li>Vidu</li><li>Kling</li>
+	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
+
+	// <p>模型版本。取值：</p><li>当 ModelName 是 OG，可选值为 image2_low、image2_medium、image2_high；</li><li>当 ModelName 是 GG，可选值为 2.5、3.0、3.1；</li><li>当 ModelName 是 Jimeng，可选值为 4.0；</li><li>当 ModelName 是 SI，可选值为 4.0、4.5、5.0-lite；</li><li>当 ModelName 是 Qwen，可选值为 0925；</li><li>当 ModelName 是 Hunyuan，可选值为 3.0；</li><li>当 ModelName 是 Vidu，可选值为 q2；</li><li>当 ModelName 是 Kling，可选值为 2.1、3.0、3.0-Omni、O1；</li>
+	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
+
+	// <p>AIGC 生图任务的输入图片的文件信息。各模型支持最大参考图数量：</p><ul><li>GG 2.5： 3张；</li><li>GG 3.0：14张；</li><li>GG 3.1：14张；</li><li>Kling 2.1：4张；</li><li>Kling 3.0：1张；</li><li>Kling 3.0-Omni：10张；</li><li>Kling O1：10张；</li><li>SI 4.0：14张；</li><li>SI 4.5：14张；</li><li>SI 5.0-lite：14张；</li><li>Vidu q2：7张；</li><li>Hunyuan 3.0：3张；</li><li>Qwen 0925：1张；</li><li>MJ v7：3张。</li></ul>
+	FileInfos []*AigcImageTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
+
+	// <p>生成图片的提示词。当 FileInfos 为空时，此参数必填。</p>
+	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
+
+	// <p>要阻止模型生成图片的提示词。</p>
+	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
+
+	// <p>是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
+	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
+
+	// <p>生图任务的输出媒体文件配置。</p>
+	OutputConfig *AigcImageOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
+
+	// <p>输入的区域信息。可选值：</p><ul><li>Mainland：中国大陆；</li><li>Oversea：海外；</li><li>OverseaUSWest：海外-美西；</li></ul>
+	InputRegion *string `json:"InputRegion,omitnil,omitempty" name:"InputRegion"`
+
+	// <p>模型随机种子。</p>
+	Seed *int64 `json:"Seed,omitnil,omitempty" name:"Seed"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
 	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p><ul><li><p>Hunyuan 3.0</p><ul><li>支持自由设置分辨率宽高，宽、高均在 [512, 2048] 像素范围内，宽高乘积 ≤ 1024x1024 像素。示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;728x1024\&quot;}&quot;}</code></li></ul></li><li><p>SI 系列</p><ul><li>支持自由设置分辨率宽高：<ul><li>SI 4.0：合法总像素范围 [1280x720=921600, 4096x4096=16777216]，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;728x1356\&quot;}&quot;}</code></li><li>SI 4.5：合法总像素范围 [2560x1440=3686400, 4096x4096=16777216]，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;2560x1440\&quot;}&quot;}</code></li><li>SI 5.0-lite：合法总像素范围 [2560x1440=3686400, 3072x3072x1.1025=10404496]，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;2560x1440\&quot;}&quot;}</code></li></ul></li><li>可用于开启输出多张图像，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;sequential_image_generation\&quot;:\&quot;auto\&quot;}&quot;}</code>。除此之外，还需要在<code>Prompt</code>中说明需要输出图片张数，如：输出3张图片。</li></ul></li><li><p>Qwen 0925</p><ul><li>支持自由设置分辨率宽高，合法总像素范围 [512x512=261632, 2048x2048=4194304]。示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;728*1024\&quot;}&quot;}</code></li></ul></li></ul>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
 type CreateAigcImageTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 模型名称。取值：
-	// <li>GEM：Gemini；</li>
-	// <li>Qwen：千问。</li>
-	// <li>Hunyuan：混元。</li>
+	// <p>模型名称。取值：</p><li>OG</li><li>GG</li><li>SI</li><li>Qwen</li><li>Hunyuan</li><li>Vidu</li><li>Kling</li>
 	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
 
-	// 模型版本。取值：
-	// <li>当 ModelName 是 GEM，可选值为 2.5、3.0；</li>
-	// <li>当 ModelName 是 Qwen，可选值为 0925；</li>
-	// <li>当 ModelName 是 Hunyuan，可选值为 3.0；</li>
+	// <p>模型版本。取值：</p><li>当 ModelName 是 OG，可选值为 image2_low、image2_medium、image2_high；</li><li>当 ModelName 是 GG，可选值为 2.5、3.0、3.1；</li><li>当 ModelName 是 Jimeng，可选值为 4.0；</li><li>当 ModelName 是 SI，可选值为 4.0、4.5、5.0-lite；</li><li>当 ModelName 是 Qwen，可选值为 0925；</li><li>当 ModelName 是 Hunyuan，可选值为 3.0；</li><li>当 ModelName 是 Vidu，可选值为 q2；</li><li>当 ModelName 是 Kling，可选值为 2.1、3.0、3.0-Omni、O1；</li>
 	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
 
-	// AIGC 生图任务的输入图片的文件信息。默认只支持指定1个，使用模型 GEM 时，版本2.5最多指定3个，版本3.0最多指定14个。
+	// <p>AIGC 生图任务的输入图片的文件信息。各模型支持最大参考图数量：</p><ul><li>GG 2.5： 3张；</li><li>GG 3.0：14张；</li><li>GG 3.1：14张；</li><li>Kling 2.1：4张；</li><li>Kling 3.0：1张；</li><li>Kling 3.0-Omni：10张；</li><li>Kling O1：10张；</li><li>SI 4.0：14张；</li><li>SI 4.5：14张；</li><li>SI 5.0-lite：14张；</li><li>Vidu q2：7张；</li><li>Hunyuan 3.0：3张；</li><li>Qwen 0925：1张；</li><li>MJ v7：3张。</li></ul>
 	FileInfos []*AigcImageTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
 
-	// 生成图片的提示词。当 FileInfos 为空时，此参数必填。
+	// <p>生成图片的提示词。当 FileInfos 为空时，此参数必填。</p>
 	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
 
-	// 要阻止模型生成图片的提示词。
+	// <p>要阻止模型生成图片的提示词。</p>
 	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
 
-	// 是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
 
-	// 生图任务的输出媒体文件配置。
+	// <p>生图任务的输出媒体文件配置。</p>
 	OutputConfig *AigcImageOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
 
-	// 用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>输入的区域信息。可选值：</p><ul><li>Mainland：中国大陆；</li><li>Oversea：海外；</li><li>OverseaUSWest：海外-美西；</li></ul>
+	InputRegion *string `json:"InputRegion,omitnil,omitempty" name:"InputRegion"`
+
+	// <p>模型随机种子。</p>
+	Seed *int64 `json:"Seed,omitnil,omitempty" name:"Seed"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
 	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p><ul><li><p>Hunyuan 3.0</p><ul><li>支持自由设置分辨率宽高，宽、高均在 [512, 2048] 像素范围内，宽高乘积 ≤ 1024x1024 像素。示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;728x1024\&quot;}&quot;}</code></li></ul></li><li><p>SI 系列</p><ul><li>支持自由设置分辨率宽高：<ul><li>SI 4.0：合法总像素范围 [1280x720=921600, 4096x4096=16777216]，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;728x1356\&quot;}&quot;}</code></li><li>SI 4.5：合法总像素范围 [2560x1440=3686400, 4096x4096=16777216]，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;2560x1440\&quot;}&quot;}</code></li><li>SI 5.0-lite：合法总像素范围 [2560x1440=3686400, 3072x3072x1.1025=10404496]，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;2560x1440\&quot;}&quot;}</code></li></ul></li><li>可用于开启输出多张图像，示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;sequential_image_generation\&quot;:\&quot;auto\&quot;}&quot;}</code>。除此之外，还需要在<code>Prompt</code>中说明需要输出图片张数，如：输出3张图片。</li></ul></li><li><p>Qwen 0925</p><ul><li>支持自由设置分辨率宽高，合法总像素范围 [512x512=261632, 2048x2048=4194304]。示例：<code>{&quot;AdditionalParameters&quot;: &quot;{\&quot;size\&quot;:\&quot;728*1024\&quot;}&quot;}</code></li></ul></li></ul>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
@@ -4563,6 +5056,8 @@ func (r *CreateAigcImageTaskRequest) FromJsonString(s string) error {
 	delete(f, "NegativePrompt")
 	delete(f, "EnhancePrompt")
 	delete(f, "OutputConfig")
+	delete(f, "InputRegion")
+	delete(f, "Seed")
 	delete(f, "SessionId")
 	delete(f, "SessionContext")
 	delete(f, "TasksPriority")
@@ -4575,7 +5070,7 @@ func (r *CreateAigcImageTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAigcImageTaskResponseParams struct {
-	// 任务 ID。
+	// <p>任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4598,144 +5093,374 @@ func (r *CreateAigcImageTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateAigcSubjectInput struct {
+	// <p>主体名称。</p>
+	SubjectName *string `json:"SubjectName,omitnil,omitempty" name:"SubjectName"`
+
+	// <p>主体图片。</p>
+	SubjectImages []*string `json:"SubjectImages,omitnil,omitempty" name:"SubjectImages"`
+
+	// <p>主体视频。</p>
+	SubjectVideos []*string `json:"SubjectVideos,omitnil,omitempty" name:"SubjectVideos"`
+
+	// <p>主体音色ID。</p>
+	VoiceId *string `json:"VoiceId,omitnil,omitempty" name:"VoiceId"`
+}
+
+type CreateAigcSubjectOutput struct {
+	// <p>主体ID。</p>
+	SubjectId *string `json:"SubjectId,omitnil,omitempty" name:"SubjectId"`
+
+	// <p>主体信息。</p>
+	SubjectInfo *string `json:"SubjectInfo,omitnil,omitempty" name:"SubjectInfo"`
+}
+
 // Predefined struct for user
-type CreateAigcVideoTaskRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+type CreateAigcSubjectRequestParams struct {
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 模型名称。取值：<li>Hailuo：海螺；</li><li>Kling：可灵；</li><li> Jimeng：即梦；</li><li>Vidu；</li><li>Hunyuan：混元；</li><li>Mingmou：明眸；</li>
-	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
+	// <p>主体名称。</p>
+	SubjectName *string `json:"SubjectName,omitnil,omitempty" name:"SubjectName"`
 
-	// 模型版本。取值：<li>当 ModelName 是 Hailuo，可选值为 02、2.3、2.3-fast；</li><li>当 ModelName 是 Kling，可选值为 1.6、2.0、2.1、2.5、O1；</li><li>当 ModelName 是 Jimeng，可选值为 3.0pro；</li><li>当 ModelName 是 Vidu，可选值为 q2、q2-pro、q2-turbo；</li><li>当 ModelName 是 GV，可选值为 3.1、3.1-Fast；</li><li>当 ModelName 是 OS，可选值为 2.0；</li><li>当 ModelName 是 Hunyuan，可选值为 1.5；</li><li>当 ModelName 是 Mingmou，可选值为 1.0；</li>
-	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
+	// <p>主体图片，至少上传 1 张主体图片。* 注1：支持传入图片URL（确保可访问）；* 注2：最多支持输入 3 张图；* 注3：图片支持 png、jpeg、jpg、webp格式；* 注4：图片比例需要小于 1:4 或者 4:1 ；* 注5：图片大小不超过 50 MB；</p>
+	SubjectImages []*string `json:"SubjectImages,omitnil,omitempty" name:"SubjectImages"`
 
-	// 最多包含三张素材资源文件的列表，用于描述模型在生成视频时要使用的资源文件。
-	// 
-	// 首尾帧视频生成：用 FileInfos 第一张表示首帧（此时 FileInfos 最多包含一张图片），LastFrameFileId 或者 LastFrameUrl 表示尾帧。
-	// 
-	// 支持多图输入的模型：
-	// 1. GV，使用多图输入时，不可使用 LastFrameFileId 和 LastFrameUrl。
-	// 2. Vidu，支持多图参考生视频。q2 模型1-7张图片，可通过 FileInfos 里面的 ObjectId 作为主体 id 来传入。
-	// 
-	// 注意：
-	// 1. 图片大小不超过10M。
-	// 2. 支持的图片格式：jpeg、png。
-	FileInfos []*AigcVideoTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
+	// <p>视频参考支持上传 1 个主体视频</p><ul><li>注1：仅参考生viduq2-pro模型支持使用视频主体</li><li>注2：最多支持上传 1个5秒 的视频</li><li>注3：视频支持 mp4、avi、mov格式</li><li>注4：视频像素不能小于 128*128，且比例需要小于1:4或者4:1，且大小不超过100M。</li></ul>
+	SubjectVideos []*string `json:"SubjectVideos,omitnil,omitempty" name:"SubjectVideos"`
 
-	// 用于作为尾帧画面来生成视频的媒体文件 ID。该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。说明：
-	// 1. 只支持模型 GV 、Kling、Vidu，其他模型暂不支持。当 ModelName 为 GV 时，如果指定该参数，则需同时指定 FileInfos 作为待生成视频的首帧。当 ModelName 为 Kling 、ModelVersion 为 2.1 并且指定输出分辨率 Resolution 为 1080P 时，才能指定该参数。当 ModelName 为 Vidu、ModelVersion 为 q2-pro、q2-turbo 时，才能指定该参数。
-	// 2. 图片大小需小于5M。
-	// 3. 图片格式的取值为：jpeg，jpg, png, webp。
-	LastFrameFileId *string `json:"LastFrameFileId,omitnil,omitempty" name:"LastFrameFileId"`
+	// <p>主体音色Id，该信息仅在创建音视频直出任务时使用</p><ul><li>注1：不传音色id 生成音视频直出任务时，系统会自动推荐音色</li><li>注2：q2-pro不支持使用音色id</li></ul>
+	VoiceId *string `json:"VoiceId,omitnil,omitempty" name:"VoiceId"`
 
-	// 用于作为尾帧画面来生成视频的媒体文件 URL。说明：
-	// 1. 只支持模型 GV 、Kling、Vidu，其他模型暂不支持。当 ModelName 为 GV 时，如果指定该参数，则需同时指定 FileInfos 作为待生成视频的首帧。当 ModelName 为 Kling 、ModelVersion 为 2.1 并且指定输出分辨率 Resolution 为 1080P 时，才能指定该参数。当 ModelName 为 Vidu、ModelVersion 为 q2-pro、q2-turbo 时，才能指定该参数。
-	// 2. 图片大小需小于5M。
-	// 3. 3. 图片格式的取值为：jpeg，jpg, png, webp。
-	LastFrameUrl *string `json:"LastFrameUrl,omitnil,omitempty" name:"LastFrameUrl"`
-
-	// 生成视频的提示词。当 FileInfos 为空时，此参数必填。
-	// 示例值：move the picture
-	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
-
-	// 要阻止模型生成视频的提示词。
-	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
-
-	// 是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
-	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
-
-	// 生视频任务的输出媒体文件配置。
-	OutputConfig *AigcVideoOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
-
-	// 输入文件的区域信息。当文件url是国外地址时候，可选Oversea。默认Mainland。
-	InputRegion *string `json:"InputRegion,omitnil,omitempty" name:"InputRegion"`
-
-	// 场景类型。取值如下：
-	// <li>当 ModelName 为 Kling 时，取值 motion_control 表示动作控制；</li>
-	// <li>其他 ModelName 暂不支持。</li>
-	SceneType *string `json:"SceneType,omitnil,omitempty" name:"SceneType"`
-
-	// 用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，任务完成回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+type CreateAigcSubjectRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>主体名称。</p>
+	SubjectName *string `json:"SubjectName,omitnil,omitempty" name:"SubjectName"`
+
+	// <p>主体图片，至少上传 1 张主体图片。* 注1：支持传入图片URL（确保可访问）；* 注2：最多支持输入 3 张图；* 注3：图片支持 png、jpeg、jpg、webp格式；* 注4：图片比例需要小于 1:4 或者 4:1 ；* 注5：图片大小不超过 50 MB；</p>
+	SubjectImages []*string `json:"SubjectImages,omitnil,omitempty" name:"SubjectImages"`
+
+	// <p>视频参考支持上传 1 个主体视频</p><ul><li>注1：仅参考生viduq2-pro模型支持使用视频主体</li><li>注2：最多支持上传 1个5秒 的视频</li><li>注3：视频支持 mp4、avi、mov格式</li><li>注4：视频像素不能小于 128*128，且比例需要小于1:4或者4:1，且大小不超过100M。</li></ul>
+	SubjectVideos []*string `json:"SubjectVideos,omitnil,omitempty" name:"SubjectVideos"`
+
+	// <p>主体音色Id，该信息仅在创建音视频直出任务时使用</p><ul><li>注1：不传音色id 生成音视频直出任务时，系统会自动推荐音色</li><li>注2：q2-pro不支持使用音色id</li></ul>
+	VoiceId *string `json:"VoiceId,omitnil,omitempty" name:"VoiceId"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+func (r *CreateAigcSubjectRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcSubjectRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "SubjectName")
+	delete(f, "SubjectImages")
+	delete(f, "SubjectVideos")
+	delete(f, "VoiceId")
+	delete(f, "SessionId")
+	delete(f, "SessionContext")
+	delete(f, "TasksPriority")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAigcSubjectRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAigcSubjectResponseParams struct {
+	// <p>任务ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateAigcSubjectResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateAigcSubjectResponseParams `json:"Response"`
+}
+
+func (r *CreateAigcSubjectResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcSubjectResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateAigcSubjectTask struct {
+	// <p>任务ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>任务状态。</p><p>枚举值：</p><ul><li>PROCESSING： 处理中</li><li>FINISH： 已完成</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>错误码。源异常时返回非0错误码，返回0时请使用各个具体任务的 ErrCode。</p>
+	ErrCode *int64 `json:"ErrCode,omitnil,omitempty" name:"ErrCode"`
+
+	// <p>扩展错误码。空字符串表示成功，其它值表示失败。</p>
+	ErrCodeExt *string `json:"ErrCodeExt,omitnil,omitempty" name:"ErrCodeExt"`
+
+	// <p>错误信息。</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// <p>创建 AIGC 主体输入信息。</p>
+	Input *CreateAigcSubjectInput `json:"Input,omitnil,omitempty" name:"Input"`
+
+	// <p>创建 AIGC 主体输出信息。</p>
+	Output *CreateAigcSubjectOutput `json:"Output,omitnil,omitempty" name:"Output"`
+
+	// <p>用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+}
+
+// Predefined struct for user
+type CreateAigcVideoRedrawTaskRequestParams struct {
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>AIGC 视频转绘任务的输入视频的文件信息。</p>
+	FileInfo *AigcVideoRedrawTaskInputFileInfo `json:"FileInfo,omitnil,omitempty" name:"FileInfo"`
+
+	// <p>AIGC 视频转绘任务的输出媒体文件配置。</p>
+	OutputConfig *AigcVideoRedrawOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
 	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p>
+	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
+}
+
+type CreateAigcVideoRedrawTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p><b>点播<a href="https://cloud.tencent.com/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>AIGC 视频转绘任务的输入视频的文件信息。</p>
+	FileInfo *AigcVideoRedrawTaskInputFileInfo `json:"FileInfo,omitnil,omitempty" name:"FileInfo"`
+
+	// <p>AIGC 视频转绘任务的输出媒体文件配置。</p>
+	OutputConfig *AigcVideoRedrawOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+
+	// <p>保留字段，特殊用途时使用。</p>
+	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
+}
+
+func (r *CreateAigcVideoRedrawTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcVideoRedrawTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "FileInfo")
+	delete(f, "OutputConfig")
+	delete(f, "SessionId")
+	delete(f, "SessionContext")
+	delete(f, "TasksPriority")
+	delete(f, "ExtInfo")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAigcVideoRedrawTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAigcVideoRedrawTaskResponseParams struct {
+	// <p>任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateAigcVideoRedrawTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateAigcVideoRedrawTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateAigcVideoRedrawTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAigcVideoRedrawTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateAigcVideoTaskRequestParams struct {
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>模型名称。取值：<br>Kling：可灵；<br>Vidu；<br>Hailuo：海螺；<br>Jimeng：即梦；<br>Hunyuan：混元；<br>Mingmou：明眸；<br>GV；<br>OS；<br>PixVerse;</p>
+	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
+
+	// <p>模型版本。取值：<br>当 ModelName 是 Hailuo，可选值为 02、2.3、2.3-fast；<br>当 ModelName 是 Kling，可选值为 1.6、2.0、2.1、2.5、2.6、O1、3.0、3.0-Omni；<br>当 ModelName 是 Jimeng，可选值为 3.0pro；<br>当 ModelName 是 Vidu，可选值为 q2、q2-pro、q2-turbo、q3、q3-pro、q3-turbo；<br>当 ModelName 是 GV，可选值为 3.1、3.1-fast；<br>当 ModelName 是 OS，可选值为 2.0；<br>当 ModelName 是 Hunyuan，可选值为 1.5；<br>当 ModelName 是 Mingmou，可选值为 1.0；<br>当 ModelName 是 PixVerse，可选值为 v5.6、v6、c1；</p>
+	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
+
+	// <p>用于描述模型在生成视频时要使用的资源文件，分为<strong>首尾帧模式、参考图、视频参考、视频编辑等模式</strong>。</p><p><strong>首尾帧视频生成</strong>：首帧图片只支持<strong>一张</strong>图片，<strong>图片的Usage字段为FirstFrame</strong>，LastFrameFileId 或者 LastFrameUrl 表示尾帧。可以单独传首帧，不能单独传尾帧。<strong>首尾帧生成会参考图片比例</strong>。<br><strong>参考图片生成</strong>：可传入单张图片或者多张，<strong>图片的Usage字段为Reference</strong>；参考图片，可以调整生成视频的宽高比例。<br><strong>视频编辑、视频参考</strong>：Vidu、Kling可输入视频作为参考或者进行编辑。传入视频的同时也可以传入图片，<strong>图片的Usage字段为Reference</strong>。</p><p>注意：</p><ol><li>图片大小不超过10M。</li><li>支持的图片格式：jpeg、jpg、png。x0b</li><li>关于模型某个版本是否支持参考图、首尾帧、视频编辑等功能，可向我们索取文档或者参考原厂文档信息。</li></ol>
+	FileInfos []*AigcVideoTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
+
+	// <p>主体输入信息。</p>
+	SubjectInfos []*AigcVideoTaskInputSubjectInfo `json:"SubjectInfos,omitnil,omitempty" name:"SubjectInfos"`
+
+	// <p>用于作为尾帧画面来生成视频的媒体文件 ID。该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 <a href="/document/product/266/7830">视频上传完成事件通知</a> 或 <a href="https://console.cloud.tencent.com/vod/media">云点播控制台</a> 获取该字段。</p><ol><li>指定该参数时，须同时通过 FileInfos 指定首帧画面。</li><li>图片大小需小于10M。</li><li>图片格式的取值为：jpeg，jpg, png, webp。</li></ol>
+	LastFrameFileId *string `json:"LastFrameFileId,omitnil,omitempty" name:"LastFrameFileId"`
+
+	// <p>用于作为尾帧画面来生成视频的媒体文件 URL。说明：</p><ol><li>指定该参数时，须同时通过 FileInfos 指定首帧画面。</li><li>图片大小需小于5M。</li><li>图片格式的取值为：jpeg，jpg, png, webp。</li></ol>
+	LastFrameUrl *string `json:"LastFrameUrl,omitnil,omitempty" name:"LastFrameUrl"`
+
+	// <p>生成视频的提示词。<br>当未传入参考文件，没有使用场景类型，ExtInfo不为空，Prompt 为必填。</p>
+	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
+
+	// <p>要阻止模型生成视频的提示词。</p>
+	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
+
+	// <p>是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
+	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
+
+	// <p>生视频任务的输出媒体文件配置。</p>
+	OutputConfig *AigcVideoOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
+
+	// <p>输入文件的区域信息。当文件url是国外地址时候，可选Oversea。默认Mainland。</p>
+	InputRegion *string `json:"InputRegion,omitnil,omitempty" name:"InputRegion"`
+
+	// <p>场景类型。取值如下：</p><li>当 ModelName 为 Kling 时：    motion_control 表示动作控制；    avatar_i2v 表示数字人；    lip_sync 表示对口型；</li><li>当 ModelName 为 Vidu 时：    template_effect 表示特效模板；</li><li>其他 ModelName 暂不支持。</li>
+	SceneType *string `json:"SceneType,omitnil,omitempty" name:"SceneType"`
+
+	// <p>模型随机种子。</p>
+	Seed *int64 `json:"Seed,omitnil,omitempty" name:"Seed"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+
+	// <p>保留字段，特殊用途时使用。<br>可用于传入模型特殊参数、分镜prompt等</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
 type CreateAigcVideoTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 模型名称。取值：<li>Hailuo：海螺；</li><li>Kling：可灵；</li><li> Jimeng：即梦；</li><li>Vidu；</li><li>Hunyuan：混元；</li><li>Mingmou：明眸；</li>
+	// <p>模型名称。取值：<br>Kling：可灵；<br>Vidu；<br>Hailuo：海螺；<br>Jimeng：即梦；<br>Hunyuan：混元；<br>Mingmou：明眸；<br>GV；<br>OS；<br>PixVerse;</p>
 	ModelName *string `json:"ModelName,omitnil,omitempty" name:"ModelName"`
 
-	// 模型版本。取值：<li>当 ModelName 是 Hailuo，可选值为 02、2.3、2.3-fast；</li><li>当 ModelName 是 Kling，可选值为 1.6、2.0、2.1、2.5、O1；</li><li>当 ModelName 是 Jimeng，可选值为 3.0pro；</li><li>当 ModelName 是 Vidu，可选值为 q2、q2-pro、q2-turbo；</li><li>当 ModelName 是 GV，可选值为 3.1、3.1-Fast；</li><li>当 ModelName 是 OS，可选值为 2.0；</li><li>当 ModelName 是 Hunyuan，可选值为 1.5；</li><li>当 ModelName 是 Mingmou，可选值为 1.0；</li>
+	// <p>模型版本。取值：<br>当 ModelName 是 Hailuo，可选值为 02、2.3、2.3-fast；<br>当 ModelName 是 Kling，可选值为 1.6、2.0、2.1、2.5、2.6、O1、3.0、3.0-Omni；<br>当 ModelName 是 Jimeng，可选值为 3.0pro；<br>当 ModelName 是 Vidu，可选值为 q2、q2-pro、q2-turbo、q3、q3-pro、q3-turbo；<br>当 ModelName 是 GV，可选值为 3.1、3.1-fast；<br>当 ModelName 是 OS，可选值为 2.0；<br>当 ModelName 是 Hunyuan，可选值为 1.5；<br>当 ModelName 是 Mingmou，可选值为 1.0；<br>当 ModelName 是 PixVerse，可选值为 v5.6、v6、c1；</p>
 	ModelVersion *string `json:"ModelVersion,omitnil,omitempty" name:"ModelVersion"`
 
-	// 最多包含三张素材资源文件的列表，用于描述模型在生成视频时要使用的资源文件。
-	// 
-	// 首尾帧视频生成：用 FileInfos 第一张表示首帧（此时 FileInfos 最多包含一张图片），LastFrameFileId 或者 LastFrameUrl 表示尾帧。
-	// 
-	// 支持多图输入的模型：
-	// 1. GV，使用多图输入时，不可使用 LastFrameFileId 和 LastFrameUrl。
-	// 2. Vidu，支持多图参考生视频。q2 模型1-7张图片，可通过 FileInfos 里面的 ObjectId 作为主体 id 来传入。
-	// 
-	// 注意：
-	// 1. 图片大小不超过10M。
-	// 2. 支持的图片格式：jpeg、png。
+	// <p>用于描述模型在生成视频时要使用的资源文件，分为<strong>首尾帧模式、参考图、视频参考、视频编辑等模式</strong>。</p><p><strong>首尾帧视频生成</strong>：首帧图片只支持<strong>一张</strong>图片，<strong>图片的Usage字段为FirstFrame</strong>，LastFrameFileId 或者 LastFrameUrl 表示尾帧。可以单独传首帧，不能单独传尾帧。<strong>首尾帧生成会参考图片比例</strong>。<br><strong>参考图片生成</strong>：可传入单张图片或者多张，<strong>图片的Usage字段为Reference</strong>；参考图片，可以调整生成视频的宽高比例。<br><strong>视频编辑、视频参考</strong>：Vidu、Kling可输入视频作为参考或者进行编辑。传入视频的同时也可以传入图片，<strong>图片的Usage字段为Reference</strong>。</p><p>注意：</p><ol><li>图片大小不超过10M。</li><li>支持的图片格式：jpeg、jpg、png。x0b</li><li>关于模型某个版本是否支持参考图、首尾帧、视频编辑等功能，可向我们索取文档或者参考原厂文档信息。</li></ol>
 	FileInfos []*AigcVideoTaskInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
 
-	// 用于作为尾帧画面来生成视频的媒体文件 ID。该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。说明：
-	// 1. 只支持模型 GV 、Kling、Vidu，其他模型暂不支持。当 ModelName 为 GV 时，如果指定该参数，则需同时指定 FileInfos 作为待生成视频的首帧。当 ModelName 为 Kling 、ModelVersion 为 2.1 并且指定输出分辨率 Resolution 为 1080P 时，才能指定该参数。当 ModelName 为 Vidu、ModelVersion 为 q2-pro、q2-turbo 时，才能指定该参数。
-	// 2. 图片大小需小于5M。
-	// 3. 图片格式的取值为：jpeg，jpg, png, webp。
+	// <p>主体输入信息。</p>
+	SubjectInfos []*AigcVideoTaskInputSubjectInfo `json:"SubjectInfos,omitnil,omitempty" name:"SubjectInfos"`
+
+	// <p>用于作为尾帧画面来生成视频的媒体文件 ID。该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 <a href="/document/product/266/7830">视频上传完成事件通知</a> 或 <a href="https://console.cloud.tencent.com/vod/media">云点播控制台</a> 获取该字段。</p><ol><li>指定该参数时，须同时通过 FileInfos 指定首帧画面。</li><li>图片大小需小于10M。</li><li>图片格式的取值为：jpeg，jpg, png, webp。</li></ol>
 	LastFrameFileId *string `json:"LastFrameFileId,omitnil,omitempty" name:"LastFrameFileId"`
 
-	// 用于作为尾帧画面来生成视频的媒体文件 URL。说明：
-	// 1. 只支持模型 GV 、Kling、Vidu，其他模型暂不支持。当 ModelName 为 GV 时，如果指定该参数，则需同时指定 FileInfos 作为待生成视频的首帧。当 ModelName 为 Kling 、ModelVersion 为 2.1 并且指定输出分辨率 Resolution 为 1080P 时，才能指定该参数。当 ModelName 为 Vidu、ModelVersion 为 q2-pro、q2-turbo 时，才能指定该参数。
-	// 2. 图片大小需小于5M。
-	// 3. 3. 图片格式的取值为：jpeg，jpg, png, webp。
+	// <p>用于作为尾帧画面来生成视频的媒体文件 URL。说明：</p><ol><li>指定该参数时，须同时通过 FileInfos 指定首帧画面。</li><li>图片大小需小于5M。</li><li>图片格式的取值为：jpeg，jpg, png, webp。</li></ol>
 	LastFrameUrl *string `json:"LastFrameUrl,omitnil,omitempty" name:"LastFrameUrl"`
 
-	// 生成视频的提示词。当 FileInfos 为空时，此参数必填。
-	// 示例值：move the picture
+	// <p>生成视频的提示词。<br>当未传入参考文件，没有使用场景类型，ExtInfo不为空，Prompt 为必填。</p>
 	Prompt *string `json:"Prompt,omitnil,omitempty" name:"Prompt"`
 
-	// 要阻止模型生成视频的提示词。
+	// <p>要阻止模型生成视频的提示词。</p>
 	NegativePrompt *string `json:"NegativePrompt,omitnil,omitempty" name:"NegativePrompt"`
 
-	// 是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li> 
+	// <p>是否自动优化提示词。开启时将自动优化传入的 Prompt，以提升生成质量。取值有： <li>Enabled：开启；</li> <li>Disabled：关闭；</li></p>
 	EnhancePrompt *string `json:"EnhancePrompt,omitnil,omitempty" name:"EnhancePrompt"`
 
-	// 生视频任务的输出媒体文件配置。
+	// <p>生视频任务的输出媒体文件配置。</p>
 	OutputConfig *AigcVideoOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
 
-	// 输入文件的区域信息。当文件url是国外地址时候，可选Oversea。默认Mainland。
+	// <p>输入文件的区域信息。当文件url是国外地址时候，可选Oversea。默认Mainland。</p>
 	InputRegion *string `json:"InputRegion,omitnil,omitempty" name:"InputRegion"`
 
-	// 场景类型。取值如下：
-	// <li>当 ModelName 为 Kling 时，取值 motion_control 表示动作控制；</li>
-	// <li>其他 ModelName 暂不支持。</li>
+	// <p>场景类型。取值如下：</p><li>当 ModelName 为 Kling 时：    motion_control 表示动作控制；    avatar_i2v 表示数字人；    lip_sync 表示对口型；</li><li>当 ModelName 为 Vidu 时：    template_effect 表示特效模板；</li><li>其他 ModelName 暂不支持。</li>
 	SceneType *string `json:"SceneType,omitnil,omitempty" name:"SceneType"`
 
-	// 用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>模型随机种子。</p>
+	Seed *int64 `json:"Seed,omitnil,omitempty" name:"Seed"`
+
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
 	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。<br>可用于传入模型特殊参数、分镜prompt等</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
@@ -4755,6 +5480,7 @@ func (r *CreateAigcVideoTaskRequest) FromJsonString(s string) error {
 	delete(f, "ModelName")
 	delete(f, "ModelVersion")
 	delete(f, "FileInfos")
+	delete(f, "SubjectInfos")
 	delete(f, "LastFrameFileId")
 	delete(f, "LastFrameUrl")
 	delete(f, "Prompt")
@@ -4763,6 +5489,7 @@ func (r *CreateAigcVideoTaskRequest) FromJsonString(s string) error {
 	delete(f, "OutputConfig")
 	delete(f, "InputRegion")
 	delete(f, "SceneType")
+	delete(f, "Seed")
 	delete(f, "SessionId")
 	delete(f, "SessionContext")
 	delete(f, "TasksPriority")
@@ -4775,7 +5502,7 @@ func (r *CreateAigcVideoTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAigcVideoTaskResponseParams struct {
-	// 任务 ID。
+	// <p>任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4934,6 +5661,91 @@ func (r *CreateAnimatedGraphicsTemplateResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAnimatedGraphicsTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateBlindWatermarkTemplateRequestParams struct {
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li><li>blind-nagra：NAGRA水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 数字水印文字内容，长度不超过64个字符，NAGRA水印类型的模板创建后不支持修改文字内容。
+	TextContent *string `json:"TextContent,omitnil,omitempty" name:"TextContent"`
+
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 数字水印模板名称，支持中文、英文、数字、_、-和. 六种格式，长度限制：64 个字符。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数字水印模板描述信息，长度限制：256 个字符。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+}
+
+type CreateBlindWatermarkTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li><li>blind-nagra：NAGRA水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 数字水印文字内容，长度不超过64个字符，NAGRA水印类型的模板创建后不支持修改文字内容。
+	TextContent *string `json:"TextContent,omitnil,omitempty" name:"TextContent"`
+
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 数字水印模板名称，支持中文、英文、数字、_、-和. 六种格式，长度限制：64 个字符。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数字水印模板描述信息，长度限制：256 个字符。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+}
+
+func (r *CreateBlindWatermarkTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateBlindWatermarkTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Type")
+	delete(f, "TextContent")
+	delete(f, "SubAppId")
+	delete(f, "Name")
+	delete(f, "Comment")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateBlindWatermarkTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateBlindWatermarkTemplateResponseParams struct {
+	// 数字水印模板唯一标识。
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateBlindWatermarkTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateBlindWatermarkTemplateResponseParams `json:"Response"`
+}
+
+func (r *CreateBlindWatermarkTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateBlindWatermarkTemplateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6020,17 +6832,122 @@ func (r *CreateJustInTimeTranscodeTemplateResponse) FromJsonString(s string) err
 }
 
 // Predefined struct for user
+type CreateLLMComprehendTemplateRequestParams struct {
+	// <p>解析级别，可选值为：</p><ul><li>Audio: 音频级解析</li><li>Video: 视频级解析</li></ul>
+	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
+
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>大模型解析模板名称，长度限制：64 个字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>大模型解析模板描述信息，长度限制：256 个字符。</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>分段摘要解析配置</p>
+	Summary *LLMComprehendSummary `json:"Summary,omitnil,omitempty" name:"Summary"`
+
+	// <p>文本转录解析配置</p>
+	Asr *LLMComprehendAsr `json:"Asr,omitnil,omitempty" name:"Asr"`
+
+	// <p>人脸识别配置</p>
+	FaceRecognition *LLMComprehendFaceRecognition `json:"FaceRecognition,omitnil,omitempty" name:"FaceRecognition"`
+}
+
+type CreateLLMComprehendTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>解析级别，可选值为：</p><ul><li>Audio: 音频级解析</li><li>Video: 视频级解析</li></ul>
+	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
+
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>大模型解析模板名称，长度限制：64 个字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>大模型解析模板描述信息，长度限制：256 个字符。</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>分段摘要解析配置</p>
+	Summary *LLMComprehendSummary `json:"Summary,omitnil,omitempty" name:"Summary"`
+
+	// <p>文本转录解析配置</p>
+	Asr *LLMComprehendAsr `json:"Asr,omitnil,omitempty" name:"Asr"`
+
+	// <p>人脸识别配置</p>
+	FaceRecognition *LLMComprehendFaceRecognition `json:"FaceRecognition,omitnil,omitempty" name:"FaceRecognition"`
+}
+
+func (r *CreateLLMComprehendTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateLLMComprehendTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Level")
+	delete(f, "SubAppId")
+	delete(f, "Name")
+	delete(f, "Comment")
+	delete(f, "Summary")
+	delete(f, "Asr")
+	delete(f, "FaceRecognition")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLLMComprehendTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateLLMComprehendTemplateResponseParams struct {
+	// <p>大模型理解模板的唯一标识</p>
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateLLMComprehendTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateLLMComprehendTemplateResponseParams `json:"Response"`
+}
+
+func (r *CreateLLMComprehendTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateLLMComprehendTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateMPSTemplateRequestParams struct {
 	// <b>点播[应用](/document/product/266/14574) ID。</b>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
 	// 需要创建的 MPS 模板的类型。取值：
 	// <li>Transcode: 创建转码模板，目前仅支持创建增强模板。</li>
+	// <li>AIAnalysis: 创建智能分析模板。</li>
+	// <li>SmartSubtitle: 创建智能字幕模板。</li>
+	// <li>SmartErase: 创建智能擦除模板。</li>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
 	// MPS 创建模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧创建用户自定义的 MPS 任务模板。
 	// 目前仅支持通过此方式创建以下任务类型的模板：
 	// 1. 音视频增强：仅支持填写“[创建转码模板](https://cloud.tencent.com/document/product/862/37605)”接口中的 Container 、Name、Comment、RemoveVideo、RemoveAudio、VideoTemplate、AudioTemplate 和 EnhanceConfig 几个参数。其中 EnhanceConfig 此处必填，且 Container 目前暂不支持 hls。
+	// 2. 智能分析：仅支持填写“[创建内容分析模板](https://cloud.tencent.com/document/api/862/40249)”接口中的Name、Comment、ClassificationConfigure、TagConfigure、CoverConfigure、FrameTagConfigure几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 3. 智能字幕：仅支持填写“[创建智能字幕模板](https://cloud.tencent.com/document/api/862/117004)”接口中的Name、Comment、TranslateSwitch、VideoSrcLanguage、SubtitleFormat、SubtitleType、AsrHotWordsConfigure、TranslateDstLanguage、ProcessType几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 4. 智能擦除：仅支持填写“[创建智能擦除模板](https://cloud.tencent.com/document/api/862/123735)”接口中的Name、Comment、EraseType、EraseSubtitleConfig、EraseWatermarkConfig、ErasePrivacyConfig几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
 	// 
 	// 目前模板中仅支持配置以上参数，其他参数无需填写。若包含其它参数，系统将自动忽略。以上透传参数以JSON形式表示。
 	MPSCreateTemplateParams *string `json:"MPSCreateTemplateParams,omitnil,omitempty" name:"MPSCreateTemplateParams"`
@@ -6044,11 +6961,17 @@ type CreateMPSTemplateRequest struct {
 
 	// 需要创建的 MPS 模板的类型。取值：
 	// <li>Transcode: 创建转码模板，目前仅支持创建增强模板。</li>
+	// <li>AIAnalysis: 创建智能分析模板。</li>
+	// <li>SmartSubtitle: 创建智能字幕模板。</li>
+	// <li>SmartErase: 创建智能擦除模板。</li>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
 	// MPS 创建模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧创建用户自定义的 MPS 任务模板。
 	// 目前仅支持通过此方式创建以下任务类型的模板：
 	// 1. 音视频增强：仅支持填写“[创建转码模板](https://cloud.tencent.com/document/product/862/37605)”接口中的 Container 、Name、Comment、RemoveVideo、RemoveAudio、VideoTemplate、AudioTemplate 和 EnhanceConfig 几个参数。其中 EnhanceConfig 此处必填，且 Container 目前暂不支持 hls。
+	// 2. 智能分析：仅支持填写“[创建内容分析模板](https://cloud.tencent.com/document/api/862/40249)”接口中的Name、Comment、ClassificationConfigure、TagConfigure、CoverConfigure、FrameTagConfigure几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 3. 智能字幕：仅支持填写“[创建智能字幕模板](https://cloud.tencent.com/document/api/862/117004)”接口中的Name、Comment、TranslateSwitch、VideoSrcLanguage、SubtitleFormat、SubtitleType、AsrHotWordsConfigure、TranslateDstLanguage、ProcessType几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 4. 智能擦除：仅支持填写“[创建智能擦除模板](https://cloud.tencent.com/document/api/862/123735)”接口中的Name、Comment、EraseType、EraseSubtitleConfig、EraseWatermarkConfig、ErasePrivacyConfig几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
 	// 
 	// 目前模板中仅支持配置以上参数，其他参数无需填写。若包含其它参数，系统将自动忽略。以上透传参数以JSON形式表示。
 	MPSCreateTemplateParams *string `json:"MPSCreateTemplateParams,omitnil,omitempty" name:"MPSCreateTemplateParams"`
@@ -7423,20 +8346,20 @@ func (r *CreateSnapshotByTimeOffsetTemplateResponse) FromJsonString(s string) er
 
 // Predefined struct for user
 type CreateStorageRegionRequestParams struct {
-	// 待开通的存储地域，必须是系统支持的地域。
+	// <p>待开通的存储地域，必须是系统支持的地域。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/266/9760">已支持地域列表</a></p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
 type CreateStorageRegionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 待开通的存储地域，必须是系统支持的地域。
+	// <p>待开通的存储地域，必须是系统支持的地域。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/266/9760">已支持地域列表</a></p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
@@ -7484,50 +8407,44 @@ func (r *CreateStorageRegionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSubAppIdRequestParams struct {
-	// 应用名称，长度限制：40个字符。
+	// <p>应用名称，长度限制：40个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 应用简介，长度限制： 300个字符。不填则应用简介默认为空。
+	// <p>应用简介，长度限制： 300个字符。不填则应用简介默认为空。</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 应用类型， 取值有：<li>AllInOne：一体化；</li><li>Professional：专业版。</li>默认值为 AllInOne。
+	// <p>应用类型， 取值有：<li>AllInOne：一体化；</li><li>Professional：专业版。</li>默认值为 AllInOne。</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 此应用的模式，可选值为：
-	// - fileid：仅FileID模式
-	// - fileid+path：FileID & Path模式
-	// 留空时默认选择仅FileID模式
+	// <p>此应用的模式，可选值为：</p><ul><li>fileid：仅FileID模式</li><li>fileid+path：FileID &amp; Path模式<br>留空时默认选择仅FileID模式</li></ul>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// 存储地域
+	// <p>Mode是仅fileid时，用于设置默认存储地域，可选。<br>Mode是fileid+path时，用于指定存储地域，必填。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/266/9760">已支持地域列表</a></p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// 此应用需要绑定的tag
+	// <p>此应用需要绑定的tag</p>
 	Tags []*ResourceTag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateSubAppIdRequest struct {
 	*tchttp.BaseRequest
 	
-	// 应用名称，长度限制：40个字符。
+	// <p>应用名称，长度限制：40个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 应用简介，长度限制： 300个字符。不填则应用简介默认为空。
+	// <p>应用简介，长度限制： 300个字符。不填则应用简介默认为空。</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 应用类型， 取值有：<li>AllInOne：一体化；</li><li>Professional：专业版。</li>默认值为 AllInOne。
+	// <p>应用类型， 取值有：<li>AllInOne：一体化；</li><li>Professional：专业版。</li>默认值为 AllInOne。</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 此应用的模式，可选值为：
-	// - fileid：仅FileID模式
-	// - fileid+path：FileID & Path模式
-	// 留空时默认选择仅FileID模式
+	// <p>此应用的模式，可选值为：</p><ul><li>fileid：仅FileID模式</li><li>fileid+path：FileID &amp; Path模式<br>留空时默认选择仅FileID模式</li></ul>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// 存储地域
+	// <p>Mode是仅fileid时，用于设置默认存储地域，可选。<br>Mode是fileid+path时，用于指定存储地域，必填。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/266/9760">已支持地域列表</a></p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// 此应用需要绑定的tag
+	// <p>此应用需要绑定的tag</p>
 	Tags []*ResourceTag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -7557,7 +8474,7 @@ func (r *CreateSubAppIdRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSubAppIdResponseParams struct {
-	// 新创建的应用 ID。
+	// <p>新创建的应用 ID。</p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7759,93 +8676,81 @@ func (r *CreateSuperPlayerConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateTranscodeTemplateRequestParams struct {
-	// 封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。
+	// <p>封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。</p>
 	Container *string `json:"Container,omitnil,omitempty" name:"Container"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 转码模板名称，长度限制：64 个字符。
+	// <p>转码模板名称，长度限制：64 个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 模板描述信息，长度限制：256 个字符。
+	// <p>模板描述信息，长度限制：256 个字符。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 是否去除视频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
-	// 默认值：0。
+	// <p>是否去除视频数据，可选值：</p><li>0：保留</li><li>1：去除</li>默认值：0。
 	RemoveVideo *int64 `json:"RemoveVideo,omitnil,omitempty" name:"RemoveVideo"`
 
-	// 是否去除音频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
-	// 默认值：0。
+	// <p>是否去除音频数据，可选值：</p><li>0：保留</li><li>1：去除</li>默认值：0。
 	RemoveAudio *int64 `json:"RemoveAudio,omitnil,omitempty" name:"RemoveAudio"`
 
-	// 视频流配置参数，当 RemoveVideo 为 0，该字段必填。
+	// <p>视频流配置参数，当 RemoveVideo 为 0，该字段必填。</p>
 	VideoTemplate *VideoTemplateInfo `json:"VideoTemplate,omitnil,omitempty" name:"VideoTemplate"`
 
-	// 音频流配置参数，当 RemoveAudio 为 0，该字段必填。
+	// <p>音频流配置参数，当 RemoveAudio 为 0，该字段必填。</p>
 	AudioTemplate *AudioTemplateInfo `json:"AudioTemplate,omitnil,omitempty" name:"AudioTemplate"`
 
-	// 极速高清转码参数。
+	// <p>极速高清转码参数。</p>
 	TEHDConfig *TEHDConfig `json:"TEHDConfig,omitnil,omitempty" name:"TEHDConfig"`
 
-	// 音视频增强配置。
+	// <p>音视频增强配置。</p>
 	EnhanceConfig *EnhanceConfig `json:"EnhanceConfig,omitnil,omitempty" name:"EnhanceConfig"`
 
-	// 切片类型，当 Container 为 hls 时有效，可选值：
-	// <li>ts：ts 切片；</li>
-	// <li>fmp4：fmp4 切片。</li>
-	// 默认值：ts。
+	// <p>切片类型，当 Container 为 hls 时有效，可选值：</p><li>ts：ts 切片；</li><li>fmp4：fmp4 切片。</li>默认值：ts。
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
+
+	// <p>扩展参数。</p>
+	StdExtInfo *string `json:"StdExtInfo,omitnil,omitempty" name:"StdExtInfo"`
 }
 
 type CreateTranscodeTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。
+	// <p>封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。</p>
 	Container *string `json:"Container,omitnil,omitempty" name:"Container"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 转码模板名称，长度限制：64 个字符。
+	// <p>转码模板名称，长度限制：64 个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 模板描述信息，长度限制：256 个字符。
+	// <p>模板描述信息，长度限制：256 个字符。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 是否去除视频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
-	// 默认值：0。
+	// <p>是否去除视频数据，可选值：</p><li>0：保留</li><li>1：去除</li>默认值：0。
 	RemoveVideo *int64 `json:"RemoveVideo,omitnil,omitempty" name:"RemoveVideo"`
 
-	// 是否去除音频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
-	// 默认值：0。
+	// <p>是否去除音频数据，可选值：</p><li>0：保留</li><li>1：去除</li>默认值：0。
 	RemoveAudio *int64 `json:"RemoveAudio,omitnil,omitempty" name:"RemoveAudio"`
 
-	// 视频流配置参数，当 RemoveVideo 为 0，该字段必填。
+	// <p>视频流配置参数，当 RemoveVideo 为 0，该字段必填。</p>
 	VideoTemplate *VideoTemplateInfo `json:"VideoTemplate,omitnil,omitempty" name:"VideoTemplate"`
 
-	// 音频流配置参数，当 RemoveAudio 为 0，该字段必填。
+	// <p>音频流配置参数，当 RemoveAudio 为 0，该字段必填。</p>
 	AudioTemplate *AudioTemplateInfo `json:"AudioTemplate,omitnil,omitempty" name:"AudioTemplate"`
 
-	// 极速高清转码参数。
+	// <p>极速高清转码参数。</p>
 	TEHDConfig *TEHDConfig `json:"TEHDConfig,omitnil,omitempty" name:"TEHDConfig"`
 
-	// 音视频增强配置。
+	// <p>音视频增强配置。</p>
 	EnhanceConfig *EnhanceConfig `json:"EnhanceConfig,omitnil,omitempty" name:"EnhanceConfig"`
 
-	// 切片类型，当 Container 为 hls 时有效，可选值：
-	// <li>ts：ts 切片；</li>
-	// <li>fmp4：fmp4 切片。</li>
-	// 默认值：ts。
+	// <p>切片类型，当 Container 为 hls 时有效，可选值：</p><li>ts：ts 切片；</li><li>fmp4：fmp4 切片。</li>默认值：ts。
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
+
+	// <p>扩展参数。</p>
+	StdExtInfo *string `json:"StdExtInfo,omitnil,omitempty" name:"StdExtInfo"`
 }
 
 func (r *CreateTranscodeTemplateRequest) ToJsonString() string {
@@ -7871,6 +8776,7 @@ func (r *CreateTranscodeTemplateRequest) FromJsonString(s string) error {
 	delete(f, "TEHDConfig")
 	delete(f, "EnhanceConfig")
 	delete(f, "SegmentType")
+	delete(f, "StdExtInfo")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTranscodeTemplateRequest has unknown keys!", "")
 	}
@@ -7879,7 +8785,7 @@ func (r *CreateTranscodeTemplateRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateTranscodeTemplateResponseParams struct {
-	// 转码模板唯一标识。
+	// <p>转码模板唯一标识。</p>
 	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8220,6 +9126,14 @@ func (r *CreateWordSamplesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CustomVoiceInfo struct {
+	// <p>音色 ID。</p>
+	VoiceId *string `json:"VoiceId,omitnil,omitempty" name:"VoiceId"`
+
+	// <p>音色信息。</p>
+	VoiceInfo *string `json:"VoiceInfo,omitnil,omitempty" name:"VoiceInfo"`
+}
+
 type DNSVerifyInfo struct {
 	// 子解析。
 	SubDomain *string `json:"SubDomain,omitnil,omitempty" name:"SubDomain"`
@@ -8429,6 +9343,67 @@ func (r *DeleteAdaptiveDynamicStreamingTemplateResponse) FromJsonString(s string
 }
 
 // Predefined struct for user
+type DeleteAigcApiTokenRequestParams struct {
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// API 的 Token
+	ApiToken *string `json:"ApiToken,omitnil,omitempty" name:"ApiToken"`
+}
+
+type DeleteAigcApiTokenRequest struct {
+	*tchttp.BaseRequest
+	
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// API 的 Token
+	ApiToken *string `json:"ApiToken,omitnil,omitempty" name:"ApiToken"`
+}
+
+func (r *DeleteAigcApiTokenRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAigcApiTokenRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "ApiToken")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteAigcApiTokenRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteAigcApiTokenResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteAigcApiTokenResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteAigcApiTokenResponseParams `json:"Response"`
+}
+
+func (r *DeleteAigcApiTokenResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAigcApiTokenResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteAnimatedGraphicsTemplateRequestParams struct {
 	// 转动图模板唯一标识。
 	Definition *uint64 `json:"Definition,omitnil,omitempty" name:"Definition"`
@@ -8486,6 +9461,67 @@ func (r *DeleteAnimatedGraphicsTemplateResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAnimatedGraphicsTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteBlindWatermarkTemplateRequestParams struct {
+	// 数字水印模板唯一标识。
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+type DeleteBlindWatermarkTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数字水印模板唯一标识。
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+func (r *DeleteBlindWatermarkTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteBlindWatermarkTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Definition")
+	delete(f, "SubAppId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteBlindWatermarkTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteBlindWatermarkTemplateResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteBlindWatermarkTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteBlindWatermarkTemplateResponseParams `json:"Response"`
+}
+
+func (r *DeleteBlindWatermarkTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteBlindWatermarkTemplateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8978,12 +10014,76 @@ func (r *DeleteJustInTimeTranscodeTemplateResponse) FromJsonString(s string) err
 }
 
 // Predefined struct for user
+type DeleteLLMComprehendTemplateRequestParams struct {
+	// 大模型理解模板的唯一标识
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+type DeleteLLMComprehendTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大模型理解模板的唯一标识
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+func (r *DeleteLLMComprehendTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteLLMComprehendTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Definition")
+	delete(f, "SubAppId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteLLMComprehendTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteLLMComprehendTemplateResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteLLMComprehendTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteLLMComprehendTemplateResponseParams `json:"Response"`
+}
+
+func (r *DeleteLLMComprehendTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteLLMComprehendTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteMPSTemplateRequestParams struct {
 	// <b>点播[应用](/document/product/266/14574) ID。</b>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
 	// 需要删除的 MPS 模板的类型。取值：
 	// <li>Transcode: 删除转码模板。</li>
+	// <li>AIAnalysis: 创建智能分析模板。</li>
+	// <li>SmartSubtitle: 创建智能字幕模板。</li>
+	// <li>SmartErase: 创建智能擦除模板。</li>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
 	// MPS 任务模板唯一标识。
@@ -8998,6 +10098,9 @@ type DeleteMPSTemplateRequest struct {
 
 	// 需要删除的 MPS 模板的类型。取值：
 	// <li>Transcode: 删除转码模板。</li>
+	// <li>AIAnalysis: 创建智能分析模板。</li>
+	// <li>SmartSubtitle: 创建智能字幕模板。</li>
+	// <li>SmartErase: 创建智能擦除模板。</li>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
 	// MPS 任务模板唯一标识。
@@ -10231,33 +11334,154 @@ func (r *DescribeAdaptiveDynamicStreamingTemplatesResponse) FromJsonString(s str
 }
 
 // Predefined struct for user
+type DescribeAigcApiTokensRequestParams struct {
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+type DescribeAigcApiTokensRequest struct {
+	*tchttp.BaseRequest
+	
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+}
+
+func (r *DescribeAigcApiTokensRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAigcApiTokensRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAigcApiTokensRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAigcApiTokensResponseParams struct {
+	// API Token 列表
+	ApiTokens []*string `json:"ApiTokens,omitnil,omitempty" name:"ApiTokens"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAigcApiTokensResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAigcApiTokensResponseParams `json:"Response"`
+}
+
+func (r *DescribeAigcApiTokensResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAigcApiTokensResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAigcFaceInfoRequestParams struct {
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 需要获取人脸信息的输入视频信息，最多包含一个文件。
+	FileInfos []*AigcFaceInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
+}
+
+type DescribeAigcFaceInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 需要获取人脸信息的输入视频信息，最多包含一个文件。
+	FileInfos []*AigcFaceInputFileInfo `json:"FileInfos,omitnil,omitempty" name:"FileInfos"`
+}
+
+func (r *DescribeAigcFaceInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAigcFaceInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "FileInfos")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAigcFaceInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAigcFaceInfoResponseParams struct {
+	// 人脸信息。
+	FaceInfoSet []*AigcFaceInfo `json:"FaceInfoSet,omitnil,omitempty" name:"FaceInfoSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAigcFaceInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAigcFaceInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeAigcFaceInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAigcFaceInfoResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeAigcUsageDataRequestParams struct {
-	// 起始日期。使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#52)。
+	// <p>起始日期。使用 <a href="https://cloud.tencent.com/document/product/266/11732#52">ISO 日期格式</a>。</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束日期，需大于等于起始日期。使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#52)。
+	// <p>结束日期，需大于等于起始日期。使用 <a href="https://cloud.tencent.com/document/product/266/11732#52">ISO 日期格式</a>。</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// AIGC类型，取值有：<li> Video：视频。</li><li> Image：图片。</li>
+	// <p>AIGC类型。</p><p>枚举值：</p><ul><li>Video： 视频</li><li>Image： 图片</li><li>Text： 文本</li><li>SceneAigcVideo： 场景化视频处理</li><li>SceneAigcImage： 场景化图片处理</li><li>SceneAigcTime： 场景化处理次数</li></ul>
 	AigcType *string `json:"AigcType,omitnil,omitempty" name:"AigcType"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
 type DescribeAigcUsageDataRequest struct {
 	*tchttp.BaseRequest
 	
-	// 起始日期。使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#52)。
+	// <p>起始日期。使用 <a href="https://cloud.tencent.com/document/product/266/11732#52">ISO 日期格式</a>。</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束日期，需大于等于起始日期。使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#52)。
+	// <p>结束日期，需大于等于起始日期。使用 <a href="https://cloud.tencent.com/document/product/266/11732#52">ISO 日期格式</a>。</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// AIGC类型，取值有：<li> Video：视频。</li><li> Image：图片。</li>
+	// <p>AIGC类型。</p><p>枚举值：</p><ul><li>Video： 视频</li><li>Image： 图片</li><li>Text： 文本</li><li>SceneAigcVideo： 场景化视频处理</li><li>SceneAigcImage： 场景化图片处理</li><li>SceneAigcTime： 场景化处理次数</li></ul>
 	AigcType *string `json:"AigcType,omitnil,omitempty" name:"AigcType"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
@@ -10285,7 +11509,7 @@ func (r *DescribeAigcUsageDataRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAigcUsageDataResponseParams struct {
-	// AIGC统计数据。
+	// <p>AIGC统计数据。</p>
 	AigcUsageDataSet []*AigcUsageDataItem `json:"AigcUsageDataSet,omitnil,omitempty" name:"AigcUsageDataSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -10454,6 +11678,98 @@ func (r *DescribeAnimatedGraphicsTemplatesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAnimatedGraphicsTemplatesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBlindWatermarkTemplatesRequestParams struct {
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 数字水印模板唯一标识过滤条件，数组长度限制：100。
+	Definitions []*int64 `json:"Definitions,omitnil,omitempty" name:"Definitions"`
+
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li><li>blind-nagra：Nagra取证水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 分页偏移量，默认值：0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回记录条数
+	// <li>默认值：10；</li>
+	// <li>最大值：100。</li>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeBlindWatermarkTemplatesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 数字水印模板唯一标识过滤条件，数组长度限制：100。
+	Definitions []*int64 `json:"Definitions,omitnil,omitempty" name:"Definitions"`
+
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li><li>blind-nagra：Nagra取证水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 分页偏移量，默认值：0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回记录条数
+	// <li>默认值：10；</li>
+	// <li>最大值：100。</li>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeBlindWatermarkTemplatesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBlindWatermarkTemplatesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "Definitions")
+	delete(f, "Type")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBlindWatermarkTemplatesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBlindWatermarkTemplatesResponseParams struct {
+	// 符合过滤条件的记录总数。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 数字水印模板详情列表。
+	BlindWatermarkTemplateSet []*BlindWatermarkTemplate `json:"BlindWatermarkTemplateSet,omitnil,omitempty" name:"BlindWatermarkTemplateSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeBlindWatermarkTemplatesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBlindWatermarkTemplatesResponseParams `json:"Response"`
+}
+
+func (r *DescribeBlindWatermarkTemplatesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBlindWatermarkTemplatesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -11713,14 +13029,14 @@ func (r *DescribeDrmDataKeyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDrmKeyProviderInfoRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
 type DescribeDrmKeyProviderInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
@@ -11745,7 +13061,7 @@ func (r *DescribeDrmKeyProviderInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDrmKeyProviderInfoResponseParams struct {
-	// 华曦达（SDMC）相关的 DRM 密钥提供商信息。
+	// <p>华曦达（SDMC）相关的 DRM 密钥提供商信息。</p><p>华曦达服务后续逐步下线，请使用VOD DRM加密服务。</p>
 	SDMCInfo *SDMCDrmKeyProviderInfo `json:"SDMCInfo,omitnil,omitempty" name:"SDMCInfo"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -11931,14 +13247,14 @@ func (r *DescribeEventConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeEventsStateRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
 type DescribeEventsStateRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
@@ -11963,7 +13279,7 @@ func (r *DescribeEventsStateRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeEventsStateResponseParams struct {
-	// 待进行拉取的事件通知数，为近似值，约5秒延迟。
+	// <p>待进行拉取的事件通知数，为近似值，约有3分钟延迟。</p><p><strong>注意：不建议使用此字段作为是否拉取事件通知的依据。</strong></p>
 	CountOfEventsToPull *uint64 `json:"CountOfEventsToPull,omitnil,omitempty" name:"CountOfEventsToPull"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -12551,6 +13867,87 @@ func (r *DescribeJustInTimeTranscodeTemplatesResponse) FromJsonString(s string) 
 }
 
 // Predefined struct for user
+type DescribeLLMComprehendTemplatesRequestParams struct {
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>大模型解析模板唯一标识过滤条件，数组长度最大值：100。</p>
+	Definitions []*int64 `json:"Definitions,omitnil,omitempty" name:"Definitions"`
+
+	// <p>分页偏移量，默认值：0。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>返回记录条数，默认值：10，最大值：100。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeLLMComprehendTemplatesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>大模型解析模板唯一标识过滤条件，数组长度最大值：100。</p>
+	Definitions []*int64 `json:"Definitions,omitnil,omitempty" name:"Definitions"`
+
+	// <p>分页偏移量，默认值：0。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>返回记录条数，默认值：10，最大值：100。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeLLMComprehendTemplatesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLLMComprehendTemplatesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubAppId")
+	delete(f, "Definitions")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLLMComprehendTemplatesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLLMComprehendTemplatesResponseParams struct {
+	// <p>符合过滤条件的记录总数。</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>大模型解析模板详情列表。</p>
+	LLMComprehendTemplateSet []*LLMComprehendTemplateItem `json:"LLMComprehendTemplateSet,omitnil,omitempty" name:"LLMComprehendTemplateSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeLLMComprehendTemplatesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeLLMComprehendTemplatesResponseParams `json:"Response"`
+}
+
+func (r *DescribeLLMComprehendTemplatesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLLMComprehendTemplatesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeLicenseUsageDataRequestParams struct {
 	// 起始日期。使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#52)。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
@@ -12637,10 +14034,16 @@ type DescribeMPSTemplatesRequestParams struct {
 
 	// MPS 模板类型。根据需要查询的 MPS 模板的类型对结果进行过滤。取值：
 	// <li>Transcode: 查询转码模板列表。</li>
+	// <li>AIAnalysis: 创建智能分析模板。</li>
+	// <li>SmartSubtitle: 创建智能字幕模板。</li>
+	// <li>SmartErase: 创建智能擦除模板。</li>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
 	// MPS 查询模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧查询 MPS 任务模板列表。目前仅支持通过此方式查询以下任务类型的模板：
-	// 1. 音视频增强：仅支持填写“[获取转码模板列表](https://cloud.tencent.com/document/product/862/37593)”接口中的 Definitions、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 1. 音视频增强：仅支持填写“[获取转码模板列表](https://cloud.tencent.com/document/product/862/37593)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 2. 智能分析：仅支持填写“[获取智能分析模板列表](https://cloud.tencent.com/document/product/862/40247)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 3. 智能字幕：仅支持填写“[获取智能字幕模板列表](https://cloud.tencent.com/document/product/862/117002)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 4. 智能擦除：仅支持填写“[获取智能擦除模板列表](https://cloud.tencent.com/document/product/862/123733)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
 	MPSDescribeTemplateParams *string `json:"MPSDescribeTemplateParams,omitnil,omitempty" name:"MPSDescribeTemplateParams"`
 }
 
@@ -12652,10 +14055,16 @@ type DescribeMPSTemplatesRequest struct {
 
 	// MPS 模板类型。根据需要查询的 MPS 模板的类型对结果进行过滤。取值：
 	// <li>Transcode: 查询转码模板列表。</li>
+	// <li>AIAnalysis: 创建智能分析模板。</li>
+	// <li>SmartSubtitle: 创建智能字幕模板。</li>
+	// <li>SmartErase: 创建智能擦除模板。</li>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
 	// MPS 查询模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧查询 MPS 任务模板列表。目前仅支持通过此方式查询以下任务类型的模板：
-	// 1. 音视频增强：仅支持填写“[获取转码模板列表](https://cloud.tencent.com/document/product/862/37593)”接口中的 Definitions、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 1. 音视频增强：仅支持填写“[获取转码模板列表](https://cloud.tencent.com/document/product/862/37593)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 2. 智能分析：仅支持填写“[获取智能分析模板列表](https://cloud.tencent.com/document/product/862/40247)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 3. 智能字幕：仅支持填写“[获取智能字幕模板列表](https://cloud.tencent.com/document/product/862/117002)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// 4. 智能擦除：仅支持填写“[获取智能擦除模板列表](https://cloud.tencent.com/document/product/862/123733)”接口中的 Definitions、Type、Name、Offset 和 Limit 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
 	MPSDescribeTemplateParams *string `json:"MPSDescribeTemplateParams,omitnil,omitempty" name:"MPSDescribeTemplateParams"`
 }
 
@@ -12710,50 +14119,26 @@ func (r *DescribeMPSTemplatesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMediaInfosRequestParams struct {
-	// 媒体文件 ID 列表，N 从 0 开始取值，最大 19。
+	// <p>媒体文件 ID 列表，N 从 0 开始取值，最大 19。</p>
 	FileIds []*string `json:"FileIds,omitnil,omitempty" name:"FileIds"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：
-	// <li>basicInfo（视频基础信息）。</li>
-	// <li>metaData（视频元信息）。</li>
-	// <li>transcodeInfo（视频转码结果信息）。</li>
-	// <li>animatedGraphicsInfo（视频转动图结果信息）。</li>
-	// <li>imageSpriteInfo（视频雪碧图信息）。</li>
-	// <li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li>
-	// <li>sampleSnapshotInfo（采样截图信息）。</li>
-	// <li>keyFrameDescInfo（打点信息）。</li>
-	// <li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li>
-	// <li>miniProgramReviewInfo（小程序审核信息）。</li>
-	// <li>subtitleInfo（字幕信息）。</li>
-	// <li>reviewInfo（审核信息）。</li>
+	// <p>指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：</p><li>basicInfo（视频基础信息）。</li><li>metaData（视频元信息）。</li><li>transcodeInfo（视频转码结果信息）。</li><li>animatedGraphicsInfo（视频转动图结果信息）。</li><li>imageSpriteInfo（视频雪碧图信息）。</li><li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li><li>sampleSnapshotInfo（采样截图信息）。</li><li>keyFrameDescInfo（打点信息）。</li><li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li><li>miniProgramReviewInfo（小程序审核信息）。</li><li>subtitleInfo（字幕信息）。</li><li>reviewInfo（审核信息）。</li><li>mpsAiMediaInfo（mps智能媒资信息）。</li>
 	Filters []*string `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeMediaInfosRequest struct {
 	*tchttp.BaseRequest
 	
-	// 媒体文件 ID 列表，N 从 0 开始取值，最大 19。
+	// <p>媒体文件 ID 列表，N 从 0 开始取值，最大 19。</p>
 	FileIds []*string `json:"FileIds,omitnil,omitempty" name:"FileIds"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：
-	// <li>basicInfo（视频基础信息）。</li>
-	// <li>metaData（视频元信息）。</li>
-	// <li>transcodeInfo（视频转码结果信息）。</li>
-	// <li>animatedGraphicsInfo（视频转动图结果信息）。</li>
-	// <li>imageSpriteInfo（视频雪碧图信息）。</li>
-	// <li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li>
-	// <li>sampleSnapshotInfo（采样截图信息）。</li>
-	// <li>keyFrameDescInfo（打点信息）。</li>
-	// <li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li>
-	// <li>miniProgramReviewInfo（小程序审核信息）。</li>
-	// <li>subtitleInfo（字幕信息）。</li>
-	// <li>reviewInfo（审核信息）。</li>
+	// <p>指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：</p><li>basicInfo（视频基础信息）。</li><li>metaData（视频元信息）。</li><li>transcodeInfo（视频转码结果信息）。</li><li>animatedGraphicsInfo（视频转动图结果信息）。</li><li>imageSpriteInfo（视频雪碧图信息）。</li><li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li><li>sampleSnapshotInfo（采样截图信息）。</li><li>keyFrameDescInfo（打点信息）。</li><li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li><li>miniProgramReviewInfo（小程序审核信息）。</li><li>subtitleInfo（字幕信息）。</li><li>reviewInfo（审核信息）。</li><li>mpsAiMediaInfo（mps智能媒资信息）。</li>
 	Filters []*string `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -12780,10 +14165,10 @@ func (r *DescribeMediaInfosRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMediaInfosResponseParams struct {
-	// 媒体文件信息列表。
+	// <p>媒体文件信息列表。</p>
 	MediaInfoSet []*MediaInfo `json:"MediaInfoSet,omitnil,omitempty" name:"MediaInfoSet"`
 
-	// 不存在的文件 ID 列表。
+	// <p>不存在的文件 ID 列表。</p>
 	NotExistFileIdSet []*string `json:"NotExistFileIdSet,omitnil,omitempty" name:"NotExistFileIdSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -12933,6 +14318,18 @@ type DescribeMediaProcessUsageDataRequestParams struct {
 	// <li>JITTranscoding: 即时转码</li>
 	// <li>VideoSnapshot: 视频截图</li>
 	// <li>JITEncryption: 即时加密</li>
+	// <li>MediaEnhancement: 音视频增强</li>
+	// <li>ImageCompression: 图片压缩</li>
+	// <li>ImageEnhancement: 图片增强</li>
+	// <li>ImageSuperResolution: 图片超分</li>
+	// <li>ImageAdvanceCompression: 图片高级压缩</li>
+	// <li>ImageUnderstanding: 图片理解</li>
+	// <li>AddTraceWatermark: 添加溯源水印</li>
+	// <li>AddBlindWatermark: 添加盲水印</li>
+	// <li>AddNagraWatermark: 添加NAGRA数字水印</li>
+	// <li>ExtractTraceWatermark: 提取溯源水印</li>
+	// <li>ExtractBlindWatermark: 提取盲水印</li>
+	// <li>ExtractNagraWatermark: 提取NAGRA数字水印</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
@@ -12973,6 +14370,18 @@ type DescribeMediaProcessUsageDataRequest struct {
 	// <li>JITTranscoding: 即时转码</li>
 	// <li>VideoSnapshot: 视频截图</li>
 	// <li>JITEncryption: 即时加密</li>
+	// <li>MediaEnhancement: 音视频增强</li>
+	// <li>ImageCompression: 图片压缩</li>
+	// <li>ImageEnhancement: 图片增强</li>
+	// <li>ImageSuperResolution: 图片超分</li>
+	// <li>ImageAdvanceCompression: 图片高级压缩</li>
+	// <li>ImageUnderstanding: 图片理解</li>
+	// <li>AddTraceWatermark: 添加溯源水印</li>
+	// <li>AddBlindWatermark: 添加盲水印</li>
+	// <li>AddNagraWatermark: 添加NAGRA数字水印</li>
+	// <li>ExtractTraceWatermark: 提取溯源水印</li>
+	// <li>ExtractBlindWatermark: 提取盲水印</li>
+	// <li>ExtractNagraWatermark: 提取NAGRA数字水印</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
@@ -14456,20 +15865,20 @@ func (r *DescribeSuperPlayerConfigsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTaskDetailRequestParams struct {
-	// 视频处理任务的任务 ID。
+	// <p>视频处理任务的任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
 type DescribeTaskDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// 视频处理任务的任务 ID。
+	// <p>视频处理任务的任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
@@ -14495,133 +15904,144 @@ func (r *DescribeTaskDetailRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTaskDetailResponseParams struct {
-	// 任务类型，取值：<li>Procedure：视频处理任务；</li><li>EditMedia：视频编辑任务；</li><li>SplitMedia：视频拆条任务；</li><li>ComposeMedia：制作媒体文件任务；</li><li>WechatPublish：微信发布任务；</li><li>WechatMiniProgramPublish：微信小程序视频发布任务；</li><li>PullUpload：拉取上传媒体文件任务；</li><li>FastClipMedia：快速剪辑任务；</li><li>RemoveWatermarkTask：智能去除水印任务；</li><li>DescribeFileAttributesTask：获取文件属性任务；</li><li>RebuildMedia：音画质重生任务（不推荐使用）；</li><li>ReviewAudioVideo：音视频审核任务；</li><li>ExtractTraceWatermark：提取溯源水印任务；</li><li>ExtractCopyRightWatermark：提取版权水印任务；</li><li>QualityInspect：音画质检测任务；</li><li>QualityEnhance：音画质重生任务；</li><li>ComplexAdaptiveDynamicStreaming：复杂自适应码流任务；</li><li>ProcessMediaByMPS：MPS 视频处理任务；</li><li>AigcImageTask：AIGC 生图任务；</li><li>SceneAigcImageTask：场景化 AIGC 生图任务；</li><li>AigcVideoTask：AIGC 生视频任务；</li><li>ImportMediaKnowledge：导入媒体知识任务。</li><li>SceneAigcVideoTask：场景化 AIGC 生视频任务；</li>
+	// <p>任务类型，取值：<li>Procedure：视频处理任务；</li><li>EditMedia：视频编辑任务；</li><li>SplitMedia：视频拆条任务；</li><li>ComposeMedia：制作媒体文件任务；</li><li>WechatPublish：微信发布任务；</li><li>WechatMiniProgramPublish：微信小程序视频发布任务；</li><li>PullUpload：拉取上传媒体文件任务；</li><li>FastClipMedia：快速剪辑任务；</li><li>RemoveWatermarkTask：智能去除水印任务；</li><li>DescribeFileAttributesTask：获取文件属性任务；</li><li>RebuildMedia：音画质重生任务（不推荐使用）；</li><li>ReviewAudioVideo：音视频审核任务；</li><li>ExtractTraceWatermark：提取溯源水印任务；</li><li>ExtractCopyRightWatermark：提取版权水印任务；</li><li>QualityInspect：音画质检测任务；</li><li>QualityEnhance：音画质重生任务；</li><li>ComplexAdaptiveDynamicStreaming：复杂自适应码流任务；</li><li>ProcessMediaByMPS：MPS 视频处理任务；</li><li>AigcImageTask：AIGC 生图任务；</li><li>SceneAigcImageTask：场景化 AIGC 生图任务；</li><li>AigcVideoTask：AIGC 生视频任务；</li><li>ImportMediaKnowledge：导入媒体知识任务。</li><li>SceneAigcVideoTask：场景化 AIGC 生视频任务；</li><li> ExtractBlindWatermark：提取数字水印任务。</li><li> ExtractBlindWatermark：提取数字水印任务。</li><li> CreateAigcAdvancedCustomElementTask：创建自定义主体任务</li><li>CreateAigcCustomVoiceTask：创建自定义音色任务</li><li>CreateAigcSubjectTask：创建主体任务</li><li>AigcVideoRedrawTask：AIGC 视频转绘任务</li></p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 任务状态，取值：
-	// <li>WAITING：等待中；</li>
-	// <li>PROCESSING：处理中；</li>
-	// <li>FINISH：已完成；</li>
-	// <li>ABORTED：已终止。</li>
+	// <p>任务状态，取值：</p><li>WAITING：等待中；</li><li>PROCESSING：处理中；</li><li>FINISH：已完成；</li><li>ABORTED：已终止。</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 任务的创建时间，采用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>任务的创建时间，采用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 任务开始执行的时间，采用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>任务开始执行的时间，采用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	BeginProcessTime *string `json:"BeginProcessTime,omitnil,omitempty" name:"BeginProcessTime"`
 
-	// 任务执行完毕的时间，采用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>任务执行完毕的时间，采用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	FinishTime *string `json:"FinishTime,omitnil,omitempty" name:"FinishTime"`
 
-	// 视频处理任务信息，仅当 TaskType 为 Procedure，该字段有值。
+	// <p>视频处理任务信息，仅当 TaskType 为 Procedure，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProcedureTask *ProcedureTask `json:"ProcedureTask,omitnil,omitempty" name:"ProcedureTask"`
 
-	// 视频编辑任务信息，仅当 TaskType 为 EditMedia，该字段有值。
+	// <p>视频编辑任务信息，仅当 TaskType 为 EditMedia，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EditMediaTask *EditMediaTask `json:"EditMediaTask,omitnil,omitempty" name:"EditMediaTask"`
 
-	// 微信发布任务信息，仅当 TaskType 为 WechatPublish，该字段有值。
+	// <p>微信发布任务信息，仅当 TaskType 为 WechatPublish，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	WechatPublishTask *WechatPublishTask `json:"WechatPublishTask,omitnil,omitempty" name:"WechatPublishTask"`
 
-	// 制作媒体文件任务信息，仅当 TaskType 为 ComposeMedia，该字段有值。
+	// <p>制作媒体文件任务信息，仅当 TaskType 为 ComposeMedia，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ComposeMediaTask *ComposeMediaTask `json:"ComposeMediaTask,omitnil,omitempty" name:"ComposeMediaTask"`
 
-	// 视频拆条任务信息，仅当 TaskType 为 SplitMedia，该字段有值。
+	// <p>视频拆条任务信息，仅当 TaskType 为 SplitMedia，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SplitMediaTask *SplitMediaTask `json:"SplitMediaTask,omitnil,omitempty" name:"SplitMediaTask"`
 
-	// 微信小程序发布任务信息，仅当 TaskType 为 WechatMiniProgramPublish，该字段有值。
+	// <p>微信小程序发布任务信息，仅当 TaskType 为 WechatMiniProgramPublish，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	WechatMiniProgramPublishTask *WechatMiniProgramPublishTask `json:"WechatMiniProgramPublishTask,omitnil,omitempty" name:"WechatMiniProgramPublishTask"`
 
-	// 拉取上传媒体文件任务信息，仅当 TaskType 为 PullUpload，该字段有值。
+	// <p>拉取上传媒体文件任务信息，仅当 TaskType 为 PullUpload，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PullUploadTask *PullUploadTask `json:"PullUploadTask,omitnil,omitempty" name:"PullUploadTask"`
 
-	// 视频转码任务信息，仅当 TaskType 为 Transcode，该字段有值。
+	// <p>视频转码任务信息，仅当 TaskType 为 Transcode，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranscodeTask *TranscodeTask2017 `json:"TranscodeTask,omitnil,omitempty" name:"TranscodeTask"`
 
-	// 视频拼接任务信息，仅当 TaskType 为 Concat，该字段有值。
+	// <p>视频拼接任务信息，仅当 TaskType 为 Concat，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ConcatTask *ConcatTask2017 `json:"ConcatTask,omitnil,omitempty" name:"ConcatTask"`
 
-	// 视频剪辑任务信息，仅当 TaskType 为 Clip，该字段有值。
+	// <p>视频剪辑任务信息，仅当 TaskType 为 Clip，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClipTask *ClipTask2017 `json:"ClipTask,omitnil,omitempty" name:"ClipTask"`
 
-	// 截取雪碧图任务信息，仅当 TaskType 为 ImageSprite，该字段有值。
+	// <p>截取雪碧图任务信息，仅当 TaskType 为 ImageSprite，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateImageSpriteTask *CreateImageSpriteTask2017 `json:"CreateImageSpriteTask,omitnil,omitempty" name:"CreateImageSpriteTask"`
 
-	// 视频指定时间点截图任务信息，仅当 TaskType 为 SnapshotByTimeOffset，该字段有值。
+	// <p>视频指定时间点截图任务信息，仅当 TaskType 为 SnapshotByTimeOffset，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapshotByTimeOffsetTask *SnapshotByTimeOffsetTask2017 `json:"SnapshotByTimeOffsetTask,omitnil,omitempty" name:"SnapshotByTimeOffsetTask"`
 
-	// 智能去除水印任务信息，仅当 TaskType 为 RemoveWatermark，该字段有值。
+	// <p>智能去除水印任务信息，仅当 TaskType 为 RemoveWatermark，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoveWatermarkTask *RemoveWatermarkTask `json:"RemoveWatermarkTask,omitnil,omitempty" name:"RemoveWatermarkTask"`
 
-	// 音画质重生任务信息，仅当 TaskType 为 RebuildMedia，该字段有值。
+	// <p>音画质重生任务信息，仅当 TaskType 为 RebuildMedia，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RebuildMediaTask *RebuildMediaTask `json:"RebuildMediaTask,omitnil,omitempty" name:"RebuildMediaTask"`
 
-	// 提取溯源水印任务信息，仅当 TaskType 为 ExtractTraceWatermark，该字段有值。
+	// <p>提取溯源水印任务信息，仅当 TaskType 为 ExtractTraceWatermark，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExtractTraceWatermarkTask *ExtractTraceWatermarkTask `json:"ExtractTraceWatermarkTask,omitnil,omitempty" name:"ExtractTraceWatermarkTask"`
 
-	// 提取版权水印任务信息，仅当 TaskType 为 ExtractCopyRightWatermark，该字段有值。
+	// <p>提取版权水印任务信息，仅当 TaskType 为 ExtractCopyRightWatermark，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExtractCopyRightWatermarkTask *ExtractCopyRightWatermarkTask `json:"ExtractCopyRightWatermarkTask,omitnil,omitempty" name:"ExtractCopyRightWatermarkTask"`
 
-	// 音视频审核任务信息，仅当 TaskType 为 ReviewAudioVideo，该字段有值。
+	// <p>音视频审核任务信息，仅当 TaskType 为 ReviewAudioVideo，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReviewAudioVideoTask *ReviewAudioVideoTask `json:"ReviewAudioVideoTask,omitnil,omitempty" name:"ReviewAudioVideoTask"`
 
-	// 该字段已无效。
+	// <p>该字段已无效。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReduceMediaBitrateTask *ReduceMediaBitrateTask `json:"ReduceMediaBitrateTask,omitnil,omitempty" name:"ReduceMediaBitrateTask"`
 
-	// 获取文件属性任务信息，仅当 TaskType 为 DescribeFileAttributes，该字段有值。
+	// <p>获取文件属性任务信息，仅当 TaskType 为 DescribeFileAttributes，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DescribeFileAttributesTask *DescribeFileAttributesTask `json:"DescribeFileAttributesTask,omitnil,omitempty" name:"DescribeFileAttributesTask"`
 
-	// 音画质检测任务信息，仅当 TaskType 为 QualityInspect 时该字段有值。
+	// <p>音画质检测任务信息，仅当 TaskType 为 QualityInspect 时该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	QualityInspectTask *QualityInspectTask `json:"QualityInspectTask,omitnil,omitempty" name:"QualityInspectTask"`
 
-	// 音画质重生任务信息，仅当 TaskType 为 QualityEnhance，该字段有值。
+	// <p>音画质重生任务信息，仅当 TaskType 为 QualityEnhance，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	QualityEnhanceTask *QualityEnhanceTask `json:"QualityEnhanceTask,omitnil,omitempty" name:"QualityEnhanceTask"`
 
-	// 复杂自适应码流任务信息，仅当 TaskType 为 ComplexAdaptiveDynamicStreaming，该字段有值。
+	// <p>复杂自适应码流任务信息，仅当 TaskType 为 ComplexAdaptiveDynamicStreaming，该字段有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ComplexAdaptiveDynamicStreamingTask *ComplexAdaptiveDynamicStreamingTask `json:"ComplexAdaptiveDynamicStreamingTask,omitnil,omitempty" name:"ComplexAdaptiveDynamicStreamingTask"`
 
-	// MPS 视频处理任务信息，仅当 TaskType 为 ProcessMediaByMPS，该字段有值。
+	// <p>MPS 视频处理任务信息，仅当 TaskType 为 ProcessMediaByMPS，该字段有值。</p>
 	ProcessMediaByMPSTask *ProcessMediaByMPS `json:"ProcessMediaByMPSTask,omitnil,omitempty" name:"ProcessMediaByMPSTask"`
 
-	// AIGC 生图任务信息，仅当 TaskType 为 AigcImageTask，该字段有值。
+	// <p>AIGC 生图任务信息，仅当 TaskType 为 AigcImageTask，该字段有值。</p>
 	AigcImageTask *AigcImageTask `json:"AigcImageTask,omitnil,omitempty" name:"AigcImageTask"`
 
-	// AIGC 生视频任务信息，仅当 TaskType 为 AigcVideoTask，该字段有值。
+	// <p>AIGC 生视频任务信息，仅当 TaskType 为 AigcVideoTask，该字段有值。</p>
 	AigcVideoTask *AigcVideoTask `json:"AigcVideoTask,omitnil,omitempty" name:"AigcVideoTask"`
 
-	// 媒体导入知识库任务信息，仅当 TaskType 为 ImportMediaKnowledge，该字段有值。
+	// <p>媒体导入知识库任务信息，仅当 TaskType 为 ImportMediaKnowledge，该字段有值。</p>
 	ImportMediaKnowledge *ImportMediaKnowledgeTask `json:"ImportMediaKnowledge,omitnil,omitempty" name:"ImportMediaKnowledge"`
 
-	// 场景化 AIGC 生图任务信息，仅当 TaskType 为 SceneAigcImageTask，该字段有值。
+	// <p>场景化 AIGC 生图任务信息，仅当 TaskType 为 SceneAigcImageTask，该字段有值。</p>
 	SceneAigcImageTask *SceneAigcImageTask `json:"SceneAigcImageTask,omitnil,omitempty" name:"SceneAigcImageTask"`
 
-	// 场景化 AIGC 生视频任务信息，仅当 TaskType 为 SceneAigcVideoTask，该字段有值。
+	// <p>场景化 AIGC 生视频任务信息，仅当 TaskType 为 SceneAigcVideoTask，该字段有值。</p>
 	SceneAigcVideoTask *SceneAigcVideoTask `json:"SceneAigcVideoTask,omitnil,omitempty" name:"SceneAigcVideoTask"`
 
-	// 图像异步处理任务信息，仅当 TaskType 为 ProcessImageAsync，该字段有值。
+	// <p>图像异步处理任务信息，仅当 TaskType 为 ProcessImageAsync，该字段有值。</p>
 	ProcessImageAsyncTask *ProcessImageAsync `json:"ProcessImageAsyncTask,omitnil,omitempty" name:"ProcessImageAsyncTask"`
+
+	// <p>提取数字水印任务信息，仅当 TaskType 为 ExtractBlindWatermark，该字段有值。</p>
+	ExtractBlindWatermarkTask *ExtractBlindWatermarkTask `json:"ExtractBlindWatermarkTask,omitnil,omitempty" name:"ExtractBlindWatermarkTask"`
+
+	// <p>创建自定义主体信息，仅当 TaskType 为 CreateAigcAdvancedCustomElement，该字段有值。</p>
+	CreateAigcAdvancedCustomElementTask *CreateAigcAdvancedCustomElementTask `json:"CreateAigcAdvancedCustomElementTask,omitnil,omitempty" name:"CreateAigcAdvancedCustomElementTask"`
+
+	// <p>创建自定义音色信息，仅当 TaskType 为 CreateAigcCustomVoice，该字段有值。</p>
+	CreateAigcCustomVoiceTask *CreateAigcCustomVoiceTask `json:"CreateAigcCustomVoiceTask,omitnil,omitempty" name:"CreateAigcCustomVoiceTask"`
+
+	// <p>创建主体信息，仅当 TaskType 为 CreateAigcSubject，该字段有值。</p>
+	CreateAigcSubjectTask *CreateAigcSubjectTask `json:"CreateAigcSubjectTask,omitnil,omitempty" name:"CreateAigcSubjectTask"`
+
+	// <p>AIGC 视频转绘信息，仅当 TaskType 为AigcVideoRedrawTask，该字段有值。</p>
+	AigcVideoRedrawTask *AigcVideoRedrawTask `json:"AigcVideoRedrawTask,omitnil,omitempty" name:"AigcVideoRedrawTask"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -16025,6 +17445,15 @@ type EventContent struct {
 
 	// AIGC 生视频任务信息，仅当 EventType 为 AigcVideoTaskComplete 时有效。
 	AigcVideoCompleteEvent *AigcVideoTask `json:"AigcVideoCompleteEvent,omitnil,omitempty" name:"AigcVideoCompleteEvent"`
+
+	// 提取数字水印信息，仅当 EventType 为 ExtractBlindWatermarkComplete 时有效。
+	ExtractBlindWatermarkComplete *ExtractBlindWatermarkTask `json:"ExtractBlindWatermarkComplete,omitnil,omitempty" name:"ExtractBlindWatermarkComplete"`
+
+	// AIGC 场景化生图任务信息，仅当 EventType 为 SceneAigcImageCompleteEvent 时有效。
+	SceneAigcImageCompleteEvent *SceneAigcImageTask `json:"SceneAigcImageCompleteEvent,omitnil,omitempty" name:"SceneAigcImageCompleteEvent"`
+
+	// 图片异步处理任务信息，仅当 EventType 为 ProcessImageAsyncCompleteEvent 时有效。
+	ProcessImageAsyncCompleteEvent *ProcessImageAsyncTask `json:"ProcessImageAsyncCompleteEvent,omitnil,omitempty" name:"ProcessImageAsyncCompleteEvent"`
 }
 
 // Predefined struct for user
@@ -16117,6 +17546,163 @@ func (r *ExecuteFunctionResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *ExecuteFunctionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type ExtractBlindWatermarkInputInfo struct {
+	// 提取数字水印输入类型，可选值：<li>FILEID：文件媒资ID；</li><li>URL：文件url；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 需要提取的文件媒资ID
+	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
+
+	// 需要提取的视频文件url
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+}
+
+// Predefined struct for user
+type ExtractBlindWatermarkRequestParams struct {
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li><li>blind-trace：溯源ab序列水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 媒体处理的文件输入信息。
+	InputInfo *ExtractBlindWatermarkInputInfo `json:"InputInfo,omitnil,omitempty" name:"InputInfo"`
+
+	// 添加水印时的点播应用 ID。注意不管是传入FILEID还是URL，都必须与添加水印时的SubAppId吻合才能提取到水印。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 提取数字水印任务配置
+	ExtractBlindWatermarkConfig *ExtractBlindWatermarkTaskConfig `json:"ExtractBlindWatermarkConfig,omitnil,omitempty" name:"ExtractBlindWatermarkConfig"`
+
+	// 标识来源上下文，用于透传用户请求信息，在 ExtractBlindWatermarkComplete 回调和任务流状态变更回调将返回该字段值，最长 1000 个字符。
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// 用于任务去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+type ExtractBlindWatermarkRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li><li>blind-trace：溯源ab序列水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 媒体处理的文件输入信息。
+	InputInfo *ExtractBlindWatermarkInputInfo `json:"InputInfo,omitnil,omitempty" name:"InputInfo"`
+
+	// 添加水印时的点播应用 ID。注意不管是传入FILEID还是URL，都必须与添加水印时的SubAppId吻合才能提取到水印。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 提取数字水印任务配置
+	ExtractBlindWatermarkConfig *ExtractBlindWatermarkTaskConfig `json:"ExtractBlindWatermarkConfig,omitnil,omitempty" name:"ExtractBlindWatermarkConfig"`
+
+	// 标识来源上下文，用于透传用户请求信息，在 ExtractBlindWatermarkComplete 回调和任务流状态变更回调将返回该字段值，最长 1000 个字符。
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// 用于任务去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
+}
+
+func (r *ExtractBlindWatermarkRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ExtractBlindWatermarkRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Type")
+	delete(f, "InputInfo")
+	delete(f, "SubAppId")
+	delete(f, "ExtractBlindWatermarkConfig")
+	delete(f, "SessionContext")
+	delete(f, "SessionId")
+	delete(f, "TasksPriority")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ExtractBlindWatermarkRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ExtractBlindWatermarkResponseParams struct {
+	// 任务 ID。
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ExtractBlindWatermarkResponse struct {
+	*tchttp.BaseResponse
+	Response *ExtractBlindWatermarkResponseParams `json:"Response"`
+}
+
+func (r *ExtractBlindWatermarkResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ExtractBlindWatermarkResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ExtractBlindWatermarkTask struct {
+	// 媒体处理任务 ID。
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 任务流状态，取值：
+	// <li>WAITING：等待中；</li>
+	// <li>PROCESSING：处理中；</li>
+	// <li>FINISH：已完成。</li>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 错误码，0 表示成功，其他值表示失败。
+	ErrCode *int64 `json:"ErrCode,omitnil,omitempty" name:"ErrCode"`
+
+	// 错误信息。
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// 提取数字水印的文件输入信息。
+	InputInfo *ExtractBlindWatermarkInputInfo `json:"InputInfo,omitnil,omitempty" name:"InputInfo"`
+
+	// 数字水印类型，可选值：<li>blind-basic：基础版权数字水印；</li> <li>blind-ab：ab版权数字水印；</li>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 标记是否检测到水印，如果该参数为true， Result字段将返回水印提取结果，如果该参数为false，Result字段不会返回。
+	IsDetected *bool `json:"IsDetected,omitnil,omitempty" name:"IsDetected"`
+
+	// 提取出的数字水印内容，当没有检测到水印时该字段不会返回。
+	Result *string `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 溯源水印提取出的播放者的 ID，以十六进制表示，共6位。
+	ResultUV *string `json:"ResultUV,omitnil,omitempty" name:"ResultUV"`
+
+	// 提取数字水印配置。
+	ExtractBlindWatermarkConfig *ExtractBlindWatermarkTaskConfig `json:"ExtractBlindWatermarkConfig,omitnil,omitempty" name:"ExtractBlindWatermarkConfig"`
+
+	// 来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。
+	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
+
+	// 用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+}
+
+type ExtractBlindWatermarkTaskConfig struct {
+	// 当提取数字水印类型为blind-abseq时有效，用于指定输入视频的切片时长，单位：毫秒。
+	// 如果不填默认切片时长为5秒。
+	SegmentDuration *int64 `json:"SegmentDuration,omitnil,omitempty" name:"SegmentDuration"`
 }
 
 // Predefined struct for user
@@ -16470,6 +18056,27 @@ type FaceEnhanceInfo struct {
 	// 人脸增强强度，仅当人脸增强控制开关为 ON 时有效，取值范围：0.0~1.0。
 	// 默认：0.0。
 	Intensity *float64 `json:"Intensity,omitnil,omitempty" name:"Intensity"`
+}
+
+type FaceRecognitionInfo struct {
+	// <p>人脸识别任务列表</p>
+	FaceRecognitionTasks []*FaceRecognitionTask `json:"FaceRecognitionTasks,omitnil,omitempty" name:"FaceRecognitionTasks"`
+}
+
+type FaceRecognitionOutputFileInfo struct {
+	// <p>人脸识别输出文件类型</p><p>枚举值：</p><ul><li>Output： 任务生成的结果输出，文件对应人脸识别任务返回中的结果，以 JSON 格式生成文件。</li></ul>
+	FileType *string `json:"FileType,omitnil,omitempty" name:"FileType"`
+
+	// <p>人脸识别输出文件的URL</p>
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+}
+
+type FaceRecognitionTask struct {
+	// <p>人脸识别模板编号</p>
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// <p>输出文件信息</p>
+	OutputFile []*FaceRecognitionOutputFileInfo `json:"OutputFile,omitnil,omitempty" name:"OutputFile"`
 }
 
 type FastEditMediaFileInfo struct {
@@ -16928,13 +18535,13 @@ type HeadTailTemplate struct {
 }
 
 type HighlightSegmentItem struct {
-	// 置信度。
+	// <p>置信度。</p>
 	Confidence *float64 `json:"Confidence,omitnil,omitempty" name:"Confidence"`
 
-	// 片段起始时间偏移。
+	// <p>片段起始时间偏移。</p><p>单位：秒</p>
 	StartTimeOffset *float64 `json:"StartTimeOffset,omitnil,omitempty" name:"StartTimeOffset"`
 
-	// 片段结束时间偏移。
+	// <p>片段结束时间偏移。</p><p>单位：秒</p>
 	EndTimeOffset *float64 `json:"EndTimeOffset,omitnil,omitempty" name:"EndTimeOffset"`
 }
 
@@ -17234,6 +18841,19 @@ type ImageTransform struct {
 	Flip *string `json:"Flip,omitnil,omitempty" name:"Flip"`
 }
 
+type ImageUnderstandingInfo struct {
+	// 图片理解项集合。
+	ImageUnderstandingSet []*ImageUnderstandingItem `json:"ImageUnderstandingSet,omitnil,omitempty" name:"ImageUnderstandingSet"`
+}
+
+type ImageUnderstandingItem struct {
+	// 模板id。
+	Definition *uint64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 任务输出文件。
+	OutputFile []*MPSOutputFileInfo `json:"OutputFile,omitnil,omitempty" name:"OutputFile"`
+}
+
 type ImageWatermarkInput struct {
 	// 水印图片 [Base64](https://tools.ietf.org/html/rfc4648) 编码后的字符串。支持 jpeg、png、gif 图片格式。
 	ImageContent *string `json:"ImageContent,omitnil,omitempty" name:"ImageContent"`
@@ -17324,9 +18944,14 @@ type ImportMediaKnowledgeRequestParams struct {
 	// 媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
+	// 大模型理解模板的唯一标识
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
 	// 需要导入知识库任务类型，可选值有：
 	// - AiAnalysis.DescriptionTask
 	// - SmartSubtitle.AsrFullTextTask
+	//
+	// Deprecated: ImportTasks is deprecated.
 	ImportTasks []*string `json:"ImportTasks,omitnil,omitempty" name:"ImportTasks"`
 }
 
@@ -17338,6 +18963,9 @@ type ImportMediaKnowledgeRequest struct {
 
 	// 媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
+
+	// 大模型理解模板的唯一标识
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
 	// 需要导入知识库任务类型，可选值有：
 	// - AiAnalysis.DescriptionTask
@@ -17359,6 +18987,7 @@ func (r *ImportMediaKnowledgeRequest) FromJsonString(s string) error {
 	}
 	delete(f, "SubAppId")
 	delete(f, "FileId")
+	delete(f, "Definition")
 	delete(f, "ImportTasks")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ImportMediaKnowledgeRequest has unknown keys!", "")
@@ -17533,6 +19162,108 @@ type JustInTimeTranscodeTemplate struct {
 
 	// 水印参数配置。
 	WatermarkConfigure *WatermarkConfigureData `json:"WatermarkConfigure,omitnil,omitempty" name:"WatermarkConfigure"`
+}
+
+type KnowledgeBasesInfo struct {
+	// <p>当前媒资当导入的知识库列表</p>
+	Bases []*string `json:"Bases,omitnil,omitempty" name:"Bases"`
+}
+
+type LLMComprehendAsr struct {
+	// 文本转录任务开关，可选值：
+	// - ON：开启文本转录任务；
+	// - OFF：关闭文本转录任务。
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+}
+
+type LLMComprehendAsrForUpdate struct {
+	// 文本转录任务开关，可选值：
+	// - ON：开启文本转录任务；
+	// - OFF：关闭文本转录任务。
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+}
+
+type LLMComprehendFaceRecognition struct {
+	// <p>人脸识别任务开关</p><p>枚举值：</p><ul><li>ON： 开启智能人脸识别任务</li><li>OFF： 关闭智能人脸识别任务</li></ul><p>默认值：OFF</p>
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+
+	// <p>人脸识别过滤分数，当识别结果达到该分数以上，返回识别结果</p><p>取值范围：[0, 100]</p><p>默认值：95</p>
+	Score *float64 `json:"Score,omitnil,omitempty" name:"Score"`
+
+	// <p>默认人物过滤标签，指定需要返回的默认人物的标签。如果未填或者为空，则全部默认人物结果都返回。</p><p>枚举值：</p><ul><li>entertainment： 娱乐明星</li><li>sport： 体育明星</li><li>politician： 政治人物</li></ul>
+	DefaultLibraryLabelSet []*string `json:"DefaultLibraryLabelSet,omitnil,omitempty" name:"DefaultLibraryLabelSet"`
+
+	// <p>用户自定义人物过滤标签，指定需要返回的用户自定义人物的标签。如果未填或者为空，则全部自定义人物结果都返回。 </p><p>入参限制：标签个数最多 100 个，每个标签长度最多 16 个字符。</p>
+	UserDefineLibraryLabelSet []*string `json:"UserDefineLibraryLabelSet,omitnil,omitempty" name:"UserDefineLibraryLabelSet"`
+
+	// <p>人物库选择</p><p>枚举值：</p><ul><li>Default： 使用默认人物库</li><li>UserDefine： 使用用户自定义人物库</li><li>All： 同时使用默认人物库和用户自定义人物库</li></ul><p>默认值：All</p>
+	FaceLibrary *string `json:"FaceLibrary,omitnil,omitempty" name:"FaceLibrary"`
+}
+
+type LLMComprehendFaceRecognitionForUpdate struct {
+	// <p>人脸识别任务开关</p><p>枚举值：</p><ul><li>ON： 开启智能人脸识别任务</li><li>OFF： 关闭智能人脸识别任务</li></ul><p>默认值：OFF</p>
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+
+	// <p>人脸识别过滤分数，当识别结果达到该分数以上，返回识别结果</p><p>取值范围：[0, 100]</p>
+	Score *float64 `json:"Score,omitnil,omitempty" name:"Score"`
+
+	// <p>默认人物过滤标签，指定需要返回的默认人物的标签。如果未填或者为空，则全部默认人物结果都返回。</p><p>枚举值：</p><ul><li>entertainment： 娱乐明星</li><li>sport： 体育明星</li><li>politician： 政治人物</li></ul>
+	DefaultLibraryLabelSet []*string `json:"DefaultLibraryLabelSet,omitnil,omitempty" name:"DefaultLibraryLabelSet"`
+
+	// <p>用户自定义人物过滤标签，指定需要返回的用户自定义人物的标签。如果未填或者为空，则全部自定义人物结果都返回。 </p><p>入参限制：标签个数最多 100 个，每个标签长度最多 16 个字符。</p>
+	UserDefineLibraryLabelSet []*string `json:"UserDefineLibraryLabelSet,omitnil,omitempty" name:"UserDefineLibraryLabelSet"`
+
+	// <p>人物库选择</p><p>枚举值：</p><ul><li>Default： 使用默认人物库</li><li>UserDefine： 使用用户自定义人物库</li><li>All： 同时使用默认人物库和用户自定义人物库</li></ul><p>默认值：All</p>
+	FaceLibrary *string `json:"FaceLibrary,omitnil,omitempty" name:"FaceLibrary"`
+}
+
+type LLMComprehendSummary struct {
+	// 分段摘要任务开关，可选值：
+	// - ON：开启分段摘要任务；
+	// - OFF：关闭分段摘要任
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+
+	// 扩展参数，其值为序列化的 json字符串。可参考[扩展参数说明](/document/product/862/104493#note)
+	ExtendedParameter *string `json:"ExtendedParameter,omitnil,omitempty" name:"ExtendedParameter"`
+}
+
+type LLMComprehendSummaryForUpdate struct {
+	// 分段摘要任务开关，可选值：
+	// - ON：开启分段摘要任务；
+	// - OFF：关闭分段摘要任
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+
+	// 扩展参数，其值为序列化的 json字符串。可参考[扩展参数说明](/document/product/862/104493#note)
+	ExtendedParameter *string `json:"ExtendedParameter,omitnil,omitempty" name:"ExtendedParameter"`
+}
+
+type LLMComprehendTemplateItem struct {
+	// <p>图片异步处理模板唯一标识。</p>
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// <p>图片异步处理模板名称。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>图片异步处理模板描述信息。</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>解析级别，可选值为：</p><ul><li>Audio: 音频级解析</li><li>Video: 视频级解析</li></ul>
+	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
+
+	// <p>分段摘要解析配置</p>
+	Summary *LLMComprehendSummary `json:"Summary,omitnil,omitempty" name:"Summary"`
+
+	// <p>文本转录解析配置</p>
+	Asr *LLMComprehendAsr `json:"Asr,omitnil,omitempty" name:"Asr"`
+
+	// <p>人脸识别解析配置</p>
+	FaceRecognition *LLMComprehendFaceRecognition `json:"FaceRecognition,omitnil,omitempty" name:"FaceRecognition"`
+
+	// <p>模板创建时间，使用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>模板最后修改时间，使用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
 type LicenseUsageDataItem struct {
@@ -17833,13 +19564,19 @@ type LiveRealTimeClipStreamInfo struct {
 }
 
 type LiveRecordInfo struct {
-	// 直播录制流 ID。
+	// <p>直播录制域名</p>
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// <p>直播录制Path</p>
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// <p>直播录制流 ID。</p>
 	StreamId *string `json:"StreamId,omitnil,omitempty" name:"StreamId"`
 
-	// 录制起始时间，使用  [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>录制起始时间，使用  <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	RecordStartTime *string `json:"RecordStartTime,omitnil,omitempty" name:"RecordStartTime"`
 
-	// 录制结束时间，使用  [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>录制结束时间，使用  <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	RecordEndTime *string `json:"RecordEndTime,omitnil,omitempty" name:"RecordEndTime"`
 }
 
@@ -18143,30 +19880,30 @@ type MediaAiAnalysisFrameTagItem struct {
 }
 
 type MediaAiAnalysisFrameTagSegmentItem struct {
-	// 按帧标签起始的偏移时间。
+	// <p>按帧标签起始的偏移时间。</p><p>单位：秒</p>
 	StartTimeOffset *float64 `json:"StartTimeOffset,omitnil,omitempty" name:"StartTimeOffset"`
 
-	// 按帧标签结束的偏移时间。
+	// <p>按帧标签结束的偏移时间。</p><p>单位：秒</p>
 	EndTimeOffset *float64 `json:"EndTimeOffset,omitnil,omitempty" name:"EndTimeOffset"`
 
-	// 时间片段内的标签列表。
+	// <p>时间片段内的标签列表。</p>
 	TagSet []*MediaAiAnalysisFrameTagItem `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type MediaAiAnalysisHighlightItem struct {
-	// 智能精彩集锦地址。
+	// <p>智能精彩集锦地址。</p>
 	HighlightUrl *string `json:"HighlightUrl,omitnil,omitempty" name:"HighlightUrl"`
 
-	// 智能精彩集锦封面地址。
+	// <p>智能精彩集锦封面地址。</p>
 	CovImgUrl *string `json:"CovImgUrl,omitnil,omitempty" name:"CovImgUrl"`
 
-	// 智能精彩集锦的可信度，取值范围是 0 到 100。
+	// <p>智能精彩集锦的可信度，取值范围是 0 到 100。</p>
 	Confidence *float64 `json:"Confidence,omitnil,omitempty" name:"Confidence"`
 
-	// 智能精彩集锦持续时间。
+	// <p>智能精彩集锦持续时间。</p><p>单位：秒</p>
 	Duration *float64 `json:"Duration,omitnil,omitempty" name:"Duration"`
 
-	// 智能精彩集锦子片段列表，精彩集锦片段由这些子片段拼接生成。
+	// <p>智能精彩集锦子片段列表，精彩集锦片段由这些子片段拼接生成。</p>
 	SegmentSet []*HighlightSegmentItem `json:"SegmentSet,omitnil,omitempty" name:"SegmentSet"`
 }
 
@@ -18216,13 +19953,13 @@ type MediaAnimatedGraphicsItem struct {
 }
 
 type MediaAudioStreamItem struct {
-	// 音频流的码率，单位：bps。
+	// <p>音频流的码率，单位：bps。</p>
 	Bitrate *int64 `json:"Bitrate,omitnil,omitempty" name:"Bitrate"`
 
-	// 音频流的采样率，单位：hz。
+	// <p>音频流的采样率，单位：hz。</p>
 	SamplingRate *int64 `json:"SamplingRate,omitnil,omitempty" name:"SamplingRate"`
 
-	// 音频流的编码格式，例如 aac。
+	// <p>音频流的编码格式，例如 aac。</p>
 	Codec *string `json:"Codec,omitnil,omitempty" name:"Codec"`
 }
 
@@ -18490,79 +20227,89 @@ type MediaImageSpriteInfo struct {
 }
 
 type MediaImageSpriteItem struct {
-	// 雪碧图规格，参见[雪碧图参数模板](https://cloud.tencent.com/document/product/266/33480#.E9.9B.AA.E7.A2.A7.E5.9B.BE.E6.A8.A1.E6.9D.BF)。
+	// <p>雪碧图规格，参见<a href="https://cloud.tencent.com/document/product/266/33480#.E9.9B.AA.E7.A2.A7.E5.9B.BE.E6.A8.A1.E6.9D.BF">雪碧图参数模板</a>。</p>
 	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// 雪碧图小图的高度。
+	// <p>雪碧图小图的高度。</p>
 	Height *int64 `json:"Height,omitnil,omitempty" name:"Height"`
 
-	// 雪碧图小图的宽度。
+	// <p>雪碧图小图的宽度。</p>
 	Width *int64 `json:"Width,omitnil,omitempty" name:"Width"`
 
-	// 每一张雪碧图大图里小图的数量。
+	// <p>每一张雪碧图大图里小图的数量。</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 每一张雪碧图大图的地址。
+	// <p>每一张雪碧图大图的地址。</p>
 	ImageUrlSet []*string `json:"ImageUrlSet,omitnil,omitempty" name:"ImageUrlSet"`
 
-	// 雪碧图子图位置与时间关系的 WebVtt 文件地址。WebVtt 文件表明了各个雪碧图小图对应的时间点，以及在雪碧大图里的坐标位置，一般被播放器用于实现预览。
+	// <p>雪碧图子图位置与时间关系的 WebVtt 文件地址。WebVtt 文件表明了各个雪碧图小图对应的时间点，以及在雪碧大图里的坐标位置，一般被播放器用于实现预览。</p>
 	WebVttUrl *string `json:"WebVttUrl,omitnil,omitempty" name:"WebVttUrl"`
 }
 
 type MediaInfo struct {
-	// 基础信息。包括视频名称、分类、播放地址、封面图片等。
+	// <p>基础信息。包括视频名称、分类、播放地址、封面图片等。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BasicInfo *MediaBasicInfo `json:"BasicInfo,omitnil,omitempty" name:"BasicInfo"`
 
-	// 元信息。包括大小、时长、视频流信息、音频流信息等。
+	// <p>元信息。包括大小、时长、视频流信息、音频流信息等。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MetaData *MediaMetaData `json:"MetaData,omitnil,omitempty" name:"MetaData"`
 
-	// 转码结果信息。包括该视频转码生成的各种码率的视频的地址、规格、码率、分辨率等。
+	// <p>转码结果信息。包括该视频转码生成的各种码率的视频的地址、规格、码率、分辨率等。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TranscodeInfo *MediaTranscodeInfo `json:"TranscodeInfo,omitnil,omitempty" name:"TranscodeInfo"`
 
-	// 转动图结果信息。对视频转动图（如 gif）后，动图相关信息。
+	// <p>转动图结果信息。对视频转动图（如 gif）后，动图相关信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AnimatedGraphicsInfo *MediaAnimatedGraphicsInfo `json:"AnimatedGraphicsInfo,omitnil,omitempty" name:"AnimatedGraphicsInfo"`
 
-	// 采样截图信息。对视频采样截图后，相关截图信息。
+	// <p>采样截图信息。对视频采样截图后，相关截图信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SampleSnapshotInfo *MediaSampleSnapshotInfo `json:"SampleSnapshotInfo,omitnil,omitempty" name:"SampleSnapshotInfo"`
 
-	// 雪碧图信息。对视频截取雪碧图之后，雪碧的相关信息。
+	// <p>雪碧图信息。对视频截取雪碧图之后，雪碧的相关信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ImageSpriteInfo *MediaImageSpriteInfo `json:"ImageSpriteInfo,omitnil,omitempty" name:"ImageSpriteInfo"`
 
-	// 指定时间点截图信息。对视频依照指定时间点截图后，各个截图的信息。
+	// <p>指定时间点截图信息。对视频依照指定时间点截图后，各个截图的信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapshotByTimeOffsetInfo *MediaSnapshotByTimeOffsetInfo `json:"SnapshotByTimeOffsetInfo,omitnil,omitempty" name:"SnapshotByTimeOffsetInfo"`
 
-	// 视频打点信息。对视频设置的各个打点信息。
+	// <p>视频打点信息。对视频设置的各个打点信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeyFrameDescInfo *MediaKeyFrameDescInfo `json:"KeyFrameDescInfo,omitnil,omitempty" name:"KeyFrameDescInfo"`
 
-	// 转自适应码流信息。包括规格、加密类型、打包格式等相关信息。
+	// <p>转自适应码流信息。包括规格、加密类型、打包格式等相关信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AdaptiveDynamicStreamingInfo *MediaAdaptiveDynamicStreamingInfo `json:"AdaptiveDynamicStreamingInfo,omitnil,omitempty" name:"AdaptiveDynamicStreamingInfo"`
 
-	// 小程序审核信息。
+	// <p>小程序审核信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MiniProgramReviewInfo *MediaMiniProgramReviewInfo `json:"MiniProgramReviewInfo,omitnil,omitempty" name:"MiniProgramReviewInfo"`
 
-	// 字幕信息。
+	// <p>字幕信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubtitleInfo *MediaSubtitleInfo `json:"SubtitleInfo,omitnil,omitempty" name:"SubtitleInfo"`
 
-	// 媒体文件唯一标识 ID。
+	// <p>媒体文件唯一标识 ID。</p>
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
-	// 审核信息。
+	// <p>审核信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReviewInfo *FileReviewInfo `json:"ReviewInfo,omitnil,omitempty" name:"ReviewInfo"`
 
-	// MPS智能媒资信息
+	// <p>MPS智能媒资信息</p>
 	MPSAiMediaInfo *MPSAiMediaInfo `json:"MPSAiMediaInfo,omitnil,omitempty" name:"MPSAiMediaInfo"`
+
+	// <p>图片理解信息。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ImageUnderstandingInfo *ImageUnderstandingInfo `json:"ImageUnderstandingInfo,omitnil,omitempty" name:"ImageUnderstandingInfo"`
+
+	// <p>智能知识库信息。</p>
+	KnowledgeBasesInfo *KnowledgeBasesInfo `json:"KnowledgeBasesInfo,omitnil,omitempty" name:"KnowledgeBasesInfo"`
+
+	// <p>人脸识别信息。</p>
+	FaceRecognitionInfo *FaceRecognitionInfo `json:"FaceRecognitionInfo,omitnil,omitempty" name:"FaceRecognitionInfo"`
 }
 
 type MediaInputInfo struct {
@@ -19215,6 +20962,9 @@ type MediaTranscodeItem struct {
 
 	// 版权信息。
 	CopyRightWatermarkText *string `json:"CopyRightWatermarkText,omitnil,omitempty" name:"CopyRightWatermarkText"`
+
+	// 数字水印模板id。
+	BlindWatermarkDefinition *int64 `json:"BlindWatermarkDefinition,omitnil,omitempty" name:"BlindWatermarkDefinition"`
 }
 
 type MediaTransitionItem struct {
@@ -19763,6 +21513,88 @@ func (r *ModifyAnimatedGraphicsTemplateResponse) FromJsonString(s string) error 
 }
 
 // Predefined struct for user
+type ModifyBlindWatermarkTemplateRequestParams struct {
+	// 数字水印模板唯一标识。
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 数字水印模板名称，支持 中文、英文、数字、_、-和. 六种格式，长度限制：64 个字符。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数字水印模板描述信息，长度限制：256 个字符。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 数字水印文字内容，长度不超过64个字符，NAGRA水印类型的模板不支持修改文字内容。
+	TextContent *string `json:"TextContent,omitnil,omitempty" name:"TextContent"`
+}
+
+type ModifyBlindWatermarkTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数字水印模板唯一标识。
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 点播应用 ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// 数字水印模板名称，支持 中文、英文、数字、_、-和. 六种格式，长度限制：64 个字符。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 数字水印模板描述信息，长度限制：256 个字符。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 数字水印文字内容，长度不超过64个字符，NAGRA水印类型的模板不支持修改文字内容。
+	TextContent *string `json:"TextContent,omitnil,omitempty" name:"TextContent"`
+}
+
+func (r *ModifyBlindWatermarkTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBlindWatermarkTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Definition")
+	delete(f, "SubAppId")
+	delete(f, "Name")
+	delete(f, "Comment")
+	delete(f, "TextContent")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBlindWatermarkTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyBlindWatermarkTemplateResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyBlindWatermarkTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyBlindWatermarkTemplateResponseParams `json:"Response"`
+}
+
+func (r *ModifyBlindWatermarkTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBlindWatermarkTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyClassRequestParams struct {
 	// 分类 ID
 	ClassId *uint64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
@@ -20236,51 +22068,51 @@ func (r *ModifyEnhanceMediaTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyEventConfigRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 接收事件通知的方式。
-	// <li>PUSH：[HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779)；</li>
-	// <li>PULL：[基于消息队列的可靠通知](https://cloud.tencent.com/document/product/266/33779)。</li>
+	// <p>接收事件通知的方式。</p><li>PUSH：[HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779)；</li><li>PULL：[基于消息队列的可靠通知](https://cloud.tencent.com/document/product/266/33779)。</li>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// 采用 [HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779) 接收方式时，用于接收 3.0 格式回调的地址。
-	// 注意：如果带 NotificationUrl  参数且值为空字符串时将会清空 3.0 格式回调地址。
+	// <p>采用 <a href="https://cloud.tencent.com/document/product/266/33779">HTTP 回调通知</a> 接收方式时，用于接收 3.0 格式回调的地址。<br>注意：如果带 NotificationUrl  参数且值为空字符串时将会清空 3.0 格式回调地址。</p>
 	NotificationUrl *string `json:"NotificationUrl,omitnil,omitempty" name:"NotificationUrl"`
 
-	// 是否接收 [视频上传完成](https://cloud.tencent.com/document/product/266/7830) 事件通知， 默认 "OFF" 为忽略该事件通知，"ON" 为接收事件通知。
+	// <p>是否接收 <a href="https://cloud.tencent.com/document/product/266/7830">视频上传完成</a> 事件通知， 默认 &quot;OFF&quot; 为忽略该事件通知，&quot;ON&quot; 为接收事件通知。</p>
 	UploadMediaCompleteEventSwitch *string `json:"UploadMediaCompleteEventSwitch,omitnil,omitempty" name:"UploadMediaCompleteEventSwitch"`
 
-	// 是否接收 [视频删除完成](https://cloud.tencent.com/document/product/266/13434) 事件通知，  默认 "OFF" 为忽略该事件通知，"ON" 为接收事件通知。
+	// <p>是否接收 <a href="https://cloud.tencent.com/document/product/266/13434">视频删除完成</a> 事件通知，  默认 &quot;OFF&quot; 为忽略该事件通知，&quot;ON&quot; 为接收事件通知。</p>
 	DeleteMediaCompleteEventSwitch *string `json:"DeleteMediaCompleteEventSwitch,omitnil,omitempty" name:"DeleteMediaCompleteEventSwitch"`
 
-	// 是否接收剪辑固化完成事件通知，  默认 "OFF" 为忽略该事件通知，"ON" 为接收事件通知。
+	// <p>是否接收剪辑固化完成事件通知，  默认 &quot;OFF&quot; 为忽略该事件通知，&quot;ON&quot; 为接收事件通知。</p>
 	PersistenceCompleteEventSwitch *string `json:"PersistenceCompleteEventSwitch,omitnil,omitempty" name:"PersistenceCompleteEventSwitch"`
+
+	// <p>回调密钥，由大小写字母及数字组成，最长32字符。配置后将在回调中发送<code>Sign</code>与<code>T</code>字段，可用于鉴权。</p><ul><li><code>Sign</code>：string类型。事件通知安全签名 Sign = MD5（SignKey + T）。说明：腾讯云把加密 SignKey 和 T 进行字符串拼接后通过 MD5 计算得出 Sign 值，并将其放在通知消息里，您的后台服务器在收到通知消息后可以根据同样的算法确认 Sign 是否正确，进而确认消息是否确实来自腾讯云后台。</li><li><code>T</code>：int64类型。过期时间，事件通知签名过期 UNIX 时间戳。来自腾讯云的消息通知默认过期时间是10分钟，如果一条消息通知中的 t 值所指定的时间已经过期，则可以判定这条通知无效，进而可以防止网络重放攻击。T 的格式为十进制 UNIX 时间戳，即从1970年01月01日（UTC/GMT 的午夜）开始所经过的秒数。</li></ul>
+	SignKey *string `json:"SignKey,omitnil,omitempty" name:"SignKey"`
 }
 
 type ModifyEventConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 接收事件通知的方式。
-	// <li>PUSH：[HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779)；</li>
-	// <li>PULL：[基于消息队列的可靠通知](https://cloud.tencent.com/document/product/266/33779)。</li>
+	// <p>接收事件通知的方式。</p><li>PUSH：[HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779)；</li><li>PULL：[基于消息队列的可靠通知](https://cloud.tencent.com/document/product/266/33779)。</li>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// 采用 [HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779) 接收方式时，用于接收 3.0 格式回调的地址。
-	// 注意：如果带 NotificationUrl  参数且值为空字符串时将会清空 3.0 格式回调地址。
+	// <p>采用 <a href="https://cloud.tencent.com/document/product/266/33779">HTTP 回调通知</a> 接收方式时，用于接收 3.0 格式回调的地址。<br>注意：如果带 NotificationUrl  参数且值为空字符串时将会清空 3.0 格式回调地址。</p>
 	NotificationUrl *string `json:"NotificationUrl,omitnil,omitempty" name:"NotificationUrl"`
 
-	// 是否接收 [视频上传完成](https://cloud.tencent.com/document/product/266/7830) 事件通知， 默认 "OFF" 为忽略该事件通知，"ON" 为接收事件通知。
+	// <p>是否接收 <a href="https://cloud.tencent.com/document/product/266/7830">视频上传完成</a> 事件通知， 默认 &quot;OFF&quot; 为忽略该事件通知，&quot;ON&quot; 为接收事件通知。</p>
 	UploadMediaCompleteEventSwitch *string `json:"UploadMediaCompleteEventSwitch,omitnil,omitempty" name:"UploadMediaCompleteEventSwitch"`
 
-	// 是否接收 [视频删除完成](https://cloud.tencent.com/document/product/266/13434) 事件通知，  默认 "OFF" 为忽略该事件通知，"ON" 为接收事件通知。
+	// <p>是否接收 <a href="https://cloud.tencent.com/document/product/266/13434">视频删除完成</a> 事件通知，  默认 &quot;OFF&quot; 为忽略该事件通知，&quot;ON&quot; 为接收事件通知。</p>
 	DeleteMediaCompleteEventSwitch *string `json:"DeleteMediaCompleteEventSwitch,omitnil,omitempty" name:"DeleteMediaCompleteEventSwitch"`
 
-	// 是否接收剪辑固化完成事件通知，  默认 "OFF" 为忽略该事件通知，"ON" 为接收事件通知。
+	// <p>是否接收剪辑固化完成事件通知，  默认 &quot;OFF&quot; 为忽略该事件通知，&quot;ON&quot; 为接收事件通知。</p>
 	PersistenceCompleteEventSwitch *string `json:"PersistenceCompleteEventSwitch,omitnil,omitempty" name:"PersistenceCompleteEventSwitch"`
+
+	// <p>回调密钥，由大小写字母及数字组成，最长32字符。配置后将在回调中发送<code>Sign</code>与<code>T</code>字段，可用于鉴权。</p><ul><li><code>Sign</code>：string类型。事件通知安全签名 Sign = MD5（SignKey + T）。说明：腾讯云把加密 SignKey 和 T 进行字符串拼接后通过 MD5 计算得出 Sign 值，并将其放在通知消息里，您的后台服务器在收到通知消息后可以根据同样的算法确认 Sign 是否正确，进而确认消息是否确实来自腾讯云后台。</li><li><code>T</code>：int64类型。过期时间，事件通知签名过期 UNIX 时间戳。来自腾讯云的消息通知默认过期时间是10分钟，如果一条消息通知中的 t 值所指定的时间已经过期，则可以判定这条通知无效，进而可以防止网络重放攻击。T 的格式为十进制 UNIX 时间戳，即从1970年01月01日（UTC/GMT 的午夜）开始所经过的秒数。</li></ul>
+	SignKey *string `json:"SignKey,omitnil,omitempty" name:"SignKey"`
 }
 
 func (r *ModifyEventConfigRequest) ToJsonString() string {
@@ -20301,6 +22133,7 @@ func (r *ModifyEventConfigRequest) FromJsonString(s string) error {
 	delete(f, "UploadMediaCompleteEventSwitch")
 	delete(f, "DeleteMediaCompleteEventSwitch")
 	delete(f, "PersistenceCompleteEventSwitch")
+	delete(f, "SignKey")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyEventConfigRequest has unknown keys!", "")
 	}
@@ -20676,33 +22509,130 @@ func (r *ModifyJustInTimeTranscodeTemplateResponse) FromJsonString(s string) err
 }
 
 // Predefined struct for user
-type ModifyMPSTemplateRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。</b>
+type ModifyLLMComprehendTemplateRequestParams struct {
+	// <p>大模型理解模板的唯一标识</p>
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 需要修改的 MPS 模板的类型。取值：
-	// <li>Transcode: 创建转码模板，目前仅支持修改增强参数。</li>
+	// <p>大模型解析模板名称，长度限制：64 个字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>大模型解析模板描述信息，长度限制：256 个字符。</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>解析模型，可选值为：</p><ul><li>Basic: 基础模型</li><li>Pro: 优化模型</li></ul>
+	Model *string `json:"Model,omitnil,omitempty" name:"Model"`
+
+	// <p>分段摘要解析配置</p>
+	Summary *LLMComprehendSummaryForUpdate `json:"Summary,omitnil,omitempty" name:"Summary"`
+
+	// <p>文本转录解析配置</p>
+	Asr *LLMComprehendAsrForUpdate `json:"Asr,omitnil,omitempty" name:"Asr"`
+
+	// <p>人脸识别配置</p>
+	FaceRecognition *LLMComprehendFaceRecognitionForUpdate `json:"FaceRecognition,omitnil,omitempty" name:"FaceRecognition"`
+}
+
+type ModifyLLMComprehendTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>大模型理解模板的唯一标识</p>
+	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>大模型解析模板名称，长度限制：64 个字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>大模型解析模板描述信息，长度限制：256 个字符。</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>解析模型，可选值为：</p><ul><li>Basic: 基础模型</li><li>Pro: 优化模型</li></ul>
+	Model *string `json:"Model,omitnil,omitempty" name:"Model"`
+
+	// <p>分段摘要解析配置</p>
+	Summary *LLMComprehendSummaryForUpdate `json:"Summary,omitnil,omitempty" name:"Summary"`
+
+	// <p>文本转录解析配置</p>
+	Asr *LLMComprehendAsrForUpdate `json:"Asr,omitnil,omitempty" name:"Asr"`
+
+	// <p>人脸识别配置</p>
+	FaceRecognition *LLMComprehendFaceRecognitionForUpdate `json:"FaceRecognition,omitnil,omitempty" name:"FaceRecognition"`
+}
+
+func (r *ModifyLLMComprehendTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLLMComprehendTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Definition")
+	delete(f, "SubAppId")
+	delete(f, "Name")
+	delete(f, "Comment")
+	delete(f, "Model")
+	delete(f, "Summary")
+	delete(f, "Asr")
+	delete(f, "FaceRecognition")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyLLMComprehendTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyLLMComprehendTemplateResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyLLMComprehendTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyLLMComprehendTemplateResponseParams `json:"Response"`
+}
+
+func (r *ModifyLLMComprehendTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLLMComprehendTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyMPSTemplateRequestParams struct {
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。</b></p>
+	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
+
+	// <p>需要修改的 MPS 模板的类型。</p><p>枚举值：</p><ul><li>Transcode： 转码模板，目前仅支持修改增强参数</li><li>AIAnalysis： 智能分析模板</li><li>SmartSubtitle： 智能字幕模板</li><li>SmartErase： 智能擦除模板</li></ul>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
-	// MPS 修改模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧修改用户自定义的 MPS 任务模板。
-	//  目前仅支持通过此方式修改以下任务类型的模板：
-	// 1. 音视频增强：仅支持填写“[修改转码模板](https://cloud.tencent.com/document/api/862/37578)”接口中的 Name、Comment、RemoveVideo、RemoveAudio、VideoTemplate、AudioTemplate 和 EnhanceConfig 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// <p>MPS 修改模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧修改用户自定义的 MPS 任务模板。<br> 目前仅支持通过此方式修改以下任务类型的模板：</p><ol><li>音视频增强：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/37578">修改转码模板</a>”接口中的 Name、Comment、RemoveVideo、RemoveAudio、VideoTemplate、AudioTemplate 和 EnhanceConfig 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li><li>智能分析：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/40246">修改内容分析模板</a>”接口中的Name、Comment、ClassificationConfigure、TagConfigure、CoverConfigure、FrameTagConfigure几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li><li>智能字幕：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/117001">修改智能字幕模板</a>”接口中的Name、Comment、TranslateSwitch、VideoSrcLanguage、SubtitleFormat、SubtitleType、AsrHotWordsConfigure、TranslateDstLanguage、ProcessType几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li><li>智能擦除：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/123732">修改智能擦除模板</a>”接口中的Name、Comment、EraseType、EraseSubtitleConfig、EraseWatermarkConfig、ErasePrivacyConfig几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li></ol>
 	MPSModifyTemplateParams *string `json:"MPSModifyTemplateParams,omitnil,omitempty" name:"MPSModifyTemplateParams"`
 }
 
 type ModifyMPSTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 需要修改的 MPS 模板的类型。取值：
-	// <li>Transcode: 创建转码模板，目前仅支持修改增强参数。</li>
+	// <p>需要修改的 MPS 模板的类型。</p><p>枚举值：</p><ul><li>Transcode： 转码模板，目前仅支持修改增强参数</li><li>AIAnalysis： 智能分析模板</li><li>SmartSubtitle： 智能字幕模板</li><li>SmartErase： 智能擦除模板</li></ul>
 	TemplateType *string `json:"TemplateType,omitnil,omitempty" name:"TemplateType"`
 
-	// MPS 修改模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧修改用户自定义的 MPS 任务模板。
-	//  目前仅支持通过此方式修改以下任务类型的模板：
-	// 1. 音视频增强：仅支持填写“[修改转码模板](https://cloud.tencent.com/document/api/862/37578)”接口中的 Name、Comment、RemoveVideo、RemoveAudio、VideoTemplate、AudioTemplate 和 EnhanceConfig 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。
+	// <p>MPS 修改模板参数。该参数用于透传至媒体处理服务（MPS），从云点播侧修改用户自定义的 MPS 任务模板。<br> 目前仅支持通过此方式修改以下任务类型的模板：</p><ol><li>音视频增强：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/37578">修改转码模板</a>”接口中的 Name、Comment、RemoveVideo、RemoveAudio、VideoTemplate、AudioTemplate 和 EnhanceConfig 几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li><li>智能分析：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/40246">修改内容分析模板</a>”接口中的Name、Comment、ClassificationConfigure、TagConfigure、CoverConfigure、FrameTagConfigure几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li><li>智能字幕：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/117001">修改智能字幕模板</a>”接口中的Name、Comment、TranslateSwitch、VideoSrcLanguage、SubtitleFormat、SubtitleType、AsrHotWordsConfigure、TranslateDstLanguage、ProcessType几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li><li>智能擦除：仅支持填写“<a href="https://cloud.tencent.com/document/api/862/123732">修改智能擦除模板</a>”接口中的Name、Comment、EraseType、EraseSubtitleConfig、EraseWatermarkConfig、ErasePrivacyConfig几个参数的内容。目前仅支持在模板中配置以上参数，其他参数无需填写，若包含其它参数，系统将自动忽略。</li></ol>
 	MPSModifyTemplateParams *string `json:"MPSModifyTemplateParams,omitnil,omitempty" name:"MPSModifyTemplateParams"`
 }
 
@@ -22269,93 +24199,87 @@ func (r *ModifySuperPlayerConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyTranscodeTemplateRequestParams struct {
-	// 转码模板唯一标识。
+	// <p>转码模板唯一标识。</p>
 	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。
+	// <p>封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。</p>
 	Container *string `json:"Container,omitnil,omitempty" name:"Container"`
 
-	// 转码模板名称，长度限制：64 个字符。
+	// <p>转码模板名称，长度限制：64 个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 模板描述信息，长度限制：256 个字符。
+	// <p>模板描述信息，长度限制：256 个字符。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 是否去除视频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
+	// <p>是否去除视频数据，可选值：</p><li>0：保留</li><li>1：去除</li>
 	RemoveVideo *int64 `json:"RemoveVideo,omitnil,omitempty" name:"RemoveVideo"`
 
-	// 是否去除音频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
+	// <p>是否去除音频数据，可选值：</p><li>0：保留</li><li>1：去除</li>
 	RemoveAudio *int64 `json:"RemoveAudio,omitnil,omitempty" name:"RemoveAudio"`
 
-	// 视频流配置参数。
+	// <p>视频流配置参数。</p>
 	VideoTemplate *VideoTemplateInfoForUpdate `json:"VideoTemplate,omitnil,omitempty" name:"VideoTemplate"`
 
-	// 音频流配置参数。
+	// <p>音频流配置参数。</p>
 	AudioTemplate *AudioTemplateInfoForUpdate `json:"AudioTemplate,omitnil,omitempty" name:"AudioTemplate"`
 
-	// 极速高清转码参数。
+	// <p>极速高清转码参数。</p>
 	TEHDConfig *TEHDConfigForUpdate `json:"TEHDConfig,omitnil,omitempty" name:"TEHDConfig"`
 
-	// 音视频增强配置。
+	// <p>音视频增强配置。</p>
 	EnhanceConfig *EnhanceConfigForUpdate `json:"EnhanceConfig,omitnil,omitempty" name:"EnhanceConfig"`
 
-	// 切片类型，当 Container 为 hls 时有效，可选值：
-	// <li>ts：ts 切片；</li>
-	// <li>fmp4：fmp4 切片。</li>
+	// <p>切片类型，当 Container 为 hls 时有效，可选值：</p><li>ts：ts 切片；</li><li>fmp4：fmp4 切片。</li>
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
+
+	// <p>扩展参数。</p>
+	StdExtInfo *string `json:"StdExtInfo,omitnil,omitempty" name:"StdExtInfo"`
 }
 
 type ModifyTranscodeTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 转码模板唯一标识。
+	// <p>转码模板唯一标识。</p>
 	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。
+	// <p>封装格式，可选值：mp4、flv、hls、mp3、flac、ogg、m4a、wav。其中，mp3、flac、ogg、m4a、wav 为纯音频文件。</p>
 	Container *string `json:"Container,omitnil,omitempty" name:"Container"`
 
-	// 转码模板名称，长度限制：64 个字符。
+	// <p>转码模板名称，长度限制：64 个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 模板描述信息，长度限制：256 个字符。
+	// <p>模板描述信息，长度限制：256 个字符。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 是否去除视频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
+	// <p>是否去除视频数据，可选值：</p><li>0：保留</li><li>1：去除</li>
 	RemoveVideo *int64 `json:"RemoveVideo,omitnil,omitempty" name:"RemoveVideo"`
 
-	// 是否去除音频数据，可选值：
-	// <li>0：保留</li>
-	// <li>1：去除</li>
+	// <p>是否去除音频数据，可选值：</p><li>0：保留</li><li>1：去除</li>
 	RemoveAudio *int64 `json:"RemoveAudio,omitnil,omitempty" name:"RemoveAudio"`
 
-	// 视频流配置参数。
+	// <p>视频流配置参数。</p>
 	VideoTemplate *VideoTemplateInfoForUpdate `json:"VideoTemplate,omitnil,omitempty" name:"VideoTemplate"`
 
-	// 音频流配置参数。
+	// <p>音频流配置参数。</p>
 	AudioTemplate *AudioTemplateInfoForUpdate `json:"AudioTemplate,omitnil,omitempty" name:"AudioTemplate"`
 
-	// 极速高清转码参数。
+	// <p>极速高清转码参数。</p>
 	TEHDConfig *TEHDConfigForUpdate `json:"TEHDConfig,omitnil,omitempty" name:"TEHDConfig"`
 
-	// 音视频增强配置。
+	// <p>音视频增强配置。</p>
 	EnhanceConfig *EnhanceConfigForUpdate `json:"EnhanceConfig,omitnil,omitempty" name:"EnhanceConfig"`
 
-	// 切片类型，当 Container 为 hls 时有效，可选值：
-	// <li>ts：ts 切片；</li>
-	// <li>fmp4：fmp4 切片。</li>
+	// <p>切片类型，当 Container 为 hls 时有效，可选值：</p><li>ts：ts 切片；</li><li>fmp4：fmp4 切片。</li>
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
+
+	// <p>扩展参数。</p>
+	StdExtInfo *string `json:"StdExtInfo,omitnil,omitempty" name:"StdExtInfo"`
 }
 
 func (r *ModifyTranscodeTemplateRequest) ToJsonString() string {
@@ -22382,6 +24306,7 @@ func (r *ModifyTranscodeTemplateRequest) FromJsonString(s string) error {
 	delete(f, "TEHDConfig")
 	delete(f, "EnhanceConfig")
 	delete(f, "SegmentType")
+	delete(f, "StdExtInfo")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyTranscodeTemplateRequest has unknown keys!", "")
 	}
@@ -23597,9 +25522,17 @@ type ProcessImageAsyncInput struct {
 	OutputConfig *ProcessImageAsyncOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
 }
 
+type ProcessImageAsyncInputExtendedParameter struct {
+	// 输入模型的提示词。
+	Prompts []*string `json:"Prompts,omitnil,omitempty" name:"Prompts"`
+}
+
 type ProcessImageAsyncOutput struct {
 	// 图片异步处理任务的输出文件信息。
 	FileInfo *ProcessImageAsyncOutputFileInfo `json:"FileInfo,omitnil,omitempty" name:"FileInfo"`
+
+	// 图片理解结果。
+	OutputText *string `json:"OutputText,omitnil,omitempty" name:"OutputText"`
 }
 
 type ProcessImageAsyncOutputConfig struct {
@@ -23639,56 +25572,68 @@ type ProcessImageAsyncOutputFileInfo struct {
 
 // Predefined struct for user
 type ProcessImageAsyncRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 需要进行图片处理的FileId。
+	// <p>需要进行图片处理的FileId。不能与Url同时输入。</p>
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
-	// 图片处理参数。
+	// <p>需要进行图片处理的Url。不能与FileId同时输入。</p>
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+
+	// <p>需要进行图片处理的Base64，要求图片文件小于4MB。使用 Base64 时，请不要添加任何前缀如 <code>data:image/png;base64,</code>，只需提供 Base64 编码字符串本身。</p>
+	Base64 *string `json:"Base64,omitnil,omitempty" name:"Base64"`
+
+	// <p>图片处理参数。</p>
 	ImageTaskInput *ProcessImageAsyncTaskInput `json:"ImageTaskInput,omitnil,omitempty" name:"ImageTaskInput"`
 
-	// 图片处理任务的输出媒体文件配置。
+	// <p>图片处理任务的输出媒体文件配置。</p>
 	OutputConfig *ProcessImageAsyncOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
 
-	// 用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
 	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
 type ProcessImageAsyncRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 需要进行图片处理的FileId。
+	// <p>需要进行图片处理的FileId。不能与Url同时输入。</p>
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
-	// 图片处理参数。
+	// <p>需要进行图片处理的Url。不能与FileId同时输入。</p>
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+
+	// <p>需要进行图片处理的Base64，要求图片文件小于4MB。使用 Base64 时，请不要添加任何前缀如 <code>data:image/png;base64,</code>，只需提供 Base64 编码字符串本身。</p>
+	Base64 *string `json:"Base64,omitnil,omitempty" name:"Base64"`
+
+	// <p>图片处理参数。</p>
 	ImageTaskInput *ProcessImageAsyncTaskInput `json:"ImageTaskInput,omitnil,omitempty" name:"ImageTaskInput"`
 
-	// 图片处理任务的输出媒体文件配置。
+	// <p>图片处理任务的输出媒体文件配置。</p>
 	OutputConfig *ProcessImageAsyncOutputConfig `json:"OutputConfig,omitnil,omitempty" name:"OutputConfig"`
 
-	// 用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	// <p>用于去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。
+	// <p>来源上下文，用于透传用户请求信息，音画质重生完成回调将返回该字段值，最长 1000 个字符。</p>
 	SessionContext *string `json:"SessionContext,omitnil,omitempty" name:"SessionContext"`
 
-	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	// <p>任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。</p>
 	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
@@ -23706,6 +25651,8 @@ func (r *ProcessImageAsyncRequest) FromJsonString(s string) error {
 	}
 	delete(f, "SubAppId")
 	delete(f, "FileId")
+	delete(f, "Url")
+	delete(f, "Base64")
 	delete(f, "ImageTaskInput")
 	delete(f, "OutputConfig")
 	delete(f, "SessionId")
@@ -23720,7 +25667,7 @@ func (r *ProcessImageAsyncRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ProcessImageAsyncResponseParams struct {
-	// 任务 ID。
+	// <p>任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -23756,6 +25703,9 @@ type ProcessImageAsyncTask struct {
 type ProcessImageAsyncTaskInput struct {
 	// 图片异步处理模板ID。
 	Definition *int64 `json:"Definition,omitnil,omitempty" name:"Definition"`
+
+	// 图片异步处理扩展参数。
+	ExtendedParameter *ProcessImageAsyncInputExtendedParameter `json:"ExtendedParameter,omitnil,omitempty" name:"ExtendedParameter"`
 }
 
 type ProcessImageAsyncTemplateItem struct {
@@ -23878,42 +25828,32 @@ type ProcessMediaByMPS struct {
 
 // Predefined struct for user
 type ProcessMediaByMPSRequestParams struct {
-	// 媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。
+	// <p>媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 <a href="/document/product/266/7830">视频上传完成事件通知</a> 或 <a href="https://console.cloud.tencent.com/vod/media">云点播控制台</a> 获取该字段。</p>
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 该参数用于透传至媒体处理服务（MPS），以便从云点播侧发起 MPS 视频处理任务。
-	// 视频处理参数详情请参考：[MPS 发起媒体处理](https://cloud.tencent.com/document/api/862/37578)。
-	// 填写说明：
-	// 1. 目前仅需要配置 MPS “发起媒体处理”接口中任务配置相关的参数，如 AiAnalysisTask 与 MediaProcessTask，其他参数无需填写。若包含其它参数，系统将自动忽略；
-	// 2. 当前仅支持通过此方式发起智能擦除及音视频增强任务。若配置了其他任务类型的相关参数，系统将自动忽略这些参数；
-	// 3. 音视频增强任务目前不支持使用预置模板发起，可通过 [CreateMPSTemplate](https://cloud.tencent.com/document/product/266/122580) 接口创建自定义模板。
+	// <p>该参数用于透传至媒体处理服务（MPS），以便从云点播侧发起 MPS 视频处理任务。<br>视频处理参数详情请参考：<a href="https://cloud.tencent.com/document/api/862/37578">MPS 发起媒体处理</a>。<br>填写说明：</p><ol><li>目前仅需要配置 MPS “发起媒体处理”接口中任务配置相关的参数，如 AiAnalysisTask 与 MediaProcessTask，其他参数无需填写。若包含其它参数，系统将自动忽略；</li><li>当前仅支持通过此方式发起智能擦除及音视频增强任务。若配置了其他任务类型的相关参数，系统将自动忽略这些参数；</li><li>音视频增强任务目前不支持使用预置模板发起，可通过 <a href="https://cloud.tencent.com/document/product/266/122580">CreateMPSTemplate</a> 接口创建自定义模板。</li></ol>
 	MPSProcessMediaParams *string `json:"MPSProcessMediaParams,omitnil,omitempty" name:"MPSProcessMediaParams"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
 type ProcessMediaByMPSRequest struct {
 	*tchttp.BaseRequest
 	
-	// 媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 [视频上传完成事件通知](/document/product/266/7830) 或 [云点播控制台](https://console.cloud.tencent.com/vod/media) 获取该字段。
+	// <p>媒体文件 ID，即该文件在云点播上的全局唯一标识符，在上传成功后由云点播后台分配。可以在 <a href="/document/product/266/7830">视频上传完成事件通知</a> 或 <a href="https://console.cloud.tencent.com/vod/media">云点播控制台</a> 获取该字段。</p>
 	FileId *string `json:"FileId,omitnil,omitempty" name:"FileId"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 该参数用于透传至媒体处理服务（MPS），以便从云点播侧发起 MPS 视频处理任务。
-	// 视频处理参数详情请参考：[MPS 发起媒体处理](https://cloud.tencent.com/document/api/862/37578)。
-	// 填写说明：
-	// 1. 目前仅需要配置 MPS “发起媒体处理”接口中任务配置相关的参数，如 AiAnalysisTask 与 MediaProcessTask，其他参数无需填写。若包含其它参数，系统将自动忽略；
-	// 2. 当前仅支持通过此方式发起智能擦除及音视频增强任务。若配置了其他任务类型的相关参数，系统将自动忽略这些参数；
-	// 3. 音视频增强任务目前不支持使用预置模板发起，可通过 [CreateMPSTemplate](https://cloud.tencent.com/document/product/266/122580) 接口创建自定义模板。
+	// <p>该参数用于透传至媒体处理服务（MPS），以便从云点播侧发起 MPS 视频处理任务。<br>视频处理参数详情请参考：<a href="https://cloud.tencent.com/document/api/862/37578">MPS 发起媒体处理</a>。<br>填写说明：</p><ol><li>目前仅需要配置 MPS “发起媒体处理”接口中任务配置相关的参数，如 AiAnalysisTask 与 MediaProcessTask，其他参数无需填写。若包含其它参数，系统将自动忽略；</li><li>当前仅支持通过此方式发起智能擦除及音视频增强任务。若配置了其他任务类型的相关参数，系统将自动忽略这些参数；</li><li>音视频增强任务目前不支持使用预置模板发起，可通过 <a href="https://cloud.tencent.com/document/product/266/122580">CreateMPSTemplate</a> 接口创建自定义模板。</li></ol>
 	MPSProcessMediaParams *string `json:"MPSProcessMediaParams,omitnil,omitempty" name:"MPSProcessMediaParams"`
 
-	// 保留字段，特殊用途时使用。
+	// <p>保留字段，特殊用途时使用。</p>
 	ExtInfo *string `json:"ExtInfo,omitnil,omitempty" name:"ExtInfo"`
 }
 
@@ -23941,7 +25881,7 @@ func (r *ProcessMediaByMPSRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ProcessMediaByMPSResponseParams struct {
-	// 任务 ID。
+	// <p>任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -26047,6 +27987,8 @@ type RemoveWatermarkRequestParams struct {
 	TasksPriority *int64 `json:"TasksPriority,omitnil,omitempty" name:"TasksPriority"`
 
 	// 该字段已无效。
+	//
+	// Deprecated: TasksNotifyMode is deprecated.
 	TasksNotifyMode *string `json:"TasksNotifyMode,omitnil,omitempty" name:"TasksNotifyMode"`
 }
 
@@ -27049,27 +28991,32 @@ type SampleSnapshotTemplate struct {
 }
 
 type SceneAigcImageOutputConfig struct {
-	// 存储模式。取值有： <li>Permanent：永久存储，生成的图片文件将存储到云点播，可在事件通知中获取到 FileId；</li> <li>Temporary：临时存储，生成的图片文件不会存储到云点播，可在事件通知中获取到临时访问的 URL；</li>
-	// 默认值：Temporary
+	// <p>存储模式</p><p>枚举值：</p><ul><li>Temporary： 临时存储，生成的视频文件不会存储到云点播，可在事件通知中获取到临时访问的 URL，有效期 7 天</li><li>Permanent： 永久存储，生成的视频文件将存储到云点播，可在事件通知中获取到 FileId</li></ul><p>默认值：Temporary</p>
 	StorageMode *string `json:"StorageMode,omitnil,omitempty" name:"StorageMode"`
 
-	// 输出文件名，最长 64 个字符。缺省由系统指定生成文件名。
+	// <p>输出文件名，最长 64 个字符。缺省由系统指定生成文件名。</p>
 	MediaName *string `json:"MediaName,omitnil,omitempty" name:"MediaName"`
 
-	// 分类ID，用于对媒体进行分类管理，可通过 [创建分类](/document/product/266/7812) 接口，创建分类，获得分类 ID。
-	// <li>默认值：0，表示其他分类。</li>
+	// <p>分类ID，用于对媒体进行分类管理，可通过 <a href="/document/product/266/7812">创建分类</a> 接口，创建分类，获得分类 ID。</p><li>默认值：0，表示其他分类。</li>
 	ClassId *int64 `json:"ClassId,omitnil,omitempty" name:"ClassId"`
 
-	// 输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式说明</a>。</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 指定所生成图片的宽高比。输入格式为 W:H。
-	// 
-	// 仅生商品图场景有效，可选值为：1:1、3:2、2:3、3:4、4:3、4:5、5:4、16:9、9:16、21:9
+	// <p>指定所生成图片的宽高比。输入格式为 W:H。<br>本字段在以下场景有效：</p><ul><li>生商品图场景，可选值为：1:1、3:2、2:3、3:4、4:3、4:5、5:4、16:9、9:16、21:9</li><li>AI扩图场景。可选值为：1:1、3:2、2:3、3:4、4:3、4:5、5:4、9:16、16:9、21:9，可以配合 ImageWidth 和 ImageHeight 使用，规则如下： <ol><li>仅指定 AspectRatio 时，根据原图输入进行自适应调整。</li><li>指定 AspectRatio 和 ImageWidth 时，ImageHeight  由两者计算得出，反亦是如此。</li><li>当AspectRatio、ImageWidth、ImageHeight 同时指定的时候，优先使用ImageWidth、ImageHeight。</li></ol></li></ul>
 	AspectRatio *string `json:"AspectRatio,omitnil,omitempty" name:"AspectRatio"`
 
-	// 输出图片编码格式参数。**仅AI换衣场景有效。**
+	// <p>输出图片编码格式参数。<strong>仅AI换衣场景有效。</strong></p>
 	EncodeConfig *ImageSceneAigcEncodeConfig `json:"EncodeConfig,omitnil,omitempty" name:"EncodeConfig"`
+
+	// <p>输出图像宽度，<strong>仅AI扩图场景有效</strong>。</p>
+	ImageWidth *uint64 `json:"ImageWidth,omitnil,omitempty" name:"ImageWidth"`
+
+	// <p>输出图像高度，<strong>仅AI扩图场景有效</strong>。</p>
+	ImageHeight *uint64 `json:"ImageHeight,omitnil,omitempty" name:"ImageHeight"`
+
+	// <p>输出分辨率。仅change_clothes、change_clothes_under场景有效。可选值：1K、2K、4K。</p>
+	Resolution *string `json:"Resolution,omitnil,omitempty" name:"Resolution"`
 }
 
 type SceneAigcImageTask struct {
@@ -27262,48 +29209,50 @@ type ScratchRepairInfo struct {
 
 // Predefined struct for user
 type SearchMediaBySemanticsRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 需要进行搜索的内容
+	// <p>需要进行搜索的内容</p>
 	Text *string `json:"Text,omitnil,omitempty" name:"Text"`
 
-	// 返回的记录条数，默认值：20。
+	// <p>返回的记录条数，默认值：20。</p><p>取值范围：[1, 100]</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 文件类型。匹配集合中的任意元素： <li>Video: 视频文件</li> <li>Audio: 音频文件</li> <li>Image: 图片文件</li>
+	// <p>文件类型。匹配集合中的任意元素： <li>Video: 视频文件</li> <li>Audio: 音频文件</li> <li>Image: 图片文件</li></p>
 	Categories []*string `json:"Categories,omitnil,omitempty" name:"Categories"`
 
-	// 标签集合，匹配集合中任意元素。 <li>单个标签长度限制：32个字符。</li> <li>数组长度限制：16。</li>
+	// <p>标签集合，匹配集合中任意元素。</p><p>入参限制：单个标签长度限制：32个字符。数组长度限制：16。</p>
 	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 搜索的任务类型，可选值有： 
-	// - AiAnalysis.DescriptionTask 
-	// - SmartSubtitle.AsrFullTextTask
+	// <p>人物集合，匹配出现了所有传入人物的片段</p><p>入参限制：数组长度限制：16</p>
+	Persons []*string `json:"Persons,omitnil,omitempty" name:"Persons"`
+
+	// <p>搜索的任务类型，可选值有： </p><ul><li>AiAnalysis.DescriptionTask </li><li>SmartSubtitle.AsrFullTextTask</li></ul>
 	TaskTypes []*string `json:"TaskTypes,omitnil,omitempty" name:"TaskTypes"`
 }
 
 type SearchMediaBySemanticsRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 需要进行搜索的内容
+	// <p>需要进行搜索的内容</p>
 	Text *string `json:"Text,omitnil,omitempty" name:"Text"`
 
-	// 返回的记录条数，默认值：20。
+	// <p>返回的记录条数，默认值：20。</p><p>取值范围：[1, 100]</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 文件类型。匹配集合中的任意元素： <li>Video: 视频文件</li> <li>Audio: 音频文件</li> <li>Image: 图片文件</li>
+	// <p>文件类型。匹配集合中的任意元素： <li>Video: 视频文件</li> <li>Audio: 音频文件</li> <li>Image: 图片文件</li></p>
 	Categories []*string `json:"Categories,omitnil,omitempty" name:"Categories"`
 
-	// 标签集合，匹配集合中任意元素。 <li>单个标签长度限制：32个字符。</li> <li>数组长度限制：16。</li>
+	// <p>标签集合，匹配集合中任意元素。</p><p>入参限制：单个标签长度限制：32个字符。数组长度限制：16。</p>
 	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 搜索的任务类型，可选值有： 
-	// - AiAnalysis.DescriptionTask 
-	// - SmartSubtitle.AsrFullTextTask
+	// <p>人物集合，匹配出现了所有传入人物的片段</p><p>入参限制：数组长度限制：16</p>
+	Persons []*string `json:"Persons,omitnil,omitempty" name:"Persons"`
+
+	// <p>搜索的任务类型，可选值有： </p><ul><li>AiAnalysis.DescriptionTask </li><li>SmartSubtitle.AsrFullTextTask</li></ul>
 	TaskTypes []*string `json:"TaskTypes,omitnil,omitempty" name:"TaskTypes"`
 }
 
@@ -27324,6 +29273,7 @@ func (r *SearchMediaBySemanticsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Categories")
 	delete(f, "Tags")
+	delete(f, "Persons")
 	delete(f, "TaskTypes")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SearchMediaBySemanticsRequest has unknown keys!", "")
@@ -27333,7 +29283,7 @@ func (r *SearchMediaBySemanticsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SearchMediaBySemanticsResponseParams struct {
-	// 媒体列表。
+	// <p>媒体列表。</p>
 	SearchResults []*SemanticsSearchResult `json:"SearchResults,omitnil,omitempty" name:"SearchResults"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -27358,309 +29308,201 @@ func (r *SearchMediaBySemanticsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SearchMediaRequestParams struct {
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 文件 ID 集合，匹配集合中的任意元素。
-	// <li>数组长度限制：10。</li>
-	// <li>单个 ID 长度限制：40个字符。</li>
+	// <p>文件 ID 集合，匹配集合中的任意元素。</p><li>数组长度限制：10。</li><li>单个 ID 长度限制：40个字符。</li>
 	FileIds []*string `json:"FileIds,omitnil,omitempty" name:"FileIds"`
 
-	// 文件名集合，模糊匹配媒体文件的文件名，匹配度越高，排序越优先。
-	// <li>单个文件名长度限制：100个字符。</li>
-	// <li>数组长度限制：10。</li>
+	// <p>文件名集合，模糊匹配媒体文件的文件名，匹配度越高，排序越优先。</p><li>单个文件名长度限制：100个字符。</li><li>数组长度限制：10。</li>
 	Names []*string `json:"Names,omitnil,omitempty" name:"Names"`
 
-	// 文件名前缀，前缀匹配媒体文件的文件名。
-	// <li>单个文件名前缀长度限制：100个字符。</li>
-	// <li>数组长度限制：10。</li>
+	// <p>文件名前缀，前缀匹配媒体文件的文件名。</p><li>单个文件名前缀长度限制：100个字符。</li><li>数组长度限制：10。</li>
 	NamePrefixes []*string `json:"NamePrefixes,omitnil,omitempty" name:"NamePrefixes"`
 
-	// 文件描述集合，模糊匹配媒体文件的描述，匹配度越高，排序越优先。
-	// <li>单个描述长度限制：100个字符。</li>
-	// <li>数组长度限制：10。</li>
+	// <p>文件描述集合，模糊匹配媒体文件的描述，匹配度越高，排序越优先。</p><li>单个描述长度限制：100个字符。</li><li>数组长度限制：10。</li>
 	Descriptions []*string `json:"Descriptions,omitnil,omitempty" name:"Descriptions"`
 
-	// 分类 ID 集合，匹配集合指定 ID 的分类及其所有子类。
-	// <li>数组长度限制：10。</li>
+	// <p>分类 ID 集合，匹配集合指定 ID 的分类及其所有子类。</p><li>数组长度限制：10。</li>
 	ClassIds []*int64 `json:"ClassIds,omitnil,omitempty" name:"ClassIds"`
 
-	// 标签集合，匹配集合中任意元素。
-	// <li>单个标签长度限制：32个字符。</li>
-	// <li>数组长度限制：16。</li>
+	// <p>标签集合，匹配集合中任意元素。</p><li>单个标签长度限制：32个字符。</li><li>数组长度限制：16。</li>
 	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 文件类型。匹配集合中的任意元素：
-	// <li>Video: 视频文件</li>
-	// <li>Audio: 音频文件</li>
-	// <li>Image: 图片文件</li>
+	// <p>文件类型。匹配集合中的任意元素：</p><li>Video: 视频文件</li><li>Audio: 音频文件</li><li>Image: 图片文件</li>
 	Categories []*string `json:"Categories,omitnil,omitempty" name:"Categories"`
 
-	// 媒体文件来源集合，来源取值参见 [SourceType](https://cloud.tencent.com/document/product/266/31773#MediaSourceData)。
-	// <li>数组长度限制：10。</li>
+	// <p>媒体文件来源集合，来源取值参见 <a href="https://cloud.tencent.com/document/product/266/31773#MediaSourceData">SourceType</a>。</p><li>数组长度限制：10。</li>
 	SourceTypes []*string `json:"SourceTypes,omitnil,omitempty" name:"SourceTypes"`
 
-	// 推流直播码集合。匹配集合中的任意元素。
-	// <li>数组长度限制：10。</li>
+	// <p>推流直播码集合。匹配集合中的任意元素。</p><li>数组长度限制：10。</li>
 	StreamIds []*string `json:"StreamIds,omitnil,omitempty" name:"StreamIds"`
 
-	// 匹配创建时间在此时间段内的文件。
-	// <li>包含所指定的头尾时间点。</li>
+	// <p>匹配创建时间在此时间段内的文件。</p><li>包含所指定的头尾时间点。</li>
 	CreateTime *TimeRange `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 匹配过期时间在此时间段内的文件，无法检索到已过期文件。
-	// <li>包含所指定的头尾时间点。</li>
+	// <p>匹配过期时间在此时间段内的文件，无法检索到已过期文件。</p><li>包含所指定的头尾时间点。</li>
 	ExpireTime *TimeRange `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 媒体文件存储地区，如 ap-chongqing，参见[地域列表](https://cloud.tencent.com/document/product/266/9760#.E5.B7.B2.E6.94.AF.E6.8C.81.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8)。
-	// <li>单个存储地区长度限制：20个字符。</li>
-	// <li>数组长度限制：20。</li>
+	// <p>媒体文件存储地区，如 ap-chongqing，参见<a href="https://cloud.tencent.com/document/product/266/9760#.E5.B7.B2.E6.94.AF.E6.8C.81.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8">地域列表</a>。</p><li>单个存储地区长度限制：20个字符。</li><li>数组长度限制：20。</li>
 	StorageRegions []*string `json:"StorageRegions,omitnil,omitempty" name:"StorageRegions"`
 
-	// 存储类型数组。可选值有：
-	// <li> STANDARD：标准存储。</li>
-	// <li> STANDARD_IA：低频存储。</li>
-	// <li> ARCHIVE：归档存储。</li>
-	// <li> DEEP_ARCHIVE：深度归档存储。</li>
+	// <p>存储类型数组。可选值有：</p><li> STANDARD：标准存储。</li><li> STANDARD_IA：低频存储。</li><li> ARCHIVE：归档存储。</li><li> DEEP_ARCHIVE：深度归档存储。</li>
 	StorageClasses []*string `json:"StorageClasses,omitnil,omitempty" name:"StorageClasses"`
 
-	// 媒体文件封装格式集合，匹配集合中任意元素。
-	// <li>数组长度限制：10。</li>
+	// <p>媒体文件封装格式集合，匹配集合中任意元素。</p><li>数组长度限制：10。</li>
 	MediaTypes []*string `json:"MediaTypes,omitnil,omitempty" name:"MediaTypes"`
 
-	// 媒体文件状态，匹配集合中任意元素。
-	// <li> Normal：正常；</li>
-	// <li> SystemForbidden：平台封禁；</li>
-	// <li> Forbidden：主动封禁。</li>
+	// <p>媒体文件状态，匹配集合中任意元素。</p><li> Normal：正常；</li><li> SystemForbidden：平台封禁；</li><li> Forbidden：主动封禁。</li>
 	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 媒体文件审核结果，匹配集合中任意元素。
-	// <li> pass：审核通过；</li>
-	// <li> review：疑似违规，建议复审；</li>
-	// <li> block：确认违规，建议封禁；</li>
-	// <li> notModerated：未审核。</li>
+	// <p>媒体文件审核结果，匹配集合中任意元素。</p><li> pass：审核通过；</li><li> review：疑似违规，建议复审；</li><li> block：确认违规，建议封禁；</li><li> notModerated：未审核。</li>
 	ReviewResults []*string `json:"ReviewResults,omitnil,omitempty" name:"ReviewResults"`
 
-	// TRTC 应用 ID 集合。匹配集合中的任意元素。
-	// <li>数组长度限制：10。</li>
+	// <p>TRTC 应用 ID 集合。匹配集合中的任意元素。</p><li>数组长度限制：10。</li>
 	TrtcSdkAppIds []*uint64 `json:"TrtcSdkAppIds,omitnil,omitempty" name:"TrtcSdkAppIds"`
 
-	// TRTC 房间 ID 集合。匹配集合中的任意元素。
-	// <li>单个房间 ID 长度限制：64个字符；</li>
-	// <li>数组长度限制：10。</li>
+	// <p>TRTC 房间 ID 集合。匹配集合中的任意元素。</p><li>单个房间 ID 长度限制：64个字符；</li><li>数组长度限制：10。</li>
 	TrtcRoomIds []*string `json:"TrtcRoomIds,omitnil,omitempty" name:"TrtcRoomIds"`
 
-	// 指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：
-	// <li>basicInfo（视频基础信息）。</li>
-	// <li>metaData（视频元信息）。</li>
-	// <li>transcodeInfo（视频转码结果信息）。</li>
-	// <li>animatedGraphicsInfo（视频转动图结果信息）。</li>
-	// <li>imageSpriteInfo（视频雪碧图信息）。</li>
-	// <li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li>
-	// <li>sampleSnapshotInfo（采样截图信息）。</li>
-	// <li>keyFrameDescInfo（打点信息）。</li>
-	// <li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li>
-	// <li>miniProgramReviewInfo（小程序审核信息）。</li>
+	// <p>指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：</p><li>basicInfo（视频基础信息）。</li><li>metaData（视频元信息）。</li><li>transcodeInfo（视频转码结果信息）。</li><li>animatedGraphicsInfo（视频转动图结果信息）。</li><li>imageSpriteInfo（视频雪碧图信息）。</li><li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li><li>sampleSnapshotInfo（采样截图信息）。</li><li>keyFrameDescInfo（打点信息）。</li><li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li><li>miniProgramReviewInfo（小程序审核信息）。</li>
 	Filters []*string `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序方式。
-	// <li>Sort.Field 可选 CreateTime 。</li>
-	// <li>当 Text、 Names 或 Descriptions 不为空时，Sort.Field 字段无效， 搜索结果将以匹配度排序。</li>
+	// <p>排序方式。</p><li>Sort.Field 可选 CreateTime 。</li><li>当 Text、 Names 或 Descriptions 不为空时，Sort.Field 字段无效， 搜索结果将以匹配度排序。</li>
 	Sort *SortBy `json:"Sort,omitnil,omitempty" name:"Sort"`
 
-	// <div id="p_offset">分页返回的起始偏移量，默认值：0。将返回第 Offset 到第 Offset+Limit-1 条。
-	// <li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
+	// <div id="p_offset">分页返回的起始偏移量，默认值：0。将返回第 Offset 到第 Offset+Limit-1 条。<li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// <div id="p_limit">分页返回的记录条数，默认值：10。将返回第 Offset 到第 Offset+Limit-1 条。
-	// <li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
+	// <div id="p_limit">分页返回的记录条数，默认值：10。将返回第 Offset 到第 Offset+Limit-1 条。<li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// （不推荐：应使用 Names、NamePrefixes 或 Descriptions 替代）
-	// 搜索文本，模糊匹配媒体文件名称或描述信息，匹配项越多，匹配度越高，排序越优先。长度限制：64个字符。
+	// <p>（不推荐：应使用 Names、NamePrefixes 或 Descriptions 替代）<br>搜索文本，模糊匹配媒体文件名称或描述信息，匹配项越多，匹配度越高，排序越优先。长度限制：64个字符。</p>
 	Text *string `json:"Text,omitnil,omitempty" name:"Text"`
 
-	// （不推荐：应使用 SourceTypes 替代）
-	// 媒体文件来源，来源取值参见 [SourceType](https://cloud.tencent.com/document/product/266/31773#MediaSourceData)。
+	// <p>（不推荐：应使用 SourceTypes 替代）<br>媒体文件来源，来源取值参见 <a href="https://cloud.tencent.com/document/product/266/31773#MediaSourceData">SourceType</a>。</p>
 	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
 
-	// （不推荐：应使用 StreamIds 替代）
-	// 推流直播码。
+	// <p>（不推荐：应使用 StreamIds 替代）<br>推流直播码。</p>
 	StreamId *string `json:"StreamId,omitnil,omitempty" name:"StreamId"`
 
-	// （不推荐：应使用 CreateTime 替代）
-	// 创建时间的开始时间。
-	// <li>大于等于开始时间。</li>
-	// <li>当 CreateTime.After 也存在时，将优先使用 CreateTime.After。</li>
-	// <li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
+	// <p>（不推荐：应使用 CreateTime 替代）<br>创建时间的开始时间。</p><li>大于等于开始时间。</li><li>当 CreateTime.After 也存在时，将优先使用 CreateTime.After。</li><li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// （不推荐：应使用 CreateTime 替代）
-	// 创建时间的结束时间。
-	// <li>小于结束时间。</li>
-	// <li>当 CreateTime.Before 也存在时，将优先使用 CreateTime.Before。</li>
-	// <li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
+	// <p>（不推荐：应使用 CreateTime 替代）<br>创建时间的结束时间。</p><li>小于结束时间。</li><li>当 CreateTime.Before 也存在时，将优先使用 CreateTime.Before。</li><li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 该字段已无效。
+	// <p>该字段已无效。</p>
 	Vids []*string `json:"Vids,omitnil,omitempty" name:"Vids"`
 
-	// 该字段已无效。
+	// <p>该字段已无效。</p>
 	Vid *string `json:"Vid,omitnil,omitempty" name:"Vid"`
+
+	// <p>直播推流Domain，当媒资来源是直播录制时有效。</p>
+	StreamDomains []*string `json:"StreamDomains,omitnil,omitempty" name:"StreamDomains"`
+
+	// <p>直播推流Path，当媒资来源是直播录制时有效。</p>
+	StreamPaths []*string `json:"StreamPaths,omitnil,omitempty" name:"StreamPaths"`
 }
 
 type SearchMediaRequest struct {
 	*tchttp.BaseRequest
 	
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 
-	// 文件 ID 集合，匹配集合中的任意元素。
-	// <li>数组长度限制：10。</li>
-	// <li>单个 ID 长度限制：40个字符。</li>
+	// <p>文件 ID 集合，匹配集合中的任意元素。</p><li>数组长度限制：10。</li><li>单个 ID 长度限制：40个字符。</li>
 	FileIds []*string `json:"FileIds,omitnil,omitempty" name:"FileIds"`
 
-	// 文件名集合，模糊匹配媒体文件的文件名，匹配度越高，排序越优先。
-	// <li>单个文件名长度限制：100个字符。</li>
-	// <li>数组长度限制：10。</li>
+	// <p>文件名集合，模糊匹配媒体文件的文件名，匹配度越高，排序越优先。</p><li>单个文件名长度限制：100个字符。</li><li>数组长度限制：10。</li>
 	Names []*string `json:"Names,omitnil,omitempty" name:"Names"`
 
-	// 文件名前缀，前缀匹配媒体文件的文件名。
-	// <li>单个文件名前缀长度限制：100个字符。</li>
-	// <li>数组长度限制：10。</li>
+	// <p>文件名前缀，前缀匹配媒体文件的文件名。</p><li>单个文件名前缀长度限制：100个字符。</li><li>数组长度限制：10。</li>
 	NamePrefixes []*string `json:"NamePrefixes,omitnil,omitempty" name:"NamePrefixes"`
 
-	// 文件描述集合，模糊匹配媒体文件的描述，匹配度越高，排序越优先。
-	// <li>单个描述长度限制：100个字符。</li>
-	// <li>数组长度限制：10。</li>
+	// <p>文件描述集合，模糊匹配媒体文件的描述，匹配度越高，排序越优先。</p><li>单个描述长度限制：100个字符。</li><li>数组长度限制：10。</li>
 	Descriptions []*string `json:"Descriptions,omitnil,omitempty" name:"Descriptions"`
 
-	// 分类 ID 集合，匹配集合指定 ID 的分类及其所有子类。
-	// <li>数组长度限制：10。</li>
+	// <p>分类 ID 集合，匹配集合指定 ID 的分类及其所有子类。</p><li>数组长度限制：10。</li>
 	ClassIds []*int64 `json:"ClassIds,omitnil,omitempty" name:"ClassIds"`
 
-	// 标签集合，匹配集合中任意元素。
-	// <li>单个标签长度限制：32个字符。</li>
-	// <li>数组长度限制：16。</li>
+	// <p>标签集合，匹配集合中任意元素。</p><li>单个标签长度限制：32个字符。</li><li>数组长度限制：16。</li>
 	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 文件类型。匹配集合中的任意元素：
-	// <li>Video: 视频文件</li>
-	// <li>Audio: 音频文件</li>
-	// <li>Image: 图片文件</li>
+	// <p>文件类型。匹配集合中的任意元素：</p><li>Video: 视频文件</li><li>Audio: 音频文件</li><li>Image: 图片文件</li>
 	Categories []*string `json:"Categories,omitnil,omitempty" name:"Categories"`
 
-	// 媒体文件来源集合，来源取值参见 [SourceType](https://cloud.tencent.com/document/product/266/31773#MediaSourceData)。
-	// <li>数组长度限制：10。</li>
+	// <p>媒体文件来源集合，来源取值参见 <a href="https://cloud.tencent.com/document/product/266/31773#MediaSourceData">SourceType</a>。</p><li>数组长度限制：10。</li>
 	SourceTypes []*string `json:"SourceTypes,omitnil,omitempty" name:"SourceTypes"`
 
-	// 推流直播码集合。匹配集合中的任意元素。
-	// <li>数组长度限制：10。</li>
+	// <p>推流直播码集合。匹配集合中的任意元素。</p><li>数组长度限制：10。</li>
 	StreamIds []*string `json:"StreamIds,omitnil,omitempty" name:"StreamIds"`
 
-	// 匹配创建时间在此时间段内的文件。
-	// <li>包含所指定的头尾时间点。</li>
+	// <p>匹配创建时间在此时间段内的文件。</p><li>包含所指定的头尾时间点。</li>
 	CreateTime *TimeRange `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 匹配过期时间在此时间段内的文件，无法检索到已过期文件。
-	// <li>包含所指定的头尾时间点。</li>
+	// <p>匹配过期时间在此时间段内的文件，无法检索到已过期文件。</p><li>包含所指定的头尾时间点。</li>
 	ExpireTime *TimeRange `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 媒体文件存储地区，如 ap-chongqing，参见[地域列表](https://cloud.tencent.com/document/product/266/9760#.E5.B7.B2.E6.94.AF.E6.8C.81.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8)。
-	// <li>单个存储地区长度限制：20个字符。</li>
-	// <li>数组长度限制：20。</li>
+	// <p>媒体文件存储地区，如 ap-chongqing，参见<a href="https://cloud.tencent.com/document/product/266/9760#.E5.B7.B2.E6.94.AF.E6.8C.81.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8">地域列表</a>。</p><li>单个存储地区长度限制：20个字符。</li><li>数组长度限制：20。</li>
 	StorageRegions []*string `json:"StorageRegions,omitnil,omitempty" name:"StorageRegions"`
 
-	// 存储类型数组。可选值有：
-	// <li> STANDARD：标准存储。</li>
-	// <li> STANDARD_IA：低频存储。</li>
-	// <li> ARCHIVE：归档存储。</li>
-	// <li> DEEP_ARCHIVE：深度归档存储。</li>
+	// <p>存储类型数组。可选值有：</p><li> STANDARD：标准存储。</li><li> STANDARD_IA：低频存储。</li><li> ARCHIVE：归档存储。</li><li> DEEP_ARCHIVE：深度归档存储。</li>
 	StorageClasses []*string `json:"StorageClasses,omitnil,omitempty" name:"StorageClasses"`
 
-	// 媒体文件封装格式集合，匹配集合中任意元素。
-	// <li>数组长度限制：10。</li>
+	// <p>媒体文件封装格式集合，匹配集合中任意元素。</p><li>数组长度限制：10。</li>
 	MediaTypes []*string `json:"MediaTypes,omitnil,omitempty" name:"MediaTypes"`
 
-	// 媒体文件状态，匹配集合中任意元素。
-	// <li> Normal：正常；</li>
-	// <li> SystemForbidden：平台封禁；</li>
-	// <li> Forbidden：主动封禁。</li>
+	// <p>媒体文件状态，匹配集合中任意元素。</p><li> Normal：正常；</li><li> SystemForbidden：平台封禁；</li><li> Forbidden：主动封禁。</li>
 	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 媒体文件审核结果，匹配集合中任意元素。
-	// <li> pass：审核通过；</li>
-	// <li> review：疑似违规，建议复审；</li>
-	// <li> block：确认违规，建议封禁；</li>
-	// <li> notModerated：未审核。</li>
+	// <p>媒体文件审核结果，匹配集合中任意元素。</p><li> pass：审核通过；</li><li> review：疑似违规，建议复审；</li><li> block：确认违规，建议封禁；</li><li> notModerated：未审核。</li>
 	ReviewResults []*string `json:"ReviewResults,omitnil,omitempty" name:"ReviewResults"`
 
-	// TRTC 应用 ID 集合。匹配集合中的任意元素。
-	// <li>数组长度限制：10。</li>
+	// <p>TRTC 应用 ID 集合。匹配集合中的任意元素。</p><li>数组长度限制：10。</li>
 	TrtcSdkAppIds []*uint64 `json:"TrtcSdkAppIds,omitnil,omitempty" name:"TrtcSdkAppIds"`
 
-	// TRTC 房间 ID 集合。匹配集合中的任意元素。
-	// <li>单个房间 ID 长度限制：64个字符；</li>
-	// <li>数组长度限制：10。</li>
+	// <p>TRTC 房间 ID 集合。匹配集合中的任意元素。</p><li>单个房间 ID 长度限制：64个字符；</li><li>数组长度限制：10。</li>
 	TrtcRoomIds []*string `json:"TrtcRoomIds,omitnil,omitempty" name:"TrtcRoomIds"`
 
-	// 指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：
-	// <li>basicInfo（视频基础信息）。</li>
-	// <li>metaData（视频元信息）。</li>
-	// <li>transcodeInfo（视频转码结果信息）。</li>
-	// <li>animatedGraphicsInfo（视频转动图结果信息）。</li>
-	// <li>imageSpriteInfo（视频雪碧图信息）。</li>
-	// <li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li>
-	// <li>sampleSnapshotInfo（采样截图信息）。</li>
-	// <li>keyFrameDescInfo（打点信息）。</li>
-	// <li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li>
-	// <li>miniProgramReviewInfo（小程序审核信息）。</li>
+	// <p>指定所有媒体文件需要返回的信息，可同时指定多个信息，N 从 0 开始递增。如果未填写该字段，默认返回所有信息。选项有：</p><li>basicInfo（视频基础信息）。</li><li>metaData（视频元信息）。</li><li>transcodeInfo（视频转码结果信息）。</li><li>animatedGraphicsInfo（视频转动图结果信息）。</li><li>imageSpriteInfo（视频雪碧图信息）。</li><li>snapshotByTimeOffsetInfo（视频指定时间点截图信息）。</li><li>sampleSnapshotInfo（采样截图信息）。</li><li>keyFrameDescInfo（打点信息）。</li><li>adaptiveDynamicStreamingInfo（转自适应码流信息）。</li><li>miniProgramReviewInfo（小程序审核信息）。</li>
 	Filters []*string `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序方式。
-	// <li>Sort.Field 可选 CreateTime 。</li>
-	// <li>当 Text、 Names 或 Descriptions 不为空时，Sort.Field 字段无效， 搜索结果将以匹配度排序。</li>
+	// <p>排序方式。</p><li>Sort.Field 可选 CreateTime 。</li><li>当 Text、 Names 或 Descriptions 不为空时，Sort.Field 字段无效， 搜索结果将以匹配度排序。</li>
 	Sort *SortBy `json:"Sort,omitnil,omitempty" name:"Sort"`
 
-	// <div id="p_offset">分页返回的起始偏移量，默认值：0。将返回第 Offset 到第 Offset+Limit-1 条。
-	// <li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
+	// <div id="p_offset">分页返回的起始偏移量，默认值：0。将返回第 Offset 到第 Offset+Limit-1 条。<li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// <div id="p_limit">分页返回的记录条数，默认值：10。将返回第 Offset 到第 Offset+Limit-1 条。
-	// <li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
+	// <div id="p_limit">分页返回的记录条数，默认值：10。将返回第 Offset 到第 Offset+Limit-1 条。<li>取值范围：Offset + Limit 不超过5000。（参见：<a href="#maxResultsDesc">接口返回结果数限制</a>）</li></div>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// （不推荐：应使用 Names、NamePrefixes 或 Descriptions 替代）
-	// 搜索文本，模糊匹配媒体文件名称或描述信息，匹配项越多，匹配度越高，排序越优先。长度限制：64个字符。
+	// <p>（不推荐：应使用 Names、NamePrefixes 或 Descriptions 替代）<br>搜索文本，模糊匹配媒体文件名称或描述信息，匹配项越多，匹配度越高，排序越优先。长度限制：64个字符。</p>
 	Text *string `json:"Text,omitnil,omitempty" name:"Text"`
 
-	// （不推荐：应使用 SourceTypes 替代）
-	// 媒体文件来源，来源取值参见 [SourceType](https://cloud.tencent.com/document/product/266/31773#MediaSourceData)。
+	// <p>（不推荐：应使用 SourceTypes 替代）<br>媒体文件来源，来源取值参见 <a href="https://cloud.tencent.com/document/product/266/31773#MediaSourceData">SourceType</a>。</p>
 	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
 
-	// （不推荐：应使用 StreamIds 替代）
-	// 推流直播码。
+	// <p>（不推荐：应使用 StreamIds 替代）<br>推流直播码。</p>
 	StreamId *string `json:"StreamId,omitnil,omitempty" name:"StreamId"`
 
-	// （不推荐：应使用 CreateTime 替代）
-	// 创建时间的开始时间。
-	// <li>大于等于开始时间。</li>
-	// <li>当 CreateTime.After 也存在时，将优先使用 CreateTime.After。</li>
-	// <li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
+	// <p>（不推荐：应使用 CreateTime 替代）<br>创建时间的开始时间。</p><li>大于等于开始时间。</li><li>当 CreateTime.After 也存在时，将优先使用 CreateTime.After。</li><li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// （不推荐：应使用 CreateTime 替代）
-	// 创建时间的结束时间。
-	// <li>小于结束时间。</li>
-	// <li>当 CreateTime.Before 也存在时，将优先使用 CreateTime.Before。</li>
-	// <li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
+	// <p>（不推荐：应使用 CreateTime 替代）<br>创建时间的结束时间。</p><li>小于结束时间。</li><li>当 CreateTime.Before 也存在时，将优先使用 CreateTime.Before。</li><li>格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。</li>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 该字段已无效。
+	// <p>该字段已无效。</p>
 	Vids []*string `json:"Vids,omitnil,omitempty" name:"Vids"`
 
-	// 该字段已无效。
+	// <p>该字段已无效。</p>
 	Vid *string `json:"Vid,omitnil,omitempty" name:"Vid"`
+
+	// <p>直播推流Domain，当媒资来源是直播录制时有效。</p>
+	StreamDomains []*string `json:"StreamDomains,omitnil,omitempty" name:"StreamDomains"`
+
+	// <p>直播推流Path，当媒资来源是直播录制时有效。</p>
+	StreamPaths []*string `json:"StreamPaths,omitnil,omitempty" name:"StreamPaths"`
 }
 
 func (r *SearchMediaRequest) ToJsonString() string {
@@ -27705,6 +29547,8 @@ func (r *SearchMediaRequest) FromJsonString(s string) error {
 	delete(f, "EndTime")
 	delete(f, "Vids")
 	delete(f, "Vid")
+	delete(f, "StreamDomains")
+	delete(f, "StreamPaths")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SearchMediaRequest has unknown keys!", "")
 	}
@@ -27713,11 +29557,10 @@ func (r *SearchMediaRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SearchMediaResponseParams struct {
-	// 符合搜索条件的记录总数。
-	// <li>最大值：5000。当命中记录数超过5000时，该字段将返回 5000，而非实际命中总数。</li>
+	// <p>符合搜索条件的记录总数。</p><li>最大值：5000。当命中记录数超过5000时，该字段将返回 5000，而非实际命中总数。</li>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 媒体文件信息列表。
+	// <p>媒体文件信息列表。</p>
 	MediaInfoSet []*MediaInfo `json:"MediaInfoSet,omitnil,omitempty" name:"MediaInfoSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -27845,20 +29688,20 @@ func (r *SetCLSPushTargetResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SetDrmKeyProviderInfoRequestParams struct {
-	// 华曦达（SDMC）相关的 DRM 密钥提供商信息。
+	// <p>华曦达（SDMC）相关的 DRM 密钥提供商信息。</p><p>华曦达服务后续逐步下线，请使用VOD DRM加密服务。</p>
 	SDMCInfo *SDMCDrmKeyProviderInfo `json:"SDMCInfo,omitnil,omitempty" name:"SDMCInfo"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
 type SetDrmKeyProviderInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 华曦达（SDMC）相关的 DRM 密钥提供商信息。
+	// <p>华曦达（SDMC）相关的 DRM 密钥提供商信息。</p><p>华曦达服务后续逐步下线，请使用VOD DRM加密服务。</p>
 	SDMCInfo *SDMCDrmKeyProviderInfo `json:"SDMCInfo,omitnil,omitempty" name:"SDMCInfo"`
 
-	// <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+	// <p><b>点播<a href="/document/product/266/14574">应用</a> ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b></p>
 	SubAppId *uint64 `json:"SubAppId,omitnil,omitempty" name:"SubAppId"`
 }
 
@@ -28626,6 +30469,65 @@ type SubtitleFormatsOperation struct {
 	Formats []*string `json:"Formats,omitnil,omitempty" name:"Formats"`
 }
 
+type SubtitleInfoInput struct {
+	// <p>字幕 ID。</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>字体类型。</p><p>枚举值：</p><ul><li>hei.ttf： 黑体</li><li>song.ttf： 宋体</li><li>kai.ttf（推荐）或 simkai.ttf： 楷体</li><li>msyh.ttf： 微软雅黑</li><li>msyhbd.ttf： 微软雅黑加粗</li><li>hkjgt.ttf： 华康金刚体</li><li>dhttx.ttf： 典黑体特细</li><li>xqgdzt.ttf： 喜鹊古字典体</li><li>qpcyt.ttf： 巧拼超圆体</li><li>arial.ttf： 仅支持英文</li><li>dinalternate.ttf： DIN Alternate Bold</li><li>helveticalt.ttf： Helvetica</li><li>helveticains.ttf： Helvetica Inserat</li><li>trajanpro.ttf： TrajanPro-Bold</li><li>korean.ttf： 韩语</li><li>japanese.ttf： 日语</li><li>thai.ttf： 泰语</li><li>roboto.ttf： Roboto</li><li>notosans.ttf： NotoSans</li><li>notosansthai.ttf： 泰语NotoSansThai</li><li>sarabun.ttf： 泰语Sarabun</li><li>kanit.ttf： 泰语Kanit</li><li>charmonman.ttf： 泰语Charmonman</li><li>notonaskharabic.ttf： 阿拉伯语NotoNaskhArabic</li><li>notosansdevanagari.ttf： 印度语NotoSansDevanagari</li><li>notosanstc.ttf： 粤语思源黑体NotoSansTC</li><li>notosanskr.ttf： 韩语NotoSansKR</li><li>gothica1.ttf： 韩语GothicA1</li><li>nanummyeongjo.ttf： 韩语NanumMyeongjo</li><li>notosansjp.ttf： 日语NotoSansJP</li><li>notoserifjp.ttf： 日语NotoSerifJP</li><li>shipporimincho.ttf： 日语ShipporiMincho</li></ul><p>默认值：hei.ttf 黑体</p>
+	FontType *string `json:"FontType,omitnil,omitempty" name:"FontType"`
+
+	// <p>字体大小，不指定则以字幕文件中为准。支持像素和百分比格式：</p><ul><li>像素：Npx，N范围：(0,4096]。</li><li>百分比：N%，N范围：(0,100]；例如，10%表示字幕字体大小=10%*源视频高度。不填且字幕文件中无设置时，默认源视频高度的5%。</li></ul>
+	FontSize *string `json:"FontSize,omitnil,omitempty" name:"FontSize"`
+
+	// <p>字体颜色，格式：0xRRGGBB。</p><p>默认值：0xFFFFFF（白色）。</p>
+	FontColor *string `json:"FontColor,omitnil,omitempty" name:"FontColor"`
+
+	// <p>文字透明度。取值范围：(0, 1]。</p><ul><li>0：完全透明；</li><li>1：完全不透明</li></ul><p>默认值：1</p>
+	FontAlpha *float64 `json:"FontAlpha,omitnil,omitempty" name:"FontAlpha"`
+
+	// <p>字幕y轴坐标位置，指定此参数会忽略字幕文件自带坐标；支持像素和百分比格式：</p><ul><li>像素：Npx，N范围：[0,4096]。</li><li>百分比：N%，N范围：[0,100]；例如10%表示字幕y坐标=10%<em>源视频高度。默认值：源视频高度</em>4%。<br>注意：坐标轴原点在源视频中轴线底部，字幕基准点在字幕中轴线底部，参考下图：<img src="https://ie-mps-1258344699.cos.ap-nanjing.tencentcos.cn/common/cloud/mps-demo/102_ai_subtitle/subtitle_style.png" alt="image"></li></ul>
+	YPos *string `json:"YPos,omitnil,omitempty" name:"YPos"`
+
+	// <p>字幕背景底板的y轴坐标位置；支持像素和百分比格式：</p><ul><li>像素：Npx，N范围：[0,4096]。</li><li>百分比：N%，N范围：[0,100]；例如10%表示字幕背景底板y坐标=10%*源视频高度。不传表示不开启字幕背景底板。<br>注意：坐标轴原点位于源视频的中轴线底部，字幕背景底板的基准点在其中轴线底部，参考下图：<img src="https://ie-mps-1258344699.cos.ap-nanjing.tencentcos.cn/common/cloud/mps-demo/102_ai_subtitle/subtitle_style.png" alt="image"></li></ul>
+	BoardY *string `json:"BoardY,omitnil,omitempty" name:"BoardY"`
+
+	// <p>底板的宽度，正整数。</p><ul><li>像素：Npx，N 取值范围：[0,4096]。</li><li>百分比：N%，N 取值范围：[0, 100]。开启底板且不填此值时，默认源视频宽像素的90%。</li></ul>
+	BoardWidth *string `json:"BoardWidth,omitnil,omitempty" name:"BoardWidth"`
+
+	// <p>底板的高度，正整数。</p><ul><li>像素：Npx，N 取值范围：[0,4096]。</li><li>百分比：N%，N 取值范围：[0, 100]。开启底板且不填此值时，默认为源视频高像素的15%。</li></ul>
+	BoardHeight *string `json:"BoardHeight,omitnil,omitempty" name:"BoardHeight"`
+
+	// <p>底板颜色。格式：0xRRGGBB。</p><p>默认值：0x000000（黑色）。</p>
+	BoardColor *string `json:"BoardColor,omitnil,omitempty" name:"BoardColor"`
+
+	// <p>字幕背景板透明度，取值范围：[0, 1]。</p><ul><li>0：完全透明；</li><li>1：完全不透明。</li></ul><p>默认值：0.8。</p>
+	BoardAlpha *float64 `json:"BoardAlpha,omitnil,omitempty" name:"BoardAlpha"`
+
+	// <p>对齐方式。</p><p>枚举值：</p><ul><li>top： 顶部对齐，字幕顶部按位置固定，底部随行数变化。 </li><li>bottom： 底部对齐，字幕底部按位置固定，顶部随行数变化。 </li></ul><p>默认值：bottom</p>
+	Alignment *string `json:"Alignment,omitnil,omitempty" name:"Alignment"`
+
+	// <p>描边宽度。浮点数。</p><ul><li>像素：Npx，N 取值范围： [0, 1000]。</li><li>百分比：N%，N 取值范围：[0, 100]。</li></ul><p>不填默认源视频高度的0.3%。</p>
+	OutlineWidth *string `json:"OutlineWidth,omitnil,omitempty" name:"OutlineWidth"`
+
+	// <p>描边颜色。格式：0xRRGGBB。</p><p>默认值：0x000000（黑色）。</p>
+	OutlineColor *string `json:"OutlineColor,omitnil,omitempty" name:"OutlineColor"`
+
+	// <p>描边透明度。(0，1] 正浮点数。</p><ul><li>0：完全透明；</li><li>1：完全不透明。</li></ul><p>默认值：1</p>
+	OutlineAlpha *float64 `json:"OutlineAlpha,omitnil,omitempty" name:"OutlineAlpha"`
+
+	// <p>阴影宽度。浮点数。</p><ul><li>像素：Npx，N 取值范围： [0, 1000]。</li><li>百分比：N%，N 取值范围：[0, 100]。不填默认无阴影。</li></ul>
+	ShadowWidth *string `json:"ShadowWidth,omitnil,omitempty" name:"ShadowWidth"`
+
+	// <p>阴影颜色。格式：0xRRGGBB。</p><p>默认值：0x000000（黑色），有设置阴影的情况下。</p>
+	ShadowColor *string `json:"ShadowColor,omitnil,omitempty" name:"ShadowColor"`
+
+	// <p>阴影透明度。(0，1] 正浮点数。</p><ul><li>0：完全透明；</li><li>1：完全不透明。</li></ul><p>默认值：1，完全不透明，有设置阴影的情况下。</p>
+	ShadowAlpha *float64 `json:"ShadowAlpha,omitnil,omitempty" name:"ShadowAlpha"`
+
+	// <p>行间距。正整数。</p><ul><li>像素：Npx，N 取值范围： [0, 1000]。</li><li>百分比：N%，N 取值范围：[0, 100]。</li></ul><p>默认值：0</p>
+	LineSpacing *string `json:"LineSpacing,omitnil,omitempty" name:"LineSpacing"`
+}
+
 type SuperResolutionInfo struct {
 	// 画面超分控制开关，可选值：
 	// <li>ON：开启画面超分；</li>
@@ -29115,92 +31017,87 @@ type TranscodeTask2017 struct {
 }
 
 type TranscodeTaskInput struct {
-	// 视频转码模板 ID。
+	// <p>视频转码模板 ID。</p>
 	Definition *uint64 `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// 水印列表，支持多张图片或文字水印，最大可支持 10 张。
+	// <p>水印列表，支持多张图片或文字水印，最大可支持 10 张。</p>
 	WatermarkSet []*WatermarkInput `json:"WatermarkSet,omitnil,omitempty" name:"WatermarkSet"`
 
-	// 溯源水印。
+	// <p>溯源水印。</p>
 	TraceWatermark *TraceWatermarkInput `json:"TraceWatermark,omitnil,omitempty" name:"TraceWatermark"`
 
-	// 版权水印。
+	// <p>版权水印。</p>
 	CopyRightWatermark *CopyRightWatermarkInput `json:"CopyRightWatermark,omitnil,omitempty" name:"CopyRightWatermark"`
 
-	// 马赛克列表，最大可支持 10 张。
+	// <p>数字水印。</p>
+	BlindWatermark *BlindWatermarkInput `json:"BlindWatermark,omitnil,omitempty" name:"BlindWatermark"`
+
+	// <p>马赛克列表，最大可支持 10 张。</p>
 	MosaicSet []*MosaicInput `json:"MosaicSet,omitnil,omitempty" name:"MosaicSet"`
 
-	// 片头片尾列表，支持多片头片尾，最大可支持 10 个。
+	// <p>片头片尾列表，支持多片头片尾，最大可支持 10 个。</p>
 	HeadTailSet []*HeadTailTaskInput `json:"HeadTailSet,omitnil,omitempty" name:"HeadTailSet"`
 
-	// 转码后的视频的起始时间偏移，单位：秒。
-	// <li>不填或填0，表示转码后的视频从原始视频的起始位置开始；</li>
-	// <li>当数值大于0时（假设为 n），表示转码后的视频从原始视频的第 n 秒位置开始；</li>
-	// <li>当数值小于0时（假设为 -n），表示转码后的视频从原始视频结束 n 秒前的位置开始。</li>
+	// <p>转码后的视频的起始时间偏移，单位：秒。</p><li>不填或填0，表示转码后的视频从原始视频的起始位置开始；</li><li>当数值大于0时（假设为 n），表示转码后的视频从原始视频的第 n 秒位置开始；</li><li>当数值小于0时（假设为 -n），表示转码后的视频从原始视频结束 n 秒前的位置开始。</li>
 	StartTimeOffset *float64 `json:"StartTimeOffset,omitnil,omitempty" name:"StartTimeOffset"`
 
-	// 转码后视频的终止时间偏移，单位：秒。
-	// <li>不填或填0，表示转码后的视频持续到原始视频的末尾终止；</li>
-	// <li>当数值大于0时（假设为 n），表示转码后的视频持续到原始视频第 n 秒时终止；</li>
-	// <li>当数值小于0时（假设为 -n），表示转码后的视频持续到原始视频结束 n 秒前终止。</li>
+	// <p>转码后视频的终止时间偏移，单位：秒。</p><li>不填或填0，表示转码后的视频持续到原始视频的末尾终止；</li><li>当数值大于0时（假设为 n），表示转码后的视频持续到原始视频第 n 秒时终止；</li><li>当数值小于0时（假设为 -n），表示转码后的视频持续到原始视频结束 n 秒前终止。</li>
 	EndTimeOffset *float64 `json:"EndTimeOffset,omitnil,omitempty" name:"EndTimeOffset"`
+
+	// <p>字幕压制信息列表。最大可支持 2 个。</p>
+	SubtitleInfoSet []*SubtitleInfoInput `json:"SubtitleInfoSet,omitnil,omitempty" name:"SubtitleInfoSet"`
 }
 
 type TranscodeTemplate struct {
-	// 转码模板唯一标识。
+	// <p>转码模板唯一标识。</p>
 	Definition *string `json:"Definition,omitnil,omitempty" name:"Definition"`
 
-	// 封装格式，取值：mp4、flv、hls、mp3、flac、ogg。
+	// <p>封装格式，取值：mp4、flv、hls、mp3、flac、ogg。</p>
 	Container *string `json:"Container,omitnil,omitempty" name:"Container"`
 
-	// 转码模板名称。
+	// <p>转码模板名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 模板描述信息。
+	// <p>模板描述信息。</p>
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 模板类型，取值：
-	// <li>Preset：系统预置模板；</li>
-	// <li>Custom：用户自定义模板。</li>
+	// <p>模板类型，取值：</p><li>Preset：系统预置模板；</li><li>Custom：用户自定义模板。</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 是否去除视频数据，取值：
-	// <li>0：保留；</li>
-	// <li>1：去除。</li>
+	// <p>是否去除视频数据，取值：</p><li>0：保留；</li><li>1：去除。</li>
 	RemoveVideo *int64 `json:"RemoveVideo,omitnil,omitempty" name:"RemoveVideo"`
 
-	// 是否去除音频数据，取值：
-	// <li>0：保留；</li>
-	// <li>1：去除。</li>
+	// <p>是否去除音频数据，取值：</p><li>0：保留；</li><li>1：去除。</li>
 	RemoveAudio *int64 `json:"RemoveAudio,omitnil,omitempty" name:"RemoveAudio"`
 
-	// 视频流配置参数，仅当 RemoveVideo 为 0，该字段有效。
+	// <p>视频流配置参数，仅当 RemoveVideo 为 0，该字段有效。</p>
 	VideoTemplate *VideoTemplateInfo `json:"VideoTemplate,omitnil,omitempty" name:"VideoTemplate"`
 
-	// 音频流配置参数，仅当 RemoveAudio 为 0，该字段有效 。
+	// <p>音频流配置参数，仅当 RemoveAudio 为 0，该字段有效 。</p>
 	AudioTemplate *AudioTemplateInfo `json:"AudioTemplate,omitnil,omitempty" name:"AudioTemplate"`
 
-	// 极速高清转码参数。
+	// <p>极速高清转码参数。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TEHDConfig *TEHDConfig `json:"TEHDConfig,omitnil,omitempty" name:"TEHDConfig"`
 
-	// 音视频增强配置。
+	// <p>音视频增强配置。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnhanceConfig *EnhanceConfig `json:"EnhanceConfig,omitnil,omitempty" name:"EnhanceConfig"`
 
-	// 封装格式过滤条件，可选值：
-	// <li>Video：视频格式，可以同时包含视频流和音频流的封装格式；</li>
-	// <li>PureAudio：纯音频格式，只能包含音频流的封装格式板。</li>
+	// <p>封装格式过滤条件，可选值：</p><li>Video：视频格式，可以同时包含视频流和音频流的封装格式；</li><li>PureAudio：纯音频格式，只能包含音频流的封装格式板。</li>
 	ContainerType *string `json:"ContainerType,omitnil,omitempty" name:"ContainerType"`
 
-	// 模板创建时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>模板创建时间，使用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 模板最后修改时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	// <p>模板最后修改时间，使用 <a href="https://cloud.tencent.com/document/product/266/11732#I">ISO 日期格式</a>。</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 切片类型，仅当 Container 为 hls 时有效。
+	// <p>切片类型，仅当 Container 为 hls 时有效。</p>
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
+
+	// <p>扩展参数。</p>
+	StdExtInfo *string `json:"StdExtInfo,omitnil,omitempty" name:"StdExtInfo"`
 }
 
 type TransitionOperation struct {
@@ -29673,142 +31570,97 @@ type VideoFrameInterpolationInfo struct {
 }
 
 type VideoTemplateInfo struct {
-	// 视频流的编码格式，可选值：
-	// <li>libx264：H.264 编码；</li>
-	// <li>libx265：H.265 编码；</li>
-	// <li>av1：AOMedia Video 1 编码；</li>
-	// <li>H.266：H.266 编码。</li>
-	// <font color=red>注意：</font>
-	// <li> av1，H.266 编码容器目前只支持 mp4 ；</li>
-	// <li> H.266 目前只支持恒定 CRF 码率控制方式。 </li>
+	// <p>视频流的编码格式，可选值：</p><li>libx264：H.264 编码；</li><li>libx265：H.265 编码；</li><li>av1：AOMedia Video 1 编码；</li><li>H.266：H.266 编码。</li><font color="red">注意：</font><li> av1，H.266 编码容器目前只支持 mp4 ；</li><li> H.266 目前只支持恒定 CRF 码率控制方式。 </li>
 	Codec *string `json:"Codec,omitnil,omitempty" name:"Codec"`
 
-	// 视频帧率，取值范围：[0, 100]，单位：Hz。
-	// 当取值为 0，表示帧率和原始视频保持一致。
+	// <p>视频帧率，取值范围：[0, 100]，单位：Hz。<br>当取值为 0，表示帧率和原始视频保持一致。</p>
 	Fps *uint64 `json:"Fps,omitnil,omitempty" name:"Fps"`
 
-	// 视频流的码率，取值范围：0 和 [128, 100000]，单位：kbps。
-	// 当取值为 0，表示由云点播自动设置码率。
+	// <p>视频流的码率，取值范围：0 和 [128, 100000]，单位：kbps。<br>当取值为 0，表示由云点播自动设置码率。</p>
 	Bitrate *uint64 `json:"Bitrate,omitnil,omitempty" name:"Bitrate"`
 
-	// 分辨率自适应，可选值：
-	// <li>open：开启，此时，Width 代表视频的长边，Height 表示视频的短边；</li>
-	// <li>close：关闭，此时，Width 代表视频的宽度，Height 表示视频的高度。</li>
-	// 默认值：open。
+	// <p>分辨率自适应，可选值：</p><li>open：开启，此时，Width 代表视频的长边，Height 表示视频的短边；</li><li>close：关闭，此时，Width 代表视频的宽度，Height 表示视频的高度。</li>默认值：open。
 	ResolutionAdaptive *string `json:"ResolutionAdaptive,omitnil,omitempty" name:"ResolutionAdaptive"`
 
-	// 视频流宽度（或长边）的最大值，取值范围：0 和 [128, 8192]，单位：px。
-	// <li>当 Width、Height 均为 0，则分辨率同源；</li>
-	// <li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li>
-	// <li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li>
-	// <li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
-	// 默认值：0。
+	// <p>视频流宽度（或长边）的最大值，取值范围：0 和 [128, 8192]，单位：px。</p><li>当 Width、Height 均为 0，则分辨率同源；</li><li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li><li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li><li>当 Width、Height 均非 0，则分辨率按用户指定。</li>默认值：0。
 	Width *uint64 `json:"Width,omitnil,omitempty" name:"Width"`
 
-	// 视频流高度（或短边）的最大值，取值范围：0 和 [128, 8192]，单位：px。
-	// <li>当 Width、Height 均为 0，则分辨率同源；</li>
-	// <li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li>
-	// <li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li>
-	// <li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
-	// 默认值：0。
+	// <p>视频流高度（或短边）的最大值，取值范围：0 和 [128, 8192]，单位：px。</p><li>当 Width、Height 均为 0，则分辨率同源；</li><li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li><li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li><li>当 Width、Height 均非 0，则分辨率按用户指定。</li>默认值：0。
 	Height *uint64 `json:"Height,omitnil,omitempty" name:"Height"`
 
-	// 填充方式，当视频流配置宽高参数与原始视频的宽高比不一致时，对转码的处理方式，即为“填充”。可选填充方式：
-	// <li> stretch：拉伸，对每一帧进行拉伸，填满整个画面，可能导致转码后的视频被“压扁“或者“拉长“；</li>
-	// <li>black：留黑，保持视频宽高比不变，边缘剩余部分使用黑色填充。</li>
-	// <li>white：留白，保持视频宽高比不变，边缘剩余部分使用白色填充。</li>
-	// <li>gauss：高斯模糊，保持视频宽高比不变，边缘剩余部分使用高斯模糊填充。</li>
-	// 默认值：black 。
+	// <p>填充方式，当视频流配置宽高参数与原始视频的宽高比不一致时，对转码的处理方式，即为“填充”。可选填充方式：</p><li> stretch：拉伸，对每一帧进行拉伸，填满整个画面，可能导致转码后的视频被“压扁“或者“拉长“；</li><li>black：留黑，保持视频宽高比不变，边缘剩余部分使用黑色填充。</li><li>white：留白，保持视频宽高比不变，边缘剩余部分使用白色填充。</li><li>gauss：高斯模糊，保持视频宽高比不变，边缘剩余部分使用高斯模糊填充。</li>默认值：black 。
 	FillType *string `json:"FillType,omitnil,omitempty" name:"FillType"`
 
-	// 视频恒定码率控制因子，取值范围为[1, 51]。
-	// 
-	// <font color=red>注意：</font>
-	// <li>如果指定该参数，将使用 CRF 的码率控制方式做转码（视频码率将不再生效）；</li>
-	// <li>当指定视频流编码格式为 H.266 时，该字段必填，推荐值为 28；</li>
-	// <li>如果没有特殊需求，不建议指定该参数。</li>
+	// <p>视频恒定码率控制因子，取值范围为[1, 51]。</p><p><font color="red">注意：</font></p><li>如果指定该参数，将使用 CRF 的码率控制方式做转码（视频码率将不再生效）；</li><li>当指定视频流编码格式为 H.266 时，该字段必填，推荐值为 28；</li><li>如果没有特殊需求，不建议指定该参数。</li>
 	Vcrf *uint64 `json:"Vcrf,omitnil,omitempty" name:"Vcrf"`
 
-	// 关键帧 I 帧之间的间隔，取值范围：0 和 [1, 100000]，单位：帧数。
-	// 当填 0 或不填时，系统将自动设置 gop 长度。
+	// <p>关键帧 I 帧之间的间隔，取值范围：0 和 [1, 100000]，单位：帧数。<br>当填 0 或不填时，系统将自动设置 gop 长度。</p>
 	Gop *uint64 `json:"Gop,omitnil,omitempty" name:"Gop"`
 
-	// 当原始视频为 HDR（High Dynamic Range）时，转码输出是否依然保持 HDR。取值范围：
-	// <li>ON: 如果原始文件是 HDR，则转码输出保持 HDR；否则转码输出为 SDR （Standard Dynamic Range）。</li>
-	// <li>OFF: 无论原始文件是 HDR 还是 SDR，转码输出均为 SDR。</li>
-	// 默认值：OFF。
+	// <p>Gop数值单位。</p><p>枚举值：</p><ul><li>frame： 表示帧数。</li><li>second： 表示秒数。</li></ul><p>默认值：frame</p>
+	GopUnit *string `json:"GopUnit,omitnil,omitempty" name:"GopUnit"`
+
+	// <p>当原始视频为 HDR（High Dynamic Range）时，转码输出是否依然保持 HDR。取值范围：</p><li>ON: 如果原始文件是 HDR，则转码输出保持 HDR；否则转码输出为 SDR （Standard Dynamic Range）。</li><li>OFF: 无论原始文件是 HDR 还是 SDR，转码输出均为 SDR。</li>默认值：OFF。
 	PreserveHDRSwitch *string `json:"PreserveHDRSwitch,omitnil,omitempty" name:"PreserveHDRSwitch"`
 
-	// 编码标签，仅当视频流的编码格式为 H.265 编码时有效，可选值：
-	// <li>hvc1 表示 hvc1 标签；</li>
-	// <li>hev1 表示 hev1 标签。 </li>
-	// 默认值：hvc1。
+	// <p>编码标签，仅当视频流的编码格式为 H.265 编码时有效，可选值：</p><li>hvc1 表示 hvc1 标签；</li><li>hev1 表示 hev1 标签。 </li>默认值：hvc1。
 	CodecTag *string `json:"CodecTag,omitnil,omitempty" name:"CodecTag"`
+
+	// <p>码率控制模式。</p><p>枚举值：</p><ul><li>VBR： Variable Bit Rate，动态比特率，根据视频画面的复杂度动态调整输出的码率，使得画面质量更高，适用于存储场景和对画面质量要求较高的应用。</li><li>ABR： Average Bit Rate，平均比特率，尽量保持输出视频的平均码率稳定，但允许短期内的码率波动，适用于需要在保持一定画质的情况下尽量减少整体码率的场景。</li><li>CBR： Constant Bit Rate，恒定比特率，指视频编码时输出的码率保持恒定不变，不考虑画面复杂度的变化，适用于对网络带宽要求较为严格的场景，如直播等。</li><li>VCRF： 恒定质量因子，通过设定一个质量因子来控制视频质量，实现视频的恒定质量编码，码率会根据内容的复杂度自动调整，适用于希望保持一定画质的场景。</li></ul><p>默认值：VBR</p>
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// <p>参考帧之间的B帧数，默认为自动。</p><p>取值范围：[0, 16]</p>
+	Bframes *int64 `json:"Bframes,omitnil,omitempty" name:"Bframes"`
+
+	// <p>分片平均时长。0或不填表示自动，将根据视频的 GOP 等特征自动选择合适的分片时长。</p><p>取值范围：[0, 10]</p><p>单位：秒</p><p>只支持转码模板，暂不支持自适应码流模板。</p>
+	HlsTime *int64 `json:"HlsTime,omitnil,omitempty" name:"HlsTime"`
 }
 
 type VideoTemplateInfoForUpdate struct {
-	// 视频流的编码格式，可选值：
-	// <li>libx264：H.264 编码；</li>
-	// <li>libx265：H.265 编码；</li>
-	// <li>av1：AOMedia Video 1 编码；</li>
-	// <li>H.266：H.266 编码。</li>
-	// <font color=red>注意：</font>
-	// <li> av1，H.266 编码容器目前只支持 mp4 ；</li>
-	// <li> H.266 目前只支持恒定 CRF 码率控制方式。 </li>
+	// <p>视频流的编码格式，可选值：</p><li>libx264：H.264 编码；</li><li>libx265：H.265 编码；</li><li>av1：AOMedia Video 1 编码；</li><li>H.266：H.266 编码。</li><font color="red">注意：</font><li> av1，H.266 编码容器目前只支持 mp4 ；</li><li> H.266 目前只支持恒定 CRF 码率控制方式。 </li>
 	Codec *string `json:"Codec,omitnil,omitempty" name:"Codec"`
 
-	// 视频帧率，取值范围：[0, 100]，单位：Hz。
-	// 当取值为 0，表示帧率和原始视频保持一致。
+	// <p>视频帧率，取值范围：[0, 100]，单位：Hz。<br>当取值为 0，表示帧率和原始视频保持一致。</p>
 	Fps *uint64 `json:"Fps,omitnil,omitempty" name:"Fps"`
 
-	// 视频流的码率，取值范围：0 和 [128, 100000]，单位：kbps。
-	// 当取值为 0，表示由云点播自动设置码率。
+	// <p>视频流的码率，取值范围：0 和 [128, 100000]，单位：kbps。<br>当取值为 0，表示由云点播自动设置码率。</p>
 	Bitrate *uint64 `json:"Bitrate,omitnil,omitempty" name:"Bitrate"`
 
-	// 分辨率自适应，可选值：
-	// <li>open：开启，此时，Width 代表视频的长边，Height 表示视频的短边；</li>
-	// <li>close：关闭，此时，Width 代表视频的宽度，Height 表示视频的高度。</li>
+	// <p>分辨率自适应，可选值：</p><li>open：开启，此时，Width 代表视频的长边，Height 表示视频的短边；</li><li>close：关闭，此时，Width 代表视频的宽度，Height 表示视频的高度。</li>
 	ResolutionAdaptive *string `json:"ResolutionAdaptive,omitnil,omitempty" name:"ResolutionAdaptive"`
 
-	// 视频流宽度（或长边）的最大值，取值范围：0 和 [128, 8192]，单位：px。
-	// <li>当 Width、Height 均为 0，则分辨率同源；</li>
-	// <li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li>
-	// <li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li>
-	// <li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
+	// <p>视频流宽度（或长边）的最大值，取值范围：0 和 [128, 8192]，单位：px。</p><li>当 Width、Height 均为 0，则分辨率同源；</li><li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li><li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li><li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
 	Width *uint64 `json:"Width,omitnil,omitempty" name:"Width"`
 
-	// 视频流高度（或短边）的最大值，取值范围：0 和 [128, 8192]，单位：px。
+	// <p>视频流高度（或短边）的最大值，取值范围：0 和 [128, 8192]，单位：px。</p>
 	Height *uint64 `json:"Height,omitnil,omitempty" name:"Height"`
 
-	// 填充方式，当视频流配置宽高参数与原始视频的宽高比不一致时，对转码的处理方式，即为“填充”。可选填充方式：
-	// <li> stretch：拉伸，对每一帧进行拉伸，填满整个画面，可能导致转码后的视频被“压扁“或者“拉长“；</li>
-	// <li>black：留黑，保持视频宽高比不变，边缘剩余部分使用黑色填充。</li>
-	// <li>white：留白，保持视频宽高比不变，边缘剩余部分使用白色填充。</li>
-	// <li>gauss：高斯模糊，保持视频宽高比不变，边缘剩余部分使用高斯模糊填充。</li>
+	// <p>填充方式，当视频流配置宽高参数与原始视频的宽高比不一致时，对转码的处理方式，即为“填充”。可选填充方式：</p><li> stretch：拉伸，对每一帧进行拉伸，填满整个画面，可能导致转码后的视频被“压扁“或者“拉长“；</li><li>black：留黑，保持视频宽高比不变，边缘剩余部分使用黑色填充。</li><li>white：留白，保持视频宽高比不变，边缘剩余部分使用白色填充。</li><li>gauss：高斯模糊，保持视频宽高比不变，边缘剩余部分使用高斯模糊填充。</li>
 	FillType *string `json:"FillType,omitnil,omitempty" name:"FillType"`
 
-	// 视频恒定码率控制因子，取值范围为[1, 51]，填 0 表示禁用该参数。
-	// 
-	// <font color=red>注意：</font>
-	// <li>如果指定该参数，将使用 CRF 的码率控制方式做转码（视频码率将不再生效）；</li>
-	// <li>当指定视频流编码格式为 H.266 时，该字段必填，推荐值为 28；</li>
-	// <li>如果没有特殊需求，不建议指定该参数。</li>
+	// <p>视频恒定码率控制因子，取值范围为[1, 51]，填 0 表示禁用该参数。</p><p><font color="red">注意：</font></p><li>如果指定该参数，将使用 CRF 的码率控制方式做转码（视频码率将不再生效）；</li><li>当指定视频流编码格式为 H.266 时，该字段必填，推荐值为 28；</li><li>如果没有特殊需求，不建议指定该参数。</li>
 	Vcrf *uint64 `json:"Vcrf,omitnil,omitempty" name:"Vcrf"`
 
-	// 关键帧 I 帧之间的间隔，取值范围：0 和 [1, 100000]，单位：帧数。
-	// 当填 0 或不填时，系统将自动设置 gop 长度。
+	// <p>关键帧 I 帧之间的间隔，取值范围：0 和 [1, 100000]，单位：帧数。<br>当填 0 或不填时，系统将自动设置 gop 长度。</p>
 	Gop *uint64 `json:"Gop,omitnil,omitempty" name:"Gop"`
 
-	// 当原始视频为 HDR（High Dynamic Range）时，转码输出是否依然保持 HDR。取值范围：
-	// <li>ON: 如果原始文件是 HDR，则转码输出保持 HDR；否则转码输出为 SDR （Standard Dynamic Range）。</li>
-	// <li>OFF: 无论原始文件是 HDR 还是 SDR，转码输出均为 SDR。</li>
+	// <p>当原始视频为 HDR（High Dynamic Range）时，转码输出是否依然保持 HDR。取值范围：</p><li>ON: 如果原始文件是 HDR，则转码输出保持 HDR；否则转码输出为 SDR （Standard Dynamic Range）。</li><li>OFF: 无论原始文件是 HDR 还是 SDR，转码输出均为 SDR。</li>
 	PreserveHDRSwitch *string `json:"PreserveHDRSwitch,omitnil,omitempty" name:"PreserveHDRSwitch"`
 
-	// 编码标签，仅当视频流的编码格式为 H.265 编码时有效，可选值：
-	// <li>hvc1 表示 hvc1 标签；</li>
-	// <li>hev1 表示 hev1 标签。 </li>
-	// 默认值：hvc1。
+	// <p>编码标签，仅当视频流的编码格式为 H.265 编码时有效，可选值：</p><li>hvc1 表示 hvc1 标签；</li><li>hev1 表示 hev1 标签。 </li>默认值：hvc1。
 	CodecTag *string `json:"CodecTag,omitnil,omitempty" name:"CodecTag"`
+
+	// <p>Gop数值单位。</p><p>枚举值：</p><ul><li>frame： 表示帧数。</li><li>second： 表示秒数。</li></ul><p>默认值：frame</p>
+	GopUnit *string `json:"GopUnit,omitnil,omitempty" name:"GopUnit"`
+
+	// <p>码率控制模式。</p><p>枚举值：</p><ul><li>VBR： Variable Bit Rate，动态比特率，根据视频画面的复杂度动态调整输出的码率，使得画面质量更高，适用于存储场景和对画面质量要求较高的应用。</li><li>ABR： Average Bit Rate，平均比特率，尽量保持输出视频的平均码率稳定，但允许短期内的码率波动，适用于需要在保持一定画质的情况下尽量减少整体码率的场景。</li><li>CBR： Constant Bit Rate，恒定比特率，指视频编码时输出的码率保持恒定不变，不考虑画面复杂度的变化，适用于对网络带宽要求较为严格的场景，如直播等。</li><li>VCRF： Constant Rate Factor，恒定质量因子，通过设定一个质量因子来控制视频质量，实现视频的恒定质量编码，码率会根据内容的复杂度自动调整，适用于希望保持一定画质的场景。</li></ul><p>默认值：VBR</p>
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// <p>最大连续B帧数，默认为自动， -1 表示修改为自动值。</p><p>取值范围：[-1, 16]</p>
+	Bframes *int64 `json:"Bframes,omitnil,omitempty" name:"Bframes"`
+
+	// <p>分片平均时长。0或不填表示自动，将根据视频的 GOP 等特征自动选择合适的分片时长。</p><p>取值范围：[0, 10]</p><p>单位：秒</p><p>只支持转码模板，暂不支持自适应码流模板。</p>
+	HlsTime *int64 `json:"HlsTime,omitnil,omitempty" name:"HlsTime"`
 }
 
 type VideoTrackItem struct {
