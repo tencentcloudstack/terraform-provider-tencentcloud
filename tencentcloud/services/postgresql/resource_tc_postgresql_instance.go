@@ -31,9 +31,7 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 		Update: resourceTencentCloudPostgresqlInstanceUpdate,
 		Delete: resourceTencentCLoudPostgresqlInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: helper.ImportWithDefaultValue(map[string]interface{}{
-				"delete_protection": false,
-			}),
+			State: schema.ImportStatePassthrough,
 		},
 
 		Timeouts: &schema.ResourceTimeout{
@@ -325,7 +323,7 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"delete_protection": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
+				Computed:    true,
 				Description: "Whether to enable instance deletion protection. Default: false.",
 			},
 			"wait_switch": {
@@ -404,18 +402,19 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	var allowMajorVersion, allowSpecVersion, allowSpec []string
 
 	var (
-		dbMajorVersion  = ""
-		dbKernelVersion = ""
-		needSupportTde  = 0
-		kmsKeyId        = ""
-		kmsRegion       = ""
-		kmsClusterId    = ""
-		period          = 1
-		autoRenewFlag   = 0
-		autoVoucher     = 0
-		voucherIds      []*string
-		cpu             int // cpu only used for query specCode which contains cpu info
-		storageType     string
+		dbMajorVersion   = ""
+		dbKernelVersion  = ""
+		needSupportTde   = 0
+		kmsKeyId         = ""
+		kmsRegion        = ""
+		kmsClusterId     = ""
+		period           = 1
+		autoRenewFlag    = 0
+		autoVoucher      = 0
+		voucherIds       []*string
+		cpu              int // cpu only used for query specCode which contains cpu info
+		storageType      string
+		deleteProtection bool
 	)
 
 	if v, ok := d.GetOkExists("cpu"); ok {
@@ -471,6 +470,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	if v, ok := d.GetOk("storage_type"); ok {
 		storageType = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("delete_protection"); ok {
+		deleteProtection = v.(bool)
 	}
 
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
@@ -595,6 +598,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			autoVoucher,
 			voucherIds,
 			storageType,
+			deleteProtection,
 		)
 
 		if inErr != nil {
@@ -947,6 +951,10 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 
 	if ins.DBInstanceStorageType != nil {
 		_ = d.Set("storage_type", ins.DBInstanceStorageType)
+	}
+
+	if ins.DeletionProtection != nil {
+		_ = d.Set("delete_protection", ins.DeletionProtection)
 	}
 
 	nodeSet := ins.DBNodeSet
@@ -1888,6 +1896,29 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 	}
 
+	if d.HasChange("delete_protection") {
+		request := postgresql.NewModifyDBInstanceDeletionProtectionRequest()
+		request.DBInstanceId = &instanceId
+		if v, ok := d.GetOkExists("delete_protection"); ok {
+			request.DeletionProtection = helper.Bool(v.(bool))
+		}
+
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyDBInstanceDeletionProtection(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
+		}
+	}
+
 	if len(paramEntrys) != 0 {
 		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr := postgresqlService.ModifyPgParams(ctx, instanceId, paramEntrys)
@@ -1920,7 +1951,6 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 		postgresqlService = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		outErr, inErr     error
 		has               bool
-		deleteProtection  bool
 	)
 
 	instanceId := d.Id()
@@ -1965,15 +1995,6 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 
 		return resource.RetryableError(fmt.Errorf("waiting for instance isolating"))
 	})
-
-	if v, ok := d.GetOkExists("delete_protection"); ok {
-		deleteProtection = v.(bool)
-	}
-
-	// delete protection
-	if deleteProtection {
-		return nil
-	}
 
 	outErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
 	if outErr != nil {
