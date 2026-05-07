@@ -59,6 +59,7 @@ func ResourceTencentCloudVpcRoutePolicyEntries() *schema.Resource {
 						"gateway_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Next hop type. types currently supported:.\nCVM: cloud virtual machine with public network gateway type.\nVPN: vpn gateway.\nDIRECTCONNECT: direct connect gateway.\nPEERCONNECTION: peering connection.\nHAVIP: high availability virtual ip.\nNAT: specifies the nat gateway. \nEIP: specifies the public ip address of the cloud virtual machine.\nLOCAL_GATEWAY: specifies the local gateway.\nPVGW: pvgw gateway.\nNote: This field may return null, indicating that no valid value was found.",
 						},
 						"gateway_id": {
