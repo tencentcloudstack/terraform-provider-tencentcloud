@@ -564,16 +564,15 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			}
 
 			// Pick secondary node zone: last element in availabilityZoneList that differs from primaryNodeZone and hiddenNodeZone
-			var secondaryNodeZone string
+			var secondaryNodeZones []*string
 			for i := len(availabilityZoneList) - 1; i >= 0; i-- {
 				z := availabilityZoneList[i]
 				if z != primaryNodeZone && z != hiddenNodeZone {
-					secondaryNodeZone = z
-					break
+					secondaryNodeZones = append(secondaryNodeZones, &z)
 				}
 			}
 
-			request.SecondaryNodeZone = append(request.SecondaryNodeZone, &secondaryNodeZone)
+			request.SecondaryNodeZone = secondaryNodeZones
 		}
 
 		request.InstanceId = &instanceId
