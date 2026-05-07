@@ -75,6 +75,12 @@ func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instan
 	if v, ok := params["deletion_protection"]; ok {
 		request.DeletionProtection = helper.Bool(v.(bool))
 	}
+	if v, ok := params["enable_cos_maz"]; ok {
+		request.EnableCosMAZ = helper.Bool(v.(bool))
+	}
+	if v, ok := params["enable_cos_versioning"]; ok {
+		request.EnableCosVersioning = helper.Bool(v.(bool))
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().CreateInstance(request)
