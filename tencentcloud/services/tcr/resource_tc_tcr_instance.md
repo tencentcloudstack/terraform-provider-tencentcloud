@@ -73,6 +73,21 @@ variable "tcr_region_map" {
 }
 ```
 
+Create instance with COS bucket configuration.
+
+```hcl
+resource "tencentcloud_tcr_instance" "example" {
+  name                    = "tf-example-tcr"
+  instance_type           = "standard"
+  enable_cos_maz          = true
+  enable_cos_versioning   = true
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
 Import
 
 tcr instance can be imported using the id, e.g.
