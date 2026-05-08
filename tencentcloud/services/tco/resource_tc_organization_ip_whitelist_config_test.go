@@ -43,14 +43,20 @@ func TestAccTencentCloudOrganizationIPWhitelistConfigResource_basic(t *testing.T
 
 const testAccOrganizationIPWhitelistConfig = `
 resource "tencentcloud_organization_ip_whitelist_config" "example" {
-  zone_id      = "zone-xxxxx"
-  ip_whitelist = ["10.0.0.0/24"]
+  zone_id = "z-1os7c9znogct"
+  ip_whitelist = [
+    "10.0.0.0/24",
+    "192.168.1.0/24",
+    "172.16.10.0/24",
+  ]
 }
 `
 
 const testAccOrganizationIPWhitelistConfigUpdate = `
 resource "tencentcloud_organization_ip_whitelist_config" "example" {
-  zone_id      = "zone-xxxxx"
-  ip_whitelist = ["10.0.0.0/24", "192.168.1.0/24"]
+  zone_id = "z-1os7c9znogct"
+  ip_whitelist = [
+    "10.0.0.0/24",
+  ]
 }
 `
