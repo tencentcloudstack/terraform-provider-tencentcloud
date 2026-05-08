@@ -527,6 +527,65 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	d.Partial(true)
 
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") {
+		memory := d.Get("memory").(int)
+		volume := d.Get("volume").(int)
+		params := make(map[string]interface{})
+		var nodeNum int
+		if v, ok := d.GetOk("node_num"); ok {
+			nodeNum = v.(int)
+			params["node_num"] = nodeNum
+		}
+		if v, ok := d.GetOk("add_node_list"); ok {
+			addNodeList := v.([]interface{})
+			params["add_node_list"] = addNodeList
+		}
+		if v, ok := d.GetOk("remove_node_list"); ok {
+			removeNodeList := v.([]interface{})
+			params["remove_node_list"] = removeNodeList
+		}
+		var inMaintenance int
+		if v, ok := d.GetOkExists("in_maintenance"); ok {
+			inMaintenance = v.(int)
+			params["in_maintenance"] = v.(int)
+		}
+		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
+		if err != nil {
+			return err
+		}
+
+		if dealId == "" {
+			return fmt.Errorf("deal id is empty")
+		}
+
+		if inMaintenance == 0 {
+			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
+				if err != nil {
+					if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
+						if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
+							return resource.RetryableError(err)
+						}
+					}
+					return resource.NonRetryableError(err)
+				}
+
+				if dealResponseParams == nil || dealResponseParams.Status == nil {
+					return resource.NonRetryableError(fmt.Errorf("Status is nil"))
+				}
+
+				if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS && *dealResponseParams.Status != MONGODB_STATUS_RETURN_SUCCESS {
+					return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
+				}
+
+				return nil
+			})
+			if errUpdate != nil {
+				return errUpdate
+			}
+		}
+	}
+
 	if d.HasChange("available_zone") || d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
 		request := mongodb.NewModifyInstanceAzRequest()
 		response := mongodb.NewModifyInstanceAzResponse()
@@ -563,13 +622,11 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 				return fmt.Errorf("hidden_zone `%s` must be in availability_zone_list", hiddenNodeZone)
 			}
 
-			// Pick secondary node zone: last element in availabilityZoneList that differs from primaryNodeZone and hiddenNodeZone
+			// Pick secondary node zone: remove first and last element, rest go to secondaryNodeZones
 			var secondaryNodeZones []*string
-			for i := len(availabilityZoneList) - 1; i >= 0; i-- {
+			for i := 1; i < len(availabilityZoneList)-1; i++ {
 				z := availabilityZoneList[i]
-				if z != primaryNodeZone && z != hiddenNodeZone {
-					secondaryNodeZones = append(secondaryNodeZones, &z)
-				}
+				secondaryNodeZones = append(secondaryNodeZones, &z)
 			}
 
 			request.SecondaryNodeZone = secondaryNodeZones
@@ -630,65 +687,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
 			return err
-		}
-	}
-
-	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") {
-		memory := d.Get("memory").(int)
-		volume := d.Get("volume").(int)
-		params := make(map[string]interface{})
-		var nodeNum int
-		if v, ok := d.GetOk("node_num"); ok {
-			nodeNum = v.(int)
-			params["node_num"] = nodeNum
-		}
-		if v, ok := d.GetOk("add_node_list"); ok {
-			addNodeList := v.([]interface{})
-			params["add_node_list"] = addNodeList
-		}
-		if v, ok := d.GetOk("remove_node_list"); ok {
-			removeNodeList := v.([]interface{})
-			params["remove_node_list"] = removeNodeList
-		}
-		var inMaintenance int
-		if v, ok := d.GetOkExists("in_maintenance"); ok {
-			inMaintenance = v.(int)
-			params["in_maintenance"] = v.(int)
-		}
-		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
-		if err != nil {
-			return err
-		}
-
-		if dealId == "" {
-			return fmt.Errorf("deal id is empty")
-		}
-
-		if inMaintenance == 0 {
-			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				dealResponseParams, err := mongodbService.DescribeDBInstanceDeal(ctx, dealId)
-				if err != nil {
-					if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
-						if sdkError.Code == "InvalidParameter" && sdkError.Message == "deal resource not found." {
-							return resource.RetryableError(err)
-						}
-					}
-					return resource.NonRetryableError(err)
-				}
-
-				if dealResponseParams == nil || dealResponseParams.Status == nil {
-					return resource.NonRetryableError(fmt.Errorf("Status is nil"))
-				}
-
-				if *dealResponseParams.Status != MONGODB_STATUS_DELIVERY_SUCCESS && *dealResponseParams.Status != MONGODB_STATUS_RETURN_SUCCESS {
-					return resource.RetryableError(fmt.Errorf("mongodb status is not delivery success"))
-				}
-
-				return nil
-			})
-			if errUpdate != nil {
-				return errUpdate
-			}
 		}
 	}
 
