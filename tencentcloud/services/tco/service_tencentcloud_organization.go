@@ -2869,3 +2869,41 @@ func (me *OrganizationService) DescribeOrganizationOrgShareUnitNodesByFilter(ctx
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationIPWhitelistConfigById(ctx context.Context, zoneId string) (ipWhitelist []*string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetIPWhitelistRequest()
+	request.ZoneId = helper.String(zoneId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "DescribeOrganizationIPWhitelistConfigById", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().GetIPWhitelistWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return nil
+		}
+
+		ipWhitelist = response.Response.IpWhitelist
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
