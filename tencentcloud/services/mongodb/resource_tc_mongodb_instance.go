@@ -632,11 +632,19 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			request.SecondaryNodeZone = secondaryNodeZones
 		}
 
+		needModifyFlag := true
 		request.InstanceId = &instanceId
 		request.InMaintenance = helper.IntUint64(0)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ModifyInstanceAz(request)
 			if e != nil {
+				if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+					if ee.GetCode() == "InvalidParameter" && ee.GetMessage() == "The target az already distribution." {
+						needModifyFlag = false
+						return nil
+					}
+				}
+
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -653,6 +661,10 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
 			return err
+		}
+
+		if !needModifyFlag {
+			return nil
 		}
 
 		dealId := *response.Response.DealId
