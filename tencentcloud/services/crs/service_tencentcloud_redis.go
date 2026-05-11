@@ -2313,3 +2313,36 @@ func (me *RedisService) ModifyInstanceChargeType(ctx context.Context, instanceId
 	}
 	return
 }
+
+func (me *RedisService) DescribeRedisAuditLogById(ctx context.Context, instanceId string) (instance *redis.LogInstance, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := redis.NewDescribeLogInstanceListRequest()
+	request.LogType = helper.String("auditLog")
+	request.LogSwitch = helper.String("on")
+	request.Filters = []*redis.Filter{
+		{
+			Name:   helper.String("instance-id"),
+			Values: []*string{&instanceId},
+		},
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeLogInstanceList(request)
+	if err != nil {
+		errRet = err
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || len(response.Response.Items) == 0 {
+		return
+	}
+
+	instance = response.Response.Items[0]
+	return
+}
