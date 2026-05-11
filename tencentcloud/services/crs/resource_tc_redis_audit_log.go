@@ -116,6 +116,31 @@ func resourceTencentCloudRedisAuditLogCreate(d *schema.ResourceData, meta interf
 
 	_ = response
 	d.SetId(instanceId)
+
+	// Poll DescribeLogInstanceList until Status is "normal", indicating the async task has completed.
+	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	pollErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		instance, e := service.DescribeRedisAuditLogById(ctx, instanceId)
+		if e != nil {
+			return resource.NonRetryableError(fmt.Errorf("polling DescribeLogInstanceList failed: %w", e))
+		}
+
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("audit log for instance [%s] not found yet, retrying", instanceId))
+		}
+
+		if instance.Status == nil || *instance.Status != "normal" {
+			return resource.RetryableError(fmt.Errorf("audit log for instance [%s] is not ready yet, Status: %v", instanceId, instance.Status))
+		}
+
+		return nil
+	})
+
+	if pollErr != nil {
+		log.Printf("[CRITAL]%s polling audit log status failed, reason:%+v", logId, pollErr)
+		return pollErr
+	}
+
 	return resourceTencentCloudRedisAuditLogRead(d, meta)
 }
 
@@ -219,6 +244,30 @@ func resourceTencentCloudRedisAuditLogUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s update redis audit log failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
+
+		// Poll DescribeLogInstanceList until Status is "normal", indicating the async task has completed.
+		service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		pollErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			instance, e := service.DescribeRedisAuditLogById(ctx, instanceId)
+			if e != nil {
+				return resource.NonRetryableError(fmt.Errorf("polling DescribeLogInstanceList failed: %w", e))
+			}
+
+			if instance == nil {
+				return resource.RetryableError(fmt.Errorf("audit log for instance [%s] not found yet, retrying", instanceId))
+			}
+
+			if instance.Status == nil || *instance.Status != "normal" {
+				return resource.RetryableError(fmt.Errorf("audit log for instance [%s] is not ready yet, Status: %v", instanceId, instance.Status))
+			}
+
+			return nil
+		})
+
+		if pollErr != nil {
+			log.Printf("[CRITAL]%s polling audit log status failed, reason:%+v", logId, pollErr)
+			return pollErr
+		}
 	}
 
 	return resourceTencentCloudRedisAuditLogRead(d, meta)
@@ -257,6 +306,26 @@ func resourceTencentCloudRedisAuditLogDelete(d *schema.ResourceData, meta interf
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s delete redis audit log failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	// Poll DescribeLogInstanceList until no data is returned, indicating the audit log has been closed.
+	service := RedisService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	pollErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		instance, e := service.DescribeRedisAuditLogById(ctx, instanceId)
+		if e != nil {
+			return resource.NonRetryableError(fmt.Errorf("polling DescribeLogInstanceList failed: %w", e))
+		}
+
+		if instance != nil {
+			return resource.RetryableError(fmt.Errorf("audit log for instance [%s] is still closing, retrying", instanceId))
+		}
+
+		return nil
+	})
+
+	if pollErr != nil {
+		log.Printf("[CRITAL]%s polling audit log close status failed, reason:%+v", logId, pollErr)
+		return pollErr
 	}
 
 	return nil
