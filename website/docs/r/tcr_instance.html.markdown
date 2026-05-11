@@ -84,6 +84,21 @@ variable "tcr_region_map" {
 }
 ```
 
+### Create instance with COS bucket configuration.
+
+```hcl
+resource "tencentcloud_tcr_instance" "example" {
+  name                  = "tf-example-tcr"
+  instance_type         = "standard"
+  enable_cos_maz        = true
+  enable_cos_versioning = true
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -92,6 +107,8 @@ The following arguments are supported:
 * `name` - (Required, String, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `deletion_protection` - (Optional, Bool) Whether to enable Instance Deletion Protection.
+* `enable_cos_maz` - (Optional, Bool, ForceNew) Whether to enable COS bucket multi-AZ feature. Default is `false`.
+* `enable_cos_versioning` - (Optional, Bool, ForceNew) Whether to enable COS bucket versioning. Default is `false`.
 * `instance_charge_type_prepaid_period` - (Optional, Int) Length of time to purchase an instance (in month). Must set when registry_charge_type is prepaid.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, Int) Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.
 * `open_public_operation` - (Optional, Bool) Control public network access.

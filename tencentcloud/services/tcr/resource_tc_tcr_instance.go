@@ -136,6 +136,20 @@ func ResourceTencentCloudTcrInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Whether to enable Instance Deletion Protection.",
 			},
+			"enable_cos_maz": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to enable COS bucket multi-AZ feature. Default is `false`.",
+			},
+			"enable_cos_versioning": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to enable COS bucket versioning. Default is `false`.",
+			},
 			//Computed values
 			"status": {
 				Type:        schema.TypeString,
@@ -224,6 +238,12 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	if v, ok := d.GetOkExists("deletion_protection"); ok {
 		params["deletion_protection"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("enable_cos_maz"); ok {
+		params["enable_cos_maz"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("enable_cos_versioning"); ok {
+		params["enable_cos_versioning"] = v.(bool)
 	}
 
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -396,6 +416,12 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 	}
 	if instance.DeletionProtection != nil {
 		_ = d.Set("deletion_protection", instance.DeletionProtection)
+	}
+	if instance.EnableCosMAZ != nil {
+		_ = d.Set("enable_cos_maz", instance.EnableCosMAZ)
+	}
+	if instance.EnableCosVersioning != nil {
+		_ = d.Set("enable_cos_versioning", instance.EnableCosVersioning)
 	}
 
 	request := tcr.NewDescribeSecurityPoliciesRequest()
