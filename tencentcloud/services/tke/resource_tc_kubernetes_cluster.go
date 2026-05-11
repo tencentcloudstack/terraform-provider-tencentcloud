@@ -461,6 +461,28 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					// Suppress diff when the list elements are the same set but in a different order.
+					// This function is called for both the length key "eni_subnet_ids.#" and each
+					// element key "eni_subnet_ids.N", so we apply the same set-equality check for all.
+					oldRaw, newRaw := d.GetChange("eni_subnet_ids")
+					oldList := oldRaw.([]interface{})
+					newList := newRaw.([]interface{})
+					if len(oldList) != len(newList) {
+						return false
+					}
+					oldSet := make(map[string]int, len(oldList))
+					for _, v := range oldList {
+						oldSet[v.(string)]++
+					}
+					for _, v := range newList {
+						oldSet[v.(string)]--
+						if oldSet[v.(string)] < 0 {
+							return false
+						}
+					}
+					return true
+				},
 			},
 
 			"claim_expired_seconds": {
