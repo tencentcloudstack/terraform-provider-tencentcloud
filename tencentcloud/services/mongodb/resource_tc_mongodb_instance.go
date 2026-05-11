@@ -527,113 +527,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	d.Partial(true)
 
-	if d.HasChange("available_zone") || d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
-		request := mongodb.NewModifyInstanceAzRequest()
-		response := mongodb.NewModifyInstanceAzResponse()
-		var (
-			primaryNodeZone      string
-			hiddenNodeZone       string
-			availabilityZoneList []string
-		)
-
-		if v, ok := d.GetOk("available_zone"); ok {
-			request.PrimaryNodeZone = helper.String(v.(string))
-			primaryNodeZone = v.(string)
-		}
-
-		if v, ok := d.GetOk("hidden_zone"); ok {
-			request.HiddenNodeZone = helper.String(v.(string))
-			hiddenNodeZone = v.(string)
-		}
-
-		if v, ok := d.GetOk("availability_zone_list"); ok {
-			for _, item := range v.([]interface{}) {
-				availabilityZoneList = append(availabilityZoneList, item.(string))
-			}
-
-			// Validate: primaryNodeZone and hiddenNodeZone must be in availabilityZoneList if not empty
-			zoneSet := make(map[string]bool, len(availabilityZoneList))
-			for _, z := range availabilityZoneList {
-				zoneSet[z] = true
-			}
-			if primaryNodeZone != "" && !zoneSet[primaryNodeZone] {
-				return fmt.Errorf("available_zone `%s` must be in availability_zone_list", primaryNodeZone)
-			}
-			if hiddenNodeZone != "" && !zoneSet[hiddenNodeZone] {
-				return fmt.Errorf("hidden_zone `%s` must be in availability_zone_list", hiddenNodeZone)
-			}
-
-			// Pick secondary node zone: last element in availabilityZoneList that differs from primaryNodeZone and hiddenNodeZone
-			var secondaryNodeZone string
-			for i := len(availabilityZoneList) - 1; i >= 0; i-- {
-				z := availabilityZoneList[i]
-				if z != primaryNodeZone && z != hiddenNodeZone {
-					secondaryNodeZone = z
-					break
-				}
-			}
-
-			request.SecondaryNodeZone = append(request.SecondaryNodeZone, &secondaryNodeZone)
-		}
-
-		request.InstanceId = &instanceId
-		request.InMaintenance = helper.IntUint64(0)
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ModifyInstanceAz(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			if result == nil || result.Response == nil || result.Response.DealId == nil {
-				return resource.NonRetryableError(fmt.Errorf("Modify instance az failed, Response is nil"))
-			}
-
-			response = result
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
-			return err
-		}
-
-		dealId := *response.Response.DealId
-
-		// wait for api sync
-		time.Sleep(10 * time.Second)
-		waitReq := mongodb.NewDescribeDBInstanceDealRequest()
-		waitReq.DealId = &dealId
-		err = resource.Retry(tccommon.ReadRetryTimeout*20, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeDBInstanceDeal(waitReq)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
-			}
-
-			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Response is nil"))
-			}
-
-			if result.Response.Status == nil {
-				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Status is nil"))
-			}
-
-			if *result.Response.Status == 4 {
-				return nil
-			}
-
-			return resource.RetryableError(fmt.Errorf("mongodb az is still in running, status: %d", *result.Response.Status))
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
 	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
@@ -690,6 +583,122 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			if errUpdate != nil {
 				return errUpdate
 			}
+		}
+	}
+
+	if d.HasChange("available_zone") || d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
+		request := mongodb.NewModifyInstanceAzRequest()
+		response := mongodb.NewModifyInstanceAzResponse()
+		var (
+			primaryNodeZone      string
+			hiddenNodeZone       string
+			availabilityZoneList []string
+		)
+
+		if v, ok := d.GetOk("available_zone"); ok {
+			request.PrimaryNodeZone = helper.String(v.(string))
+			primaryNodeZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("hidden_zone"); ok {
+			request.HiddenNodeZone = helper.String(v.(string))
+			hiddenNodeZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("availability_zone_list"); ok {
+			for _, item := range v.([]interface{}) {
+				availabilityZoneList = append(availabilityZoneList, item.(string))
+			}
+
+			// Validate: primaryNodeZone and hiddenNodeZone must be in availabilityZoneList if not empty
+			zoneSet := make(map[string]bool, len(availabilityZoneList))
+			for _, z := range availabilityZoneList {
+				zoneSet[z] = true
+			}
+			if primaryNodeZone != "" && !zoneSet[primaryNodeZone] {
+				return fmt.Errorf("available_zone `%s` must be in availability_zone_list", primaryNodeZone)
+			}
+			if hiddenNodeZone != "" && !zoneSet[hiddenNodeZone] {
+				return fmt.Errorf("hidden_zone `%s` must be in availability_zone_list", hiddenNodeZone)
+			}
+
+			// Pick secondary node zone: remove first and last element, rest go to secondaryNodeZones
+			var secondaryNodeZones []*string
+			for i := 1; i < len(availabilityZoneList)-1; i++ {
+				z := availabilityZoneList[i]
+				secondaryNodeZones = append(secondaryNodeZones, &z)
+			}
+
+			request.SecondaryNodeZone = secondaryNodeZones
+		}
+
+		needModifyFlag := true
+		request.InstanceId = &instanceId
+		request.InMaintenance = helper.IntUint64(0)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ModifyInstanceAz(request)
+			if e != nil {
+				if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+					if ee.GetCode() == "InvalidParameter" && ee.GetMessage() == "The target az already distribution." {
+						needModifyFlag = false
+						return nil
+					}
+				}
+
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.DealId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify instance az failed, Response is nil"))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
+			return err
+		}
+
+		if !needModifyFlag {
+			return nil
+		}
+
+		dealId := *response.Response.DealId
+
+		// wait for api sync
+		time.Sleep(10 * time.Second)
+		waitReq := mongodb.NewDescribeDBInstanceDealRequest()
+		waitReq.DealId = &dealId
+		err = resource.Retry(tccommon.ReadRetryTimeout*20, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeDBInstanceDeal(waitReq)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Response is nil"))
+			}
+
+			if result.Response.Status == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Status is nil"))
+			}
+
+			if *result.Response.Status == 4 {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("mongodb az is still in running, status: %d", *result.Response.Status))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
+			return err
 		}
 	}
 
