@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to create a VPC subnet.
 
+~> **NOTE:** In accordance with VPC business requirements, the default value for `is_multicast` has been updated to `false`(previously `true`) in version `v1.82.93` of the provider. If you wish to utilize this feature, you must first contact the VPC product team to have your account added to the whitelist, and then set the `is_multicast` field to `true`.
+
 ## Example Usage
 
 ### Create a normal VPC subnet
@@ -63,7 +65,7 @@ The following arguments are supported:
 * `name` - (Required, String) The name of subnet to be created.
 * `vpc_id` - (Required, String, ForceNew) ID of the VPC to be associated.
 * `cdc_id` - (Optional, String, ForceNew) ID of CDC instance.
-* `is_multicast` - (Optional, Bool) Indicates whether multicast is enabled. The default value is 'true'. We recommend disabling these features if they are not applicable to your environment.
+* `is_multicast` - (Optional, Bool) Indicates whether multicast is enabled. The default value is `false`. We recommend disabling these features if they are not applicable to your environment.
 * `route_table_id` - (Optional, String) ID of a routing table to which the subnet should be associated.
 * `tags` - (Optional, Map) Tags of the subnet.
 
