@@ -1,3 +1,22 @@
+## 1.82.93(May 11, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mysql_proxy_address_config` ([#4119](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4119))
+* **New Resource:** `tencentcloud_organization_ip_whitelist_config` ([#4117](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4117))
+* **New Resource:** `tencentcloud_redis_audit_log` ([#4118](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4118))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_cluster: optimize field `eni_subnet_ids` attribute ([#4121](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4121))
+* resource/tencentcloud_kubernetes_native_node_pool: update code logic for field `tags` ([#4123](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4123))
+* resource/tencentcloud_mongodb_instance: optimize code logic for update `availability_zone_list` ([#4111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4111))
+* resource/tencentcloud_mongodb_instance_ssl: optimize code logic for update function ([#4122](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4122))
+* resource/tencentcloud_postgresql_instance: support `delete_protection` ([#4112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4112))
+* resource/tencentcloud_subnet: update `is_multicast` default value ([#4120](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4120))
+* resource/tencentcloud_tcr_instance: add new params ([#4113](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4113))
+* resource/tencentcloud_vpc: update `is_multicast` default value ([#4120](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4120))
+
 ## 1.82.92(May 9, 2026)
 
 FEATURES:
