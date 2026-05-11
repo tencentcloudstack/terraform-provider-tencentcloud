@@ -2250,6 +2250,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_accept_join_share_unit_invitation_operation":                              tco.ResourceTencentCloudAcceptJoinShareUnitInvitationOperation(),
 			"tencentcloud_reject_join_share_unit_invitation_operation":                              tco.ResourceTencentCloudRejectJoinShareUnitInvitationOperation(),
 			"tencentcloud_organization_external_saml_identity_provider":                             tco.ResourceTencentCloudOrganizationExternalSamlIdentityProvider(),
+			"tencentcloud_organization_ip_whitelist_config":                                         tco.ResourceTencentCloudOrganizationIPWhitelistConfig(),
 			"tencentcloud_dbbrain_sql_filter":                                                       dbbrain.ResourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":                                   dbbrain.ResourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                                              dbbrain.ResourceTencentCloudDbbrainDbDiagReportTask(),
