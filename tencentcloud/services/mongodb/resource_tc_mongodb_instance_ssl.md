@@ -6,7 +6,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mongodb_instance_ssl" "example" {
-  instance_id = "cmgo-xxxxxxxx"
+  instance_id = "cmgo-olr1xx9d"
   enable      = true
 }
 ```
@@ -16,5 +16,5 @@ Import
 MongoDB instance SSL configuration can be imported using the instance id, e.g.
 
 ```
-terraform import tencentcloud_mongodb_instance_ssl.example cmgo-xxxxxxxx
+terraform import tencentcloud_mongodb_instance_ssl.example cmgo-olr1xx9d
 ```

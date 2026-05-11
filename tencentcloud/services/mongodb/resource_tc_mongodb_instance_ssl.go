@@ -2,12 +2,10 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -128,33 +126,6 @@ func resourceTencentCloudMongodbInstanceSslUpdate(d *schema.ResourceData, meta i
 		enable := d.Get("enable").(bool)
 
 		err := service.ModifyMongodbInstanceSSL(ctx, instanceId, enable)
-		if err != nil {
-			return err
-		}
-
-		// Wait for SSL configuration to take effect
-		err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			sslStatus, e := service.DescribeMongodbInstanceSSLById(ctx, instanceId)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-
-			if sslStatus == nil || sslStatus.Response == nil || sslStatus.Response.Status == nil {
-				return resource.RetryableError(fmt.Errorf("ssl status response is nil"))
-			}
-
-			expectedStatus := 0
-			if enable {
-				expectedStatus = 1
-			}
-
-			if int(*sslStatus.Response.Status) == expectedStatus {
-				return nil
-			}
-
-			return resource.RetryableError(fmt.Errorf("ssl status is %d, waiting for %d", *sslStatus.Response.Status, expectedStatus))
-		})
-
 		if err != nil {
 			log.Printf("[CRITAL]%s update mongodb instance ssl failed, reason:%+v", logId, err)
 			return err
