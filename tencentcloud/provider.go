@@ -1631,6 +1631,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_ro_group_load_operation":                                            cdb.ResourceTencentCloudMysqlRoGroupLoadOperation(),
 			"tencentcloud_mysql_switch_master_slave_operation":                                      cdb.ResourceTencentCloudMysqlSwitchMasterSlaveOperation(),
 			"tencentcloud_mysql_proxy":                                                              cdb.ResourceTencentCloudMysqlProxy(),
+			"tencentcloud_mysql_proxy_address_config":                                               cdb.ResourceTencentCloudMysqlProxyAddressConfig(),
 			"tencentcloud_mysql_reset_root_account":                                                 cdb.ResourceTencentCloudMysqlResetRootAccount(),
 			"tencentcloud_mysql_verify_root_account":                                                cdb.ResourceTencentCloudMysqlVerifyRootAccount(),
 			"tencentcloud_mysql_reload_balance_proxy_node":                                          cdb.ResourceTencentCloudMysqlReloadBalanceProxyNode(),
