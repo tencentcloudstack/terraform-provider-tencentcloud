@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to create a VPC.
 
+~> **NOTE:** In accordance with VPC business requirements, the default value for `is_multicast` has been updated to `false`(previously `true`) in version `v1.82.93` of the provider. If you wish to utilize this feature, you must first contact the VPC product team to have your account added to the whitelist, and then set the `is_multicast` field to `true`.
+
 ## Example Usage
 
 ### Create a basic VPC
@@ -69,7 +71,7 @@ The following arguments are supported:
 * `dns_servers` - (Optional, Set: [`String`]) The DNS server list of the VPC. And you can specify 0 to 5 servers to this list.
 * `enable_route_vpc_publish_ipv6` - (Optional, Bool) Vpc association with CCN IPV6 route publish policy. true: enables cidr route publishing. false: enables subnet route publishing. default is subnet route publishing when creating a vpc. to select cidr route publishing, submit a ticket for adding to allowlist.
 * `enable_route_vpc_publish` - (Optional, Bool) Vpc association with CCN route publish policy. true: enables cidr route publishing. false: enables subnet route publishing. default is subnet route publishing when creating a vpc. to select cidr route publishing, submit a ticket for adding to allowlist.
-* `is_multicast` - (Optional, Bool) Indicates whether VPC multicast is enabled. The default value is 'true'. Multicast are whitelist-restricted. We recommend disabling these features if they are not applicable to your environment.
+* `is_multicast` - (Optional, Bool) Indicates whether VPC multicast is enabled. The default value is `false`. Multicast are whitelist-restricted. We recommend disabling these features if they are not applicable to your environment.
 * `tags` - (Optional, Map) Tags of the VPC.
 
 ## Attributes Reference
