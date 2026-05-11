@@ -19,12 +19,12 @@ func ResourceTencentCloudKubernetesLogConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudKubernetesLogConfigCreate,
 		Read:   resourceTencentCloudKubernetesLogConfigRead,
+		Update: resourceTencentCloudKubernetesLogConfigUpdate,
 		Delete: resourceTencentCloudKubernetesLogConfigDelete,
 		Schema: map[string]*schema.Schema{
 			"log_config": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "JSON expression of log collection configuration. For more details, please refer to the guide: https://www.tencentcloud.com/zh/document/product/457/64846.",
 			},
 
@@ -32,7 +32,7 @@ func ResourceTencentCloudKubernetesLogConfig() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Log config name.",
+				Description: "Log config name. Must be identical to Value `metadata.name` in Field `log_config`.",
 			},
 
 			"cluster_id": {
@@ -201,6 +201,49 @@ func resourceTencentCloudKubernetesLogConfigRead(d *schema.ResourceData, meta in
 	}
 
 	return nil
+}
+
+func resourceTencentCloudKubernetesLogConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_log_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = tkev20180525.NewModifyLogConfigRequest()
+	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+
+	clusterId := idSplit[0]
+	clusterType := idSplit[2]
+
+	if v, ok := d.GetOk("log_config"); ok {
+		request.LogConfig = helper.String(v.(string))
+	}
+
+	request.ClusterId = helper.String(clusterId)
+	request.ClusterType = helper.String(clusterType)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyLogConfigWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s update kubernetes log config failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return resourceTencentCloudKubernetesLogConfigRead(d, meta)
 }
 
 func resourceTencentCloudKubernetesLogConfigDelete(d *schema.ResourceData, meta interface{}) error {

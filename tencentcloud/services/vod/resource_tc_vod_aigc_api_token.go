@@ -3,7 +3,6 @@ package vod
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -109,18 +108,16 @@ func resourceTencentCloudVodAigcApiTokenRead(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	_ = d.Set("sub_app_id", int(subAppId))
-	_ = d.Set("api_token", apiToken)
-
 	exists, err := service.DescribeVodAigcApiTokenById(ctx, subAppId, apiToken)
 	if err != nil {
 		return err
 	}
 	if !exists {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `tencentcloud_vod_aigc_api_token` [sub_app_id=%d] not found in cloud, please check if it has been deleted.\n", logId, subAppId)
-		return nil
+		return fmt.Errorf("resource `tencentcloud_vod_aigc_api_token` [sub_app_id=%d] not found in cloud, please check if the sub app or the token has been deleted", subAppId)
 	}
+
+	_ = d.Set("sub_app_id", int(subAppId))
+	_ = d.Set("api_token", apiToken)
 
 	return nil
 }
