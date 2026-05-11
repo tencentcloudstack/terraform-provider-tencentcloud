@@ -2956,16 +2956,23 @@ func (me *MysqlService) DescribeMysqlProxyById(ctx context.Context, instanceId, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseMysqlClient().DescribeCdbProxyInfo(request)
+	var response *cdb.DescribeCdbProxyInfoResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMysqlClient().DescribeCdbProxyInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.ProxyInfos) < 1 {
+	if response.Response == nil || len(response.Response.ProxyInfos) < 1 {
 		return
 	}
 
@@ -3522,5 +3529,29 @@ func (me *MysqlService) DescribeMysqlAuditInstanceListById(ctx context.Context, 
 	}
 
 	ret = response.Response.Items[0]
+	return
+}
+
+func (me *MysqlService) DescribeMysqlProxyAddressConfig(ctx context.Context, instanceId, proxyGroupId, proxyAddressId string) (address *cdb.ProxyAddress, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	proxy, err := me.DescribeMysqlProxyById(ctx, instanceId, proxyGroupId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if proxy == nil {
+		return
+	}
+
+	for _, addr := range proxy.ProxyAddress {
+		if addr.ProxyAddressId != nil && *addr.ProxyAddressId == proxyAddressId {
+			address = addr
+			return
+		}
+	}
+
+	log.Printf("[DEBUG]%s proxy address [%s] not found in proxy group [%s], instance [%s].\n", logId, proxyAddressId, proxyGroupId, instanceId)
 	return
 }

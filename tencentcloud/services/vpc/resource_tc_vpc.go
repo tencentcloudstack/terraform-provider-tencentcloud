@@ -55,8 +55,8 @@ func ResourceTencentCloudVpcInstance() *schema.Resource {
 			"is_multicast": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
-				Description: "Indicates whether VPC multicast is enabled. The default value is 'true'. Multicast are whitelist-restricted. We recommend disabling these features if they are not applicable to your environment.",
+				Computed:    true,
+				Description: "Indicates whether VPC multicast is enabled. The default value is `false`. Multicast are whitelist-restricted. We recommend disabling these features if they are not applicable to your environment.",
 			},
 			"assistant_cidrs": {
 				Type:        schema.TypeSet,
@@ -151,7 +151,10 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 
 	}
-	isMulticast = d.Get("is_multicast").(bool)
+
+	if temp, ok := d.GetOkExists("is_multicast"); ok {
+		isMulticast = temp.(bool)
+	}
 
 	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
 		tags = temp

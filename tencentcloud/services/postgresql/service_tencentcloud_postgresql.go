@@ -39,6 +39,7 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 	dbNodeSet []*postgresql.DBNode,
 	needSupportTde int, kmsKeyId, kmsRegion string, kmsClusterId string, autoVoucher int, voucherIds []*string,
 	storageType string,
+	deleteProtection bool,
 ) (instanceId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewCreateInstancesRequest()
@@ -105,6 +106,7 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 		request.StorageType = helper.String(storageType)
 	}
 
+	request.DeletionProtection = helper.Bool(deleteProtection)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().CreateInstances(request)
 	if err != nil {

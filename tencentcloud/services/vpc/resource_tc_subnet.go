@@ -54,8 +54,8 @@ func ResourceTencentCloudVpcSubnet() *schema.Resource {
 			"is_multicast": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
-				Description: "Indicates whether multicast is enabled. The default value is 'true'. We recommend disabling these features if they are not applicable to your environment.",
+				Computed:    true,
+				Description: "Indicates whether multicast is enabled. The default value is `false`. We recommend disabling these features if they are not applicable to your environment.",
 			},
 			"cdc_id": {
 				Type:        schema.TypeString,
@@ -134,7 +134,9 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 		cidrBlock = temp.(string)
 	}
 
-	isMulticast = d.Get("is_multicast").(bool)
+	if temp, ok := d.GetOkExists("is_multicast"); ok {
+		isMulticast = temp.(bool)
+	}
 
 	if temp, ok := d.GetOk("route_table_id"); ok {
 		routeTableId = temp.(string)

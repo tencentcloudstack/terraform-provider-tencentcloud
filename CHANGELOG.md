@@ -1,3 +1,14 @@
+## 1.82.92(May 9, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vod_aigc_api_token` ([#4109](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4109))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: add bot_management_lite parameter to support CAPTCHA page challenge and AI crawler detection configuration ([#4115](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4115))
+* resource/tencentcloud_kubernetes_log_config: support modify `log_config` ([#4110](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4110))
+
 ## 1.82.91(April 30, 2026)
 
 FEATURES:
