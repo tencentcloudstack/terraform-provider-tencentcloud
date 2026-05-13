@@ -7,5 +7,5 @@ tencentcloud_kubernetes_cluster_extra_args_config
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_kubernetes_cluster: update `is_multicast` default value
+resource/tencentcloud_kubernetes_cluster: support change field `cluster_extra_args`
 ```
