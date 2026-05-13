@@ -26,7 +26,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 					"name": {
 						Type:        schema.TypeString,
 						Required:    true,
-						Description: "Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.\n- `Cache`: Node cache TTL;\n- `CacheKey`: Custom Cache Key;\n- `CachePrefresh`: Cache pre-refresh;\n- `AccessURLRedirect`: Access URL redirection;\n- `UpstreamURLRewrite`: Back-to-origin URL rewrite;\n- `QUIC`: QUIC;\n- `WebSocket`: WebSocket;\n- `Authentication`: Token authentication;\n- `MaxAge`: Browser cache TTL;\n- `StatusCodeCache`: Status code cache TTL;\n- `OfflineCache`: Offline cache;\n- `SmartRouting`: Smart acceleration;\n- `RangeOriginPull`: Segment back-to-origin;\n- `UpstreamHTTP2`: HTTP2 back-to-origin;\n- `HostHeader`: Host Header rewrite;\n- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;\n- `OriginPullProtocol`: Back-to-origin HTTPS;\n- `Compression`: Smart compression configuration;\n- `HSTS`: HSTS;\n- `ClientIPHeader`: Header information configuration for storing client request IP;\n- `OCSPStapling`: OCSP stapling;\n- `HTTP2`: HTTP2 Access;\n- `PostMaxSize`: POST request upload file streaming maximum limit configuration;\n- `ClientIPCountry`: Carry client IP region information when returning to the source;\n- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;\n- `UpstreamRequest`: Return to the source request parameters;\n- `TLSConfig`: SSL/TLS security;\n- `ModifyOrigin`: Modify the source station;\n- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;\n- `HttpResponse`: HTTP response;\n- `ErrorPage`: Custom error page;\n- `ModifyResponseHeader`: Modify HTTP node response header;\n- `ModifyRequestHeader`: Modify HTTP node request header;\n- `ResponseSpeedLimit`: Single connection download speed limit.\n- `SetContentIdentifierParameters`: Set content identifier.",
+						Description: "Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.\n- `Cache`: Node cache TTL;\n- `CacheKey`: Custom Cache Key;\n- `CachePrefresh`: Cache pre-refresh;\n- `AccessURLRedirect`: Access URL redirection;\n- `UpstreamURLRewrite`: Back-to-origin URL rewrite;\n- `QUIC`: QUIC;\n- `WebSocket`: WebSocket;\n- `Authentication`: Token authentication;\n- `MaxAge`: Browser cache TTL;\n- `StatusCodeCache`: Status code cache TTL;\n- `OfflineCache`: Offline cache;\n- `SmartRouting`: Smart acceleration;\n- `RangeOriginPull`: Segment back-to-origin;\n- `UpstreamHTTP2`: HTTP2 back-to-origin;\n- `HostHeader`: Host Header rewrite;\n- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;\n- `OriginPullProtocol`: Back-to-origin HTTPS;\n- `Compression`: Smart compression configuration;\n- `HSTS`: HSTS;\n- `ClientIPHeader`: Header information configuration for storing client request IP;\n- `OCSPStapling`: OCSP stapling;\n- `HTTP2`: HTTP2 Access;\n- `PostMaxSize`: POST request upload file streaming maximum limit configuration;\n- `ClientIPCountry`: Carry client IP region information when returning to the source;\n- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;\n- `UpstreamRequest`: Return to the source request parameters;\n- `TLSConfig`: SSL/TLS security;\n- `ModifyOrigin`: Modify the source station;\n- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;\n- `HttpResponse`: HTTP response;\n- `ErrorPage`: Custom error page;\n- `ModifyResponseHeader`: Modify HTTP node response header;\n- `ModifyRequestHeader`: Modify HTTP node request header;\n- `ResponseSpeedLimit`: Single connection download speed limit.\n- `SetContentIdentifier`: Set content identifier.\n- `Vary`: Vary feature configuration.\n- `ContentCompression`: Content compression configuration.\n- `OriginAuthentication`: Origin authentication configuration.",
 					},
 					"cache_parameters": {
 						Type:        schema.TypeList,
@@ -50,7 +50,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 											"default_cache": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: On: cache; Off: do not cache.",
+												Description: "Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.",
 											},
 											"default_cache_strategy": {
 												Type:        schema.TypeString,
@@ -151,7 +151,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"ignore_case": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Switch for ignoring case. values: enable; off: disable.note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.",
+									Description: "Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.",
 								},
 								"header": {
 									Type:        schema.TypeList,
@@ -222,7 +222,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable cache prefresh. values: enable; off: disable.",
+									Description: "Whether to enable cache prefresh. values: on: enable; off: disable.",
 								},
 								"cache_time_percent": {
 									Type:        schema.TypeInt,
@@ -481,7 +481,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable offline caching. values: on: enable; Off: disable.",
+									Description: "Whether to enable offline caching. values: on: enable; off: disable.",
 								},
 							},
 						},
@@ -496,7 +496,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable smart acceleration. values: on: enable; Off: disable.",
+									Description: "Whether to enable smart acceleration. values: on: enable; off: disable.",
 								},
 							},
 						},
@@ -511,7 +511,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable range gets. values are: on: enable; Off: disable.",
+									Description: "Whether to enable range gets. values are: on: enable; off: disable.",
 								},
 							},
 						},
@@ -724,7 +724,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"header_name": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Name of the request header that contains the client ip region. it is valid when switch=on. the default value eo-client-ipcountry is used when it is not specified.",
+									Description: "Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.",
 								},
 							},
 						},
@@ -825,7 +825,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"version": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									Description: "TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable tls1, 1.1, 1.2, and 1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: tlsv1: tlsv1 version; `tlsv1.1`: tlsv1.1 version; `tlsv1.2`: tlsv1.2 version; `tlsv1.3`: tlsv1.3 version.",
+									Description: "TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.",
 									Elem: &schema.Schema{
 										Type: schema.TypeString,
 									},
@@ -858,7 +858,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"origin_protocol": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: Http: use http protocol; Https: use https protocol; Follow: follow the protocol.",
+									Description: "Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.",
 								},
 								"http_origin_port": {
 									Type:         schema.TypeInt,
@@ -1093,6 +1093,55 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Type:        schema.TypeString,
 									Required:    true,
 									Description: "Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.",
+								},
+							},
+						},
+					},
+					"vary_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "Vary configuration parameter. This parameter is required when Name is set to Vary.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"switch": {
+									Type:        schema.TypeString,
+									Required:    true,
+									Description: "Whether to enable Vary feature. Valid values: on: enable; off: disable.",
+								},
+							},
+						},
+					},
+					"origin_authentication_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"request_properties": {
+									Type:        schema.TypeList,
+									Required:    true,
+									Description: "Origin authentication request properties.",
+									Elem: &schema.Resource{
+										Schema: map[string]*schema.Schema{
+											"type": {
+												Type:        schema.TypeString,
+												Required:    true,
+												Description: "Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.",
+											},
+											"name": {
+												Type:        schema.TypeString,
+												Required:    true,
+												Description: "Origin authentication parameter name.",
+											},
+											"value": {
+												Type:        schema.TypeString,
+												Required:    true,
+												Description: "Origin authentication parameter value.",
+											},
+										},
+									},
 								},
 							},
 						},
@@ -1714,6 +1763,33 @@ func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{})
 							contentCompressionParameters.Switch = helper.String(v)
 						}
 						ruleEngineAction.ContentCompressionParameters = &contentCompressionParameters
+					}
+					if varyParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["vary_parameters"]); ok {
+						varyParameters := teov20220901.VaryParameters{}
+						if v, ok := varyParametersMap["switch"].(string); ok && v != "" {
+							varyParameters.Switch = helper.String(v)
+						}
+						ruleEngineAction.VaryParameters = &varyParameters
+					}
+					if originAuthenticationParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["origin_authentication_parameters"]); ok {
+						originAuthenticationParameters := teov20220901.OriginAuthenticationParameters{}
+						if v, ok := originAuthenticationParametersMap["request_properties"]; ok {
+							for _, item := range v.([]interface{}) {
+								propMap := item.(map[string]interface{})
+								prop := teov20220901.OriginAuthenticationRequestProperties{}
+								if v, ok := propMap["type"].(string); ok && v != "" {
+									prop.Type = helper.String(v)
+								}
+								if v, ok := propMap["name"].(string); ok && v != "" {
+									prop.Name = helper.String(v)
+								}
+								if v, ok := propMap["value"].(string); ok && v != "" {
+									prop.Value = helper.String(v)
+								}
+								originAuthenticationParameters.RequestProperties = append(originAuthenticationParameters.RequestProperties, &prop)
+							}
+						}
+						ruleEngineAction.OriginAuthenticationParameters = &originAuthenticationParameters
 					}
 					ruleBranch.Actions = append(ruleBranch.Actions, &ruleEngineAction)
 				}
@@ -2513,6 +2589,36 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 						}
 
 						actionsMap["content_compression_parameters"] = []interface{}{contentCompressionParametersMap}
+					}
+
+					varyParametersMap := map[string]interface{}{}
+					if actions.VaryParameters != nil {
+						if actions.VaryParameters.Switch != nil {
+							varyParametersMap["switch"] = actions.VaryParameters.Switch
+						}
+
+						actionsMap["vary_parameters"] = []interface{}{varyParametersMap}
+					}
+
+					originAuthenticationParametersMap := map[string]interface{}{}
+					if actions.OriginAuthenticationParameters != nil {
+						requestPropertiesList := make([]map[string]interface{}, 0, len(actions.OriginAuthenticationParameters.RequestProperties))
+						for _, prop := range actions.OriginAuthenticationParameters.RequestProperties {
+							propMap := map[string]interface{}{}
+							if prop.Type != nil {
+								propMap["type"] = prop.Type
+							}
+							if prop.Name != nil {
+								propMap["name"] = prop.Name
+							}
+							if prop.Value != nil {
+								propMap["value"] = prop.Value
+							}
+							requestPropertiesList = append(requestPropertiesList, propMap)
+						}
+						originAuthenticationParametersMap["request_properties"] = requestPropertiesList
+
+						actionsMap["origin_authentication_parameters"] = []interface{}{originAuthenticationParametersMap}
 					}
 
 					actionsList = append(actionsList, actionsMap)

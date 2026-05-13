@@ -5071,6 +5071,56 @@ func (c *Client) GetGroupWithContext(ctx context.Context, request *GetGroupReque
     return
 }
 
+func NewGetIPWhitelistRequest() (request *GetIPWhitelistRequest) {
+    request = &GetIPWhitelistRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "GetIPWhitelist")
+    
+    
+    return
+}
+
+func NewGetIPWhitelistResponse() (response *GetIPWhitelistResponse) {
+    response = &GetIPWhitelistResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetIPWhitelist
+// 获取CIC的ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) GetIPWhitelist(request *GetIPWhitelistRequest) (response *GetIPWhitelistResponse, err error) {
+    return c.GetIPWhitelistWithContext(context.Background(), request)
+}
+
+// GetIPWhitelist
+// 获取CIC的ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) GetIPWhitelistWithContext(ctx context.Context, request *GetIPWhitelistRequest) (response *GetIPWhitelistResponse, err error) {
+    if request == nil {
+        request = NewGetIPWhitelistRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetIPWhitelist")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetIPWhitelist require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetIPWhitelistResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetProvisioningTaskStatusRequest() (request *GetProvisioningTaskStatusRequest) {
     request = &GetProvisioningTaskStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7623,6 +7673,56 @@ func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGrou
     request.SetContext(ctx)
     
     response = NewUpdateGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateIPWhitelistRequest() (request *UpdateIPWhitelistRequest) {
+    request = &UpdateIPWhitelistRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "UpdateIPWhitelist")
+    
+    
+    return
+}
+
+func NewUpdateIPWhitelistResponse() (response *UpdateIPWhitelistResponse) {
+    response = &UpdateIPWhitelistResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateIPWhitelist
+// 更新新建ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) UpdateIPWhitelist(request *UpdateIPWhitelistRequest) (response *UpdateIPWhitelistResponse, err error) {
+    return c.UpdateIPWhitelistWithContext(context.Background(), request)
+}
+
+// UpdateIPWhitelist
+// 更新新建ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) UpdateIPWhitelistWithContext(ctx context.Context, request *UpdateIPWhitelistRequest) (response *UpdateIPWhitelistResponse, err error) {
+    if request == nil {
+        request = NewUpdateIPWhitelistRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateIPWhitelist")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateIPWhitelist require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateIPWhitelistResponse()
     err = c.Send(request, response)
     return
 }

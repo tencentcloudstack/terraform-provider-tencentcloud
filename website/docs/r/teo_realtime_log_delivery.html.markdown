@@ -69,7 +69,7 @@ The following arguments are supported:
 * `log_type` - (Required, String) Data delivery type, the values are: `domain`: site acceleration log; `application`: four-layer proxy log; `web-rateLiming`: rate limit and CC attack protection log; `web-attack`: managed rule log; `web-rule`: custom rule log; `web-bot`: Bot management log.
 * `sample` - (Required, Int) The sampling ratio is in thousandths, with a value range of 1-1000. For example, filling in 605 means the sampling ratio is 60.5%. Leaving it blank means the sampling ratio is 100%.
 * `task_name` - (Required, String) The name of the real-time log delivery task. The format is a combination of numbers, English, -, and _. The maximum length is 200 characters.
-* `task_type` - (Required, String) The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address.
+* `task_type` - (Required, String) The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address; `log_analysis`: push to EdgeOne log analysis.
 * `zone_id` - (Required, String, ForceNew) ID of the site.
 * `cls` - (Optional, List) CLS configuration information. This parameter is required when TaskType is cls.
 * `custom_endpoint` - (Optional, List) Customize the configuration information of the HTTP service. This parameter is required when TaskType is set to custom_endpoint.

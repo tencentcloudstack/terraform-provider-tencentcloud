@@ -64,6 +64,24 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
       }
     }
 
+    actions {
+      name = "Vary"
+      vary_parameters {
+        switch = "on"
+      }
+    }
+
+    actions {
+      name = "OriginAuthentication"
+      origin_authentication_parameters {
+        request_properties {
+          type  = "Header"
+          name  = "Authorization"
+          value = "Bearer token123"
+        }
+      }
+    }
+
     sub_rules {
       description = ["1-1"]
       branches {

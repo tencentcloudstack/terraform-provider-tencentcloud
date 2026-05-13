@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_function_rule: add trigger_type parameter to support function selection configuration type
+```

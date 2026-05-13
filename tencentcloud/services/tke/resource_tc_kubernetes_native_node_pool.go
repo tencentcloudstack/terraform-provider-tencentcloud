@@ -1022,6 +1022,11 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 	tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
 	if respData.Tags != nil {
 		for _, tags := range respData.Tags {
+			// Only set tags with resource_type "machine", skip "cluster" to avoid state drift.
+			if tags.ResourceType == nil || *tags.ResourceType == "cluster" {
+				continue
+			}
+
 			tagsMap := map[string]interface{}{}
 
 			if tags.ResourceType != nil {

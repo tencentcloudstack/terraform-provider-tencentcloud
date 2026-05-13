@@ -47,6 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 * `content_id` - Content identifier ID.
 * `created_on` - Creation time, which is in Coordinated Universal Time (UTC) and follows the ISO 8601 date and time format..
 * `modified_on` - The time of the latest update, in Coordinated Universal Time (UTC), following the ISO 8601 date and time format..
+* `status` - Content identifier status. Valid values: `active` (effective), `deleted` (deleted).
 
 
 ## Import

@@ -306,6 +306,11 @@ func DataSourceTencentCloudTeoOriginAcl() *schema.Resource {
 							Computed:    true,
 							Description: "Origin protection status. Vaild values:\n- online: in effect;\n- offline: disabled;\n- updating: configuration deployment in progress.",
 						},
+						"origin_acl_family": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Origin ACL control domain.",
+						},
 					},
 				},
 			},
@@ -468,6 +473,10 @@ func dataSourceTencentCloudTeoOriginAclRead(d *schema.ResourceData, meta interfa
 
 		if respData.OriginACLInfo.Status != nil {
 			originACLInfoMap["status"] = respData.OriginACLInfo.Status
+		}
+
+		if respData.OriginACLInfo.OriginACLFamily != nil {
+			originACLInfoMap["origin_acl_family"] = respData.OriginACLInfo.OriginACLFamily
 		}
 
 		_ = d.Set("origin_acl_info", []interface{}{originACLInfoMap})

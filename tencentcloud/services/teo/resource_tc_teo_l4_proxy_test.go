@@ -6,13 +6,38 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svcteo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
+
+// mockMetaL4Proxy implements tccommon.ProviderMeta
+type mockMetaL4Proxy struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaL4Proxy) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaL4Proxy{}
+
+func newMockMetaL4Proxy() *mockMetaL4Proxy {
+	return &mockMetaL4Proxy{client: &connectivity.TencentCloudClient{}}
+}
+
+func ptrStringL4Proxy(s string) *string {
+	return &s
+}
 
 // go test -test.run TestAccTencentCloudTeoL4ProxyResource_basic -v -timeout=0
 func TestAccTencentCloudTeoL4ProxyResource_basic(t *testing.T) {
@@ -133,3 +158,134 @@ resource "tencentcloud_teo_l4_proxy" "teo_l4_proxy" {
   zone_id             = "zone-2qtuhspy7cr6"
 }
 `
+
+// ---- Unit Tests (gomonkey mock) ----
+
+// go test ./tencentcloud/services/teo/ -run "TestTeoL4Proxy_" -v -count=1 -gcflags="all=-l"
+
+// TestTeoL4Proxy_Create tests that proxy_id is set correctly after Create
+func TestTeoL4Proxy_Create(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaL4Proxy().client, "UseTeoClient", teoClient)
+
+	// Mock CreateL4ProxyWithContext to return a response with ProxyId
+	patches.ApplyMethodFunc(teoClient, "CreateL4ProxyWithContext", func(_ context.Context, _ *teov20220901.CreateL4ProxyRequest) (*teov20220901.CreateL4ProxyResponse, error) {
+		resp := teov20220901.NewCreateL4ProxyResponse()
+		resp.Response = &teov20220901.CreateL4ProxyResponseParams{
+			ProxyId:   ptrStringL4Proxy("proxy-12345678"),
+			RequestId: ptrStringL4Proxy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock TeoService.DescribeTeoL4ProxyById for both the state refresh in CreatePostHandleResponse and the Read call
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoL4ProxyById", func(_ context.Context, zoneId string, proxyId string) (*teov20220901.L4Proxy, error) {
+		return &teov20220901.L4Proxy{
+			ZoneId:             ptrStringL4Proxy("zone-test1234"),
+			ProxyId:            ptrStringL4Proxy("proxy-12345678"),
+			ProxyName:          ptrStringL4Proxy("proxy-test"),
+			Area:               ptrStringL4Proxy("overseas"),
+			Ipv6:               ptrStringL4Proxy("on"),
+			StaticIp:           ptrStringL4Proxy("off"),
+			AccelerateMainland: ptrStringL4Proxy("off"),
+			Status:             ptrStringL4Proxy("online"),
+		}, nil
+	})
+
+	meta := newMockMetaL4Proxy()
+	res := svcteo.ResourceTencentCloudTeoL4Proxy()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":             "zone-test1234",
+		"proxy_name":          "proxy-test",
+		"area":                "overseas",
+		"ipv6":                "on",
+		"static_ip":           "off",
+		"accelerate_mainland": "off",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+
+	// Verify proxy_id is set correctly
+	proxyId := d.Get("proxy_id").(string)
+	assert.Equal(t, "proxy-12345678", proxyId)
+
+	// Verify composite ID
+	assert.Equal(t, "zone-test1234#proxy-12345678", d.Id())
+}
+
+// TestTeoL4Proxy_Read tests that proxy_id is set correctly after Read
+func TestTeoL4Proxy_Read(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	// Mock TeoService.DescribeTeoL4ProxyById for the Read flow
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoL4ProxyById", func(_ context.Context, zoneId string, proxyId string) (*teov20220901.L4Proxy, error) {
+		assert.Equal(t, "zone-test1234", zoneId)
+		assert.Equal(t, "proxy-87654321", proxyId)
+		return &teov20220901.L4Proxy{
+			ZoneId:             ptrStringL4Proxy("zone-test1234"),
+			ProxyId:            ptrStringL4Proxy("proxy-87654321"),
+			ProxyName:          ptrStringL4Proxy("proxy-test"),
+			Area:               ptrStringL4Proxy("overseas"),
+			Ipv6:               ptrStringL4Proxy("off"),
+			StaticIp:           ptrStringL4Proxy("off"),
+			AccelerateMainland: ptrStringL4Proxy("off"),
+		}, nil
+	})
+
+	meta := newMockMetaL4Proxy()
+	res := svcteo.ResourceTencentCloudTeoL4Proxy()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":    "zone-test1234",
+		"proxy_name": "proxy-test",
+	})
+	d.SetId("zone-test1234#proxy-87654321")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	// Verify proxy_id is set correctly from Read
+	proxyId := d.Get("proxy_id").(string)
+	assert.Equal(t, "proxy-87654321", proxyId)
+}
+
+// TestTeoL4Proxy_Read_NotFound tests read when resource is not found
+func TestTeoL4Proxy_Read_NotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	// Mock TeoService.DescribeTeoL4ProxyById to return nil (not found)
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoL4ProxyById", func(_ context.Context, zoneId string, proxyId string) (*teov20220901.L4Proxy, error) {
+		return nil, nil
+	})
+
+	meta := newMockMetaL4Proxy()
+	res := svcteo.ResourceTencentCloudTeoL4Proxy()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":    "zone-test123",
+		"proxy_name": "test-proxy",
+	})
+	d.SetId("zone-test123#proxy-abc123")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "", d.Id())
+}
+
+// TestTeoL4Proxy_Schema tests that proxy_id is defined as computed attribute in schema
+func TestTeoL4Proxy_Schema(t *testing.T) {
+	res := svcteo.ResourceTencentCloudTeoL4Proxy()
+
+	assert.NotNil(t, res)
+
+	assert.Contains(t, res.Schema, "proxy_id")
+	proxyIdSchema := res.Schema["proxy_id"]
+	assert.Equal(t, schema.TypeString, proxyIdSchema.Type)
+	assert.True(t, proxyIdSchema.Computed)
+	assert.False(t, proxyIdSchema.Optional)
+	assert.False(t, proxyIdSchema.Required)
+}

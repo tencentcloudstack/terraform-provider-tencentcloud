@@ -1,0 +1,8 @@
+name: add-organization-ip-whitelist-config
+schemaName: default
+status: active
+artifacts:
+  proposal: done
+  design: done
+  tasks: done
+createdAt: 2026-05-08

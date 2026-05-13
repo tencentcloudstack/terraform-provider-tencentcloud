@@ -75,6 +75,7 @@ Note: This field may return null, which indicates a failure to obtain a valid va
       * `ipv4` - IPv4 subnet.
       * `ipv6` - IPv6 subnet.
     * `version` - Version number.
+  * `origin_acl_family` - Origin ACL control domain.
   * `status` - Origin protection status. Vaild values:
 - online: in effect;
 - offline: disabled;

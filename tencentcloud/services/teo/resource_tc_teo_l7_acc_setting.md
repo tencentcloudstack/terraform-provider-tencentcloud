@@ -69,6 +69,9 @@ resource "tencentcloud_teo_l7_acc_setting" "teo_l7_acc_setting" {
       cache_time    = 600
       follow_origin = "on"
     }
+    network_error_logging {
+      switch = "off"
+    }
     ocsp_stapling {
       switch = "off"
     }
@@ -104,6 +107,7 @@ resource "tencentcloud_teo_l7_acc_setting" "teo_l7_acc_setting" {
   }
 }
 ```
+
 Import
 
 teo l7_acc_setting can be imported using the zone_id, e.g.

@@ -195,6 +195,12 @@ func resourceTencentCloudCdhInstanceCreate(d *schema.ResourceData, meta interfac
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
+		if hostInstance == nil {
+			return resource.NonRetryableError(fmt.Errorf("cdh instance %s is not found", d.Id()))
+		}
+		if hostInstance.HostState == nil {
+			return resource.RetryableError(errors.New("cdh instance is pending"))
+		}
 		if *hostInstance.HostState == CDH_HOST_STATE_PENDING {
 			return resource.RetryableError(errors.New("cdh instance is pending"))
 		}

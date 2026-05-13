@@ -1099,6 +1099,7 @@ func (me *MongodbService) ModifyMongodbInstanceSSL(ctx context.Context, instance
 		}
 	}()
 
+	var flowIdString string
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().InstanceEnableSSL(request)
@@ -1106,6 +1107,9 @@ func (me *MongodbService) ModifyMongodbInstanceSSL(ctx context.Context, instance
 			return tccommon.RetryError(e, tccommon.InternalError)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if result.Response != nil && result.Response.FlowId != nil {
+			flowIdString = helper.Int64ToStr(*result.Response.FlowId)
+		}
 		return nil
 	})
 
@@ -1113,6 +1117,14 @@ func (me *MongodbService) ModifyMongodbInstanceSSL(ctx context.Context, instance
 		log.Printf("[CRITAL]%s modify mongodb instance ssl failed, reason: %v", logId, err)
 		errRet = err
 		return
+	}
+
+	// Wait for async task completion via DescribeAsyncRequestInfo.
+	if flowIdString != "" {
+		if err = me.DescribeAsyncRequestInfo(ctx, flowIdString, 3*tccommon.ReadRetryTimeout); err != nil {
+			errRet = err
+			return
+		}
 	}
 
 	return

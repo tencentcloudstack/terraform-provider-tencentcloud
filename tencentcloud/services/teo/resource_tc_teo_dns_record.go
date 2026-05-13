@@ -62,7 +62,7 @@ func ResourceTencentCloudTeoDnsRecord() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Optional:    true,
-				Description: "DNS record resolution route. if not specified, the default is DEFAULT, which means the default resolution route and is effective in all regions.\n\n- resolution route configuration is only applicable when type (dns record type) is A, AAAA, or CNAME.\n- resolution route configuration is only applicable to standard version and enterprise edition packages. for valid values, please refer to: [resolution routes and corresponding code enumeration](https://intl.cloud.tencent.com/document/product/1552/112542?from_cn_redirect=1).",
+				Description: "DNS record resolution route, not specified as default, indicates the default resolution route, which is effective for all regions.\n-The resolution of line configuration is only applicable when the Type (DNS record type) is A, AAAA, or CNAME.\n-The analysis of line configuration is only applicable to standard and enterprise packages. Please refer to the analysis of line and corresponding code enumeration for values.",
 			},
 
 			"ttl": {
@@ -92,6 +92,11 @@ func ResourceTencentCloudTeoDnsRecord() *schema.Resource {
 				Description: "DNS record resolution status, the following values:\n" +
 					"	- enable: has taken effect;\n" +
 					"	- disable: has been disabled.",
+			},
+			"record_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "DNS record id.",
 			},
 			"created_on": {
 				Type:        schema.TypeString,
@@ -239,6 +244,10 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 
 	if respData.Status != nil {
 		_ = d.Set("status", respData.Status)
+	}
+
+	if respData.RecordId != nil {
+		_ = d.Set("record_id", respData.RecordId)
 	}
 
 	if respData.CreatedOn != nil {

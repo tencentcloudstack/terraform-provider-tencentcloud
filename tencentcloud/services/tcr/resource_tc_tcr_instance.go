@@ -130,6 +130,26 @@ func ResourceTencentCloudTcrInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 3),
 				Description:  "Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.",
 			},
+			"deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable Instance Deletion Protection.",
+			},
+			"enable_cos_maz": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to enable COS bucket multi-AZ feature. Default is `false`.",
+			},
+			"enable_cos_versioning": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to enable COS bucket versioning. Default is `false`.",
+			},
 			//Computed values
 			"status": {
 				Type:        schema.TypeString,
@@ -215,6 +235,15 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 		params["instance_charge_type_prepaid_renew_flag"] = v.(int)
+	}
+	if v, ok := d.GetOkExists("deletion_protection"); ok {
+		params["deletion_protection"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("enable_cos_maz"); ok {
+		params["enable_cos_maz"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("enable_cos_versioning"); ok {
+		params["enable_cos_versioning"] = v.(bool)
 	}
 
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -384,6 +413,15 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 	if *instance.PayMod == REGISTRY_CHARGE_TYPE_PREPAID && instance.ExpiredAt != nil {
 		_ = d.Set("expired_at", instance.ExpiredAt)
 
+	}
+	if instance.DeletionProtection != nil {
+		_ = d.Set("deletion_protection", instance.DeletionProtection)
+	}
+	if instance.EnableCosMAZ != nil {
+		_ = d.Set("enable_cos_maz", instance.EnableCosMAZ)
+	}
+	if instance.EnableCosVersioning != nil {
+		_ = d.Set("enable_cos_versioning", instance.EnableCosVersioning)
 	}
 
 	request := tcr.NewDescribeSecurityPoliciesRequest()
@@ -571,9 +609,21 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	}
 
-	if d.HasChange("instance_type") {
-		instanceType := d.Get("instance_type").(string)
-		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType); err != nil {
+	if d.HasChange("instance_type") || d.HasChange("deletion_protection") {
+		var (
+			instanceType       string
+			deletionProtection bool
+		)
+
+		if d.HasChange("instance_type") {
+			instanceType = d.Get("instance_type").(string)
+		}
+
+		if v, ok := d.GetOkExists("deletion_protection"); ok {
+			deletionProtection = v.(bool)
+		}
+
+		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType, deletionProtection); err != nil {
 			return err
 		}
 		err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {

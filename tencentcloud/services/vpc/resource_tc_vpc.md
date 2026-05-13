@@ -1,5 +1,7 @@
 Provide a resource to create a VPC.
 
+~> **NOTE:** In accordance with VPC business requirements, the default value for `is_multicast` has been updated to `false`(previously `true`) in version `v1.82.93` of the provider. If you wish to utilize this feature, you must first contact the VPC product team to have your account added to the whitelist, and then set the `is_multicast` field to `true`.
+
 Example Usage
 
 Create a basic VPC

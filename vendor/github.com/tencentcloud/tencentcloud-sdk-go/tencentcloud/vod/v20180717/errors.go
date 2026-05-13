@@ -281,6 +281,9 @@ const (
 	// ExpiredTime 错误。
 	INVALIDPARAMETERVALUE_EXPIREDTIME = "InvalidParameterValue.ExpiredTime"
 
+	// 参数值错误：ExtendedParameter 参数取值非法。
+	INVALIDPARAMETERVALUE_EXTENDEDPARAMETER = "InvalidParameterValue.ExtendedParameter"
+
 	// 参数值错误：人脸重复。
 	INVALIDPARAMETERVALUE_FACEDUPLICATE = "InvalidParameterValue.FaceDuplicate"
 
@@ -535,6 +538,9 @@ const (
 
 	// 未知的媒体文件来源。
 	INVALIDPARAMETERVALUE_SOURCETYPES = "InvalidParameterValue.SourceTypes"
+
+	// 源文件错误。
+	INVALIDPARAMETERVALUE_SRCFILE = "InvalidParameterValue.SrcFile"
 
 	// 参数值错误：StartDate 无效。
 	INVALIDPARAMETERVALUE_STARTDATE = "InvalidParameterValue.StartDate"

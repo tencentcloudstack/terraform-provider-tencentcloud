@@ -17,7 +17,7 @@ Provides a resource to manage MongoDB instance SSL configuration.
 
 ```hcl
 resource "tencentcloud_mongodb_instance_ssl" "example" {
-  instance_id = "cmgo-xxxxxxxx"
+  instance_id = "cmgo-olr1xx9d"
   enable      = true
 }
 ```
@@ -44,6 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 MongoDB instance SSL configuration can be imported using the instance id, e.g.
 
 ```
-terraform import tencentcloud_mongodb_instance_ssl.example cmgo-xxxxxxxx
+terraform import tencentcloud_mongodb_instance_ssl.example cmgo-olr1xx9d
 ```
 
