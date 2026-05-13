@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_kubernetes_cluster_available_extra_args
+```
+
+```release-note:new-resource
+tencentcloud_kubernetes_cluster_extra_args_config
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: update `is_multicast` default value
+```
