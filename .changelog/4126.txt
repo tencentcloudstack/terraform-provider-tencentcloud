@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_ssl_pay_certificate: optimize code logic for update function
+```
+
+```release-note:enhancement
+data-source/tencentcloud_ssl_describe_host_waf_instance_list: update fields
+```
