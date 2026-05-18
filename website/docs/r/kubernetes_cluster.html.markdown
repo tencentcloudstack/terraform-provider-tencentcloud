@@ -799,7 +799,7 @@ The following arguments are supported:
 * `cluster_cidr` - (Optional, String, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, String, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional, String) Description of the cluster.
-* `cluster_extra_args` - (Optional, List, ForceNew) Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.
+* `cluster_extra_args` - (Optional, List) Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.
 * `cluster_internet_domain` - (Optional, String) Domain name for cluster Kube-apiserver internet access. Be careful if you modify value of this parameter, the cluster_external_endpoint value may be changed automatically too.
 * `cluster_internet_security_group` - (Optional, String) Specify security group, NOTE: This argument must not be empty if cluster internet enabled.
 * `cluster_internet` - (Optional, Bool) Open internet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint. You may open it through `tencentcloud_kubernetes_cluster_endpoint`.
@@ -868,9 +868,9 @@ The `cluster_audit` object supports the following:
 
 The `cluster_extra_args` object supports the following:
 
-* `kube_apiserver` - (Optional, List, ForceNew) The customized parameters for kube-apiserver.
-* `kube_controller_manager` - (Optional, List, ForceNew) The customized parameters for kube-controller-manager.
-* `kube_scheduler` - (Optional, List, ForceNew) The customized parameters for kube-scheduler.
+* `kube_apiserver` - (Optional, List) The customized parameters for kube-apiserver.
+* `kube_controller_manager` - (Optional, List) The customized parameters for kube-controller-manager.
+* `kube_scheduler` - (Optional, List) The customized parameters for kube-scheduler.
 
 The `data_disk` object of `master_config` supports the following:
 
