@@ -381,7 +381,12 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 	if response.Response.Status != nil {
 		_ = d.Set("status", response.Response.Status)
 	}
-	if response.Response.SubmittedData != nil {
+	// When Status is SSL_STATUS_AVAILABLE (1), the certificate has been issued and
+	// SubmittedData will not be returned (or returned with all nil fields) because
+	// information can no longer be modified at this point.
+	// Skip setSubmitInfo to preserve the existing state value and avoid false drift.
+	if response.Response.Status != nil && *response.Response.Status != SSL_STATUS_AVAILABLE &&
+		response.Response.SubmittedData != nil {
 		setSubmitInfo(d, response.Response.SubmittedData)
 	}
 	if response.Response.DvAuthDetail != nil && response.Response.DvAuthDetail.DvAuths != nil && len(response.Response.DvAuthDetail.DvAuths) != 0 {
@@ -471,6 +476,11 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
+
+		if status == SSL_STATUS_AVAILABLE {
+			return fmt.Errorf("status[%v] information cannot be modified in this status certificateId[%s]", status, certificateId)
+		}
+
 		if status == SSL_STATUS_CANCELING {
 			err := fmt.Errorf("%s \n\tcertificateId[%s], status[%v]", SSL_ERR_CANCELING, certificateId, status)
 			return err
@@ -512,10 +522,10 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		commitInfoRequest := ssl.NewCommitCertificateInformationRequest()
-		commitInfoRequest.CertificateId = helper.String(certificateId)
+		orderSubmitRequest := ssl.NewCertificateOrderSubmitRequest()
+		orderSubmitRequest.CertId = helper.String(certificateId)
 		if err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			if err = sslService.CommitCertificateInformation(ctx, commitInfoRequest); err != nil {
+			if err = sslService.CertificateOrderSubmit(ctx, orderSubmitRequest); err != nil {
 				if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
 					code := sdkError.GetCode()
 					if code == InvalidParam || code == CertificateNotFound || code == CertificateInvalid {

@@ -1,10 +1,10 @@
-Use this data source to query detailed information of ssl describe_host_waf_instance_list
+Use this data source to query detailed information of SSL describe host waf instance list
 
 Example Usage
 
 ```hcl
-data "tencentcloud_ssl_describe_host_waf_instance_list" "describe_host_waf_instance_list" {
-  certificate_id = "8u8DII0l"
-  resource_type = "waf"
- }
+data "tencentcloud_ssl_describe_host_waf_instance_list" "example" {
+  certificate_id = "GGQ0tJxn"
+  resource_type  = "waf"
+}
 ```
