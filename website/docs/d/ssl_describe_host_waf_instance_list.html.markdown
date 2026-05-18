@@ -4,18 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ssl_describe_host_waf_instance_list"
 sidebar_current: "docs-tencentcloud-datasource-ssl_describe_host_waf_instance_list"
 description: |-
-  Use this data source to query detailed information of ssl describe_host_waf_instance_list
+  Use this data source to query detailed information of SSL describe host waf instance list
 ---
 
 # tencentcloud_ssl_describe_host_waf_instance_list
 
-Use this data source to query detailed information of ssl describe_host_waf_instance_list
+Use this data source to query detailed information of SSL describe host waf instance list
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_ssl_describe_host_waf_instance_list" "describe_host_waf_instance_list" {
-  certificate_id = "8u8DII0l"
+data "tencentcloud_ssl_describe_host_waf_instance_list" "example" {
+  certificate_id = "GGQ0tJxn"
   resource_type  = "waf"
 }
 ```
@@ -43,6 +43,7 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_list` - WAF instance listNote: This field may return NULL, indicating that the valid value cannot be obtained.
   * `cert_id` - Binded certificate IDNote: This field may return NULL, indicating that the valid value cannot be obtained.
   * `domain` - domain name.
-  * `status` - -1: Unrelated certificate of domain name.1: The domain name HTTPS has been opened.0: The domain name HTTPS has been closed.
+  * `keepalive` - Whether to maintain a persistent connection (1: Yes, 0: No).
+  * `status` - (**Deprecated**) Deprecated from version v1.82.94. -1: Unrelated certificate of domain name.1: The domain name HTTPS has been opened.0: The domain name HTTPS has been closed.
 
 
