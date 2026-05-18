@@ -703,6 +703,60 @@ func (c *Client) CreateClusterWithContext(ctx context.Context, request *CreateCl
     return
 }
 
+func NewCreateDynamicInstanceRequest() (request *CreateDynamicInstanceRequest) {
+    request = &CreateDynamicInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "CreateDynamicInstance")
+    
+    
+    return
+}
+
+func NewCreateDynamicInstanceResponse() (response *CreateDynamicInstanceResponse) {
+    response = &CreateDynamicInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateDynamicInstance
+// 创建容器EMR-TKE集群DynamicInstance
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) CreateDynamicInstance(request *CreateDynamicInstanceRequest) (response *CreateDynamicInstanceResponse, err error) {
+    return c.CreateDynamicInstanceWithContext(context.Background(), request)
+}
+
+// CreateDynamicInstance
+// 创建容器EMR-TKE集群DynamicInstance
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) CreateDynamicInstanceWithContext(ctx context.Context, request *CreateDynamicInstanceRequest) (response *CreateDynamicInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateDynamicInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "CreateDynamicInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDynamicInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDynamicInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateGroupsSTDRequest() (request *CreateGroupsSTDRequest) {
     request = &CreateGroupsSTDRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -727,35 +781,8 @@ func NewCreateGroupsSTDResponse() (response *CreateGroupsSTDResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_GETCVMSERVERFAILED = "FailedOperation.GetCvmServerFailed"
-//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
-//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
-//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
-//  INVALIDPARAMETER_HALESSMASTERCOUNT = "InvalidParameter.HALessMasterCount"
-//  INVALIDPARAMETER_INCORRECTMASTERCOUNT = "InvalidParameter.IncorrectMasterCount"
-//  INVALIDPARAMETER_INVALIDALLNODERESOURCESPEC = "InvalidParameter.InvalidAllNodeResourceSpec"
-//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
-//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
-//  INVALIDPARAMETER_INVALIDCOREDISKTYPE = "InvalidParameter.InvalidCoreDiskType"
-//  INVALIDPARAMETER_INVALIDCOSBUCKET = "InvalidParameter.InvalidCosBucket"
-//  INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
-//  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
-//  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
-//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
-//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
-//  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
-//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
-//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
-//  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
-//  INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
-//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
-//  INVALIDPARAMETER_INVALIDSCRIPTBOOTSTRAPACTIONCONFIG = "InvalidParameter.InvalidScriptBootstrapActionConfig"
-//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
-//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
-//  INVALIDPARAMETER_KERBEROSSUPPORT = "InvalidParameter.KerberosSupport"
-//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
-//  RESOURCENOTFOUND_SUBNETNOTFOUND = "ResourceNotFound.SubnetNotFound"
-//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 func (c *Client) CreateGroupsSTD(request *CreateGroupsSTDRequest) (response *CreateGroupsSTDResponse, err error) {
     return c.CreateGroupsSTDWithContext(context.Background(), request)
 }
@@ -765,35 +792,8 @@ func (c *Client) CreateGroupsSTD(request *CreateGroupsSTDRequest) (response *Cre
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_GETCVMSERVERFAILED = "FailedOperation.GetCvmServerFailed"
-//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
-//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
-//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
-//  INVALIDPARAMETER_HALESSMASTERCOUNT = "InvalidParameter.HALessMasterCount"
-//  INVALIDPARAMETER_INCORRECTMASTERCOUNT = "InvalidParameter.IncorrectMasterCount"
-//  INVALIDPARAMETER_INVALIDALLNODERESOURCESPEC = "InvalidParameter.InvalidAllNodeResourceSpec"
-//  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
-//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
-//  INVALIDPARAMETER_INVALIDCOREDISKTYPE = "InvalidParameter.InvalidCoreDiskType"
-//  INVALIDPARAMETER_INVALIDCOSBUCKET = "InvalidParameter.InvalidCosBucket"
-//  INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
-//  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
-//  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
-//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
-//  INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
-//  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
-//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
-//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
-//  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
-//  INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
-//  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
-//  INVALIDPARAMETER_INVALIDSCRIPTBOOTSTRAPACTIONCONFIG = "InvalidParameter.InvalidScriptBootstrapActionConfig"
-//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
-//  INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
-//  INVALIDPARAMETER_KERBEROSSUPPORT = "InvalidParameter.KerberosSupport"
-//  RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
-//  RESOURCENOTFOUND_SUBNETNOTFOUND = "ResourceNotFound.SubnetNotFound"
-//  RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 func (c *Client) CreateGroupsSTDWithContext(ctx context.Context, request *CreateGroupsSTDRequest) (response *CreateGroupsSTDResponse, err error) {
     if request == nil {
         request = NewCreateGroupsSTDRequest()
@@ -1893,6 +1893,58 @@ func (c *Client) DescribeDAGInfoWithContext(ctx context.Context, request *Descri
     request.SetContext(ctx)
     
     response = NewDescribeDAGInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDynamicInstanceListRequest() (request *DescribeDynamicInstanceListRequest) {
+    request = &DescribeDynamicInstanceListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeDynamicInstanceList")
+    
+    
+    return
+}
+
+func NewDescribeDynamicInstanceListResponse() (response *DescribeDynamicInstanceListResponse) {
+    response = &DescribeDynamicInstanceListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDynamicInstanceList
+// 描述容器EMR-TKE集群DynamicInstance列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeDynamicInstanceList(request *DescribeDynamicInstanceListRequest) (response *DescribeDynamicInstanceListResponse, err error) {
+    return c.DescribeDynamicInstanceListWithContext(context.Background(), request)
+}
+
+// DescribeDynamicInstanceList
+// 描述容器EMR-TKE集群DynamicInstance列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeDynamicInstanceListWithContext(ctx context.Context, request *DescribeDynamicInstanceListRequest) (response *DescribeDynamicInstanceListResponse, err error) {
+    if request == nil {
+        request = NewDescribeDynamicInstanceListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeDynamicInstanceList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDynamicInstanceList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDynamicInstanceListResponse()
     err = c.Send(request, response)
     return
 }
@@ -5025,6 +5077,202 @@ func (c *Client) InquiryPriceUpdateInstanceWithContext(ctx context.Context, requ
     return
 }
 
+func NewInstallSoftwareRequest() (request *InstallSoftwareRequest) {
+    request = &InstallSoftwareRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "InstallSoftware")
+    
+    
+    return
+}
+
+func NewInstallSoftwareResponse() (response *InstallSoftwareResponse) {
+    response = &InstallSoftwareResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InstallSoftware
+// 安装组件。对于依赖元数据库的组件，有可能会需要下单一个cdb。可根据InstallSoftWareInfo查看当前集群可安装的组件，以及哪些组件有可能需要cdb。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDCLASSIFICATION = "InvalidParameter.InvalidClassification"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  INVALIDPARAMETER_INVALIDCONFIGTYPE = "InvalidParameter.InvalidConfigType"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDCOSFILEURI = "InvalidParameter.InvalidCosFileURI"
+//  INVALIDPARAMETER_INVALIDCOUNT = "InvalidParameter.InvalidCount"
+//  INVALIDPARAMETER_INVALIDCOUNTNUM = "InvalidParameter.InvalidCountNum"
+//  INVALIDPARAMETER_INVALIDDOWNLOADOBJ = "InvalidParameter.InvalidDownloadObj"
+//  INVALIDPARAMETER_INVALIDEXPORTCONFCONTEXTS = "InvalidParameter.InvalidExportConfContexts"
+//  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+//  INVALIDPARAMETER_INVALIDEXTENDNAMESERVICE = "InvalidParameter.InvalidExtendNameService"
+//  INVALIDPARAMETER_INVALIDFILEPATH = "InvalidParameter.InvalidFilePath"
+//  INVALIDPARAMETER_INVALIDIPLIST = "InvalidParameter.InvalidIpList"
+//  INVALIDPARAMETER_INVALIDJOBFLOW = "InvalidParameter.InvalidJobFlow"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDMODIFYSPEC = "InvalidParameter.InvalidModifySpec"
+//  INVALIDPARAMETER_INVALIDNODETYPE = "InvalidParameter.InvalidNodeType"
+//  INVALIDPARAMETER_INVALIDPARAMTERINVALIDSOFTINFO = "InvalidParameter.InvalidParamterInvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDPODNUM = "InvalidParameter.InvalidPodNum"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_INVALIDRESTYPE = "InvalidParameter.InvalidResType"
+//  INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
+//  INVALIDPARAMETER_INVALIDROUTERCOUNT = "InvalidParameter.InvalidRouterCount"
+//  INVALIDPARAMETER_INVALIDSERVICENAME = "InvalidParameter.InvalidServiceName"
+//  INVALIDPARAMETER_INVALIDSOFTDEPLOYINFO = "InvalidParameter.InvalidSoftDeployInfo"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDSOFTWARENAME = "InvalidParameter.InvalidSoftWareName"
+//  INVALIDPARAMETER_INVALIDSOFTWAREVERSION = "InvalidParameter.InvalidSoftWareVersion"
+//  INVALIDPARAMETER_INVALIDTASKCOUNT = "InvalidParameter.InvalidTaskCount"
+//  INVALIDPARAMETER_INVALIDTIMESPAN = "InvalidParameter.InvalidTimeSpan"
+//  INVALIDPARAMETER_INVALIDTIMEUNIT = "InvalidParameter.InvalidTimeUnit"
+//  INVALIDPARAMETER_INVALIDUNIFYMETA = "InvalidParameter.InvalidUnifyMeta"
+//  INVALIDPARAMETER_INVALIDWRITEFILE = "InvalidParameter.InvalidWriteFile"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededAvailableCpu"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDNODEAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededNodeAvailableCpu"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_METRICSMETANOTFOUND = "ResourceNotFound.MetricsMetaNotFound"
+//  RESOURCENOTFOUND_OPTIONALSPECFOUND = "ResourceNotFound.OptionalSpecFound"
+//  RESOURCENOTFOUND_SERVICECONFNOTFOUND = "ResourceNotFound.ServiceConfNotFound"
+//  RESOURCENOTFOUND_SERVICEGROUPNOTFOUND = "ResourceNotFound.ServiceGroupNotFound"
+//  RESOURCENOTFOUND_SERVICENODENOTFOUND = "ResourceNotFound.ServiceNodeNotFound"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) InstallSoftware(request *InstallSoftwareRequest) (response *InstallSoftwareResponse, err error) {
+    return c.InstallSoftwareWithContext(context.Background(), request)
+}
+
+// InstallSoftware
+// 安装组件。对于依赖元数据库的组件，有可能会需要下单一个cdb。可根据InstallSoftWareInfo查看当前集群可安装的组件，以及哪些组件有可能需要cdb。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  INTERNALERROR_CAMERROR = "InternalError.CamError"
+//  INTERNALERROR_CBSCGWERROR = "InternalError.CbsCgwError"
+//  INTERNALERROR_CBSERROR = "InternalError.CbsError"
+//  INTERNALERROR_CDBCGWERROR = "InternalError.CdbCgwError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_CHECKQUOTAERR = "InternalError.CheckQuotaErr"
+//  INTERNALERROR_CONFIGCGWERROR = "InternalError.ConfigCgwError"
+//  INTERNALERROR_CVMERROR = "InternalError.CvmError"
+//  INTERNALERROR_KMSERROR = "InternalError.KmsError"
+//  INTERNALERROR_PROJECTCGWERROR = "InternalError.ProjectCgwError"
+//  INTERNALERROR_SGERROR = "InternalError.SgError"
+//  INTERNALERROR_TAGERROR = "InternalError.TagError"
+//  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
+//  INTERNALERROR_VPCCGWERROR = "InternalError.VpcCgwError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDCLASSIFICATION = "InvalidParameter.InvalidClassification"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  INVALIDPARAMETER_INVALIDCONFIGTYPE = "InvalidParameter.InvalidConfigType"
+//  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDCOSFILEURI = "InvalidParameter.InvalidCosFileURI"
+//  INVALIDPARAMETER_INVALIDCOUNT = "InvalidParameter.InvalidCount"
+//  INVALIDPARAMETER_INVALIDCOUNTNUM = "InvalidParameter.InvalidCountNum"
+//  INVALIDPARAMETER_INVALIDDOWNLOADOBJ = "InvalidParameter.InvalidDownloadObj"
+//  INVALIDPARAMETER_INVALIDEXPORTCONFCONTEXTS = "InvalidParameter.InvalidExportConfContexts"
+//  INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+//  INVALIDPARAMETER_INVALIDEXTENDNAMESERVICE = "InvalidParameter.InvalidExtendNameService"
+//  INVALIDPARAMETER_INVALIDFILEPATH = "InvalidParameter.InvalidFilePath"
+//  INVALIDPARAMETER_INVALIDIPLIST = "InvalidParameter.InvalidIpList"
+//  INVALIDPARAMETER_INVALIDJOBFLOW = "InvalidParameter.InvalidJobFlow"
+//  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
+//  INVALIDPARAMETER_INVALIDMODIFYSPEC = "InvalidParameter.InvalidModifySpec"
+//  INVALIDPARAMETER_INVALIDNODETYPE = "InvalidParameter.InvalidNodeType"
+//  INVALIDPARAMETER_INVALIDPARAMTERINVALIDSOFTINFO = "InvalidParameter.InvalidParamterInvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
+//  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
+//  INVALIDPARAMETER_INVALIDPODNUM = "InvalidParameter.InvalidPodNum"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_INVALIDRESTYPE = "InvalidParameter.InvalidResType"
+//  INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
+//  INVALIDPARAMETER_INVALIDROUTERCOUNT = "InvalidParameter.InvalidRouterCount"
+//  INVALIDPARAMETER_INVALIDSERVICENAME = "InvalidParameter.InvalidServiceName"
+//  INVALIDPARAMETER_INVALIDSOFTDEPLOYINFO = "InvalidParameter.InvalidSoftDeployInfo"
+//  INVALIDPARAMETER_INVALIDSOFTINFO = "InvalidParameter.InvalidSoftInfo"
+//  INVALIDPARAMETER_INVALIDSOFTWARENAME = "InvalidParameter.InvalidSoftWareName"
+//  INVALIDPARAMETER_INVALIDSOFTWAREVERSION = "InvalidParameter.InvalidSoftWareVersion"
+//  INVALIDPARAMETER_INVALIDTASKCOUNT = "InvalidParameter.InvalidTaskCount"
+//  INVALIDPARAMETER_INVALIDTIMESPAN = "InvalidParameter.InvalidTimeSpan"
+//  INVALIDPARAMETER_INVALIDTIMEUNIT = "InvalidParameter.InvalidTimeUnit"
+//  INVALIDPARAMETER_INVALIDUNIFYMETA = "InvalidParameter.InvalidUnifyMeta"
+//  INVALIDPARAMETER_INVALIDWRITEFILE = "InvalidParameter.InvalidWriteFile"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededAvailableCpu"
+//  LIMITEXCEEDED_PODCPULIMITEXCEEDEDNODEAVAILABLECPU = "LimitExceeded.PodCpuLimitExceededNodeAvailableCpu"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_METRICSMETANOTFOUND = "ResourceNotFound.MetricsMetaNotFound"
+//  RESOURCENOTFOUND_OPTIONALSPECFOUND = "ResourceNotFound.OptionalSpecFound"
+//  RESOURCENOTFOUND_SERVICECONFNOTFOUND = "ResourceNotFound.ServiceConfNotFound"
+//  RESOURCENOTFOUND_SERVICEGROUPNOTFOUND = "ResourceNotFound.ServiceGroupNotFound"
+//  RESOURCENOTFOUND_SERVICENODENOTFOUND = "ResourceNotFound.ServiceNodeNotFound"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) InstallSoftwareWithContext(ctx context.Context, request *InstallSoftwareRequest) (response *InstallSoftwareResponse, err error) {
+    if request == nil {
+        request = NewInstallSoftwareRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "InstallSoftware")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InstallSoftware require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInstallSoftwareResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAutoRenewFlagRequest() (request *ModifyAutoRenewFlagRequest) {
     request = &ModifyAutoRenewFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5215,6 +5463,60 @@ func (c *Client) ModifyBootScriptWithContext(ctx context.Context, request *Modif
     request.SetContext(ctx)
     
     response = NewModifyBootScriptResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDynamicInstanceRequest() (request *ModifyDynamicInstanceRequest) {
+    request = &ModifyDynamicInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyDynamicInstance")
+    
+    
+    return
+}
+
+func NewModifyDynamicInstanceResponse() (response *ModifyDynamicInstanceResponse) {
+    response = &ModifyDynamicInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDynamicInstance
+// 更新容器EMR-TKE集群DynamicInstance
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) ModifyDynamicInstance(request *ModifyDynamicInstanceRequest) (response *ModifyDynamicInstanceResponse, err error) {
+    return c.ModifyDynamicInstanceWithContext(context.Background(), request)
+}
+
+// ModifyDynamicInstance
+// 更新容器EMR-TKE集群DynamicInstance
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) ModifyDynamicInstanceWithContext(ctx context.Context, request *ModifyDynamicInstanceRequest) (response *ModifyDynamicInstanceResponse, err error) {
+    if request == nil {
+        request = NewModifyDynamicInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyDynamicInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDynamicInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDynamicInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -7097,6 +7399,60 @@ func (c *Client) TerminateClusterNodesWithContext(ctx context.Context, request *
     return
 }
 
+func NewTerminateDynamicInstancesRequest() (request *TerminateDynamicInstancesRequest) {
+    request = &TerminateDynamicInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "TerminateDynamicInstances")
+    
+    
+    return
+}
+
+func NewTerminateDynamicInstancesResponse() (response *TerminateDynamicInstancesResponse) {
+    response = &TerminateDynamicInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// TerminateDynamicInstances
+// 销毁容器EMR-TKE集群DynamicInstance
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) TerminateDynamicInstances(request *TerminateDynamicInstancesRequest) (response *TerminateDynamicInstancesResponse, err error) {
+    return c.TerminateDynamicInstancesWithContext(context.Background(), request)
+}
+
+// TerminateDynamicInstances
+// 销毁容器EMR-TKE集群DynamicInstance
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) TerminateDynamicInstancesWithContext(ctx context.Context, request *TerminateDynamicInstancesRequest) (response *TerminateDynamicInstancesResponse, err error) {
+    if request == nil {
+        request = NewTerminateDynamicInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "TerminateDynamicInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("TerminateDynamicInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewTerminateDynamicInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewTerminateInstanceRequest() (request *TerminateInstanceRequest) {
     request = &TerminateInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7121,6 +7477,7 @@ func NewTerminateInstanceResponse() (response *TerminateInstanceResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_NAMESPACEHASUSERCUSTOMPODS = "FailedOperation.NamespaceHasUserCustomPods"
 //  FAILEDOPERATION_REFUNDCVMFAILED = "FailedOperation.RefundCvmFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
@@ -7143,6 +7500,7 @@ func (c *Client) TerminateInstance(request *TerminateInstanceRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_NAMESPACEHASUSERCUSTOMPODS = "FailedOperation.NamespaceHasUserCustomPods"
 //  FAILEDOPERATION_REFUNDCVMFAILED = "FailedOperation.RefundCvmFailed"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
