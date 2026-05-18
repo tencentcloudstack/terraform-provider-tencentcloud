@@ -111,9 +111,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-payment SSL instance can be imported, e.g.
+payment SSL instance can be imported certificateId#productId#domainNum#timeSpan, e.g.
 
 ```
-$ terraform import tencentcloud_ssl_pay_certificate.ssl iPQNn61x#33#1#1
+terraform import tencentcloud_ssl_pay_certificate.example iPQNn61x#33#1#1
 ```
 
